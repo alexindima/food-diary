@@ -81,7 +81,10 @@ public class UpdateUserCommandHandler(
             HydrationGoal: command.HydrationGoal));
         currentUser.UpdatePreferences(new UserPreferenceUpdate(
             DashboardLayoutJson: dashboardLayoutJson,
-            Language: languageResult.Value));
+            Language: languageResult.Value,
+            PushNotificationsEnabled: command.PushNotificationsEnabled,
+            FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
+            SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));
         currentUser.UpdateProfileMedia(new UserProfileMediaUpdate(
             ProfileImage: Normalize(command.ProfileImage),
             ProfileImageAssetId: newAssetId));

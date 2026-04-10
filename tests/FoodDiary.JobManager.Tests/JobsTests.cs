@@ -189,6 +189,93 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task NotificationCleanupJob_RecordsSuccessMetrics_AndBuildsExpectedPolicy() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? deletedItems = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: (value, _) => deletedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingNotificationCleanupService([2, 0]);
+        var options = Options.Create(new NotificationCleanupOptions {
+            TransientTypes = ["Test", "Reminder"],
+            BatchSize = 2,
+            TransientReadRetentionDays = 3,
+            TransientUnreadRetentionDays = 5,
+            StandardReadRetentionDays = 14,
+            StandardUnreadRetentionDays = 30,
+        });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationCleanupJob(
+            cleanupService,
+            options,
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.Equal(2, deletedItems);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("notifications.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("notifications.cleanup")?.LastSucceededAtUtc);
+        Assert.Equal(2, cleanupService.Policies.Count);
+        Assert.All(cleanupService.Policies, policy => {
+            Assert.Equal(["Test", "Reminder"], policy.TransientTypes);
+            Assert.Equal(3, policy.TransientReadRetentionDays);
+            Assert.Equal(5, policy.TransientUnreadRetentionDays);
+            Assert.Equal(14, policy.StandardReadRetentionDays);
+            Assert.Equal(30, policy.StandardUnreadRetentionDays);
+            Assert.Equal(2, policy.BatchSize);
+        });
+    }
+
+    [Fact]
+    public async Task NotificationCleanupJob_WhenCleanupFails_RecordsFailureMetric_AndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new ThrowingNotificationCleanupService();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationCleanupJob(
+            cleanupService,
+            Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 10 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationCleanupJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("failure", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(1, tracker.GetSnapshot("notifications.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("notifications.cleanup")?.LastFailedAtUtc);
+    }
+
+    [Fact]
     public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
         var recurringJobManager = new RecordingRecurringJobManager();
         var verifier = new RecordingRecurringJobRegistrationVerifier();
@@ -268,12 +355,15 @@ public sealed class JobsTests {
     [Fact]
     public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
         var imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
+        var notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
         var userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
 
         Assert.NotNull(imageMethod);
+        Assert.NotNull(notificationMethod);
         Assert.NotNull(userMethod);
 
         AssertExecutionPolicy(imageMethod!);
+        AssertExecutionPolicy(notificationMethod!);
         AssertExecutionPolicy(userMethod!);
     }
 
@@ -392,6 +482,11 @@ public sealed class JobsTests {
             Guid? reassignUserId,
             CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("cleanup failed");
+    }
+
+    private sealed class ThrowingNotificationCleanupService : INotificationCleanupService {
+        public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("notification cleanup failed");
     }
 
     private sealed class RecordingRecurringJobManager : IRecurringJobManager {

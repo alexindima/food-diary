@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { firstValueFrom } from 'rxjs';
 import { finalize } from 'rxjs';
 import {
     ConfirmDeleteDialogComponent,
@@ -9,6 +10,7 @@ import {
 import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
+import { NotificationPreferences, NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { UserService } from '../../../shared/api/user.service';
 import { UpdateUserDto, User } from '../../../shared/models/user.data';
 import { environment } from '../../../../environments/environment';
@@ -24,10 +26,15 @@ export class ProfileManageFacade {
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);
+    private readonly notificationService = inject(NotificationService);
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
     public readonly isDeleting = signal(false);
+    public readonly isUpdatingNotifications = signal(false);
+    public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
+    public readonly isLoadingWebPushSubscriptions = signal(false);
+    public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
 
     public initialize(): void {
         this.loadUser();
@@ -122,6 +129,35 @@ export class ProfileManageFacade {
         });
     }
 
+    public async updateNotificationPreferences(preferences: {
+        pushNotificationsEnabled?: boolean;
+        fastingPushNotificationsEnabled?: boolean;
+        socialPushNotificationsEnabled?: boolean;
+    }): Promise<User | null> {
+        if (this.isUpdatingNotifications()) {
+            return this.user();
+        }
+
+        this.isUpdatingNotifications.set(true);
+
+        try {
+            const notificationPreferences = await firstValueFrom(this.notificationService.updateNotificationPreferences(preferences));
+            if (!notificationPreferences) {
+                this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+                return null;
+            }
+
+            this.applyNotificationPreferences(notificationPreferences);
+            this.clearGlobalError();
+            return this.user();
+        } catch {
+            this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+            return null;
+        } finally {
+            this.isUpdatingNotifications.set(false);
+        }
+    }
+
     public openAdminPanel(): void {
         if (!environment.adminAppUrl) {
             return;
@@ -154,6 +190,8 @@ export class ProfileManageFacade {
                 this.user.set(user);
                 this.clearGlobalError();
                 void this.localizationService.applyLanguagePreference(user.language ?? null);
+                this.loadNotificationPreferences();
+                this.loadWebPushSubscriptions();
             },
             error: () => {
                 this.setGlobalError('USER_MANAGE.LOAD_ERROR');
@@ -178,5 +216,66 @@ export class ProfileManageFacade {
 
     private setGlobalError(errorKey: string): void {
         this.globalError.set(this.translateService.instant(errorKey));
+    }
+
+    private loadNotificationPreferences(): void {
+        this.notificationService.getNotificationPreferences().subscribe({
+            next: preferences => this.applyNotificationPreferences(preferences),
+            error: () => {
+                // Keep the profile responsive even if notification preferences fail separately.
+            },
+        });
+    }
+
+    private applyNotificationPreferences(preferences: NotificationPreferences): void {
+        const current = this.user();
+        if (!current) {
+            return;
+        }
+
+        this.user.set({
+            ...current,
+            pushNotificationsEnabled: preferences.pushNotificationsEnabled,
+            fastingPushNotificationsEnabled: preferences.fastingPushNotificationsEnabled,
+            socialPushNotificationsEnabled: preferences.socialPushNotificationsEnabled,
+        });
+    }
+
+    public refreshWebPushSubscriptions(): void {
+        this.loadWebPushSubscriptions();
+    }
+
+    public async removeWebPushSubscription(endpoint: string): Promise<boolean> {
+        if (!endpoint || this.removingWebPushSubscriptionEndpoint()) {
+            return false;
+        }
+
+        this.removingWebPushSubscriptionEndpoint.set(endpoint);
+
+        try {
+            await firstValueFrom(this.notificationService.removeWebPushSubscription(endpoint));
+            this.webPushSubscriptions.update(items => items.filter(item => item.endpoint !== endpoint));
+            return true;
+        } catch {
+            return false;
+        } finally {
+            this.removingWebPushSubscriptionEndpoint.set(null);
+        }
+    }
+
+    private loadWebPushSubscriptions(): void {
+        this.isLoadingWebPushSubscriptions.set(true);
+
+        this.notificationService
+            .getWebPushSubscriptions()
+            .pipe(finalize(() => this.isLoadingWebPushSubscriptions.set(false)))
+            .subscribe({
+                next: subscriptions => {
+                    this.webPushSubscriptions.set(subscriptions);
+                },
+                error: () => {
+                    this.webPushSubscriptions.set([]);
+                },
+            });
     }
 }

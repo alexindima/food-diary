@@ -60,4 +60,23 @@ describe('FrontendObservabilityService', () => {
 
         expect(loggingSpy.logEvent).toHaveBeenCalledTimes(1);
     });
+
+    it('should log notification preference changes as user actions', () => {
+        service.recordNotificationPreferenceChanged('push', true, { permission: 'granted' });
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        expect(payload['category']).toBe('user_action');
+        expect(payload['name']).toBe('notifications.preference.changed');
+        expect(payload['outcome']).toBe('enabled');
+        expect((payload['details'] as Record<string, unknown>)['preference']).toBe('push');
+    });
+
+    it('should log notification subscription events as user actions', () => {
+        service.recordNotificationSubscriptionEvent('subscription.ensure', 'blocked', { result: 'blocked' });
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        expect(payload['category']).toBe('user_action');
+        expect(payload['name']).toBe('notifications.subscription.ensure');
+        expect(payload['outcome']).toBe('blocked');
+    });
 });

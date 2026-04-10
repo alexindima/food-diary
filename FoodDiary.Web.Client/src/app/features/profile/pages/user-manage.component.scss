@@ -111,6 +111,10 @@
         &--body {
             background: linear-gradient(145deg, #d9ffec, #e8fff5);
         }
+
+        &--notifications {
+            background: linear-gradient(145deg, #dbeafe, #eff6ff);
+        }
     }
 
     &__card-text {
@@ -219,6 +223,181 @@
         align-items: start;
     }
 
+    &__notifications {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    &__notifications-category-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__notifications-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(219, 234, 254, 0.5);
+        border: 1px solid rgba(96, 165, 250, 0.18);
+
+        &--nested {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.78);
+            border-color: rgba(148, 163, 184, 0.18);
+        }
+    }
+
+    &__notifications-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    &__notifications-label {
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: variables.$color-text-main;
+    }
+
+    &__notifications-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &__notifications-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        color: #1d4ed8;
+        font-size: 0.8rem;
+        font-weight: 700;
+
+        &--account {
+            color: #0f172a;
+        }
+    }
+
+    &__notifications-hint {
+        font-size: 0.9rem;
+        line-height: 1.35;
+        color: variables.$color-text-additional;
+    }
+
+    &__notifications-device-note {
+        font-size: 0.84rem;
+        line-height: 1.35;
+        color: #64748b;
+    }
+
+    &__notifications-actions {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    &__notifications-devices {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 4px;
+    }
+
+    &__notifications-devices-header {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__notifications-device-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__notifications-device-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    &__notifications-devices-empty {
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px dashed rgba(148, 163, 184, 0.32);
+        color: variables.$color-text-additional;
+        font-size: 0.9rem;
+        line-height: 1.35;
+    }
+
+    &__switch {
+        appearance: none;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0;
+        flex-shrink: 0;
+
+        &.is-disabled {
+            cursor: default;
+            opacity: 0.6;
+        }
+    }
+
+    &__switch-track {
+        width: 56px;
+        height: 32px;
+        border-radius: 999px;
+        background: #cbd5e1;
+        padding: 4px;
+        display: inline-flex;
+        align-items: center;
+        transition: background-color 0.2s ease;
+    }
+
+    &__switch-thumb {
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        background: #ffffff;
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
+        transition: transform 0.2s ease;
+    }
+
+    &__switch.is-on &__switch-track {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    &__switch.is-on &__switch-thumb {
+        transform: translateX(24px);
+    }
+
+    &__switch-label {
+        min-width: 28px;
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: variables.$color-text-main;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
     &__error {
         color: #f00;
         font-size: 0.95rem;
@@ -309,6 +488,29 @@
 
         &__gender-options {
             gap: 8px;
+        }
+
+        &__notifications-item {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        &__notifications-actions {
+            width: 100%;
+
+            ::ng-deep fd-ui-button {
+                width: 100%;
+            }
+        }
+
+        &__notifications-device-item {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        &__switch {
+            justify-content: space-between;
+            width: 100%;
         }
     }
 }

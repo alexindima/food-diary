@@ -5,6 +5,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
+import { NotificationService } from '../../../services/notification.service';
 import { UserService } from '../../../shared/api/user.service';
 import { UpdateUserDto } from '../../../shared/models/user.data';
 import { ProfileManageFacade } from './profile-manage.facade';
@@ -12,6 +13,12 @@ import { ProfileManageFacade } from './profile-manage.facade';
 describe('ProfileManageFacade', () => {
     let facade: ProfileManageFacade;
     let userService: { getInfo: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteCurrentUser: ReturnType<typeof vi.fn> };
+    let notificationService: {
+        getNotificationPreferences: ReturnType<typeof vi.fn>;
+        updateNotificationPreferences: ReturnType<typeof vi.fn>;
+        getWebPushSubscriptions: ReturnType<typeof vi.fn>;
+        removeWebPushSubscription: ReturnType<typeof vi.fn>;
+    };
     let dialogService: { open: ReturnType<typeof vi.fn> };
     let authService: { onLogout: ReturnType<typeof vi.fn>; startAdminSso: ReturnType<typeof vi.fn> };
     let localizationService: { applyLanguagePreference: ReturnType<typeof vi.fn> };
@@ -30,6 +37,36 @@ describe('ProfileManageFacade', () => {
             getInfo: vi.fn().mockReturnValue(of(user as any)),
             update: vi.fn().mockReturnValue(of(user as any)),
             deleteCurrentUser: vi.fn().mockReturnValue(of(true)),
+        };
+        notificationService = {
+            getNotificationPreferences: vi.fn().mockReturnValue(
+                of({
+                    pushNotificationsEnabled: true,
+                    fastingPushNotificationsEnabled: false,
+                    socialPushNotificationsEnabled: true,
+                }),
+            ),
+            updateNotificationPreferences: vi.fn().mockReturnValue(
+                of({
+                    pushNotificationsEnabled: false,
+                    fastingPushNotificationsEnabled: true,
+                    socialPushNotificationsEnabled: true,
+                }),
+            ),
+            getWebPushSubscriptions: vi.fn().mockReturnValue(
+                of([
+                    {
+                        endpoint: 'https://push.example.com/subscriptions/current',
+                        endpointHost: 'push.example.com',
+                        expirationTimeUtc: null,
+                        locale: 'en',
+                        userAgent: 'Chrome',
+                        createdAtUtc: '2026-04-10T10:00:00Z',
+                        updatedAtUtc: null,
+                    },
+                ]),
+            ),
+            removeWebPushSubscription: vi.fn().mockReturnValue(of(undefined)),
         };
         dialogService = {
             open: vi.fn(),
@@ -51,6 +88,7 @@ describe('ProfileManageFacade', () => {
             providers: [
                 ProfileManageFacade,
                 { provide: UserService, useValue: userService },
+                { provide: NotificationService, useValue: notificationService },
                 { provide: FdUiDialogService, useValue: dialogService },
                 { provide: AuthService, useValue: authService },
                 { provide: LocalizationService, useValue: localizationService },
@@ -71,8 +109,12 @@ describe('ProfileManageFacade', () => {
         facade.initialize();
 
         expect(userService.getInfo).toHaveBeenCalledTimes(1);
-        expect(facade.user()).toEqual(user as any);
+        expect(facade.user()).toEqual(expect.objectContaining(user as any));
         expect(localizationService.applyLanguagePreference).toHaveBeenCalledWith('ru');
+        expect(notificationService.getNotificationPreferences).toHaveBeenCalledTimes(1);
+        expect(notificationService.getWebPushSubscriptions).toHaveBeenCalledTimes(1);
+        expect(facade.user()?.pushNotificationsEnabled).toBe(true);
+        expect(facade.webPushSubscriptions()).toHaveLength(1);
         expect(facade.globalError()).toBeNull();
     });
 
@@ -120,5 +162,36 @@ describe('ProfileManageFacade', () => {
 
         expect(facade.globalError()).toBe('USER_MANAGE.DELETE_ACCOUNT_ERROR');
         expect(facade.isDeleting()).toBe(false);
+    });
+
+    it('updates notification preferences through notification endpoint', async () => {
+        facade.initialize();
+
+        const updatedUser = await facade.updateNotificationPreferences({ pushNotificationsEnabled: false });
+
+        expect(notificationService.updateNotificationPreferences).toHaveBeenCalledWith({ pushNotificationsEnabled: false });
+        expect(updatedUser?.pushNotificationsEnabled).toBe(false);
+        expect(updatedUser?.fastingPushNotificationsEnabled).toBe(true);
+        expect(facade.globalError()).toBeNull();
+    });
+
+    it('removes web push subscription and updates local device list', async () => {
+        facade.initialize();
+
+        const removed = await facade.removeWebPushSubscription('https://push.example.com/subscriptions/current');
+
+        expect(removed).toBe(true);
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith('https://push.example.com/subscriptions/current');
+        expect(facade.webPushSubscriptions()).toHaveLength(0);
+    });
+
+    it('sets update error when notification preferences request fails', async () => {
+        facade.initialize();
+        notificationService.updateNotificationPreferences.mockReturnValueOnce(throwError(() => new Error('preferences failed')));
+
+        const updatedUser = await facade.updateNotificationPreferences({ socialPushNotificationsEnabled: false });
+
+        expect(updatedUser).toBeNull();
+        expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
     });
 });

@@ -28,7 +28,12 @@ public sealed partial class User {
 
     public void SetLanguage(string language) {
         EnsureNotDeleted();
-        if (ApplyPreferencesChanges(dashboardLayoutJson: null, language: language)) {
+        if (ApplyPreferencesChanges(
+            dashboardLayoutJson: null,
+            language: language,
+            pushNotificationsEnabled: null,
+            fastingPushNotificationsEnabled: null,
+            socialPushNotificationsEnabled: null)) {
             SetModified();
         }
     }
@@ -93,13 +98,26 @@ public sealed partial class User {
 
     public void UpdatePreferences(
         string? dashboardLayoutJson = null,
-        string? language = null) {
-        UpdatePreferences(new UserPreferenceUpdate(dashboardLayoutJson, language));
+        string? language = null,
+        bool? pushNotificationsEnabled = null,
+        bool? fastingPushNotificationsEnabled = null,
+        bool? socialPushNotificationsEnabled = null) {
+        UpdatePreferences(new UserPreferenceUpdate(
+            dashboardLayoutJson,
+            language,
+            pushNotificationsEnabled,
+            fastingPushNotificationsEnabled,
+            socialPushNotificationsEnabled));
     }
 
     public void UpdatePreferences(UserPreferenceUpdate update) {
         EnsureNotDeleted();
-        if (ApplyPreferencesChanges(update.DashboardLayoutJson, update.Language)) {
+        if (ApplyPreferencesChanges(
+            update.DashboardLayoutJson,
+            update.Language,
+            update.PushNotificationsEnabled,
+            update.FastingPushNotificationsEnabled,
+            update.SocialPushNotificationsEnabled)) {
             SetModified();
         }
     }
@@ -232,7 +250,12 @@ public sealed partial class User {
         return changed;
     }
 
-    private bool ApplyPreferencesChanges(string? dashboardLayoutJson, string? language) {
+    private bool ApplyPreferencesChanges(
+        string? dashboardLayoutJson,
+        string? language,
+        bool? pushNotificationsEnabled,
+        bool? fastingPushNotificationsEnabled,
+        bool? socialPushNotificationsEnabled) {
         var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
         var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
         var state = GetPreferenceState();
@@ -248,6 +271,21 @@ public sealed partial class User {
 
         if (language is not null && state.Language != normalizedLanguage) {
             state = state with { Language = normalizedLanguage };
+            changed = true;
+        }
+
+        if (pushNotificationsEnabled.HasValue && state.PushNotificationsEnabled != pushNotificationsEnabled.Value) {
+            state = state with { PushNotificationsEnabled = pushNotificationsEnabled.Value };
+            changed = true;
+        }
+
+        if (fastingPushNotificationsEnabled.HasValue && state.FastingPushNotificationsEnabled != fastingPushNotificationsEnabled.Value) {
+            state = state with { FastingPushNotificationsEnabled = fastingPushNotificationsEnabled.Value };
+            changed = true;
+        }
+
+        if (socialPushNotificationsEnabled.HasValue && state.SocialPushNotificationsEnabled != socialPushNotificationsEnabled.Value) {
+            state = state with { SocialPushNotificationsEnabled = socialPushNotificationsEnabled.Value };
             changed = true;
         }
 

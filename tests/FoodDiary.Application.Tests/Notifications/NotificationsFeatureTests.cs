@@ -1,8 +1,12 @@
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
+using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
+using FoodDiary.Application.Common.Abstractions.Audit;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Notifications;
@@ -103,6 +107,28 @@ public class NotificationsFeatureTests {
         Assert.Equal(2, result.Value);
     }
 
+    [Fact]
+    public async Task UpdateNotificationPreferences_UpdatesUserAndWritesAuditLog() {
+        var user = User.Create("notifications@example.com", "hash");
+        var userRepository = new SingleUserRepository(user);
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new UpdateNotificationPreferencesCommandHandler(userRepository, auditLogger);
+
+        var result = await handler.Handle(
+            new UpdateNotificationPreferencesCommand(user.Id.Value, true, false, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.PushNotificationsEnabled);
+        Assert.False(user.FastingPushNotificationsEnabled);
+        Assert.True(user.SocialPushNotificationsEnabled);
+        Assert.Equal("notifications.preferences.updated", auditLogger.Action);
+        Assert.Equal(user.Id, auditLogger.ActorId);
+        Assert.Contains("push=True", auditLogger.Details);
+        Assert.Contains("fasting=False", auditLogger.Details);
+        Assert.Contains("social=True", auditLogger.Details);
+    }
+
     private sealed class InMemoryNotificationRepository : INotificationRepository {
         private readonly List<Notification> _notifications = [];
         public bool MarkAllReadCalled { get; private set; }
@@ -144,5 +170,31 @@ public class NotificationsFeatureTests {
             int batchSize,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
+    }
+
+    private sealed class SingleUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class RecordingAuditLogger : IAuditLogger {
+        public string Action { get; private set; } = string.Empty;
+        public UserId ActorId { get; private set; } = UserId.Empty;
+        public string? Details { get; private set; }
+
+        public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) {
+            Action = action;
+            ActorId = actorId;
+            Details = details;
+        }
     }
 }

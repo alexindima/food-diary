@@ -33,6 +33,9 @@ public sealed class UpdateUserCommandHandlerTests {
             null,
             null,
             null,
+            null,
+            null,
+            null,
             layout,
             null);
 
@@ -72,6 +75,9 @@ public sealed class UpdateUserCommandHandlerTests {
             null,
             null,
             null,
+            null,
+            null,
+            null,
             newAssetId.Value,
             null,
             null);
@@ -93,6 +99,9 @@ public sealed class UpdateUserCommandHandlerTests {
         var result = await handler.Handle(
             new UpdateUserCommand(
                 user.Id.Value,
+                null,
+                null,
+                null,
                 null,
                 null,
                 null,

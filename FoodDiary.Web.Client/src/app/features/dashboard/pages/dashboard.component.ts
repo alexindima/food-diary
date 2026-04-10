@@ -7,7 +7,6 @@ import {
     OnInit,
     computed,
     inject,
-    signal,
     viewChild,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -40,10 +39,6 @@ import { DashboardFacade } from '../lib/dashboard.facade';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingOccurrenceKind } from '../../fasting/models/fasting.data';
-import { NotificationService } from '../../../services/notification.service';
-import { environment } from '../../../../environments/environment';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { PushNotificationService } from '../../../services/push-notification.service';
 
 @Component({
     selector: 'fd-dashboard',
@@ -83,17 +78,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly facade = inject(DashboardFacade);
     private readonly translateService = inject(TranslateService);
-    private readonly notificationService = inject(NotificationService);
-    private readonly toastService = inject(FdUiToastService);
-    public readonly pushNotifications = inject(PushNotificationService);
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
     private resizeObserver: ResizeObserver | null = null;
 
-    public readonly isDevBuild = environment.buildVersion === 'dev';
-    public readonly isSchedulingTestNotification = signal(false);
     public readonly selectedDate = this.facade.selectedDate;
     public readonly isTodaySelected = this.facade.isTodaySelected;
     public readonly snapshot = this.facade.snapshot;
@@ -208,47 +198,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             });
     }
 
-    public scheduleTestNotification(): void {
-        if (this.isSchedulingTestNotification()) {
-            return;
-        }
-
-        this.isSchedulingTestNotification.set(true);
-        this.notificationService
-            .scheduleTestNotification({
-                delaySeconds: 20,
-                type: 'FastingCompleted',
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isSchedulingTestNotification.set(false);
-                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_SCHEDULED'));
-                },
-                error: () => {
-                    this.isSchedulingTestNotification.set(false);
-                    this.toastService.error(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_ERROR'));
-                },
-            });
-    }
-
-    public togglePushNotifications(): void {
-        void this.pushNotifications.toggleSubscription().then(result => {
-            switch (result) {
-                case 'subscribed':
-                    this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
-                    break;
-                case 'unsubscribed':
-                    this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
-                    break;
-                case 'unsupported':
-                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNSUPPORTED'));
-                    break;
-                case 'unavailable':
-                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNAVAILABLE'));
-                    break;
-            }
-        });
+    public async openNotificationSettings(): Promise<void> {
+        await this.navigationService.navigateToProfile();
     }
 
     public async addConsumption(mealType?: string | null): Promise<void> {

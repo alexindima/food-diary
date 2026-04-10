@@ -329,7 +329,7 @@ public sealed class ControllerConventionsTests {
     }
 
     private static bool IsAllowedApplicationAbstractionReference(string filePath) =>
-        string.Equals(Path.GetFileName(filePath), "NotificationsController.cs", StringComparison.Ordinal);
+        Path.GetFileName(filePath) is "NotificationsController.cs" or "NotificationPushController.cs";
 
     private static IEnumerable<string> GetHandleCreatedMethods(SyntaxTree tree) =>
         tree.GetRoot()

@@ -39,6 +39,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasDefaultValue(ActivityLevel.Moderate);
         entity.Property(e => e.Language)
             .HasDefaultValue("en");
+        entity.Property(e => e.PushNotificationsEnabled)
+            .HasDefaultValue(false);
+        entity.Property(e => e.FastingPushNotificationsEnabled)
+            .HasDefaultValue(true);
+        entity.Property(e => e.SocialPushNotificationsEnabled)
+            .HasDefaultValue(true);
         entity.Property(e => e.TelegramUserId)
             .HasColumnType("bigint");
         entity.Property(e => e.DashboardLayoutJson)

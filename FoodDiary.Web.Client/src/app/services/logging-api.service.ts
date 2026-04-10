@@ -6,7 +6,7 @@ import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { SKIP_OBSERVABILITY } from '../constants/observability-context.tokens';
 
 export type ClientTelemetryEvent = {
-    category: 'client_error' | 'route_timing' | 'http_request' | 'web_vital';
+    category: 'client_error' | 'route_timing' | 'http_request' | 'web_vital' | 'user_action';
     name: string;
     level: 'info' | 'warning' | 'error';
     timestamp: string;

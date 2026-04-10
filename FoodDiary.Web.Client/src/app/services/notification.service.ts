@@ -42,6 +42,28 @@ export interface WebPushSubscriptionRequest {
     userAgent: string | null;
 }
 
+export interface NotificationPreferences {
+    pushNotificationsEnabled: boolean;
+    fastingPushNotificationsEnabled: boolean;
+    socialPushNotificationsEnabled: boolean;
+}
+
+export interface WebPushSubscriptionItem {
+    endpoint: string;
+    endpointHost: string;
+    expirationTimeUtc: string | null;
+    locale: string | null;
+    userAgent: string | null;
+    createdAtUtc: string;
+    updatedAtUtc: string | null;
+}
+
+export interface UpdateNotificationPreferencesRequest {
+    pushNotificationsEnabled?: boolean;
+    fastingPushNotificationsEnabled?: boolean;
+    socialPushNotificationsEnabled?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
     private readonly http = inject(HttpClient);
@@ -127,6 +149,18 @@ export class NotificationService {
 
     public scheduleTestNotification(request: ScheduleTestNotificationRequest): Observable<ScheduledNotificationResponse> {
         return this.http.post<ScheduledNotificationResponse>(`${this.baseUrl}/test/schedule`, request);
+    }
+
+    public getNotificationPreferences(): Observable<NotificationPreferences> {
+        return this.http.get<NotificationPreferences>(`${this.baseUrl}/preferences`);
+    }
+
+    public updateNotificationPreferences(request: UpdateNotificationPreferencesRequest): Observable<NotificationPreferences> {
+        return this.http.put<NotificationPreferences>(`${this.baseUrl}/preferences`, request);
+    }
+
+    public getWebPushSubscriptions(): Observable<WebPushSubscriptionItem[]> {
+        return this.http.get<WebPushSubscriptionItem[]>(`${this.baseUrl}/push/subscriptions`);
     }
 
     public getWebPushConfiguration(): Observable<WebPushConfiguration> {

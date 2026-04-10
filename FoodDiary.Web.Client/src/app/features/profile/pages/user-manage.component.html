@@ -163,6 +163,207 @@
                         />
                     </div>
                 </fd-ui-card>
+
+                <fd-ui-card class="user-manage__card user-manage__card--notifications">
+                    <div class="user-manage__card-header">
+                        <div class="user-manage__card-icon user-manage__card-icon--notifications"></div>
+                        <div class="user-manage__card-text">
+                            <div class="user-manage__card-title">{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</div>
+                            <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</div>
+                        </div>
+                    </div>
+                    <div class="user-manage__notifications">
+                        <div class="user-manage__notifications-item">
+                            <div class="user-manage__notifications-copy">
+                                <div class="user-manage__notifications-label">
+                                    {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
+                                </div>
+                                <div class="user-manage__notifications-meta">
+                                    <span class="user-manage__notifications-badge user-manage__notifications-badge--account">
+                                        {{ pushNotificationsAccountStatusKey() | translate }}
+                                    </span>
+                                    <span class="user-manage__notifications-badge">
+                                        {{ pushNotificationsDeviceStatusKey() | translate }}
+                                    </span>
+                                </div>
+                                <div class="user-manage__notifications-hint">
+                                    {{ pushNotificationsHintKey() | translate }}
+                                </div>
+                                <div class="user-manage__notifications-device-note">
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE' | translate }}
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                class="user-manage__switch"
+                                role="switch"
+                                [class.is-on]="pushNotificationsEnabled()"
+                                [class.is-disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
+                                [attr.aria-checked]="pushNotificationsEnabled()"
+                                [disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
+                                (click)="togglePushNotifications()"
+                            >
+                                <span class="user-manage__switch-track">
+                                    <span class="user-manage__switch-thumb"></span>
+                                </span>
+                                <span class="user-manage__switch-label">
+                                    {{
+                                        (pushNotificationsEnabled()
+                                            ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                            : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                        ) | translate
+                                    }}
+                                </span>
+                            </button>
+                        </div>
+
+                        @if (pushNotificationsEnabled()) {
+                            <div class="user-manage__notifications-category-list">
+                                <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-label">
+                                            {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}
+                                        </div>
+                                        <div class="user-manage__notifications-hint">
+                                            {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="user-manage__switch"
+                                        role="switch"
+                                        [class.is-on]="fastingPushNotificationsEnabled()"
+                                        [class.is-disabled]="isUpdatingNotifications()"
+                                        [attr.aria-checked]="fastingPushNotificationsEnabled()"
+                                        [disabled]="isUpdatingNotifications()"
+                                        (click)="toggleFastingPushNotifications()"
+                                    >
+                                        <span class="user-manage__switch-track">
+                                            <span class="user-manage__switch-thumb"></span>
+                                        </span>
+                                        <span class="user-manage__switch-label">
+                                            {{
+                                                (fastingPushNotificationsEnabled()
+                                                    ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                    : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                ) | translate
+                                            }}
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-label">
+                                            {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}
+                                        </div>
+                                        <div class="user-manage__notifications-hint">
+                                            {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="user-manage__switch"
+                                        role="switch"
+                                        [class.is-on]="socialPushNotificationsEnabled()"
+                                        [class.is-disabled]="isUpdatingNotifications()"
+                                        [attr.aria-checked]="socialPushNotificationsEnabled()"
+                                        [disabled]="isUpdatingNotifications()"
+                                        (click)="toggleSocialPushNotifications()"
+                                    >
+                                        <span class="user-manage__switch-track">
+                                            <span class="user-manage__switch-thumb"></span>
+                                        </span>
+                                        <span class="user-manage__switch-label">
+                                            {{
+                                                (socialPushNotificationsEnabled()
+                                                    ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                    : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                ) | translate
+                                            }}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="user-manage__notifications-actions">
+                                <fd-ui-button
+                                    type="button"
+                                    fill="outline"
+                                    variant="secondary"
+                                    icon="notifications_active"
+                                    [disabled]="
+                                        isSchedulingTestNotification() ||
+                                        !pushNotificationsSupported() ||
+                                        !fastingPushNotificationsEnabled()
+                                    "
+                                    (click)="scheduleTestNotification()"
+                                >
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_TEST_BUTTON' | translate }}
+                                </fd-ui-button>
+                            </div>
+                        }
+
+                        <div class="user-manage__notifications-devices">
+                            <div class="user-manage__notifications-devices-header">
+                                <div class="user-manage__notifications-label">
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES' | translate }}
+                                </div>
+                                <div class="user-manage__notifications-hint">
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_HINT' | translate }}
+                                </div>
+                            </div>
+
+                            @if (isLoadingConnectedDevices()) {
+                                <div class="user-manage__notifications-devices-empty">
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate }}
+                                </div>
+                            } @else if (connectedDevices().length === 0) {
+                                <div class="user-manage__notifications-devices-empty">
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate }}
+                                </div>
+                            } @else {
+                                <div class="user-manage__notifications-device-list">
+                                    @for (subscription of connectedDevices(); track subscription.endpoint) {
+                                        <div class="user-manage__notifications-device-item">
+                                            <div class="user-manage__notifications-copy">
+                                                <div class="user-manage__notifications-label">
+                                                    {{ getConnectedDeviceLabel(subscription) }}
+                                                </div>
+                                                <div class="user-manage__notifications-meta">
+                                                    @if (isCurrentDevice(subscription)) {
+                                                        <span
+                                                            class="user-manage__notifications-badge user-manage__notifications-badge--account"
+                                                        >
+                                                            {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_CURRENT' | translate }}
+                                                        </span>
+                                                    }
+                                                </div>
+                                                <div class="user-manage__notifications-hint">
+                                                    {{ getConnectedDeviceMeta(subscription) }}
+                                                </div>
+                                            </div>
+
+                                            <fd-ui-button
+                                                type="button"
+                                                fill="outline"
+                                                variant="secondary"
+                                                size="sm"
+                                                icon="close"
+                                                [disabled]="
+                                                    pushNotificationsBusy() || removingConnectedDeviceEndpoint() === subscription.endpoint
+                                                "
+                                                (click)="removeConnectedDevice(subscription)"
+                                            >
+                                                {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE' | translate }}
+                                            </fd-ui-button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </fd-ui-card>
             </div>
 
             <fd-ui-card class="user-manage__card user-manage__card--privacy">

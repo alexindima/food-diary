@@ -29,6 +29,9 @@ export interface User {
     waterGoal?: number;
     hydrationGoal?: number;
     language?: string;
+    pushNotificationsEnabled: boolean;
+    fastingPushNotificationsEnabled: boolean;
+    socialPushNotificationsEnabled: boolean;
     profileImage?: string;
     profileImageAssetId?: string;
     dashboardLayout?: DashboardLayoutSettings | null;
@@ -51,6 +54,9 @@ export interface UpdateUserFormValues {
     stepGoal: number | null;
     hydrationGoal?: number | null;
     profileImage: ImageSelection | string | null;
+    pushNotificationsEnabled?: boolean | null;
+    fastingPushNotificationsEnabled?: boolean | null;
+    socialPushNotificationsEnabled?: boolean | null;
 }
 
 export class UpdateUserDto {
@@ -64,6 +70,9 @@ export class UpdateUserDto {
     public stepGoal?: number;
     public hydrationGoal?: number;
     public language?: string;
+    public pushNotificationsEnabled?: boolean;
+    public fastingPushNotificationsEnabled?: boolean;
+    public socialPushNotificationsEnabled?: boolean;
     public profileImage?: string;
     public profileImageAssetId?: string;
     public dashboardLayout?: DashboardLayoutSettings | null;
@@ -80,6 +89,15 @@ export class UpdateUserDto {
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);
         this.language = normalizeLanguage((formValues as { language?: string | null }).language);
+        this.pushNotificationsEnabled = normalizeBoolean(
+            (formValues as { pushNotificationsEnabled?: boolean | null }).pushNotificationsEnabled,
+        );
+        this.fastingPushNotificationsEnabled = normalizeBoolean(
+            (formValues as { fastingPushNotificationsEnabled?: boolean | null }).fastingPushNotificationsEnabled,
+        );
+        this.socialPushNotificationsEnabled = normalizeBoolean(
+            (formValues as { socialPushNotificationsEnabled?: boolean | null }).socialPushNotificationsEnabled,
+        );
         const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
         this.profileImage = normalizedImage?.url;
         this.profileImageAssetId = normalizedImage?.assetId;
@@ -129,6 +147,9 @@ const normalizeLanguage = (value: string | null | undefined): string | undefined
     const normalized = value.trim().toLowerCase();
     return normalized ? normalized : undefined;
 };
+
+const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined =>
+    value === null || value === undefined ? undefined : value;
 
 const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | undefined => {
     if (!value) {

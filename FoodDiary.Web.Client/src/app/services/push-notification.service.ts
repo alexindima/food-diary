@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
 import { NotificationService, WebPushSubscriptionRequest } from './notification.service';
 
-export type PushNotificationToggleResult = 'subscribed' | 'unsubscribed' | 'unsupported' | 'unavailable';
+export type PushNotificationEnableResult = 'subscribed' | 'already-subscribed' | 'unsupported' | 'blocked' | 'unavailable';
 
 @Injectable({
     providedIn: 'root',
@@ -23,6 +23,7 @@ export class PushNotificationService {
     public readonly isSupported = signal(this.swPush.isEnabled);
     public readonly isSubscribed = signal(false);
     public readonly isBusy = signal(false);
+    public readonly currentSubscriptionEndpoint = signal<string | null>(null);
 
     public constructor() {
         if (!this.swPush.isEnabled) {
@@ -31,6 +32,7 @@ export class PushNotificationService {
 
         this.swPush.subscription.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(subscription => {
             this.isSubscribed.set(!!subscription);
+            this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
         });
 
         this.swPush.pushSubscriptionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(change => {
@@ -50,6 +52,7 @@ export class PushNotificationService {
         effect(() => {
             if (!this.authService.isAuthenticated()) {
                 this.isSubscribed.set(false);
+                this.currentSubscriptionEndpoint.set(null);
                 return;
             }
 
@@ -59,13 +62,13 @@ export class PushNotificationService {
         });
     }
 
-    public async toggleSubscription(): Promise<PushNotificationToggleResult> {
+    public async ensureSubscription(): Promise<PushNotificationEnableResult> {
         if (!this.swPush.isEnabled) {
             return 'unsupported';
         }
 
         if (this.isBusy()) {
-            return this.isSubscribed() ? 'subscribed' : 'unavailable';
+            return this.isSubscribed() ? 'already-subscribed' : 'unavailable';
         }
 
         this.isBusy.set(true);
@@ -73,15 +76,19 @@ export class PushNotificationService {
         try {
             const current = await firstValueFrom(this.swPush.subscription.pipe(take(1)));
             if (current) {
-                await firstValueFrom(this.notificationService.removeWebPushSubscription(current.endpoint));
-                await current.unsubscribe();
-                this.isSubscribed.set(false);
-                return 'unsubscribed';
+                await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(current)));
+                this.isSubscribed.set(true);
+                this.currentSubscriptionEndpoint.set(current.endpoint);
+                return 'already-subscribed';
             }
 
             const configuration = await firstValueFrom(this.notificationService.getWebPushConfiguration());
             if (!configuration.enabled || !configuration.publicKey) {
                 return 'unavailable';
+            }
+
+            if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+                return 'blocked';
             }
 
             const subscription = await this.swPush.requestSubscription({
@@ -90,8 +97,13 @@ export class PushNotificationService {
 
             await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(subscription)));
             this.isSubscribed.set(true);
+            this.currentSubscriptionEndpoint.set(subscription.endpoint);
             return 'subscribed';
         } catch {
+            if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+                return 'blocked';
+            }
+
             return 'unavailable';
         } finally {
             this.isBusy.set(false);
@@ -102,6 +114,7 @@ export class PushNotificationService {
         try {
             const subscription = await firstValueFrom(this.swPush.subscription.pipe(take(1)));
             this.isSubscribed.set(!!subscription);
+            this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
 
             if (!subscription) {
                 return;
@@ -110,6 +123,7 @@ export class PushNotificationService {
             await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(subscription)));
         } catch {
             this.isSubscribed.set(false);
+            this.currentSubscriptionEndpoint.set(null);
         }
     }
 
@@ -120,6 +134,7 @@ export class PushNotificationService {
         try {
             if (!this.authService.isAuthenticated()) {
                 this.isSubscribed.set(!!newSubscription);
+                this.currentSubscriptionEndpoint.set(newSubscription?.endpoint ?? null);
                 return;
             }
 
@@ -132,8 +147,36 @@ export class PushNotificationService {
             }
 
             this.isSubscribed.set(!!newSubscription);
+            this.currentSubscriptionEndpoint.set(newSubscription?.endpoint ?? null);
         } catch {
             this.isSubscribed.set(!!newSubscription);
+            this.currentSubscriptionEndpoint.set(newSubscription?.endpoint ?? null);
+        }
+    }
+
+    public async removeSubscription(endpoint: string): Promise<boolean> {
+        if (!endpoint || this.isBusy()) {
+            return false;
+        }
+
+        this.isBusy.set(true);
+
+        try {
+            const current = this.swPush.isEnabled ? await firstValueFrom(this.swPush.subscription.pipe(take(1))) : null;
+            if (current?.endpoint === endpoint) {
+                await current.unsubscribe();
+                await firstValueFrom(this.notificationService.removeWebPushSubscription(endpoint));
+                this.isSubscribed.set(false);
+                this.currentSubscriptionEndpoint.set(null);
+                return true;
+            }
+
+            await firstValueFrom(this.notificationService.removeWebPushSubscription(endpoint));
+            return true;
+        } catch {
+            return false;
+        } finally {
+            this.isBusy.set(false);
         }
     }
 

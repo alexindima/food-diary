@@ -15,7 +15,10 @@ public readonly record struct UserProfileState(
     string? ProfileImage,
     ImageAssetId? ProfileImageAssetId,
     string? DashboardLayoutJson,
-    string? Language) {
+    string? Language,
+    bool PushNotificationsEnabled,
+    bool FastingPushNotificationsEnabled,
+    bool SocialPushNotificationsEnabled) {
     public static UserProfileState CreateInitial() {
         return new UserProfileState(
             Username: null,
@@ -29,7 +32,10 @@ public readonly record struct UserProfileState(
             ProfileImage: null,
             ProfileImageAssetId: null,
             DashboardLayoutJson: null,
-            Language: null);
+            Language: null,
+            PushNotificationsEnabled: false,
+            FastingPushNotificationsEnabled: true,
+            SocialPushNotificationsEnabled: true);
     }
 
     public UserPersonalProfileState PersonalInfo => new(
@@ -44,5 +50,10 @@ public readonly record struct UserProfileState(
 
     public UserProfileMediaState Media => new(ProfileImage, ProfileImageAssetId);
 
-    public UserPreferenceState Preferences => new(DashboardLayoutJson, Language);
+    public UserPreferenceState Preferences => new(
+        DashboardLayoutJson,
+        Language,
+        PushNotificationsEnabled,
+        FastingPushNotificationsEnabled,
+        SocialPushNotificationsEnabled);
 }

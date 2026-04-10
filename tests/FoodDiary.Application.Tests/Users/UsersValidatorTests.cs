@@ -96,14 +96,14 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateUser_WithNullUserId_HasError() {
         var v = new UpdateUserCommandValidator();
-        var result = await v.TestValidateAsync(new UpdateUserCommand(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
+        var result = await v.TestValidateAsync(new UpdateUserCommand(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateUser_WithNegativeWeight_HasError() {
         var v = new UpdateUserCommandValidator();
-        var result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), null, null, null, null, null, -1, null, null, null, null, null, null, null, null, null));
+        var result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), null, null, null, null, null, -1, null, null, null, null, null, null, null, null, null, null, null, null));
         result.ShouldHaveValidationErrorFor(c => c.Weight);
     }
 

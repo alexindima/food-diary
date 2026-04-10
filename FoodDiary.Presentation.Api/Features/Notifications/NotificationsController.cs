@@ -1,4 +1,4 @@
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
@@ -16,8 +16,7 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 public class NotificationsController(
     ISender mediator,
     INotificationTestScheduler notificationTestScheduler,
-    IWebPushSubscriptionRepository webPushSubscriptionRepository,
-    IWebPushConfigurationProvider webPushConfigurationProvider)
+    IAuditLogger auditLogger)
     : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<NotificationHttpResponse>>(StatusCodes.Status200OK)]
@@ -50,74 +49,29 @@ public class NotificationsController(
         [FromCurrentUser] Guid userId,
         [FromBody] ScheduleTestNotificationHttpRequest request) {
         var response = await notificationTestScheduler.ScheduleAsync(userId, request.DelaySeconds, request.Type);
+        auditLogger.Log(
+            "notifications.test.scheduled",
+            new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
+            "Notification",
+            request.Type,
+            $"delaySeconds={response.DelaySeconds};scheduledAtUtc={response.ScheduledAtUtc:O}");
         return new ObjectResult(response) { StatusCode = StatusCodes.Status202Accepted };
     }
 
-    [HttpGet("push/config")]
-    [ProducesResponseType<WebPushConfigurationHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetWebPushConfiguration() {
-        var configuration = webPushConfigurationProvider.GetClientConfiguration();
-        IActionResult response = new OkObjectResult(new WebPushConfigurationHttpResponse(configuration.Enabled, configuration.PublicKey));
-        return Task.FromResult(response);
+    [HttpGet("preferences")]
+    [ProducesResponseType<NotificationPreferencesHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetNotificationPreferences([FromCurrentUser] Guid userId) {
+        return HandleOk(userId.ToNotificationPreferencesQuery(), static value => value.ToHttpResponse());
     }
 
-    [HttpPut("push/subscription")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpPut("preferences")]
+    [ProducesResponseType<NotificationPreferencesHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpsertWebPushSubscription(
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateNotificationPreferences(
         [FromCurrentUser] Guid userId,
-        [FromBody] UpsertWebPushSubscriptionHttpRequest request) {
-        if (string.IsNullOrWhiteSpace(request.Endpoint)
-            || string.IsNullOrWhiteSpace(request.Keys?.P256dh)
-            || string.IsNullOrWhiteSpace(request.Keys.Auth)) {
-            return new BadRequestObjectResult(new ApiErrorHttpResponse(
-                "Validation.Invalid",
-                "Endpoint and subscription keys are required.",
-                HttpContext.TraceIdentifier));
-        }
-
-        var existing = await webPushSubscriptionRepository.GetByEndpointAsync(request.Endpoint, asTracking: true, HttpContext.RequestAborted);
-        if (existing is null) {
-            var subscription = FoodDiary.Domain.Entities.Notifications.WebPushSubscription.Create(
-                new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
-                request.Endpoint,
-                request.Keys.P256dh,
-                request.Keys.Auth,
-                request.ExpirationTime,
-                request.Locale,
-                request.UserAgent);
-
-            await webPushSubscriptionRepository.AddAsync(subscription, HttpContext.RequestAborted);
-            return new NoContentResult();
-        }
-
-        existing.Refresh(
-            new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
-            request.Keys.P256dh,
-            request.Keys.Auth,
-            request.ExpirationTime,
-            request.Locale,
-            request.UserAgent);
-
-        await webPushSubscriptionRepository.UpdateAsync(existing, HttpContext.RequestAborted);
-        return new NoContentResult();
-    }
-
-    [HttpDelete("push/subscription")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RemoveWebPushSubscription(
-        [FromCurrentUser] Guid userId,
-        [FromBody] RemoveWebPushSubscriptionHttpRequest request) {
-        if (string.IsNullOrWhiteSpace(request.Endpoint)) {
-            return new NoContentResult();
-        }
-
-        var existing = await webPushSubscriptionRepository.GetByEndpointAsync(request.Endpoint, asTracking: true, HttpContext.RequestAborted);
-        if (existing is null || existing.UserId.Value != userId) {
-            return new NoContentResult();
-        }
-
-        await webPushSubscriptionRepository.DeleteAsync(existing, HttpContext.RequestAborted);
-        return new NoContentResult();
+        [FromBody] UpdateNotificationPreferencesHttpRequest request) {
+        return HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
     }
 }

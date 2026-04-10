@@ -58,6 +58,9 @@ public sealed partial class User : AggregateRoot<UserId> {
     public ImageAssetId? ProfileImageAssetId { get; private set; }
     public string? DashboardLayoutJson { get; private set; }
     public string? Language { get; private set; }
+    public bool PushNotificationsEnabled { get; private set; }
+    public bool FastingPushNotificationsEnabled { get; private set; }
+    public bool SocialPushNotificationsEnabled { get; private set; }
     public long? TelegramUserId { get; private set; }
     public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
     public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
@@ -278,7 +281,10 @@ public sealed partial class User : AggregateRoot<UserId> {
             ProfileImage,
             ProfileImageAssetId,
             DashboardLayoutJson,
-            Language);
+            Language,
+            PushNotificationsEnabled,
+            FastingPushNotificationsEnabled,
+            SocialPushNotificationsEnabled);
     }
 
     private UserPersonalProfileState GetPersonalProfileState() {
@@ -322,6 +328,9 @@ public sealed partial class User : AggregateRoot<UserId> {
     private void ApplyPreferenceState(UserPreferenceState state) {
         DashboardLayoutJson = state.DashboardLayoutJson;
         Language = state.Language;
+        PushNotificationsEnabled = state.PushNotificationsEnabled;
+        FastingPushNotificationsEnabled = state.FastingPushNotificationsEnabled;
+        SocialPushNotificationsEnabled = state.SocialPushNotificationsEnabled;
     }
 
     private void ApplyProfileMediaState(UserProfileMediaState state) {

@@ -94,6 +94,59 @@ export class FrontendObservabilityService {
         });
     }
 
+    public recordNotificationSettingsViewed(details: Record<string, unknown>): void {
+        this.send({
+            category: 'user_action',
+            name: 'notifications.settings.viewed',
+            level: 'info',
+            timestamp: new Date().toISOString(),
+            location: this.getLocation(),
+            route: this.router.url,
+            buildVersion: environment.buildVersion,
+            details,
+        });
+    }
+
+    public recordNotificationPreferenceChanged(
+        preference: 'push' | 'fasting' | 'social',
+        enabled: boolean,
+        details?: Record<string, unknown>,
+    ): void {
+        this.send({
+            category: 'user_action',
+            name: 'notifications.preference.changed',
+            level: 'info',
+            timestamp: new Date().toISOString(),
+            location: this.getLocation(),
+            route: this.router.url,
+            outcome: enabled ? 'enabled' : 'disabled',
+            buildVersion: environment.buildVersion,
+            details: {
+                preference,
+                enabled,
+                ...details,
+            },
+        });
+    }
+
+    public recordNotificationSubscriptionEvent(
+        name: 'subscription.ensure' | 'subscription.remove' | 'test-push.schedule',
+        outcome: 'success' | 'blocked' | 'unsupported' | 'unavailable' | 'failed',
+        details?: Record<string, unknown>,
+    ): void {
+        this.send({
+            category: 'user_action',
+            name: `notifications.${name}`,
+            level: outcome === 'failed' ? 'warning' : 'info',
+            timestamp: new Date().toISOString(),
+            location: this.getLocation(),
+            route: this.router.url,
+            outcome,
+            buildVersion: environment.buildVersion,
+            details,
+        });
+    }
+
     private observeRouteTimings(): void {
         this.router.events
             .pipe(
