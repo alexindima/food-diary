@@ -1371,6 +1371,44 @@
       ]
     },
     {
+      "Path": "/api/v{version}/notifications/push/config",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications/push/subscription",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "500"
+          ]
+        },
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/notifications/read-all",
       "Operations": [
         {
@@ -1378,6 +1416,20 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "204",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications/test/schedule",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "202",
             "401",
             "500"
           ]
