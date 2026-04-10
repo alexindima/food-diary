@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.JobManager.Services;
 using Hangfire;
@@ -195,6 +196,10 @@ public sealed class JobsTests {
             recurringJobManager,
             verifier,
             Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new NotificationCleanupOptions {
+                TransientTypes = ["Test"],
+                Cron = "15 4 * * *",
+            }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
             new ImageCleanupJob(
                 new RecordingImageCleanupService([0]),
@@ -202,6 +207,12 @@ public sealed class JobsTests {
                 new FixedDateTimeProvider(DateTime.UtcNow),
                 new JobExecutionStateTracker(),
                 NullLogger<ImageCleanupJob>.Instance),
+            new NotificationCleanupJob(
+                new RecordingNotificationCleanupService([0]),
+                Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"] }),
+                new FixedDateTimeProvider(DateTime.UtcNow),
+                new JobExecutionStateTracker(),
+                NullLogger<NotificationCleanupJob>.Instance),
             new UserCleanupJob(
                 new RecordingUserCleanupService([0]),
                 Options.Create(new UserCleanupOptions()),
@@ -212,10 +223,10 @@ public sealed class JobsTests {
         await service.StartAsync(CancellationToken.None);
 
         Assert.Equal(
-            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.UsersCleanup],
+            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.NotificationsCleanup, RecurringJobIds.UsersCleanup],
             recurringJobManager.JobIds);
         Assert.Equal(
-            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.UsersCleanup],
+            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.NotificationsCleanup, RecurringJobIds.UsersCleanup],
             verifier.ExpectedJobIds);
     }
 
@@ -227,6 +238,10 @@ public sealed class JobsTests {
             recurringJobManager,
             verifier,
             Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new NotificationCleanupOptions {
+                TransientTypes = ["Test"],
+                Cron = "15 4 * * *",
+            }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
             new ImageCleanupJob(
                 new RecordingImageCleanupService([0]),
@@ -234,6 +249,12 @@ public sealed class JobsTests {
                 new FixedDateTimeProvider(DateTime.UtcNow),
                 new JobExecutionStateTracker(),
                 NullLogger<ImageCleanupJob>.Instance),
+            new NotificationCleanupJob(
+                new RecordingNotificationCleanupService([0]),
+                Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"] }),
+                new FixedDateTimeProvider(DateTime.UtcNow),
+                new JobExecutionStateTracker(),
+                NullLogger<NotificationCleanupJob>.Instance),
             new UserCleanupJob(
                 new RecordingUserCleanupService([0]),
                 Options.Create(new UserCleanupOptions()),
@@ -347,6 +368,18 @@ public sealed class JobsTests {
             OlderThanValues.Add(olderThanUtc);
             BatchSizes.Add(batchSize);
             ReassignUserIds.Add(reassignUserId);
+            var value = _results.Count > 0 ? _results.Dequeue() : 0;
+            return Task.FromResult(value);
+        }
+    }
+
+    private sealed class RecordingNotificationCleanupService(IEnumerable<int> results) : INotificationCleanupService {
+        private readonly Queue<int> _results = new(results);
+
+        public List<NotificationCleanupPolicy> Policies { get; } = [];
+
+        public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) {
+            Policies.Add(policy);
             var value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
