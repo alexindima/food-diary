@@ -1089,6 +1089,15 @@ public class DietologistFeatureTests {
             throw new NotSupportedException();
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken ct = default) =>
             throw new NotSupportedException();
+        public Task<int> DeleteExpiredBatchAsync(
+            IReadOnlyCollection<string> transientTypes,
+            DateTime transientReadOlderThanUtc,
+            DateTime transientUnreadOlderThanUtc,
+            DateTime standardReadOlderThanUtc,
+            DateTime standardUnreadOlderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     private sealed class StubPasswordHasher(bool verifyResult = true) : IPasswordHasher {

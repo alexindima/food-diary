@@ -134,5 +134,15 @@ public class NotificationsFeatureTests {
             var items = _notifications.Where(n => n.UserId == userId).Take(limit).ToList();
             return Task.FromResult<IReadOnlyList<Notification>>(items);
         }
+
+        public Task<int> DeleteExpiredBatchAsync(
+            IReadOnlyCollection<string> transientTypes,
+            DateTime transientReadOlderThanUtc,
+            DateTime transientUnreadOlderThanUtc,
+            DateTime standardReadOlderThanUtc,
+            DateTime standardUnreadOlderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
     }
 }

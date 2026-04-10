@@ -225,6 +225,9 @@
             [attr.aria-expanded]="isMobileUserOpen()"
         >
             <mat-icon>person</mat-icon>
+            @if (unreadNotificationCount() > 0) {
+                <span class="sidebar-mobile__item-dot" aria-hidden="true"></span>
+            }
             <span class="sidebar-mobile__label">{{ 'SIDEBAR.USER' | translate }}</span>
         </button>
     </div>
@@ -303,11 +306,18 @@
 
 @if (isMobileUserOpen()) {
     <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
+        <button type="button" class="sidebar-mobile__sheet-action" (click)="openNotificationsFromMobileMenu()">
+            <mat-icon>notifications</mat-icon>
+            <span>{{ 'NOTIFICATIONS.TITLE' | translate }}</span>
+            @if (unreadNotificationCount() > 0) {
+                <span class="sidebar-mobile__sheet-badge">{{ unreadNotificationCount() }}</span>
+            }
+        </button>
         <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>settings</mat-icon>
             <span>{{ 'HEADER.ACCOUNT' | translate }}</span>
         </a>
-        <button type="button" (click)="logout(); closeMobileMenus()">
+        <button type="button" class="sidebar-mobile__sheet-logout" (click)="logout(); closeMobileMenus()">
             <mat-icon>logout</mat-icon>
             <span>{{ 'HEADER.LOGOUT' | translate }}</span>
         </button>

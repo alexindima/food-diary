@@ -170,6 +170,14 @@ public class RecipeCommentsFeatureTests {
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<int> DeleteExpiredBatchAsync(
+            IReadOnlyCollection<string> transientTypes,
+            DateTime transientReadOlderThanUtc,
+            DateTime transientUnreadOlderThanUtc,
+            DateTime standardReadOlderThanUtc,
+            DateTime standardUnreadOlderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class StubRecipeRepository(Recipe? recipe) : IRecipeRepository {

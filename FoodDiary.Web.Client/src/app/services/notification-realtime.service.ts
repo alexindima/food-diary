@@ -68,7 +68,7 @@ export class NotificationRealtimeService {
 
         this.connection.onreconnected(() => {
             this.notificationService.fetchUnreadCount();
-            this.notificationService.notifyNotificationsChanged();
+            this.notificationService.refreshNotifications();
             this.connectedSignal.set(true);
         });
 
@@ -83,6 +83,7 @@ export class NotificationRealtimeService {
             await this.connection.start();
             this.connectedSignal.set(true);
             this.notificationService.fetchUnreadCount();
+            this.notificationService.ensureNotificationsLoaded();
         } catch (error) {
             this.connectedSignal.set(false);
             if (environment.buildVersion === 'dev') {

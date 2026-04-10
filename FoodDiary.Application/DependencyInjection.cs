@@ -8,6 +8,8 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Images.Services;
+using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Notifications.Services;
 using FluentValidation;
 using System.Reflection;
 
@@ -30,6 +32,7 @@ public static class DependencyInjection {
         services.AddScoped<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
+        services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
 

@@ -66,4 +66,42 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
                 .SetProperty(n => n.ModifiedOnUtc, DateTime.UtcNow),
                 cancellationToken);
     }
+
+    public async Task<int> DeleteExpiredBatchAsync(
+        IReadOnlyCollection<string> transientTypes,
+        DateTime transientReadOlderThanUtc,
+        DateTime transientUnreadOlderThanUtc,
+        DateTime standardReadOlderThanUtc,
+        DateTime standardUnreadOlderThanUtc,
+        int batchSize,
+        CancellationToken cancellationToken = default) {
+        if (batchSize <= 0) {
+            return 0;
+        }
+
+        var transientTypeList = transientTypes
+            .Where(static type => !string.IsNullOrWhiteSpace(type))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        var candidates = await context.Notifications
+            .Where(n =>
+                (transientTypeList.Contains(n.Type) &&
+                 ((n.IsRead && n.CreatedOnUtc < transientReadOlderThanUtc) ||
+                  (!n.IsRead && n.CreatedOnUtc < transientUnreadOlderThanUtc))) ||
+                (!transientTypeList.Contains(n.Type) &&
+                 ((n.IsRead && n.CreatedOnUtc < standardReadOlderThanUtc) ||
+                  (!n.IsRead && n.CreatedOnUtc < standardUnreadOlderThanUtc))))
+            .OrderBy(n => n.CreatedOnUtc)
+            .Take(batchSize)
+            .ToListAsync(cancellationToken);
+
+        if (candidates.Count == 0) {
+            return 0;
+        }
+
+        context.Notifications.RemoveRange(candidates);
+        await context.SaveChangesAsync(cancellationToken);
+        return candidates.Count;
+    }
 }

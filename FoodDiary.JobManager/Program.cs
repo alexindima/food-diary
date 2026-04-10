@@ -19,6 +19,11 @@ builder.Services.AddOptions<UserCleanupOptions>()
     .Validate(UserCleanupOptions.HasValidConfiguration,
         "UserCleanup configuration requires positive RetentionDays/BatchSize, a non-empty Cron, and a valid optional ReassignUserId GUID.")
     .ValidateOnStart();
+builder.Services.AddOptions<NotificationCleanupOptions>()
+    .Bind(builder.Configuration.GetSection(NotificationCleanupOptions.SectionName))
+    .Validate(NotificationCleanupOptions.HasValidConfiguration,
+        "NotificationCleanup configuration requires positive retention days/batch size and a non-empty Cron.")
+    .ValidateOnStart();
 
 builder.Services.AddHangfire((sp, config) => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -32,6 +37,7 @@ builder.Services.AddHangfire((sp, config) => {
 builder.Services.AddHangfireServer();
 
 builder.Services.AddSingleton<ImageCleanupJob>();
+builder.Services.AddSingleton<NotificationCleanupJob>();
 builder.Services.AddSingleton<UserCleanupJob>();
 builder.Services.AddSingleton<IJobExecutionStateTracker, JobExecutionStateTracker>();
 builder.Services.AddSingleton<IRecurringJobRegistrationVerifier, HangfireRecurringJobRegistrationVerifier>();

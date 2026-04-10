@@ -89,6 +89,7 @@ export class SidebarComponent {
     private readonly notificationSync = effect(() => {
         if (this.isAuthenticated()) {
             this.notificationService.fetchUnreadCount();
+            this.notificationService.ensureNotificationsLoaded();
         }
     });
 
@@ -116,6 +117,11 @@ export class SidebarComponent {
         this.dialogService.open<NotificationsDialogComponent, null, void>(NotificationsDialogComponent, {
             size: 'md',
         });
+    }
+
+    protected openNotificationsFromMobileMenu(): void {
+        this.closeMobileMenus();
+        this.openNotifications();
     }
 
     protected toggleMobileFood(): void {

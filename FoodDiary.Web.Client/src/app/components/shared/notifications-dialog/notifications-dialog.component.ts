@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,15 +22,12 @@ export class NotificationsDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<NotificationsDialogComponent, void>>(FdUiDialogRef);
     private readonly notificationService = inject(NotificationService);
 
-    protected readonly notifications = signal<NotificationItem[]>([]);
-    protected readonly isLoading = signal(true);
+    protected readonly notifications = this.notificationService.notifications;
+    protected readonly isLoading = this.notificationService.notificationsLoading;
     protected readonly isMarkingAllRead = signal(false);
 
     public constructor() {
-        effect(() => {
-            this.notificationService.refreshVersion();
-            untracked(() => this.loadNotifications());
-        });
+        this.notificationService.ensureNotificationsLoaded();
     }
 
     protected close(): void {
@@ -42,14 +39,7 @@ export class NotificationsDialogComponent {
             return;
         }
 
-        this.notificationService
-            .markAsRead(notification.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.notifications.update(items => items.map(item => (item.id === notification.id ? { ...item, isRead: true } : item)));
-                },
-            });
+        this.notificationService.markAsRead(notification.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     protected markAllAsRead(): void {
@@ -63,7 +53,6 @@ export class NotificationsDialogComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
-                    this.notifications.update(items => items.map(item => ({ ...item, isRead: true })));
                     this.isMarkingAllRead.set(false);
                 },
                 error: () => {
@@ -74,22 +63,5 @@ export class NotificationsDialogComponent {
 
     protected hasUnreadNotifications(): boolean {
         return this.notifications().some(item => !item.isRead);
-    }
-
-    private loadNotifications(): void {
-        this.isLoading.set(true);
-        this.notificationService
-            .getNotifications()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: notifications => {
-                    this.notifications.set(notifications);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.notifications.set([]);
-                    this.isLoading.set(false);
-                },
-            });
     }
 }
