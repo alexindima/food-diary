@@ -8,7 +8,7 @@ using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

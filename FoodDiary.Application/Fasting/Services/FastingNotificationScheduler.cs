@@ -1,10 +1,10 @@
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Services;
 

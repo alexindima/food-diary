@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Common;

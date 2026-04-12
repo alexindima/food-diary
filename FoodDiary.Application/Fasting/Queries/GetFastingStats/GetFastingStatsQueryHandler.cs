@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -47,7 +48,7 @@ public class GetFastingStatsQueryHandler(
         return Result.Success(new FastingStatsModel(totalCompleted, currentStreak, Math.Round(avgDuration, 1)));
     }
 
-    private static int CalculateCurrentStreak(IReadOnlyList<Domain.Entities.Tracking.FastingOccurrence> completedOccurrences, DateTime todayUtcDate) {
+    private static int CalculateCurrentStreak(IReadOnlyList<FastingOccurrence> completedOccurrences, DateTime todayUtcDate) {
         if (completedOccurrences.Count == 0) {
             return 0;
         }

@@ -5,6 +5,7 @@ using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

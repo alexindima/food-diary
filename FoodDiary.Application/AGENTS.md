@@ -16,6 +16,8 @@ Keep namespaces aligned with folder paths.
 ## CQRS + Validation
 - Commands/queries with focused handlers.
 - FluentValidation validators per request model.
+- Prefer a dedicated `{RequestName}Validator` for request-shape validation instead of embedding those checks in handlers.
+- Keep handler-side validation only for runtime/domain guards that depend on repository state, strongly typed ID construction, enum parsing, or aggregate/value-object invariants.
 - Reuse feature-level common models from `Feature/Common/`.
 
 ## Domain Interaction

@@ -4,8 +4,8 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 

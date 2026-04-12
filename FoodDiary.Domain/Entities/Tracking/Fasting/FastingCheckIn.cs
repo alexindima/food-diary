@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Domain.Entities.Tracking.Fasting;
 
 public sealed class FastingCheckIn : Entity<FastingCheckInId> {
     private const int NotesMaxLength = 500;

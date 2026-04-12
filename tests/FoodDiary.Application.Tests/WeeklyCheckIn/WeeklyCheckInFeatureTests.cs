@@ -89,7 +89,7 @@ public class WeeklyCheckInFeatureTests {
             userRepo ?? new InMemoryUserRepository(),
             new StubDateTimeProvider());
 
-    // ── Test Doubles ──
+    // Test Doubles
 
     private sealed class StubMealRepository : IMealRepository {
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(

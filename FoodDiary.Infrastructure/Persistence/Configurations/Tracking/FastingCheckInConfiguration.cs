@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;

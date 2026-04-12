@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Domain.Entities.Tracking.Fasting;
 
 public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     private const int NotesMaxLength = 500;

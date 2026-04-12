@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

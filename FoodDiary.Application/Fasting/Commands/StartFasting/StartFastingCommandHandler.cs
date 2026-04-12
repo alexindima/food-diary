@@ -7,6 +7,7 @@ using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -69,7 +70,7 @@ public class StartFastingCommandHandler(
         };
     }
 
-    private static Result<(Domain.Entities.Tracking.FastingPlan Plan, Domain.Entities.Tracking.FastingOccurrence Occurrence)> CreatePlanAndOccurrence(
+    private static Result<(FastingPlan Plan, FastingOccurrence Occurrence)> CreatePlanAndOccurrence(
         StartFastingCommand command,
         UserId userId,
         FastingPlanType planType,
@@ -80,32 +81,32 @@ public class StartFastingCommandHandler(
                 FastingPlanType.Intermittent => CreateIntermittent(command, userId, startedAtUtc, notes),
                 FastingPlanType.Extended => CreateExtended(command, userId, startedAtUtc, notes),
                 FastingPlanType.Cyclic => CreateCyclic(command, userId, startedAtUtc, notes),
-                _ => Result.Failure<(Domain.Entities.Tracking.FastingPlan, Domain.Entities.Tracking.FastingOccurrence)>(Errors.Fasting.InvalidProtocol)
+                _ => Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol)
             };
         } catch (ArgumentOutOfRangeException) {
-            return Result.Failure<(Domain.Entities.Tracking.FastingPlan, Domain.Entities.Tracking.FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         } catch (ArgumentException) {
-            return Result.Failure<(Domain.Entities.Tracking.FastingPlan, Domain.Entities.Tracking.FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
     }
 
-    private static Result<(Domain.Entities.Tracking.FastingPlan Plan, Domain.Entities.Tracking.FastingOccurrence Occurrence)> CreateIntermittent(
+    private static Result<(FastingPlan Plan, FastingOccurrence Occurrence)> CreateIntermittent(
         StartFastingCommand command,
         UserId userId,
         DateTime startedAtUtc,
         string? notes) {
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
             !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out var protocol)) {
-            return Result.Failure<(Domain.Entities.Tracking.FastingPlan, Domain.Entities.Tracking.FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 
-        var duration = command.PlannedDurationHours ?? Domain.Entities.Tracking.FastingSession.GetDefaultDuration(protocol);
+        var duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
         if (protocol == FastingProtocol.CustomIntermittent && (duration < 1 || duration >= 24)) {
-            return Result.Failure<(Domain.Entities.Tracking.FastingPlan, Domain.Entities.Tracking.FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 
-        var plan = Domain.Entities.Tracking.FastingPlan.CreateIntermittent(userId, protocol, duration, 24 - duration, startedAtUtc);
-        var occurrence = Domain.Entities.Tracking.FastingOccurrence.Create(
+        var plan = FastingPlan.CreateIntermittent(userId, protocol, duration, 24 - duration, startedAtUtc);
+        var occurrence = FastingOccurrence.Create(
             plan.Id,
             userId,
             FastingOccurrenceKind.FastingWindow,
@@ -117,19 +118,19 @@ public class StartFastingCommandHandler(
         return Result.Success((plan, occurrence));
     }
 
-    private static Result<(Domain.Entities.Tracking.FastingPlan Plan, Domain.Entities.Tracking.FastingOccurrence Occurrence)> CreateExtended(
+    private static Result<(FastingPlan Plan, FastingOccurrence Occurrence)> CreateExtended(
         StartFastingCommand command,
         UserId userId,
         DateTime startedAtUtc,
         string? notes) {
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
             !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out var protocol)) {
-            return Result.Failure<(Domain.Entities.Tracking.FastingPlan, Domain.Entities.Tracking.FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 
-        var duration = command.PlannedDurationHours ?? Domain.Entities.Tracking.FastingSession.GetDefaultDuration(protocol);
-        var plan = Domain.Entities.Tracking.FastingPlan.CreateExtended(userId, protocol, duration, startedAtUtc);
-        var occurrence = Domain.Entities.Tracking.FastingOccurrence.Create(
+        var duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
+        var plan = FastingPlan.CreateExtended(userId, protocol, duration, startedAtUtc);
+        var occurrence = FastingOccurrence.Create(
             plan.Id,
             userId,
             FastingOccurrenceKind.FastDay,
@@ -141,7 +142,7 @@ public class StartFastingCommandHandler(
         return Result.Success((plan, occurrence));
     }
 
-    private static Result<(Domain.Entities.Tracking.FastingPlan Plan, Domain.Entities.Tracking.FastingOccurrence Occurrence)> CreateCyclic(
+    private static Result<(FastingPlan Plan, FastingOccurrence Occurrence)> CreateCyclic(
         StartFastingCommand command,
         UserId userId,
         DateTime startedAtUtc,
@@ -151,7 +152,7 @@ public class StartFastingCommandHandler(
         var eatDayFastHours = command.CyclicEatDayFastHours ?? 16;
         var eatDayEatingWindowHours = command.CyclicEatDayEatingWindowHours ?? 8;
 
-        var plan = Domain.Entities.Tracking.FastingPlan.CreateCyclic(
+        var plan = FastingPlan.CreateCyclic(
             userId,
             fastDays,
             eatDays,
@@ -159,7 +160,7 @@ public class StartFastingCommandHandler(
             eatDayEatingWindowHours,
             startedAtUtc,
             startedAtUtc);
-        var occurrence = Domain.Entities.Tracking.FastingOccurrence.Create(
+        var occurrence = FastingOccurrence.Create(
             plan.Id,
             userId,
             FastingOccurrenceKind.FastDay,

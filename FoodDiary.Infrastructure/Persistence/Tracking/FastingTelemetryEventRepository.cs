@@ -1,5 +1,5 @@
 using FoodDiary.Application.Fasting.Common;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;

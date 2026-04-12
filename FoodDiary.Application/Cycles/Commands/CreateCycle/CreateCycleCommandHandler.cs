@@ -6,8 +6,8 @@ using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 

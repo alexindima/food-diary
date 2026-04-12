@@ -1,7 +1,7 @@
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Dashboard.Services;
 

@@ -11,6 +11,7 @@ using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Social;

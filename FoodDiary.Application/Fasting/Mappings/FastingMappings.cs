@@ -1,6 +1,6 @@
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Mappings;
 

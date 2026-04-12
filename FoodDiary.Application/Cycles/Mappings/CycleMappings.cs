@@ -1,6 +1,6 @@
 using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Cycles.Mappings;
 

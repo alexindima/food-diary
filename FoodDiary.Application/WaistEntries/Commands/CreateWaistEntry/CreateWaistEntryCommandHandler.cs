@@ -6,8 +6,8 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 

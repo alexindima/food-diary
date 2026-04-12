@@ -152,7 +152,7 @@ public class TdeeCalculatorTests {
     [Fact]
     public void CalculateAdaptive_EmaSmoothing_HandlesNoisyWeights() {
         var baseDate = DateTime.UtcNow.AddDays(-30);
-        // Noisy weights around 80 kg — EMA should smooth them
+        // Noisy weights around 80 kg - EMA should smooth them
         var weights = new List<WeightEntry>();
         var noisy = new[] { 80.5, 79.2, 80.8, 79.5, 80.3, 79.8, 80.1, 79.9, 80.0, 80.2 };
         var daysPerEntry = 30.0 / (noisy.Length - 1);

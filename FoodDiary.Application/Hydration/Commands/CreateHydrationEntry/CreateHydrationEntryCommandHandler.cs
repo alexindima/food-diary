@@ -6,8 +6,8 @@ using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Validators;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 

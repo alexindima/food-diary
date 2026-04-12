@@ -5,9 +5,9 @@ using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 
