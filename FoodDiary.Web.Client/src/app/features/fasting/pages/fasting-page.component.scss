@@ -606,6 +606,14 @@
         font-weight: 600;
     }
 
+    &__history-toggle-buttons {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
     &__history-toggle {
         padding: 0;
         border: 0;
@@ -618,6 +626,14 @@
 
         &:hover {
             color: #5b21b6;
+        }
+
+        &--muted {
+            color: #475569;
+
+            &:hover {
+                color: #334155;
+            }
         }
     }
 
@@ -718,6 +734,10 @@
         &__history-toggle-row {
             align-items: flex-start;
             flex-direction: column;
+        }
+
+        &__history-toggle-buttons {
+            justify-content: flex-start;
         }
 
         &__history-checkin {

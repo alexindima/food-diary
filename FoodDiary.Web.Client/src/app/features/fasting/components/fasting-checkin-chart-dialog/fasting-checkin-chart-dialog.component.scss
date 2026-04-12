@@ -1,0 +1,22 @@
+.fasting-checkin-chart-dialog__body {
+    padding: 16px 20px 20px;
+}
+
+.fasting-checkin-chart-dialog__chart {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.fasting-checkin-chart-dialog__chart canvas {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+}
+
+@media (max-width: 767px) {
+
+    .fasting-checkin-chart-dialog__body {
+        padding: 12px 12px 16px;
+    }
+}

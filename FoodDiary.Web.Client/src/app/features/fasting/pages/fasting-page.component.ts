@@ -26,6 +26,10 @@ import {
     FastingSafetyDialogData,
     FastingSafetyDialogResult,
 } from '../components/fasting-safety-dialog/fasting-safety-dialog.component';
+import {
+    FastingCheckInChartDialogComponent,
+    FastingCheckInChartDialogData,
+} from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
 import { FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
@@ -338,6 +342,27 @@ export class FastingPageComponent implements OnInit {
         this.facade.loadMoreHistory();
     }
 
+    public openSessionCheckInChart(session: FastingSession): void {
+        if (!this.canViewSessionCheckInChart(session)) {
+            return;
+        }
+
+        this.dialogService.open<FastingCheckInChartDialogComponent, FastingCheckInChartDialogData, void>(
+            FastingCheckInChartDialogComponent,
+            {
+                size: 'lg',
+                width: 'min(1440px, calc(100vw - 40px))',
+                maxWidth: 'min(1440px, calc(100vw - 40px))',
+                panelClass: 'fd-ui-dialog-panel--chart',
+                data: {
+                    title: this.translateService.instant('FASTING.CHECK_IN.CHART_TITLE'),
+                    subtitle: this.getHistoryChartSubtitle(session),
+                    checkIns: this.getSessionCheckIns(session),
+                },
+            },
+        );
+    }
+
     public extendByDay(): void {
         this.requestExtendByHours(24);
     }
@@ -466,6 +491,10 @@ export class FastingPageComponent implements OnInit {
 
     public getSessionCheckInCount(session: FastingSession): number {
         return this.getSessionCheckIns(session).length;
+    }
+
+    public canViewSessionCheckInChart(session: FastingSession): boolean {
+        return this.getSessionCheckInCount(session) > 1;
     }
 
     public getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {
@@ -860,6 +889,20 @@ export class FastingPageComponent implements OnInit {
 
     private getSymptomLabel(symptom: string): string {
         return this.translateService.instant(`FASTING.CHECK_IN.SYMPTOMS.${symptom.toUpperCase()}`);
+    }
+
+    private getHistoryChartSubtitle(session: FastingSession): string {
+        return `${this.formatSessionDateLabel(session.startedAtUtc)} · ${this.getHistorySessionTypeLabel(session)} · ${this.getHistoryProtocolDisplay(session)}`;
+    }
+
+    private formatSessionDateLabel(value: string): string {
+        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        }).format(new Date(value));
     }
 
     public getTranslatedMessage(descriptor: FastingMessage, field: 'titleKey' | 'bodyKey'): string {

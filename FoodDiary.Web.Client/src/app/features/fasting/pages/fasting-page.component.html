@@ -569,17 +569,28 @@
                                                         | translate: { count: getSessionCheckInCount(session) }
                                                 }}
                                             </span>
-                                            <button
-                                                type="button"
-                                                class="fasting__history-toggle"
-                                                [attr.aria-expanded]="isHistorySessionExpanded(session.id)"
-                                                (click)="toggleHistorySession(session.id)"
-                                            >
-                                                {{
-                                                    getHistoryCheckInToggleKey(session)
-                                                        | translate: { count: getSessionCheckInCount(session) }
-                                                }}
-                                            </button>
+                                            <div class="fasting__history-toggle-buttons">
+                                                @if (canViewSessionCheckInChart(session)) {
+                                                    <button
+                                                        type="button"
+                                                        class="fasting__history-toggle fasting__history-toggle--muted"
+                                                        (click)="openSessionCheckInChart(session)"
+                                                    >
+                                                        {{ 'FASTING.SHOW_CHECK_IN_CHART' | translate }}
+                                                    </button>
+                                                }
+                                                <button
+                                                    type="button"
+                                                    class="fasting__history-toggle"
+                                                    [attr.aria-expanded]="isHistorySessionExpanded(session.id)"
+                                                    (click)="toggleHistorySession(session.id)"
+                                                >
+                                                    {{
+                                                        getHistoryCheckInToggleKey(session)
+                                                            | translate: { count: getSessionCheckInCount(session) }
+                                                    }}
+                                                </button>
+                                            </div>
                                         </div>
 
                                         @if (isHistorySessionExpanded(session.id)) {

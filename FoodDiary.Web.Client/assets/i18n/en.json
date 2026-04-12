@@ -1724,6 +1724,7 @@
         "HIDE_HISTORY_CHECK_INS": "Hide check-ins",
         "LOAD_MORE_CHECK_INS": "Show more check-ins",
         "HISTORY_CHECK_INS_COUNT": "{{count}} check-ins",
+        "SHOW_CHECK_IN_CHART": "Show chart",
         "CHECK_IN": {
             "TITLE": "Today's check-in",
             "SUBTITLE": "Log how the fast feels so you can notice patterns and stop early if something feels off.",
@@ -1742,6 +1743,9 @@
             "SAVE": "Save check-in",
             "SAVED_TOAST": "Check-in saved",
             "SUMMARY": "Hunger {{hunger}}, energy {{energy}}, mood {{mood}}",
+            "CHART_TITLE": "Check-in chart",
+            "CHART_TOOLTIP_SYMPTOMS": "Symptoms: {{value}}",
+            "CHART_TOOLTIP_NOTES": "Notes: {{value}}",
             "SYMPTOMS": {
                 "HEADACHE": "Headache",
                 "WEAKNESS": "Weakness",

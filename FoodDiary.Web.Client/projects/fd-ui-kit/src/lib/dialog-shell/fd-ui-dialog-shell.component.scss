@@ -15,6 +15,20 @@
     animation: fdDialogShellIn 180ms ease-out forwards;
 }
 
+.fd-ui-dialog-shell .fd-ui-dialog.fd-ui-dialog--size-md {
+    max-width: 560px;
+}
+
+.fd-ui-dialog-shell .fd-ui-dialog.fd-ui-dialog--size-lg {
+    max-width: min(1360px, calc(100vw - 40px));
+}
+
+.cdk-overlay-pane.fd-ui-dialog-panel--chart .fd-ui-dialog-shell .fd-ui-dialog {
+    animation: none;
+    transform: none;
+    opacity: 1;
+}
+
 .fd-ui-dialog-shell--flush .fd-ui-dialog {
     padding: 0;
 }

@@ -1487,6 +1487,7 @@
         "HIDE_HISTORY_CHECK_INS": "Скрыть отметки",
         "LOAD_MORE_CHECK_INS": "Показать еще отметки",
         "HISTORY_CHECK_INS_COUNT": "{{count}} отметок",
+        "SHOW_CHECK_IN_CHART": "Показать график",
         "CHECK_IN": {
             "TITLE": "Самочувствие сегодня",
             "SUBTITLE": "Отмечайте, как переносится голодание, чтобы видеть паттерны и вовремя останавливаться, если становится хуже.",
@@ -1505,6 +1506,9 @@
             "SAVE": "Сохранить отметку",
             "SAVED_TOAST": "Отметка сохранена",
             "SUMMARY": "Голод {{hunger}}, энергия {{energy}}, настроение {{mood}}",
+            "CHART_TITLE": "График отметок",
+            "CHART_TOOLTIP_SYMPTOMS": "Симптомы: {{value}}",
+            "CHART_TOOLTIP_NOTES": "Комментарий: {{value}}",
             "SYMPTOMS": {
                 "HEADACHE": "Головная боль",
                 "WEAKNESS": "Слабость",
