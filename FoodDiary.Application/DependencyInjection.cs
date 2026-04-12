@@ -30,6 +30,7 @@ public static class DependencyInjection {
 
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>();
+        services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();

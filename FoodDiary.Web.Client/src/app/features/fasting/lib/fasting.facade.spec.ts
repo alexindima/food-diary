@@ -76,6 +76,7 @@ describe('FastingFacade', () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-04-13T09:45:00Z'));
 
         fastingService = {
             getOverview: vi.fn().mockReturnValue(of(baseOverview)),
@@ -168,7 +169,14 @@ describe('FastingFacade', () => {
         facade.initialize();
         facade.loadMoreHistory();
 
-        expect(fastingService.getHistory).toHaveBeenCalledWith(expect.objectContaining({ page: 2, limit: 10 }));
+        expect(fastingService.getHistory).toHaveBeenCalledWith(
+            expect.objectContaining({
+                from: '2026-03-01T00:00:00.000Z',
+                to: '2026-05-31T23:59:59.999Z',
+                page: 2,
+                limit: 10,
+            }),
+        );
         expect(facade.history()).toEqual([activeSession, olderSession]);
         expect(facade.historyPage()).toBe(2);
     });
@@ -275,7 +283,7 @@ describe('FastingFacade', () => {
         expect(facade.extendHours()).toBe(24);
     });
 
-    it('reduces target and refreshes overview', () => {
+    it('reduces target locally without overview refresh', () => {
         facade.currentSession.set({
             ...activeSession,
             protocol: 'F36_0',
@@ -295,25 +303,10 @@ describe('FastingFacade', () => {
                 plannedDurationHours: 28,
             }),
         );
-        fastingService.getOverview.mockReturnValueOnce(
-            of({
-                ...baseOverview,
-                currentSession: {
-                    ...activeSession,
-                    protocol: 'F36_0',
-                    planType: 'Extended',
-                    occurrenceKind: 'FastDay',
-                    initialPlannedDurationHours: 36,
-                    addedDurationHours: -8,
-                    plannedDurationHours: 28,
-                },
-            }),
-        );
-
         facade.reduceTargetByHours(8);
 
         expect(fastingService.reduceTarget).toHaveBeenCalledWith({ reducedHours: 8 });
-        expect(fastingService.getOverview).toHaveBeenCalledTimes(1);
+        expect(fastingService.getOverview).not.toHaveBeenCalled();
         expect(facade.currentSession()?.plannedDurationHours).toBe(28);
     });
 });

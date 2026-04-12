@@ -10,6 +10,7 @@ namespace FoodDiary.Application.Fasting.Services;
 
 public sealed class FastingNotificationScheduler(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingCheckInRepository fastingCheckInRepository,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
     IWebPushNotificationSender webPushNotificationSender,
@@ -20,6 +21,13 @@ public sealed class FastingNotificationScheduler(
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
         var now = dateTimeProvider.UtcNow;
         var activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken);
+        var activeOccurrenceIds = activeOccurrences.Select(static x => x.Id).ToArray();
+        var checkIns = activeOccurrenceIds.Length == 0
+            ? []
+            : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken);
+        var checkInLookup = checkIns
+            .GroupBy(static x => x.OccurrenceId)
+            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)group.ToList());
         var usersToPush = new HashSet<Guid>();
         var createdCount = 0;
 
@@ -29,7 +37,8 @@ public sealed class FastingNotificationScheduler(
                 continue;
             }
 
-            createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, now, usersToPush, cancellationToken);
+            checkInLookup.TryGetValue(occurrence.Id, out var occurrenceCheckIns);
+            createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, occurrenceCheckIns, now, usersToPush, cancellationToken);
             createdCount += plan.Type switch {
                 FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken),
                 _ => await ProcessCompletionNotificationAsync(occurrence, plan, now, usersToPush, cancellationToken)
@@ -55,10 +64,11 @@ public sealed class FastingNotificationScheduler(
 
     private async Task<int> ProcessCheckInReminderNotificationsAsync(
         FastingOccurrence occurrence,
+        IReadOnlyList<FastingCheckIn>? checkIns,
         DateTime now,
         ISet<Guid> usersToPush,
         CancellationToken cancellationToken) {
-        if (occurrence.CheckInAtUtc.HasValue) {
+        if (HasExistingCheckIn(occurrence, checkIns)) {
             return 0;
         }
 
@@ -89,6 +99,14 @@ public sealed class FastingNotificationScheduler(
         }
 
         return createdCount;
+    }
+
+    private static bool HasExistingCheckIn(FastingOccurrence occurrence, IReadOnlyList<FastingCheckIn>? checkIns) {
+        if (checkIns is { Count: > 0 }) {
+            return true;
+        }
+
+        return occurrence.CheckInAtUtc.HasValue;
     }
 
     private async Task<int> ProcessCompletionNotificationAsync(

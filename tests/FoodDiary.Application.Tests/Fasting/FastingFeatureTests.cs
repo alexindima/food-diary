@@ -13,10 +13,15 @@ using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
 using FoodDiary.Application.Fasting.Queries.GetFastingStats;
+using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Fasting;
 
@@ -478,7 +483,10 @@ public class FastingFeatureTests {
 
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: current);
         occurrenceRepo.StoredOccurrences.InsertRange(0, [historyOne, historyTwo]);
-        var handler = new GetFastingInsightsQueryHandler(occurrenceRepo, new FixedDateTimeProvider());
+        var handler = new GetFastingInsightsQueryHandler(
+            occurrenceRepo,
+            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository()),
+            new FixedDateTimeProvider());
 
         var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -521,8 +529,9 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         occurrenceRepo.StoredOccurrences.AddRange([latest, earlier]);
         var handler = new GetFastingHistoryQueryHandler(
-            occurrenceRepo,
-            new InMemoryFastingCheckInRepository(latestCheckIn, earlierCheckIn));
+            new FastingAnalyticsService(
+                occurrenceRepo,
+                new InMemoryFastingCheckInRepository(latestCheckIn, earlierCheckIn)));
 
         var result = await handler.Handle(
             new GetFastingHistoryQuery(userId.Value, FixedNow.AddDays(-7), FixedNow, 1, 1),
@@ -542,22 +551,26 @@ public class FastingFeatureTests {
         var now = FixedNow;
 
         var oldCompleted = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-40), 1, 16);
-        oldCompleted.UpdateCheckIn(4, 4, 4, ["weakness"], "old", now.AddDays(-40).AddHours(8));
         oldCompleted.Complete(now.AddDays(-40).AddHours(16));
 
         var completedOne = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-2), 1, 16);
-        completedOne.UpdateCheckIn(2, 4, 4, ["dizziness"], "one", now.AddDays(-2).AddHours(8));
         completedOne.Complete(now.AddDays(-2).AddHours(16));
 
         var completedTwo = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-1), 1, 16);
-        completedTwo.UpdateCheckIn(3, 5, 5, ["dizziness"], "two", now.AddDays(-1).AddHours(8));
         completedTwo.Complete(now.AddDays(-1).AddHours(16));
 
         var active = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now, 1, 16);
+        var oldCheckIn = FastingCheckIn.Create(oldCompleted.Id, userId, 3, 4, 4, ["weakness"], "old", now.AddDays(-40).AddHours(8));
+        var completedOneCheckIn = FastingCheckIn.Create(completedOne.Id, userId, 2, 4, 4, ["dizziness"], "one", now.AddDays(-2).AddHours(8));
+        var completedTwoCheckIn = FastingCheckIn.Create(completedTwo.Id, userId, 3, 5, 5, ["dizziness"], "two", now.AddDays(-1).AddHours(8));
 
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         occurrenceRepo.StoredOccurrences.AddRange([oldCompleted, completedOne, completedTwo, active]);
-        var handler = new GetFastingStatsQueryHandler(occurrenceRepo, new FixedDateTimeProvider());
+        var handler = new GetFastingStatsQueryHandler(
+            new FastingAnalyticsService(
+                occurrenceRepo,
+                new InMemoryFastingCheckInRepository(oldCheckIn, completedOneCheckIn, completedTwoCheckIn)),
+            new FixedDateTimeProvider());
 
         var result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
 
@@ -588,9 +601,11 @@ public class FastingFeatureTests {
 
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current);
         occurrenceRepo.StoredOccurrences.InsertRange(0, [historyOne, historyTwo]);
+        var checkInRepo = new InMemoryFastingCheckInRepository(currentCheckIn);
         var handler = new GetFastingOverviewQueryHandler(
             occurrenceRepo,
-            new InMemoryFastingCheckInRepository(currentCheckIn),
+            checkInRepo,
+            new FastingAnalyticsService(occurrenceRepo, checkInRepo),
             new FixedDateTimeProvider());
 
         var result = await handler.Handle(new GetFastingOverviewQuery(userId.Value), CancellationToken.None);
@@ -603,6 +618,135 @@ public class FastingFeatureTests {
         Assert.Contains(result.Value.Insights.Insights, x => x.Id == "symptom-headache");
         Assert.Equal(1, result.Value.History.Page);
         Assert.True(result.Value.History.Data.Count >= 3);
+    }
+
+    [Fact]
+    public void GetDefaultHistoryWindow_UsesCanonicalUtcMonthWindow() {
+        var service = new FastingAnalyticsService(new InMemoryFastingOccurrenceRepository(), new InMemoryFastingCheckInRepository());
+        var (fromUtc, toUtc) = service.GetDefaultHistoryWindow(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc));
+
+        Assert.Equal(new DateTime(2025, 12, 1, 0, 0, 0, DateTimeKind.Utc), fromUtc);
+        Assert.Equal(new DateTime(2026, 2, 28, 23, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), toUtc);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenOccurrenceHasRealCheckIn_SuppressesCheckInReminder() {
+        var user = User.Create("fasting-notifications@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-13), 1, 36);
+        AttachNavigation(occurrence, plan, user);
+
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(occurrence);
+        var checkInRepo = new InMemoryFastingCheckInRepository(
+            FastingCheckIn.Create(occurrence.Id, user.Id, 2, 4, 4, ["weakness"], "steady", FixedNow.AddHours(-1)));
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            occurrenceRepo,
+            checkInRepo,
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(0, created);
+        Assert.Empty(notificationRepo.Stored);
+        Assert.Empty(webPushSender.Sent);
+        Assert.Empty(notificationPusher.ChangedUsers);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenOnlyLegacySummaryCheckInExists_SuppressesCheckInReminder() {
+        var user = User.Create("fasting-summary@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-13), 1, 36);
+        occurrence.UpdateCheckIn(2, 4, 4, ["weakness"], "legacy", FixedNow.AddHours(-2));
+        AttachNavigation(occurrence, plan, user);
+
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(0, created);
+        Assert.Empty(notificationRepo.Stored);
+        Assert.Empty(webPushSender.Sent);
+        Assert.Empty(notificationPusher.ChangedUsers);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenNoCheckInExists_CreatesReminderAndPushesUnreadCount() {
+        var user = User.Create("fasting-reminder@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-13), 1, 36);
+        AttachNavigation(occurrence, plan, user);
+
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(1, created);
+        Assert.Single(notificationRepo.Stored);
+        Assert.Single(webPushSender.Sent);
+        Assert.Single(notificationPusher.UnreadCountUsers);
+        Assert.Single(notificationPusher.ChangedUsers);
+        Assert.Equal(user.Id.Value, notificationPusher.UnreadCountUsers[0]);
+        Assert.Equal(user.Id.Value, notificationPusher.ChangedUsers[0]);
+        Assert.Equal(NotificationTypes.FastingCheckInReminder, notificationRepo.Stored[0].Type);
+        Assert.Equal($"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}", notificationRepo.Stored[0].ReferenceId);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenPastFollowUpThreshold_CreatesTwoRemindersOnceAndDeduplicatesLaterRuns() {
+        var user = User.Create("fasting-reminder-thresholds@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-21), 1, 36);
+        AttachNavigation(occurrence, plan, user);
+
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var firstCreated = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        var secondCreated = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(2, firstCreated);
+        Assert.Equal(0, secondCreated);
+        Assert.Equal(2, notificationRepo.Stored.Count);
+        Assert.Equal(2, webPushSender.Sent.Count);
+        Assert.Contains(notificationRepo.Stored, x => x.ReferenceId == $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}");
+        Assert.Contains(notificationRepo.Stored, x => x.ReferenceId == $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInFollowUpReminderHours}");
     }
 
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
@@ -707,6 +851,64 @@ public class FastingFeatureTests {
         }
     }
 
+    private sealed class InMemorySchedulerNotificationRepository : INotificationRepository {
+        public List<Notification> Stored { get; } = [];
+
+        public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Notification>>(Stored.Where(x => x.UserId == userId).Take(limit).ToList());
+
+        public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Notification?>(Stored.FirstOrDefault(x => x.Id == id));
+
+        public Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
+            Stored.Add(notification);
+            return Task.FromResult(notification);
+        }
+
+        public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Stored.Any(x => x.UserId == userId && x.Type == type && x.ReferenceId == referenceId));
+
+        public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead));
+
+        public Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<int> DeleteExpiredBatchAsync(
+            IReadOnlyCollection<string> transientTypes,
+            DateTime transientReadOlderThanUtc,
+            DateTime transientUnreadOlderThanUtc,
+            DateTime standardReadOlderThanUtc,
+            DateTime standardUnreadOlderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
+    private sealed class RecordingNotificationPusher : INotificationPusher {
+        public List<Guid> UnreadCountUsers { get; } = [];
+        public List<Guid> ChangedUsers { get; } = [];
+
+        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) {
+            UnreadCountUsers.Add(userId);
+            return Task.CompletedTask;
+        }
+
+        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) {
+            ChangedUsers.Add(userId);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
+        public List<Notification> Sent { get; } = [];
+
+        public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
+            Sent.Add(notification);
+            return Task.CompletedTask;
+        }
+    }
+
     private sealed class StubUnitOfWork : IUnitOfWork {
         public bool HasPendingChanges => false;
         public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -728,5 +930,16 @@ public class FastingFeatureTests {
 
     private sealed class FixedDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => FixedNow;
+    }
+
+    private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan, User user) {
+        SetPrivateProperty(occurrence, nameof(FastingOccurrence.Plan), plan);
+        SetPrivateProperty(occurrence, nameof(FastingOccurrence.User), user);
+    }
+
+    private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
+        var property = typeof(TTarget).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        Assert.NotNull(property);
+        property!.SetValue(target, value);
     }
 }

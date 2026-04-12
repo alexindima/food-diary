@@ -169,8 +169,6 @@ export class FastingFacade {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(session => {
-                this.currentSession.set(session);
-                this.syncCheckInFromSession(session);
                 this.frontendObservability.recordFastingLifecycleEvent('session.started', {
                     sessionId: session.id,
                     protocol: session.protocol,
@@ -179,7 +177,6 @@ export class FastingFacade {
                     occurrenceKind: session.occurrenceKind,
                     ...this.getReminderTelemetryDetails(),
                 });
-                this.startTimer();
                 this.refreshOverview();
             });
     }
@@ -206,14 +203,9 @@ export class FastingFacade {
                         ...this.getReminderTelemetryDetails(),
                     });
                     this.clearPromptStateForSession(session.id);
-                    this.currentSession.set(null);
                     this.resetDraftState();
-                    this.syncCheckInFromSession(null);
                     this.refreshOverview();
                 } else {
-                    this.currentSession.set(session);
-                    this.syncCheckInFromSession(session);
-                    this.startTimer();
                     this.refreshOverview();
                 }
             });
@@ -321,9 +313,7 @@ export class FastingFacade {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(session => {
-                this.currentSession.set(session);
-                this.syncCheckInFromSession(session);
-                this.refreshOverview();
+                this.applyCurrentSessionUpdate(session);
             });
     }
 
@@ -338,17 +328,11 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 if (session.endedAtUtc) {
-                    this.stopTimer();
-                    this.currentSession.set(null);
                     this.resetDraftState();
-                    this.syncCheckInFromSession(null);
+                    this.applyCompletedSessionUpdate(session);
                 } else {
-                    this.currentSession.set(session);
-                    this.syncCheckInFromSession(session);
-                    this.startTimer();
+                    this.applyCurrentSessionUpdate(session);
                 }
-
-                this.refreshOverview();
             });
     }
 
@@ -372,8 +356,6 @@ export class FastingFacade {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(updated => {
-                this.currentSession.set(updated);
-                this.syncCheckInFromSession(updated);
                 this.checkInSavedVersion.update(version => version + 1);
                 this.frontendObservability.recordFastingLifecycleEvent('check-in.saved', {
                     sessionId: updated.id,
@@ -439,10 +421,7 @@ export class FastingFacade {
                 finalize(() => this.isUpdatingCycle.set(false)),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(session => {
-                this.currentSession.set(session);
-                this.syncCheckInFromSession(session);
-                this.startTimer();
+            .subscribe(() => {
                 this.refreshOverview();
             });
     }
@@ -455,10 +434,7 @@ export class FastingFacade {
                 finalize(() => this.isUpdatingCycle.set(false)),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(session => {
-                this.currentSession.set(session);
-                this.syncCheckInFromSession(session);
-                this.startTimer();
+            .subscribe(() => {
                 this.refreshOverview();
             });
     }
@@ -499,6 +475,34 @@ export class FastingFacade {
         }
 
         this.stopTimer();
+    }
+
+    private applyCurrentSessionUpdate(session: FastingSession): void {
+        this.currentSession.set(session);
+        this.syncCheckInFromSession(session);
+        this.upsertHistorySession(session);
+        this.startTimer();
+    }
+
+    private applyCompletedSessionUpdate(session: FastingSession): void {
+        this.stopTimer();
+        this.currentSession.set(null);
+        this.syncCheckInFromSession(null);
+        this.upsertHistorySession(session);
+        this.insightsData.update(current => ({ ...current, alerts: [] }));
+    }
+
+    private upsertHistorySession(session: FastingSession): void {
+        this.history.update(current => {
+            const existingIndex = current.findIndex(item => item.id === session.id);
+            if (existingIndex < 0) {
+                return current;
+            }
+
+            const next = [...current];
+            next[existingIndex] = session;
+            return next;
+        });
     }
 
     private syncCheckInFromSession(session: FastingSession | null): void {
@@ -603,8 +607,8 @@ export class FastingFacade {
 
     private getHistoryRange(): { from: string; to: string } {
         const now = new Date();
-        const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1, 0, 0, 0, 0));
+        const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 2, 1, 0, 0, 0, 0) - 1);
 
         return {
             from: from.toISOString(),
