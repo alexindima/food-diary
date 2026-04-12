@@ -43,14 +43,9 @@ public class GetTdeeInsightQueryHandler(
         var today = dateTimeProvider.UtcNow.Date;
         var periodStart = today.AddDays(-AnalysisPeriodDays);
 
-        var weightsTask = weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
-        var mealsTask = mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
-        var exercisesTask = exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken);
-        await Task.WhenAll(weightsTask, mealsTask, exercisesTask);
-
-        var weights = weightsTask.Result;
-        var meals = mealsTask.Result;
-        var exercises = exercisesTask.Result;
+        var weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
+        var meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
+        var exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken);
 
         var bmr = user.CalculateBmr();
         var estimatedTdee = user.CalculateEstimatedTdee();
