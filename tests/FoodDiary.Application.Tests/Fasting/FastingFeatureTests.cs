@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Abstractions.Persistence;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
+using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Common;
@@ -258,6 +259,48 @@ public class FastingFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Contains("NoActiveSession", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ReduceActiveFastingTarget_WhenSessionIsActive_Succeeds() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
+        var handler = new ReduceActiveFastingTargetCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(72, result.Value.InitialPlannedDurationHours);
+        Assert.Equal(-8, result.Value.AddedDurationHours);
+        Assert.Equal(64, result.Value.PlannedDurationHours);
+        Assert.Equal("Active", result.Value.Status);
+    }
+
+    [Fact]
+    public async Task ReduceActiveFastingTarget_WhenNewTargetAlreadyReached_CompletesSession() {
+        var userId = UserId.New();
+        var now = FixedNow;
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F36_0, 36, now.AddHours(-30));
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, now.AddHours(-30), 1, 36);
+        var handler = new ReduceActiveFastingTargetCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("Completed", result.Value.Status);
+        Assert.NotNull(result.Value.EndedAtUtc);
+        Assert.Equal(FastingPlanStatus.Stopped, plan.Status);
     }
 
     [Fact]

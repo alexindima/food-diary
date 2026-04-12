@@ -10,6 +10,7 @@ import {
     FastingHistoryQuery,
     FastingInsights,
     FastingOverview,
+    ReduceFastingTargetPayload,
     FastingSession,
     FastingStats,
     StartFastingPayload,
@@ -37,6 +38,12 @@ export class FastingService extends ApiService {
     public extend(payload: ExtendFastingPayload): Observable<FastingSession> {
         return this.put<FastingSession>('current/duration', payload).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Extend fasting error', error)),
+        );
+    }
+
+    public reduceTarget(payload: ReduceFastingTargetPayload): Observable<FastingSession> {
+        return this.put<FastingSession>('current/duration/reduce', payload).pipe(
+            catchError((error: HttpErrorResponse) => rethrowApiError('Reduce fasting target error', error)),
         );
     }
 

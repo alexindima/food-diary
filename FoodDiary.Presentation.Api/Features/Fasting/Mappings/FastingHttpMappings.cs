@@ -1,6 +1,7 @@
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
+using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
@@ -34,6 +35,9 @@ public static class FastingHttpMappings {
 
     public static ExtendActiveFastingCommand ToExtendCommand(this ExtendActiveFastingHttpRequest request, Guid userId) =>
         new(userId, request.AdditionalHours);
+
+    public static ReduceActiveFastingTargetCommand ToReduceCommand(this ReduceActiveFastingTargetHttpRequest request, Guid userId) =>
+        new(userId, request.ReducedHours);
 
     public static UpdateCurrentFastingCheckInCommand ToCheckInCommand(this UpdateFastingCheckInHttpRequest request, Guid userId) =>
         new(userId, request.HungerLevel, request.EnergyLevel, request.MoodLevel, request.Symptoms, request.CheckInNotes);

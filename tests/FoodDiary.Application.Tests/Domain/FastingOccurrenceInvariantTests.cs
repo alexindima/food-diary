@@ -44,6 +44,23 @@ public class FastingOccurrenceInvariantTests {
     }
 
     [Fact]
+    public void Reduce_DecreasesTargetHours() {
+        var occurrence = FastingOccurrence.Create(
+            FastingPlanId.New(),
+            UserId.New(),
+            FastingOccurrenceKind.FastDay,
+            DateTime.UtcNow,
+            sequenceNumber: 1,
+            targetHours: 36);
+
+        occurrence.Reduce(8);
+
+        Assert.Equal(36, occurrence.InitialTargetHours);
+        Assert.Equal(-8, occurrence.AddedTargetHours);
+        Assert.Equal(28, occurrence.TargetHours);
+    }
+
+    [Fact]
     public void Postpone_ChangesStatusAndSchedule() {
         var scheduledForUtc = DateTime.UtcNow.AddDays(1);
         var occurrence = FastingOccurrence.Schedule(

@@ -126,6 +126,7 @@ function createFacadeMock(): {
     selectCyclicEatDayProtocol: ReturnType<typeof vi.fn>;
     setCyclicEatDayFastHours: ReturnType<typeof vi.fn>;
     setExtendHours: ReturnType<typeof vi.fn>;
+    setReduceHours: ReturnType<typeof vi.fn>;
     setHungerLevel: ReturnType<typeof vi.fn>;
     setEnergyLevel: ReturnType<typeof vi.fn>;
     setMoodLevel: ReturnType<typeof vi.fn>;
@@ -136,6 +137,7 @@ function createFacadeMock(): {
     dismissPrompt: ReturnType<typeof vi.fn>;
     snoozePrompt: ReturnType<typeof vi.fn>;
     extendByHours: ReturnType<typeof vi.fn>;
+    reduceTargetByHours: ReturnType<typeof vi.fn>;
     skipCyclicDay: ReturnType<typeof vi.fn>;
     postponeCyclicDay: ReturnType<typeof vi.fn>;
     isPromptVisible: ReturnType<typeof vi.fn>;
@@ -143,6 +145,7 @@ function createFacadeMock(): {
     isStarting: ReturnType<typeof signal<boolean>>;
     isEnding: ReturnType<typeof signal<boolean>>;
     isExtending: ReturnType<typeof signal<boolean>>;
+    isReducing: ReturnType<typeof signal<boolean>>;
     isUpdatingCycle: ReturnType<typeof signal<boolean>>;
     isSavingCheckIn: ReturnType<typeof signal<boolean>>;
     currentSession: ReturnType<typeof signal<any>>;
@@ -163,6 +166,7 @@ function createFacadeMock(): {
     cyclicUsesCustomPreset: ReturnType<typeof signal<boolean>>;
     cyclicEatDayFastHours: ReturnType<typeof signal<number>>;
     extendHours: ReturnType<typeof signal<number>>;
+    reduceHours: ReturnType<typeof signal<number>>;
     hungerLevel: ReturnType<typeof signal<number>>;
     energyLevel: ReturnType<typeof signal<number>>;
     moodLevel: ReturnType<typeof signal<number>>;
@@ -191,6 +195,7 @@ function createFacadeMock(): {
         selectCyclicEatDayProtocol: vi.fn(),
         setCyclicEatDayFastHours: vi.fn(),
         setExtendHours: vi.fn(),
+        setReduceHours: vi.fn(),
         setHungerLevel: vi.fn(),
         setEnergyLevel: vi.fn(),
         setMoodLevel: vi.fn(),
@@ -201,6 +206,7 @@ function createFacadeMock(): {
         dismissPrompt: vi.fn(),
         snoozePrompt: vi.fn(),
         extendByHours: vi.fn(),
+        reduceTargetByHours: vi.fn(),
         skipCyclicDay: vi.fn(),
         postponeCyclicDay: vi.fn(),
         isPromptVisible: vi.fn(() => true),
@@ -208,6 +214,7 @@ function createFacadeMock(): {
         isStarting: signal(false),
         isEnding: signal(false),
         isExtending: signal(false),
+        isReducing: signal(false),
         isUpdatingCycle: signal(false),
         isSavingCheckIn: signal(false),
         currentSession: signal<any>(null),
@@ -228,6 +235,7 @@ function createFacadeMock(): {
         cyclicUsesCustomPreset: signal(false),
         cyclicEatDayFastHours: signal(16),
         extendHours: signal(24),
+        reduceHours: signal(4),
         hungerLevel: signal(3),
         energyLevel: signal(3),
         moodLevel: signal(3),

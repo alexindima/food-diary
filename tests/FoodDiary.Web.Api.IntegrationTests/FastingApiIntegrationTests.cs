@@ -100,6 +100,27 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.Single(payload.Data[0].CheckIns);
     }
 
+    [Fact]
+    public async Task ReduceDuration_WhenAdjustedTargetAlreadyReached_CompletesSession() {
+        var user = await SeedUserAsync();
+        var startedAtUtc = DateTime.UtcNow.AddHours(-30);
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, startedAtUtc);
+        var current = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, startedAtUtc, 1, 36);
+        await SeedFastingDataAsync(plan, current);
+
+        var client = CreateAuthenticatedClient(user);
+        var response = await client.PutAsJsonAsync(
+            "/api/v1/fasting/current/duration/reduce",
+            new ReduceActiveFastingTargetHttpRequest(8));
+        var payload = await response.Content.ReadFromJsonAsync<FastingSessionPayload>();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Completed", payload.Status);
+        Assert.NotNull(payload.EndedAtUtc);
+        Assert.Equal(-8, payload.AddedDurationHours);
+    }
+
     private HttpClient CreateAuthenticatedClient(User user) {
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");

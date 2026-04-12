@@ -1003,6 +1003,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/fasting/current/duration/reduce",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/fasting/current/postpone-day",
       "Operations": [
         {

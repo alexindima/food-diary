@@ -97,6 +97,10 @@ export interface ExtendFastingPayload {
     additionalHours: number;
 }
 
+export interface ReduceFastingTargetPayload {
+    reducedHours: number;
+}
+
 export interface UpdateFastingCheckInPayload {
     hungerLevel: number;
     energyLevel: number;

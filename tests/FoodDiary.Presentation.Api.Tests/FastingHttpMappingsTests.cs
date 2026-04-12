@@ -56,6 +56,17 @@ public sealed class FastingHttpMappingsTests {
     }
 
     [Fact]
+    public void ReduceActiveFastingRequest_ToCommand_MapsFields() {
+        var userId = Guid.NewGuid();
+        var request = new ReduceActiveFastingTargetHttpRequest(8);
+
+        var command = request.ToReduceCommand(userId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal(8, command.ReducedHours);
+    }
+
+    [Fact]
     public void OverviewQuery_ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 

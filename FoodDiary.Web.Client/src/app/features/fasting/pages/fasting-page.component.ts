@@ -111,6 +111,7 @@ export class FastingPageComponent implements OnInit {
     public readonly isStarting = this.facade.isStarting;
     public readonly isEnding = this.facade.isEnding;
     public readonly isExtending = this.facade.isExtending;
+    public readonly isReducing = this.facade.isReducing;
     public readonly isUpdatingCycle = this.facade.isUpdatingCycle;
     public readonly isSavingCheckIn = this.facade.isSavingCheckIn;
     public readonly isActive = this.facade.isActive;
@@ -127,6 +128,7 @@ export class FastingPageComponent implements OnInit {
     public readonly cyclicUsesCustomPreset = this.facade.cyclicUsesCustomPreset;
     public readonly cyclicEatDayFastHours = this.facade.cyclicEatDayFastHours;
     public readonly extendHours = this.facade.extendHours;
+    public readonly reduceHours = this.facade.reduceHours;
     public readonly hungerLevel = this.facade.hungerLevel;
     public readonly energyLevel = this.facade.energyLevel;
     public readonly moodLevel = this.facade.moodLevel;
@@ -180,6 +182,8 @@ export class FastingPageComponent implements OnInit {
     public readonly visibleHistory = this.history;
     public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
     public readonly isCheckInExpanded = signal(false);
+    public readonly isCustomExtendExpanded = signal(false);
+    public readonly isCustomReduceExpanded = signal(false);
     public readonly expandedHistorySessionId = signal<string | null>(null);
     public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
     public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
@@ -297,6 +301,13 @@ export class FastingPageComponent implements OnInit {
         }
     }
 
+    public onReduceHoursChange(value: string | number): void {
+        const hours = typeof value === 'number' ? value : parseInt(value, 10);
+        if (!isNaN(hours)) {
+            this.facade.setReduceHours(hours);
+        }
+    }
+
     public setHungerLevel(level: number): void {
         this.facade.setHungerLevel(level);
     }
@@ -364,11 +375,39 @@ export class FastingPageComponent implements OnInit {
     }
 
     public extendByDay(): void {
+        this.isCustomExtendExpanded.set(false);
         this.requestExtendByHours(24);
+    }
+
+    public extendBy36Hours(): void {
+        this.isCustomExtendExpanded.set(false);
+        this.requestExtendByHours(36);
     }
 
     public extendByCustom(): void {
         this.requestExtendByHours(this.extendHours());
+    }
+
+    public showCustomExtend(): void {
+        this.isCustomExtendExpanded.set(true);
+    }
+
+    public reduceBy4Hours(): void {
+        this.isCustomReduceExpanded.set(false);
+        this.requestReduceByHours(4);
+    }
+
+    public reduceBy8Hours(): void {
+        this.isCustomReduceExpanded.set(false);
+        this.requestReduceByHours(8);
+    }
+
+    public reduceByCustom(): void {
+        this.requestReduceByHours(this.reduceHours());
+    }
+
+    public showCustomReduce(): void {
+        this.isCustomReduceExpanded.set(true);
     }
 
     public skipCyclicDay(): void {
@@ -450,11 +489,15 @@ export class FastingPageComponent implements OnInit {
                 : this.translateService.instant(option.labelKey);
 
         const addedHours = session.addedDurationHours;
-        if (addedHours <= 0) {
+        if (addedHours === 0) {
             return baseLabel;
         }
 
-        return `${baseLabel} (+${addedHours} ${hoursLabel})`;
+        if (addedHours > 0) {
+            return `${baseLabel} (+${addedHours} ${hoursLabel})`;
+        }
+
+        return `${baseLabel} (${addedHours} ${hoursLabel})`;
     }
 
     public hasPersonalSummary(stats: FastingStats | null): boolean {
@@ -798,6 +841,21 @@ export class FastingPageComponent implements OnInit {
         this.facade.extendByHours(normalizedHours);
     }
 
+    private requestReduceByHours(reducedHours: number): void {
+        const session = this.currentSession();
+        if (!session) {
+            return;
+        }
+
+        const maxReducibleHours = Math.max(0, session.plannedDurationHours - 1);
+        const normalizedHours = Math.max(1, Math.min(maxReducibleHours, reducedHours));
+        if (normalizedHours <= 0) {
+            return;
+        }
+
+        this.facade.reduceTargetByHours(normalizedHours);
+    }
+
     private openCycleActionDialog(titleKey: string, messageKey: string, confirmLabelKey: string, action: () => void): void {
         this.dialogService
             .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
@@ -831,11 +889,15 @@ export class FastingPageComponent implements OnInit {
     }
 
     private formatHistoryDuration(baseHours: number, addedHours: number, hoursLabel: string): string {
-        if (addedHours <= 0) {
+        if (addedHours === 0) {
             return `${baseHours} ${hoursLabel}`;
         }
 
-        return `${baseHours} ${hoursLabel} (+${addedHours} ${hoursLabel})`;
+        if (addedHours > 0) {
+            return `${baseHours} ${hoursLabel} (+${addedHours} ${hoursLabel})`;
+        }
+
+        return `${baseHours} ${hoursLabel} (${addedHours} ${hoursLabel})`;
     }
 
     public getCustomIntermittentEatingWindowHours(): number {

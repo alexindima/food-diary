@@ -15,6 +15,7 @@ describe('FastingFacade', () => {
         end: ReturnType<typeof vi.fn>;
         start: ReturnType<typeof vi.fn>;
         extend: ReturnType<typeof vi.fn>;
+        reduceTarget: ReturnType<typeof vi.fn>;
         skipCyclicDay: ReturnType<typeof vi.fn>;
         postponeCyclicDay: ReturnType<typeof vi.fn>;
     };
@@ -83,6 +84,7 @@ describe('FastingFacade', () => {
             end: vi.fn(),
             start: vi.fn(),
             extend: vi.fn(),
+            reduceTarget: vi.fn(),
             skipCyclicDay: vi.fn(),
             postponeCyclicDay: vi.fn(),
         };
@@ -271,5 +273,47 @@ describe('FastingFacade', () => {
         expect(facade.selectedMode()).toBe('intermittent');
         expect(facade.selectedProtocol()).toBe('F16_8');
         expect(facade.extendHours()).toBe(24);
+    });
+
+    it('reduces target and refreshes overview', () => {
+        facade.currentSession.set({
+            ...activeSession,
+            protocol: 'F36_0',
+            planType: 'Extended',
+            occurrenceKind: 'FastDay',
+            initialPlannedDurationHours: 36,
+            plannedDurationHours: 36,
+        });
+        fastingService.reduceTarget.mockReturnValueOnce(
+            of({
+                ...activeSession,
+                protocol: 'F36_0',
+                planType: 'Extended',
+                occurrenceKind: 'FastDay',
+                initialPlannedDurationHours: 36,
+                addedDurationHours: -8,
+                plannedDurationHours: 28,
+            }),
+        );
+        fastingService.getOverview.mockReturnValueOnce(
+            of({
+                ...baseOverview,
+                currentSession: {
+                    ...activeSession,
+                    protocol: 'F36_0',
+                    planType: 'Extended',
+                    occurrenceKind: 'FastDay',
+                    initialPlannedDurationHours: 36,
+                    addedDurationHours: -8,
+                    plannedDurationHours: 28,
+                },
+            }),
+        );
+
+        facade.reduceTargetByHours(8);
+
+        expect(fastingService.reduceTarget).toHaveBeenCalledWith({ reducedHours: 8 });
+        expect(fastingService.getOverview).toHaveBeenCalledTimes(1);
+        expect(facade.currentSession()?.plannedDurationHours).toBe(28);
     });
 });

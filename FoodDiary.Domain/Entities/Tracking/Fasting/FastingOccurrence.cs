@@ -174,6 +174,24 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         SetModified();
     }
 
+    public void Reduce(int reducedHours) {
+        if (Status != FastingOccurrenceStatus.Active) {
+            throw new InvalidOperationException("Only active occurrences can be adjusted.");
+        }
+
+        if (!InitialTargetHours.HasValue) {
+            throw new InvalidOperationException("This occurrence does not have a target duration.");
+        }
+
+        if (reducedHours <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(reducedHours), "Reduced hours must be greater than zero.");
+        }
+
+        EnsureTargetHours(TargetHours.GetValueOrDefault() - reducedHours);
+        AddedTargetHours -= reducedHours;
+        SetModified();
+    }
+
     public void UpdateNotes(string? notes) {
         var normalizedNotes = NormalizeNotes(notes);
         if (Notes == normalizedNotes) {

@@ -38,6 +38,7 @@ export class FastingFacade {
     public readonly isStarting = signal(false);
     public readonly isEnding = signal(false);
     public readonly isExtending = signal(false);
+    public readonly isReducing = signal(false);
     public readonly isUpdatingCycle = signal(false);
     public readonly isSavingCheckIn = signal(false);
     public readonly currentSession = signal<FastingSession | null>(null);
@@ -58,6 +59,7 @@ export class FastingFacade {
     public readonly cyclicUsesCustomPreset = signal(false);
     public readonly cyclicEatDayFastHours = signal(16);
     public readonly extendHours = signal(24);
+    public readonly reduceHours = signal(4);
     public readonly hungerLevel = signal(3);
     public readonly energyLevel = signal(3);
     public readonly moodLevel = signal(3);
@@ -279,6 +281,10 @@ export class FastingFacade {
         this.extendHours.set(Math.max(1, Math.min(168, hours)));
     }
 
+    public setReduceHours(hours: number): void {
+        this.reduceHours.set(Math.max(1, Math.min(168, hours)));
+    }
+
     public setHungerLevel(level: number): void {
         this.hungerLevel.set(Math.max(1, Math.min(5, level)));
     }
@@ -317,6 +323,31 @@ export class FastingFacade {
             .subscribe(session => {
                 this.currentSession.set(session);
                 this.syncCheckInFromSession(session);
+                this.refreshOverview();
+            });
+    }
+
+    public reduceTargetByHours(hours: number): void {
+        const reducedHours = Math.max(1, Math.min(168, hours));
+        this.isReducing.set(true);
+        this.fastingService
+            .reduceTarget({ reducedHours })
+            .pipe(
+                finalize(() => this.isReducing.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(session => {
+                if (session.endedAtUtc) {
+                    this.stopTimer();
+                    this.currentSession.set(null);
+                    this.resetDraftState();
+                    this.syncCheckInFromSession(null);
+                } else {
+                    this.currentSession.set(session);
+                    this.syncCheckInFromSession(session);
+                    this.startTimer();
+                }
+
                 this.refreshOverview();
             });
     }
@@ -567,6 +598,7 @@ export class FastingFacade {
         this.cyclicUsesCustomPreset.set(false);
         this.cyclicEatDayFastHours.set(16);
         this.extendHours.set(24);
+        this.reduceHours.set(4);
     }
 
     private getHistoryRange(): { from: string; to: string } {

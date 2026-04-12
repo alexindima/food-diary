@@ -208,35 +208,115 @@
                         }
 
                         @if (isActive() && canExtendActiveSession()) {
-                            <div class="fasting__protocol-group">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.EXTEND_GROUP' | translate }}</div>
-                                <div class="fasting__extend-actions">
-                                    <fd-ui-button
-                                        variant="secondary"
-                                        fill="outline"
-                                        (click)="extendByDay()"
-                                        [disabled]="isExtending() || isEnding()"
-                                    >
-                                        {{ 'FASTING.ADD_DAY' | translate }}
-                                    </fd-ui-button>
-                                </div>
-                                <div class="fasting__extend-custom">
-                                    <div class="fasting__custom-input">
-                                        <fd-ui-input
-                                            type="number"
-                                            [label]="'FASTING.ADD_HOURS' | translate"
-                                            [ngModel]="extendHours()"
-                                            (ngModelChange)="onExtendHoursChange($event)"
-                                        />
+                            <div class="fasting__session-actions-grid">
+                                <div class="fasting__extend-panel">
+                                    <div class="fasting__extend-panel-header">
+                                        <div class="fasting__protocol-group-title">{{ 'FASTING.EXTEND_GROUP' | translate }}</div>
                                     </div>
-                                    <fd-ui-button
-                                        variant="secondary"
-                                        fill="outline"
-                                        (click)="extendByCustom()"
-                                        [disabled]="isExtending() || isEnding()"
-                                    >
-                                        {{ 'FASTING.ADD_TIME' | translate }}
-                                    </fd-ui-button>
+
+                                    <div class="fasting__extend-toolbar">
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            (click)="extendByDay()"
+                                            [disabled]="isExtending() || isReducing() || isEnding()"
+                                        >
+                                            {{ 'FASTING.ADD_DAY' | translate }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            (click)="extendBy36Hours()"
+                                            [disabled]="isExtending() || isReducing() || isEnding()"
+                                        >
+                                            {{ 'FASTING.ADD_36_HOURS' | translate }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="isCustomExtendExpanded()"
+                                            (click)="showCustomExtend()"
+                                            [disabled]="isExtending() || isReducing() || isEnding()"
+                                        >
+                                            {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
+                                        </button>
+                                    </div>
+
+                                    @if (isCustomExtendExpanded()) {
+                                        <div class="fasting__extend-custom">
+                                            <div class="fasting__custom-input fasting__custom-input--compact">
+                                                <fd-ui-input
+                                                    type="number"
+                                                    [label]="'FASTING.ADD_HOURS' | translate"
+                                                    [ngModel]="extendHours()"
+                                                    (ngModelChange)="onExtendHoursChange($event)"
+                                                />
+                                            </div>
+                                            <fd-ui-button
+                                                variant="secondary"
+                                                fill="outline"
+                                                (click)="extendByCustom()"
+                                                [disabled]="isExtending() || isReducing() || isEnding()"
+                                            >
+                                                {{ 'FASTING.ADD_TIME' | translate }}
+                                            </fd-ui-button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="fasting__extend-panel fasting__extend-panel--subtle">
+                                    <div class="fasting__extend-panel-header">
+                                        <div class="fasting__protocol-group-title">{{ 'FASTING.REDUCE_GROUP' | translate }}</div>
+                                    </div>
+
+                                    <div class="fasting__extend-toolbar">
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn fasting__protocol-btn--warning"
+                                            (click)="reduceBy4Hours()"
+                                            [disabled]="isReducing() || isExtending() || isEnding()"
+                                        >
+                                            {{ 'FASTING.REDUCE_4_HOURS' | translate }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn fasting__protocol-btn--warning"
+                                            (click)="reduceBy8Hours()"
+                                            [disabled]="isReducing() || isExtending() || isEnding()"
+                                        >
+                                            {{ 'FASTING.REDUCE_8_HOURS' | translate }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn fasting__protocol-btn--warning"
+                                            [class.fasting__protocol-btn--active]="isCustomReduceExpanded()"
+                                            (click)="showCustomReduce()"
+                                            [disabled]="isReducing() || isExtending() || isEnding()"
+                                        >
+                                            {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
+                                        </button>
+                                    </div>
+
+                                    @if (isCustomReduceExpanded()) {
+                                        <div class="fasting__extend-custom">
+                                            <div class="fasting__custom-input fasting__custom-input--compact">
+                                                <fd-ui-input
+                                                    type="number"
+                                                    [label]="'FASTING.REDUCE_HOURS' | translate"
+                                                    [ngModel]="reduceHours()"
+                                                    (ngModelChange)="onReduceHoursChange($event)"
+                                                />
+                                            </div>
+                                            <fd-ui-button
+                                                variant="secondary"
+                                                fill="outline"
+                                                (click)="reduceByCustom()"
+                                                [disabled]="isReducing() || isExtending() || isEnding()"
+                                            >
+                                                {{ 'FASTING.REDUCE_TIME' | translate }}
+                                            </fd-ui-button>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         }
@@ -265,9 +345,9 @@
                             </div>
                         }
 
-                        <div class="fasting__actions">
+                        <div class="fasting__actions" [class.fasting__actions--separated]="isActive()">
                             @if (isActive()) {
-                                <fd-ui-button (click)="endFasting()" [disabled]="isEnding() || isUpdatingCycle()">
+                                <fd-ui-button (click)="endFasting()" [disabled]="isEnding() || isReducing() || isUpdatingCycle()">
                                     {{ getEndActionLabelKey() | translate }}
                                 </fd-ui-button>
                             } @else {
@@ -281,7 +361,7 @@
 
                 <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">
                     @if (stats(); as s) {
-                        <div class="fasting__stats">
+                        <div class="fasting__stats fasting__stats--primary">
                             <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#7c3aed" [tinted]="true">
                                 <span class="fasting__stat-label">{{ 'FASTING.TOTAL_COMPLETED' | translate }}</span>
                                 <strong class="fasting__stat-value">{{ s.totalCompleted }}</strong>
@@ -300,41 +380,49 @@
 
                         @if (hasPersonalSummary(s)) {
                             <div class="fasting__personal-summary">
-                                <div class="fasting__section-label">{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</div>
-                                <div class="fasting__personal-summary-window">
-                                    {{ 'FASTING.PERSONAL_SUMMARY.WINDOW' | translate }}
+                                <div class="fasting__personal-summary-header">
+                                    <div class="fasting__section-label">{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</div>
+                                    <div class="fasting__personal-summary-window">
+                                        {{ 'FASTING.PERSONAL_SUMMARY.WINDOW' | translate }}
+                                    </div>
                                 </div>
-                                <div class="fasting__stats fasting__stats--compact">
-                                    <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#0f766e" [tinted]="true">
-                                        <span class="fasting__stat-label">
-                                            {{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}
+
+                                <div class="fasting__pattern-panel">
+                                    <div class="fasting__stats fasting__stats--compact">
+                                        <fd-ui-accent-surface
+                                            class="fasting__stat fasting__stat--compact"
+                                            accentSide="top"
+                                            accentColor="#0f766e"
+                                            [tinted]="true"
+                                        >
+                                            <span class="fasting__stat-label fasting__stat-label--compact">
+                                                {{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}
+                                            </span>
+                                            <strong class="fasting__stat-value fasting__stat-value--compact">
+                                                {{ s.completionRateLast30Days | number: '1.0-1' }}%
+                                            </strong>
+                                        </fd-ui-accent-surface>
+                                        <fd-ui-accent-surface
+                                            class="fasting__stat fasting__stat--compact"
+                                            accentSide="top"
+                                            accentColor="#2563eb"
+                                            [tinted]="true"
+                                        >
+                                            <span class="fasting__stat-label fasting__stat-label--compact">
+                                                {{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}
+                                            </span>
+                                            <strong class="fasting__stat-value fasting__stat-value--compact">
+                                                {{ s.checkInRateLast30Days | number: '1.0-1' }}%
+                                            </strong>
+                                        </fd-ui-accent-surface>
+                                    </div>
+
+                                    <div class="fasting__pattern-symptom">
+                                        <span class="fasting__stat-label fasting__stat-label--compact">
+                                            {{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}
                                         </span>
-                                        <strong class="fasting__stat-value">{{ s.completionRateLast30Days | number: '1.0-1' }}%</strong>
-                                    </fd-ui-accent-surface>
-                                    <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#2563eb" [tinted]="true">
-                                        <span class="fasting__stat-label">
-                                            {{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}
-                                        </span>
-                                        <strong class="fasting__stat-value">{{ s.checkInRateLast30Days | number: '1.0-1' }}%</strong>
-                                    </fd-ui-accent-surface>
-                                    <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#ea580c" [tinted]="true">
-                                        <span class="fasting__stat-label">
-                                            {{ 'FASTING.PERSONAL_SUMMARY.LAST_CHECK_IN' | translate }}
-                                        </span>
-                                        <strong class="fasting__stat-value fasting__stat-value--small">
-                                            {{
-                                                s.lastCheckInAtUtc
-                                                    ? formatRelativeTime(s.lastCheckInAtUtc)
-                                                    : ('FASTING.PERSONAL_SUMMARY.NO_CHECK_IN' | translate)
-                                            }}
-                                        </strong>
-                                    </fd-ui-accent-surface>
-                                </div>
-                                <div class="fasting__personal-summary-meta">
-                                    <span class="fasting__stat-label">
-                                        {{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}
-                                    </span>
-                                    <strong class="fasting__personal-summary-text">{{ getTopSymptomLabel(s.topSymptom) }}</strong>
+                                        <strong class="fasting__personal-summary-text">{{ getTopSymptomLabel(s.topSymptom) }}</strong>
+                                    </div>
                                 </div>
                             </div>
                         }

@@ -145,4 +145,43 @@ describe('FastingService', () => {
         });
         req.flush(response);
     });
+
+    it('should send reduce target request to current/duration/reduce', () => {
+        const response = {
+            id: 'session-1',
+            startedAtUtc: '2026-04-12T06:00:00Z',
+            endedAtUtc: null,
+            initialPlannedDurationHours: 36,
+            addedDurationHours: -8,
+            plannedDurationHours: 28,
+            protocol: 'F36_0',
+            planType: 'Extended',
+            occurrenceKind: 'FastDay',
+            cyclicFastDays: null,
+            cyclicEatDays: null,
+            cyclicEatDayFastHours: null,
+            cyclicEatDayEatingWindowHours: null,
+            cyclicPhaseDayNumber: null,
+            cyclicPhaseDayTotal: null,
+            isCompleted: false,
+            status: 'Active',
+            notes: null,
+            checkInAtUtc: null,
+            hungerLevel: null,
+            energyLevel: null,
+            moodLevel: null,
+            symptoms: [],
+            checkInNotes: null,
+            checkIns: [],
+        };
+
+        service.reduceTarget({ reducedHours: 8 }).subscribe(result => {
+            expect(result).toEqual(response);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/current/duration/reduce`);
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual({ reducedHours: 8 });
+        req.flush(response);
+    });
 });

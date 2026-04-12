@@ -1,6 +1,7 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
+using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
@@ -76,6 +77,14 @@ public class FastingValidatorTests {
         var result = await validator.TestValidateAsync(new PostponeCyclicDayCommand(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task ReduceActiveFastingTarget_WithInvalidHours_HasError() {
+        var validator = new ReduceActiveFastingTargetCommandValidator();
+        var result = await validator.TestValidateAsync(new ReduceActiveFastingTargetCommand(Guid.NewGuid(), 0));
+
+        result.ShouldHaveValidationErrorFor(x => x.ReducedHours);
     }
 
     [Fact]
