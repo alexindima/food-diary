@@ -1078,6 +1078,20 @@
       ]
     },
     {
+      "Path": "/api/v{version}/fasting/overview",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/fasting/start",
       "Operations": [
         {

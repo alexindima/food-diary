@@ -9,6 +9,7 @@ import {
     ExtendFastingPayload,
     FastingHistoryQuery,
     FastingInsights,
+    FastingOverview,
     FastingSession,
     FastingStats,
     StartFastingPayload,
@@ -63,6 +64,36 @@ export class FastingService extends ApiService {
         );
     }
 
+    public getOverview(): Observable<FastingOverview> {
+        return this.get<FastingOverview>('overview').pipe(
+            catchError((error: HttpErrorResponse) =>
+                fallbackApiError('Get fasting overview error', error, {
+                    currentSession: null,
+                    stats: {
+                        totalCompleted: 0,
+                        currentStreak: 0,
+                        averageDurationHours: 0,
+                        completionRateLast30Days: 0,
+                        checkInRateLast30Days: 0,
+                        lastCheckInAtUtc: null,
+                        topSymptom: null,
+                    },
+                    insights: {
+                        alerts: [],
+                        insights: [],
+                    },
+                    history: {
+                        data: [],
+                        page: 1,
+                        limit: 10,
+                        totalPages: 0,
+                        totalItems: 0,
+                    },
+                }),
+            ),
+        );
+    }
+
     public getHistory(query: FastingHistoryQuery): Observable<PageOf<FastingSession>> {
         return this.get<PageOf<FastingSession>>('history', {
             from: query.from,
@@ -89,6 +120,10 @@ export class FastingService extends ApiService {
                     totalCompleted: 0,
                     currentStreak: 0,
                     averageDurationHours: 0,
+                    completionRateLast30Days: 0,
+                    checkInRateLast30Days: 0,
+                    lastCheckInAtUtc: null,
+                    topSymptom: null,
                 }),
             ),
         );

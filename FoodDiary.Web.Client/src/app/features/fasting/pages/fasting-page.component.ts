@@ -39,6 +39,7 @@ import {
     FastingProtocol,
     FastingSession,
     FastingSessionStatus,
+    FastingStats,
 } from '../models/fasting.data';
 
 interface FastingEmojiScaleOption {
@@ -177,6 +178,14 @@ export class FastingPageComponent implements OnInit {
     public readonly isCheckInExpanded = signal(false);
     public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
     public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
+    public readonly currentSessionRecentCheckIns = computed(() => {
+        const session = this.currentSession();
+        if (!session) {
+            return [];
+        }
+
+        return this.getSessionCheckIns(session).slice(0, 3);
+    });
     public readonly visibleAlerts = computed(() => {
         const session = this.currentSession();
         return this.alerts().filter(alert => this.facade.isPromptVisible(session, alert));
@@ -422,6 +431,17 @@ export class FastingPageComponent implements OnInit {
         return `${baseLabel} (+${addedHours} ${hoursLabel})`;
     }
 
+    public hasPersonalSummary(stats: FastingStats | null): boolean {
+        return (
+            !!stats &&
+            (stats.completionRateLast30Days > 0 || stats.checkInRateLast30Days > 0 || !!stats.lastCheckInAtUtc || !!stats.topSymptom)
+        );
+    }
+
+    public getTopSymptomLabel(symptom: string | null): string {
+        return symptom ? this.getSymptomLabel(symptom) : this.translateService.instant('FASTING.PERSONAL_SUMMARY.NO_SYMPTOM');
+    }
+
     public hasCheckIn(session: FastingSession): boolean {
         return this.getSessionCheckIns(session).length > 0;
     }
@@ -436,6 +456,19 @@ export class FastingPageComponent implements OnInit {
 
     public getCurrentCheckInCtaKey(): string {
         return this.hasCurrentCheckIn() ? 'FASTING.CHECK_IN.UPDATE_ACTION' : 'FASTING.CHECK_IN.ADD_ACTION';
+    }
+
+    public hasCurrentSessionTimeline(): boolean {
+        return this.currentSessionRecentCheckIns().length > 0;
+    }
+
+    public getCurrentSessionOlderCheckInsCount(): number {
+        const session = this.currentSession();
+        if (!session) {
+            return 0;
+        }
+
+        return Math.max(0, this.getSessionCheckIns(session).length - this.currentSessionRecentCheckIns().length);
     }
 
     public getSessionCheckIns(session: FastingSession): FastingCheckIn[] {

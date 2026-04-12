@@ -297,6 +297,47 @@
                                 >
                             </fd-ui-accent-surface>
                         </div>
+
+                        @if (hasPersonalSummary(s)) {
+                            <div class="fasting__personal-summary">
+                                <div class="fasting__section-label">{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</div>
+                                <div class="fasting__personal-summary-window">
+                                    {{ 'FASTING.PERSONAL_SUMMARY.WINDOW' | translate }}
+                                </div>
+                                <div class="fasting__stats fasting__stats--compact">
+                                    <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#0f766e" [tinted]="true">
+                                        <span class="fasting__stat-label">
+                                            {{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}
+                                        </span>
+                                        <strong class="fasting__stat-value">{{ s.completionRateLast30Days | number: '1.0-1' }}%</strong>
+                                    </fd-ui-accent-surface>
+                                    <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#2563eb" [tinted]="true">
+                                        <span class="fasting__stat-label">
+                                            {{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}
+                                        </span>
+                                        <strong class="fasting__stat-value">{{ s.checkInRateLast30Days | number: '1.0-1' }}%</strong>
+                                    </fd-ui-accent-surface>
+                                    <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#ea580c" [tinted]="true">
+                                        <span class="fasting__stat-label">
+                                            {{ 'FASTING.PERSONAL_SUMMARY.LAST_CHECK_IN' | translate }}
+                                        </span>
+                                        <strong class="fasting__stat-value fasting__stat-value--small">
+                                            {{
+                                                s.lastCheckInAtUtc
+                                                    ? formatRelativeTime(s.lastCheckInAtUtc)
+                                                    : ('FASTING.PERSONAL_SUMMARY.NO_CHECK_IN' | translate)
+                                            }}
+                                        </strong>
+                                    </fd-ui-accent-surface>
+                                </div>
+                                <div class="fasting__personal-summary-meta">
+                                    <span class="fasting__stat-label">
+                                        {{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}
+                                    </span>
+                                    <strong class="fasting__personal-summary-text">{{ getTopSymptomLabel(s.topSymptom) }}</strong>
+                                </div>
+                            </div>
+                        }
                     } @else {
                         <p class="fasting__empty">{{ 'FASTING.NO_STATS' | translate }}</p>
                     }
@@ -351,6 +392,43 @@
                                     @if (latestCheckIn.notes) {
                                         <p class="fasting__checkin-summary-note">{{ latestCheckIn.notes }}</p>
                                     }
+                                }
+
+                                @if (hasCurrentSessionTimeline()) {
+                                    <div class="fasting__checkin-timeline">
+                                        <div class="fasting__checkin-timeline-title">
+                                            {{ 'FASTING.CHECK_IN.RECENT_TITLE' | translate }}
+                                        </div>
+                                        <div class="fasting__checkin-timeline-list">
+                                            @for (checkIn of currentSessionRecentCheckIns(); track checkIn.id) {
+                                                <div class="fasting__checkin-timeline-entry">
+                                                    <div class="fasting__checkin-timeline-time">
+                                                        {{ checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                                    </div>
+                                                    <div class="fasting__checkin-timeline-summary">
+                                                        {{ getCheckInSummary(checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel) }}
+                                                    </div>
+                                                    @if (checkIn.symptoms.length > 0) {
+                                                        <div class="fasting__history-symptoms">
+                                                            @for (symptom of checkIn.symptoms; track symptom) {
+                                                                <span class="fasting__history-symptom">
+                                                                    {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        @if (getCurrentSessionOlderCheckInsCount() > 0) {
+                                            <div class="fasting__checkin-timeline-more">
+                                                {{
+                                                    'FASTING.CHECK_IN.RECENT_MORE'
+                                                        | translate: { count: getCurrentSessionOlderCheckInsCount() }
+                                                }}
+                                            </div>
+                                        }
+                                    </div>
                                 }
 
                                 <div class="fasting__actions fasting__actions--start">

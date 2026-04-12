@@ -56,6 +56,15 @@ public sealed class FastingHttpMappingsTests {
     }
 
     [Fact]
+    public void OverviewQuery_ToQuery_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        var query = userId.ToOverviewQuery();
+
+        Assert.Equal(userId, query.UserId);
+    }
+
+    [Fact]
     public void SkipCyclicDay_ToCommand_MapsUserId() {
         var userId = Guid.NewGuid();
 
@@ -128,5 +137,61 @@ public sealed class FastingHttpMappingsTests {
         Assert.Equal(["good"], response.Symptoms);
         Assert.Equal("Hydration was fine", response.CheckInNotes);
         Assert.Single(response.CheckIns);
+    }
+
+    [Fact]
+    public void FastingOverviewModel_ToHttpResponse_MapsNestedSections() {
+        var sessionId = Guid.NewGuid();
+        var model = new FastingOverviewModel(
+            new FastingSessionModel(
+                sessionId,
+                DateTime.UtcNow.AddHours(-4),
+                null,
+                16,
+                0,
+                16,
+                "F16_8",
+                "Intermittent",
+                "FastingWindow",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false,
+                "Active",
+                null,
+                null,
+                null,
+                null,
+                null,
+                [],
+                null,
+                []),
+            new FastingStatsModel(5, 2, 18.4, 66.7, 50.0, DateTime.UtcNow.AddHours(-2), "dizziness"),
+            new FastingInsightsModel(
+                [
+                    new FastingMessageModel("mid", "FASTING.PROMPTS.MID_TITLE", "FASTING.PROMPTS.MID_BODY", "neutral")
+                ],
+                [
+                    new FastingMessageModel("positive", "FASTING.INSIGHTS.POSITIVE_TITLE", "FASTING.INSIGHTS.POSITIVE_BODY", "positive")
+                ]),
+            new FoodDiary.Application.Common.Models.PagedResponse<FastingSessionModel>(
+                [],
+                1,
+                10,
+                0,
+                0));
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal(sessionId, response.CurrentSession!.Id);
+        Assert.Equal(5, response.Stats.TotalCompleted);
+        Assert.Equal(66.7, response.Stats.CompletionRateLast30Days);
+        Assert.Equal("dizziness", response.Stats.TopSymptom);
+        Assert.Single(response.Insights.Alerts);
+        Assert.Single(response.Insights.Insights);
+        Assert.Equal(1, response.History.Page);
     }
 }

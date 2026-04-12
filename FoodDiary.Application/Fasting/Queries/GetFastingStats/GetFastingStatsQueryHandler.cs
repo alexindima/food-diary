@@ -13,6 +13,8 @@ public class GetFastingStatsQueryHandler(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IDateTimeProvider dateTimeProvider)
     : IQueryHandler<GetFastingStatsQuery, Result<FastingStatsModel>> {
+    private static readonly string[] PrioritizedSymptoms = ["dizziness", "weakness", "headache", "irritability", "cravings"];
+
     public async Task<Result<FastingStatsModel>> Handle(
         GetFastingStatsQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
@@ -45,7 +47,26 @@ public class GetFastingStatsQueryHandler(
             ? completedLast30Days.Average(occurrence => (occurrence.EndedAtUtc!.Value - occurrence.StartedAtUtc).TotalHours)
             : 0;
 
-        return Result.Success(new FastingStatsModel(totalCompleted, currentStreak, Math.Round(avgDuration, 1)));
+        var completionRate = last30Days.Count > 0
+            ? Math.Round(completedLast30Days.Count / (double)last30Days.Count * 100, 1)
+            : 0;
+        var checkInRate = last30Days.Count > 0
+            ? Math.Round(last30Days.Count(static occurrence => occurrence.CheckInAtUtc.HasValue) / (double)last30Days.Count * 100, 1)
+            : 0;
+        var lastCheckInAtUtc = allOccurrences
+            .Where(static occurrence => occurrence.CheckInAtUtc.HasValue)
+            .MaxBy(static occurrence => occurrence.CheckInAtUtc)?
+            .CheckInAtUtc;
+        var topSymptom = GetTopSymptom(last30Days);
+
+        return Result.Success(new FastingStatsModel(
+            totalCompleted,
+            currentStreak,
+            Math.Round(avgDuration, 1),
+            completionRate,
+            checkInRate,
+            lastCheckInAtUtc,
+            topSymptom));
     }
 
     private static int CalculateCurrentStreak(IReadOnlyList<FastingOccurrence> completedOccurrences, DateTime todayUtcDate) {
@@ -68,4 +89,21 @@ public class GetFastingStatsQueryHandler(
 
         return streak;
     }
+
+    private static string? GetTopSymptom(IReadOnlyList<FastingOccurrence> occurrences) {
+        var symptomCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var occurrence in occurrences) {
+            foreach (var symptom in GetSymptoms(occurrence)) {
+                symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out var count) ? count + 1 : 1;
+            }
+        }
+
+        return PrioritizedSymptoms.FirstOrDefault(symptom => symptomCounts.GetValueOrDefault(symptom) >= 2);
+    }
+
+    private static IReadOnlyList<string> GetSymptoms(FastingOccurrence occurrence) =>
+        string.IsNullOrWhiteSpace(occurrence.Symptoms)
+            ? []
+            : occurrence.Symptoms.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 }

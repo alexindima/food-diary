@@ -17,12 +17,26 @@ public static class FastingHttpResponseMappings {
         new(model.Id, model.CheckedInAtUtc, model.HungerLevel, model.EnergyLevel, model.MoodLevel, model.Symptoms, model.Notes);
 
     public static FastingStatsHttpResponse ToHttpResponse(this FastingStatsModel model) =>
-        new(model.TotalCompleted, model.CurrentStreak, model.AverageDurationHours);
+        new(
+            model.TotalCompleted,
+            model.CurrentStreak,
+            model.AverageDurationHours,
+            model.CompletionRateLast30Days,
+            model.CheckInRateLast30Days,
+            model.LastCheckInAtUtc,
+            model.TopSymptom);
 
     public static FastingInsightsHttpResponse ToHttpResponse(this FastingInsightsModel model) =>
         new(
             model.Alerts.Select(static message => message.ToHttpResponse()).ToList(),
             model.Insights.Select(static message => message.ToHttpResponse()).ToList());
+
+    public static FastingOverviewHttpResponse ToHttpResponse(this FastingOverviewModel model) =>
+        new(
+            model.CurrentSession?.ToHttpResponse(),
+            model.Stats.ToHttpResponse(),
+            model.Insights.ToHttpResponse(),
+            model.History.ToHttpResponse());
 
     public static FastingMessageHttpResponse ToHttpResponse(this FastingMessageModel model) =>
         new(model.Id, model.TitleKey, model.BodyKey, model.Tone, model.BodyParams);

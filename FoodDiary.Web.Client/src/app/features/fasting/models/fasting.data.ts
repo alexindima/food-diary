@@ -1,3 +1,5 @@
+import { PageOf } from '../../../shared/models/page-of.data';
+
 export type FastingProtocol = 'F16_8' | 'F18_6' | 'F20_4' | 'F24_0' | 'F36_0' | 'F72_0' | 'Custom' | 'CustomIntermittent';
 export type FastingSessionStatus = 'Active' | 'Completed' | 'Interrupted' | 'Skipped' | 'Postponed';
 export type FastingPlanType = 'Intermittent' | 'Extended' | 'Cyclic';
@@ -54,6 +56,10 @@ export interface FastingStats {
     totalCompleted: number;
     currentStreak: number;
     averageDurationHours: number;
+    completionRateLast30Days: number;
+    checkInRateLast30Days: number;
+    lastCheckInAtUtc: string | null;
+    topSymptom: string | null;
 }
 
 export interface FastingMessage {
@@ -67,6 +73,13 @@ export interface FastingMessage {
 export interface FastingInsights {
     alerts: FastingMessage[];
     insights: FastingMessage[];
+}
+
+export interface FastingOverview {
+    currentSession: FastingSession | null;
+    stats: FastingStats;
+    insights: FastingInsights;
+    history: PageOf<FastingSession>;
 }
 
 export interface StartFastingPayload {

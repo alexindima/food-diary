@@ -236,6 +236,55 @@
         line-height: 1.5;
     }
 
+    &__checkin-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 4px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    &__checkin-timeline-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    &__checkin-timeline-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__checkin-timeline-entry {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        background: #f8fafc;
+    }
+
+    &__checkin-timeline-time {
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    &__checkin-timeline-summary {
+        color: #334155;
+        font-size: 0.93rem;
+        font-weight: 600;
+    }
+
+    &__checkin-timeline-more {
+        font-size: 0.9rem;
+        color: #64748b;
+    }
+
     &__checkin-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -276,6 +325,10 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 12px;
+
+        &--compact {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        }
     }
 
     &__stat {
@@ -296,6 +349,38 @@
     &__stat-value {
         display: block;
         font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+
+        &--small {
+            font-size: 1rem;
+            line-height: 1.35;
+        }
+    }
+
+    &__personal-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    &__personal-summary-window {
+        font-size: 0.84rem;
+        color: #64748b;
+    }
+
+    &__personal-summary-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px 2px 0;
+    }
+
+    &__personal-summary-text {
+        font-size: 0.98rem;
         font-weight: 700;
         color: #0f172a;
     }

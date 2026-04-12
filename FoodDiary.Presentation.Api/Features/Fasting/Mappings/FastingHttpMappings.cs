@@ -7,6 +7,7 @@ using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
+using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
 using FoodDiary.Application.Fasting.Queries.GetFastingStats;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
 
@@ -38,6 +39,8 @@ public static class FastingHttpMappings {
         new(userId, request.HungerLevel, request.EnergyLevel, request.MoodLevel, request.Symptoms, request.CheckInNotes);
 
     public static GetCurrentFastingQuery ToCurrentQuery(this Guid userId) => new(userId);
+
+    public static GetFastingOverviewQuery ToOverviewQuery(this Guid userId) => new(userId);
 
     public static GetFastingHistoryQuery ToHistoryQuery(this GetFastingHistoryHttpQuery query, Guid userId) =>
         new(userId, query.From, query.To, query.Page, query.Limit);

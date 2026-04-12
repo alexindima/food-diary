@@ -53,14 +53,4 @@ public class FastingController(ISender mediator) : AuthorizedController(mediator
     public Task<IActionResult> PostponeCyclicDay([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToPostponeCyclicDayCommand(), static value => value.ToHttpResponse());
 
-    [HttpGet("current")]
-    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
-
-    [HttpGet("history")]
-    [ProducesResponseType<PagedHttpResponse<FastingSessionHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetHistory([FromCurrentUser] Guid userId, [FromQuery] GetFastingHistoryHttpQuery query) =>
-        HandleOk(query.ToHistoryQuery(userId), static value => value.ToHttpResponse());
-
 }

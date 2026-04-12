@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, forkJoin, of } from 'rxjs';
+import { finalize } from 'rxjs';
 import { FastingService } from '../api/fasting.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -10,6 +10,7 @@ import {
     FastingInsights,
     FastingMessage,
     FastingMode,
+    FastingOverview,
     FastingPlanType,
     FastingProtocol,
     FastingSession,
@@ -120,51 +121,15 @@ export class FastingFacade {
         return session !== null && session.endedAtUtc === null && session.planType === 'Extended';
     });
 
-    public initialize(options?: { includeStats?: boolean; includeHistory?: boolean }): void {
+    public initialize(): void {
         this.isLoading.set(true);
-        const includeStats = options?.includeStats ?? true;
-        const includeHistory = options?.includeHistory ?? true;
-
-        const now = new Date();
-        const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-        forkJoin([
-            this.fastingService.getCurrent(),
-            includeStats ? this.fastingService.getStats() : of(null),
-            includeHistory
-                ? this.fastingService.getHistory({
-                      from: from.toISOString(),
-                      to: to.toISOString(),
-                      page: 1,
-                      limit: FastingFacade.HistoryPageSize,
-                  })
-                : of({
-                      data: [],
-                      page: 1,
-                      limit: FastingFacade.HistoryPageSize,
-                      totalPages: 0,
-                      totalItems: 0,
-                  }),
-            this.fastingService.getInsights(),
-        ])
+        this.fastingService
+            .getOverview()
             .pipe(
                 finalize(() => this.isLoading.set(false)),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(([current, stats, history, insights]) => {
-                this.currentSession.set(current);
-                this.stats.set(stats);
-                this.history.set(history.data);
-                this.historyPage.set(history.page);
-                this.historyTotalPages.set(history.totalPages);
-                this.insightsData.set(insights);
-                this.syncCheckInFromSession(current);
-
-                if (current && !current.endedAtUtc) {
-                    this.startTimer();
-                }
-            });
+            .subscribe(overview => this.applyOverview(overview));
     }
 
     public loadMoreHistory(): void {
@@ -204,7 +169,6 @@ export class FastingFacade {
             .subscribe(session => {
                 this.currentSession.set(session);
                 this.syncCheckInFromSession(session);
-                this.refreshInsights();
                 this.frontendObservability.recordFastingLifecycleEvent('session.started', {
                     sessionId: session.id,
                     protocol: session.protocol,
@@ -214,6 +178,7 @@ export class FastingFacade {
                     ...this.getReminderTelemetryDetails(),
                 });
                 this.startTimer();
+                this.refreshOverview();
             });
     }
 
@@ -242,13 +207,12 @@ export class FastingFacade {
                     this.currentSession.set(null);
                     this.resetDraftState();
                     this.syncCheckInFromSession(null);
-                    this.refreshStats();
+                    this.refreshOverview();
                 } else {
                     this.currentSession.set(session);
                     this.syncCheckInFromSession(session);
                     this.startTimer();
-                    this.refreshHistory();
-                    this.refreshInsights();
+                    this.refreshOverview();
                 }
             });
     }
@@ -353,7 +317,7 @@ export class FastingFacade {
             .subscribe(session => {
                 this.currentSession.set(session);
                 this.syncCheckInFromSession(session);
-                this.refreshInsights();
+                this.refreshOverview();
             });
     }
 
@@ -392,8 +356,7 @@ export class FastingFacade {
                     ...this.getReminderTelemetryDetails(),
                 });
                 this.clearPromptStateForSession(updated.id);
-                this.refreshHistory();
-                this.refreshInsights();
+                this.refreshOverview();
             });
     }
 
@@ -449,8 +412,7 @@ export class FastingFacade {
                 this.currentSession.set(session);
                 this.syncCheckInFromSession(session);
                 this.startTimer();
-                this.refreshHistory();
-                this.refreshInsights();
+                this.refreshOverview();
             });
     }
 
@@ -466,8 +428,7 @@ export class FastingFacade {
                 this.currentSession.set(session);
                 this.syncCheckInFromSession(session);
                 this.startTimer();
-                this.refreshHistory();
-                this.refreshInsights();
+                this.refreshOverview();
             });
     }
 
@@ -485,38 +446,28 @@ export class FastingFacade {
         }
     }
 
-    private refreshStats(): void {
+    private refreshOverview(): void {
         this.fastingService
-            .getStats()
+            .getOverview()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(stats => this.stats.set(stats));
-
-        this.refreshHistory();
-        this.refreshInsights();
+            .subscribe(overview => this.applyOverview(overview));
     }
 
-    private refreshHistory(): void {
-        const range = this.getHistoryRange();
-        this.fastingService
-            .getHistory({
-                from: range.from,
-                to: range.to,
-                page: 1,
-                limit: FastingFacade.HistoryPageSize,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(history => {
-                this.history.set(history.data);
-                this.historyPage.set(history.page);
-                this.historyTotalPages.set(history.totalPages);
-            });
-    }
+    private applyOverview(overview: FastingOverview): void {
+        this.currentSession.set(overview.currentSession);
+        this.stats.set(overview.stats);
+        this.history.set(overview.history.data);
+        this.historyPage.set(overview.history.page);
+        this.historyTotalPages.set(overview.history.totalPages);
+        this.insightsData.set(overview.insights);
+        this.syncCheckInFromSession(overview.currentSession);
 
-    private refreshInsights(): void {
-        this.fastingService
-            .getInsights()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(insights => this.insightsData.set(insights));
+        if (overview.currentSession && !overview.currentSession.endedAtUtc) {
+            this.startTimer();
+            return;
+        }
+
+        this.stopTimer();
     }
 
     private syncCheckInFromSession(session: FastingSession | null): void {
