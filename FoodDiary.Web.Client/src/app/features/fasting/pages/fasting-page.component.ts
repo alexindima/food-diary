@@ -32,8 +32,8 @@ import { FastingFacade } from '../lib/fasting.facade';
 import { FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
 import {
     CYCLIC_PRESETS,
+    FastingCheckIn,
     FASTING_PROTOCOLS,
-    FASTING_CHECK_IN_SCALE,
     FASTING_SYMPTOM_OPTIONS,
     FastingMessage,
     FastingMode,
@@ -41,6 +41,11 @@ import {
     FastingSession,
     FastingSessionStatus,
 } from '../models/fasting.data';
+
+interface FastingEmojiScaleOption {
+    value: number;
+    emoji: string;
+}
 
 @Component({
     selector: 'fd-fasting-page',
@@ -67,6 +72,28 @@ import {
 export class FastingPageComponent implements OnInit {
     private static readonly WarningThresholdHours = 72;
     private static readonly HardStopThresholdHours = 168;
+    private static readonly SessionCheckInsPageSize = 5;
+    private static readonly HungerEmojiScale: FastingEmojiScaleOption[] = [
+        { value: 1, emoji: '😫' },
+        { value: 2, emoji: '😟' },
+        { value: 3, emoji: '😐' },
+        { value: 4, emoji: '🙂' },
+        { value: 5, emoji: '😌' },
+    ];
+    private static readonly EnergyEmojiScale: FastingEmojiScaleOption[] = [
+        { value: 1, emoji: '😴' },
+        { value: 2, emoji: '😮‍💨' },
+        { value: 3, emoji: '🙂' },
+        { value: 4, emoji: '⚡' },
+        { value: 5, emoji: '🚀' },
+    ];
+    private static readonly MoodEmojiScale: FastingEmojiScaleOption[] = [
+        { value: 1, emoji: '😣' },
+        { value: 2, emoji: '😕' },
+        { value: 3, emoji: '😐' },
+        { value: 4, emoji: '🙂' },
+        { value: 5, emoji: '😄' },
+    ];
 
     private readonly facade = inject(FastingFacade);
     private readonly translateService = inject(TranslateService);
@@ -138,11 +165,17 @@ export class FastingPageComponent implements OnInit {
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     public readonly cyclicPresets = CYCLIC_PRESETS;
-    public readonly checkInScale = FASTING_CHECK_IN_SCALE;
+    public readonly hungerEmojiScale = FastingPageComponent.HungerEmojiScale;
+    public readonly energyEmojiScale = FastingPageComponent.EnergyEmojiScale;
+    public readonly moodEmojiScale = FastingPageComponent.MoodEmojiScale;
     public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
     public readonly insights = computed(() => this.facade.insightsData().insights);
     public readonly fastingTelemetrySummary = signal<FastingTelemetrySummary | null>(null);
     public readonly isLoadingFastingTelemetrySummary = signal(false);
+    public readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
+    public readonly isLoadingMoreHistory = this.facade.isLoadingMoreHistory;
+    public readonly visibleHistory = this.history;
+    public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
     public readonly visibleCheckInPrompt = computed(() => {
         const prompt = this.facade.insightsData().currentPrompt;
         const session = this.currentSession();
@@ -296,6 +329,10 @@ export class FastingPageComponent implements OnInit {
         this.facade.snoozePrompt(promptId);
     }
 
+    public loadMoreHistory(): void {
+        this.facade.loadMoreHistory();
+    }
+
     public extendByDay(): void {
         this.requestExtendByHours(24);
     }
@@ -391,19 +428,57 @@ export class FastingPageComponent implements OnInit {
     }
 
     public hasCheckIn(session: FastingSession): boolean {
-        return !!session.checkInAtUtc;
+        return this.getSessionCheckIns(session).length > 0;
     }
 
-    public getCheckInSummary(session: FastingSession): string | null {
-        if (!this.hasCheckIn(session)) {
-            return null;
+    public getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {
+        return this.translateService.instant('FASTING.CHECK_IN.SUMMARY', {
+            hunger: this.getHungerSummaryValue(hunger),
+            energy: this.getEnergySummaryValue(energy),
+            mood: this.getMoodSummaryValue(mood),
+        });
+    }
+
+    public getSessionCheckIns(session: FastingSession): FastingCheckIn[] {
+        if (session.checkIns.length > 0) {
+            return session.checkIns;
         }
 
-        return this.translateService.instant('FASTING.CHECK_IN.SUMMARY', {
-            hunger: session.hungerLevel ?? '—',
-            energy: session.energyLevel ?? '—',
-            mood: session.moodLevel ?? '—',
-        });
+        if (!session.checkInAtUtc) {
+            return [];
+        }
+
+        return [
+            {
+                id: `${session.id}:latest`,
+                checkedInAtUtc: session.checkInAtUtc,
+                hungerLevel: session.hungerLevel ?? 0,
+                energyLevel: session.energyLevel ?? 0,
+                moodLevel: session.moodLevel ?? 0,
+                symptoms: session.symptoms,
+                notes: session.checkInNotes,
+            },
+        ];
+    }
+
+    public getVisibleSessionCheckIns(session: FastingSession): FastingCheckIn[] {
+        const allCheckIns = this.getSessionCheckIns(session);
+        const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FastingPageComponent.SessionCheckInsPageSize;
+        return allCheckIns.slice(0, visibleCount);
+    }
+
+    public canLoadMoreSessionCheckIns(session: FastingSession): boolean {
+        const allCheckIns = this.getSessionCheckIns(session);
+        const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FastingPageComponent.SessionCheckInsPageSize;
+        return allCheckIns.length > visibleCount;
+    }
+
+    public loadMoreSessionCheckIns(sessionId: string): void {
+        this.sessionCheckInVisibleCount.update(current => ({
+            ...current,
+            [sessionId]:
+                (current[sessionId] ?? FastingPageComponent.SessionCheckInsPageSize) + FastingPageComponent.SessionCheckInsPageSize,
+        }));
     }
 
     public getHistorySessionTypeLabel(session: FastingSession): string {
@@ -728,6 +803,18 @@ export class FastingPageComponent implements OnInit {
         return this.translateService.instant(key, this.resolveMessageParams(descriptor.bodyParams));
     }
 
+    public getEnergyEmoji(level: number | null | undefined): string {
+        return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? '—';
+    }
+
+    public getHungerEmoji(level: number | null | undefined): string {
+        return this.hungerEmojiScale.find(option => option.value === level)?.emoji ?? '—';
+    }
+
+    public getMoodEmoji(level: number | null | undefined): string {
+        return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? '—';
+    }
+
     public formatMetric(value: number | null | undefined): string {
         if (value === null || value === undefined || Number.isNaN(value)) {
             return '-';
@@ -752,6 +839,34 @@ export class FastingPageComponent implements OnInit {
         }).format(date);
     }
 
+    public formatRelativeTime(value: string | null): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const timestamp = new Date(value).getTime();
+        if (Number.isNaN(timestamp)) {
+            return null;
+        }
+
+        const diffMs = timestamp - Date.now();
+        const diffMinutes = Math.round(diffMs / 60000);
+        const locale = this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US';
+        const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+
+        if (Math.abs(diffMinutes) < 60) {
+            return formatter.format(diffMinutes, 'minute');
+        }
+
+        const diffHours = Math.round(diffMinutes / 60);
+        if (Math.abs(diffHours) < 24) {
+            return formatter.format(diffHours, 'hour');
+        }
+
+        const diffDays = Math.round(diffHours / 24);
+        return formatter.format(diffDays, 'day');
+    }
+
     private resolveMessageParams(params: Record<string, string> | null): Record<string, string> | undefined {
         if (!params) {
             return undefined;
@@ -763,5 +878,45 @@ export class FastingPageComponent implements OnInit {
                 value.startsWith('FASTING.') ? this.translateService.instant(value) : value,
             ]),
         );
+    }
+
+    private getEnergyDisplay(level: number | null): string {
+        if (level === null) {
+            return '—';
+        }
+
+        return `${this.getEnergyEmoji(level)} ${level}/5`;
+    }
+
+    private getMoodDisplay(level: number | null): string {
+        if (level === null) {
+            return '—';
+        }
+
+        return `${this.getMoodEmoji(level)} ${level}/5`;
+    }
+
+    private getHungerSummaryValue(level: number | null): string {
+        if (level === null) {
+            return '—';
+        }
+
+        return this.getHungerEmoji(level);
+    }
+
+    private getEnergySummaryValue(level: number | null): string {
+        if (level === null) {
+            return '—';
+        }
+
+        return this.getEnergyEmoji(level);
+    }
+
+    private getMoodSummaryValue(level: number | null): string {
+        if (level === null) {
+            return '—';
+        }
+
+        return this.getMoodEmoji(level);
     }
 }

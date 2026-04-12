@@ -24,6 +24,7 @@ export interface FastingTelemetrySummary {
     completionRatePercent: number;
     checkInRatePercent: number;
     averageCompletedDurationHours: number | null;
+    lastCheckInAtUtc: string | null;
     lastEventAtUtc: string | null;
     topPresets: FastingTelemetryPresetSummary[];
 }

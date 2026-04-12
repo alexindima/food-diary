@@ -50,6 +50,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<WebPushSubscription> WebPushSubscriptions => Set<WebPushSubscription>();
     public DbSet<FastingPlan> FastingPlans => Set<FastingPlan>();
     public DbSet<FastingOccurrence> FastingOccurrences => Set<FastingOccurrence>();
+    public DbSet<FastingCheckIn> FastingCheckIns => Set<FastingCheckIn>();
     public DbSet<FastingSession> FastingSessions => Set<FastingSession>();
     public DbSet<FastingTelemetryEvent> FastingTelemetryEvents => Set<FastingTelemetryEvent>();
     public DbSet<FavoriteMeal> FavoriteMeals => Set<FavoriteMeal>();

@@ -1472,6 +1472,7 @@
         "NO_STATS": "Статистики пока нет.",
         "HISTORY_TITLE": "Последние сессии",
         "NO_HISTORY": "Сессий голодания пока нет.",
+        "LOAD_MORE_HISTORY": "Загрузить еще",
         "CHECK_IN": {
             "TITLE": "Самочувствие сегодня",
             "SUBTITLE": "Отмечайте, как переносится голодание, чтобы видеть паттерны и вовремя останавливаться, если становится хуже.",
@@ -1482,7 +1483,7 @@
             "NOTES": "Комментарий",
             "NOTES_PLACEHOLDER": "Необязательная заметка про тягу к еде, концентрацию, воду или любые необычные ощущения.",
             "SAVE": "Сохранить отметку",
-            "SUMMARY": "Голод {{hunger}}/5, энергия {{energy}}/5, настроение {{mood}}/5",
+            "SUMMARY": "Голод {{hunger}}, энергия {{energy}}, настроение {{mood}}",
             "SYMPTOMS": {
                 "HEADACHE": "Головная боль",
                 "WEAKNESS": "Слабость",
@@ -1729,6 +1730,7 @@
         "FASTING_TELEMETRY_CHECK_IN_RATE": "Доля check-in",
         "FASTING_TELEMETRY_AVG_DURATION": "Средняя длительность",
         "FASTING_TELEMETRY_WINDOW": "Rolling window: последние {{ hours }}ч",
+        "FASTING_TELEMETRY_LAST_CHECK_IN": "Последний check-in: {{ value }}",
         "FASTING_TELEMETRY_LAST_EVENT": "Последнее событие: {{ value }}",
         "FASTING_TELEMETRY_TOP_PRESETS": "Топ пресетов напоминаний",
         "FASTING_TELEMETRY_TOP_PRESETS_EMPTY": "В текущем окне пока нет выборов пресетов напоминаний.",

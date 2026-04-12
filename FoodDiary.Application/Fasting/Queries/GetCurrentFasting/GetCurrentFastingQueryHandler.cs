@@ -8,7 +8,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 
 public class GetCurrentFastingQueryHandler(
-    IFastingOccurrenceRepository fastingOccurrenceRepository)
+    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingCheckInRepository fastingCheckInRepository)
     : IQueryHandler<GetCurrentFastingQuery, Result<FastingSessionModel?>> {
     public async Task<Result<FastingSessionModel?>> Handle(
         GetCurrentFastingQuery query, CancellationToken cancellationToken) {
@@ -18,6 +19,11 @@ public class GetCurrentFastingQueryHandler(
 
         var userId = new UserId(query.UserId!.Value);
         var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
-        return Result.Success(current?.ToModel());
+        if (current is null) {
+            return Result.Success<FastingSessionModel?>(null);
+        }
+
+        var checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken);
+        return Result.Success<FastingSessionModel?>(current.ToModel(current.Plan, checkIns));
     }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { PageOf } from '../../../shared/models/page-of.data';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import {
     ExtendFastingPayload,
@@ -62,9 +63,22 @@ export class FastingService extends ApiService {
         );
     }
 
-    public getHistory(query: FastingHistoryQuery): Observable<FastingSession[]> {
-        return this.get<FastingSession[]>('history', { from: query.from, to: query.to }).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get fasting history error', error, [])),
+    public getHistory(query: FastingHistoryQuery): Observable<PageOf<FastingSession>> {
+        return this.get<PageOf<FastingSession>>('history', {
+            from: query.from,
+            to: query.to,
+            page: query.page ?? 1,
+            limit: query.limit ?? 10,
+        }).pipe(
+            catchError((error: HttpErrorResponse) =>
+                fallbackApiError('Get fasting history error', error, {
+                    data: [],
+                    page: query.page ?? 1,
+                    limit: query.limit ?? 10,
+                    totalPages: 0,
+                    totalItems: 0,
+                }),
+            ),
         );
     }
 

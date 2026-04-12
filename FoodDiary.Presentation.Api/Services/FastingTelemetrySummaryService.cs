@@ -98,6 +98,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             startedEvents.Length > 0 ? Math.Round((double)completedEvents.Length / startedEvents.Length * 100, 1) : 0,
             startedEvents.Length > 0 ? Math.Round((double)checkInEvents.Length / startedEvents.Length * 100, 1) : 0,
             completedDurations.Length > 0 ? Math.Round(completedDurations.Average(), 1) : null,
+            checkInEvents.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
             events.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
             topPresets);
     }
@@ -173,6 +174,7 @@ public sealed record FastingTelemetrySummarySnapshot(
     double CompletionRatePercent,
     double CheckInRatePercent,
     double? AverageCompletedDurationHours,
+    DateTime? LastCheckInAtUtc,
     DateTime? LastEventAtUtc,
     IReadOnlyList<FastingTelemetryPresetSnapshot> TopPresets);
 

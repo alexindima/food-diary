@@ -40,7 +40,7 @@ public static class FastingHttpMappings {
     public static GetCurrentFastingQuery ToCurrentQuery(this Guid userId) => new(userId);
 
     public static GetFastingHistoryQuery ToHistoryQuery(this GetFastingHistoryHttpQuery query, Guid userId) =>
-        new(userId, query.From, query.To);
+        new(userId, query.From, query.To, query.Page, query.Limit);
 
     public static GetFastingStatsQuery ToStatsQuery(this Guid userId) => new(userId);
 

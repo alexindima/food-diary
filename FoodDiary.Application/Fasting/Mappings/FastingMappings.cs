@@ -7,6 +7,16 @@ namespace FoodDiary.Application.Fasting.Mappings;
 public static class FastingMappings {
     private static readonly char[] SymptomSeparators = [','];
 
+    public static FastingCheckInModel ToModel(this FastingCheckIn checkIn) =>
+        new(
+            checkIn.Id.Value,
+            checkIn.CheckedInAtUtc,
+            checkIn.HungerLevel,
+            checkIn.EnergyLevel,
+            checkIn.MoodLevel,
+            ParseSymptoms(checkIn.Symptoms),
+            checkIn.Notes);
+
     public static FastingSessionModel ToModel(this FastingSession session) =>
         new(
             session.Id.Value,
@@ -32,13 +42,17 @@ public static class FastingMappings {
             null,
             null,
             [],
-            null);
+            null,
+            []);
 
     public static FastingSessionModel ToModel(this FastingOccurrence occurrence) {
-        return occurrence.ToModel(occurrence.Plan);
+        return occurrence.ToModel(occurrence.Plan, null);
     }
 
-    public static FastingSessionModel ToModel(this FastingOccurrence occurrence, FastingPlan? plan) {
+    public static FastingSessionModel ToModel(
+        this FastingOccurrence occurrence,
+        FastingPlan? plan,
+        IReadOnlyList<FastingCheckIn>? checkIns = null) {
         var protocol = plan?.Protocol ?? FastingProtocol.Custom;
         var initialPlannedDurationHours = occurrence.InitialTargetHours ?? ResolveDefaultHours(occurrence, plan);
         var addedDurationHours = occurrence.AddedTargetHours;
@@ -47,6 +61,10 @@ public static class FastingMappings {
             occurrence.Status != FastingOccurrenceStatus.Scheduled &&
             occurrence.Status != FastingOccurrenceStatus.Postponed;
         var cyclicPhaseProgress = ResolveCyclicPhaseProgress(occurrence, plan);
+        var sortedCheckIns = (checkIns ?? [])
+            .OrderByDescending(static checkIn => checkIn.CheckedInAtUtc)
+            .ToList();
+        var latestCheckIn = sortedCheckIns.FirstOrDefault();
 
         return new FastingSessionModel(
             occurrence.Id.Value,
@@ -67,12 +85,13 @@ public static class FastingMappings {
             isCompleted,
             occurrence.Status.ToString(),
             occurrence.Notes,
-            occurrence.CheckInAtUtc,
-            occurrence.HungerLevel,
-            occurrence.EnergyLevel,
-            occurrence.MoodLevel,
-            ParseSymptoms(occurrence.Symptoms),
-            occurrence.CheckInNotes);
+            latestCheckIn?.CheckedInAtUtc ?? occurrence.CheckInAtUtc,
+            latestCheckIn?.HungerLevel ?? occurrence.HungerLevel,
+            latestCheckIn?.EnergyLevel ?? occurrence.EnergyLevel,
+            latestCheckIn?.MoodLevel ?? occurrence.MoodLevel,
+            latestCheckIn is not null ? ParseSymptoms(latestCheckIn.Symptoms) : ParseSymptoms(occurrence.Symptoms),
+            latestCheckIn?.Notes ?? occurrence.CheckInNotes,
+            sortedCheckIns.Select(static checkIn => checkIn.ToModel()).ToList());
     }
 
     private static IReadOnlyList<string> ParseSymptoms(string? value) {

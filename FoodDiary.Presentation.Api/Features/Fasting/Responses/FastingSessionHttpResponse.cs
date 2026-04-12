@@ -24,4 +24,5 @@ public sealed record FastingSessionHttpResponse(
     int? EnergyLevel,
     int? MoodLevel,
     IReadOnlyList<string> Symptoms,
-    string? CheckInNotes);
+    string? CheckInNotes,
+    IReadOnlyList<FastingCheckInHttpResponse> CheckIns);

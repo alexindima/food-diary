@@ -18,6 +18,14 @@ public interface IFastingOccurrenceRepository {
         DateTime? to = null,
         FastingOccurrenceStatus? status = null,
         CancellationToken cancellationToken = default);
+    Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+        UserId userId,
+        int page,
+        int limit,
+        DateTime? from = null,
+        DateTime? to = null,
+        FastingOccurrenceStatus? status = null,
+        CancellationToken cancellationToken = default);
     Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default);
     Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default);
 }

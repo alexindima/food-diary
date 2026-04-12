@@ -1247,6 +1247,7 @@
         "FASTING_TELEMETRY_CHECK_IN_RATE": "Check-in rate",
         "FASTING_TELEMETRY_AVG_DURATION": "Avg completed hours",
         "FASTING_TELEMETRY_WINDOW": "Rolling window: last {{ hours }}h",
+        "FASTING_TELEMETRY_LAST_CHECK_IN": "Last check-in: {{ value }}",
         "FASTING_TELEMETRY_LAST_EVENT": "Last event: {{ value }}",
         "FASTING_TELEMETRY_TOP_PRESETS": "Top reminder presets",
         "FASTING_TELEMETRY_TOP_PRESETS_EMPTY": "No reminder preset selections in the current window.",
@@ -1708,6 +1709,7 @@
         "NO_STATS": "No statistics yet.",
         "HISTORY_TITLE": "Recent history",
         "NO_HISTORY": "No fasting sessions yet.",
+        "LOAD_MORE_HISTORY": "Load more",
         "CHECK_IN": {
             "TITLE": "Today's check-in",
             "SUBTITLE": "Log how the fast feels so you can notice patterns and stop early if something feels off.",
@@ -1718,7 +1720,7 @@
             "NOTES": "Notes",
             "NOTES_PLACEHOLDER": "Optional notes about cravings, focus, hydration, or anything unusual.",
             "SAVE": "Save check-in",
-            "SUMMARY": "Hunger {{hunger}}/5, energy {{energy}}/5, mood {{mood}}/5",
+            "SUMMARY": "Hunger {{hunger}}, energy {{energy}}, mood {{mood}}",
             "SYMPTOMS": {
                 "HEADACHE": "Headache",
                 "WEAKNESS": "Weakness",

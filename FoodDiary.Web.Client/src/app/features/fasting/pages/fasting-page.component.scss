@@ -56,6 +56,10 @@
         flex-wrap: wrap;
         gap: 8px;
         justify-content: center;
+
+        &--emoji {
+            gap: 10px;
+        }
     }
 
     &__protocol-btn {
@@ -87,6 +91,46 @@
                 color: #fff;
             }
         }
+
+        &--emoji {
+            width: 44px;
+            min-width: 44px;
+            height: 44px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            background: transparent;
+            font-size: 1.6rem;
+            line-height: 1;
+            color: inherit;
+            transform: scale(1);
+
+            &:hover {
+                background: rgba(124, 58, 237, 0.08);
+                border-color: rgba(124, 58, 237, 0.2);
+                color: inherit;
+            }
+        }
+
+        &--emoji#{&}--active {
+            background: rgba(124, 58, 237, 0.18);
+            border-color: transparent;
+            color: inherit;
+            transform: scale(1.08);
+
+            &:hover {
+                background: rgba(124, 58, 237, 0.22);
+                color: inherit;
+            }
+        }
+    }
+
+    &__emoji {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
     &__custom-input {
@@ -332,6 +376,12 @@
         gap: 10px;
     }
 
+    &__history-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 12px;
+    }
+
     &__history-content {
         padding-top: 8px;
     }
@@ -405,6 +455,30 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+    }
+
+    &__history-checkin-entry {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 0;
+
+        &:not(:last-child) {
+            border-bottom: 1px dashed #e2e8f0;
+        }
+    }
+
+    &__history-checkin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__history-checkin-time {
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #64748b;
     }
 
     &__history-checkin-summary {

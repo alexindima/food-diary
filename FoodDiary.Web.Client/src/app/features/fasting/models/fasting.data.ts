@@ -37,6 +37,17 @@ export interface FastingSession {
     moodLevel: number | null;
     symptoms: string[];
     checkInNotes: string | null;
+    checkIns: FastingCheckIn[];
+}
+
+export interface FastingCheckIn {
+    id: string;
+    checkedInAtUtc: string;
+    hungerLevel: number;
+    energyLevel: number;
+    moodLevel: number;
+    symptoms: string[];
+    notes: string | null;
 }
 
 export interface FastingStats {
@@ -84,6 +95,8 @@ export interface UpdateFastingCheckInPayload {
 export interface FastingHistoryQuery {
     from: string;
     to: string;
+    page?: number;
+    limit?: number;
 }
 
 export const FASTING_PROTOCOLS: FastingProtocolOption[] = [

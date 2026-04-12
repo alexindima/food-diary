@@ -25,19 +25,15 @@ public sealed class GetFastingInsightsQueryHandler(
 
         var userId = new UserId(query.UserId.Value);
         var now = dateTimeProvider.UtcNow;
-        var currentTask = fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
-        var historyTask = fastingOccurrenceRepository.GetByUserAsync(
+        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
+        var history = await fastingOccurrenceRepository.GetByUserAsync(
             userId,
             from: now.AddDays(-AnalysisDays),
             to: now,
             cancellationToken: cancellationToken);
+        var historyWithCheckIns = history.Where(static occurrence => HasCheckIn(occurrence)).ToList();
 
-        await Task.WhenAll(currentTask, historyTask);
-
-        var current = currentTask.Result;
-        var history = historyTask.Result.Where(static occurrence => HasCheckIn(occurrence)).ToList();
-
-        var insights = BuildInsights(history, current);
+        var insights = BuildInsights(historyWithCheckIns, current);
         var prompt = BuildCurrentPrompt(current, now);
 
         return Result.Success(new FastingInsightsModel(insights, prompt));

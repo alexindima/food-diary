@@ -331,15 +331,17 @@
                         <div class="fasting__checkin-grid">
                             <div class="fasting__checkin-field">
                                 <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
-                                <div class="fasting__protocols">
-                                    @for (level of checkInScale; track level) {
+                                <div class="fasting__protocols fasting__protocols--emoji">
+                                    @for (option of hungerEmojiScale; track option.value) {
                                         <button
                                             type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="hungerLevel() === level"
-                                            (click)="setHungerLevel(level)"
+                                            class="fasting__protocol-btn fasting__protocol-btn--emoji"
+                                            [class.fasting__protocol-btn--active]="hungerLevel() === option.value"
+                                            [attr.aria-label]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value"
+                                            [title]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value + '/5'"
+                                            (click)="setHungerLevel(option.value)"
                                         >
-                                            {{ level }}
+                                            <span class="fasting__emoji">{{ option.emoji }}</span>
                                         </button>
                                     }
                                 </div>
@@ -347,15 +349,17 @@
 
                             <div class="fasting__checkin-field">
                                 <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
-                                <div class="fasting__protocols">
-                                    @for (level of checkInScale; track level) {
+                                <div class="fasting__protocols fasting__protocols--emoji">
+                                    @for (option of energyEmojiScale; track option.value) {
                                         <button
                                             type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="energyLevel() === level"
-                                            (click)="setEnergyLevel(level)"
+                                            class="fasting__protocol-btn fasting__protocol-btn--emoji"
+                                            [class.fasting__protocol-btn--active]="energyLevel() === option.value"
+                                            [attr.aria-label]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value"
+                                            [title]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value + '/5'"
+                                            (click)="setEnergyLevel(option.value)"
                                         >
-                                            {{ level }}
+                                            <span class="fasting__emoji">{{ option.emoji }}</span>
                                         </button>
                                     }
                                 </div>
@@ -363,15 +367,17 @@
 
                             <div class="fasting__checkin-field">
                                 <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
-                                <div class="fasting__protocols">
-                                    @for (level of checkInScale; track level) {
+                                <div class="fasting__protocols fasting__protocols--emoji">
+                                    @for (option of moodEmojiScale; track option.value) {
                                         <button
                                             type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="moodLevel() === level"
-                                            (click)="setMoodLevel(level)"
+                                            class="fasting__protocol-btn fasting__protocol-btn--emoji"
+                                            [class.fasting__protocol-btn--active]="moodLevel() === option.value"
+                                            [attr.aria-label]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value"
+                                            [title]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value + '/5'"
+                                            (click)="setMoodLevel(option.value)"
                                         >
-                                            {{ level }}
+                                            <span class="fasting__emoji">{{ option.emoji }}</span>
                                         </button>
                                     }
                                 </div>
@@ -515,6 +521,15 @@
                             </div>
                             <div class="fasting__telemetry-meta">
                                 {{
+                                    'USER_MANAGE.FASTING_TELEMETRY_LAST_CHECK_IN'
+                                        | translate
+                                            : {
+                                                  value: formatRelativeTime(fastingTelemetrySummary()?.lastCheckInAtUtc ?? null) ?? '-',
+                                              }
+                                }}
+                            </div>
+                            <div class="fasting__telemetry-meta">
+                                {{
                                     'USER_MANAGE.FASTING_TELEMETRY_LAST_EVENT'
                                         | translate: { value: formatDateTime(fastingTelemetrySummary()?.lastEventAtUtc ?? null) ?? '-' }
                                 }}
@@ -591,7 +606,7 @@
                         <p class="fasting__empty">{{ 'FASTING.NO_HISTORY' | translate }}</p>
                     } @else {
                         <div class="fasting__history">
-                            @for (session of history(); track session.id) {
+                            @for (session of visibleHistory(); track session.id) {
                                 <fd-ui-accent-surface
                                     class="fasting__history-item"
                                     accentSide="left"
@@ -623,24 +638,49 @@
                                     }
                                     @if (hasCheckIn(session)) {
                                         <div class="fasting__history-checkin">
-                                            <div class="fasting__history-checkin-summary">{{ getCheckInSummary(session) }}</div>
-                                            @if (session.symptoms.length > 0) {
-                                                <div class="fasting__history-symptoms">
-                                                    @for (symptom of session.symptoms; track symptom) {
-                                                        <span class="fasting__history-symptom">
-                                                            {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
-                                                        </span>
+                                            @for (checkIn of getSessionCheckIns(session); track checkIn.id) {
+                                                <div class="fasting__history-checkin-entry">
+                                                    <div class="fasting__history-checkin-header">
+                                                        <div class="fasting__history-checkin-time">
+                                                            {{ checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="fasting__history-checkin-summary">
+                                                        {{ getCheckInSummary(checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel) }}
+                                                    </div>
+                                                    @if (checkIn.symptoms.length > 0) {
+                                                        <div class="fasting__history-symptoms">
+                                                            @for (symptom of checkIn.symptoms; track symptom) {
+                                                                <span class="fasting__history-symptom">
+                                                                    {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    @if (checkIn.notes) {
+                                                        <p class="fasting__history-notes">{{ checkIn.notes }}</p>
                                                     }
                                                 </div>
-                                            }
-                                            @if (session.checkInNotes) {
-                                                <p class="fasting__history-notes">{{ session.checkInNotes }}</p>
                                             }
                                         </div>
                                     }
                                 </fd-ui-accent-surface>
                             }
                         </div>
+                        @if (canLoadMoreHistory()) {
+                            <div class="fasting__history-actions">
+                                <fd-ui-button
+                                    type="button"
+                                    fill="outline"
+                                    variant="secondary"
+                                    size="sm"
+                                    [disabled]="isLoadingMoreHistory()"
+                                    (click)="loadMoreHistory()"
+                                >
+                                    {{ (isLoadingMoreHistory() ? 'FASTING.LOADING' : 'FASTING.LOAD_MORE_HISTORY') | translate }}
+                                </fd-ui-button>
+                            </div>
+                        }
                     }
                 </div>
             </fd-ui-card>

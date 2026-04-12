@@ -102,6 +102,15 @@ public sealed class DashboardSnapshotBuilderTests {
             DateTime? to = null,
             FastingOccurrenceStatus? status = null,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)>(([], 0));
         public Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }

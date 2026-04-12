@@ -24,4 +24,5 @@ public sealed record FastingSessionModel(
     int? EnergyLevel,
     int? MoodLevel,
     IReadOnlyList<string> Symptoms,
-    string? CheckInNotes);
+    string? CheckInNotes,
+    IReadOnlyList<FastingCheckInModel> CheckIns);

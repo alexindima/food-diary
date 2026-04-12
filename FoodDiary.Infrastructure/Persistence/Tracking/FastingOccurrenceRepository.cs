@@ -67,6 +67,39 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         DateTime? to = null,
         FastingOccurrenceStatus? status = null,
         CancellationToken cancellationToken = default) {
+        var query = BuildByUserQuery(userId, from, to, status);
+
+        return await query
+            .OrderByDescending(occurrence => occurrence.StartedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+        UserId userId,
+        int page,
+        int limit,
+        DateTime? from = null,
+        DateTime? to = null,
+        FastingOccurrenceStatus? status = null,
+        CancellationToken cancellationToken = default) {
+        var normalizedPage = Math.Max(page, 1);
+        var normalizedLimit = Math.Max(limit, 1);
+        var query = BuildByUserQuery(userId, from, to, status);
+        var totalItems = await query.CountAsync(cancellationToken);
+        var items = await query
+            .OrderByDescending(occurrence => occurrence.StartedAtUtc)
+            .Skip((normalizedPage - 1) * normalizedLimit)
+            .Take(normalizedLimit)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalItems);
+    }
+
+    private IQueryable<FastingOccurrence> BuildByUserQuery(
+        UserId userId,
+        DateTime? from,
+        DateTime? to,
+        FastingOccurrenceStatus? status) {
         var query = context.FastingOccurrences
             .Include(occurrence => occurrence.Plan)
             .AsNoTracking()
@@ -84,9 +117,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
             query = query.Where(occurrence => occurrence.Status == status.Value);
         }
 
-        return await query
-            .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken);
+        return query;
     }
 
     public async Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {

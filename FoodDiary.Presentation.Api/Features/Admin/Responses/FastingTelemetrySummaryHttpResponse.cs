@@ -13,5 +13,6 @@ public sealed record FastingTelemetrySummaryHttpResponse(
     double CompletionRatePercent,
     double CheckInRatePercent,
     double? AverageCompletedDurationHours,
+    DateTime? LastCheckInAtUtc,
     DateTime? LastEventAtUtc,
     IReadOnlyList<FastingTelemetryPresetHttpResponse> TopPresets);

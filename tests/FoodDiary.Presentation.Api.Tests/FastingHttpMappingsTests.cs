@@ -99,7 +99,17 @@ public sealed class FastingHttpMappingsTests {
             4,
             5,
             ["good"],
-            "Hydration was fine");
+            "Hydration was fine",
+            [
+                new FastingCheckInModel(
+                    Guid.NewGuid(),
+                    DateTime.UtcNow.AddHours(-1),
+                    3,
+                    4,
+                    5,
+                    ["good"],
+                    "Hydration was fine")
+            ]);
 
         var response = model.ToHttpResponse();
 
@@ -117,5 +127,6 @@ public sealed class FastingHttpMappingsTests {
         Assert.Equal(5, response.MoodLevel);
         Assert.Equal(["good"], response.Symptoms);
         Assert.Equal("Hydration was fine", response.CheckInNotes);
+        Assert.Single(response.CheckIns);
     }
 }

@@ -18,6 +18,7 @@ public static class AdminTelemetryHttpResponseMappings {
             summary.CompletionRatePercent,
             summary.CheckInRatePercent,
             summary.AverageCompletedDurationHours,
+            summary.LastCheckInAtUtc,
             summary.LastEventAtUtc,
             summary.TopPresets.Select(x => new FastingTelemetryPresetHttpResponse(
                 x.PresetId,

@@ -59,8 +59,8 @@ public class FastingController(ISender mediator) : AuthorizedController(mediator
         HandleOk(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("history")]
-    [ProducesResponseType<List<FastingSessionHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PagedHttpResponse<FastingSessionHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetHistory([FromCurrentUser] Guid userId, [FromQuery] GetFastingHistoryHttpQuery query) =>
-        HandleOk(query.ToHistoryQuery(userId), static value => value.Select(x => x.ToHttpResponse()).ToList());
+        HandleOk(query.ToHistoryQuery(userId), static value => value.ToHttpResponse());
 
 }

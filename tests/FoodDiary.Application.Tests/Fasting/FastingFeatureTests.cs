@@ -7,6 +7,7 @@ using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -397,6 +398,49 @@ public class FastingFeatureTests {
         Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.EatDay && x.SequenceNumber == 4);
     }
 
+    [Fact]
+    public async Task GetFastingInsights_WithCurrentAndHistory_ReturnsInsightsAndPrompt() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-5));
+        var current = FastingOccurrence.Create(
+            plan.Id,
+            userId,
+            FastingOccurrenceKind.FastingWindow,
+            FixedNow.AddHours(-13),
+            1,
+            16);
+        var historyOne = FastingOccurrence.Create(
+            plan.Id,
+            userId,
+            FastingOccurrenceKind.FastingWindow,
+            FixedNow.AddDays(-3),
+            1,
+            16);
+        historyOne.UpdateCheckIn(5, 5, 5, ["headache"], "note", FixedNow.AddDays(-3).AddHours(8));
+        historyOne.Complete(FixedNow.AddDays(-3).AddHours(16));
+
+        var historyTwo = FastingOccurrence.Create(
+            plan.Id,
+            userId,
+            FastingOccurrenceKind.FastingWindow,
+            FixedNow.AddDays(-2),
+            1,
+            16);
+        historyTwo.UpdateCheckIn(4, 4, 4, ["headache"], "note", FixedNow.AddDays(-2).AddHours(8));
+        historyTwo.Complete(FixedNow.AddDays(-2).AddHours(16));
+
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: current);
+        occurrenceRepo.StoredOccurrences.InsertRange(0, [historyOne, historyTwo]);
+        var handler = new GetFastingInsightsQueryHandler(occurrenceRepo, new FixedDateTimeProvider());
+
+        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value.CurrentPrompt);
+        Assert.Equal("mid", result.Value.CurrentPrompt!.Id);
+        Assert.Contains(result.Value.Insights, x => x.Id == "symptom-headache");
+    }
+
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
         public Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(active);
         public Task<FastingPlan?> GetByIdAsync(FastingPlanId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
@@ -418,7 +462,60 @@ public class FastingFeatureTests {
                 .ToList();
             return Task.FromResult(occurrences);
         }
-        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(UserId userId, DateTime? from = null, DateTime? to = null, FastingOccurrenceStatus? status = null, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(UserId userId, DateTime? from = null, DateTime? to = null, FastingOccurrenceStatus? status = null, CancellationToken ct = default) {
+            var query = StoredOccurrences.Where(x => x.UserId == userId);
+
+            if (from.HasValue) {
+                query = query.Where(x => x.StartedAtUtc >= from.Value);
+            }
+
+            if (to.HasValue) {
+                query = query.Where(x => x.StartedAtUtc <= to.Value);
+            }
+
+            if (status.HasValue) {
+                query = query.Where(x => x.Status == status.Value);
+            }
+
+            IReadOnlyList<FastingOccurrence> occurrences = query
+                .OrderByDescending(x => x.StartedAtUtc)
+                .ToList();
+
+            return Task.FromResult(occurrences);
+        }
+        public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            var query = StoredOccurrences.Where(x => x.UserId == userId);
+
+            if (from.HasValue) {
+                query = query.Where(x => x.StartedAtUtc >= from.Value);
+            }
+
+            if (to.HasValue) {
+                query = query.Where(x => x.StartedAtUtc <= to.Value);
+            }
+
+            if (status.HasValue) {
+                query = query.Where(x => x.Status == status.Value);
+            }
+
+            var ordered = query
+                .OrderByDescending(x => x.StartedAtUtc)
+                .ToList();
+
+            var items = ordered
+                .Skip(Math.Max(0, page - 1) * limit)
+                .Take(limit)
+                .ToList();
+
+            return Task.FromResult<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)>((items, ordered.Count));
+        }
         public Task AddAsync(FastingOccurrence occurrence, CancellationToken ct = default) {
             StoredOccurrences.Add(occurrence);
             return Task.CompletedTask;

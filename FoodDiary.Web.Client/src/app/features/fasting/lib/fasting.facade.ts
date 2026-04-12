@@ -25,6 +25,7 @@ interface FastingPromptState {
 export class FastingFacade {
     private static readonly PromptStorageKey = 'fd_fasting_prompt_state';
     private static readonly PromptSnoozeHours = 4;
+    private static readonly HistoryPageSize = 10;
 
     private readonly fastingService = inject(FastingService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
@@ -41,6 +42,9 @@ export class FastingFacade {
     public readonly currentSession = signal<FastingSession | null>(null);
     public readonly stats = signal<FastingStats | null>(null);
     public readonly history = signal<FastingSession[]>([]);
+    public readonly historyPage = signal(1);
+    public readonly historyTotalPages = signal(0);
+    public readonly isLoadingMoreHistory = signal(false);
     public readonly insightsData = signal<FastingInsights>({ insights: [], currentPrompt: null });
     public readonly selectedMode = signal<FastingMode>('intermittent');
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
@@ -131,8 +135,16 @@ export class FastingFacade {
                 ? this.fastingService.getHistory({
                       from: from.toISOString(),
                       to: to.toISOString(),
+                      page: 1,
+                      limit: FastingFacade.HistoryPageSize,
                   })
-                : of([]),
+                : of({
+                      data: [],
+                      page: 1,
+                      limit: FastingFacade.HistoryPageSize,
+                      totalPages: 0,
+                      totalItems: 0,
+                  }),
             this.fastingService.getInsights(),
         ])
             .pipe(
@@ -142,13 +154,40 @@ export class FastingFacade {
             .subscribe(([current, stats, history, insights]) => {
                 this.currentSession.set(current);
                 this.stats.set(stats);
-                this.history.set(history);
+                this.history.set(history.data);
+                this.historyPage.set(history.page);
+                this.historyTotalPages.set(history.totalPages);
                 this.insightsData.set(insights);
                 this.syncCheckInFromSession(current);
 
                 if (current && !current.endedAtUtc) {
                     this.startTimer();
                 }
+            });
+    }
+
+    public loadMoreHistory(): void {
+        if (this.isLoadingMoreHistory() || this.historyPage() >= this.historyTotalPages()) {
+            return;
+        }
+
+        const range = this.getHistoryRange();
+        this.isLoadingMoreHistory.set(true);
+        this.fastingService
+            .getHistory({
+                from: range.from,
+                to: range.to,
+                page: this.historyPage() + 1,
+                limit: FastingFacade.HistoryPageSize,
+            })
+            .pipe(
+                finalize(() => this.isLoadingMoreHistory.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(history => {
+                this.history.update(current => [...current, ...history.data]);
+                this.historyPage.set(history.page);
+                this.historyTotalPages.set(history.totalPages);
             });
     }
 
@@ -186,8 +225,6 @@ export class FastingFacade {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(session => {
-                this.currentSession.set(session);
-                this.syncCheckInFromSession(session);
                 if (session.endedAtUtc) {
                     this.stopTimer();
                     this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
@@ -200,8 +237,14 @@ export class FastingFacade {
                         hadCheckIn: !!session.checkInAtUtc,
                         ...this.getReminderTelemetryDetails(),
                     });
+                    this.clearPromptStateForSession(session.id);
+                    this.currentSession.set(null);
+                    this.resetDraftState();
+                    this.syncCheckInFromSession(null);
                     this.refreshStats();
                 } else {
+                    this.currentSession.set(session);
+                    this.syncCheckInFromSession(session);
                     this.startTimer();
                     this.refreshHistory();
                     this.refreshInsights();
@@ -215,6 +258,10 @@ export class FastingFacade {
 
     public selectMode(mode: FastingMode): void {
         this.selectedMode.set(mode);
+
+        if (mode === 'extended') {
+            this.selectedProtocol.set('F24_0');
+        }
     }
 
     public setCustomHours(hours: number): void {
@@ -443,14 +490,20 @@ export class FastingFacade {
     }
 
     private refreshHistory(): void {
-        const now = new Date();
-        const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
+        const range = this.getHistoryRange();
         this.fastingService
-            .getHistory({ from: from.toISOString(), to: to.toISOString() })
+            .getHistory({
+                from: range.from,
+                to: range.to,
+                page: 1,
+                limit: FastingFacade.HistoryPageSize,
+            })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(history => this.history.set(history));
+            .subscribe(history => {
+                this.history.set(history.data);
+                this.historyPage.set(history.page);
+                this.historyTotalPages.set(history.totalPages);
+            });
     }
 
     private refreshInsights(): void {
@@ -543,6 +596,30 @@ export class FastingFacade {
             firstReminderHours,
             followUpReminderHours,
             reminderPresetId,
+        };
+    }
+
+    private resetDraftState(): void {
+        this.selectedMode.set('intermittent');
+        this.selectedProtocol.set('F16_8');
+        this.customHours.set(16);
+        this.customIntermittentFastHours.set(16);
+        this.cyclicEatDayProtocol.set('F16_8');
+        this.cyclicFastDays.set(1);
+        this.cyclicEatDays.set(1);
+        this.cyclicUsesCustomPreset.set(false);
+        this.cyclicEatDayFastHours.set(16);
+        this.extendHours.set(24);
+    }
+
+    private getHistoryRange(): { from: string; to: string } {
+        const now = new Date();
+        const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        return {
+            from: from.toISOString(),
+            to: to.toISOString(),
         };
     }
 
