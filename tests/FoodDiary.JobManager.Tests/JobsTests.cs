@@ -22,6 +22,7 @@ public sealed class JobsTests {
         double? duration = null;
 
         using var listener = CreateJobManagerListener(
+            expectedJobName: "images.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
                 outcome = GetTagValue(tags, "fooddiary.job.outcome");
@@ -58,6 +59,7 @@ public sealed class JobsTests {
         double? duration = null;
 
         using var listener = CreateJobManagerListener(
+            expectedJobName: "users.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
                 outcome = GetTagValue(tags, "fooddiary.job.outcome");
@@ -196,6 +198,7 @@ public sealed class JobsTests {
         double? duration = null;
 
         using var listener = CreateJobManagerListener(
+            expectedJobName: "notifications.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
                 outcome = GetTagValue(tags, "fooddiary.job.outcome");
@@ -248,6 +251,7 @@ public sealed class JobsTests {
         double? duration = null;
 
         using var listener = CreateJobManagerListener(
+            expectedJobName: "notifications.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
                 outcome = GetTagValue(tags, "fooddiary.job.outcome");
@@ -372,6 +376,7 @@ public sealed class JobsTests {
     }
 
     private static MeterListener CreateJobManagerListener(
+        string expectedJobName,
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onExecution,
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onDeletedItems,
         Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration) {
@@ -386,6 +391,10 @@ public sealed class JobsTests {
             }
         };
         listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
+            if (!string.Equals(GetTagValue(tags, "fooddiary.job.name"), expectedJobName, StringComparison.Ordinal)) {
+                return;
+            }
+
             if (instrument.Name == "fooddiary.job.execution.events") {
                 onExecution?.Invoke(value, tags);
             } else if (instrument.Name == "fooddiary.job.deleted_items") {
@@ -393,6 +402,10 @@ public sealed class JobsTests {
             }
         });
         listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
+            if (!string.Equals(GetTagValue(tags, "fooddiary.job.name"), expectedJobName, StringComparison.Ordinal)) {
+                return;
+            }
+
             if (instrument.Name == "fooddiary.job.execution.duration") {
                 onDuration?.Invoke(value, tags);
             }
