@@ -4,4 +4,5 @@
     flex-direction: column;
     gap: var(--fd-layout-page-section-spacing, 24px);
     box-sizing: border-box;
+    padding-bottom: clamp(12px, 2vw, 20px);
 }

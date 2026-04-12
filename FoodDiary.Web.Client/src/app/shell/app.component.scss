@@ -62,6 +62,8 @@
         overflow-y: auto;
         overscroll-behavior-y: contain;
         -webkit-overflow-scrolling: touch;
+        padding-bottom: calc(24px + env(safe-area-inset-bottom));
+        box-sizing: border-box;
     }
 
     &__main > router-outlet {

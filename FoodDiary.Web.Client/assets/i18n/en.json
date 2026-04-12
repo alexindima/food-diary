@@ -1720,6 +1720,10 @@
         "HISTORY_TITLE": "Recent history",
         "NO_HISTORY": "No fasting sessions yet.",
         "LOAD_MORE_HISTORY": "Load more",
+        "SHOW_HISTORY_CHECK_INS": "Show check-ins ({{count}})",
+        "HIDE_HISTORY_CHECK_INS": "Hide check-ins",
+        "LOAD_MORE_CHECK_INS": "Show more check-ins",
+        "HISTORY_CHECK_INS_COUNT": "{{count}} check-ins",
         "CHECK_IN": {
             "TITLE": "Today's check-in",
             "SUBTITLE": "Log how the fast feels so you can notice patterns and stop early if something feels off.",

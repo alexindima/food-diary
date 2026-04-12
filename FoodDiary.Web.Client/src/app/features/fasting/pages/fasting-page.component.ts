@@ -176,6 +176,7 @@ export class FastingPageComponent implements OnInit {
     public readonly visibleHistory = this.history;
     public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
     public readonly isCheckInExpanded = signal(false);
+    public readonly expandedHistorySessionId = signal<string | null>(null);
     public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
     public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
     public readonly currentSessionRecentCheckIns = computed(() => {
@@ -444,6 +445,27 @@ export class FastingPageComponent implements OnInit {
 
     public hasCheckIn(session: FastingSession): boolean {
         return this.getSessionCheckIns(session).length > 0;
+    }
+
+    public isHistorySessionExpanded(sessionId: string): boolean {
+        return this.expandedHistorySessionId() === sessionId;
+    }
+
+    public toggleHistorySession(sessionId: string): void {
+        this.expandedHistorySessionId.update(current => (current === sessionId ? null : sessionId));
+    }
+
+    public getHistoryCheckInToggleKey(session: FastingSession): string {
+        return this.isHistorySessionExpanded(session.id) ? 'FASTING.HIDE_HISTORY_CHECK_INS' : 'FASTING.SHOW_HISTORY_CHECK_INS';
+    }
+
+    public getLatestSessionCheckIn(session: FastingSession): FastingCheckIn | null {
+        const checkIns = this.getSessionCheckIns(session);
+        return checkIns.length > 0 ? (checkIns[0] ?? null) : null;
+    }
+
+    public getSessionCheckInCount(session: FastingSession): number {
+        return this.getSessionCheckIns(session).length;
     }
 
     public getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {

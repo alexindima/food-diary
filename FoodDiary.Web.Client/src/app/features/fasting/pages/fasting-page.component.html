@@ -394,43 +394,6 @@
                                     }
                                 }
 
-                                @if (hasCurrentSessionTimeline()) {
-                                    <div class="fasting__checkin-timeline">
-                                        <div class="fasting__checkin-timeline-title">
-                                            {{ 'FASTING.CHECK_IN.RECENT_TITLE' | translate }}
-                                        </div>
-                                        <div class="fasting__checkin-timeline-list">
-                                            @for (checkIn of currentSessionRecentCheckIns(); track checkIn.id) {
-                                                <div class="fasting__checkin-timeline-entry">
-                                                    <div class="fasting__checkin-timeline-time">
-                                                        {{ checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
-                                                    </div>
-                                                    <div class="fasting__checkin-timeline-summary">
-                                                        {{ getCheckInSummary(checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel) }}
-                                                    </div>
-                                                    @if (checkIn.symptoms.length > 0) {
-                                                        <div class="fasting__history-symptoms">
-                                                            @for (symptom of checkIn.symptoms; track symptom) {
-                                                                <span class="fasting__history-symptom">
-                                                                    {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
-                                                                </span>
-                                                            }
-                                                        </div>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-                                        @if (getCurrentSessionOlderCheckInsCount() > 0) {
-                                            <div class="fasting__checkin-timeline-more">
-                                                {{
-                                                    'FASTING.CHECK_IN.RECENT_MORE'
-                                                        | translate: { count: getCurrentSessionOlderCheckInsCount() }
-                                                }}
-                                            </div>
-                                        }
-                                    </div>
-                                }
-
                                 <div class="fasting__actions fasting__actions--start">
                                     <fd-ui-button
                                         variant="secondary"
@@ -576,8 +539,14 @@
                                     [tinted]="true"
                                 >
                                     <div class="fasting__history-header">
-                                        <div class="fasting__history-date">
-                                            {{ session.startedAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                        <div class="fasting__history-heading">
+                                            <span class="fasting__history-date">
+                                                {{ session.startedAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                            </span>
+                                            <span class="fasting__history-separator" aria-hidden="true">&middot;</span>
+                                            <span class="fasting__history-details">
+                                                {{ getHistorySessionTypeLabel(session) }} &middot; {{ getHistoryProtocolDisplay(session) }}
+                                            </span>
                                         </div>
                                         <div
                                             class="fasting__history-badge"
@@ -589,42 +558,79 @@
                                             {{ getHistoryBadgeKey(session.status) | translate }}
                                         </div>
                                     </div>
-                                    <div class="fasting__history-details">
-                                        <span
-                                            >{{ getHistorySessionTypeLabel(session) }} &middot;
-                                            {{ getHistoryProtocolDisplay(session) }}</span
-                                        >
-                                    </div>
                                     @if (session.notes) {
                                         <p class="fasting__history-notes">{{ session.notes }}</p>
                                     }
                                     @if (hasCheckIn(session)) {
-                                        <div class="fasting__history-checkin">
-                                            @for (checkIn of getSessionCheckIns(session); track checkIn.id) {
-                                                <div class="fasting__history-checkin-entry">
-                                                    <div class="fasting__history-checkin-header">
-                                                        <div class="fasting__history-checkin-time">
-                                                            {{ checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="fasting__history-checkin-summary">
-                                                        {{ getCheckInSummary(checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel) }}
-                                                    </div>
-                                                    @if (checkIn.symptoms.length > 0) {
-                                                        <div class="fasting__history-symptoms">
-                                                            @for (symptom of checkIn.symptoms; track symptom) {
-                                                                <span class="fasting__history-symptom">
-                                                                    {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
-                                                                </span>
-                                                            }
-                                                        </div>
-                                                    }
-                                                    @if (checkIn.notes) {
-                                                        <p class="fasting__history-notes">{{ checkIn.notes }}</p>
-                                                    }
-                                                </div>
-                                            }
+                                        <div class="fasting__history-toggle-row">
+                                            <span class="fasting__history-toggle-count">
+                                                {{
+                                                    'FASTING.HISTORY_CHECK_INS_COUNT'
+                                                        | translate: { count: getSessionCheckInCount(session) }
+                                                }}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                class="fasting__history-toggle"
+                                                [attr.aria-expanded]="isHistorySessionExpanded(session.id)"
+                                                (click)="toggleHistorySession(session.id)"
+                                            >
+                                                {{
+                                                    getHistoryCheckInToggleKey(session)
+                                                        | translate: { count: getSessionCheckInCount(session) }
+                                                }}
+                                            </button>
                                         </div>
+
+                                        @if (isHistorySessionExpanded(session.id)) {
+                                            <div class="fasting__history-checkin">
+                                                @for (checkIn of getVisibleSessionCheckIns(session); track checkIn.id) {
+                                                    <div class="fasting__history-checkin-entry">
+                                                        <div class="fasting__history-checkin-header">
+                                                            <div class="fasting__history-checkin-time">
+                                                                {{ checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="fasting__history-checkin-summary">
+                                                            {{
+                                                                getCheckInSummary(
+                                                                    checkIn.hungerLevel,
+                                                                    checkIn.energyLevel,
+                                                                    checkIn.moodLevel
+                                                                )
+                                                            }}
+                                                        </div>
+                                                        @if (checkIn.symptoms.length > 0) {
+                                                            <div class="fasting__history-symptoms">
+                                                                @for (symptom of checkIn.symptoms; track symptom) {
+                                                                    <span class="fasting__history-symptom">
+                                                                        {{
+                                                                            'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate
+                                                                        }}
+                                                                    </span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        @if (checkIn.notes) {
+                                                            <p class="fasting__history-notes">{{ checkIn.notes }}</p>
+                                                        }
+                                                    </div>
+                                                }
+                                                @if (canLoadMoreSessionCheckIns(session)) {
+                                                    <div class="fasting__history-toggle-actions">
+                                                        <fd-ui-button
+                                                            type="button"
+                                                            fill="outline"
+                                                            variant="secondary"
+                                                            size="sm"
+                                                            (click)="loadMoreSessionCheckIns(session.id)"
+                                                        >
+                                                            {{ 'FASTING.LOAD_MORE_CHECK_INS' | translate }}
+                                                        </fd-ui-button>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
                                     }
                                 </fd-ui-accent-surface>
                             }
