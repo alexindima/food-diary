@@ -31,6 +31,12 @@ public partial class AddFastingCheckIns : Migration {
                     principalTable: "FastingOccurrences",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
+                table.ForeignKey(
+                    name: "FK_FastingCheckIns_Users_UserId",
+                    column: x => x.UserId,
+                    principalTable: "Users",
+                    principalColumn: "Id",
+                    onDelete: ReferentialAction.Cascade);
             });
 
         migrationBuilder.Sql(
