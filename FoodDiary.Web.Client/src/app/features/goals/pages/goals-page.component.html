@@ -64,8 +64,11 @@
                                     <div class="goals__cycling-days">
                                         @for (day of daysOfWeek; track day.key) {
                                             <div class="goals__cycling-day">
-                                                <label class="goals__cycling-day-label">{{ day.labelKey | translate }}</label>
+                                                <label class="goals__cycling-day-label" [attr.for]="'cycling-day-' + day.key">
+                                                    {{ day.labelKey | translate }}
+                                                </label>
                                                 <input
+                                                    [id]="'cycling-day-' + day.key"
                                                     type="number"
                                                     class="goals__cycling-day-input"
                                                     [min]="0"

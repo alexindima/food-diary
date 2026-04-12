@@ -1,7 +1,12 @@
 <fd-ui-dialog [title]="'REPORT.TITLE' | translate">
     <div class="report-form">
-        <label class="report-label">{{ 'REPORT.REASON_LABEL' | translate }}</label>
-        <fd-ui-textarea [formControl]="reasonControl" [placeholder]="'REPORT.REASON_PLACEHOLDER' | translate" [rows]="4" />
+        <label class="report-label" for="reportReason">{{ 'REPORT.REASON_LABEL' | translate }}</label>
+        <fd-ui-textarea
+            id="reportReason"
+            [formControl]="reasonControl"
+            [placeholder]="'REPORT.REASON_PLACEHOLDER' | translate"
+            [rows]="4"
+        />
     </div>
     <div class="report-actions">
         <fd-ui-button variant="outline" (click)="onCancel()">
