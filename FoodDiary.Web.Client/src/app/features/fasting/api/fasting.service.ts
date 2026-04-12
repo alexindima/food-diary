@@ -98,8 +98,8 @@ export class FastingService extends ApiService {
         return this.get<FastingInsights>('insights').pipe(
             catchError((error: HttpErrorResponse) =>
                 fallbackApiError('Get fasting insights error', error, {
+                    alerts: [],
                     insights: [],
-                    currentPrompt: null,
                 }),
             ),
         );

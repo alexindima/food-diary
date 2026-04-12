@@ -303,301 +303,185 @@
                 </fd-ui-card>
             </div>
 
+            @if (isActive() && visibleAlerts().length > 0) {
+                <div class="fasting__alerts-section">
+                    @for (alert of visibleAlerts(); track alert.id) {
+                        <fd-ui-inline-alert
+                            appearance="alert"
+                            [severity]="getAlertSeverity(alert)"
+                            [title]="getTranslatedMessage(alert, 'titleKey')"
+                            [message]="getTranslatedMessage(alert, 'bodyKey')"
+                            [primaryActionLabel]="'FASTING.PROMPTS.SNOOZE' | translate"
+                            [secondaryActionLabel]="'FASTING.PROMPTS.DISMISS' | translate"
+                            (primaryAction)="snoozePrompt(alert.id)"
+                            (secondaryAction)="dismissPrompt(alert.id)"
+                        />
+                    }
+                </div>
+            }
+
             @if (isActive()) {
                 <fd-ui-card class="fasting__card" [title]="'FASTING.CHECK_IN.TITLE' | translate">
                     <div class="fasting__checkin">
-                        @if (visibleCheckInPrompt(); as prompt) {
-                            <fd-ui-accent-surface
-                                class="fasting__prompt"
-                                accentSide="left"
-                                [accentColor]="prompt.tone === 'warning' ? '#f97316' : '#7c3aed'"
-                                [tinted]="true"
-                            >
-                                <div class="fasting__insight-title">{{ getTranslatedMessage(prompt, 'titleKey') }}</div>
-                                <p class="fasting__insight-body">{{ getTranslatedMessage(prompt, 'bodyKey') }}</p>
-                                <div class="fasting__prompt-actions">
-                                    <button type="button" class="fasting__prompt-link" (click)="snoozePrompt(prompt.id)">
-                                        {{ 'FASTING.PROMPTS.SNOOZE' | translate }}
-                                    </button>
-                                    <button type="button" class="fasting__prompt-link" (click)="dismissPrompt(prompt.id)">
-                                        {{ 'FASTING.PROMPTS.DISMISS' | translate }}
-                                    </button>
-                                </div>
-                            </fd-ui-accent-surface>
-                        }
+                        @if (!isCheckInExpanded()) {
+                            <div class="fasting__checkin-summary">
+                                <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
 
-                        <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
-
-                        <div class="fasting__checkin-grid">
-                            <div class="fasting__checkin-field">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
-                                <div class="fasting__protocols fasting__protocols--emoji">
-                                    @for (option of hungerEmojiScale; track option.value) {
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn fasting__protocol-btn--emoji"
-                                            [class.fasting__protocol-btn--active]="hungerLevel() === option.value"
-                                            [attr.aria-label]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value"
-                                            [title]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value + '/5'"
-                                            (click)="setHungerLevel(option.value)"
-                                        >
-                                            <span class="fasting__emoji">{{ option.emoji }}</span>
-                                        </button>
+                                @if (currentSessionLatestCheckIn(); as latestCheckIn) {
+                                    <div class="fasting__checkin-meta">
+                                        {{
+                                            'FASTING.CHECK_IN.LAST_SAVED'
+                                                | translate: { value: formatRelativeTime(latestCheckIn.checkedInAtUtc) }
+                                        }}
+                                    </div>
+                                    <div class="fasting__checkin-summary-text">
+                                        {{
+                                            getCheckInSummary(latestCheckIn.hungerLevel, latestCheckIn.energyLevel, latestCheckIn.moodLevel)
+                                        }}
+                                    </div>
+                                    @if (latestCheckIn.symptoms.length > 0) {
+                                        <div class="fasting__history-symptoms">
+                                            @for (symptom of latestCheckIn.symptoms; track symptom) {
+                                                <span class="fasting__history-symptom">
+                                                    {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
+                                                </span>
+                                            }
+                                        </div>
                                     }
-                                </div>
-                            </div>
-
-                            <div class="fasting__checkin-field">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
-                                <div class="fasting__protocols fasting__protocols--emoji">
-                                    @for (option of energyEmojiScale; track option.value) {
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn fasting__protocol-btn--emoji"
-                                            [class.fasting__protocol-btn--active]="energyLevel() === option.value"
-                                            [attr.aria-label]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value"
-                                            [title]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value + '/5'"
-                                            (click)="setEnergyLevel(option.value)"
-                                        >
-                                            <span class="fasting__emoji">{{ option.emoji }}</span>
-                                        </button>
+                                    @if (latestCheckIn.notes) {
+                                        <p class="fasting__checkin-summary-note">{{ latestCheckIn.notes }}</p>
                                     }
-                                </div>
-                            </div>
-
-                            <div class="fasting__checkin-field">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
-                                <div class="fasting__protocols fasting__protocols--emoji">
-                                    @for (option of moodEmojiScale; track option.value) {
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn fasting__protocol-btn--emoji"
-                                            [class.fasting__protocol-btn--active]="moodLevel() === option.value"
-                                            [attr.aria-label]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value"
-                                            [title]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value + '/5'"
-                                            (click)="setMoodLevel(option.value)"
-                                        >
-                                            <span class="fasting__emoji">{{ option.emoji }}</span>
-                                        </button>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="fasting__checkin-field">
-                            <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}</div>
-                            <div class="fasting__protocols">
-                                @for (symptom of symptomOptions; track symptom.value) {
-                                    <button
-                                        type="button"
-                                        class="fasting__protocol-btn"
-                                        [class.fasting__protocol-btn--active]="selectedSymptoms().includes(symptom.value)"
-                                        (click)="toggleSymptom(symptom.value)"
-                                    >
-                                        {{ symptom.labelKey | translate }}
-                                    </button>
                                 }
+
+                                <div class="fasting__actions fasting__actions--start">
+                                    <fd-ui-button
+                                        variant="secondary"
+                                        fill="outline"
+                                        (click)="openCheckInForm()"
+                                        [disabled]="isEnding() || isUpdatingCycle()"
+                                    >
+                                        {{ getCurrentCheckInCtaKey() | translate }}
+                                    </fd-ui-button>
+                                </div>
                             </div>
-                        </div>
+                        } @else {
+                            <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
 
-                        <label class="fasting__checkin-notes">
-                            <span class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
-                            <textarea
-                                class="fasting__textarea"
-                                [ngModel]="checkInNotes()"
-                                (ngModelChange)="onCheckInNotesChange($event)"
-                                [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
-                                rows="4"
-                            ></textarea>
-                        </label>
+                            <div class="fasting__checkin-grid">
+                                <div class="fasting__checkin-field">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
+                                    <div class="fasting__protocols fasting__protocols--emoji">
+                                        @for (option of hungerEmojiScale; track option.value) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn fasting__protocol-btn--emoji"
+                                                [class.fasting__protocol-btn--active]="hungerLevel() === option.value"
+                                                [attr.aria-label]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value"
+                                                [title]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value + '/5'"
+                                                (click)="setHungerLevel(option.value)"
+                                            >
+                                                <span class="fasting__emoji">{{ option.emoji }}</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
 
-                        <div class="fasting__actions fasting__actions--start">
-                            <fd-ui-button (click)="saveCheckIn()" [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()">
-                                {{ 'FASTING.CHECK_IN.SAVE' | translate }}
-                            </fd-ui-button>
-                        </div>
+                                <div class="fasting__checkin-field">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
+                                    <div class="fasting__protocols fasting__protocols--emoji">
+                                        @for (option of energyEmojiScale; track option.value) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn fasting__protocol-btn--emoji"
+                                                [class.fasting__protocol-btn--active]="energyLevel() === option.value"
+                                                [attr.aria-label]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value"
+                                                [title]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value + '/5'"
+                                                (click)="setEnergyLevel(option.value)"
+                                            >
+                                                <span class="fasting__emoji">{{ option.emoji }}</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="fasting__checkin-field">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
+                                    <div class="fasting__protocols fasting__protocols--emoji">
+                                        @for (option of moodEmojiScale; track option.value) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn fasting__protocol-btn--emoji"
+                                                [class.fasting__protocol-btn--active]="moodLevel() === option.value"
+                                                [attr.aria-label]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value"
+                                                [title]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value + '/5'"
+                                                (click)="setMoodLevel(option.value)"
+                                            >
+                                                <span class="fasting__emoji">{{ option.emoji }}</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fasting__checkin-field">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}</div>
+                                <div class="fasting__protocols">
+                                    @for (symptom of symptomOptions; track symptom.value) {
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="selectedSymptoms().includes(symptom.value)"
+                                            (click)="toggleSymptom(symptom.value)"
+                                        >
+                                            {{ symptom.labelKey | translate }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <label class="fasting__checkin-notes">
+                                <span class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
+                                <textarea
+                                    class="fasting__textarea"
+                                    [ngModel]="checkInNotes()"
+                                    (ngModelChange)="onCheckInNotesChange($event)"
+                                    [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
+                                    rows="4"
+                                ></textarea>
+                            </label>
+
+                            <div class="fasting__actions fasting__actions--split">
+                                <fd-ui-button
+                                    variant="secondary"
+                                    fill="outline"
+                                    (click)="closeCheckInForm()"
+                                    [disabled]="isSavingCheckIn()"
+                                >
+                                    {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
+                                </fd-ui-button>
+                                <fd-ui-button (click)="saveCheckIn()" [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()">
+                                    {{ 'FASTING.CHECK_IN.SAVE' | translate }}
+                                </fd-ui-button>
+                            </div>
+                        }
                     </div>
                 </fd-ui-card>
             }
 
-            <fd-ui-card class="fasting__card" [title]="'FASTING.INSIGHTS.TITLE' | translate">
-                <div class="fasting__history-content">
-                    @if (insights().length === 0) {
-                        <p class="fasting__empty">{{ 'FASTING.INSIGHTS.EMPTY' | translate }}</p>
-                    } @else {
-                        <div class="fasting__insights">
-                            @for (insight of insights(); track insight.titleKey) {
-                                <fd-ui-accent-surface
-                                    class="fasting__insight"
-                                    accentSide="left"
-                                    [accentColor]="
-                                        insight.tone === 'warning' ? '#f97316' : insight.tone === 'positive' ? '#22c55e' : '#7c3aed'
-                                    "
-                                    [tinted]="true"
-                                >
-                                    <div class="fasting__insight-title">{{ getTranslatedMessage(insight, 'titleKey') }}</div>
-                                    <p class="fasting__insight-body">{{ getTranslatedMessage(insight, 'bodyKey') }}</p>
-                                </fd-ui-accent-surface>
-                            }
-                        </div>
-                    }
-                </div>
-            </fd-ui-card>
-
-            @if (isAdminUser()) {
-                <fd-ui-card class="fasting__card" [title]="'USER_MANAGE.FASTING_TELEMETRY_TITLE' | translate">
-                    <div class="fasting__history-content fasting__telemetry">
-                        <p class="fasting__telemetry-hint">{{ 'USER_MANAGE.FASTING_TELEMETRY_HINT' | translate }}</p>
-
-                        <div class="fasting__telemetry-actions">
-                            <fd-ui-button
-                                type="button"
-                                fill="outline"
-                                variant="secondary"
-                                size="sm"
-                                [disabled]="isLoadingFastingTelemetrySummary()"
-                                (click)="loadFastingTelemetrySummary()"
-                            >
-                                {{ 'USER_MANAGE.FASTING_TELEMETRY_REFRESH' | translate }}
-                            </fd-ui-button>
-                        </div>
-
-                        @if (isLoadingFastingTelemetrySummary()) {
-                            <p class="fasting__empty">{{ 'USER_MANAGE.FASTING_TELEMETRY_LOADING' | translate }}</p>
-                        } @else if (!fastingTelemetrySummary()) {
-                            <p class="fasting__empty">{{ 'USER_MANAGE.FASTING_TELEMETRY_EMPTY' | translate }}</p>
-                        } @else {
-                            <div class="fasting__telemetry-grid">
-                                <div class="fasting__telemetry-metric">
-                                    <span class="fasting__telemetry-value">{{
-                                        formatMetric(fastingTelemetrySummary()?.startedSessions)
-                                    }}</span>
-                                    <span class="fasting__telemetry-label">{{ 'USER_MANAGE.FASTING_TELEMETRY_STARTED' | translate }}</span>
-                                </div>
-                                <div class="fasting__telemetry-metric">
-                                    <span class="fasting__telemetry-value">{{
-                                        formatMetric(fastingTelemetrySummary()?.completedSessions)
-                                    }}</span>
-                                    <span class="fasting__telemetry-label">{{
-                                        'USER_MANAGE.FASTING_TELEMETRY_COMPLETED' | translate
-                                    }}</span>
-                                </div>
-                                <div class="fasting__telemetry-metric">
-                                    <span class="fasting__telemetry-value">{{
-                                        formatMetric(fastingTelemetrySummary()?.savedCheckIns)
-                                    }}</span>
-                                    <span class="fasting__telemetry-label">{{
-                                        'USER_MANAGE.FASTING_TELEMETRY_CHECK_INS' | translate
-                                    }}</span>
-                                </div>
-                                <div class="fasting__telemetry-metric">
-                                    <span class="fasting__telemetry-value">
-                                        {{ formatMetric(fastingTelemetrySummary()?.completionRatePercent) }}%
-                                    </span>
-                                    <span class="fasting__telemetry-label">
-                                        {{ 'USER_MANAGE.FASTING_TELEMETRY_COMPLETION_RATE' | translate }}
-                                    </span>
-                                </div>
-                                <div class="fasting__telemetry-metric">
-                                    <span class="fasting__telemetry-value"
-                                        >{{ formatMetric(fastingTelemetrySummary()?.checkInRatePercent) }}%</span
-                                    >
-                                    <span class="fasting__telemetry-label">{{
-                                        'USER_MANAGE.FASTING_TELEMETRY_CHECK_IN_RATE' | translate
-                                    }}</span>
-                                </div>
-                                <div class="fasting__telemetry-metric">
-                                    <span class="fasting__telemetry-value">
-                                        {{ formatMetric(fastingTelemetrySummary()?.averageCompletedDurationHours) }}
-                                    </span>
-                                    <span class="fasting__telemetry-label">{{
-                                        'USER_MANAGE.FASTING_TELEMETRY_AVG_DURATION' | translate
-                                    }}</span>
-                                </div>
-                            </div>
-
-                            <div class="fasting__telemetry-meta">
-                                {{ 'USER_MANAGE.FASTING_TELEMETRY_WINDOW' | translate: { hours: fastingTelemetrySummary()?.windowHours } }}
-                            </div>
-                            <div class="fasting__telemetry-meta">
-                                {{
-                                    'USER_MANAGE.FASTING_TELEMETRY_LAST_CHECK_IN'
-                                        | translate
-                                            : {
-                                                  value: formatRelativeTime(fastingTelemetrySummary()?.lastCheckInAtUtc ?? null) ?? '-',
-                                              }
-                                }}
-                            </div>
-                            <div class="fasting__telemetry-meta">
-                                {{
-                                    'USER_MANAGE.FASTING_TELEMETRY_LAST_EVENT'
-                                        | translate: { value: formatDateTime(fastingTelemetrySummary()?.lastEventAtUtc ?? null) ?? '-' }
-                                }}
-                            </div>
-
-                            <div class="fasting__telemetry-preset-list">
-                                <div class="fasting__protocol-group-title">
-                                    {{ 'USER_MANAGE.FASTING_TELEMETRY_TOP_PRESETS' | translate }}
-                                </div>
-
-                                @if (fastingTelemetrySummary()!.topPresets.length === 0) {
-                                    <p class="fasting__empty">{{ 'USER_MANAGE.FASTING_TELEMETRY_TOP_PRESETS_EMPTY' | translate }}</p>
-                                } @else {
-                                    @for (preset of fastingTelemetrySummary()!.topPresets; track preset.presetId) {
-                                        <fd-ui-accent-surface
-                                            class="fasting__history-item"
-                                            accentSide="left"
-                                            accentColor="#0ea5e9"
-                                            [tinted]="true"
-                                        >
-                                            <div class="fasting__history-header">
-                                                <div class="fasting__history-date">
-                                                    {{ preset.firstReminderHours ?? '-' }}h / {{ preset.followUpReminderHours ?? '-' }}h
-                                                </div>
-                                                <div class="fasting__history-badge">
-                                                    {{
-                                                        'USER_MANAGE.FASTING_TELEMETRY_PRESET_COUNT'
-                                                            | translate: { count: preset.selectionCount }
-                                                    }}
-                                                </div>
-                                            </div>
-                                            <div class="fasting__history-details">
-                                                {{ 'USER_MANAGE.FASTING_TELEMETRY_PRESET_KEY' | translate: { value: preset.presetId } }}
-                                            </div>
-                                            <p class="fasting__history-notes">
-                                                {{
-                                                    'USER_MANAGE.FASTING_TELEMETRY_PRESET_METRICS'
-                                                        | translate
-                                                            : {
-                                                                  started: preset.startedSessions,
-                                                                  checkIns: preset.savedCheckIns,
-                                                                  completed: preset.completedSessions,
-                                                              }
-                                                }}
-                                            </p>
-                                            <p class="fasting__history-notes">
-                                                {{
-                                                    'USER_MANAGE.FASTING_TELEMETRY_PRESET_RATES'
-                                                        | translate
-                                                            : {
-                                                                  checkInRate: formatMetric(preset.checkInRatePercent),
-                                                                  completionRate: formatMetric(preset.completionRatePercent),
-                                                              }
-                                                }}
-                                            </p>
-                                            <p class="fasting__history-notes">
-                                                {{
-                                                    'USER_MANAGE.FASTING_TELEMETRY_TIMING_SAVE_COUNT'
-                                                        | translate: { count: preset.timingSaveCount }
-                                                }}
-                                            </p>
-                                        </fd-ui-accent-surface>
-                                    }
-                                }
-                            </div>
+            @if (insights().length > 0) {
+                <div class="fasting__insights-section">
+                    <div class="fasting__section-label">{{ 'FASTING.INSIGHTS.TITLE' | translate }}</div>
+                    <div class="fasting__insights">
+                        @for (insight of insights(); track insight.titleKey) {
+                            <fd-ui-inline-alert
+                                appearance="notice"
+                                [severity]="getAlertSeverity(insight)"
+                                [title]="getTranslatedMessage(insight, 'titleKey')"
+                                [message]="getTranslatedMessage(insight, 'bodyKey')"
+                            />
                         }
                     </div>
-                </fd-ui-card>
+                </div>
             }
 
             <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">

@@ -1,0 +1,35 @@
+<div class="fd-ui-inline-alert__icon" aria-hidden="true">
+    <mat-icon>{{ iconName() }}</mat-icon>
+</div>
+
+<div class="fd-ui-inline-alert__content">
+    @if (title()) {
+        <div class="fd-ui-inline-alert__title">{{ title() }}</div>
+    }
+
+    @if (message()) {
+        <p class="fd-ui-inline-alert__message">{{ message() }}</p>
+    }
+
+    @if (hasActions()) {
+        <div class="fd-ui-inline-alert__actions">
+            @if (primaryActionLabel()) {
+                <button type="button" class="fd-ui-inline-alert__action" (click)="primaryAction.emit()">
+                    {{ primaryActionLabel() }}
+                </button>
+            }
+
+            @if (secondaryActionLabel()) {
+                <button type="button" class="fd-ui-inline-alert__action" (click)="secondaryAction.emit()">
+                    {{ secondaryActionLabel() }}
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@if (dismissible()) {
+    <button type="button" class="fd-ui-inline-alert__dismiss" (click)="dismiss.emit()">
+        <mat-icon>close</mat-icon>
+    </button>
+}

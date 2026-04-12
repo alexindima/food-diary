@@ -20,7 +20,9 @@ public static class FastingHttpResponseMappings {
         new(model.TotalCompleted, model.CurrentStreak, model.AverageDurationHours);
 
     public static FastingInsightsHttpResponse ToHttpResponse(this FastingInsightsModel model) =>
-        new(model.Insights.Select(static message => message.ToHttpResponse()).ToList(), model.CurrentPrompt?.ToHttpResponse());
+        new(
+            model.Alerts.Select(static message => message.ToHttpResponse()).ToList(),
+            model.Insights.Select(static message => message.ToHttpResponse()).ToList());
 
     public static FastingMessageHttpResponse ToHttpResponse(this FastingMessageModel model) =>
         new(model.Id, model.TitleKey, model.BodyKey, model.Tone, model.BodyParams);

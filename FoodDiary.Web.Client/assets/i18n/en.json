@@ -1719,7 +1719,12 @@
             "SYMPTOMS_TITLE": "Symptoms",
             "NOTES": "Notes",
             "NOTES_PLACEHOLDER": "Optional notes about cravings, focus, hydration, or anything unusual.",
+            "ADD_ACTION": "Add check-in",
+            "UPDATE_ACTION": "Update check-in",
+            "HIDE_ACTION": "Hide",
+            "LAST_SAVED": "Last saved {{value}}",
             "SAVE": "Save check-in",
+            "SAVED_TOAST": "Check-in saved",
             "SUMMARY": "Hunger {{hunger}}, energy {{energy}}, mood {{mood}}",
             "SYMPTOMS": {
                 "HEADACHE": "Headache",

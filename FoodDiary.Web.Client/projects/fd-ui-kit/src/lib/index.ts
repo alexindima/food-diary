@@ -17,6 +17,7 @@ export * from './radio/fd-ui-radio-group.component';
 export * from './entity-card/fd-ui-entity-card.component';
 export * from './entity-card/fd-ui-entity-card-header.directive';
 export * from './accent-surface/fd-ui-accent-surface.component';
+export * from './inline-alert/fd-ui-inline-alert.component';
 export * from './button/fd-ui-button.component';
 export * from './checkbox/fd-ui-checkbox.component';
 export * from './tabs/fd-ui-tabs.component';

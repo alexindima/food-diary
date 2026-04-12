@@ -180,6 +180,12 @@
         &--start {
             padding-bottom: 0;
         }
+
+        &--split {
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
     }
 
     &__checkin {
@@ -189,38 +195,45 @@
         padding-top: 8px;
     }
 
+    &__checkin-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    &__alerts,
+    &__alerts-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__alerts-section {
+        margin-top: 4px;
+    }
+
     &__checkin-copy {
         margin: 0;
         color: #475569;
     }
 
-    &__prompt {
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
-    }
-
-    &__prompt-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 10px;
-    }
-
-    &__prompt-link {
-        border: 0;
-        background: transparent;
-        padding: 0;
-        color: #6d28d9;
-        font: inherit;
+    &__checkin-meta {
+        font-size: 0.9rem;
         font-weight: 600;
-        cursor: pointer;
+        color: #64748b;
+    }
 
-        &:hover {
-            color: #5b21b6;
-        }
+    &__checkin-summary-text {
+        font-size: 0.96rem;
+        font-weight: 600;
+        color: #334155;
+        line-height: 1.45;
+    }
+
+    &__checkin-summary-note {
+        margin: 0;
+        color: #475569;
+        line-height: 1.5;
     }
 
     &__checkin-grid {
@@ -291,6 +304,20 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+
+    &__insights-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 4px;
+    }
+
+    &__section-label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: 0.01em;
     }
 
     &__telemetry {

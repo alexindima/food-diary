@@ -45,7 +45,8 @@ export class FastingFacade {
     public readonly historyPage = signal(1);
     public readonly historyTotalPages = signal(0);
     public readonly isLoadingMoreHistory = signal(false);
-    public readonly insightsData = signal<FastingInsights>({ insights: [], currentPrompt: null });
+    public readonly insightsData = signal<FastingInsights>({ alerts: [], insights: [] });
+    public readonly checkInSavedVersion = signal(0);
     public readonly selectedMode = signal<FastingMode>('intermittent');
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
     public readonly customHours = signal(16);
@@ -336,6 +337,10 @@ export class FastingFacade {
         this.checkInNotes.set(value);
     }
 
+    public resetCheckInDraft(): void {
+        this.syncCheckInFromSession(this.currentSession());
+    }
+
     public extendByHours(hours: number): void {
         const additionalHours = Math.max(1, Math.min(168, hours));
         this.isExtending.set(true);
@@ -374,6 +379,7 @@ export class FastingFacade {
             .subscribe(updated => {
                 this.currentSession.set(updated);
                 this.syncCheckInFromSession(updated);
+                this.checkInSavedVersion.update(version => version + 1);
                 this.frontendObservability.recordFastingLifecycleEvent('check-in.saved', {
                     sessionId: updated.id,
                     protocol: updated.protocol,

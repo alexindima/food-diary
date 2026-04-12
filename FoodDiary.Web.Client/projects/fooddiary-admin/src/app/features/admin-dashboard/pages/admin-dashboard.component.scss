@@ -23,3 +23,64 @@
     font-size: 1.5rem;
     font-weight: 700;
 }
+
+.admin-dashboard__section {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-dashboard__section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+}
+
+.admin-dashboard__section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.admin-dashboard__section-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.admin-dashboard__telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.admin-dashboard__meta-list {
+    display: grid;
+    gap: 0.375rem;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.admin-dashboard__preset-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.admin-dashboard__preset-item {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+
+.admin-dashboard__preset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-dashboard__preset-meta {
+    color: #4b5563;
+    font-size: 0.9rem;
+}

@@ -65,8 +65,8 @@ export interface FastingMessage {
 }
 
 export interface FastingInsights {
+    alerts: FastingMessage[];
     insights: FastingMessage[];
-    currentPrompt: FastingMessage | null;
 }
 
 export interface StartFastingPayload {

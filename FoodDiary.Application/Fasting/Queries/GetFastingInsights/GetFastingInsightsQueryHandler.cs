@@ -33,21 +33,13 @@ public sealed class GetFastingInsightsQueryHandler(
             cancellationToken: cancellationToken);
         var historyWithCheckIns = history.Where(static occurrence => HasCheckIn(occurrence)).ToList();
 
-        var insights = BuildInsights(historyWithCheckIns, current);
-        var prompt = BuildCurrentPrompt(current, now);
-
-        return Result.Success(new FastingInsightsModel(insights, prompt));
+        var alerts = BuildAlerts(current, now);
+        var insights = BuildInsights(historyWithCheckIns);
+        return Result.Success(new FastingInsightsModel(alerts, insights));
     }
 
-    private static IReadOnlyList<FastingMessageModel> BuildInsights(
-        IReadOnlyList<FastingOccurrence> history,
-        FastingOccurrence? current) {
+    private static IReadOnlyList<FastingMessageModel> BuildInsights(IReadOnlyList<FastingOccurrence> history) {
         var insights = new List<FastingMessageModel>();
-
-        var currentWarning = BuildCurrentWarning(current);
-        if (currentWarning is not null) {
-            insights.Add(currentWarning);
-        }
 
         var shorterTolerance = BuildShorterToleranceInsight(history);
         if (shorterTolerance is not null) {
@@ -67,41 +59,47 @@ public sealed class GetFastingInsightsQueryHandler(
         return insights.Take(3).ToList();
     }
 
-    private static FastingMessageModel? BuildCurrentPrompt(FastingOccurrence? current, DateTime now) {
+    private static IReadOnlyList<FastingMessageModel> BuildAlerts(FastingOccurrence? current, DateTime now) {
+        var alerts = new List<FastingMessageModel>();
+
+        var currentWarning = BuildCurrentWarning(current);
+        if (currentWarning is not null) {
+            alerts.Add(currentWarning);
+        }
+
         if (current is null || current.EndedAtUtc.HasValue) {
-            return null;
+            return alerts;
         }
 
         if (HasRiskyCurrentCheckIn(current)) {
-            return new FastingMessageModel(
+            alerts.Add(new FastingMessageModel(
                 "risky",
                 "FASTING.PROMPTS.RISKY_TITLE",
                 "FASTING.PROMPTS.RISKY_BODY",
-                "warning");
+                "warning"));
+            return alerts;
         }
 
         if (current.CheckInAtUtc.HasValue) {
-            return null;
+            return alerts;
         }
 
         var elapsedHours = (now - current.StartedAtUtc).TotalHours;
         if (elapsedHours >= 20) {
-            return new FastingMessageModel(
+            alerts.Add(new FastingMessageModel(
                 "late",
                 "FASTING.PROMPTS.LATE_TITLE",
                 "FASTING.PROMPTS.LATE_BODY",
-                "warning");
-        }
-
-        if (elapsedHours >= 12) {
-            return new FastingMessageModel(
+                "warning"));
+        } else if (elapsedHours >= 12) {
+            alerts.Add(new FastingMessageModel(
                 "mid",
                 "FASTING.PROMPTS.MID_TITLE",
                 "FASTING.PROMPTS.MID_BODY",
-                "neutral");
+                "neutral"));
         }
 
-        return null;
+        return alerts;
     }
 
     private static FastingMessageModel? BuildCurrentWarning(FastingOccurrence? current) {

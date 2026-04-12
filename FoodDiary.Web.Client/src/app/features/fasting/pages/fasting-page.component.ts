@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -8,15 +8,14 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiInlineAlertComponent, FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
-import { AdminTelemetryService } from '../../../services/admin-telemetry.service';
-import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
-import { FastingTelemetrySummary } from '../../../shared/models/admin-telemetry.data';
 import {
     FastingEndConfirmDialogComponent,
     FastingEndConfirmDialogData,
@@ -62,6 +61,7 @@ interface FastingEmojiScaleOption {
         FdUiButtonComponent,
         FdUiInputComponent,
         FdUiAccentSurfaceComponent,
+        FdUiInlineAlertComponent,
         FastingTimerCardComponent,
     ],
     templateUrl: './fasting-page.component.html',
@@ -99,9 +99,8 @@ export class FastingPageComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly authService = inject(AuthService);
-    private readonly adminTelemetryService = inject(AdminTelemetryService);
     private readonly localizationService = inject(LocalizationService);
+    private readonly toastService = inject(FdUiToastService);
 
     public readonly isLoading = this.facade.isLoading;
     public readonly isStarting = this.facade.isStarting;
@@ -169,22 +168,34 @@ export class FastingPageComponent implements OnInit {
     public readonly energyEmojiScale = FastingPageComponent.EnergyEmojiScale;
     public readonly moodEmojiScale = FastingPageComponent.MoodEmojiScale;
     public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
+    public readonly alerts = computed(() => this.facade.insightsData().alerts);
     public readonly insights = computed(() => this.facade.insightsData().insights);
-    public readonly fastingTelemetrySummary = signal<FastingTelemetrySummary | null>(null);
-    public readonly isLoadingFastingTelemetrySummary = signal(false);
     public readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
     public readonly isLoadingMoreHistory = this.facade.isLoadingMoreHistory;
     public readonly visibleHistory = this.history;
     public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
-    public readonly visibleCheckInPrompt = computed(() => {
-        const prompt = this.facade.insightsData().currentPrompt;
+    public readonly isCheckInExpanded = signal(false);
+    public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
+    public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
+    public readonly visibleAlerts = computed(() => {
         const session = this.currentSession();
-        return this.facade.isPromptVisible(session, prompt) ? prompt : null;
+        return this.alerts().filter(alert => this.facade.isPromptVisible(session, alert));
     });
+
+    public constructor() {
+        effect(() => {
+            const version = this.facade.checkInSavedVersion();
+            if (version <= 0) {
+                return;
+            }
+
+            this.isCheckInExpanded.set(false);
+            this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
+        });
+    }
 
     public ngOnInit(): void {
         this.facade.initialize();
-        this.loadFastingTelemetrySummary();
     }
 
     public selectMode(mode: FastingMode): void {
@@ -296,33 +307,17 @@ export class FastingPageComponent implements OnInit {
         this.facade.saveCheckIn();
     }
 
+    public openCheckInForm(): void {
+        this.isCheckInExpanded.set(true);
+    }
+
+    public closeCheckInForm(): void {
+        this.isCheckInExpanded.set(false);
+        this.facade.resetCheckInDraft();
+    }
+
     public dismissPrompt(promptId: string): void {
         this.facade.dismissPrompt(promptId);
-    }
-
-    public isAdminUser(): boolean {
-        return this.authService.isAdmin();
-    }
-
-    public loadFastingTelemetrySummary(): void {
-        if (!this.isAdminUser() || this.isLoadingFastingTelemetrySummary()) {
-            return;
-        }
-
-        this.isLoadingFastingTelemetrySummary.set(true);
-        this.adminTelemetryService
-            .getFastingSummary()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: summary => {
-                    this.fastingTelemetrySummary.set(summary);
-                    this.isLoadingFastingTelemetrySummary.set(false);
-                },
-                error: () => {
-                    this.fastingTelemetrySummary.set(null);
-                    this.isLoadingFastingTelemetrySummary.set(false);
-                },
-            });
     }
 
     public snoozePrompt(promptId: string): void {
@@ -437,6 +432,10 @@ export class FastingPageComponent implements OnInit {
             energy: this.getEnergySummaryValue(energy),
             mood: this.getMoodSummaryValue(mood),
         });
+    }
+
+    public getCurrentCheckInCtaKey(): string {
+        return this.hasCurrentCheckIn() ? 'FASTING.CHECK_IN.UPDATE_ACTION' : 'FASTING.CHECK_IN.ADD_ACTION';
     }
 
     public getSessionCheckIns(session: FastingSession): FastingCheckIn[] {
@@ -767,6 +766,16 @@ export class FastingPageComponent implements OnInit {
         return `${fastHours}:${24 - fastHours}`;
     }
 
+    private getCurrentSessionLatestCheckIn(): FastingCheckIn | null {
+        const session = this.currentSession();
+        if (!session) {
+            return null;
+        }
+
+        const checkIns = this.getSessionCheckIns(session);
+        return checkIns.length > 0 ? (checkIns[0] ?? null) : null;
+    }
+
     private getOccurrenceKindLabel(kind?: FastingSession['occurrenceKind']): string | null {
         switch (kind) {
             case 'FastDay':
@@ -803,6 +812,17 @@ export class FastingPageComponent implements OnInit {
         return this.translateService.instant(key, this.resolveMessageParams(descriptor.bodyParams));
     }
 
+    public getAlertSeverity(message: FastingMessage): FdUiInlineAlertSeverity {
+        switch (message.tone) {
+            case 'warning':
+                return 'warning';
+            case 'positive':
+                return 'success';
+            default:
+                return 'info';
+        }
+    }
+
     public getEnergyEmoji(level: number | null | undefined): string {
         return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
@@ -813,30 +833,6 @@ export class FastingPageComponent implements OnInit {
 
     public getMoodEmoji(level: number | null | undefined): string {
         return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? '—';
-    }
-
-    public formatMetric(value: number | null | undefined): string {
-        if (value === null || value === undefined || Number.isNaN(value)) {
-            return '-';
-        }
-
-        return Number.isInteger(value) ? `${value}` : value.toFixed(1);
-    }
-
-    public formatDateTime(value: string | null): string | null {
-        if (!value) {
-            return null;
-        }
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return null;
-        }
-
-        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-        }).format(date);
     }
 
     public formatRelativeTime(value: string | null): string | null {

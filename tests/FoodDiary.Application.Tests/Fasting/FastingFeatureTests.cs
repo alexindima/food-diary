@@ -436,8 +436,7 @@ public class FastingFeatureTests {
         var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value.CurrentPrompt);
-        Assert.Equal("mid", result.Value.CurrentPrompt!.Id);
+        Assert.Contains(result.Value.Alerts, x => x.Id == "mid");
         Assert.Contains(result.Value.Insights, x => x.Id == "symptom-headache");
     }
 

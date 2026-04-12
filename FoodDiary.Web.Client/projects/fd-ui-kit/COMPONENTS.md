@@ -284,6 +284,23 @@ Hunger/satiety scale widget.
 **Inputs**
 - `required?: boolean`
 
+#### `fd-ui-inline-alert`
+Inline alert/banner for actionable warnings, info states, or success notices.
+
+**Inputs**
+- `appearance?: 'alert' | 'notice'`
+- `severity?: 'info' | 'warning' | 'success' | 'danger'`
+- `title?: string`
+- `message?: string`
+- `primaryActionLabel?: string | null`
+- `secondaryActionLabel?: string | null`
+- `dismissible?: boolean`
+
+**Outputs**
+- `primaryAction`
+- `secondaryAction`
+- `dismiss`
+
 #### `fd-ui-menu`, `fd-ui-menu-item`, `fd-ui-menu-trigger`, `fd-ui-menu-divider`
 Context menu components.
 
