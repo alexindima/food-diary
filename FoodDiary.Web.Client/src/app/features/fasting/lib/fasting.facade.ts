@@ -46,8 +46,10 @@ export class FastingFacade {
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
     public readonly customHours = signal(16);
     public readonly customIntermittentFastHours = signal(16);
+    public readonly cyclicEatDayProtocol = signal<FastingProtocol>('F16_8');
     public readonly cyclicFastDays = signal(1);
     public readonly cyclicEatDays = signal(1);
+    public readonly cyclicUsesCustomPreset = signal(false);
     public readonly cyclicEatDayFastHours = signal(16);
     public readonly extendHours = signal(24);
     public readonly hungerLevel = signal(3);
@@ -224,11 +226,40 @@ export class FastingFacade {
     }
 
     public setCyclicPreset(fastDays: number, eatDays: number): void {
+        this.cyclicUsesCustomPreset.set(false);
         this.cyclicFastDays.set(Math.max(1, Math.min(30, fastDays)));
         this.cyclicEatDays.set(Math.max(1, Math.min(30, eatDays)));
     }
 
+    public selectCustomCyclicPreset(): void {
+        this.cyclicUsesCustomPreset.set(true);
+    }
+
+    public setCyclicFastDays(days: number): void {
+        this.cyclicUsesCustomPreset.set(true);
+        this.cyclicFastDays.set(Math.max(1, Math.min(30, days)));
+    }
+
+    public setCyclicEatDays(days: number): void {
+        this.cyclicUsesCustomPreset.set(true);
+        this.cyclicEatDays.set(Math.max(1, Math.min(30, days)));
+    }
+
+    public selectCyclicEatDayProtocol(protocol: FastingProtocol): void {
+        this.cyclicEatDayProtocol.set(protocol);
+
+        if (protocol === 'CustomIntermittent') {
+            return;
+        }
+
+        const preset = FASTING_PROTOCOLS.find(item => item.value === protocol && item.category === 'intermittent');
+        if (preset) {
+            this.cyclicEatDayFastHours.set(Math.max(1, Math.min(23, preset.hours)));
+        }
+    }
+
     public setCyclicEatDayFastHours(hours: number): void {
+        this.cyclicEatDayProtocol.set('CustomIntermittent');
         this.cyclicEatDayFastHours.set(Math.max(1, Math.min(23, hours)));
     }
 
@@ -353,10 +384,10 @@ export class FastingFacade {
         this.updatePromptState(this.getPromptStateKey(session.id, promptId), { snoozedUntilUtc });
     }
 
-    public skipCyclicFastDay(): void {
+    public skipCyclicDay(): void {
         this.isUpdatingCycle.set(true);
         this.fastingService
-            .skipCyclicFastDay()
+            .skipCyclicDay()
             .pipe(
                 finalize(() => this.isUpdatingCycle.set(false)),
                 takeUntilDestroyed(this.destroyRef),
@@ -370,10 +401,10 @@ export class FastingFacade {
             });
     }
 
-    public postponeCyclicFastDay(): void {
+    public postponeCyclicDay(): void {
         this.isUpdatingCycle.set(true);
         this.fastingService
-            .postponeCyclicFastDay()
+            .postponeCyclicDay()
             .pipe(
                 finalize(() => this.isUpdatingCycle.set(false)),
                 takeUntilDestroyed(this.destroyRef),

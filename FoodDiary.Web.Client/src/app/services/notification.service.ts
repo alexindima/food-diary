@@ -10,6 +10,7 @@ export interface NotificationItem {
     type: string;
     title: string;
     body: string | null;
+    targetUrl: string | null;
     referenceId: string | null;
     isRead: boolean;
     createdAtUtc: string;

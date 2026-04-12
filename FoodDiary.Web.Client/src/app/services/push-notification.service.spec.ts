@@ -11,7 +11,7 @@ describe('PushNotificationService', () => {
     let service: PushNotificationService;
     let subscription$: Subject<PushSubscription | null>;
     let subscriptionChanges$: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
-    let notificationClicks$: Subject<{ notification: { data?: { url?: string } } }>;
+    let notificationClicks$: Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>;
     let swPush: {
         isEnabled: boolean;
         subscription: Subject<PushSubscription | null>;
@@ -33,7 +33,7 @@ describe('PushNotificationService', () => {
     beforeEach(() => {
         subscription$ = new Subject<PushSubscription | null>();
         subscriptionChanges$ = new Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>();
-        notificationClicks$ = new Subject<{ notification: { data?: { url?: string } } }>();
+        notificationClicks$ = new Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>();
 
         swPush = {
             isEnabled: true,
@@ -144,9 +144,9 @@ describe('PushNotificationService', () => {
     });
 
     it('should react to notification click by navigating and refreshing notifications', async () => {
-        notificationClicks$.next({ notification: { data: { url: '/profile' } } });
+        notificationClicks$.next({ notification: { data: { targetUrl: '/fasting?intent=check-in' } } });
 
-        expect(router.navigateByUrl).toHaveBeenCalledWith('/profile');
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/fasting?intent=check-in');
         expect(notificationService.fetchUnreadCount).toHaveBeenCalledTimes(1);
         expect(notificationService.notifyNotificationsChanged).toHaveBeenCalledTimes(1);
     });

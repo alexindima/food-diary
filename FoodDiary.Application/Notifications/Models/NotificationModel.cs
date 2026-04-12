@@ -5,6 +5,7 @@ public sealed record NotificationModel(
     string Type,
     string Title,
     string? Body,
+    string? TargetUrl,
     string? ReferenceId,
     bool IsRead,
     DateTime CreatedAtUtc);

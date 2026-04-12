@@ -44,15 +44,15 @@ export class FastingService extends ApiService {
         );
     }
 
-    public skipCyclicFastDay(): Observable<FastingSession> {
+    public skipCyclicDay(): Observable<FastingSession> {
         return this.put<FastingSession>('current/skip-day', {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Skip cyclic fast day error', error)),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Skip cyclic day error', error)),
         );
     }
 
-    public postponeCyclicFastDay(): Observable<FastingSession> {
+    public postponeCyclicDay(): Observable<FastingSession> {
         return this.put<FastingSession>('current/postpone-day', {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Postpone cyclic fast day error', error)),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Postpone cyclic day error', error)),
         );
     }
 

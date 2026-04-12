@@ -28,6 +28,10 @@
         position: relative;
         width: 220px;
         height: 220px;
+        border-radius: 50%;
+        transition:
+            box-shadow 0.35s ease,
+            transform 0.35s ease;
 
         &--summary {
             width: min(220px, 100%);
@@ -48,7 +52,9 @@
 
     &__ring-progress {
         stroke: #7c3aed;
-        transition: stroke-dashoffset 0.5s ease;
+        transition:
+            stroke-dashoffset 0.5s ease,
+            stroke 0.35s ease;
 
         &--overtime {
             stroke: #22c55e;
@@ -82,6 +88,11 @@
         font-size: 0.8rem;
         font-weight: 600;
         color: #334155;
+
+        &--summary {
+            font-size: 0.88rem;
+            color: #64748b;
+        }
     }
 
     &__percent {
@@ -89,6 +100,27 @@
         font-weight: 800;
         color: #0f172a;
         font-variant-numeric: tabular-nums;
+
+        &--summary-secondary {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 700;
+        }
+    }
+
+    &__stage-progress {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748b;
+    }
+
+    &__stage-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.2;
     }
 
     &__elapsed {
@@ -96,6 +128,11 @@
         font-weight: 700;
         color: #0f172a;
         font-variant-numeric: tabular-nums;
+
+        &--summary {
+            font-size: 2.2rem;
+            letter-spacing: -0.04em;
+        }
 
         &--idle {
             font-size: 1.4rem;
@@ -113,6 +150,13 @@
         }
     }
 
+    &__next-stage-time,
+    &__next-stage-label {
+        font-size: 0.82rem;
+        line-height: 1.35;
+        color: #475569;
+    }
+
     &__detail {
         max-width: 150px;
         font-size: 0.75rem;
@@ -124,6 +168,13 @@
             font-size: 0.9rem;
             color: #64748b;
         }
+    }
+
+    &__meta {
+        font-size: 0.88rem;
+        line-height: 1.3;
+        color: #94a3b8;
+        font-weight: 600;
     }
 
     &__summary {
@@ -149,6 +200,18 @@
         gap: 10px;
         min-width: 0;
         justify-content: center;
+    }
+
+    &__summary-protocol-line {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    &__summary-protocol-separator {
+        color: #94a3b8;
+        font-weight: 600;
     }
 
     &__badge {
@@ -187,6 +250,21 @@
         gap: 10px;
     }
 
+    &__summary-stage,
+    &__summary-next {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__controls-slot {
+        width: 100%;
+
+        &--summary {
+            grid-column: 1 / -1;
+        }
+    }
+
     @media (min-width: 761px) {
 
         &__summary {
@@ -216,6 +294,10 @@
 
         &__summary-labels {
             align-items: center;
+        }
+
+        &__summary-protocol-line {
+            justify-content: center;
         }
     }
 }

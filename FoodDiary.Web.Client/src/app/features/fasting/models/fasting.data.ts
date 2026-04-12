@@ -26,6 +26,8 @@ export interface FastingSession {
     cyclicEatDays: number | null;
     cyclicEatDayFastHours: number | null;
     cyclicEatDayEatingWindowHours: number | null;
+    cyclicPhaseDayNumber: number | null;
+    cyclicPhaseDayTotal: number | null;
     isCompleted: boolean;
     status: FastingSessionStatus;
     notes: string | null;
@@ -105,6 +107,8 @@ export const CYCLIC_PRESETS: CyclicPresetOption[] = [
     { fastDays: 1, eatDays: 1, label: '1:1' },
     { fastDays: 1, eatDays: 2, label: '1:2' },
     { fastDays: 1, eatDays: 3, label: '1:3' },
+    { fastDays: 2, eatDays: 1, label: '2:1' },
+    { fastDays: 3, eatDays: 1, label: '3:1' },
 ];
 
 export const FASTING_CHECK_IN_SCALE = [1, 2, 3, 4, 5] as const;

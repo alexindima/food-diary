@@ -40,9 +40,10 @@ export class PushNotificationService {
         });
 
         this.swPush.notificationClicks.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
-            const data = event.notification.data as { url?: string } | undefined;
-            if (data?.url) {
-                void this.router.navigateByUrl(data.url);
+            const data = event.notification.data as { targetUrl?: string; url?: string } | undefined;
+            const targetUrl = data?.targetUrl ?? data?.url;
+            if (targetUrl) {
+                void this.router.navigateByUrl(this.toAppUrl(targetUrl));
             }
 
             this.notificationService.fetchUnreadCount();
@@ -192,5 +193,22 @@ export class PushNotificationService {
             locale: this.localizationService.getCurrentLanguage(),
             userAgent: navigator.userAgent,
         };
+    }
+
+    private toAppUrl(url: string): string {
+        if (!/^https?:\/\//i.test(url)) {
+            return url;
+        }
+
+        try {
+            const parsed = new URL(url, window.location.origin);
+            if (parsed.origin === window.location.origin) {
+                return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+            }
+        } catch {
+            return url;
+        }
+
+        return url;
     }
 }

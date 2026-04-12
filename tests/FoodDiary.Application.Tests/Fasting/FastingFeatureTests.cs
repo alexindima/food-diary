@@ -3,8 +3,8 @@ using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Abstractions.Persistence;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
-using FoodDiary.Application.Fasting.Commands.PostponeCyclicFastDay;
-using FoodDiary.Application.Fasting.Commands.SkipCyclicFastDay;
+using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
+using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking;
@@ -144,7 +144,7 @@ public class FastingFeatureTests {
     }
 
     [Fact]
-    public async Task EndCyclicFastDay_AdvancesToEatDayInsteadOfStoppingPlan() {
+    public async Task EndCyclicFastDay_StopsPlanAndInterruptsCurrentOccurrence() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
@@ -159,15 +159,15 @@ public class FastingFeatureTests {
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal("EatDay", result.Value.OccurrenceKind);
-        Assert.Equal("Active", result.Value.Status);
-        Assert.Null(result.Value.EndedAtUtc);
-        Assert.Equal(FastingPlanStatus.Active, plan.Status);
-        Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.EatDay && x.Status == FastingOccurrenceStatus.Active);
+        Assert.Equal("FastDay", result.Value.OccurrenceKind);
+        Assert.Equal("Interrupted", result.Value.Status);
+        Assert.NotNull(result.Value.EndedAtUtc);
+        Assert.Equal(FastingPlanStatus.Stopped, plan.Status);
+        Assert.DoesNotContain(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.EatDay && x.Status == FastingOccurrenceStatus.Active);
     }
 
     [Fact]
-    public async Task EndCyclicFastDay_InMultiDayFastBlock_CreatesAnotherFastDay() {
+    public async Task EndCyclicFastDay_InMultiDayFastBlock_StopsPlanAndInterruptsCurrentOccurrence() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateCyclic(userId, 3, 1, 16, 8, FixedNow, FixedNow);
         var first = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow.AddDays(-1), 1, 24);
@@ -186,7 +186,9 @@ public class FastingFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal("FastDay", result.Value.OccurrenceKind);
-        Assert.Equal("Active", result.Value.Status);
+        Assert.Equal("Interrupted", result.Value.Status);
+        Assert.NotNull(result.Value.EndedAtUtc);
+        Assert.Equal(FastingPlanStatus.Stopped, plan.Status);
     }
 
     [Fact]
@@ -254,47 +256,145 @@ public class FastingFeatureTests {
     }
 
     [Fact]
-    public async Task SkipCyclicFastDay_WhenActiveFastDay_CreatesEatDayOccurrence() {
+    public async Task SkipCyclicDay_WhenActiveFastDay_CreatesEatDayOccurrence() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: occurrence);
-        var handler = new SkipCyclicFastDayCommandHandler(
+        var handler = new SkipCyclicDayCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
         var result = await handler.Handle(
-            new SkipCyclicFastDayCommand(userId.Value), CancellationToken.None);
+            new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("EatDay", result.Value.OccurrenceKind);
+        Assert.Equal(1, result.Value.CyclicPhaseDayNumber);
+        Assert.Equal(3, result.Value.CyclicPhaseDayTotal);
         Assert.Equal("Active", result.Value.Status);
         Assert.Equal("Skipped", occurrence.Status.ToString());
         Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.EatDay);
     }
 
     [Fact]
-    public async Task PostponeCyclicFastDay_WhenActiveFastDay_CreatesEatDayOccurrence() {
+    public async Task SkipCyclicDay_WhenActiveEatDay_StartsFastPhaseFromFirstDay() {
         var userId = UserId.New();
-        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
-        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var plan = FastingPlan.CreateCyclic(userId, 10, 10, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.EatDay, FixedNow, 15, 8);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: occurrence);
-        var handler = new PostponeCyclicFastDayCommandHandler(
+        var handler = new SkipCyclicDayCommandHandler(
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
         var result = await handler.Handle(
-            new PostponeCyclicFastDayCommand(userId.Value), CancellationToken.None);
+            new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("FastDay", result.Value.OccurrenceKind);
+        Assert.Equal(1, result.Value.CyclicPhaseDayNumber);
+        Assert.Equal(10, result.Value.CyclicPhaseDayTotal);
+        Assert.Equal("Active", result.Value.Status);
+        Assert.Equal("Skipped", occurrence.Status.ToString());
+        Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.FastDay && x.SequenceNumber == 21);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WhenActiveFastDay_CreatesEatDayOccurrence() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: occurrence);
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            occurrenceRepo,
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("EatDay", result.Value.OccurrenceKind);
         Assert.Equal("Active", result.Value.Status);
         Assert.Equal("Postponed", occurrence.Status.ToString());
         Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.EatDay);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WhenActiveFastDayInMultiDayPhase_CreatesNextFastDayOccurrence() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 10, 3, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: occurrence);
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            occurrenceRepo,
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("FastDay", result.Value.OccurrenceKind);
+        Assert.Equal(2, result.Value.CyclicPhaseDayNumber);
+        Assert.Equal(10, result.Value.CyclicPhaseDayTotal);
+        Assert.Equal("Active", result.Value.Status);
+        Assert.Equal("Postponed", occurrence.Status.ToString());
+        Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.FastDay && x.SequenceNumber == 2);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WhenActiveLastEatDay_StartsFastPhaseFromFirstDay() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 10, 10, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.EatDay, FixedNow, 20, 8);
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: occurrence);
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            occurrenceRepo,
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("FastDay", result.Value.OccurrenceKind);
+        Assert.Equal(1, result.Value.CyclicPhaseDayNumber);
+        Assert.Equal(10, result.Value.CyclicPhaseDayTotal);
+        Assert.Equal("Active", result.Value.Status);
+        Assert.Equal("Postponed", occurrence.Status.ToString());
+        Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.FastDay && x.SequenceNumber == 21);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WhenActiveEatDayInMultiDayPhase_CreatesNextEatDayOccurrence() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 2, 2, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.EatDay, FixedNow, 3, 8);
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: occurrence);
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            occurrenceRepo,
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("EatDay", result.Value.OccurrenceKind);
+        Assert.Equal(2, result.Value.CyclicPhaseDayNumber);
+        Assert.Equal(2, result.Value.CyclicPhaseDayTotal);
+        Assert.Equal("Active", result.Value.Status);
+        Assert.Equal("Postponed", occurrence.Status.ToString());
+        Assert.Contains(occurrenceRepo.StoredOccurrences, x => x.Kind == FastingOccurrenceKind.EatDay && x.SequenceNumber == 4);
     }
 
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {

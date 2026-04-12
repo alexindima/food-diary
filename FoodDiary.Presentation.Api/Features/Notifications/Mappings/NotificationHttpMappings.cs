@@ -31,7 +31,7 @@ public static class NotificationHttpMappings {
             request.FastingCheckInFollowUpReminderHours);
 
     public static NotificationHttpResponse ToHttpResponse(this NotificationModel model) =>
-        new(model.Id, model.Type, model.Title, model.Body, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
+        new(model.Id, model.Type, model.Title, model.Body, model.TargetUrl, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
 
     public static NotificationPreferencesHttpResponse ToHttpResponse(this NotificationPreferencesModel model) =>
         new(

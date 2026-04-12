@@ -145,6 +145,7 @@ public sealed class WebPushNotificationSender(
                 icon = "/assets/pwa/icon-192x192.png",
                 badge = "/assets/pwa/icon-96x96.png",
                 data = new {
+                    targetUrl = ResolveUrl(notification),
                     url = ResolveUrl(notification),
                     type = notification.Type,
                     referenceId = notification.ReferenceId
@@ -156,16 +157,11 @@ public sealed class WebPushNotificationSender(
     }
 
     private string ResolveUrl(Notification notification) {
-        var relativePath = notification.Type switch {
-            NotificationTypes.FastingCompleted => "/fasting",
-            NotificationTypes.EatingWindowStarted => "/fasting",
-            NotificationTypes.FastingWindowStarted => "/fasting",
-            NotificationTypes.FastingCheckInReminder => "/fasting",
-            _ => options.DefaultUrl
-        };
+        var relativePath = NotificationTargetUrlResolver.Resolve(notification.Type) ?? options.DefaultUrl;
 
-        if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out var absoluteBase)) {
-            return new Uri(absoluteBase, relativePath).ToString();
+        if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out var absoluteBase)
+            && Uri.TryCreate(absoluteBase, relativePath, out var targetUrl)) {
+            return targetUrl.ToString();
         }
 
         return relativePath;

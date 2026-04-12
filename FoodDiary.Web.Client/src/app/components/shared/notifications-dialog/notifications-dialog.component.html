@@ -18,7 +18,7 @@
                         type="button"
                         class="notifications-dialog__item"
                         [class.is-read]="notification.isRead"
-                        (click)="markAsRead(notification)"
+                        (click)="openNotification(notification)"
                     >
                         <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
                         <div class="notifications-dialog__item-content">

@@ -14,6 +14,8 @@ public sealed record FastingSessionHttpResponse(
     int? CyclicEatDays,
     int? CyclicEatDayFastHours,
     int? CyclicEatDayEatingWindowHours,
+    int? CyclicPhaseDayNumber,
+    int? CyclicPhaseDayTotal,
     bool IsCompleted,
     string Status,
     string? Notes,

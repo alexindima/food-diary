@@ -56,19 +56,19 @@ public sealed class FastingHttpMappingsTests {
     }
 
     [Fact]
-    public void SkipCyclicFastDay_ToCommand_MapsUserId() {
+    public void SkipCyclicDay_ToCommand_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var command = userId.ToSkipCyclicFastDayCommand();
+        var command = userId.ToSkipCyclicDayCommand();
 
         Assert.Equal(userId, command.UserId);
     }
 
     [Fact]
-    public void PostponeCyclicFastDay_ToCommand_MapsUserId() {
+    public void PostponeCyclicDay_ToCommand_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var command = userId.ToPostponeCyclicFastDayCommand();
+        var command = userId.ToPostponeCyclicDayCommand();
 
         Assert.Equal(userId, command.UserId);
     }
@@ -85,6 +85,8 @@ public sealed class FastingHttpMappingsTests {
             "F16_8",
             "Intermittent",
             "FastingWindow",
+            null,
+            null,
             null,
             null,
             null,
@@ -108,6 +110,8 @@ public sealed class FastingHttpMappingsTests {
         Assert.Equal(24, response.PlannedDurationHours);
         Assert.Equal("Intermittent", response.PlanType);
         Assert.Equal("FastingWindow", response.OccurrenceKind);
+        Assert.Null(response.CyclicPhaseDayNumber);
+        Assert.Null(response.CyclicPhaseDayTotal);
         Assert.Equal(3, response.HungerLevel);
         Assert.Equal(4, response.EnergyLevel);
         Assert.Equal(5, response.MoodLevel);

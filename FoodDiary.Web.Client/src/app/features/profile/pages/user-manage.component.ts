@@ -16,7 +16,6 @@ import { ImageUploadFieldComponent } from '../../../components/shared/image-uplo
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
-import { AdminTelemetryService } from '../../../services/admin-telemetry.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
@@ -27,7 +26,6 @@ import {
     FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
-import { FastingTelemetrySummary } from '../../../shared/models/admin-telemetry.data';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { FormGroupControls } from '../../../shared/lib/common.data';
 import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
@@ -74,7 +72,6 @@ export class UserManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly authService = inject(AuthService);
-    private readonly adminTelemetryService = inject(AdminTelemetryService);
     private readonly localizationService = inject(LocalizationService);
     private readonly facade = inject(ProfileManageFacade);
     private readonly notificationService = inject(NotificationService);
@@ -103,8 +100,6 @@ export class UserManageComponent implements OnInit {
     public readonly fastingCheckInReminderHours = signal(12);
     public readonly fastingCheckInFollowUpReminderHours = signal(20);
     public readonly fastingReminderPresets = FASTING_REMINDER_PRESETS;
-    public readonly fastingTelemetrySummary = signal<FastingTelemetrySummary | null>(null);
-    public readonly isLoadingFastingTelemetrySummary = signal(false);
     public readonly pushNotificationsSupported = this.pushNotifications.isSupported;
     public readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
     public readonly pushNotificationsBusy = this.pushNotifications.isBusy;
@@ -213,7 +208,6 @@ export class UserManageComponent implements OnInit {
         });
 
         this.facade.initialize();
-        this.loadFastingTelemetrySummary();
     }
 
     public async onSubmit(): Promise<void> {
@@ -386,28 +380,6 @@ export class UserManageComponent implements OnInit {
             presetId: this.activeFastingReminderPresetId() ?? undefined,
         });
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
-        this.loadFastingTelemetrySummary();
-    }
-
-    public loadFastingTelemetrySummary(): void {
-        if (!this.isAdminUser() || this.isLoadingFastingTelemetrySummary()) {
-            return;
-        }
-
-        this.isLoadingFastingTelemetrySummary.set(true);
-        this.adminTelemetryService
-            .getFastingSummary()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: summary => {
-                    this.fastingTelemetrySummary.set(summary);
-                    this.isLoadingFastingTelemetrySummary.set(false);
-                },
-                error: () => {
-                    this.fastingTelemetrySummary.set(null);
-                    this.isLoadingFastingTelemetrySummary.set(false);
-                },
-            });
     }
 
     public async removeConnectedDevice(subscription: WebPushSubscriptionItem): Promise<void> {

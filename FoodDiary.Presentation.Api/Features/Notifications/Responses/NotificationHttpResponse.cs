@@ -5,6 +5,7 @@ public sealed record NotificationHttpResponse(
     string Type,
     string Title,
     string? Body,
+    string? TargetUrl,
     string? ReferenceId,
     bool IsRead,
     DateTime CreatedAtUtc);

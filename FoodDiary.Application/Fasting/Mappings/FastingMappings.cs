@@ -22,6 +22,8 @@ public static class FastingMappings {
             null,
             null,
             null,
+            null,
+            null,
             session.IsCompleted,
             session.Status.ToString(),
             session.Notes,
@@ -44,6 +46,7 @@ public static class FastingMappings {
         var isCompleted = occurrence.Status != FastingOccurrenceStatus.Active &&
             occurrence.Status != FastingOccurrenceStatus.Scheduled &&
             occurrence.Status != FastingOccurrenceStatus.Postponed;
+        var cyclicPhaseProgress = ResolveCyclicPhaseProgress(occurrence, plan);
 
         return new FastingSessionModel(
             occurrence.Id.Value,
@@ -59,6 +62,8 @@ public static class FastingMappings {
             plan?.CyclicEatDays,
             plan?.CyclicEatDayFastHours,
             plan?.CyclicEatDayEatingWindowHours,
+            cyclicPhaseProgress.DayNumber,
+            cyclicPhaseProgress.DayTotal,
             isCompleted,
             occurrence.Status.ToString(),
             occurrence.Notes,
@@ -104,4 +109,26 @@ public static class FastingMappings {
         FastingPlanType.Cyclic => FastingOccurrenceKind.FastDay,
         _ => FastingOccurrenceKind.FastDay
     };
+
+    private static (int? DayNumber, int? DayTotal) ResolveCyclicPhaseProgress(FastingOccurrence occurrence, FastingPlan? plan) {
+        if (plan?.Type != FastingPlanType.Cyclic) {
+            return (null, null);
+        }
+
+        if (occurrence.Kind != FastingOccurrenceKind.FastDay && occurrence.Kind != FastingOccurrenceKind.EatDay) {
+            return (null, null);
+        }
+
+        var fastDays = Math.Max(1, plan.CyclicFastDays ?? 1);
+        var eatDays = Math.Max(1, plan.CyclicEatDays ?? 1);
+        var totalCycleDays = fastDays + eatDays;
+        var overallCycleDay = ((Math.Max(1, occurrence.SequenceNumber) - 1) % totalCycleDays) + 1;
+
+        if (occurrence.Kind == FastingOccurrenceKind.FastDay) {
+            return (((overallCycleDay - 1) % fastDays) + 1, fastDays);
+        }
+
+        var eatCycleDay = overallCycleDay <= fastDays ? 1 : overallCycleDay - fastDays;
+        return (((eatCycleDay - 1) % eatDays) + 1, eatDays);
+    }
 }

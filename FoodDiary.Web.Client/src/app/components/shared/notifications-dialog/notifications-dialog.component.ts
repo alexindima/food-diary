@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -21,6 +22,7 @@ export class NotificationsDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject<FdUiDialogRef<NotificationsDialogComponent, void>>(FdUiDialogRef);
     private readonly notificationService = inject(NotificationService);
+    private readonly router = inject(Router);
 
     protected readonly notifications = this.notificationService.notifications;
     protected readonly isLoading = this.notificationService.notificationsLoading;
@@ -34,12 +36,28 @@ export class NotificationsDialogComponent {
         this.dialogRef.close();
     }
 
-    protected markAsRead(notification: NotificationItem): void {
+    protected openNotification(notification: NotificationItem): void {
+        const navigate = (): void => {
+            if (!notification.targetUrl) {
+                return;
+            }
+
+            void this.router.navigateByUrl(notification.targetUrl);
+            this.close();
+        };
+
         if (notification.isRead) {
+            navigate();
             return;
         }
 
-        this.notificationService.markAsRead(notification.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.notificationService
+            .markAsRead(notification.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => navigate(),
+                error: () => navigate(),
+            });
     }
 
     protected markAllAsRead(): void {

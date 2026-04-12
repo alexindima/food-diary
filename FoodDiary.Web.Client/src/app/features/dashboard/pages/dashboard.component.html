@@ -106,9 +106,20 @@
                                     [progressPercent]="fastingProgressPercent()"
                                     [elapsedFormatted]="fastingElapsedFormatted()"
                                     [remainingFormatted]="fastingRemainingFormatted()"
+                                    [remainingLabelKey]="fastingRemainingLabelKey()"
                                     [labelKey]="getFastingCardLabelKey()"
                                     [stateLabel]="getFastingCardStateLabel()"
                                     [detailLabel]="getFastingCardDetailLabel()"
+                                    [metaLabel]="fastingMetaLabel()"
+                                    [ringColor]="fastingRingColor()"
+                                    [glowColor]="fastingStage()?.glowColor ?? null"
+                                    [showGlow]="false"
+                                    [stageTitleKey]="fastingStage()?.titleKey ?? null"
+                                    [stageDescriptionKey]="fastingStage()?.descriptionKey ?? null"
+                                    [stageIndex]="fastingStageIndex()"
+                                    [totalStages]="fastingTotalStages()"
+                                    [nextStageTitleKey]="fastingStage()?.nextTitleKey ?? null"
+                                    [nextStageFormatted]="fastingNextStageFormatted()"
                                 />
                                 @if (layout.isEditingLayout()) {
                                     <div class="dashboard__fasting-overlay">

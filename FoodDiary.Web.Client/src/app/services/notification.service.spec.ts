@@ -41,7 +41,16 @@ describe('NotificationService', () => {
         const req = httpMock.expectOne(baseUrl);
         expect(req.request.method).toBe('GET');
         req.flush([
-            { id: 'n1', type: 'info', title: 'Title', body: null, referenceId: null, isRead: false, createdAtUtc: '2026-01-01T00:00:00Z' },
+            {
+                id: 'n1',
+                type: 'info',
+                title: 'Title',
+                body: null,
+                targetUrl: null,
+                referenceId: null,
+                isRead: false,
+                createdAtUtc: '2026-01-01T00:00:00Z',
+            },
         ]);
 
         expect(service.notificationsLoaded()).toBe(true);
@@ -69,7 +78,16 @@ describe('NotificationService', () => {
 
     it('should mark notification as read and update local state', () => {
         service.notifications.set([
-            { id: 'n1', type: 'info', title: 'Title', body: null, referenceId: null, isRead: false, createdAtUtc: '2026-01-01T00:00:00Z' },
+            {
+                id: 'n1',
+                type: 'info',
+                title: 'Title',
+                body: null,
+                targetUrl: null,
+                referenceId: null,
+                isRead: false,
+                createdAtUtc: '2026-01-01T00:00:00Z',
+            },
         ]);
         service.unreadCount.set(1);
 
@@ -85,12 +103,22 @@ describe('NotificationService', () => {
 
     it('should mark all notifications as read and clear unread count', () => {
         service.notifications.set([
-            { id: 'n1', type: 'info', title: 'Title', body: null, referenceId: null, isRead: false, createdAtUtc: '2026-01-01T00:00:00Z' },
+            {
+                id: 'n1',
+                type: 'info',
+                title: 'Title',
+                body: null,
+                targetUrl: null,
+                referenceId: null,
+                isRead: false,
+                createdAtUtc: '2026-01-01T00:00:00Z',
+            },
             {
                 id: 'n2',
                 type: 'info',
                 title: 'Title 2',
                 body: null,
+                targetUrl: null,
                 referenceId: null,
                 isRead: false,
                 createdAtUtc: '2026-01-01T00:00:00Z',

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -13,6 +13,10 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
+import { AdminTelemetryService } from '../../../services/admin-telemetry.service';
+import { AuthService } from '../../../services/auth.service';
+import { LocalizationService } from '../../../services/localization.service';
+import { FastingTelemetrySummary } from '../../../shared/models/admin-telemetry.data';
 import {
     FastingEndConfirmDialogComponent,
     FastingEndConfirmDialogData,
@@ -25,6 +29,7 @@ import {
 } from '../components/fasting-safety-dialog/fasting-safety-dialog.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
+import { FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
 import {
     CYCLIC_PRESETS,
     FASTING_PROTOCOLS,
@@ -67,6 +72,9 @@ export class FastingPageComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly authService = inject(AuthService);
+    private readonly adminTelemetryService = inject(AdminTelemetryService);
+    private readonly localizationService = inject(LocalizationService);
 
     public readonly isLoading = this.facade.isLoading;
     public readonly isStarting = this.facade.isStarting;
@@ -82,8 +90,10 @@ export class FastingPageComponent implements OnInit {
     public readonly selectedProtocol = this.facade.selectedProtocol;
     public readonly customHours = this.facade.customHours;
     public readonly customIntermittentFastHours = this.facade.customIntermittentFastHours;
+    public readonly cyclicEatDayProtocol = this.facade.cyclicEatDayProtocol;
     public readonly cyclicFastDays = this.facade.cyclicFastDays;
     public readonly cyclicEatDays = this.facade.cyclicEatDays;
+    public readonly cyclicUsesCustomPreset = this.facade.cyclicUsesCustomPreset;
     public readonly cyclicEatDayFastHours = this.facade.cyclicEatDayFastHours;
     public readonly extendHours = this.facade.extendHours;
     public readonly hungerLevel = this.facade.hungerLevel;
@@ -94,14 +104,45 @@ export class FastingPageComponent implements OnInit {
     public readonly progressPercent = this.facade.progressPercent;
     public readonly elapsedFormatted = this.facade.elapsedFormatted;
     public readonly remainingFormatted = this.facade.remainingFormatted;
+    public readonly currentStage = computed<FastingStagePresentation | null>(() => {
+        const session = this.currentSession();
+        if (!session) {
+            return null;
+        }
+
+        if (session.planType === 'Cyclic' && session.occurrenceKind === 'EatDay' && !session.endedAtUtc) {
+            return null;
+        }
+
+        return resolveFastingStage(this.facade.elapsedMs(), session.plannedDurationHours);
+    });
+    public readonly currentRingColor = computed(() => {
+        const session = this.currentSession();
+        if (session?.planType === 'Cyclic' && session.occurrenceKind === 'EatDay' && !session.endedAtUtc) {
+            return '#22c55e';
+        }
+
+        return this.currentStage()?.color ?? null;
+    });
+    public readonly nextStageFormatted = computed(() => {
+        const stage = this.currentStage();
+        if (!stage?.nextInMs) {
+            return null;
+        }
+
+        return this.formatDuration(stage.nextInMs);
+    });
     public readonly isOvertime = this.facade.isOvertime;
     public readonly canExtendActiveSession = this.facade.canExtendActiveSession;
     public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
+    public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     public readonly cyclicPresets = CYCLIC_PRESETS;
     public readonly checkInScale = FASTING_CHECK_IN_SCALE;
     public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
     public readonly insights = computed(() => this.facade.insightsData().insights);
+    public readonly fastingTelemetrySummary = signal<FastingTelemetrySummary | null>(null);
+    public readonly isLoadingFastingTelemetrySummary = signal(false);
     public readonly visibleCheckInPrompt = computed(() => {
         const prompt = this.facade.insightsData().currentPrompt;
         const session = this.currentSession();
@@ -110,6 +151,7 @@ export class FastingPageComponent implements OnInit {
 
     public ngOnInit(): void {
         this.facade.initialize();
+        this.loadFastingTelemetrySummary();
     }
 
     public selectMode(mode: FastingMode): void {
@@ -136,6 +178,28 @@ export class FastingPageComponent implements OnInit {
 
     public selectCyclicPreset(fastDays: number, eatDays: number): void {
         this.facade.setCyclicPreset(fastDays, eatDays);
+    }
+
+    public selectCustomCyclicPreset(): void {
+        this.facade.selectCustomCyclicPreset();
+    }
+
+    public onCyclicFastDaysChange(value: string | number): void {
+        const days = typeof value === 'number' ? value : parseInt(value, 10);
+        if (!isNaN(days)) {
+            this.facade.setCyclicFastDays(days);
+        }
+    }
+
+    public onCyclicEatDaysChange(value: string | number): void {
+        const days = typeof value === 'number' ? value : parseInt(value, 10);
+        if (!isNaN(days)) {
+            this.facade.setCyclicEatDays(days);
+        }
+    }
+
+    public selectCyclicEatDayProtocol(protocol: FastingProtocol): void {
+        this.facade.selectCyclicEatDayProtocol(protocol);
     }
 
     public onCyclicEatDayFastHoursChange(value: string | number): void {
@@ -203,6 +267,31 @@ export class FastingPageComponent implements OnInit {
         this.facade.dismissPrompt(promptId);
     }
 
+    public isAdminUser(): boolean {
+        return this.authService.isAdmin();
+    }
+
+    public loadFastingTelemetrySummary(): void {
+        if (!this.isAdminUser() || this.isLoadingFastingTelemetrySummary()) {
+            return;
+        }
+
+        this.isLoadingFastingTelemetrySummary.set(true);
+        this.adminTelemetryService
+            .getFastingSummary()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: summary => {
+                    this.fastingTelemetrySummary.set(summary);
+                    this.isLoadingFastingTelemetrySummary.set(false);
+                },
+                error: () => {
+                    this.fastingTelemetrySummary.set(null);
+                    this.isLoadingFastingTelemetrySummary.set(false);
+                },
+            });
+    }
+
     public snoozePrompt(promptId: string): void {
         this.facade.snoozePrompt(promptId);
     }
@@ -215,18 +304,21 @@ export class FastingPageComponent implements OnInit {
         this.requestExtendByHours(this.extendHours());
     }
 
-    public skipCyclicFastDay(): void {
-        this.openCycleActionDialog('FASTING.SKIP_DAY_CONFIRM_TITLE', 'FASTING.SKIP_DAY_CONFIRM_MESSAGE', 'FASTING.SKIP_DAY', () =>
-            this.facade.skipCyclicFastDay(),
+    public skipCyclicDay(): void {
+        this.openCycleActionDialog(
+            this.getSkipCycleConfirmTitleKey(),
+            this.getSkipCycleConfirmMessageKey(),
+            this.getSkipCycleActionLabelKey(),
+            () => this.facade.skipCyclicDay(),
         );
     }
 
-    public postponeCyclicFastDay(): void {
+    public postponeCyclicDay(): void {
         this.openCycleActionDialog(
-            'FASTING.POSTPONE_DAY_CONFIRM_TITLE',
-            'FASTING.POSTPONE_DAY_CONFIRM_MESSAGE',
-            'FASTING.POSTPONE_DAY',
-            () => this.facade.postponeCyclicFastDay(),
+            this.getPostponeCycleConfirmTitleKey(),
+            this.getPostponeCycleConfirmMessageKey(),
+            this.getPostponeCycleActionLabelKey(),
+            () => this.facade.postponeCyclicDay(),
         );
     }
 
@@ -328,12 +420,29 @@ export class FastingPageComponent implements OnInit {
     }
 
     public getEndActionLabelKey(): string {
+        if (this.isCurrentSessionCyclic()) {
+            return 'FASTING.STOP_CYCLE';
+        }
+
         return this.isCurrentSessionIntermittent() ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST';
     }
 
     public canManageCurrentCyclicDay(): boolean {
         const session = this.currentSession();
-        return !!session && !session.endedAtUtc && session.planType === 'Cyclic' && session.occurrenceKind === 'FastDay';
+        return (
+            !!session &&
+            !session.endedAtUtc &&
+            session.planType === 'Cyclic' &&
+            (session.occurrenceKind === 'FastDay' || session.occurrenceKind === 'EatDay')
+        );
+    }
+
+    public getSkipCycleActionLabelKey(): string {
+        return this.getCurrentCyclicOccurrenceKind() === 'EatDay' ? 'FASTING.START_FAST_NOW' : 'FASTING.SKIP_FASTING_PERIOD';
+    }
+
+    public getPostponeCycleActionLabelKey(): string {
+        return this.getCurrentCyclicOccurrenceKind() === 'EatDay' ? 'FASTING.SKIP_DAY' : 'FASTING.SKIP_DAY';
     }
 
     public getCurrentCardLabelKey(): string {
@@ -383,7 +492,63 @@ export class FastingPageComponent implements OnInit {
         return null;
     }
 
+    public getCurrentCardSummaryDetailLabel(): string | null {
+        const session = this.currentSession();
+        if (!session) {
+            return null;
+        }
+
+        return this.getHistoryProtocolDisplay(session);
+    }
+
+    public getCurrentCardMetaLabel(): string | null {
+        const session = this.currentSession();
+        if (!session || session.planType !== 'Cyclic') {
+            return null;
+        }
+
+        return this.getCyclicPhaseProgressLabel(session);
+    }
+
+    public getCurrentRemainingLabelKey(): string {
+        const session = this.currentSession();
+        if (!session) {
+            return 'FASTING.REMAINING';
+        }
+
+        if (session.planType === 'Intermittent' && session.occurrenceKind === 'FastingWindow') {
+            return 'FASTING.UNTIL_EATING_WINDOW';
+        }
+
+        return 'FASTING.REMAINING';
+    }
+
+    public isSelectedCyclicPreset(fastDays: number, eatDays: number): boolean {
+        return !this.cyclicUsesCustomPreset() && this.cyclicFastDays() === fastDays && this.cyclicEatDays() === eatDays;
+    }
+
+    public isCustomCyclicPresetSelected(): boolean {
+        return this.cyclicUsesCustomPreset();
+    }
+
+    private formatDuration(ms: number): string {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
     private getEndConfirmDialogData(): FastingEndConfirmDialogData {
+        if (this.isCurrentSessionCyclic()) {
+            return {
+                title: this.translateService.instant('FASTING.STOP_CYCLE_CONFIRM_TITLE'),
+                message: this.translateService.instant('FASTING.STOP_CYCLE_CONFIRM_MESSAGE'),
+                confirmLabel: this.translateService.instant('FASTING.STOP_CYCLE'),
+                cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
+            };
+        }
+
         const isIntermittent = this.isCurrentSessionIntermittent();
         return {
             title: this.translateService.instant(isIntermittent ? 'FASTING.END_CONFIRM_TITLE' : 'FASTING.INTERRUPT_CONFIRM_TITLE'),
@@ -400,6 +565,43 @@ export class FastingPageComponent implements OnInit {
         }
 
         return session.planType !== 'Extended';
+    }
+
+    private isCurrentSessionCyclic(): boolean {
+        return this.currentSession()?.planType === 'Cyclic';
+    }
+
+    private getSkipCycleConfirmTitleKey(): string {
+        return this.getCurrentCyclicOccurrenceKind() === 'EatDay'
+            ? 'FASTING.START_FAST_NOW_CONFIRM_TITLE'
+            : 'FASTING.SKIP_FASTING_PERIOD_CONFIRM_TITLE';
+    }
+
+    private getSkipCycleConfirmMessageKey(): string {
+        return this.getCurrentCyclicOccurrenceKind() === 'EatDay'
+            ? 'FASTING.START_FAST_NOW_CONFIRM_MESSAGE'
+            : 'FASTING.SKIP_FASTING_PERIOD_CONFIRM_MESSAGE';
+    }
+
+    private getPostponeCycleConfirmTitleKey(): string {
+        return this.getCurrentCyclicOccurrenceKind() === 'EatDay'
+            ? 'FASTING.SKIP_EATING_DAY_CONFIRM_TITLE'
+            : 'FASTING.SKIP_FAST_DAY_CONFIRM_TITLE';
+    }
+
+    private getPostponeCycleConfirmMessageKey(): string {
+        return this.getCurrentCyclicOccurrenceKind() === 'EatDay'
+            ? 'FASTING.SKIP_EATING_DAY_CONFIRM_MESSAGE'
+            : 'FASTING.SKIP_FAST_DAY_CONFIRM_MESSAGE';
+    }
+
+    private getCurrentCyclicOccurrenceKind(): FastingSession['occurrenceKind'] | null {
+        const session = this.currentSession();
+        if (!session || session.planType !== 'Cyclic' || session.endedAtUtc) {
+            return null;
+        }
+
+        return session.occurrenceKind;
     }
 
     private requestExtendByHours(additionalHours: number): void {
@@ -505,6 +707,18 @@ export class FastingPageComponent implements OnInit {
         }
     }
 
+    private getCyclicPhaseProgressLabel(session: FastingSession): string | null {
+        const dayNumber = session.cyclicPhaseDayNumber;
+        const dayTotal = session.cyclicPhaseDayTotal;
+        if (!dayNumber || !dayTotal) {
+            return this.getOccurrenceKindLabel(session.occurrenceKind);
+        }
+
+        const key = session.occurrenceKind === 'EatDay' ? 'FASTING.CYCLIC_EAT_PHASE_PROGRESS' : 'FASTING.CYCLIC_FAST_PHASE_PROGRESS';
+
+        return this.translateService.instant(key, { current: dayNumber, total: dayTotal });
+    }
+
     private getSymptomLabel(symptom: string): string {
         return this.translateService.instant(`FASTING.CHECK_IN.SYMPTOMS.${symptom.toUpperCase()}`);
     }
@@ -512,6 +726,30 @@ export class FastingPageComponent implements OnInit {
     public getTranslatedMessage(descriptor: FastingMessage, field: 'titleKey' | 'bodyKey'): string {
         const key = descriptor[field];
         return this.translateService.instant(key, this.resolveMessageParams(descriptor.bodyParams));
+    }
+
+    public formatMetric(value: number | null | undefined): string {
+        if (value === null || value === undefined || Number.isNaN(value)) {
+            return '-';
+        }
+
+        return Number.isInteger(value) ? `${value}` : value.toFixed(1);
+    }
+
+    public formatDateTime(value: string | null): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        }).format(date);
     }
 
     private resolveMessageParams(params: Record<string, string> | null): Record<string, string> | undefined {

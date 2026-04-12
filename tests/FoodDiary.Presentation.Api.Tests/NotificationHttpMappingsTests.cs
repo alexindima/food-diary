@@ -49,7 +49,7 @@ public sealed class NotificationHttpMappingsTests {
     public void NotificationModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         var createdAt = DateTime.UtcNow;
-        var model = new NotificationModel(id, "NewRecommendation", "New recommendation", "Details here", "ref-123", false, createdAt);
+        var model = new NotificationModel(id, "NewRecommendation", "New recommendation", "Details here", "/dietologist", "ref-123", false, createdAt);
 
         var response = model.ToHttpResponse();
 
@@ -57,6 +57,7 @@ public sealed class NotificationHttpMappingsTests {
         Assert.Equal("NewRecommendation", response.Type);
         Assert.Equal("New recommendation", response.Title);
         Assert.Equal("Details here", response.Body);
+        Assert.Equal("/dietologist", response.TargetUrl);
         Assert.Equal("ref-123", response.ReferenceId);
         Assert.False(response.IsRead);
         Assert.Equal(createdAt, response.CreatedAtUtc);
@@ -64,11 +65,12 @@ public sealed class NotificationHttpMappingsTests {
 
     [Fact]
     public void NotificationModel_ToHttpResponse_WithNullOptionalFields() {
-        var model = new NotificationModel(Guid.NewGuid(), "info", "Title", null, null, true, DateTime.UtcNow);
+        var model = new NotificationModel(Guid.NewGuid(), "info", "Title", null, null, null, true, DateTime.UtcNow);
 
         var response = model.ToHttpResponse();
 
         Assert.Null(response.Body);
+        Assert.Null(response.TargetUrl);
         Assert.Null(response.ReferenceId);
         Assert.True(response.IsRead);
     }

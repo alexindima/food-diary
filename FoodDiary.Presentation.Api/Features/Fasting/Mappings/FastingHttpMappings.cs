@@ -1,7 +1,7 @@
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
-using FoodDiary.Application.Fasting.Commands.PostponeCyclicFastDay;
-using FoodDiary.Application.Fasting.Commands.SkipCyclicFastDay;
+using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
+using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
@@ -27,9 +27,9 @@ public static class FastingHttpMappings {
 
     public static EndFastingCommand ToEndCommand(this Guid userId) => new(userId);
 
-    public static SkipCyclicFastDayCommand ToSkipCyclicFastDayCommand(this Guid userId) => new(userId);
+    public static SkipCyclicDayCommand ToSkipCyclicDayCommand(this Guid userId) => new(userId);
 
-    public static PostponeCyclicFastDayCommand ToPostponeCyclicFastDayCommand(this Guid userId) => new(userId);
+    public static PostponeCyclicDayCommand ToPostponeCyclicDayCommand(this Guid userId) => new(userId);
 
     public static ExtendActiveFastingCommand ToExtendCommand(this ExtendActiveFastingHttpRequest request, Guid userId) =>
         new(userId, request.AdditionalHours);

@@ -43,15 +43,15 @@ public class FastingController(ISender mediator) : AuthorizedController(mediator
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> SkipCyclicFastDay([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToSkipCyclicFastDayCommand(), static value => value.ToHttpResponse());
+    public Task<IActionResult> SkipCyclicDay([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToSkipCyclicDayCommand(), static value => value.ToHttpResponse());
 
     [HttpPut("current/postpone-day")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> PostponeCyclicFastDay([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToPostponeCyclicFastDayCommand(), static value => value.ToHttpResponse());
+    public Task<IActionResult> PostponeCyclicDay([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToPostponeCyclicDayCommand(), static value => value.ToHttpResponse());
 
     [HttpGet("current")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]

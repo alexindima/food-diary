@@ -8,15 +8,27 @@
             <div class="fasting__grid">
                 <fd-fasting-timer-card
                     class="fasting__card"
+                    [layout]="isActive() ? 'summary' : 'stacked'"
                     [isActive]="isActive()"
                     [isOvertime]="isOvertime()"
                     [currentSessionCompleted]="!!currentSession()?.endedAtUtc"
                     [progressPercent]="progressPercent()"
                     [elapsedFormatted]="elapsedFormatted()"
                     [remainingFormatted]="remainingFormatted()"
+                    [remainingLabelKey]="getCurrentRemainingLabelKey()"
                     [labelKey]="getCurrentCardLabelKey()"
                     [stateLabel]="getCurrentCardStateLabel()"
-                    [detailLabel]="getCurrentCardDetailLabel()"
+                    [detailLabel]="isActive() ? getCurrentCardSummaryDetailLabel() : getCurrentCardDetailLabel()"
+                    [metaLabel]="isActive() ? getCurrentCardMetaLabel() : null"
+                    [ringColor]="currentRingColor()"
+                    [glowColor]="currentStage()?.glowColor ?? null"
+                    [showGlow]="!isActive()"
+                    [stageTitleKey]="currentStage()?.titleKey ?? null"
+                    [stageDescriptionKey]="currentStage()?.descriptionKey ?? null"
+                    [stageIndex]="currentStage()?.index ?? null"
+                    [totalStages]="currentStage()?.total ?? 4"
+                    [nextStageTitleKey]="currentStage()?.nextTitleKey ?? null"
+                    [nextStageFormatted]="nextStageFormatted()"
                 >
                     <div fastingControls class="fasting__controls">
                         @if (!isActive()) {
@@ -119,31 +131,78 @@
                                                 type="button"
                                                 class="fasting__protocol-btn"
                                                 [class.fasting__protocol-btn--active]="
-                                                    cyclicFastDays() === preset.fastDays && cyclicEatDays() === preset.eatDays
+                                                    isSelectedCyclicPreset(preset.fastDays, preset.eatDays)
                                                 "
                                                 (click)="selectCyclicPreset(preset.fastDays, preset.eatDays)"
                                             >
                                                 {{ preset.label }}
                                             </button>
                                         }
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="isCustomCyclicPresetSelected()"
+                                            (click)="selectCustomCyclicPreset()"
+                                        >
+                                            {{ 'FASTING.CUSTOM_CYCLE' | translate }}
+                                        </button>
                                     </div>
+
+                                    @if (isCustomCyclicPresetSelected()) {
+                                        <div class="fasting__custom-intermittent fasting__custom-intermittent--split">
+                                            <div class="fasting__custom-input">
+                                                <fd-ui-input
+                                                    type="number"
+                                                    [label]="'FASTING.CYCLIC_FAST_DAYS' | translate"
+                                                    [ngModel]="cyclicFastDays()"
+                                                    (ngModelChange)="onCyclicFastDaysChange($event)"
+                                                />
+                                            </div>
+                                            <div class="fasting__custom-input">
+                                                <fd-ui-input
+                                                    type="number"
+                                                    [label]="'FASTING.CYCLIC_EAT_DAYS' | translate"
+                                                    [ngModel]="cyclicEatDays()"
+                                                    (ngModelChange)="onCyclicEatDaysChange($event)"
+                                                />
+                                            </div>
+                                            <div class="fasting__custom-intermittent-summary">
+                                                {{ cyclicFastDays() }}:{{ cyclicEatDays() }}
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
 
                                 <div class="fasting__protocol-group">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}</div>
-                                    <div class="fasting__custom-intermittent">
-                                        <div class="fasting__custom-input">
-                                            <fd-ui-input
-                                                type="number"
-                                                [label]="'FASTING.FAST_HOURS' | translate"
-                                                [ngModel]="cyclicEatDayFastHours()"
-                                                (ngModelChange)="onCyclicEatDayFastHoursChange($event)"
-                                            />
-                                        </div>
-                                        <div class="fasting__custom-intermittent-summary">
-                                            {{ cyclicEatDayFastHours() }}:{{ getCyclicEatDayEatingWindowHours() }}
-                                        </div>
+                                    <div class="fasting__protocols">
+                                        @for (p of cyclicEatDayProtocols; track p.value) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn"
+                                                [class.fasting__protocol-btn--active]="cyclicEatDayProtocol() === p.value"
+                                                (click)="selectCyclicEatDayProtocol(p.value)"
+                                            >
+                                                {{ p.labelKey | translate }}
+                                            </button>
+                                        }
                                     </div>
+
+                                    @if (cyclicEatDayProtocol() === 'CustomIntermittent') {
+                                        <div class="fasting__custom-intermittent">
+                                            <div class="fasting__custom-input">
+                                                <fd-ui-input
+                                                    type="number"
+                                                    [label]="'FASTING.FAST_HOURS' | translate"
+                                                    [ngModel]="cyclicEatDayFastHours()"
+                                                    (ngModelChange)="onCyclicEatDayFastHoursChange($event)"
+                                                />
+                                            </div>
+                                            <div class="fasting__custom-intermittent-summary">
+                                                {{ cyclicEatDayFastHours() }}:{{ getCyclicEatDayEatingWindowHours() }}
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             }
                         }
@@ -189,18 +248,18 @@
                                     <fd-ui-button
                                         variant="secondary"
                                         fill="outline"
-                                        (click)="skipCyclicFastDay()"
+                                        (click)="skipCyclicDay()"
                                         [disabled]="isUpdatingCycle() || isEnding()"
                                     >
-                                        {{ 'FASTING.SKIP_DAY' | translate }}
+                                        {{ getSkipCycleActionLabelKey() | translate }}
                                     </fd-ui-button>
                                     <fd-ui-button
                                         variant="secondary"
                                         fill="outline"
-                                        (click)="postponeCyclicFastDay()"
+                                        (click)="postponeCyclicDay()"
                                         [disabled]="isUpdatingCycle() || isEnding()"
                                     >
-                                        {{ 'FASTING.POSTPONE_DAY' | translate }}
+                                        {{ getPostponeCycleActionLabelKey() | translate }}
                                     </fd-ui-button>
                                 </div>
                             </div>
@@ -378,6 +437,153 @@
                     }
                 </div>
             </fd-ui-card>
+
+            @if (isAdminUser()) {
+                <fd-ui-card class="fasting__card" [title]="'USER_MANAGE.FASTING_TELEMETRY_TITLE' | translate">
+                    <div class="fasting__history-content fasting__telemetry">
+                        <p class="fasting__telemetry-hint">{{ 'USER_MANAGE.FASTING_TELEMETRY_HINT' | translate }}</p>
+
+                        <div class="fasting__telemetry-actions">
+                            <fd-ui-button
+                                type="button"
+                                fill="outline"
+                                variant="secondary"
+                                size="sm"
+                                [disabled]="isLoadingFastingTelemetrySummary()"
+                                (click)="loadFastingTelemetrySummary()"
+                            >
+                                {{ 'USER_MANAGE.FASTING_TELEMETRY_REFRESH' | translate }}
+                            </fd-ui-button>
+                        </div>
+
+                        @if (isLoadingFastingTelemetrySummary()) {
+                            <p class="fasting__empty">{{ 'USER_MANAGE.FASTING_TELEMETRY_LOADING' | translate }}</p>
+                        } @else if (!fastingTelemetrySummary()) {
+                            <p class="fasting__empty">{{ 'USER_MANAGE.FASTING_TELEMETRY_EMPTY' | translate }}</p>
+                        } @else {
+                            <div class="fasting__telemetry-grid">
+                                <div class="fasting__telemetry-metric">
+                                    <span class="fasting__telemetry-value">{{
+                                        formatMetric(fastingTelemetrySummary()?.startedSessions)
+                                    }}</span>
+                                    <span class="fasting__telemetry-label">{{ 'USER_MANAGE.FASTING_TELEMETRY_STARTED' | translate }}</span>
+                                </div>
+                                <div class="fasting__telemetry-metric">
+                                    <span class="fasting__telemetry-value">{{
+                                        formatMetric(fastingTelemetrySummary()?.completedSessions)
+                                    }}</span>
+                                    <span class="fasting__telemetry-label">{{
+                                        'USER_MANAGE.FASTING_TELEMETRY_COMPLETED' | translate
+                                    }}</span>
+                                </div>
+                                <div class="fasting__telemetry-metric">
+                                    <span class="fasting__telemetry-value">{{
+                                        formatMetric(fastingTelemetrySummary()?.savedCheckIns)
+                                    }}</span>
+                                    <span class="fasting__telemetry-label">{{
+                                        'USER_MANAGE.FASTING_TELEMETRY_CHECK_INS' | translate
+                                    }}</span>
+                                </div>
+                                <div class="fasting__telemetry-metric">
+                                    <span class="fasting__telemetry-value">
+                                        {{ formatMetric(fastingTelemetrySummary()?.completionRatePercent) }}%
+                                    </span>
+                                    <span class="fasting__telemetry-label">
+                                        {{ 'USER_MANAGE.FASTING_TELEMETRY_COMPLETION_RATE' | translate }}
+                                    </span>
+                                </div>
+                                <div class="fasting__telemetry-metric">
+                                    <span class="fasting__telemetry-value"
+                                        >{{ formatMetric(fastingTelemetrySummary()?.checkInRatePercent) }}%</span
+                                    >
+                                    <span class="fasting__telemetry-label">{{
+                                        'USER_MANAGE.FASTING_TELEMETRY_CHECK_IN_RATE' | translate
+                                    }}</span>
+                                </div>
+                                <div class="fasting__telemetry-metric">
+                                    <span class="fasting__telemetry-value">
+                                        {{ formatMetric(fastingTelemetrySummary()?.averageCompletedDurationHours) }}
+                                    </span>
+                                    <span class="fasting__telemetry-label">{{
+                                        'USER_MANAGE.FASTING_TELEMETRY_AVG_DURATION' | translate
+                                    }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fasting__telemetry-meta">
+                                {{ 'USER_MANAGE.FASTING_TELEMETRY_WINDOW' | translate: { hours: fastingTelemetrySummary()?.windowHours } }}
+                            </div>
+                            <div class="fasting__telemetry-meta">
+                                {{
+                                    'USER_MANAGE.FASTING_TELEMETRY_LAST_EVENT'
+                                        | translate: { value: formatDateTime(fastingTelemetrySummary()?.lastEventAtUtc ?? null) ?? '-' }
+                                }}
+                            </div>
+
+                            <div class="fasting__telemetry-preset-list">
+                                <div class="fasting__protocol-group-title">
+                                    {{ 'USER_MANAGE.FASTING_TELEMETRY_TOP_PRESETS' | translate }}
+                                </div>
+
+                                @if (fastingTelemetrySummary()!.topPresets.length === 0) {
+                                    <p class="fasting__empty">{{ 'USER_MANAGE.FASTING_TELEMETRY_TOP_PRESETS_EMPTY' | translate }}</p>
+                                } @else {
+                                    @for (preset of fastingTelemetrySummary()!.topPresets; track preset.presetId) {
+                                        <fd-ui-accent-surface
+                                            class="fasting__history-item"
+                                            accentSide="left"
+                                            accentColor="#0ea5e9"
+                                            [tinted]="true"
+                                        >
+                                            <div class="fasting__history-header">
+                                                <div class="fasting__history-date">
+                                                    {{ preset.firstReminderHours ?? '-' }}h / {{ preset.followUpReminderHours ?? '-' }}h
+                                                </div>
+                                                <div class="fasting__history-badge">
+                                                    {{
+                                                        'USER_MANAGE.FASTING_TELEMETRY_PRESET_COUNT'
+                                                            | translate: { count: preset.selectionCount }
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div class="fasting__history-details">
+                                                {{ 'USER_MANAGE.FASTING_TELEMETRY_PRESET_KEY' | translate: { value: preset.presetId } }}
+                                            </div>
+                                            <p class="fasting__history-notes">
+                                                {{
+                                                    'USER_MANAGE.FASTING_TELEMETRY_PRESET_METRICS'
+                                                        | translate
+                                                            : {
+                                                                  started: preset.startedSessions,
+                                                                  checkIns: preset.savedCheckIns,
+                                                                  completed: preset.completedSessions,
+                                                              }
+                                                }}
+                                            </p>
+                                            <p class="fasting__history-notes">
+                                                {{
+                                                    'USER_MANAGE.FASTING_TELEMETRY_PRESET_RATES'
+                                                        | translate
+                                                            : {
+                                                                  checkInRate: formatMetric(preset.checkInRatePercent),
+                                                                  completionRate: formatMetric(preset.completionRatePercent),
+                                                              }
+                                                }}
+                                            </p>
+                                            <p class="fasting__history-notes">
+                                                {{
+                                                    'USER_MANAGE.FASTING_TELEMETRY_TIMING_SAVE_COUNT'
+                                                        | translate: { count: preset.timingSaveCount }
+                                                }}
+                                            </p>
+                                        </fd-ui-accent-surface>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </fd-ui-card>
+            }
 
             <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
                 <div class="fasting__history-content">
