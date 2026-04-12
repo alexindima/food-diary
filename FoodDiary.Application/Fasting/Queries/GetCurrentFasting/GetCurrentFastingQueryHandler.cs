@@ -13,10 +13,6 @@ public class GetCurrentFastingQueryHandler(
     : IQueryHandler<GetCurrentFastingQuery, Result<FastingSessionModel?>> {
     public async Task<Result<FastingSessionModel?>> Handle(
         GetCurrentFastingQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<FastingSessionModel?>(Errors.Authentication.InvalidToken);
-        }
-
         var userId = new UserId(query.UserId!.Value);
         var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
         if (current is null) {

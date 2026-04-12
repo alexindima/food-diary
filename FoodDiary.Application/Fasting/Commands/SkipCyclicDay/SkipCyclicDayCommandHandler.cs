@@ -19,11 +19,7 @@ public sealed class SkipCyclicDayCommandHandler(
     : ICommandHandler<SkipCyclicDayCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
         SkipCyclicDayCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<FastingSessionModel>(Errors.Authentication.InvalidToken);
-        }
-
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);

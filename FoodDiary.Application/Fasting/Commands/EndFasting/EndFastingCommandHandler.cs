@@ -18,10 +18,6 @@ public class EndFastingCommandHandler(
     : ICommandHandler<EndFastingCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
         EndFastingCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<FastingSessionModel>(Errors.Authentication.InvalidToken);
-        }
-
         var userId = new UserId(command.UserId!.Value);
         var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken);
         if (current is null) {

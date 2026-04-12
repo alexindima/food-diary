@@ -7,7 +7,11 @@ using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
+using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
+using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
+using FoodDiary.Application.Fasting.Queries.GetFastingStats;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -440,6 +444,124 @@ public class FastingFeatureTests {
         Assert.Contains(result.Value.Insights, x => x.Id == "symptom-headache");
     }
 
+    [Fact]
+    public async Task GetCurrentFasting_WithActiveSession_ReturnsSessionWithCheckIns() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-1));
+        var current = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddHours(-4), 1, 16);
+        var checkIn = FastingCheckIn.Create(current.Id, userId, 2, 4, 4, ["weakness"], "steady", FixedNow.AddHours(-1));
+        var handler = new GetCurrentFastingQueryHandler(
+            new InMemoryFastingOccurrenceRepository(current),
+            new InMemoryFastingCheckInRepository(checkIn));
+
+        var result = await handler.Handle(new GetCurrentFastingQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal(current.Id.Value, result.Value!.Id);
+        Assert.Single(result.Value.CheckIns);
+        Assert.Equal(2, result.Value.CheckIns[0].HungerLevel);
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_ReturnsPagedSessionsWithCheckIns() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-10));
+        var latest = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddDays(-1), 1, 16);
+        latest.Complete(FixedNow.AddDays(-1).AddHours(16));
+        var earlier = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddDays(-2), 1, 16);
+        earlier.Complete(FixedNow.AddDays(-2).AddHours(16));
+
+        var latestCheckIn = FastingCheckIn.Create(latest.Id, userId, 3, 4, 5, ["good"], "latest", FixedNow.AddDays(-1).AddHours(8));
+        var earlierCheckIn = FastingCheckIn.Create(earlier.Id, userId, 2, 3, 4, ["headache"], "earlier", FixedNow.AddDays(-2).AddHours(8));
+
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        occurrenceRepo.StoredOccurrences.AddRange([latest, earlier]);
+        var handler = new GetFastingHistoryQueryHandler(
+            occurrenceRepo,
+            new InMemoryFastingCheckInRepository(latestCheckIn, earlierCheckIn));
+
+        var result = await handler.Handle(
+            new GetFastingHistoryQuery(userId.Value, FixedNow.AddDays(-7), FixedNow, 1, 1),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value.Data);
+        Assert.Equal(2, result.Value.TotalItems);
+        Assert.Equal(2, result.Value.TotalPages);
+        Assert.Single(result.Value.Data[0].CheckIns);
+        Assert.Equal("latest", result.Value.Data[0].CheckIns[0].Notes);
+    }
+
+    [Fact]
+    public async Task GetFastingStats_ComputesRatesAndTopSymptom() {
+        var userId = UserId.New();
+        var now = FixedNow;
+
+        var oldCompleted = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-40), 1, 16);
+        oldCompleted.UpdateCheckIn(4, 4, 4, ["weakness"], "old", now.AddDays(-40).AddHours(8));
+        oldCompleted.Complete(now.AddDays(-40).AddHours(16));
+
+        var completedOne = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-2), 1, 16);
+        completedOne.UpdateCheckIn(2, 4, 4, ["dizziness"], "one", now.AddDays(-2).AddHours(8));
+        completedOne.Complete(now.AddDays(-2).AddHours(16));
+
+        var completedTwo = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-1), 1, 16);
+        completedTwo.UpdateCheckIn(3, 5, 5, ["dizziness"], "two", now.AddDays(-1).AddHours(8));
+        completedTwo.Complete(now.AddDays(-1).AddHours(16));
+
+        var active = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now, 1, 16);
+
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        occurrenceRepo.StoredOccurrences.AddRange([oldCompleted, completedOne, completedTwo, active]);
+        var handler = new GetFastingStatsQueryHandler(occurrenceRepo, new FixedDateTimeProvider());
+
+        var result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(3, result.Value.TotalCompleted);
+        Assert.Equal(2, result.Value.CurrentStreak);
+        Assert.Equal(66.7, result.Value.CompletionRateLast30Days);
+        Assert.Equal(66.7, result.Value.CheckInRateLast30Days);
+        Assert.Equal("dizziness", result.Value.TopSymptom);
+        Assert.Equal(now.AddDays(-1).AddHours(8), result.Value.LastCheckInAtUtc);
+    }
+
+    [Fact]
+    public async Task GetFastingOverview_ReturnsCurrentStatsInsightsAndHistory() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-5));
+        var current = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddHours(-13), 1, 16);
+        current.UpdateCheckIn(2, 2, 2, ["weakness"], "current", FixedNow.AddHours(-1));
+        var currentCheckIn = FastingCheckIn.Create(current.Id, userId, 2, 2, 2, ["weakness"], "current", FixedNow.AddHours(-1));
+
+        var historyOne = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddDays(-3), 1, 16);
+        historyOne.UpdateCheckIn(5, 5, 5, ["headache"], "history-one", FixedNow.AddDays(-3).AddHours(8));
+        historyOne.Complete(FixedNow.AddDays(-3).AddHours(16));
+
+        var historyTwo = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddDays(-2), 1, 16);
+        historyTwo.UpdateCheckIn(4, 4, 4, ["headache"], "history-two", FixedNow.AddDays(-2).AddHours(8));
+        historyTwo.Complete(FixedNow.AddDays(-2).AddHours(16));
+
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current);
+        occurrenceRepo.StoredOccurrences.InsertRange(0, [historyOne, historyTwo]);
+        var handler = new GetFastingOverviewQueryHandler(
+            occurrenceRepo,
+            new InMemoryFastingCheckInRepository(currentCheckIn),
+            new FixedDateTimeProvider());
+
+        var result = await handler.Handle(new GetFastingOverviewQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value.CurrentSession);
+        Assert.Single(result.Value.CurrentSession!.CheckIns);
+        Assert.Equal(2, result.Value.Stats.TotalCompleted);
+        Assert.Contains(result.Value.Insights.Alerts, x => x.Id == "current-warning");
+        Assert.Contains(result.Value.Insights.Insights, x => x.Id == "symptom-headache");
+        Assert.Equal(1, result.Value.History.Page);
+        Assert.True(result.Value.History.Data.Count >= 3);
+    }
+
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
         public Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(active);
         public Task<FastingPlan?> GetByIdAsync(FastingPlanId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
@@ -520,6 +642,26 @@ public class FastingFeatureTests {
             return Task.CompletedTask;
         }
         public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken ct = default) => Task.CompletedTask;
+    }
+
+    private sealed class InMemoryFastingCheckInRepository(params FastingCheckIn[] seed) : IFastingCheckInRepository {
+        private readonly List<FastingCheckIn> _stored = [.. seed];
+
+        public Task AddAsync(FastingCheckIn checkIn, CancellationToken cancellationToken = default) {
+            _stored.Add(checkIn);
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<FastingCheckIn>> GetByOccurrenceIdsAsync(
+            IReadOnlyCollection<FastingOccurrenceId> occurrenceIds,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<FastingCheckIn> items = _stored
+                .Where(x => occurrenceIds.Contains(x.OccurrenceId))
+                .OrderByDescending(x => x.CheckedInAtUtc)
+                .ToList();
+
+            return Task.FromResult(items);
+        }
     }
 
     private sealed class StubUnitOfWork : IUnitOfWork {

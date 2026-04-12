@@ -17,10 +17,6 @@ public class GetFastingStatsQueryHandler(
 
     public async Task<Result<FastingStatsModel>> Handle(
         GetFastingStatsQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<FastingStatsModel>(Errors.Authentication.InvalidToken);
-        }
-
         var userId = new UserId(query.UserId!.Value);
         var allOccurrences = await fastingOccurrenceRepository.GetByUserAsync(
             userId,

@@ -22,11 +22,7 @@ public sealed class GetFastingOverviewQueryHandler(
     private const int HistoryPageSize = 10;
 
     public async Task<Result<FastingOverviewModel>> Handle(GetFastingOverviewQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<FastingOverviewModel>(Errors.Authentication.InvalidToken);
-        }
-
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var now = dateTimeProvider.UtcNow;
         var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
         var currentCheckIns = current is null

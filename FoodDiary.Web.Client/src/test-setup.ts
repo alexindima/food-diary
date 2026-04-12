@@ -1,5 +1,7 @@
 installWebStorageMock('localStorage');
 installWebStorageMock('sessionStorage');
+installCssParseWarningFilter();
+installCssParseStderrFilter();
 
 function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): void {
     const current = globalThis[storageName];
@@ -56,4 +58,81 @@ function createMockStorage(): Storage {
             state.set(key, value);
         },
     };
+}
+
+function installCssParseWarningFilter(): void {
+    const ignoredMessage = 'Could not parse CSS stylesheet';
+    const originalConsoleError = console.error.bind(console);
+    const originalConsoleWarn = console.warn.bind(console);
+
+    console.error = (...args: unknown[]): void => {
+        if (shouldIgnoreCssParseWarning(args, ignoredMessage)) {
+            return;
+        }
+
+        originalConsoleError(...args);
+    };
+
+    console.warn = (...args: unknown[]): void => {
+        if (shouldIgnoreCssParseWarning(args, ignoredMessage)) {
+            return;
+        }
+
+        originalConsoleWarn(...args);
+    };
+}
+
+function shouldIgnoreCssParseWarning(args: unknown[], ignoredMessage: string): boolean {
+    return args.some(arg => {
+        if (typeof arg === 'string') {
+            return arg.includes(ignoredMessage);
+        }
+
+        if (arg instanceof Error) {
+            return arg.message.includes(ignoredMessage);
+        }
+
+        if (arg && typeof arg === 'object' && 'message' in arg) {
+            const message = (arg as { message?: unknown }).message;
+            return typeof message === 'string' && message.includes(ignoredMessage);
+        }
+
+        return false;
+    });
+}
+
+function installCssParseStderrFilter(): void {
+    const ignoredMessage = 'Could not parse CSS stylesheet';
+    const processRef = (
+        globalThis as typeof globalThis & {
+            process?: {
+                stderr?: {
+                    write?: (...args: unknown[]) => unknown;
+                };
+            };
+        }
+    ).process;
+
+    const stderr = processRef?.stderr;
+    if (!stderr?.write) {
+        return;
+    }
+
+    const originalWrite = stderr.write.bind(stderr) as (...args: unknown[]) => unknown;
+    const decoder = new TextDecoder();
+
+    const filteredWrite = (...args: unknown[]): boolean => {
+        const firstArg = args[0];
+        const text = typeof firstArg === 'string' ? firstArg : firstArg instanceof Uint8Array ? decoder.decode(firstArg) : '';
+
+        if (text.includes(ignoredMessage)) {
+            const maybeCallback = args.find(arg => typeof arg === 'function') as ((error?: Error | null) => void) | undefined;
+            maybeCallback?.();
+            return true;
+        }
+
+        return Boolean(originalWrite(...args));
+    };
+
+    stderr.write = filteredWrite as typeof stderr.write;
 }

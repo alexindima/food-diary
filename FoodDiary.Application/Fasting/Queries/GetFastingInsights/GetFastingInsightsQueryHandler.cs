@@ -19,11 +19,7 @@ public sealed class GetFastingInsightsQueryHandler(
     public async Task<Result<FastingInsightsModel>> Handle(
         GetFastingInsightsQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<FastingInsightsModel>(Errors.Authentication.InvalidToken);
-        }
-
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var now = dateTimeProvider.UtcNow;
         var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
         var history = await fastingOccurrenceRepository.GetByUserAsync(

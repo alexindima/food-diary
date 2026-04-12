@@ -15,19 +15,13 @@ public class GetFastingHistoryQueryHandler(
     : IQueryHandler<GetFastingHistoryQuery, Result<PagedResponse<FastingSessionModel>>> {
     public async Task<Result<PagedResponse<FastingSessionModel>>> Handle(
         GetFastingHistoryQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<PagedResponse<FastingSessionModel>>(Errors.Authentication.InvalidToken);
-        }
-
         var userId = new UserId(query.UserId!.Value);
-        var page = Math.Max(query.Page, 1);
-        var limit = Math.Clamp(query.Limit, 1, 50);
         var (occurrences, totalItems) = await fastingOccurrenceRepository.GetPagedByUserAsync(
             userId,
             from: query.From,
             to: query.To,
-            page: page,
-            limit: limit,
+            page: query.Page,
+            limit: query.Limit,
             cancellationToken: cancellationToken);
         var occurrenceIds = occurrences.Select(static occurrence => occurrence.Id).ToArray();
         var checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken);
@@ -39,7 +33,7 @@ public class GetFastingHistoryQueryHandler(
                 occurrence.Plan,
                 checkInsByOccurrence.GetValueOrDefault(occurrence.Id)))
             .ToList();
-        var totalPages = totalItems == 0 ? 0 : (int)Math.Ceiling(totalItems / (double)limit);
-        return Result.Success(new PagedResponse<FastingSessionModel>(models, page, limit, totalPages, totalItems));
+        var totalPages = totalItems == 0 ? 0 : (int)Math.Ceiling(totalItems / (double)query.Limit);
+        return Result.Success(new PagedResponse<FastingSessionModel>(models, query.Page, query.Limit, totalPages, totalItems));
     }
 }
