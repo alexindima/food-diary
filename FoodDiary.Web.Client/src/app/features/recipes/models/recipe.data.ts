@@ -75,6 +75,19 @@ export interface RecipeListWithRecent {
     allRecipes: PageOf<Recipe>;
 }
 
+export interface FavoriteRecipe {
+    id: string;
+    recipeId: string;
+    name?: string | null;
+    createdAtUtc: string;
+    recipeName: string;
+    imageUrl?: string | null;
+    totalCalories?: number | null;
+    servings: number;
+    totalTimeMinutes?: number | null;
+    ingredientCount: number;
+}
+
 export interface RecipeDto {
     name: string;
     description?: string | null;

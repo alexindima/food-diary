@@ -18,9 +18,10 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
 import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
-import { Product, ProductFilters, ProductType } from '../../models/product.data';
+import { FavoriteProduct, Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
 import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
@@ -57,6 +58,7 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly pageSize = 10;
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly quickConsumptionService = inject(QuickMealService);
+    protected readonly favoriteProductService = inject(FavoriteProductService);
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
@@ -67,6 +69,8 @@ export class ProductListBaseComponent implements OnInit {
     public productData: PagedData<Product> = new PagedData<Product>();
     public currentPageIndex = 0;
     public recentProducts: Product[] = [];
+    public readonly favorites = signal<FavoriteProduct[]>([]);
+    public readonly isFavoritesOpen = signal(false);
     public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
@@ -119,6 +123,8 @@ export class ProductListBaseComponent implements OnInit {
                 switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
             )
             .subscribe();
+
+        this.loadFavorites();
     }
 
     public retryLoad(): void {
@@ -266,6 +272,50 @@ export class ProductListBaseComponent implements OnInit {
         this.quickConsumptionService.addProduct(product);
     }
 
+    public loadFavorites(): void {
+        this.favoriteProductService
+            .getAll()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(favorites => {
+                this.favorites.set(favorites);
+            });
+    }
+
+    public toggleFavorites(): void {
+        this.isFavoritesOpen.update(value => !value);
+    }
+
+    public openFavoriteProduct(favorite: FavoriteProduct): void {
+        this.productService
+            .getById(favorite.productId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(product => {
+                if (product) {
+                    this.onProductClick(product);
+                }
+            });
+    }
+
+    public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
+        this.productService
+            .getById(favorite.productId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(product => {
+                if (product) {
+                    this.onAddToMeal(product);
+                }
+            });
+    }
+
+    public removeFavorite(favorite: FavoriteProduct): void {
+        this.favoriteProductService.remove(favorite.id).subscribe({
+            next: () => {
+                this.loadFavorites();
+                this.reloadCurrentPage();
+            },
+        });
+    }
+
     protected getProductTypeTranslationKey(product: Product): string {
         return buildProductTypeTranslationKey(product.productType ?? product.category ?? null);
     }
@@ -310,6 +360,10 @@ export class ProductListBaseComponent implements OnInit {
 
     public get isMobileSearchVisible(): boolean {
         return this.isMobileSearchOpen() || this.hasSearchValue(this.searchForm.controls.search.value);
+    }
+
+    protected reloadCurrentPage(): void {
+        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
     }
 
     private hasSearchValue(value: string | null): boolean {

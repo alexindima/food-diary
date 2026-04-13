@@ -29,6 +29,20 @@
     <div fdMediaCardContent class="meal-card__content">
         <div class="meal-card__title-block">
             <div class="meal-card__title-row">
+                @if (canToggleFavorite()) {
+                    <button
+                        type="button"
+                        class="meal-card__favorite-button"
+                        [class.meal-card__favorite-button--active]="isFavorite()"
+                        [attr.aria-label]="
+                            (isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate
+                        "
+                        [disabled]="isFavoriteLoading()"
+                        (click)="toggleFavorite($event)"
+                    >
+                        <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
+                    </button>
+                }
                 <div class="meal-card__title">
                     @if (meal().mealType) {
                         {{ 'MEAL_CARD.MEAL_TYPES.' + meal().mealType | translate }}

@@ -1,12 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { ProductCardComponent, ProductCardItem } from './product-card.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+// eslint-disable-next-line no-restricted-imports
+import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
+import { AuthService } from '../../../services/auth.service';
 
 describe('ProductCardComponent', () => {
     let component: ProductCardComponent;
     let fixture: ComponentFixture<ProductCardComponent>;
 
     const mockProduct: ProductCardItem = {
+        id: 'product-1',
         name: 'Test Product',
         isOwnedByCurrentUser: true,
         proteinsPerBase: 20,
@@ -20,6 +26,23 @@ describe('ProductCardComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [ProductCardComponent, TranslateModule.forRoot()],
+            providers: [
+                {
+                    provide: FavoriteProductService,
+                    useValue: {
+                        isFavorite: (): Observable<boolean> => of(false),
+                        add: (): Observable<{ id: string }> => of({ id: 'favorite-product-1' }),
+                        remove: (): Observable<void> => of(void 0),
+                        getAll: (): Observable<[]> => of([]),
+                    },
+                },
+                {
+                    provide: AuthService,
+                    useValue: {
+                        isAuthenticated: signal(true),
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ProductCardComponent);

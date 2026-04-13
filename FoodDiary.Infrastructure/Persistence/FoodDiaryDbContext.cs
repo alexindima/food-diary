@@ -3,6 +3,8 @@ using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Notifications;
@@ -55,6 +57,8 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<FastingSession> FastingSessions => Set<FastingSession>();
     public DbSet<FastingTelemetryEvent> FastingTelemetryEvents => Set<FastingTelemetryEvent>();
     public DbSet<FavoriteMeal> FavoriteMeals => Set<FavoriteMeal>();
+    public DbSet<FavoriteProduct> FavoriteProducts => Set<FavoriteProduct>();
+    public DbSet<FavoriteRecipe> FavoriteRecipes => Set<FavoriteRecipe>();
     public DbSet<ExerciseEntry> ExerciseEntries => Set<ExerciseEntry>();
     public DbSet<NutritionLesson> NutritionLessons => Set<NutritionLesson>();
     public DbSet<UserLessonProgress> UserLessonProgress => Set<UserLessonProgress>();

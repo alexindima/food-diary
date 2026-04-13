@@ -82,6 +82,19 @@ export interface ProductListWithRecent {
     allProducts: PageOf<Product>;
 }
 
+export interface FavoriteProduct {
+    id: string;
+    productId: string;
+    name?: string | null;
+    createdAtUtc: string;
+    productName: string;
+    brand?: string | null;
+    imageUrl?: string | null;
+    caloriesPerBase: number;
+    baseUnit: string;
+    defaultPortionAmount: number;
+}
+
 export enum MeasurementUnit {
     G = 'G',
     ML = 'ML',

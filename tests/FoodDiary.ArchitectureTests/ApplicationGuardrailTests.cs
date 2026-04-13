@@ -133,6 +133,7 @@ public sealed class ApplicationGuardrailTests {
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
         var allowedDirectories = new[] {
             Path.Combine(applicationRoot, "Products"),
+            Path.Combine(applicationRoot, "FavoriteProducts"),
             Path.Combine(applicationRoot, "Usda"),
         };
 
@@ -151,6 +152,7 @@ public sealed class ApplicationGuardrailTests {
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
         var allowedDirectories = new[] {
             Path.Combine(applicationRoot, "Recipes"),
+            Path.Combine(applicationRoot, "FavoriteRecipes"),
             Path.Combine(applicationRoot, "RecipeComments"),
             Path.Combine(applicationRoot, "RecipeLikes"),
         };

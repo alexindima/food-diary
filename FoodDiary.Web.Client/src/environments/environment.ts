@@ -23,6 +23,8 @@ export const environment: AppConfig = {
         dietologist: `${serverUrl}/api/v1/dietologist`,
         fasting: `${serverUrl}/api/v1/fasting`,
         favoriteMeals: `${serverUrl}/api/v1/favorite-meals`,
+        favoriteProducts: `${serverUrl}/api/v1/favorite-products`,
+        favoriteRecipes: `${serverUrl}/api/v1/favorite-recipes`,
         gamification: `${serverUrl}/api/v1/gamification`,
         weeklyCheckIn: `${serverUrl}/api/v1/weekly-check-in`,
         tdee: `${serverUrl}/api/v1/tdee`,

@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { MealCardComponent, MealCardItem } from './meal-card.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+// eslint-disable-next-line no-restricted-imports
+import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
+import { AuthService } from '../../../services/auth.service';
 
 describe('MealCardComponent', () => {
     let component: MealCardComponent;
@@ -23,6 +28,23 @@ describe('MealCardComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [MealCardComponent, TranslateModule.forRoot()],
+            providers: [
+                {
+                    provide: FavoriteMealService,
+                    useValue: {
+                        isFavorite: (): Observable<boolean> => of(false),
+                        add: (): Observable<{ id: string }> => of({ id: 'favorite-meal-1' }),
+                        remove: (): Observable<void> => of(void 0),
+                        getAll: (): Observable<[]> => of([]),
+                    },
+                },
+                {
+                    provide: AuthService,
+                    useValue: {
+                        isAuthenticated: signal(true),
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(MealCardComponent);

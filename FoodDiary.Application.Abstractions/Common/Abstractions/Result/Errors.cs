@@ -386,6 +386,30 @@ public static class Errors {
             kind: ErrorKind.Conflict);
     }
 
+    public static class FavoriteProduct {
+        public static Error NotFound(Guid id) => new(
+            "FavoriteProduct.NotFound",
+            $"Favorite product with id '{id}' was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error AlreadyExists => new(
+            "FavoriteProduct.AlreadyExists",
+            "This product is already in favorites.",
+            kind: ErrorKind.Conflict);
+    }
+
+    public static class FavoriteRecipe {
+        public static Error NotFound(Guid id) => new(
+            "FavoriteRecipe.NotFound",
+            $"Favorite recipe with id '{id}' was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error AlreadyExists => new(
+            "FavoriteRecipe.AlreadyExists",
+            "This recipe is already in favorites.",
+            kind: ErrorKind.Conflict);
+    }
+
     public static class MealPlan {
         public static Error NotFound(Guid id) => new(
             "MealPlan.NotFound",

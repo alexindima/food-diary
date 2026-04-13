@@ -118,6 +118,16 @@
             <span class="recipe-detail__warning">{{ warningMessage | translate }}</span>
         }
         <div class="recipe-detail__actions">
+            <button
+                type="button"
+                class="recipe-detail__favorite-btn"
+                [class.recipe-detail__favorite-btn--active]="isFavorite()"
+                [disabled]="isFavoriteLoading()"
+                (click)="toggleFavorite()"
+                [title]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
+            >
+                <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
+            </button>
             @if (canModify) {
                 <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}

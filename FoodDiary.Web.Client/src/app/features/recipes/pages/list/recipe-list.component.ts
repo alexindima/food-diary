@@ -18,11 +18,13 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { RecipeDetailActionResult, RecipeDetailComponent } from '../../components/detail/recipe-detail.component';
+import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
+import { RecipeService } from '../../api/recipe.service';
 import {
     RecipeListFiltersDialogComponent,
     RecipeListFiltersDialogResult,
 } from '../../components/list/recipe-list-filters-dialog.component';
-import { Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 
 @Component({
@@ -52,6 +54,8 @@ export class RecipeListComponent implements OnInit {
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeListFacade = inject(RecipeListFacade);
+    private readonly favoriteRecipeService = inject(FavoriteRecipeService);
+    private readonly recipeService = inject(RecipeService);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -59,6 +63,8 @@ export class RecipeListComponent implements OnInit {
     public recipeData = this.recipeListFacade.recipeData;
     public currentPageIndex = this.recipeListFacade.currentPageIndex;
     public recentRecipes = this.recipeListFacade.recentRecipes;
+    public readonly favorites = signal<FavoriteRecipe[]>([]);
+    public readonly isFavoritesOpen = signal(false);
     public readonly errorKey = this.recipeListFacade.errorKey;
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
@@ -116,6 +122,8 @@ export class RecipeListComponent implements OnInit {
                 ),
             )
             .subscribe();
+
+        this.loadFavorites();
     }
 
     public retryLoad(): void {
@@ -136,6 +144,9 @@ export class RecipeListComponent implements OnInit {
             })
             .afterClosed()
             .subscribe(result => {
+                this.loadFavorites();
+                this.reloadCurrentPage();
+
                 if (!result) {
                     return;
                 }
@@ -211,6 +222,50 @@ export class RecipeListComponent implements OnInit {
         this.recipeListFacade.addToMeal(recipe);
     }
 
+    public loadFavorites(): void {
+        this.favoriteRecipeService
+            .getAll()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(favorites => {
+                this.favorites.set(favorites);
+            });
+    }
+
+    public toggleFavorites(): void {
+        this.isFavoritesOpen.update(value => !value);
+    }
+
+    public openFavoriteRecipe(favorite: FavoriteRecipe): void {
+        this.recipeService
+            .getById(favorite.recipeId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(recipe => {
+                if (recipe) {
+                    this.onRecipeClick(recipe);
+                }
+            });
+    }
+
+    public addFavoriteRecipeToMeal(favorite: FavoriteRecipe): void {
+        this.recipeService
+            .getById(favorite.recipeId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(recipe => {
+                if (recipe) {
+                    this.onAddToMeal(recipe);
+                }
+            });
+    }
+
+    public removeFavorite(favorite: FavoriteRecipe): void {
+        this.favoriteRecipeService.remove(favorite.id).subscribe({
+            next: () => {
+                this.loadFavorites();
+                this.reloadCurrentPage();
+            },
+        });
+    }
+
     public get showRecentSection(): boolean {
         return this.recipeListFacade.showRecentSection();
     }
@@ -257,6 +312,17 @@ export class RecipeListComponent implements OnInit {
 
     private scrollToTop(): void {
         this.container()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    private reloadCurrentPage(): void {
+        this.recipeListFacade
+            .loadRecipes(
+                this.currentPageIndex() + 1,
+                this.pageSize,
+                this.searchForm.controls.search.value,
+                this.searchForm.controls.onlyMine.value,
+            )
+            .subscribe();
     }
 }
 

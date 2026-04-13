@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Recipe } from '../../models/recipe.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RecipeService } from '../../api/recipe.service';
+import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -16,6 +17,7 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -31,13 +33,19 @@ import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
         BaseChartDirective,
+        MatIconModule,
     ],
 })
 export class RecipeDetailComponent {
     private readonly dialogRef = inject(FdUiDialogRef<RecipeDetailComponent, RecipeDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeService = inject(RecipeService);
+    private readonly favoriteRecipeService = inject(FavoriteRecipeService);
     private readonly translateService = inject(TranslateService);
+
+    public readonly isFavorite = signal(false);
+    public readonly isFavoriteLoading = signal(false);
+    private favoriteRecipeId: string | null = null;
 
     public readonly recipe: Recipe;
     public readonly calories: number;
@@ -164,6 +172,10 @@ export class RecipeDetailComponent {
                 color: CHART_COLORS.alcohol,
             },
         ];
+    }
+
+    public ngOnInit(): void {
+        this.favoriteRecipeService.isFavorite(this.recipe.id).subscribe(isFav => this.isFavorite.set(isFav));
     }
 
     public get visibilityKey(): string {
@@ -353,6 +365,57 @@ export class RecipeDetailComponent {
                 this.isDuplicateInProgress = false;
             },
         });
+    }
+
+    public toggleFavorite(): void {
+        if (this.isFavoriteLoading()) {
+            return;
+        }
+
+        this.isFavoriteLoading.set(true);
+
+        if (this.isFavorite()) {
+            if (this.favoriteRecipeId) {
+                this.favoriteRecipeService.remove(this.favoriteRecipeId).subscribe({
+                    next: () => {
+                        this.isFavorite.set(false);
+                        this.favoriteRecipeId = null;
+                        this.isFavoriteLoading.set(false);
+                    },
+                    error: () => this.isFavoriteLoading.set(false),
+                });
+                return;
+            }
+
+            this.favoriteRecipeService.getAll().subscribe({
+                next: favorites => {
+                    const match = favorites.find(f => f.recipeId === this.recipe.id);
+                    if (match) {
+                        this.favoriteRecipeService.remove(match.id).subscribe({
+                            next: () => {
+                                this.isFavorite.set(false);
+                                this.favoriteRecipeId = null;
+                                this.isFavoriteLoading.set(false);
+                            },
+                            error: () => this.isFavoriteLoading.set(false),
+                        });
+                    } else {
+                        this.isFavorite.set(false);
+                        this.isFavoriteLoading.set(false);
+                    }
+                },
+                error: () => this.isFavoriteLoading.set(false),
+            });
+        } else {
+            this.favoriteRecipeService.add(this.recipe.id).subscribe({
+                next: favorite => {
+                    this.isFavorite.set(true);
+                    this.favoriteRecipeId = favorite.id;
+                    this.isFavoriteLoading.set(false);
+                },
+                error: () => this.isFavoriteLoading.set(false),
+            });
+        }
     }
 
     private showConfirmDialog(): void {

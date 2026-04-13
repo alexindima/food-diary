@@ -1,6 +1,8 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -339,6 +341,84 @@ internal sealed class FavoriteMealConfiguration : IEntityTypeConfiguration<Favor
             .OnDelete(DeleteBehavior.Cascade);
 
         entity.HasIndex(e => new { e.UserId, e.MealId })
+            .IsUnique();
+
+        entity.HasIndex(e => e.UserId);
+    }
+}
+
+internal sealed class FavoriteProductConfiguration : IEntityTypeConfiguration<FavoriteProduct> {
+    public void Configure(EntityTypeBuilder<FavoriteProduct> entity) {
+        entity.Property(e => e.Id)
+            .HasConversion(
+                id => id.Value,
+                value => new FavoriteProductId(value))
+            .ValueGeneratedNever();
+
+        entity.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        entity.Property(e => e.ProductId).HasConversion(
+            id => id.Value,
+            value => new ProductId(value));
+
+        entity.Property(e => e.Name)
+            .HasMaxLength(500);
+
+        entity.Property(e => e.CreatedAtUtc)
+            .HasColumnType("timestamp with time zone");
+
+        entity.HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(e => e.Product)
+            .WithMany()
+            .HasForeignKey(e => e.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasIndex(e => new { e.UserId, e.ProductId })
+            .IsUnique();
+
+        entity.HasIndex(e => e.UserId);
+    }
+}
+
+internal sealed class FavoriteRecipeConfiguration : IEntityTypeConfiguration<FavoriteRecipe> {
+    public void Configure(EntityTypeBuilder<FavoriteRecipe> entity) {
+        entity.Property(e => e.Id)
+            .HasConversion(
+                id => id.Value,
+                value => new FavoriteRecipeId(value))
+            .ValueGeneratedNever();
+
+        entity.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        entity.Property(e => e.RecipeId).HasConversion(
+            id => id.Value,
+            value => new RecipeId(value));
+
+        entity.Property(e => e.Name)
+            .HasMaxLength(500);
+
+        entity.Property(e => e.CreatedAtUtc)
+            .HasColumnType("timestamp with time zone");
+
+        entity.HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(e => e.Recipe)
+            .WithMany()
+            .HasForeignKey(e => e.RecipeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasIndex(e => new { e.UserId, e.RecipeId })
             .IsUnique();
 
         entity.HasIndex(e => e.UserId);

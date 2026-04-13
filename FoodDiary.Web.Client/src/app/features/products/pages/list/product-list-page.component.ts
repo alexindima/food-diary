@@ -52,6 +52,9 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
             })
             .afterClosed()
             .subscribe(data => {
+                this.loadFavorites();
+                this.reloadCurrentPage();
+
                 if (!data) {
                     return;
                 }

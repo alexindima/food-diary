@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
+import { MatIconModule } from '@angular/material/icon';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -11,6 +12,7 @@ import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { ProductService } from '../../api/product.service';
+import { FavoriteProductService } from '../../api/favorite-product.service';
 import { Product } from '../../models/product.data';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import { NutrientData } from '../../../../shared/models/charts.data';
@@ -33,13 +35,19 @@ import {
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
         BaseChartDirective,
+        MatIconModule,
     ],
 })
 export class ProductDetailComponent {
     private readonly productService = inject(ProductService);
+    private readonly favoriteProductService = inject(FavoriteProductService);
     private readonly dialogRef = inject(FdUiDialogRef<ProductDetailComponent>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
+
+    public readonly isFavorite = signal(false);
+    public readonly isFavoriteLoading = signal(false);
+    private favoriteProductId: string | null = null;
 
     public product: Product;
     public readonly productTypeKey: string;
@@ -188,6 +196,10 @@ export class ProductDetailComponent {
         ];
     }
 
+    public ngOnInit(): void {
+        this.favoriteProductService.isFavorite(this.product.id).subscribe(isFav => this.isFavorite.set(isFav));
+    }
+
     public onEdit(): void {
         if (this.isEditDisabled) {
             return;
@@ -236,6 +248,57 @@ export class ProductDetailComponent {
                 this.isDuplicateInProgress = false;
             },
         });
+    }
+
+    public toggleFavorite(): void {
+        if (this.isFavoriteLoading()) {
+            return;
+        }
+
+        this.isFavoriteLoading.set(true);
+
+        if (this.isFavorite()) {
+            if (this.favoriteProductId) {
+                this.favoriteProductService.remove(this.favoriteProductId).subscribe({
+                    next: () => {
+                        this.isFavorite.set(false);
+                        this.favoriteProductId = null;
+                        this.isFavoriteLoading.set(false);
+                    },
+                    error: () => this.isFavoriteLoading.set(false),
+                });
+                return;
+            }
+
+            this.favoriteProductService.getAll().subscribe({
+                next: favorites => {
+                    const match = favorites.find(f => f.productId === this.product.id);
+                    if (match) {
+                        this.favoriteProductService.remove(match.id).subscribe({
+                            next: () => {
+                                this.isFavorite.set(false);
+                                this.favoriteProductId = null;
+                                this.isFavoriteLoading.set(false);
+                            },
+                            error: () => this.isFavoriteLoading.set(false),
+                        });
+                    } else {
+                        this.isFavorite.set(false);
+                        this.isFavoriteLoading.set(false);
+                    }
+                },
+                error: () => this.isFavoriteLoading.set(false),
+            });
+        } else {
+            this.favoriteProductService.add(this.product.id).subscribe({
+                next: favorite => {
+                    this.isFavorite.set(true);
+                    this.favoriteProductId = favorite.id;
+                    this.isFavoriteLoading.set(false);
+                },
+                error: () => this.isFavoriteLoading.set(false),
+            });
+        }
     }
 }
 

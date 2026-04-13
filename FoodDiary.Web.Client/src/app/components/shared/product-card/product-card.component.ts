@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { inject } from '@angular/core';
+import { finalize, of, switchMap } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
@@ -9,8 +10,11 @@ import { QualityGrade } from '../../../features/products/models/product.data';
 import { MediaCardComponent } from '../media-card/media-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
+import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
+import { AuthService } from '../../../services/auth.service';
 
 export interface ProductCardItem {
+    id?: string;
     name: string;
     brand?: string | null;
     barcode?: string | null;
@@ -35,11 +39,32 @@ export interface ProductCardItem {
 export class ProductCardComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
+    private readonly favoriteProductService = inject(FavoriteProductService);
+    private readonly authService = inject(AuthService);
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly product = input.required<ProductCardItem>();
     public readonly imageUrl = input<string>();
     public readonly open = output<void>();
     public readonly addToMeal = output<void>();
+    public readonly favoriteChanged = output<boolean>();
+    public readonly isFavorite = signal(false);
+    public readonly isFavoriteLoading = signal(false);
+    public readonly isAuthenticated = this.authService.isAuthenticated;
+    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.product().id));
+    private favoriteProductId: string | null = null;
+
+    public ngOnInit(): void {
+        const productId = this.product().id;
+        if (!productId || !this.isAuthenticated()) {
+            return;
+        }
+
+        this.favoriteProductService
+            .isFavorite(productId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(isFav => this.isFavorite.set(isFav));
+    }
 
     public handleOpen(): void {
         this.open.emit();
@@ -72,5 +97,76 @@ export class ProductCardComponent {
                 title: this.product().name,
             },
         });
+    }
+
+    public toggleFavorite(event: Event): void {
+        event.stopPropagation();
+
+        const productId = this.product().id;
+        if (!productId || this.isFavoriteLoading()) {
+            return;
+        }
+
+        this.isFavoriteLoading.set(true);
+
+        if (this.isFavorite()) {
+            this.removeFavorite(productId);
+            return;
+        }
+
+        this.favoriteProductService
+            .add(productId, this.product().name)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.isFavoriteLoading.set(false)),
+            )
+            .subscribe({
+                next: favorite => {
+                    this.favoriteProductId = favorite.id;
+                    this.isFavorite.set(true);
+                    this.favoriteChanged.emit(true);
+                },
+            });
+    }
+
+    private removeFavorite(productId: string): void {
+        if (this.favoriteProductId) {
+            this.favoriteProductService
+                .remove(this.favoriteProductId)
+                .pipe(
+                    takeUntilDestroyed(this.destroyRef),
+                    finalize(() => this.isFavoriteLoading.set(false)),
+                )
+                .subscribe({
+                    next: () => {
+                        this.favoriteProductId = null;
+                        this.isFavorite.set(false);
+                        this.favoriteChanged.emit(false);
+                    },
+                });
+            return;
+        }
+
+        this.favoriteProductService
+            .getAll()
+            .pipe(
+                switchMap(favorites => {
+                    const match = favorites.find(favorite => favorite.productId === productId);
+                    if (!match) {
+                        return of(null);
+                    }
+
+                    return this.favoriteProductService.remove(match.id);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.isFavoriteLoading.set(false)),
+            )
+            .subscribe({
+                next: () => {
+                    this.favoriteProductId = null;
+                    this.isFavorite.set(false);
+                    this.favoriteChanged.emit(false);
+                },
+            });
     }
 }

@@ -1,12 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { RecipeCardComponent, RecipeCardItem } from './recipe-card.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+// eslint-disable-next-line no-restricted-imports
+import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
+import { AuthService } from '../../../services/auth.service';
 
 describe('RecipeCardComponent', () => {
     let component: RecipeCardComponent;
     let fixture: ComponentFixture<RecipeCardComponent>;
 
     const mockRecipe: RecipeCardItem = {
+        id: 'recipe-1',
         name: 'Test Recipe',
         isOwnedByCurrentUser: true,
         prepTime: 15,
@@ -23,6 +29,23 @@ describe('RecipeCardComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RecipeCardComponent, TranslateModule.forRoot()],
+            providers: [
+                {
+                    provide: FavoriteRecipeService,
+                    useValue: {
+                        isFavorite: (): Observable<boolean> => of(false),
+                        add: (): Observable<{ id: string }> => of({ id: 'favorite-recipe-1' }),
+                        remove: (): Observable<void> => of(void 0),
+                        getAll: (): Observable<[]> => of([]),
+                    },
+                },
+                {
+                    provide: AuthService,
+                    useValue: {
+                        isAuthenticated: signal(true),
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(RecipeCardComponent);

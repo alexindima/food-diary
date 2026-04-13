@@ -177,7 +177,12 @@
                         </div>
                         <div class="consumption-list__grid">
                             @for (consumption of group.items; track consumption.id) {
-                                <fd-meal-card class="consumption-card" [meal]="consumption" (open)="openMealDetails(consumption)" />
+                                <fd-meal-card
+                                    class="consumption-card"
+                                    [meal]="consumption"
+                                    (open)="openMealDetails(consumption)"
+                                    (favoriteChanged)="loadFavorites()"
+                                />
                             }
                         </div>
                     </div>

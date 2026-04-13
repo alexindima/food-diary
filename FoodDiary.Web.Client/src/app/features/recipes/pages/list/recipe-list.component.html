@@ -97,6 +97,66 @@
                 <fd-skeleton-card />
             </div>
         } @else {
+            @if (favorites().length > 0) {
+                <div class="recipe-list__favorites">
+                    <button type="button" class="recipe-list__favorites-header" (click)="toggleFavorites()">
+                        <mat-icon class="recipe-list__favorites-star">star</mat-icon>
+                        <span>{{ 'RECIPE_LIST.FAVORITES_TITLE' | translate }} ({{ favorites().length }})</span>
+                        <mat-icon [class.is-open]="isFavoritesOpen()">expand_more</mat-icon>
+                    </button>
+                    @if (isFavoritesOpen()) {
+                        <div class="recipe-list__favorites-grid">
+                            @for (favorite of favorites(); track favorite.id) {
+                                <div class="recipe-list__favorite-card">
+                                    <button type="button" class="recipe-list__favorite-info" (click)="openFavoriteRecipe(favorite)">
+                                        <div class="recipe-list__favorite-name">
+                                            {{ favorite.name || favorite.recipeName || ('RECIPE_LIST.FAVORITE_UNNAMED' | translate) }}
+                                        </div>
+                                        <div class="recipe-list__favorite-meta">
+                                            <span>{{ favorite.ingredientCount }} {{ 'RECIPE_LIST.FAVORITE_INGREDIENTS' | translate }}</span>
+                                            @if (favorite.totalTimeMinutes) {
+                                                <span>·</span>
+                                                <span
+                                                    >{{ favorite.totalTimeMinutes }} {{ 'RECIPE_LIST.FAVORITE_MINUTES' | translate }}</span
+                                                >
+                                            }
+                                            <span>·</span>
+                                            <span>{{ favorite.servings }} {{ 'RECIPE_LIST.FAVORITE_SERVINGS' | translate }}</span>
+                                        </div>
+                                    </button>
+                                    <div class="recipe-list__favorite-actions">
+                                        <button
+                                            type="button"
+                                            class="recipe-list__favorite-btn"
+                                            (click)="openFavoriteRecipe(favorite)"
+                                            [title]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
+                                        >
+                                            <mat-icon>open_in_new</mat-icon>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="recipe-list__favorite-btn"
+                                            (click)="addFavoriteRecipeToMeal(favorite)"
+                                            [title]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                        >
+                                            <mat-icon>add</mat-icon>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="recipe-list__favorite-btn recipe-list__favorite-btn--remove"
+                                            (click)="removeFavorite(favorite)"
+                                            [title]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
+                                        >
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+
             @if (hasVisibleRecipes) {
                 <div class="recipe-list__groups">
                     @if (showRecentSection) {
@@ -114,6 +174,7 @@
                                         [imageUrl]="resolveImage(recipe)"
                                         (open)="onRecipeClick(recipe)"
                                         (addToMeal)="onAddToMeal(recipe)"
+                                        (favoriteChanged)="loadFavorites()"
                                     />
                                 }
                             </div>
@@ -135,6 +196,7 @@
                                         [imageUrl]="resolveImage(recipe)"
                                         (open)="onRecipeClick(recipe)"
                                         (addToMeal)="onAddToMeal(recipe)"
+                                        (favoriteChanged)="loadFavorites()"
                                     />
                                 }
                             </div>
