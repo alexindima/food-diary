@@ -1,91 +1,20 @@
-<fd-media-card
-    class="meal-card"
-    role="button"
-    tabindex="0"
-    (click)="handleOpen()"
-    (keydown.enter)="handleOpen()"
-    (keydown.space)="handleOpen(); $event.preventDefault()"
->
-    <div
-        fdMediaCardMedia
-        class="meal-card__thumb"
-        [class.meal-card__thumb--previewable]="hasPreviewImage()"
-        [attr.role]="hasPreviewImage() ? 'button' : null"
-        [attr.tabindex]="hasPreviewImage() ? '0' : null"
-        [attr.aria-label]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
-        (click)="handlePreview($event)"
-        (keydown.enter)="handlePreview($event)"
-        (keydown.space)="handlePreview($event); $event.preventDefault()"
-    >
-        <img
-            [ngSrc]="coverImage()"
-            width="96"
-            height="96"
-            [alt]="meal().mealType ? ('MEAL_CARD.MEAL_TYPES.' + meal().mealType | translate) : ('MEAL_CARD.MEAL_TYPES.OTHER' | translate)"
-            loading="lazy"
-        />
-    </div>
-
-    <div fdMediaCardContent class="meal-card__content">
-        <div class="meal-card__title-block">
-            <div class="meal-card__title-row">
-                @if (canToggleFavorite()) {
-                    <button
-                        type="button"
-                        class="meal-card__favorite-button"
-                        [class.meal-card__favorite-button--active]="isFavorite()"
-                        [attr.aria-label]="
-                            (isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate
-                        "
-                        [disabled]="isFavoriteLoading()"
-                        (click)="toggleFavorite($event)"
-                    >
-                        <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-                    </button>
-                }
-                <div class="meal-card__title">
-                    @if (meal().mealType) {
-                        {{ 'MEAL_CARD.MEAL_TYPES.' + meal().mealType | translate }}
-                    } @else {
-                        {{ 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
-                    }
-                </div>
-                <div class="meal-card__time">
-                    {{ meal().date | date: 'HH:mm' }}
-                </div>
-            </div>
-            <div class="meal-card__items">{{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ itemCount() }}</div>
-            @if (qualityScore(); as score) {
-                <div class="meal-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
-                    <span class="meal-card__quality-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
-                    <div class="meal-card__quality-bar" aria-hidden="true">
-                        <span
-                            class="meal-card__quality-fill meal-card__quality-fill--{{ meal().qualityGrade }}"
-                            [style.width.%]="score"
-                        ></span>
-                    </div>
-                    <span class="meal-card__quality-value" [title]="'QUALITY.' + meal().qualityGrade!.toUpperCase() | translate">
-                        {{ score }}
-                    </span>
-                </div>
-            }
-        </div>
-
-        <div class="meal-card__nutrients">
-            <fd-nutrient-badges
-                [proteins]="meal().totalProteins"
-                [fats]="meal().totalFats"
-                [carbs]="meal().totalCarbs"
-                [fiber]="meal().totalFiber"
-                [alcohol]="meal().totalAlcohol"
-            />
-        </div>
-    </div>
-
-    <div fdMediaCardActions class="meal-card__calories">
-        <span class="meal-card__calories-value">
-            {{ meal().totalCalories | number: '1.0-0' }}
-        </span>
-        <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
-    </div>
-</fd-media-card>
+<fd-entity-card
+    [imageUrl]="coverImage()"
+    [imageAlt]="mealTitle()"
+    [previewable]="hasPreviewImage()"
+    [showFavorite]="canToggleFavorite()"
+    [isFavorite]="isFavorite()"
+    [favoriteLoading]="isFavoriteLoading()"
+    [favoriteAriaLabel]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
+    [ownershipIcon]="null"
+    [title]="mealTime()"
+    [titleMuted]="mealTitle()"
+    [description]="('MEAL_CARD.ITEM_COUNT' | translate) + ': ' + itemCount()"
+    [nutrition]="nutrition()"
+    [quality]="quality()"
+    [calories]="meal().totalCalories"
+    [showAction]="false"
+    (open)="handleOpen()"
+    (preview)="handlePreview()"
+    (favoriteToggle)="toggleFavorite()"
+/>

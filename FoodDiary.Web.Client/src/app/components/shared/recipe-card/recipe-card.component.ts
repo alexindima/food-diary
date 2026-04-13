@@ -1,17 +1,13 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, of, switchMap } from 'rxjs';
-import { FdUiIconModule } from 'fd-ui-kit/material';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
-import { MediaCardComponent } from '../media-card/media-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { AuthService } from '../../../services/auth.service';
 import { QualityGrade } from '../../../features/products/models/product.data';
+import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface RecipeCardStep {
     ingredients?: Array<unknown> | null;
@@ -38,7 +34,7 @@ export interface RecipeCardItem {
 @Component({
     selector: 'fd-recipe-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiIconModule, FdUiButtonComponent, NutrientBadgesComponent, MediaCardComponent],
+    imports: [TranslatePipe, EntityCardComponent],
     templateUrl: './recipe-card.component.html',
     styleUrl: './recipe-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +55,18 @@ export class RecipeCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.recipe().id));
+    public readonly nutrition = computed(() => ({
+        proteins: this.recipe().totalProteins ?? 0,
+        fats: this.recipe().totalFats ?? 0,
+        carbs: this.recipe().totalCarbs ?? 0,
+        fiber: this.recipe().totalFiber ?? 0,
+        alcohol: this.recipe().totalAlcohol ?? 0,
+    }));
+    public readonly quality = computed(() => {
+        const score = this.qualityScore();
+        const grade = this.recipe().qualityGrade;
+        return score === null || grade === null || grade === undefined ? null : { score, grade };
+    });
     public readonly qualityScore = computed(() => {
         const score = this.recipe().qualityScore;
         if (score === null || score === undefined) {
@@ -85,8 +93,7 @@ export class RecipeCardComponent {
         this.open.emit();
     }
 
-    public handleAdd(event: Event): void {
-        event.stopPropagation();
+    public handleAdd(): void {
         this.addToMeal.emit();
     }
 
@@ -94,9 +101,7 @@ export class RecipeCardComponent {
         return Boolean(this.imageUrl()?.trim());
     }
 
-    public handlePreview(event: Event): void {
-        event.stopPropagation();
-
+    public handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (!imageUrl) {
             return;
@@ -115,25 +120,32 @@ export class RecipeCardComponent {
     }
 
     public getTotalTime(): number | null {
-        const r = this.recipe();
-        const prep = r?.prepTime ?? 0;
-        const cook = r?.cookTime ?? 0;
+        const recipe = this.recipe();
+        const prep = recipe.prepTime ?? 0;
+        const cook = recipe.cookTime ?? 0;
         const total = prep + cook;
         return total > 0 ? total : null;
     }
 
     public getIngredientCount(): number {
-        const r = this.recipe();
-        if (!r?.steps?.length) {
+        const recipe = this.recipe();
+        if (!recipe.steps?.length) {
             return 0;
         }
 
-        return r.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
+        return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     }
 
-    public toggleFavorite(event: Event): void {
-        event.stopPropagation();
+    public recipeTimeSuffix(): string {
+        const minutes = this.getTotalTime();
+        if (!minutes) {
+            return '';
+        }
 
+        return ` - ${minutes} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
+    }
+
+    public toggleFavorite(): void {
         const recipeId = this.recipe().id;
         if (!recipeId || this.isFavoriteLoading()) {
             return;

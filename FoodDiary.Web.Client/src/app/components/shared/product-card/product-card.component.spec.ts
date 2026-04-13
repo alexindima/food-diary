@@ -60,7 +60,7 @@ describe('ProductCardComponent', () => {
     it('should display product name', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
-        const nameEl = el.querySelector('.product-card__name');
+        const nameEl = el.querySelector('.entity-card__name');
         expect(nameEl?.textContent?.trim()).toBe('Test Product');
     });
 
@@ -71,31 +71,27 @@ describe('ProductCardComponent', () => {
         component.open.subscribe(openSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        const card = el.querySelector<HTMLElement>('.product-card');
+        const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
 
         expect(openSpy).toHaveBeenCalledOnce();
     });
 
-    it('should emit addToMeal and stop propagation on add button click', () => {
+    it('should emit addToMeal on add button click', () => {
         fixture.detectChanges();
 
         const addSpy = vi.fn();
         component.addToMeal.subscribe(addSpy);
 
-        const mockEvent = new Event('click', { bubbles: true });
-        const stopSpy = vi.spyOn(mockEvent, 'stopPropagation');
-
-        component.handleAdd(mockEvent);
+        component.handleAdd();
 
         expect(addSpy).toHaveBeenCalledOnce();
-        expect(stopSpy).toHaveBeenCalledOnce();
     });
 
     it('should display calories per base', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
-        const caloriesEl = el.querySelector('.product-card__calories-value');
+        const caloriesEl = el.querySelector('.entity-card__calories-value');
         expect(caloriesEl?.textContent?.trim()).toBe('290');
     });
 
@@ -103,9 +99,9 @@ describe('ProductCardComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const labelEl = el.querySelector('.product-card__quality-label');
-        const valueEl = el.querySelector('.product-card__quality-value');
-        const fillEl = el.querySelector<HTMLElement>('.product-card__quality-fill');
+        const labelEl = el.querySelector('.entity-card__quality-label');
+        const valueEl = el.querySelector('.entity-card__quality-value');
+        const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
 
         expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
         expect(valueEl?.textContent?.trim()).toBe('72');
@@ -117,7 +113,7 @@ describe('ProductCardComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const img = el.querySelector('.product-card__thumb img');
+        const img = el.querySelector('.entity-card__thumb img');
         expect(img).toBeTruthy();
     });
 
@@ -125,7 +121,7 @@ describe('ProductCardComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const icon = el.querySelector('.product-card__thumb mat-icon');
+        const icon = el.querySelector('.entity-card__thumb mat-icon');
         expect(icon).toBeTruthy();
     });
 });

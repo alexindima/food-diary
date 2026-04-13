@@ -1,17 +1,15 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, LOCALE_ID, computed, inject, input, output, signal } from '@angular/core';
+import { CommonModule, formatDate } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { finalize, of, switchMap } from 'rxjs';
 import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
-import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
-import { MediaCardComponent } from '../media-card/media-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
-import { MatIconModule } from '@angular/material/icon';
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
 import { AuthService } from '../../../services/auth.service';
 import { QualityGrade } from '../../../features/products/models/product.data';
+import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface MealCardItem {
     id: string;
@@ -33,7 +31,7 @@ export interface MealCardItem {
 @Component({
     selector: 'fd-meal-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, NgOptimizedImage, NutrientBadgesComponent, MediaCardComponent, MatIconModule],
+    imports: [CommonModule, TranslatePipe, EntityCardComponent],
     templateUrl: './meal-card.component.html',
     styleUrls: ['./meal-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +42,7 @@ export class MealCardComponent {
     private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly authService = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly locale = inject(LOCALE_ID);
 
     public readonly meal = input.required<MealCardItem>();
     public readonly open = output<void>();
@@ -52,6 +51,18 @@ export class MealCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.meal().id));
+    public readonly nutrition = computed(() => ({
+        proteins: this.meal().totalProteins,
+        fats: this.meal().totalFats,
+        carbs: this.meal().totalCarbs,
+        fiber: this.meal().totalFiber,
+        alcohol: this.meal().totalAlcohol,
+    }));
+    public readonly quality = computed(() => {
+        const score = this.qualityScore();
+        const grade = this.meal().qualityGrade;
+        return score === null || grade === null || grade === undefined ? null : { score, grade };
+    });
     public readonly qualityScore = computed(() => {
         const score = this.meal().qualityScore;
         if (score === null || score === undefined) {
@@ -75,6 +86,12 @@ export class MealCardComponent {
         const aiCount = meal.aiSessions?.reduce((total, session) => total + (session?.items?.length ?? 0), 0) ?? 0;
         return manualCount + aiCount;
     });
+    public readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
+    public readonly mealTitle = computed(() =>
+        this.meal().mealType
+            ? this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${this.meal().mealType}`)
+            : this.translateService.instant('MEAL_CARD.MEAL_TYPES.OTHER'),
+    );
 
     public ngOnInit(): void {
         if (!this.isAuthenticated()) {
@@ -95,17 +112,11 @@ export class MealCardComponent {
         return Boolean(this.meal().imageUrl?.trim());
     }
 
-    public handlePreview(event: Event): void {
-        event.stopPropagation();
-
+    public handlePreview(): void {
         const imageUrl = this.meal().imageUrl?.trim();
         if (!imageUrl) {
             return;
         }
-
-        const title = this.meal().mealType
-            ? this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${this.meal().mealType}`)
-            : this.translateService.instant('MEAL_CARD.MEAL_TYPES.OTHER');
 
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
@@ -114,16 +125,14 @@ export class MealCardComponent {
             data: {
                 imageUrl,
                 alt: this.translateService.instant('IMAGE_PREVIEW.ALT', {
-                    name: title,
+                    name: this.mealTitle(),
                 }),
-                title,
+                title: this.mealTitle(),
             },
         });
     }
 
-    public toggleFavorite(event: Event): void {
-        event.stopPropagation();
-
+    public toggleFavorite(): void {
         if (this.isFavoriteLoading()) {
             return;
         }

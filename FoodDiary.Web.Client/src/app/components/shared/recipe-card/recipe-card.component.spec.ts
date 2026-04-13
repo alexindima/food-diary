@@ -63,7 +63,7 @@ describe('RecipeCardComponent', () => {
     it('should display recipe name', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
-        const titleEl = el.querySelector('.recipe-card__title');
+        const titleEl = el.querySelector('.entity-card__name');
         expect(titleEl?.textContent?.trim()).toBe('Test Recipe');
     });
 
@@ -74,25 +74,21 @@ describe('RecipeCardComponent', () => {
         component.open.subscribe(openSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        const card = el.querySelector<HTMLElement>('.recipe-card');
+        const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
 
         expect(openSpy).toHaveBeenCalledOnce();
     });
 
-    it('should emit addToMeal and stop propagation on add button click', () => {
+    it('should emit addToMeal on add button click', () => {
         fixture.detectChanges();
 
         const addSpy = vi.fn();
         component.addToMeal.subscribe(addSpy);
 
-        const mockEvent = new Event('click', { bubbles: true });
-        const stopSpy = vi.spyOn(mockEvent, 'stopPropagation');
-
-        component.handleAdd(mockEvent);
+        component.handleAdd();
 
         expect(addSpy).toHaveBeenCalledOnce();
-        expect(stopSpy).toHaveBeenCalledOnce();
     });
 
     it('should calculate total time as sum of prepTime and cookTime', () => {
@@ -165,7 +161,7 @@ describe('RecipeCardComponent', () => {
     it('should display calories', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
-        const caloriesEl = el.querySelector('.recipe-card__calories-value');
+        const caloriesEl = el.querySelector('.entity-card__calories-value');
         expect(caloriesEl?.textContent?.trim()).toBe('368');
     });
 
@@ -173,9 +169,9 @@ describe('RecipeCardComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const labelEl = el.querySelector('.recipe-card__quality-label');
-        const valueEl = el.querySelector('.recipe-card__quality-value');
-        const fillEl = el.querySelector<HTMLElement>('.recipe-card__quality-fill');
+        const labelEl = el.querySelector('.entity-card__quality-label');
+        const valueEl = el.querySelector('.entity-card__quality-value');
+        const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
 
         expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
         expect(valueEl?.textContent?.trim()).toBe('64');

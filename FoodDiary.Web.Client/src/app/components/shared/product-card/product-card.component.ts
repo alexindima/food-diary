@@ -1,17 +1,13 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, of, switchMap } from 'rxjs';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
-import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 import { QualityGrade } from '../../../features/products/models/product.data';
-import { MediaCardComponent } from '../media-card/media-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
 import { AuthService } from '../../../services/auth.service';
+import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface ProductCardItem {
     id?: string;
@@ -32,7 +28,7 @@ export interface ProductCardItem {
 @Component({
     selector: 'fd-product-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiButtonComponent, FdUiIconModule, NutrientBadgesComponent, MediaCardComponent],
+    imports: [TranslatePipe, EntityCardComponent],
     templateUrl: './product-card.component.html',
     styleUrl: './product-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +49,18 @@ export class ProductCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.product().id));
+    public readonly nutrition = computed(() => ({
+        proteins: this.product().proteinsPerBase,
+        fats: this.product().fatsPerBase,
+        carbs: this.product().carbsPerBase,
+        fiber: this.product().fiberPerBase,
+        alcohol: this.product().alcoholPerBase,
+    }));
+    public readonly quality = computed(() => {
+        const score = this.qualityScore();
+        const grade = this.product().qualityGrade;
+        return score === null || grade === null || grade === undefined ? null : { score, grade };
+    });
     public readonly qualityScore = computed(() => {
         const score = this.product().qualityScore;
         if (score === null || score === undefined) {
@@ -79,8 +87,7 @@ export class ProductCardComponent {
         this.open.emit();
     }
 
-    public handleAdd(event: Event): void {
-        event.stopPropagation();
+    public handleAdd(): void {
         this.addToMeal.emit();
     }
 
@@ -88,9 +95,7 @@ export class ProductCardComponent {
         return Boolean(this.imageUrl()?.trim());
     }
 
-    public handlePreview(event: Event): void {
-        event.stopPropagation();
-
+    public handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (!imageUrl) {
             return;
@@ -108,9 +113,7 @@ export class ProductCardComponent {
         });
     }
 
-    public toggleFavorite(event: Event): void {
-        event.stopPropagation();
-
+    public toggleFavorite(): void {
         const productId = this.product().id;
         if (!productId || this.isFavoriteLoading()) {
             return;

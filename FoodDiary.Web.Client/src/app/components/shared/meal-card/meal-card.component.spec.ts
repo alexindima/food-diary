@@ -62,7 +62,7 @@ describe('MealCardComponent', () => {
     it('should display calories', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
-        const caloriesEl = el.querySelector('.meal-card__calories-value');
+        const caloriesEl = el.querySelector('.entity-card__calories-value');
         expect(caloriesEl?.textContent?.trim()).toBe('650');
     });
 
@@ -73,7 +73,7 @@ describe('MealCardComponent', () => {
         component.open.subscribe(openSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        const card = el.querySelector<HTMLElement>('.meal-card');
+        const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
 
         expect(openSpy).toHaveBeenCalledOnce();
@@ -126,9 +126,9 @@ describe('MealCardComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const labelEl = el.querySelector('.meal-card__quality-label');
-        const valueEl = el.querySelector('.meal-card__quality-value');
-        const fillEl = el.querySelector<HTMLElement>('.meal-card__quality-fill');
+        const labelEl = el.querySelector('.entity-card__quality-label');
+        const valueEl = el.querySelector('.entity-card__quality-value');
+        const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
 
         expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
         expect(valueEl?.textContent?.trim()).toBe('42');

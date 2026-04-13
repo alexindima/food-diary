@@ -1,103 +1,22 @@
-<fd-media-card
-    class="recipe-card"
-    role="button"
-    tabindex="0"
-    (click)="handleOpen()"
-    (keydown.enter)="handleOpen()"
-    (keydown.space)="handleOpen(); $event.preventDefault()"
->
-    <div
-        fdMediaCardMedia
-        class="recipe-card__thumb"
-        [class.recipe-card__thumb--previewable]="hasPreviewImage()"
-        [attr.role]="hasPreviewImage() ? 'button' : null"
-        [attr.tabindex]="hasPreviewImage() ? '0' : null"
-        [attr.aria-label]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
-        (click)="handlePreview($event)"
-        (keydown.enter)="handlePreview($event)"
-        (keydown.space)="handlePreview($event); $event.preventDefault()"
-    >
-        @if (imageUrl()) {
-            <img [src]="imageUrl()" [alt]="recipe().name" />
-        } @else {
-            <mat-icon fontIcon="restaurant_menu"></mat-icon>
-        }
-    </div>
-
-    <div fdMediaCardContent class="recipe-card__content">
-        <div class="recipe-card__title-block">
-            <div class="recipe-card__name-row">
-                @if (canToggleFavorite()) {
-                    <button
-                        type="button"
-                        class="recipe-card__favorite-button"
-                        [class.recipe-card__favorite-button--active]="isFavorite()"
-                        [attr.aria-label]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
-                        [disabled]="isFavoriteLoading()"
-                        (click)="toggleFavorite($event)"
-                    >
-                        <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-                    </button>
-                }
-                <mat-icon class="recipe-card__visibility-icon">
-                    {{ recipe().isOwnedByCurrentUser ? 'person' : 'groups' }}
-                </mat-icon>
-                <div class="recipe-card__title">{{ recipe().name }}</div>
-            </div>
-            <div class="recipe-card__meta-row">
-                <span class="recipe-card__meta-item"> {{ 'RECIPE_LIST.INGREDIENTS_COUNT' | translate }}: {{ getIngredientCount() }} </span>
-                <span class="recipe-card__meta-divider">•</span>
-                <span class="recipe-card__meta-item recipe-card__meta-item--time">
-                    @if (getTotalTime(); as minutes) {
-                        {{ minutes }} {{ 'RECIPE_DETAIL.MIN' | translate }}
-                    } @else {
-                        {{ 'RECIPE_LIST.PREP_TIME' | translate }} -
-                    }
-                </span>
-            </div>
-            @if (qualityScore(); as score) {
-                <div class="recipe-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
-                    <span class="recipe-card__quality-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
-                    <div class="recipe-card__quality-bar" aria-hidden="true">
-                        <span
-                            class="recipe-card__quality-fill recipe-card__quality-fill--{{ recipe().qualityGrade }}"
-                            [style.width.%]="score"
-                        ></span>
-                    </div>
-                    <span class="recipe-card__quality-value" [title]="'QUALITY.' + recipe().qualityGrade!.toUpperCase() | translate">
-                        {{ score }}
-                    </span>
-                </div>
-            }
-        </div>
-
-        <div class="recipe-card__nutrients">
-            <fd-nutrient-badges
-                [proteins]="recipe().totalProteins ?? 0"
-                [fats]="recipe().totalFats ?? 0"
-                [carbs]="recipe().totalCarbs ?? 0"
-                [fiber]="recipe().totalFiber ?? 0"
-                [alcohol]="recipe().totalAlcohol ?? 0"
-            />
-        </div>
-    </div>
-
-    <div fdMediaCardActions class="recipe-card__action-group">
-        <div class="recipe-card__calories-inline">
-            <span class="recipe-card__calories-value">
-                {{ recipe().totalCalories ?? 0 | number: '1.0-0' }}
-            </span>
-            <span class="recipe-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-        </div>
-        <fd-ui-button
-            class="recipe-card__action-button"
-            icon="add"
-            variant="primary"
-            fill="solid"
-            [ariaLabel]="'RECIPE_CARD.ADD_TO_MEAL' | translate"
-            (click)="handleAdd($event)"
-        >
-            {{ 'RECIPE_CARD.ADD_TO_MEAL' | translate }}
-        </fd-ui-button>
-    </div>
-</fd-media-card>
+<fd-entity-card
+    [imageUrl]="imageUrl()"
+    [imageAlt]="recipe().name"
+    imageIcon="restaurant_menu"
+    [previewable]="hasPreviewImage()"
+    [showFavorite]="canToggleFavorite()"
+    [isFavorite]="isFavorite()"
+    [favoriteLoading]="isFavoriteLoading()"
+    [favoriteAriaLabel]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
+    [ownershipIcon]="recipe().isOwnedByCurrentUser ? 'person' : 'groups'"
+    [title]="recipe().name"
+    [description]="('RECIPE_LIST.INGREDIENTS_COUNT' | translate) + ': ' + getIngredientCount() + recipeTimeSuffix()"
+    [nutrition]="nutrition()"
+    [quality]="quality()"
+    [calories]="recipe().totalCalories ?? 0"
+    [showAction]="true"
+    [actionAriaLabel]="'RECIPE_CARD.ADD_TO_MEAL' | translate"
+    (open)="handleOpen()"
+    (preview)="handlePreview()"
+    (favoriteToggle)="toggleFavorite()"
+    (action)="handleAdd()"
+/>
