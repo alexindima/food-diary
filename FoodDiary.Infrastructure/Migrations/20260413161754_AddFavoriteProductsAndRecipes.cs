@@ -9,8 +9,7 @@ namespace FoodDiary.Infrastructure.Migrations {
         protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "FavoriteProducts",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -37,8 +36,7 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "FavoriteRecipes",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     RecipeId = table.Column<Guid>(type: "uuid", nullable: false),
