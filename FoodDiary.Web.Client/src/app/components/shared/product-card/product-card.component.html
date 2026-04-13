@@ -1,4 +1,4 @@
-<div
+<fd-media-card
     class="product-card"
     role="button"
     tabindex="0"
@@ -6,7 +6,17 @@
     (keydown.enter)="handleOpen()"
     (keydown.space)="handleOpen(); $event.preventDefault()"
 >
-    <div class="product-card__thumb">
+    <div
+        fdMediaCardMedia
+        class="product-card__thumb"
+        [class.product-card__thumb--previewable]="hasPreviewImage()"
+        [attr.role]="hasPreviewImage() ? 'button' : null"
+        [attr.tabindex]="hasPreviewImage() ? '0' : null"
+        [attr.aria-label]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
+        (click)="handlePreview($event)"
+        (keydown.enter)="handlePreview($event)"
+        (keydown.space)="handlePreview($event); $event.preventDefault()"
+    >
         @if (imageUrl()) {
             <img [src]="imageUrl()" [alt]="product().name" />
         } @else {
@@ -14,7 +24,7 @@
         }
     </div>
 
-    <div class="product-card__content">
+    <div fdMediaCardContent class="product-card__content">
         <div class="product-card__title-block">
             <div class="product-card__name-row">
                 <mat-icon class="product-card__visibility-icon">
@@ -43,7 +53,7 @@
         </div>
     </div>
 
-    <div class="product-card__action-group">
+    <div fdMediaCardActions class="product-card__action-group">
         <div class="product-card__calories-inline">
             @if (product().qualityGrade) {
                 <span
@@ -67,4 +77,4 @@
             {{ 'PRODUCT_CARD.ADD_TO_CONSUMPTION' | translate }}
         </fd-ui-button>
     </div>
-</div>
+</fd-media-card>

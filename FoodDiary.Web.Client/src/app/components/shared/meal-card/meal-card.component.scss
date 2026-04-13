@@ -2,173 +2,127 @@
 
 :host {
     display: block;
-    container-type: inline-size;
 }
 
-.meal-card {
-    display: grid;
-    grid-template-columns: clamp(72px, 10vw, 120px) minmax(0, 1fr);
-    gap: 24px;
-    align-items: center;
-    padding: 18px 20px;
-    border-radius: 22px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
-    border: 1px solid rgba(15, 23, 42, 0.04);
-    cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+fd-media-card.meal-card {
+    --fd-media-card-media-width: clamp(72px, 10vw, 120px);
+    --fd-media-card-media-width-mobile: 56px;
+}
+
+.meal-card__thumb {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: #eef2ff;
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
-    }
-
-    &__thumb {
-        grid-column: 1;
-        grid-row: 1;
-        width: clamp(72px, 10vw, 120px);
-        height: clamp(72px, 10vw, 120px);
-        border-radius: 16px;
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-        background: #eef2ff;
-        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-    }
-
-    &__content {
-        grid-column: 2;
-        grid-row: 1;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
-        gap: 10px 16px;
-        min-width: 0;
-    }
-
-    &__title-block {
-        grid-column: 1;
-        grid-row: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        min-width: 0;
-    }
-
-    &__title-row {
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-        min-width: 0;
-    }
-
-    &__title {
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: variables.$color-text-main;
-        line-height: 1.35;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        min-width: 0;
-        text-align: left;
-    }
-
-    &__time {
-        font-size: 0.9rem;
-        color: rgba(148, 163, 184, 0.9);
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    &__items {
-        font-size: 0.9rem;
-        color: rgba(148, 163, 184, 0.9);
-        font-weight: 500;
-        white-space: nowrap;
-        line-height: 1.1;
-    }
-
-    &__calories {
-        grid-column: 2;
-        grid-row: 1 / -1;
-        display: inline-flex;
-        align-items: baseline;
-        gap: 6px;
-        font-weight: 800;
-        color: variables.$color-text-main;
-        white-space: nowrap;
-        flex-shrink: 0;
-        align-self: center;
-
-        &-unit {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: variables.$color-text-additional;
-            letter-spacing: 0.1em;
-        }
-    }
-
-    &__calories-value {
-        font-size: 1.8rem;
-        line-height: 1;
-    }
-
-    &__nutrients {
-        grid-column: 1;
-        grid-row: 2;
-        container-type: inline-size;
+    img {
         width: 100%;
-        display: flex;
-        align-items: flex-start;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
     }
+
+    &--previewable {
+        cursor: zoom-in;
+    }
+}
+
+.meal-card__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    gap: 10px 16px;
+    min-width: 0;
+}
+
+.meal-card__title-block {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.meal-card__title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    min-width: 0;
+}
+
+.meal-card__title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: variables.$color-text-main;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.meal-card__time,
+.meal-card__items {
+    font-size: 0.9rem;
+    color: rgba(148, 163, 184, 0.9);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.meal-card__items {
+    line-height: 1.1;
+}
+
+.meal-card__calories {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-weight: 800;
+    color: variables.$color-text-main;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.meal-card__calories-value {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.meal-card__calories-unit {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: variables.$color-text-additional;
+    letter-spacing: 0.1em;
+}
+
+.meal-card__nutrients {
+    grid-column: 1;
+    grid-row: 2;
+    container-type: inline-size;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
 }
 
 @container (max-width: 620px) {
 
-    .meal-card {
-        grid-template-columns: 56px minmax(0, 1fr);
-        align-items: center;
-        gap: 10px;
-        padding: 12px 14px;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        background: #ffffff;
-    }
-
     .meal-card__thumb {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
-        margin: 0;
         background: #eff6ff;
-        box-shadow: none;
     }
 
     .meal-card__content {
-        grid-column: 2;
-        grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
         gap: 6px 8px;
         align-items: center;
         justify-items: stretch;
     }
 
     .meal-card__title-row {
-        justify-content: flex-start;
         gap: 6px;
         align-items: center;
     }
@@ -176,25 +130,18 @@
     .meal-card__title {
         font-size: 1.05rem;
         line-height: 1.25;
-        white-space: nowrap;
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        text-align: left;
     }
 
     .meal-card__items {
-        white-space: nowrap;
-        text-align: left;
         font-size: 0.82rem;
     }
 
     .meal-card__calories {
-        grid-column: 2;
-        grid-row: 1 / -1;
         justify-self: end;
-        align-self: center;
         justify-content: flex-end;
         gap: 4px;
     }

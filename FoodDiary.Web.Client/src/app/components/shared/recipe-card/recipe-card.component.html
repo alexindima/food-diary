@@ -1,4 +1,4 @@
-﻿<div
+<fd-media-card
     class="recipe-card"
     role="button"
     tabindex="0"
@@ -6,7 +6,17 @@
     (keydown.enter)="handleOpen()"
     (keydown.space)="handleOpen(); $event.preventDefault()"
 >
-    <div class="recipe-card__thumb">
+    <div
+        fdMediaCardMedia
+        class="recipe-card__thumb"
+        [class.recipe-card__thumb--previewable]="hasPreviewImage()"
+        [attr.role]="hasPreviewImage() ? 'button' : null"
+        [attr.tabindex]="hasPreviewImage() ? '0' : null"
+        [attr.aria-label]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
+        (click)="handlePreview($event)"
+        (keydown.enter)="handlePreview($event)"
+        (keydown.space)="handlePreview($event); $event.preventDefault()"
+    >
         @if (imageUrl()) {
             <img [src]="imageUrl()" [alt]="recipe().name" />
         } @else {
@@ -14,7 +24,7 @@
         }
     </div>
 
-    <div class="recipe-card__content">
+    <div fdMediaCardContent class="recipe-card__content">
         <div class="recipe-card__title-block">
             <div class="recipe-card__name-row">
                 <mat-icon class="recipe-card__visibility-icon">
@@ -46,7 +56,7 @@
         </div>
     </div>
 
-    <div class="recipe-card__action-group">
+    <div fdMediaCardActions class="recipe-card__action-group">
         <div class="recipe-card__calories-inline">
             <span class="recipe-card__calories-value">
                 {{ recipe().totalCalories ?? 0 | number: '1.0-0' }}
@@ -64,4 +74,4 @@
             {{ 'RECIPE_CARD.ADD_TO_MEAL' | translate }}
         </fd-ui-button>
     </div>
-</div>
+</fd-media-card>

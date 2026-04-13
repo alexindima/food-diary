@@ -2,278 +2,232 @@
 
 :host {
     display: block;
-    container-type: inline-size;
 }
 
-.product-card {
-    display: grid;
-    grid-template-columns: clamp(72px, 10vw, 120px) minmax(0, 1fr) auto;
-    gap: 24px;
-    align-items: center;
-    padding: 18px 20px;
-    border-radius: 22px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
-    border: 1px solid rgba(15, 23, 42, 0.04);
-    cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+fd-media-card.product-card {
+    --fd-media-card-media-width: clamp(72px, 10vw, 120px);
+    --fd-media-card-media-width-mobile: 48px;
+    --fd-media-card-right-padding-mobile: 16px;
+}
+
+.product-card__thumb {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: #eef2ff;
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
-    }
-
-    &__thumb {
-        width: clamp(72px, 10vw, 120px);
-        height: clamp(72px, 10vw, 120px);
-        border-radius: 16px;
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-        background: #eef2ff;
-        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        mat-icon {
-            color: #0ea5e9;
-            font-size: 28px;
-            width: 28px;
-            height: 28px;
-            line-height: 1;
-        }
-    }
-
-    &__content {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: auto auto;
-        gap: 10px;
-        min-width: 0;
-    }
-
-    &__title-block {
-        grid-column: 1;
-        grid-row: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        min-width: 0;
-        flex: 1 1 auto;
-    }
-
-    &__name-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-width: 0;
-        overflow: hidden;
-    }
-
-    &__name {
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: variables.$color-text-main;
-        line-height: 1.35;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        min-width: 0;
-        text-align: left;
-    }
-
-    &__calories-inline {
-        display: inline-flex;
-        align-items: baseline;
-        gap: 6px;
-        font-weight: 800;
-        color: variables.$color-text-main;
-        white-space: nowrap;
-        flex-shrink: 0;
-        align-self: center;
-    }
-
-    &__calories-value {
-        font-size: 1.8rem;
-        line-height: 1;
-    }
-
-    &__calories-unit {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: variables.$color-text-additional;
-        letter-spacing: 0.1em;
-    }
-
-    &__quality-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        flex-shrink: 0;
-
-        &--green {
-            background: #22c55e;
-            box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
-        }
-
-        &--yellow {
-            background: #eab308;
-            box-shadow: 0 0 6px rgba(234, 179, 8, 0.4);
-        }
-
-        &--red {
-            background: #ef4444;
-            box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
-        }
-    }
-
-    &__nutrients {
-        container-type: inline-size;
+    img {
         width: 100%;
-        display: flex;
-        align-items: flex-start;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
     }
 
-    &__barcode-text {
-        font-size: 0.9rem;
-        color: rgba(148, 163, 184, 0.9);
-        font-weight: 500;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    &__meta-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        min-width: 0;
-        flex-wrap: wrap;
-    }
-
-    &__subtitle {
-        font-size: 0.85rem;
-        color: rgba(100, 116, 139, 0.92);
-        font-weight: 700;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    &__visibility-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
+    mat-icon {
+        color: #0ea5e9;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
         line-height: 1;
-        color: variables.$color-text-additional;
-        flex-shrink: 0;
     }
 
-    &__action {
-        display: none;
+    &--previewable {
+        cursor: zoom-in;
+    }
+}
+
+.product-card__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 10px;
+    min-width: 0;
+}
+
+.product-card__title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.product-card__name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.product-card__name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: variables.$color-text-main;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    text-align: left;
+}
+
+.product-card__meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.product-card__subtitle {
+    font-size: 0.85rem;
+    color: rgba(100, 116, 139, 0.92);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-card__barcode-text {
+    font-size: 0.9rem;
+    color: rgba(148, 163, 184, 0.9);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-card__visibility-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    color: variables.$color-text-additional;
+    flex-shrink: 0;
+}
+
+.product-card__nutrients {
+    container-type: inline-size;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.product-card__action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    padding: 18px 0;
+}
+
+.product-card__calories-inline {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-weight: 800;
+    color: variables.$color-text-main;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.product-card__calories-value {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.product-card__calories-unit {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: variables.$color-text-additional;
+    letter-spacing: 0.1em;
+}
+
+.product-card__quality-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--green {
+        background: #22c55e;
+        box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
     }
 
-    &__action-group {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        justify-content: center;
+    &--yellow {
+        background: #eab308;
+        box-shadow: 0 0 6px rgba(234, 179, 8, 0.4);
     }
 
-    &__action-button {
-        --fd-button-border-radius: 999px;
-        --fd-button-padding-y: 0;
-        --fd-button-padding-x: 0;
+    &--red {
+        background: #ef4444;
+        box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+    }
+}
+
+.product-card__action-button {
+    --fd-button-border-radius: 999px;
+    --fd-button-padding-y: 0;
+    --fd-button-padding-x: 0;
+    width: 52px;
+    height: 52px;
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+    border: none;
+
+    ::ng-deep button,
+    ::ng-deep .fd-ui-button {
         width: 52px;
         height: 52px;
-        background: transparent;
-        color: inherit;
-        box-shadow: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #4dabff, #2563eb);
         border: none;
+        color: #fff;
+        box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+    }
 
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            width: 52px;
-            height: 52px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #4dabff, #2563eb);
-            border: none;
-            color: #fff;
-            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
-        }
+    ::ng-deep button:hover:not(:disabled),
+    ::ng-deep .fd-ui-button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #60b6ff, #2f6df2);
+        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+    }
 
-        ::ng-deep button:hover:not(:disabled),
-        ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: linear-gradient(135deg, #60b6ff, #2f6df2);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
-        }
+    ::ng-deep button:active:not(:disabled),
+    ::ng-deep .fd-ui-button:active:not(:disabled) {
+        background: linear-gradient(135deg, #4dabff, #2563eb);
+        box-shadow: none;
+    }
 
-        ::ng-deep button:active:not(:disabled),
-        ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
-            box-shadow: none;
-        }
-
-        ::ng-deep .fd-ui-button__label {
-            display: none;
-        }
+    ::ng-deep .fd-ui-button__label {
+        display: none;
     }
 }
 
-@media #{variables.$media-mobile} {
-
-    .product-card {
-        grid-template-columns: 48px minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-        border: none;
-    }
+@container (max-width: 620px) {
 
     .product-card__thumb {
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
-        margin: 0;
         background: #eff6ff;
-        box-shadow: none;
     }
 
     .product-card__content {
-        grid-column: 2;
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: auto auto;
         gap: 8px;
         align-items: center;
         justify-items: stretch;
     }
 
     .product-card__title-block {
-        grid-column: 1;
-        grid-row: 1;
         align-items: flex-start;
         gap: 2px;
     }
 
     .product-card__name-row {
-        justify-content: flex-start;
-        align-items: center;
         gap: 6px;
     }
 
@@ -285,26 +239,12 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        text-align: left;
     }
 
     .product-card__visibility-icon {
         font-size: 14px;
         width: 14px;
         height: 14px;
-    }
-
-    .product-card__calories-value {
-        font-size: 1rem;
-    }
-
-    .product-card__calories-unit {
-        font-size: 0.7rem;
-        letter-spacing: normal;
-    }
-
-    .product-card__meta-row {
-        justify-content: flex-start;
     }
 
     .product-card__subtitle,
@@ -317,20 +257,27 @@
     }
 
     .product-card__action-group {
-        grid-column: 3;
         align-self: center;
         justify-content: flex-end;
         gap: 6px;
+        padding: 2px 2px 2px 12px;
         border: 1px solid rgba(37, 99, 235, 0.22);
         background: rgba(59, 130, 246, 0.1);
         border-radius: 999px;
-        padding: 2px 2px 2px 12px;
         overflow: hidden;
     }
 
     .product-card__calories-inline {
-        justify-content: center;
         gap: 4px;
+    }
+
+    .product-card__calories-value {
+        font-size: 1rem;
+    }
+
+    .product-card__calories-unit {
+        font-size: 0.7rem;
+        letter-spacing: normal;
     }
 
     .product-card__action-button {
@@ -353,9 +300,5 @@
         border-radius: 50%;
         box-shadow: none;
         transform: none;
-    }
-
-    .product-card__action-button ::ng-deep .fd-ui-button__label {
-        display: none;
     }
 }

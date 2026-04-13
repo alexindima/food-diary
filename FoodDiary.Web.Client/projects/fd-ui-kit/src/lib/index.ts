@@ -27,6 +27,7 @@ export * from './dialog/fd-ui-dialog-footer.directive';
 export * from './dialog/fd-ui-dialog.service';
 export * from './dialog/fd-ui-confirm-dialog.component';
 export * from './dialog-shell/fd-ui-dialog-shell.component';
+export * from './image-preview-dialog/fd-ui-image-preview-dialog.component';
 export * from './toast/fd-ui-toast.service';
 export * from './toast/fd-ui-toast-host.component';
 export * from './menu/fd-ui-menu.component';

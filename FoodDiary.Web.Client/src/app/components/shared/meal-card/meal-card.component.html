@@ -1,4 +1,4 @@
-<div
+<fd-media-card
     class="meal-card"
     role="button"
     tabindex="0"
@@ -6,7 +6,17 @@
     (keydown.enter)="handleOpen()"
     (keydown.space)="handleOpen(); $event.preventDefault()"
 >
-    <div class="meal-card__thumb">
+    <div
+        fdMediaCardMedia
+        class="meal-card__thumb"
+        [class.meal-card__thumb--previewable]="hasPreviewImage()"
+        [attr.role]="hasPreviewImage() ? 'button' : null"
+        [attr.tabindex]="hasPreviewImage() ? '0' : null"
+        [attr.aria-label]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
+        (click)="handlePreview($event)"
+        (keydown.enter)="handlePreview($event)"
+        (keydown.space)="handlePreview($event); $event.preventDefault()"
+    >
         <img
             [ngSrc]="coverImage()"
             width="96"
@@ -16,7 +26,7 @@
         />
     </div>
 
-    <div class="meal-card__content">
+    <div fdMediaCardContent class="meal-card__content">
         <div class="meal-card__title-block">
             <div class="meal-card__title-row">
                 <div class="meal-card__title">
@@ -50,4 +60,4 @@
             />
         </div>
     </div>
-</div>
+</fd-media-card>

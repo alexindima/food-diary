@@ -1,0 +1,27 @@
+<fd-ui-dialog class="fd-ui-image-preview-dialog" [dismissible]="false">
+    <div
+        class="fd-ui-image-preview-dialog__viewport"
+        tabindex="0"
+        (click)="close()"
+        (keydown.enter)="close()"
+        (keydown.space)="close(); $event.preventDefault()"
+    >
+        <button type="button" class="fd-ui-image-preview-dialog__close" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <figure
+            class="fd-ui-image-preview-dialog__figure"
+            tabindex="-1"
+            (click)="$event.stopPropagation()"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+        >
+            <img class="fd-ui-image-preview-dialog__image" [src]="imageUrl" [alt]="alt" />
+
+            @if (title) {
+                <figcaption class="fd-ui-image-preview-dialog__caption">{{ title }}</figcaption>
+            }
+        </figure>
+    </div>
+</fd-ui-dialog>

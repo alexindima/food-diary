@@ -824,6 +824,10 @@
             "UPLOAD_FAILED": "Image upload failed. Please try again."
         }
     },
+    "IMAGE_PREVIEW": {
+        "OPEN": "Open image preview",
+        "ALT": "Preview of {{name}}"
+    },
     "CONFIRM_DELETE": {
         "TITLE": "Delete {{type}}?",
         "MESSAGE": "This action cannot be undone. Delete “{{name}}”?",
