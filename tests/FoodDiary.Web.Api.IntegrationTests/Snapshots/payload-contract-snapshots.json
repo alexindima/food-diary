@@ -45,6 +45,8 @@
       "manualProteins",
       "name",
       "prepTime",
+      "qualityGrade",
+      "qualityScore",
       "servings",
       "steps",
       "totalAlcohol",
