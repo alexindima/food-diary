@@ -151,7 +151,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var model = new ConsumptionModel(
             id, date, "Breakfast", "Comment", null, null,
             500, 30, 20, 60, 5, 0, true, null, null, null, null, null, null,
-            3, 7, 72, "green", [], []);
+            3, 7, 72, "green", false, null, [], []);
 
         var response = model.ToHttpResponse();
 
@@ -189,7 +189,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var model = new ConsumptionModel(
             consumptionId, DateTime.UtcNow, null, null, null, null,
             425, 36, 4.2, 56, 0.4, 0, true, null, null, null, null, null, null,
-            0, 0, 61, "yellow", items, sessions);
+            0, 0, 61, "yellow", false, null, items, sessions);
 
         var response = model.ToHttpResponse();
 
@@ -213,7 +213,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var model = new ConsumptionModel(
             Guid.NewGuid(), DateTime.UtcNow, null, null, null, null,
             0, 0, 0, 0, 0, 0, false, 500, 30, 20, 60, 5, 0,
-            0, 0, 55, "yellow", [], []);
+            0, 0, 55, "yellow", false, null, [], []);
 
         var response = model.ToHttpResponse();
 

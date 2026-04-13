@@ -1,35 +1,39 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.FavoriteMeals.Common;
+using FoodDiary.Application.FavoriteMeals.Mappings;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 
-public class GetConsumptionsQueryHandler(
+public sealed class GetConsumptionsOverviewQueryHandler(
     IMealRepository mealRepository,
     IUserRepository userRepository,
     IFavoriteMealRepository favoriteMealRepository)
-    : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionModel>>> {
-    public async Task<Result<PagedResponse<ConsumptionModel>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
+    : IQueryHandler<GetConsumptionsOverviewQuery, Result<ConsumptionOverviewModel>> {
+    public async Task<Result<ConsumptionOverviewModel>> Handle(
+        GetConsumptionsOverviewQuery request,
+        CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == Guid.Empty) {
-            return Result.Failure<PagedResponse<ConsumptionModel>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ConsumptionOverviewModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(request.UserId!.Value);
+        var userId = new UserId(request.UserId.Value);
         var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
         if (accessError is not null) {
-            return Result.Failure<PagedResponse<ConsumptionModel>>(accessError);
+            return Result.Failure<ConsumptionOverviewModel>(accessError);
         }
 
         var sanitizedPage = Math.Max(request.Page, 1);
         var sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
+        var favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);
         var normalizedFrom = request.DateFrom.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(request.DateFrom.Value)
             : null;
@@ -45,13 +49,20 @@ public class GetConsumptionsQueryHandler(
             normalizedTo,
             cancellationToken);
 
+        var favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken);
+        var favoriteItems = favorites
+            .Take(favoriteLimit)
+            .Select(favorite => favorite.ToModel())
+            .ToList();
+
         var mealIds = pageData.Items
             .Select(meal => meal.Id)
             .Distinct()
             .ToArray();
         var favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken);
+
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)sanitizedLimit);
-        var response = new PagedResponse<ConsumptionModel>(
+        var allConsumptions = new PagedResponse<ConsumptionModel>(
             pageData.Items
                 .Select(meal => {
                     var favorite = favoritesByMealId.GetValueOrDefault(meal.Id);
@@ -64,6 +75,7 @@ public class GetConsumptionsQueryHandler(
             sanitizedLimit,
             totalPages,
             pageData.TotalItems);
-        return Result.Success(response);
+
+        return Result.Success(new ConsumptionOverviewModel(allConsumptions, favoriteItems, favorites.Count));
     }
 }

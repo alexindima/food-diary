@@ -1,10 +1,11 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, of, switchMap } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
+import { FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
 import { AuthService } from '../../../services/auth.service';
 import { QualityGrade } from '../../../features/products/models/product.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
@@ -29,6 +30,8 @@ export interface RecipeCardItem {
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
     steps?: RecipeCardStep[] | null;
+    isFavorite?: boolean;
+    favoriteRecipeId?: string | null;
 }
 
 @Component({
@@ -77,16 +80,12 @@ export class RecipeCardComponent {
     });
     private favoriteRecipeId: string | null = null;
 
-    public ngOnInit(): void {
-        const recipeId = this.recipe().id;
-        if (!recipeId || !this.isAuthenticated()) {
-            return;
-        }
-
-        this.favoriteRecipeService
-            .isFavorite(recipeId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(isFav => this.isFavorite.set(isFav));
+    public constructor() {
+        effect(() => {
+            const recipe = this.recipe();
+            this.isFavorite.set(Boolean(recipe.isFavorite));
+            this.favoriteRecipeId = recipe.favoriteRecipeId ?? null;
+        });
     }
 
     public handleOpen(): void {
@@ -195,7 +194,7 @@ export class RecipeCardComponent {
             .getAll()
             .pipe(
                 switchMap(favorites => {
-                    const match = favorites.find(favorite => favorite.recipeId === recipeId);
+                    const match = favorites.find((favorite: FavoriteRecipe) => favorite.recipeId === recipeId);
                     if (!match) {
                         return of(null);
                     }

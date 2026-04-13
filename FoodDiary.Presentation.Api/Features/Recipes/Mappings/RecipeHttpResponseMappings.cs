@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Mappings;
 using FoodDiary.Presentation.Api.Features.Recipes.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
@@ -37,14 +38,18 @@ public static class RecipeHttpResponseMappings {
             model.IsOwnedByCurrentUser,
             model.QualityScore,
             model.QualityGrade,
-            model.Steps.ToHttpResponseList(ToHttpResponse)
+            model.Steps.ToHttpResponseList(ToHttpResponse),
+            model.IsFavorite,
+            model.FavoriteRecipeId
         );
     }
 
-    public static RecipeListWithRecentHttpResponse ToHttpResponse(this RecipeListWithRecentModel model) {
-        return new RecipeListWithRecentHttpResponse(
+    public static RecipeOverviewHttpResponse ToHttpResponse(this RecipeOverviewModel model) {
+        return new RecipeOverviewHttpResponse(
             model.RecentItems.ToHttpResponseList(ToHttpResponse),
-            model.AllRecipes.ToHttpResponse()
+            model.AllRecipes.ToHttpResponse(),
+            model.FavoriteItems.Select(FavoriteRecipeHttpMappings.ToHttpResponse).ToList(),
+            model.FavoriteTotalCount
         );
     }
 

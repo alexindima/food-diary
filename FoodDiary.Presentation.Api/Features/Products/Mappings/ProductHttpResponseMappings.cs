@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Presentation.Api.Features.FavoriteProducts.Mappings;
 using FoodDiary.Presentation.Api.Features.Products.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
@@ -32,14 +33,18 @@ public static class ProductHttpResponseMappings {
             model.CreatedAt,
             model.IsOwnedByCurrentUser,
             model.QualityScore,
-            model.QualityGrade
+            model.QualityGrade,
+            model.IsFavorite,
+            model.FavoriteProductId
         );
     }
 
-    public static ProductListWithRecentHttpResponse ToHttpResponse(this ProductListWithRecentModel model) {
-        return new ProductListWithRecentHttpResponse(
+    public static ProductOverviewHttpResponse ToHttpResponse(this ProductOverviewModel model) {
+        return new ProductOverviewHttpResponse(
             model.RecentItems.ToHttpResponseList(ToHttpResponse),
-            model.AllProducts.ToHttpResponse()
+            model.AllProducts.ToHttpResponse(),
+            model.FavoriteItems.Select(FavoriteProductHttpMappings.ToHttpResponse).ToList(),
+            model.FavoriteTotalCount
         );
     }
 

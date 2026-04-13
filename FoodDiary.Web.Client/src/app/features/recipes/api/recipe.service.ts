@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { PageOf } from '../../../shared/models/page-of.data';
-import { Recipe, RecipeDto, RecipeFilters, RecipeListWithRecent } from '../models/recipe.data';
+import { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../models/recipe.data';
 
 @Injectable({
     providedIn: 'root',
@@ -46,23 +46,26 @@ export class RecipeService extends ApiService {
         );
     }
 
-    public queryWithRecent(
+    public queryOverview(
         page: number,
         limit: number,
         filters?: RecipeFilters,
         includePublic = true,
         recentLimit = 10,
-    ): Observable<RecipeListWithRecent> {
-        const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit };
+        favoriteLimit = 10,
+    ): Observable<RecipeOverview> {
+        const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         const search = filters?.search?.trim();
         if (search) {
             params['search'] = search;
         }
 
-        return this.get<RecipeListWithRecent>('with-recent', params).pipe(
+        return this.get<RecipeOverview>('overview', params).pipe(
             catchError((error: HttpErrorResponse) =>
-                fallbackApiError('Query recipes with recent error', error, {
+                fallbackApiError('Query recipe overview error', error, {
                     recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
                     allRecipes: { data: [], page, limit, totalPages: 0, totalItems: 0 },
                 }),
             ),

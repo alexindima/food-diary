@@ -10,6 +10,7 @@ import {
     ConsumptionAiSession,
     ConsumptionAiSessionResponseDto,
     Consumption,
+    ConsumptionOverview,
     ConsumptionItem,
     ConsumptionItemResponseDto,
     ConsumptionResponseDto,
@@ -17,6 +18,7 @@ import {
     Meal,
     MealFilters,
     MealManageDto,
+    MealOverview,
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
 } from '../models/meal.data';
@@ -41,6 +43,34 @@ export class MealService extends ApiService {
                     limit,
                     totalPages: 0,
                     totalItems: 0,
+                };
+                return of(empty);
+            }),
+        );
+    }
+
+    public queryOverview(page: number, limit: number, filters: MealFilters, favoriteLimit = 10): Observable<MealOverview> {
+        const params = { page, limit, favoriteLimit, ...filters };
+        return this.get<ConsumptionOverview>('overview', params).pipe(
+            map(response => ({
+                allConsumptions: {
+                    ...response.allConsumptions,
+                    data: response.allConsumptions.data.map(item => this.mapConsumption(item)),
+                },
+                favoriteItems: response.favoriteItems,
+                favoriteTotalCount: response.favoriteTotalCount,
+            })),
+            catchError(() => {
+                const empty: MealOverview = {
+                    allConsumptions: {
+                        data: [],
+                        page,
+                        limit,
+                        totalPages: 0,
+                        totalItems: 0,
+                    },
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
                 };
                 return of(empty);
             }),
@@ -104,6 +134,8 @@ export class MealService extends ApiService {
             postMealSatietyLevel: response.postMealSatietyLevel ?? 0,
             qualityScore: response.qualityScore ?? null,
             qualityGrade: response.qualityGrade ?? null,
+            isFavorite: response.isFavorite ?? false,
+            favoriteMealId: response.favoriteMealId ?? null,
             items: response.items.map(item => this.mapConsumptionItem(item)),
             aiSessions: response.aiSessions?.map(session => this.mapAiSession(session)) ?? [],
         };

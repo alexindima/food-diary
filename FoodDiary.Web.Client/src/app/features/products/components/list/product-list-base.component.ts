@@ -70,7 +70,9 @@ export class ProductListBaseComponent implements OnInit {
     public currentPageIndex = 0;
     public recentProducts: Product[] = [];
     public readonly favorites = signal<FavoriteProduct[]>([]);
+    public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
+    public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
@@ -108,7 +110,7 @@ export class ProductListBaseComponent implements OnInit {
                 }
             });
 
-        this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+        this.loadInitialOverview().subscribe();
 
         this.searchForm.controls.search.valueChanges
             .pipe(
@@ -123,12 +125,10 @@ export class ProductListBaseComponent implements OnInit {
                 switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
             )
             .subscribe();
-
-        this.loadFavorites();
     }
 
     public retryLoad(): void {
-        this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+        this.loadInitialOverview().subscribe();
     }
 
     public onPageChange(pageIndex: number): void {
@@ -218,10 +218,35 @@ export class ProductListBaseComponent implements OnInit {
 
         this.searchOpenFoodFacts(search);
 
-        return this.productService.queryWithRecent(page, limit, filters, includePublic, 10).pipe(
+        return this.productService.query(page, limit, filters, includePublic).pipe(
+            tap(data => {
+                this.productData.setData(data);
+                this.recentProducts = [];
+                this.currentPageIndex = data.page - 1;
+                this.errorKey.set(null);
+            }),
+            map(() => void 0),
+            catchError((_error: HttpErrorResponse) => {
+                this.productData.clearData();
+                this.recentProducts = [];
+                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                return of(void 0);
+            }),
+            finalize(() => this.productData.setLoading(false)),
+        );
+    }
+
+    protected loadInitialOverview(): Observable<void> {
+        this.productData.setLoading(true);
+        this.offProducts.set([]);
+        this.searchOpenFoodFacts(this.searchForm.controls.search.value);
+
+        return this.productService.queryOverview(1, this.pageSize, undefined, true, 10, 10).pipe(
             tap(data => {
                 this.productData.setData(data.allProducts);
                 this.recentProducts = data.recentItems;
+                this.favorites.set(data.favoriteItems);
+                this.favoriteTotalCount.set(data.favoriteTotalCount);
                 this.currentPageIndex = data.allProducts.page - 1;
                 this.errorKey.set(null);
             }),
@@ -229,6 +254,8 @@ export class ProductListBaseComponent implements OnInit {
             catchError((_error: HttpErrorResponse) => {
                 this.productData.clearData();
                 this.recentProducts = [];
+                this.favorites.set([]);
+                this.favoriteTotalCount.set(0);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
@@ -273,11 +300,16 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     public loadFavorites(): void {
+        this.isFavoritesLoadingMore.set(true);
         this.favoriteProductService
             .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.isFavoritesLoadingMore.set(false)),
+            )
             .subscribe(favorites => {
                 this.favorites.set(favorites);
+                this.favoriteTotalCount.set(favorites.length);
             });
     }
 
@@ -312,6 +344,10 @@ export class ProductListBaseComponent implements OnInit {
             next: () => {
                 this.loadFavorites();
                 this.reloadCurrentPage();
+                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                this.recentProducts = this.recentProducts.map(product =>
+                    product.id === favorite.productId ? { ...product, isFavorite: false, favoriteProductId: null } : product,
+                );
             },
         });
     }
@@ -364,6 +400,10 @@ export class ProductListBaseComponent implements OnInit {
 
     protected reloadCurrentPage(): void {
         this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+    }
+
+    public get hasMoreFavorites(): boolean {
+        return this.favoriteTotalCount() > this.favorites().length;
     }
 
     private hasSearchValue(value: string | null): boolean {

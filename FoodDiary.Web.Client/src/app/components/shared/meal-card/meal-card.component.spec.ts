@@ -34,7 +34,6 @@ describe('MealCardComponent', () => {
                 {
                     provide: FavoriteMealService,
                     useValue: {
-                        isFavorite: (): Observable<boolean> => of(false),
                         add: (): Observable<{ id: string }> => of({ id: 'favorite-meal-1' }),
                         remove: (): Observable<void> => of(void 0),
                         getAll: (): Observable<[]> => of([]),

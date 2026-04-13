@@ -4,7 +4,12 @@ using FoodDiary.Domain.Entities.Products;
 namespace FoodDiary.Application.Products.Mappings;
 
 public static class ProductMappings {
-    public static ProductModel ToModel(this Product product, int usageCount = 0, bool isOwnedByCurrentUser = false) {
+    public static ProductModel ToModel(
+        this Product product,
+        int usageCount = 0,
+        bool isOwnedByCurrentUser = false,
+        bool isFavorite = false,
+        Guid? favoriteProductId = null) {
         var quality = product.GetQualityScore();
         return new ProductModel(
             product.Id.Value,
@@ -32,7 +37,9 @@ public static class ProductMappings {
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            product.UsdaFdcId
+            product.UsdaFdcId,
+            isFavorite,
+            favoriteProductId
         );
     }
 }

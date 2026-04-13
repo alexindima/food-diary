@@ -6,7 +6,11 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Consumptions.Mappings;
 
 public static class ConsumptionMappings {
-    public static ConsumptionModel ToModel(this Meal meal, bool isOwnedByCurrentUser = true) {
+    public static ConsumptionModel ToModel(
+        this Meal meal,
+        bool isOwnedByCurrentUser = true,
+        bool isFavorite = false,
+        Guid? favoriteMealId = null) {
         var items = meal.Items
             .OrderBy(i => i.Id.Value)
             .Select(item => {
@@ -105,6 +109,8 @@ public static class ConsumptionMappings {
             meal.PostMealSatietyLevel,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
+            isFavorite,
+            favoriteMealId,
             items,
             aiSessions);
     }

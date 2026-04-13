@@ -1,15 +1,15 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
+namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
 
-public sealed class GetRecipesWithRecentQueryValidator : AbstractValidator<GetRecipesWithRecentQuery> {
-    public GetRecipesWithRecentQueryValidator() {
+public sealed class GetProductsOverviewQueryValidator : AbstractValidator<GetProductsOverviewQuery> {
+    public GetProductsOverviewQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(id => id is not null && id.Value != Guid.Empty)
+            .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
     }

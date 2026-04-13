@@ -114,6 +114,17 @@ public class FavoriteMealsFeatureTests {
         public Task<FavoriteMeal?> GetByIdAsync(FavoriteMealId id, UserId userId, bool asTracking = false, CancellationToken ct = default) =>
             Task.FromResult(existingById);
 
+        public Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
+            UserId userId,
+            IReadOnlyCollection<MealId> mealIds,
+            CancellationToken ct = default) {
+            IReadOnlyDictionary<MealId, FavoriteMeal> result = existingByMealId is null
+                ? new Dictionary<MealId, FavoriteMeal>()
+                : new Dictionary<MealId, FavoriteMeal> { [existingByMealId.MealId] = existingByMealId };
+
+            return Task.FromResult(result);
+        }
+
         public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken ct = default) =>
             Task.FromResult(favorite);
 

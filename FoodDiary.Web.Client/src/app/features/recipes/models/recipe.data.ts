@@ -40,6 +40,8 @@ export interface Recipe {
     manualAlcohol?: number | null;
     steps: RecipeStep[];
     nutrientChartData?: NutrientData;
+    isFavorite?: boolean;
+    favoriteRecipeId?: string | null;
 }
 
 export interface RecipeStep {
@@ -73,9 +75,11 @@ export interface RecipeFilters {
     search?: string | null;
 }
 
-export interface RecipeListWithRecent {
+export interface RecipeOverview {
     recentItems: Recipe[];
     allRecipes: PageOf<Recipe>;
+    favoriteItems: FavoriteRecipe[];
+    favoriteTotalCount: number;
 }
 
 export interface FavoriteRecipe {

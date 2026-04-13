@@ -10,7 +10,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, switchMap } from 'rxjs';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
@@ -63,8 +63,10 @@ export class RecipeListComponent implements OnInit {
     public recipeData = this.recipeListFacade.recipeData;
     public currentPageIndex = this.recipeListFacade.currentPageIndex;
     public recentRecipes = this.recipeListFacade.recentRecipes;
-    public readonly favorites = signal<FavoriteRecipe[]>([]);
+    public readonly favorites = this.recipeListFacade.favoriteRecipes;
+    public readonly favoriteTotalCount = this.recipeListFacade.favoriteTotalCount;
     public readonly isFavoritesOpen = signal(false);
+    public readonly isFavoritesLoadingMore = this.recipeListFacade.isFavoritesLoadingMore;
     public readonly errorKey = this.recipeListFacade.errorKey;
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
@@ -99,7 +101,7 @@ export class RecipeListComponent implements OnInit {
             });
 
         this.recipeListFacade
-            .loadRecipes(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
+            .loadInitialOverview(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
             .subscribe();
 
         this.searchForm.controls.search.valueChanges
@@ -122,13 +124,11 @@ export class RecipeListComponent implements OnInit {
                 ),
             )
             .subscribe();
-
-        this.loadFavorites();
     }
 
     public retryLoad(): void {
         this.recipeListFacade
-            .loadRecipes(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
+            .loadInitialOverview(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
             .subscribe();
     }
 
@@ -223,11 +223,16 @@ export class RecipeListComponent implements OnInit {
     }
 
     public loadFavorites(): void {
+        this.recipeListFacade.isFavoritesLoadingMore.set(true);
         this.favoriteRecipeService
             .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.recipeListFacade.isFavoritesLoadingMore.set(false)),
+            )
             .subscribe(favorites => {
                 this.favorites.set(favorites);
+                this.favoriteTotalCount.set(favorites.length);
             });
     }
 
@@ -262,6 +267,12 @@ export class RecipeListComponent implements OnInit {
             next: () => {
                 this.loadFavorites();
                 this.reloadCurrentPage();
+                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                this.recentRecipes.set(
+                    this.recentRecipes().map(recipe =>
+                        recipe.id === favorite.recipeId ? { ...recipe, isFavorite: false, favoriteRecipeId: null } : recipe,
+                    ),
+                );
             },
         });
     }
@@ -304,6 +315,10 @@ export class RecipeListComponent implements OnInit {
 
     public get pageIndex(): number {
         return this.currentPageIndex();
+    }
+
+    public get hasMoreFavorites(): boolean {
+        return this.favoriteTotalCount() > this.favorites().length;
     }
 
     public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {

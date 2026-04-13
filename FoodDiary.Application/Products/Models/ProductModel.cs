@@ -26,4 +26,6 @@ public sealed record ProductModel(
     bool IsOwnedByCurrentUser,
     int QualityScore,
     string QualityGrade,
-    int? UsdaFdcId);
+    int? UsdaFdcId,
+    bool IsFavorite,
+    Guid? FavoriteProductId);

@@ -1758,7 +1758,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/products/with-recent",
+      "Path": "/api/v{version}/products/overview",
       "Operations": [
         {
           "Method": "get",
@@ -1880,7 +1880,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/recipes/with-recent",
+      "Path": "/api/v{version}/recipes/overview",
       "Operations": [
         {
           "Method": "get",

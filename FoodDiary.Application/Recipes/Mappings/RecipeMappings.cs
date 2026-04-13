@@ -6,7 +6,12 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Recipes.Mappings;
 
 public static class RecipeMappings {
-    public static RecipeModel ToModel(this Recipe recipe, int usageCount, bool isOwnedByCurrentUser) {
+    public static RecipeModel ToModel(
+        this Recipe recipe,
+        int usageCount,
+        bool isOwnedByCurrentUser,
+        bool isFavorite = false,
+        Guid? favoriteRecipeId = null) {
         var steps = recipe.Steps
             .OrderBy(s => s.StepNumber)
             .Select(step => new RecipeStepModel(
@@ -74,7 +79,9 @@ public static class RecipeMappings {
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            steps);
+            steps,
+            isFavorite,
+            favoriteRecipeId);
     }
 
     private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {

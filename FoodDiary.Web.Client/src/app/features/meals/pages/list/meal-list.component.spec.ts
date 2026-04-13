@@ -15,6 +15,7 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { Meal } from '../../models/meal.data';
 import { PageOf } from '../../../../shared/models/page-of.data';
+import { MealOverview } from '../../models/meal.data';
 
 function createMockMeal(overrides: Partial<Meal> = {}): Meal {
     return {
@@ -53,7 +54,16 @@ describe('MealListComponent', () => {
     let component: MealListComponent;
     let fixture: ComponentFixture<MealListComponent>;
 
+    function createOverview(meals: Meal[]): MealOverview {
+        return {
+            allConsumptions: createPageOf(meals),
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+        };
+    }
+
     const mockMealService = {
+        queryOverview: vi.fn().mockReturnValue(of(createOverview([]))),
         query: vi.fn().mockReturnValue(of(createPageOf([]))),
         deleteById: vi.fn().mockReturnValue(of(void 0)),
     };
@@ -91,6 +101,7 @@ describe('MealListComponent', () => {
 
     beforeEach(async () => {
         vi.clearAllMocks();
+        mockMealService.queryOverview.mockReturnValue(of(createOverview([])));
         mockMealService.query.mockReturnValue(of(createPageOf([])));
 
         // Mock window.matchMedia for the component constructor
@@ -132,15 +143,13 @@ describe('MealListComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should load consumptions on init', () => {
+    it('should load overview on init', () => {
         const meals = [createMockMeal()];
-        mockMealService.query.mockReturnValue(of(createPageOf(meals)));
+        mockMealService.queryOverview.mockReturnValue(of(createOverview(meals)));
 
-        // ngOnInit triggers searchForm.valueChanges with startWith which calls loadConsumptions synchronously via switchMap
-        // Since we use of() (synchronous), the subscription completes immediately
         fixture.detectChanges();
 
-        expect(mockMealService.query).toHaveBeenCalled();
+        expect(mockMealService.queryOverview).toHaveBeenCalledWith(1, 10, { dateFrom: undefined, dateTo: undefined }, 10);
     });
 
     it('should navigate to add meal', async () => {

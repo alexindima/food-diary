@@ -3,7 +3,7 @@ using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
+using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
@@ -68,9 +68,9 @@ public class RecipesAdditionalValidatorTests {
     // ── GetRecipesWithRecent ──
 
     [Fact]
-    public async Task GetRecipesWithRecent_WithNullUserId_HasError() {
-        var result = await new GetRecipesWithRecentQueryValidator().TestValidateAsync(
-            new GetRecipesWithRecentQuery(null, 1, 10, null, false));
+    public async Task GetRecipesOverview_WithNullUserId_HasError() {
+        var result = await new GetRecipesOverviewQueryValidator().TestValidateAsync(
+            new GetRecipesOverviewQuery(null, 1, 10, null, false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 }

@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, switchMap } from 'rxjs';
 
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
@@ -68,7 +68,9 @@ export class MealListComponent implements OnInit {
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
     public readonly errorKey = signal<string | null>(null);
     public readonly favorites = signal<FavoriteMeal[]>([]);
+    public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
+    public readonly isFavoritesLoadingMore = signal(false);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -94,24 +96,28 @@ export class MealListComponent implements OnInit {
                 }
             });
 
+        this.loadInitialOverview().subscribe();
+
         this.searchForm.valueChanges
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 debounceTime(300),
-                startWith(this.searchForm.value),
                 switchMap(() => this.loadConsumptions(1)),
             )
             .subscribe();
-
-        this.loadFavorites();
     }
 
     public loadFavorites(): void {
+        this.isFavoritesLoadingMore.set(true);
         this.favoriteMealService
             .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.isFavoritesLoadingMore.set(false)),
+            )
             .subscribe(favorites => {
                 this.favorites.set(favorites);
+                this.favoriteTotalCount.set(favorites.length);
             });
     }
 
@@ -137,7 +143,7 @@ export class MealListComponent implements OnInit {
 
     public onMealCreated(): void {
         this.scrollToTop();
-        this.loadConsumptions(1).subscribe();
+        this.reloadCurrentPage();
     }
 
     public loadConsumptions(page: number): Observable<void> {
@@ -158,6 +164,34 @@ export class MealListComponent implements OnInit {
             }),
             catchError(() => {
                 this.consumptionData.clearData();
+                this.consumptionData.setLoading(false);
+                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                return of();
+            }),
+        );
+    }
+
+    public loadInitialOverview(): Observable<void> {
+        this.consumptionData.setLoading(true);
+        const dateRange = this.searchForm.controls.dateRange.value;
+        const filters: MealFilters = {
+            dateFrom: this.toIsoDate(dateRange?.start ?? null),
+            dateTo: this.toIsoDate(dateRange?.end ?? null),
+        };
+
+        return this.mealService.queryOverview(1, 10, filters, 10).pipe(
+            map(data => {
+                this.consumptionData.setData(data.allConsumptions);
+                this.favorites.set(data.favoriteItems);
+                this.favoriteTotalCount.set(data.favoriteTotalCount);
+                this.currentPageIndex = data.allConsumptions.page - 1;
+                this.consumptionData.setLoading(false);
+                this.errorKey.set(null);
+            }),
+            catchError(() => {
+                this.consumptionData.clearData();
+                this.favorites.set([]);
+                this.favoriteTotalCount.set(0);
                 this.consumptionData.setLoading(false);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of();
@@ -192,14 +226,14 @@ export class MealListComponent implements OnInit {
                     this.mealService.repeat(data.id, today).subscribe({
                         next: () => {
                             this.scrollToTop();
-                            this.loadConsumptions(this.currentPageIndex + 1).subscribe();
+                            this.reloadCurrentPage();
                         },
                     });
                 } else if (data.action === 'Delete') {
                     this.mealService.deleteById(data.id).subscribe({
                         next: () => {
                             this.scrollToTop();
-                            this.loadConsumptions(this.currentPageIndex + 1).subscribe();
+                            this.reloadCurrentPage();
                         },
                     });
                 }
@@ -248,8 +282,16 @@ export class MealListComponent implements OnInit {
         return this.consumptionData.items().length === 0 && this.hasDateFilter;
     }
 
+    public get hasMoreFavorites(): boolean {
+        return this.favoriteTotalCount() > this.favorites().length;
+    }
+
     protected scrollToTop(): void {
         this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    protected reloadCurrentPage(): void {
+        this.loadConsumptions(this.currentPageIndex + 1).subscribe();
     }
 
     private toIsoDate(date: Date | null | undefined): string | undefined {

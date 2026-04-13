@@ -7,7 +7,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';
-import { Recipe, RecipeFilters } from '../models/recipe.data';
+import { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 import { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
 
 @Injectable()
@@ -22,8 +22,11 @@ export class RecipeListFacade {
     public readonly recipeData = new PagedData<Recipe>();
     public readonly currentPageIndex = signal(0);
     public readonly recentRecipes = signal<Recipe[]>([]);
+    public readonly favoriteRecipes = signal<FavoriteRecipe[]>([]);
+    public readonly favoriteTotalCount = signal(0);
     public readonly errorKey = signal<string | null>(null);
     public readonly isDeleting = signal(false);
+    public readonly isFavoritesLoadingMore = signal(false);
 
     public readonly showRecentSection = computed(() => !this.hasSearchValue(this.searchValue()) && this.recentRecipes().length > 0);
     public readonly allRecipesSectionItems = computed(() => {
@@ -52,10 +55,36 @@ export class RecipeListFacade {
         const filters: RecipeFilters = { search };
         const includePublic = !onlyMine;
 
-        return this.recipeService.queryWithRecent(page, limit, filters, includePublic, 10).pipe(
+        return this.recipeService.query(page, limit, filters, includePublic).pipe(
+            tap(data => {
+                this.recipeData.setData(data);
+                this.recentRecipes.set([]);
+                this.currentPageIndex.set(data.page - 1);
+                this.errorKey.set(null);
+            }),
+            map(() => void 0),
+            catchError((_error: HttpErrorResponse) => {
+                this.recipeData.clearData();
+                this.recentRecipes.set([]);
+                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                return of(void 0);
+            }),
+            finalize(() => this.recipeData.setLoading(false)),
+        );
+    }
+
+    public loadInitialOverview(page: number, limit: number, search: string | null, onlyMine: boolean): Observable<void> {
+        this.recipeData.setLoading(true);
+        this.searchValue.set(search);
+        const filters: RecipeFilters = { search };
+        const includePublic = !onlyMine;
+
+        return this.recipeService.queryOverview(page, limit, filters, includePublic, 10, 10).pipe(
             tap(data => {
                 this.recipeData.setData(data.allRecipes);
                 this.recentRecipes.set(data.recentItems);
+                this.favoriteRecipes.set(data.favoriteItems);
+                this.favoriteTotalCount.set(data.favoriteTotalCount);
                 this.currentPageIndex.set(data.allRecipes.page - 1);
                 this.errorKey.set(null);
             }),
@@ -63,6 +92,8 @@ export class RecipeListFacade {
             catchError((_error: HttpErrorResponse) => {
                 this.recipeData.clearData();
                 this.recentRecipes.set([]);
+                this.favoriteRecipes.set([]);
+                this.favoriteTotalCount.set(0);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),

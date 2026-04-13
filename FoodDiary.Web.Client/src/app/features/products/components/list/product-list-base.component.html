@@ -106,7 +106,7 @@
                 <div class="product-list__favorites">
                     <button type="button" class="product-list__favorites-header" (click)="toggleFavorites()">
                         <mat-icon class="product-list__favorites-star">star</mat-icon>
-                        <span>{{ 'PRODUCT_LIST.FAVORITES_TITLE' | translate }} ({{ favorites().length }})</span>
+                        <span>{{ 'PRODUCT_LIST.FAVORITES_TITLE' | translate }} ({{ favoriteTotalCount() }})</span>
                         <mat-icon [class.is-open]="isFavoritesOpen()">expand_more</mat-icon>
                     </button>
                     @if (isFavoritesOpen()) {
@@ -157,6 +157,17 @@
                                 </div>
                             }
                         </div>
+                        @if (hasMoreFavorites) {
+                            <fd-ui-button
+                                class="product-list__favorites-load-more"
+                                variant="secondary"
+                                fill="outline"
+                                [disabled]="isFavoritesLoadingMore()"
+                                (click)="loadFavorites()"
+                            >
+                                {{ 'PRODUCT_LIST.FAVORITES_LOAD_MORE' | translate }}
+                            </fd-ui-button>
+                        }
                     }
                 </div>
             }

@@ -19,10 +19,10 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetRecipesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
-    [HttpGet("with-recent")]
-    [ProducesResponseType<RecipeListWithRecentHttpResponse>(StatusCodes.Status200OK)]
+    [HttpGet("overview")]
+    [ProducesResponseType<RecipeOverviewHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAllWithRecent([FromCurrentUser] Guid userId, [FromQuery] GetRecipesWithRecentHttpQuery query) =>
+    public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId, [FromQuery] GetRecipesOverviewHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("recent")]

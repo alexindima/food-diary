@@ -22,4 +22,9 @@ public interface IFavoriteRecipeRepository {
     Task<IReadOnlyList<FavoriteRecipe>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyDictionary<RecipeId, FavoriteRecipe>> GetByRecipeIdsAsync(
+        UserId userId,
+        IReadOnlyCollection<RecipeId> recipeIds,
+        CancellationToken cancellationToken = default);
 }

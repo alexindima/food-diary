@@ -13,6 +13,12 @@ namespace FoodDiary.Presentation.Api.Features.Consumptions;
 [ApiController]
 [Route("api/v{version:apiVersion}/consumptions")]
 public class ConsumptionsController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet("overview")]
+    [ProducesResponseType<ConsumptionOverviewHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId, [FromQuery] GetConsumptionsOverviewHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
+
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<ConsumptionHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

@@ -11,7 +11,8 @@ import { RecipeListFacade } from './recipe-list.facade';
 describe('RecipeListFacade', () => {
     let facade: RecipeListFacade;
     let recipeService: {
-        queryWithRecent: ReturnType<typeof vi.fn>;
+        queryOverview: ReturnType<typeof vi.fn>;
+        query: ReturnType<typeof vi.fn>;
         deleteById: ReturnType<typeof vi.fn>;
     };
     let navigationService: {
@@ -35,9 +36,11 @@ describe('RecipeListFacade', () => {
 
     beforeEach(() => {
         recipeService = {
-            queryWithRecent: vi.fn().mockReturnValue(
+            queryOverview: vi.fn().mockReturnValue(
                 of({
                     recentItems: [recipe],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
                     allRecipes: {
                         data: [recipe],
                         page: 1,
@@ -45,6 +48,15 @@ describe('RecipeListFacade', () => {
                         totalPages: 1,
                         totalItems: 1,
                     },
+                }),
+            ),
+            query: vi.fn().mockReturnValue(
+                of({
+                    data: [recipe],
+                    page: 1,
+                    limit: 10,
+                    totalPages: 1,
+                    totalItems: 1,
                 }),
             ),
             deleteById: vi.fn().mockReturnValue(of(undefined)),
@@ -83,20 +95,20 @@ describe('RecipeListFacade', () => {
         facade = TestBed.inject(RecipeListFacade);
     });
 
-    it('loads recipes and updates derived state', () => {
-        facade.loadRecipes(1, 10, null, false).subscribe();
+    it('loads initial overview and updates derived state', () => {
+        facade.loadInitialOverview(1, 10, null, false).subscribe();
 
-        expect(recipeService.queryWithRecent).toHaveBeenCalledWith(1, 10, { search: null }, true, 10);
+        expect(recipeService.queryOverview).toHaveBeenCalledWith(1, 10, { search: null }, true, 10, 10);
         expect(facade.recipeData.items()).toEqual([recipe]);
         expect(facade.recentRecipes()).toEqual([recipe]);
         expect(facade.errorKey()).toBeNull();
         expect(facade.showRecentSection()).toBe(true);
     });
 
-    it('sets load error state when query fails', () => {
-        recipeService.queryWithRecent.mockReturnValueOnce(throwError(() => ({ status: 500 })));
+    it('sets load error state when overview query fails', () => {
+        recipeService.queryOverview.mockReturnValueOnce(throwError(() => ({ status: 500 })));
 
-        facade.loadRecipes(1, 10, ' soup ', false).subscribe();
+        facade.loadInitialOverview(1, 10, ' soup ', false).subscribe();
 
         expect(facade.recipeData.items()).toEqual([]);
         expect(facade.recentRecipes()).toEqual([]);
@@ -107,7 +119,7 @@ describe('RecipeListFacade', () => {
         facade.deleteRecipe(recipe, 'soup', true).subscribe();
 
         expect(recipeService.deleteById).toHaveBeenCalledWith('recipe-1');
-        expect(recipeService.queryWithRecent).toHaveBeenCalledWith(1, 10, { search: 'soup' }, false, 10);
+        expect(recipeService.query).toHaveBeenCalledWith(1, 10, { search: 'soup' }, false);
         expect(facade.isDeleting()).toBe(false);
     });
 

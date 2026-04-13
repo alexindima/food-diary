@@ -13,7 +13,9 @@ using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.FavoriteMeals.Common;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
@@ -578,7 +580,8 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsQueryHandler(
             new CreatingMealRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            new StubFavoriteMealRepository());
 
         var result = await handler.Handle(
             new GetConsumptionsQuery(null, 1, 10, null, null),
@@ -593,7 +596,8 @@ public class ConsumptionsFeatureTests {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsQueryHandler(
             repository,
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            new StubFavoriteMealRepository());
         var userId = UserId.New();
         var localFrom = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Local);
         var localTo = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Local);
@@ -826,7 +830,8 @@ public class ConsumptionsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetConsumptionsQueryHandler(
             new CreatingMealRepository(),
-            new StubUserRepository(user));
+            new StubUserRepository(user),
+            new StubFavoriteMealRepository());
 
         var result = await handler.Handle(
             new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
@@ -848,5 +853,21 @@ public class ConsumptionsFeatureTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class StubFavoriteMealRepository : IFavoriteMealRepository {
+        public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteMeal>>([]);
+        public Task<FavoriteMeal?> GetByIdAsync(FavoriteMealId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult<FavoriteMeal?>(null);
+        public Task<FavoriteMeal?> GetByMealIdAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<FavoriteMeal?>(null);
+        public Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
+            UserId userId,
+            IReadOnlyCollection<MealId> mealIds,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<MealId, FavoriteMeal>>(new Dictionary<MealId, FavoriteMeal>());
     }
 }

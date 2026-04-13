@@ -1,8 +1,8 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, of, switchMap } from 'rxjs';
-import { QualityGrade } from '../../../features/products/models/product.data';
+import { FavoriteProduct, QualityGrade } from '../../../features/products/models/product.data';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
@@ -23,6 +23,8 @@ export interface ProductCardItem {
     caloriesPerBase: number;
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
+    isFavorite?: boolean;
+    favoriteProductId?: string | null;
 }
 
 @Component({
@@ -71,16 +73,12 @@ export class ProductCardComponent {
     });
     private favoriteProductId: string | null = null;
 
-    public ngOnInit(): void {
-        const productId = this.product().id;
-        if (!productId || !this.isAuthenticated()) {
-            return;
-        }
-
-        this.favoriteProductService
-            .isFavorite(productId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(isFav => this.isFavorite.set(isFav));
+    public constructor() {
+        effect(() => {
+            const product = this.product();
+            this.isFavorite.set(Boolean(product.isFavorite));
+            this.favoriteProductId = product.favoriteProductId ?? null;
+        });
     }
 
     public handleOpen(): void {
@@ -163,7 +161,7 @@ export class ProductCardComponent {
             .getAll()
             .pipe(
                 switchMap(favorites => {
-                    const match = favorites.find(favorite => favorite.productId === productId);
+                    const match = favorites.find((favorite: FavoriteProduct) => favorite.productId === productId);
                     if (!match) {
                         return of(null);
                     }

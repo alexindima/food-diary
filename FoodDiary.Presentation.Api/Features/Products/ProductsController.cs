@@ -19,10 +19,10 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetProductsHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
-    [HttpGet("with-recent")]
-    [ProducesResponseType<ProductListWithRecentHttpResponse>(StatusCodes.Status200OK)]
+    [HttpGet("overview")]
+    [ProducesResponseType<ProductOverviewHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAllWithRecent([FromCurrentUser] Guid userId, [FromQuery] GetProductsWithRecentHttpQuery query) =>
+    public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId, [FromQuery] GetProductsOverviewHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("recent")]

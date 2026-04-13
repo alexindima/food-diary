@@ -25,4 +25,6 @@ public sealed record ProductHttpResponse(
     DateTime CreatedAt,
     bool IsOwnedByCurrentUser,
     int QualityScore,
-    string QualityGrade);
+    string QualityGrade,
+    bool IsFavorite,
+    Guid? FavoriteProductId);

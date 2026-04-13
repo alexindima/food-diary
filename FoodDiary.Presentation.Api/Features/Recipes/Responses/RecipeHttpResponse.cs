@@ -30,4 +30,6 @@ public sealed record RecipeHttpResponse(
     bool IsOwnedByCurrentUser,
     int QualityScore,
     string QualityGrade,
-    IReadOnlyList<RecipeStepHttpResponse> Steps);
+    IReadOnlyList<RecipeStepHttpResponse> Steps,
+    bool IsFavorite,
+    Guid? FavoriteRecipeId);

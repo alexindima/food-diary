@@ -56,4 +56,20 @@ public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoritePr
             .OrderByDescending(f => f.CreatedAtUtc)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(
+        UserId userId,
+        IReadOnlyCollection<ProductId> productIds,
+        CancellationToken cancellationToken = default) {
+        if (productIds.Count == 0) {
+            return new Dictionary<ProductId, FavoriteProduct>();
+        }
+
+        var favorites = await context.FavoriteProducts
+            .AsNoTracking()
+            .Where(f => f.UserId == userId && productIds.Contains(f.ProductId))
+            .ToListAsync(cancellationToken);
+
+        return favorites.ToDictionary(f => f.ProductId);
+    }
 }

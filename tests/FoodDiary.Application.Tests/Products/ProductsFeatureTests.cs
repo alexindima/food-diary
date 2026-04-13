@@ -6,7 +6,7 @@ using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
-using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
+using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
@@ -17,9 +17,9 @@ namespace FoodDiary.Application.Tests.Products;
 
 public class ProductsFeatureTests {
     [Fact]
-    public async Task GetProductsWithRecentQueryValidator_WithEmptyUserId_Fails() {
-        var validator = new GetProductsWithRecentQueryValidator();
-        var query = new GetProductsWithRecentQuery(Guid.Empty, 1, 10, null, true);
+    public async Task GetProductsOverviewQueryValidator_WithEmptyUserId_Fails() {
+        var validator = new GetProductsOverviewQueryValidator();
+        var query = new GetProductsOverviewQuery(Guid.Empty, 1, 10, null, true);
 
         var result = await validator.ValidateAsync(query);
 

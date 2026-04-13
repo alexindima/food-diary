@@ -1,6 +1,7 @@
 import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 import { QualityGrade } from '../../products/models/product.data';
+import { PageOf } from '../../../shared/models/page-of.data';
 
 export interface Consumption {
     id: string;
@@ -26,6 +27,8 @@ export interface Consumption {
     postMealSatietyLevel?: number | null;
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
+    isFavorite?: boolean;
+    favoriteMealId?: string | null;
     items: ConsumptionItem[];
     aiSessions?: ConsumptionAiSession[];
 }
@@ -88,8 +91,16 @@ export interface ConsumptionResponseDto {
     postMealSatietyLevel?: number | null;
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
+    isFavorite?: boolean;
+    favoriteMealId?: string | null;
     items: ConsumptionItemResponseDto[];
     aiSessions?: ConsumptionAiSessionResponseDto[];
+}
+
+export interface ConsumptionOverview {
+    allConsumptions: PageOf<Meal>;
+    favoriteItems: FavoriteMeal[];
+    favoriteTotalCount: number;
 }
 
 export interface ConsumptionItemResponseDto {
@@ -248,6 +259,7 @@ export type MealManageDto = ConsumptionManageDto;
 export type MealItemManageDto = ConsumptionItemManageDto;
 export type MealAiSessionManageDto = ConsumptionAiSessionManageDto;
 export type MealAiItemManageDto = ConsumptionAiItemManageDto;
+export type MealOverview = ConsumptionOverview;
 export const MealSourceType = ConsumptionSourceType;
 
 export interface FavoriteMeal {

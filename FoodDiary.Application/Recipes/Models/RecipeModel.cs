@@ -30,4 +30,6 @@ public sealed record RecipeModel(
     bool IsOwnedByCurrentUser,
     int QualityScore,
     string QualityGrade,
-    IReadOnlyList<RecipeStepModel> Steps);
+    IReadOnlyList<RecipeStepModel> Steps,
+    bool IsFavorite,
+    Guid? FavoriteRecipeId);

@@ -3,7 +3,7 @@ using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
-using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
+using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 
 namespace FoodDiary.Application.Tests.Products;
@@ -107,9 +107,9 @@ public class ProductsValidatorTests {
     // ── GetProductsWithRecent ──
 
     [Fact]
-    public async Task GetProductsWithRecent_WithNullUserId_HasError() {
-        var result = await new GetProductsWithRecentQueryValidator().TestValidateAsync(
-            new GetProductsWithRecentQuery(null, 1, 10, null, false));
+    public async Task GetProductsOverview_WithNullUserId_HasError() {
+        var result = await new GetProductsOverviewQueryValidator().TestValidateAsync(
+            new GetProductsOverviewQuery(null, 1, 10, null, false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 

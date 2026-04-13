@@ -26,6 +26,8 @@ export interface Product {
     isOwnedByCurrentUser: boolean;
     qualityScore: number;
     qualityGrade: QualityGrade;
+    isFavorite?: boolean;
+    favoriteProductId?: string | null;
 }
 
 export type QualityGrade = 'green' | 'yellow' | 'red';
@@ -77,9 +79,11 @@ export class ProductFilters {
     }
 }
 
-export interface ProductListWithRecent {
+export interface ProductOverview {
     recentItems: Product[];
     allProducts: PageOf<Product>;
+    favoriteItems: FavoriteProduct[];
+    favoriteTotalCount: number;
 }
 
 export interface FavoriteProduct {

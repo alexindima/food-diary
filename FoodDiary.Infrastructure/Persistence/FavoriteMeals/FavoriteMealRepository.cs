@@ -47,6 +47,22 @@ public class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealR
                 cancellationToken);
     }
 
+    public async Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
+        UserId userId,
+        IReadOnlyCollection<MealId> mealIds,
+        CancellationToken cancellationToken = default) {
+        if (mealIds.Count == 0) {
+            return new Dictionary<MealId, FavoriteMeal>();
+        }
+
+        var favorites = await context.FavoriteMeals
+            .AsNoTracking()
+            .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
+            .ToListAsync(cancellationToken);
+
+        return favorites.ToDictionary(favorite => favorite.MealId);
+    }
+
     public async Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {

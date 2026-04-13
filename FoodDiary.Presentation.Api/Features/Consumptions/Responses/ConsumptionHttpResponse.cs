@@ -24,5 +24,7 @@ public sealed record ConsumptionHttpResponse(
     int PostMealSatietyLevel,
     int QualityScore,
     string QualityGrade,
+    bool IsFavorite,
+    Guid? FavoriteMealId,
     IReadOnlyList<ConsumptionItemHttpResponse> Items,
     IReadOnlyList<ConsumptionAiSessionHttpResponse> AiSessions);

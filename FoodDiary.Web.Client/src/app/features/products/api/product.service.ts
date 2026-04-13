@@ -4,7 +4,7 @@ import { catchError, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { CreateProductRequest, Product, ProductFilters, ProductListWithRecent, UpdateProductRequest } from '../models/product.data';
+import { CreateProductRequest, Product, ProductFilters, ProductOverview, UpdateProductRequest } from '../models/product.data';
 import { PageOf } from '../../../shared/models/page-of.data';
 
 @Injectable({
@@ -36,14 +36,15 @@ export class ProductService extends ApiService {
         );
     }
 
-    public queryWithRecent(
+    public queryOverview(
         page: number,
         limit: number,
         filters?: ProductFilters,
         includePublic = true,
         recentLimit = 10,
-    ): Observable<ProductListWithRecent> {
-        const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit };
+        favoriteLimit = 10,
+    ): Observable<ProductOverview> {
+        const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         const search = filters?.search?.trim();
         if (search) {
             params['search'] = search;
@@ -52,10 +53,12 @@ export class ProductService extends ApiService {
             params['productTypes'] = filters.productTypes.join(',');
         }
 
-        return this.get<ProductListWithRecent>('with-recent', params).pipe(
+        return this.get<ProductOverview>('overview', params).pipe(
             catchError((error: HttpErrorResponse) =>
-                fallbackApiError('Query products with recent error', error, {
+                fallbackApiError('Query product overview error', error, {
                     recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
                     allProducts: { data: [], page, limit, totalPages: 0, totalItems: 0 },
                 }),
             ),

@@ -24,6 +24,8 @@ export interface MealCardItem {
     totalAlcohol: number;
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
+    isFavorite?: boolean;
+    favoriteMealId?: string | null;
     items?: Array<unknown> | null;
     aiSessions?: Array<{ items?: Array<unknown> | null } | null> | null;
 }
@@ -94,14 +96,8 @@ export class MealCardComponent {
     );
 
     public ngOnInit(): void {
-        if (!this.isAuthenticated()) {
-            return;
-        }
-
-        this.favoriteMealService
-            .isFavorite(this.meal().id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(isFav => this.isFavorite.set(isFav));
+        this.isFavorite.set(this.meal().isFavorite ?? false);
+        this.favoriteMealId = this.meal().favoriteMealId ?? null;
     }
 
     public handleOpen(): void {

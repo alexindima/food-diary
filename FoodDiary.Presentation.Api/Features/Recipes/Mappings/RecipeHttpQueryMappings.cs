@@ -2,7 +2,7 @@ using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
+using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;
@@ -12,14 +12,15 @@ public static class RecipeHttpQueryMappings {
         return new GetRecipesQuery(userId, query.Page, query.Limit, query.Search, query.IncludePublic);
     }
 
-    public static GetRecipesWithRecentQuery ToQuery(this GetRecipesWithRecentHttpQuery query, Guid userId) {
-        return new GetRecipesWithRecentQuery(
+    public static GetRecipesOverviewQuery ToQuery(this GetRecipesOverviewHttpQuery query, Guid userId) {
+        return new GetRecipesOverviewQuery(
             userId,
             Math.Max(query.Page, 1),
             Math.Clamp(query.Limit, 1, 100),
             string.IsNullOrWhiteSpace(query.Search) ? null : query.Search.Trim(),
             query.IncludePublic,
-            Math.Clamp(query.RecentLimit, 1, 50));
+            Math.Clamp(query.RecentLimit, 1, 50),
+            Math.Clamp(query.FavoriteLimit, 1, 50));
     }
 
     public static GetRecentRecipesQuery ToQuery(this GetRecentRecipesHttpQuery query, Guid userId) {

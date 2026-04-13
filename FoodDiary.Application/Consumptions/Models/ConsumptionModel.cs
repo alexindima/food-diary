@@ -24,5 +24,7 @@ public sealed record ConsumptionModel(
     int PostMealSatietyLevel,
     int QualityScore,
     string QualityGrade,
+    bool IsFavorite,
+    Guid? FavoriteMealId,
     IReadOnlyList<ConsumptionItemModel> Items,
     IReadOnlyList<ConsumptionAiSessionModel> AiSessions);

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Presentation.Api.Features.FavoriteMeals.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
@@ -31,6 +32,8 @@ public static class ConsumptionHttpResponseMappings {
             model.PostMealSatietyLevel,
             model.QualityScore,
             model.QualityGrade,
+            model.IsFavorite,
+            model.FavoriteMealId,
             model.Items.ToHttpResponseList(ToHttpResponse),
             model.AiSessions.ToHttpResponseList(ToHttpResponse)
         );
@@ -38,6 +41,14 @@ public static class ConsumptionHttpResponseMappings {
 
     public static PagedHttpResponse<ConsumptionHttpResponse> ToHttpResponse(this PagedResponse<ConsumptionModel> response) {
         return response.ToPagedHttpResponse(ToHttpResponse);
+    }
+
+    public static ConsumptionOverviewHttpResponse ToHttpResponse(this ConsumptionOverviewModel model) {
+        return new ConsumptionOverviewHttpResponse(
+            model.AllConsumptions.ToHttpResponse(),
+            model.FavoriteItems.Select(FavoriteMealHttpMappings.ToHttpResponse).ToList(),
+            model.FavoriteTotalCount
+        );
     }
 
     private static ConsumptionItemHttpResponse ToHttpResponse(this ConsumptionItemModel model) {
