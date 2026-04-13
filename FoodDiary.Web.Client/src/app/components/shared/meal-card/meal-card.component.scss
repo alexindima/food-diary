@@ -114,6 +114,60 @@ fd-media-card.meal-card {
     line-height: 1.1;
 }
 
+.meal-card__quality {
+    display: inline-grid;
+    grid-template-columns: auto 120px auto;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    width: fit-content;
+    max-width: 100%;
+    align-self: flex-start;
+}
+
+.meal-card__quality-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(100, 116, 139, 0.92);
+    white-space: nowrap;
+}
+
+.meal-card__quality-bar {
+    position: relative;
+    height: 6px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(148, 163, 184, 0.18);
+}
+
+.meal-card__quality-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+
+    &--green {
+        background: linear-gradient(90deg, #6fcf97, #4fba7a);
+    }
+
+    &--yellow {
+        background: linear-gradient(90deg, #e9ca63, #d7b347);
+    }
+
+    &--red {
+        background: linear-gradient(90deg, #e78a8a, #d96b6b);
+    }
+}
+
+.meal-card__quality-value {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: variables.$color-text-main;
+    line-height: 1;
+    min-width: 2ch;
+    text-align: right;
+}
+
 .meal-card__calories {
     grid-column: 2;
     grid-row: 1 / -1;
@@ -182,6 +236,25 @@ fd-media-card.meal-card {
 
     .meal-card__items {
         font-size: 0.82rem;
+    }
+
+    .meal-card__quality {
+        grid-template-columns: 76px auto;
+        gap: 6px;
+    }
+
+    .meal-card__quality-label {
+        grid-column: 1 / -1;
+        font-size: 0.68rem;
+        letter-spacing: 0.06em;
+    }
+
+    .meal-card__quality-bar {
+        height: 5px;
+    }
+
+    .meal-card__quality-value {
+        font-size: 0.78rem;
     }
 
     .meal-card__calories {

@@ -23,6 +23,8 @@ describe('RecipeCardComponent', () => {
         totalFiber: 6,
         totalAlcohol: 0,
         totalCalories: 368,
+        qualityScore: 64,
+        qualityGrade: 'yellow',
         steps: [{ ingredients: [{}, {}, {}] }, { ingredients: [{}, {}] }],
     };
 
@@ -165,5 +167,18 @@ describe('RecipeCardComponent', () => {
         const el: HTMLElement = fixture.nativeElement;
         const caloriesEl = el.querySelector('.recipe-card__calories-value');
         expect(caloriesEl?.textContent?.trim()).toBe('368');
+    });
+
+    it('should display quality score progress', () => {
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        const labelEl = el.querySelector('.recipe-card__quality-label');
+        const valueEl = el.querySelector('.recipe-card__quality-value');
+        const fillEl = el.querySelector<HTMLElement>('.recipe-card__quality-fill');
+
+        expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
+        expect(valueEl?.textContent?.trim()).toBe('64');
+        expect(fillEl?.style.width).toBe('64%');
     });
 });

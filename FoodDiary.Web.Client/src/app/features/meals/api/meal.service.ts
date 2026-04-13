@@ -102,6 +102,8 @@ export class MealService extends ApiService {
             manualAlcohol: response.manualAlcohol ?? null,
             preMealSatietyLevel: response.preMealSatietyLevel ?? 0,
             postMealSatietyLevel: response.postMealSatietyLevel ?? 0,
+            qualityScore: response.qualityScore ?? null,
+            qualityGrade: response.qualityGrade ?? null,
             items: response.items.map(item => this.mapConsumptionItem(item)),
             aiSessions: response.aiSessions?.map(session => this.mapAiSession(session)) ?? [],
         };

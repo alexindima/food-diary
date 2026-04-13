@@ -432,7 +432,8 @@
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Add to meal",
-        "NO_BARCODE": "No barcode"
+        "NO_BARCODE": "No barcode",
+        "QUALITY_SCORE": "Healthiness"
     },
     "STATISTICS": {
         "TITLE": "Statistics",

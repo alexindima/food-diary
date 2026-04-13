@@ -119,6 +119,61 @@ fd-media-card.product-card {
     flex-wrap: wrap;
 }
 
+.product-card__quality {
+    display: inline-grid;
+    grid-template-columns: auto 120px auto;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    width: fit-content;
+    max-width: 100%;
+    align-self: flex-start;
+}
+
+.product-card__quality-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(100, 116, 139, 0.92);
+    white-space: nowrap;
+}
+
+.product-card__quality-bar {
+    position: relative;
+    height: 6px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(148, 163, 184, 0.18);
+}
+
+.product-card__quality-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.2s ease;
+
+    &--green {
+        background: linear-gradient(90deg, #6fcf97, #4fba7a);
+    }
+
+    &--yellow {
+        background: linear-gradient(90deg, #e9ca63, #d7b347);
+    }
+
+    &--red {
+        background: linear-gradient(90deg, #e78a8a, #d96b6b);
+    }
+}
+
+.product-card__quality-value {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: variables.$color-text-main;
+    line-height: 1;
+    min-width: 2ch;
+    text-align: right;
+}
+
 .product-card__subtitle {
     font-size: 0.85rem;
     color: rgba(100, 116, 139, 0.92);
@@ -184,29 +239,6 @@ fd-media-card.product-card {
     font-weight: 600;
     color: variables.$color-text-additional;
     letter-spacing: 0.1em;
-}
-
-.product-card__quality-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-
-    &--green {
-        background: #22c55e;
-        box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
-    }
-
-    &--yellow {
-        background: #eab308;
-        box-shadow: 0 0 6px rgba(234, 179, 8, 0.4);
-    }
-
-    &--red {
-        background: #ef4444;
-        box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
-    }
 }
 
 .product-card__action-button {
@@ -293,6 +325,25 @@ fd-media-card.product-card {
 
     .product-card__subtitle,
     .product-card__barcode-text {
+        font-size: 0.78rem;
+    }
+
+    .product-card__quality {
+        grid-template-columns: 76px auto;
+        gap: 6px;
+    }
+
+    .product-card__quality-label {
+        grid-column: 1 / -1;
+        font-size: 0.68rem;
+        letter-spacing: 0.06em;
+    }
+
+    .product-card__quality-bar {
+        height: 5px;
+    }
+
+    .product-card__quality-value {
         font-size: 0.78rem;
     }
 

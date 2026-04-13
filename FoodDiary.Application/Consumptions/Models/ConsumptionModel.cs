@@ -22,5 +22,7 @@ public sealed record ConsumptionModel(
     double? ManualAlcohol,
     int PreMealSatietyLevel,
     int PostMealSatietyLevel,
+    int QualityScore,
+    string QualityGrade,
     IReadOnlyList<ConsumptionItemModel> Items,
     IReadOnlyList<ConsumptionAiSessionModel> AiSessions);

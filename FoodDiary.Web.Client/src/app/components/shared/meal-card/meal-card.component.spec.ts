@@ -21,6 +21,8 @@ describe('MealCardComponent', () => {
         totalCarbs: 80,
         totalFiber: 5,
         totalAlcohol: 0,
+        qualityScore: 42,
+        qualityGrade: 'yellow',
         items: [{}, {}, {}],
         aiSessions: null,
     };
@@ -118,5 +120,18 @@ describe('MealCardComponent', () => {
         fixture.componentRef.setInput('meal', { ...mockMeal, imageUrl: null, mealType: null });
         fixture.detectChanges();
         expect(component.coverImage()).toBe('assets/images/stubs/meals/other.svg');
+    });
+
+    it('should display quality score progress', () => {
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        const labelEl = el.querySelector('.meal-card__quality-label');
+        const valueEl = el.querySelector('.meal-card__quality-value');
+        const fillEl = el.querySelector<HTMLElement>('.meal-card__quality-fill');
+
+        expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
+        expect(valueEl?.textContent?.trim()).toBe('42');
+        expect(fillEl?.style.width).toBe('42%');
     });
 });

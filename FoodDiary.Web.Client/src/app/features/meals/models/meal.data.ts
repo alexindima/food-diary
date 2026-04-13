@@ -1,5 +1,6 @@
 import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
+import { QualityGrade } from '../../products/models/product.data';
 
 export interface Consumption {
     id: string;
@@ -23,6 +24,8 @@ export interface Consumption {
     manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
+    qualityScore?: number | null;
+    qualityGrade?: QualityGrade | null;
     items: ConsumptionItem[];
     aiSessions?: ConsumptionAiSession[];
 }
@@ -83,6 +86,8 @@ export interface ConsumptionResponseDto {
     manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
+    qualityScore?: number | null;
+    qualityGrade?: QualityGrade | null;
     items: ConsumptionItemResponseDto[];
     aiSessions?: ConsumptionAiSessionResponseDto[];
 }

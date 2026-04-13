@@ -53,6 +53,20 @@
                     </span>
                 }
             </div>
+            @if (qualityScore(); as score) {
+                <div class="product-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
+                    <span class="product-card__quality-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                    <div class="product-card__quality-bar" aria-hidden="true">
+                        <span
+                            class="product-card__quality-fill product-card__quality-fill--{{ product().qualityGrade }}"
+                            [style.width.%]="score"
+                        ></span>
+                    </div>
+                    <span class="product-card__quality-value" [title]="'QUALITY.' + product().qualityGrade!.toUpperCase() | translate">
+                        {{ score }}
+                    </span>
+                </div>
+            }
         </div>
         <div class="product-card__nutrients">
             <fd-nutrient-badges
@@ -67,12 +81,6 @@
 
     <div fdMediaCardActions class="product-card__action-group">
         <div class="product-card__calories-inline">
-            @if (product().qualityGrade) {
-                <span
-                    class="product-card__quality-dot product-card__quality-dot--{{ product().qualityGrade }}"
-                    [title]="'QUALITY.' + product().qualityGrade!.toUpperCase() | translate"
-                ></span>
-            }
             <span class="product-card__calories-value">
                 {{ product().caloriesPerBase | number: '1.0-0' }}
             </span>

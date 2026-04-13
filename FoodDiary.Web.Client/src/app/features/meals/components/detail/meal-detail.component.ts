@@ -55,6 +55,8 @@ export class MealDetailComponent {
     public readonly carbs: number;
     public readonly fiber: number;
     public readonly alcohol: number;
+    public readonly qualityScore: number;
+    public readonly qualityGrade: string;
     public readonly itemsCount: number;
     public readonly formattedDate: string | null;
     public readonly mealTypeLabel: string | null;
@@ -85,6 +87,8 @@ export class MealDetailComponent {
         this.carbs = data.totalCarbs ?? 0;
         this.fiber = data.totalFiber ?? 0;
         this.alcohol = data.totalAlcohol ?? 0;
+        this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
+        this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.itemsCount = data.items.length;
         this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
         this.mealTypeLabel = data.mealType ? this.translate.instant(`MEAL_TYPES.${data.mealType}`) : null;

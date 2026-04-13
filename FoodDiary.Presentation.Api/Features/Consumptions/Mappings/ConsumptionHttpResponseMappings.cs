@@ -29,6 +29,8 @@ public static class ConsumptionHttpResponseMappings {
             model.ManualAlcohol,
             model.PreMealSatietyLevel,
             model.PostMealSatietyLevel,
+            model.QualityScore,
+            model.QualityGrade,
             model.Items.ToHttpResponseList(ToHttpResponse),
             model.AiSessions.ToHttpResponseList(ToHttpResponse)
         );

@@ -397,7 +397,8 @@
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Добавить к приему",
-        "NO_BARCODE": "Без штрихкода"
+        "NO_BARCODE": "Без штрихкода",
+        "QUALITY_SCORE": "Полезность"
     },
     "STATISTICS": {
         "TITLE": "Статистика",

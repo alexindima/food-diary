@@ -44,6 +44,26 @@
                         <span class="consumption-detail__surface-label">{{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}</span>
                         <strong class="consumption-detail__surface-value">{{ itemsCount }}</strong>
                     </fd-ui-accent-surface>
+
+                    <fd-ui-accent-surface
+                        class="consumption-detail__surface consumption-detail__surface--summary consumption-detail__surface--quality"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="consumption-detail__surface-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                        <div class="consumption-detail__quality">
+                            <div class="consumption-detail__quality-bar" aria-hidden="true">
+                                <span
+                                    class="consumption-detail__quality-fill consumption-detail__quality-fill--{{ qualityGrade }}"
+                                    [style.width.%]="qualityScore"
+                                ></span>
+                            </div>
+                            <strong class="consumption-detail__quality-value" [title]="'QUALITY.' + qualityGrade.toUpperCase() | translate">
+                                {{ qualityScore }}
+                            </strong>
+                        </div>
+                    </fd-ui-accent-surface>
                 </div>
 
                 @if (consumption.comment) {

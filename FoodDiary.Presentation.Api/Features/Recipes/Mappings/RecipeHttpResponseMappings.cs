@@ -35,6 +35,8 @@ public static class RecipeHttpResponseMappings {
             model.UsageCount,
             model.CreatedAt,
             model.IsOwnedByCurrentUser,
+            model.QualityScore,
+            model.QualityGrade,
             model.Steps.ToHttpResponseList(ToHttpResponse)
         );
     }

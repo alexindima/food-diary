@@ -55,6 +55,20 @@
                 </div>
             </div>
             <div class="meal-card__items">{{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ itemCount() }}</div>
+            @if (qualityScore(); as score) {
+                <div class="meal-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
+                    <span class="meal-card__quality-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                    <div class="meal-card__quality-bar" aria-hidden="true">
+                        <span
+                            class="meal-card__quality-fill meal-card__quality-fill--{{ meal().qualityGrade }}"
+                            [style.width.%]="score"
+                        ></span>
+                    </div>
+                    <span class="meal-card__quality-value" [title]="'QUALITY.' + meal().qualityGrade!.toUpperCase() | translate">
+                        {{ score }}
+                    </span>
+                </div>
+            }
         </div>
 
         <div class="meal-card__calories">

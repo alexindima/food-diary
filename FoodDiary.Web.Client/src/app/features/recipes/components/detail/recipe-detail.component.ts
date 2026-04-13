@@ -54,6 +54,8 @@ export class RecipeDetailComponent {
     public readonly carbs: number;
     public readonly fiber: number;
     public readonly alcohol: number;
+    public readonly qualityScore: number;
+    public readonly qualityGrade: string;
     public readonly pieChartData: ChartData<'pie', number[], string>;
     public readonly barChartData: ChartData<'bar', number[], string>;
     public readonly pieChartOptions: ChartOptions<'pie'>;
@@ -85,6 +87,8 @@ export class RecipeDetailComponent {
         this.carbs = this.resolveNutrientValue(data.totalCarbs, data.manualCarbs);
         this.fiber = this.fiberValueComputed;
         this.alcohol = this.alcoholValueComputed;
+        this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
+        this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
         const labels = [

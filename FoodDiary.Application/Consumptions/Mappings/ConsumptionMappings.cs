@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Consumptions.Mappings;
 
@@ -66,6 +67,20 @@ public static class ConsumptionMappings {
                     .ToList()))
             .ToList();
 
+        var effectiveCalories = meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
+        var effectiveProteins = meal.IsNutritionAutoCalculated ? meal.TotalProteins : meal.ManualProteins ?? meal.TotalProteins;
+        var effectiveFats = meal.IsNutritionAutoCalculated ? meal.TotalFats : meal.ManualFats ?? meal.TotalFats;
+        var effectiveCarbs = meal.IsNutritionAutoCalculated ? meal.TotalCarbs : meal.ManualCarbs ?? meal.TotalCarbs;
+        var effectiveFiber = meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
+        var effectiveAlcohol = meal.IsNutritionAutoCalculated ? meal.TotalAlcohol : meal.ManualAlcohol ?? meal.TotalAlcohol;
+        var quality = FoodQualityScore.Calculate(
+            effectiveCalories,
+            effectiveProteins,
+            effectiveFats,
+            effectiveCarbs,
+            effectiveFiber,
+            effectiveAlcohol);
+
         return new ConsumptionModel(
             meal.Id.Value,
             meal.Date,
@@ -88,6 +103,8 @@ public static class ConsumptionMappings {
             meal.ManualAlcohol,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
+            quality.Score,
+            quality.Grade.ToString().ToLowerInvariant(),
             items,
             aiSessions);
     }

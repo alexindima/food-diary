@@ -11,6 +11,7 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 import { MatIconModule } from '@angular/material/icon';
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
 import { AuthService } from '../../../services/auth.service';
+import { QualityGrade } from '../../../features/products/models/product.data';
 
 export interface MealCardItem {
     id: string;
@@ -23,6 +24,8 @@ export interface MealCardItem {
     totalCarbs: number;
     totalFiber: number;
     totalAlcohol: number;
+    qualityScore?: number | null;
+    qualityGrade?: QualityGrade | null;
     items?: Array<unknown> | null;
     aiSessions?: Array<{ items?: Array<unknown> | null } | null> | null;
 }
@@ -49,6 +52,14 @@ export class MealCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.meal().id));
+    public readonly qualityScore = computed(() => {
+        const score = this.meal().qualityScore;
+        if (score === null || score === undefined) {
+            return null;
+        }
+
+        return Math.round(Math.min(100, Math.max(0, score)));
+    });
     private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
     private favoriteMealId: string | null = null;
 

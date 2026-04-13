@@ -28,4 +28,6 @@ public sealed record RecipeHttpResponse(
     int UsageCount,
     DateTime CreatedAt,
     bool IsOwnedByCurrentUser,
+    int QualityScore,
+    string QualityGrade,
     IReadOnlyList<RecipeStepHttpResponse> Steps);

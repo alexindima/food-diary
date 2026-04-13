@@ -53,6 +53,26 @@
                         <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}</span>
                         <strong class="recipe-detail__surface-value">{{ ingredientCount }}</strong>
                     </fd-ui-accent-surface>
+
+                    <fd-ui-accent-surface
+                        class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--quality"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="recipe-detail__surface-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                        <div class="recipe-detail__quality">
+                            <div class="recipe-detail__quality-bar" aria-hidden="true">
+                                <span
+                                    class="recipe-detail__quality-fill recipe-detail__quality-fill--{{ qualityGrade }}"
+                                    [style.width.%]="qualityScore"
+                                ></span>
+                            </div>
+                            <strong class="recipe-detail__quality-value" [title]="'QUALITY.' + qualityGrade.toUpperCase() | translate">
+                                {{ qualityScore }}
+                            </strong>
+                        </div>
+                    </fd-ui-accent-surface>
                 </div>
                 @if (recipe.comment) {
                     <fd-ui-accent-surface

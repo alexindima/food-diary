@@ -11,6 +11,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { AuthService } from '../../../services/auth.service';
+import { QualityGrade } from '../../../features/products/models/product.data';
 
 export interface RecipeCardStep {
     ingredients?: Array<unknown> | null;
@@ -29,6 +30,8 @@ export interface RecipeCardItem {
     totalFiber?: number | null;
     totalAlcohol?: number | null;
     totalCalories?: number | null;
+    qualityScore?: number | null;
+    qualityGrade?: QualityGrade | null;
     steps?: RecipeCardStep[] | null;
 }
 
@@ -56,6 +59,14 @@ export class RecipeCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.recipe().id));
+    public readonly qualityScore = computed(() => {
+        const score = this.recipe().qualityScore;
+        if (score === null || score === undefined) {
+            return null;
+        }
+
+        return Math.round(Math.min(100, Math.max(0, score)));
+    });
     private favoriteRecipeId: string | null = null;
 
     public ngOnInit(): void {

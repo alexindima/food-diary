@@ -22,5 +22,7 @@ public sealed record ConsumptionHttpResponse(
     double? ManualAlcohol,
     int PreMealSatietyLevel,
     int PostMealSatietyLevel,
+    int QualityScore,
+    string QualityGrade,
     IReadOnlyList<ConsumptionItemHttpResponse> Items,
     IReadOnlyList<ConsumptionAiSessionHttpResponse> AiSessions);

@@ -1,5 +1,6 @@
 import { NutrientData } from '../../../shared/models/charts.data';
 import { MeasurementUnit } from '../../products/models/product.data';
+import { QualityGrade } from '../../products/models/product.data';
 import { PageOf } from '../../../shared/models/page-of.data';
 
 export enum RecipeVisibility {
@@ -22,6 +23,8 @@ export interface Recipe {
     usageCount: number;
     createdAt: string;
     isOwnedByCurrentUser: boolean;
+    qualityScore?: number | null;
+    qualityGrade?: QualityGrade | null;
     totalCalories?: number | null;
     totalProteins?: number | null;
     totalFats?: number | null;

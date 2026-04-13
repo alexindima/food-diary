@@ -21,6 +21,8 @@ describe('ProductCardComponent', () => {
         fiberPerBase: 5,
         alcoholPerBase: 0,
         caloriesPerBase: 290,
+        qualityScore: 72,
+        qualityGrade: 'green',
     };
 
     beforeEach(async () => {
@@ -95,6 +97,19 @@ describe('ProductCardComponent', () => {
         const el: HTMLElement = fixture.nativeElement;
         const caloriesEl = el.querySelector('.product-card__calories-value');
         expect(caloriesEl?.textContent?.trim()).toBe('290');
+    });
+
+    it('should display quality score progress', () => {
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        const labelEl = el.querySelector('.product-card__quality-label');
+        const valueEl = el.querySelector('.product-card__quality-value');
+        const fillEl = el.querySelector<HTMLElement>('.product-card__quality-fill');
+
+        expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
+        expect(valueEl?.textContent?.trim()).toBe('72');
+        expect(fillEl?.style.width).toBe('72%');
     });
 
     it('should show image when imageUrl is provided', () => {

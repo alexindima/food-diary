@@ -25,6 +25,7 @@ export interface ProductCardItem {
     fiberPerBase: number;
     alcoholPerBase: number;
     caloriesPerBase: number;
+    qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
 }
 
@@ -52,6 +53,14 @@ export class ProductCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.product().id));
+    public readonly qualityScore = computed(() => {
+        const score = this.product().qualityScore;
+        if (score === null || score === undefined) {
+            return null;
+        }
+
+        return Math.round(Math.min(100, Math.max(0, score)));
+    });
     private favoriteProductId: string | null = null;
 
     public ngOnInit(): void {

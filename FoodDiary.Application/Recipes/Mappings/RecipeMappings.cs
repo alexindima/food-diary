@@ -1,6 +1,7 @@
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Recipes.Mappings;
 
@@ -35,6 +36,13 @@ public static class RecipeMappings {
             .ToList();
 
         var nutrition = BuildNutrition(recipe);
+        var quality = FoodQualityScore.Calculate(
+            nutrition.TotalCalories ?? 0,
+            nutrition.TotalProteins ?? 0,
+            nutrition.TotalFats ?? 0,
+            nutrition.TotalCarbs ?? 0,
+            nutrition.TotalFiber ?? 0,
+            nutrition.TotalAlcohol ?? 0);
 
         return new RecipeModel(
             recipe.Id.Value,
@@ -64,6 +72,8 @@ public static class RecipeMappings {
             usageCount,
             recipe.CreatedOnUtc,
             isOwnedByCurrentUser,
+            quality.Score,
+            quality.Grade.ToString().ToLowerInvariant(),
             steps);
     }
 

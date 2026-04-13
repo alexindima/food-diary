@@ -55,6 +55,20 @@
                     }
                 </span>
             </div>
+            @if (qualityScore(); as score) {
+                <div class="recipe-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
+                    <span class="recipe-card__quality-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                    <div class="recipe-card__quality-bar" aria-hidden="true">
+                        <span
+                            class="recipe-card__quality-fill recipe-card__quality-fill--{{ recipe().qualityGrade }}"
+                            [style.width.%]="score"
+                        ></span>
+                    </div>
+                    <span class="recipe-card__quality-value" [title]="'QUALITY.' + recipe().qualityGrade!.toUpperCase() | translate">
+                        {{ score }}
+                    </span>
+                </div>
+            }
         </div>
 
         <div class="recipe-card__nutrients">
