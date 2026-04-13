@@ -5,8 +5,8 @@
 }
 
 fd-media-card.entity-card {
-    --fd-media-card-media-width: clamp(72px, 10vw, 120px);
-    --fd-media-card-media-width-mobile: 48px;
+    --fd-media-card-media-width: clamp(64px, 10vw, 120px);
+    --fd-media-card-media-width-mobile: 64px;
     --fd-media-card-right-padding-mobile: 16px;
 }
 
@@ -54,7 +54,8 @@ fd-media-card.entity-card {
 }
 
 .entity-card__summary-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 16px;
     min-width: 0;
@@ -153,7 +154,7 @@ fd-media-card.entity-card {
     width: fit-content;
     max-width: 100%;
     align-self: center;
-    margin-left: auto;
+    justify-self: end;
 }
 
 .entity-card__quality-label {
@@ -201,12 +202,17 @@ fd-media-card.entity-card {
 }
 
 .entity-card__nutrients {
-    container-type: inline-size;
-    width: auto;
+    width: 100%;
     display: flex;
     align-items: center;
     min-width: 0;
     flex: 1 1 auto;
+}
+
+.entity-card__nutrients-container {
+    width: 100%;
+    min-width: 0;
+    container-type: inline-size;
 }
 
 .entity-card__action-group {
@@ -218,7 +224,7 @@ fd-media-card.entity-card {
     justify-content: center;
     width: fit-content;
     min-width: clamp(52px, 7vw, 80px);
-    padding: 8px 0;
+    padding: 4px 0;
 
     &::before {
         content: '';
@@ -226,7 +232,7 @@ fd-media-card.entity-card {
         left: -10px;
         top: 50%;
         width: 2px;
-        height: 82px;
+        height: calc(100% - 2px);
         transform: translateY(-50%);
         border-radius: 999px;
         background: linear-gradient(180deg, rgba(148, 163, 184, 0), rgba(148, 163, 184, 0.5), rgba(148, 163, 184, 0));
@@ -297,7 +303,7 @@ fd-media-card.entity-card {
     }
 }
 
-@container (max-width: 620px) {
+@container (max-width: 760px) {
 
     .entity-card__thumb {
         background: #eff6ff;
@@ -349,51 +355,56 @@ fd-media-card.entity-card {
         display: block;
     }
 
+    .entity-card__nutrients-container {
+
+        &--green {
+
+            ::ng-deep .nutrient-badges {
+                border-color: rgba(79, 186, 122, 0.68);
+                box-shadow: inset 0 0 0 1px rgba(111, 207, 151, 0.28);
+            }
+        }
+
+        &--yellow {
+
+            ::ng-deep .nutrient-badges {
+                border-color: rgba(215, 179, 71, 0.68);
+                box-shadow: inset 0 0 0 1px rgba(233, 202, 99, 0.28);
+            }
+        }
+
+        &--red {
+
+            ::ng-deep .nutrient-badges {
+                border-color: rgba(217, 107, 107, 0.64);
+                box-shadow: inset 0 0 0 1px rgba(231, 138, 138, 0.26);
+            }
+        }
+    }
+
     .entity-card__quality {
-        grid-template-columns: 76px auto;
-        gap: 6px;
-        width: 100%;
-        margin-left: 0;
-    }
-
-    .entity-card__quality-label {
-        grid-column: 1 / -1;
-        font-size: 0.68rem;
-        letter-spacing: 0.06em;
-    }
-
-    .entity-card__quality-bar {
-        height: 5px;
-    }
-
-    .entity-card__quality-value {
-        font-size: 0.78rem;
-    }
-
-    .entity-card__nutrients {
         display: none;
     }
 
     .entity-card__action-group {
         align-self: center;
-        flex-direction: row;
+        flex-direction: column;
         gap: 6px;
-        min-width: 0;
-        padding: 2px 2px 2px 12px;
-        border: 1px solid rgba(37, 99, 235, 0.22);
-        background: rgba(59, 130, 246, 0.1);
-        border-radius: 999px;
-        overflow: hidden;
+        min-width: clamp(52px, 7vw, 80px);
+        padding: 3px 0;
 
         &::before {
-            display: none;
+            left: -8px;
+            width: 2px;
+            height: calc(100% - 1px);
+            display: block;
         }
     }
 
     .entity-card__calories-inline {
-        flex-direction: row;
-        align-items: baseline;
-        gap: 4px;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
     }
 
     .entity-card__calories-value {
@@ -409,7 +420,7 @@ fd-media-card.entity-card {
         width: 34px;
         min-width: 34px;
         height: 34px;
-        --fd-button-border-radius: 999px;
+        --fd-button-border-radius: 12px;
         --fd-button-height: 34px;
         flex: 0 0 34px;
     }
@@ -422,7 +433,7 @@ fd-media-card.entity-card {
         min-height: 34px;
         padding: 0;
         margin: 0;
-        border-radius: 50%;
+        border-radius: 12px;
         box-shadow: none;
         transform: none;
     }

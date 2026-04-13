@@ -57,13 +57,20 @@
 
         <div class="entity-card__summary-row">
             <div class="entity-card__nutrients">
-                <fd-nutrient-badges
-                    [proteins]="nutrition().proteins"
-                    [fats]="nutrition().fats"
-                    [carbs]="nutrition().carbs"
-                    [fiber]="nutrition().fiber"
-                    [alcohol]="nutrition().alcohol"
-                />
+                <div
+                    class="entity-card__nutrients-container"
+                    [class.entity-card__nutrients-container--green]="normalizedQuality()?.grade === 'green'"
+                    [class.entity-card__nutrients-container--yellow]="normalizedQuality()?.grade === 'yellow'"
+                    [class.entity-card__nutrients-container--red]="normalizedQuality()?.grade === 'red'"
+                >
+                    <fd-nutrient-badges
+                        [proteins]="nutrition().proteins"
+                        [fats]="nutrition().fats"
+                        [carbs]="nutrition().carbs"
+                        [fiber]="nutrition().fiber"
+                        [alcohol]="nutrition().alcohol"
+                    />
+                </div>
             </div>
 
             @if (normalizedQuality(); as cardQuality) {
