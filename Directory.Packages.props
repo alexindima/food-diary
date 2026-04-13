@@ -40,7 +40,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.4" />
 
     <!-- Infrastructure -->
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.20.3" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.21.1" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QuestPDF" Version="2026.2.4" />
