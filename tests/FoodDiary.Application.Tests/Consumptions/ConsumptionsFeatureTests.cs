@@ -9,8 +9,10 @@ using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
+using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.FavoriteMeals.Common;
@@ -20,6 +22,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
@@ -223,6 +226,53 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithValidCommand_PersistsAndRegistersUsage() {
+        var user = User.Create("create-consumption@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var recentItems = new RecordingRecentItemRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new FixedMealNutritionService(new MealNutritionSummary(420, 28, 16, 38, 6, 0)),
+            recentItems,
+            new StubUserRepository(user),
+            new StubDateTimeProvider());
+
+        var productId = ProductId.New().Value;
+        var recipeId = RecipeId.New().Value;
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                user.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                "https://cdn.test/meal.png",
+                null,
+                [
+                    new ConsumptionItemInput(productId, null, 150),
+                    new ConsumptionItemInput(null, recipeId, 1)
+                ],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                7),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.StoredMeal);
+        Assert.Equal("Created", repository.StoredMeal.Comment);
+        Assert.Equal(2, repository.StoredMeal.Items.Count);
+        Assert.True(result.Value.IsNutritionAutoCalculated);
+        Assert.Equal(productId, recentItems.LastProductIds.Single().Value);
+        Assert.Equal(recipeId, recentItems.LastRecipeIds.Single().Value);
     }
 
     [Fact]
@@ -577,6 +627,27 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task GetConsumptionByIdQueryHandler_WithExistingConsumption_ReturnsMealModel() {
+        var userId = UserId.New();
+        var meal = Meal.Create(
+            userId,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch,
+            comment: "Owner note");
+        meal.AddProduct(ProductId.New(), 150);
+        meal.ApplyNutrition(new MealNutritionUpdate(350, 20, 12, 30, 4, 0, true));
+
+        var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
+
+        var result = await handler.Handle(new GetConsumptionByIdQuery(userId.Value, meal.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(meal.Id.Value, result.Value.Id);
+        Assert.Equal("Owner note", result.Value.Comment);
+        Assert.Single(result.Value.Items);
+    }
+
+    [Fact]
     public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsQueryHandler(
             new CreatingMealRepository(),
@@ -613,6 +684,61 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(DateTimeKind.Utc, repository.LastDateTo!.Value.Kind);
     }
 
+    [Fact]
+    public async Task GetConsumptionsOverviewQueryHandler_ReturnsFavoritePreviewAndFavoriteFlags() {
+        var user = User.Create("overview-consumptions@example.com", "hash");
+        var breakfast = Meal.Create(user.Id, new DateTime(2026, 3, 26, 8, 0, 0, DateTimeKind.Utc), MealType.Breakfast);
+        breakfast.ApplyNutrition(new MealNutritionUpdate(250, 12, 8, 24, 3, 0, true));
+
+        var dinner = Meal.Create(user.Id, new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc), MealType.Dinner);
+        dinner.ApplyNutrition(new MealNutritionUpdate(640, 40, 24, 52, 6, 0, true));
+
+        var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Fav dinner");
+        SetFavoriteMealNavigation(favorite, dinner);
+
+        var repository = new RecordingMealPageRepository([breakfast, dinner], totalItems: 2);
+        var handler = new GetConsumptionsOverviewQueryHandler(
+            repository,
+            new StubUserRepository(user),
+            new StubFavoriteMealRepository([favorite]));
+
+        var result = await handler.Handle(
+            new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, null, null, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.AllConsumptions.Data.Count);
+        Assert.Single(result.Value.FavoriteItems);
+        Assert.Equal(1, result.Value.FavoriteTotalCount);
+        Assert.True(result.Value.AllConsumptions.Data.Single(x => x.Id == dinner.Id.Value).IsFavorite);
+        Assert.Equal(favorite.Id.Value, result.Value.AllConsumptions.Data.Single(x => x.Id == dinner.Id.Value).FavoriteMealId);
+    }
+
+    [Fact]
+    public async Task RepeatMealCommandHandler_WithExistingMeal_CopiesItemsAndAppliesNutrition() {
+        var user = User.Create("repeat-meal@example.com", "hash");
+        var sourceMeal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        sourceMeal.AddProduct(ProductId.New(), 200);
+        sourceMeal.AddRecipe(RecipeId.New(), 1);
+
+        var repository = new SingleMealRepository(sourceMeal);
+        var handler = new RepeatMealCommandHandler(
+            repository,
+            new FixedMealNutritionService(new MealNutritionSummary(510, 33, 18, 47, 5, 0)),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.LastAddedMeal);
+        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), repository.LastAddedMeal.Date);
+        Assert.Equal(MealType.Dinner, repository.LastAddedMeal.MealType);
+        Assert.Equal(2, repository.LastAddedMeal.Items.Count);
+        Assert.Equal(510, repository.LastAddedMeal.TotalCalories);
+    }
+
     private static DateTime NormalizeUtcDate(DateTime value) {
         var utc = value.Kind switch {
             DateTimeKind.Utc => value,
@@ -624,8 +750,12 @@ public class ConsumptionsFeatureTests {
 
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {
         public bool UpdateCalled { get; private set; }
+        public Meal? LastAddedMeal { get; private set; }
 
-        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
+            LastAddedMeal = meal;
+            return Task.FromResult(meal);
+        }
 
         public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
             UpdateCalled = true;
@@ -640,7 +770,12 @@ public class ConsumptionsFeatureTests {
             bool includeItems = false,
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<Meal?>(id == meal.Id && userId == meal.UserId ? meal : null);
+            Task.FromResult<Meal?>(
+                LastAddedMeal is not null && LastAddedMeal.Id == id && LastAddedMeal.UserId == userId
+                    ? LastAddedMeal
+                    : id == meal.Id && userId == meal.UserId
+                        ? meal
+                        : null);
 
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -670,10 +805,10 @@ public class ConsumptionsFeatureTests {
     }
 
     private sealed class CreatingMealRepository : IMealRepository {
-        private Meal? _storedMeal;
+        public Meal? StoredMeal { get; private set; }
 
         public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
-            _storedMeal = meal;
+            StoredMeal = meal;
             return Task.FromResult(meal);
         }
 
@@ -687,7 +822,7 @@ public class ConsumptionsFeatureTests {
             bool includeItems = false,
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<Meal?>(_storedMeal is not null && _storedMeal.Id == id && _storedMeal.UserId == userId ? _storedMeal : null);
+            Task.FromResult<Meal?>(StoredMeal is not null && StoredMeal.Id == id && StoredMeal.UserId == userId ? StoredMeal : null);
 
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -716,7 +851,10 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    private sealed class RecordingMealPageRepository : IMealRepository {
+    private sealed class RecordingMealPageRepository(
+        IReadOnlyList<Meal>? items = null,
+        int totalItems = 0) : IMealRepository {
+        private readonly IReadOnlyList<Meal> _items = items ?? [];
         public DateTime? LastDateFrom { get; private set; }
         public DateTime? LastDateTo { get; private set; }
 
@@ -742,7 +880,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) {
             LastDateFrom = dateFrom;
             LastDateTo = dateTo;
-            return Task.FromResult(((IReadOnlyList<Meal>)[], 0));
+            return Task.FromResult((_items, totalItems));
         }
 
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
@@ -788,12 +926,27 @@ public class ConsumptionsFeatureTests {
             Task.FromResult(Result.Success(new MealNutritionSummary(0, 0, 0, 0, 0, 0)));
     }
 
+    private sealed class FixedMealNutritionService(MealNutritionSummary nutritionSummary) : IMealNutritionService {
+        public Task<Result<MealNutritionSummary>> CalculateAsync(
+            Meal meal,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Result.Success(nutritionSummary));
+    }
+
     private sealed class RecordingRecentItemRepository : IRecentItemRepository {
+        public IReadOnlyList<ProductId> LastProductIds { get; private set; } = [];
+        public IReadOnlyList<RecipeId> LastRecipeIds { get; private set; } = [];
+
         public Task RegisterUsageAsync(
             UserId userId,
             IReadOnlyCollection<ProductId> productIds,
             IReadOnlyCollection<RecipeId> recipeIds,
-            CancellationToken cancellationToken = default) => Task.CompletedTask;
+            CancellationToken cancellationToken = default) {
+            LastProductIds = productIds.ToList();
+            LastRecipeIds = recipeIds.ToList();
+            return Task.CompletedTask;
+        }
 
         public Task<IReadOnlyList<RecentProductUsage>> GetRecentProductsAsync(
             UserId userId,
@@ -856,18 +1009,30 @@ public class ConsumptionsFeatureTests {
     }
 
     private sealed class StubFavoriteMealRepository : IFavoriteMealRepository {
+        private readonly IReadOnlyList<FavoriteMeal> _favorites;
+
+        public StubFavoriteMealRepository(params FavoriteMeal[] favorites) {
+            _favorites = favorites;
+        }
+
         public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FavoriteMeal>>([]);
+            Task.FromResult(_favorites);
         public Task<FavoriteMeal?> GetByIdAsync(FavoriteMealId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<FavoriteMeal?>(null);
         public Task<FavoriteMeal?> GetByMealIdAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<FavoriteMeal?>(null);
+            Task.FromResult(_favorites.FirstOrDefault(x => x.MealId == mealId));
         public Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
             UserId userId,
             IReadOnlyCollection<MealId> mealIds,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<MealId, FavoriteMeal>>(new Dictionary<MealId, FavoriteMeal>());
+            Task.FromResult<IReadOnlyDictionary<MealId, FavoriteMeal>>(_favorites.Where(x => mealIds.Contains(x.MealId)).ToDictionary(x => x.MealId));
+    }
+
+    private static void SetFavoriteMealNavigation(FavoriteMeal favorite, Meal meal) {
+        typeof(FavoriteMeal)
+            .GetProperty(nameof(FavoriteMeal.Meal))!
+            .SetValue(favorite, meal);
     }
 }

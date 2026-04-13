@@ -1,3 +1,6 @@
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.FavoriteProducts.Models;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Presentation.Api.Features.Products.Mappings;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 
@@ -116,5 +119,105 @@ public sealed class ProductHttpMappingsTests {
         Assert.Equal(request.FiberPerBase, command.FiberPerBase);
         Assert.Equal(request.AlcoholPerBase, command.AlcoholPerBase);
         Assert.Equal(request.Visibility, command.Visibility);
+    }
+
+    [Fact]
+    public void ProductModel_ToHttpResponse_MapsFavoriteFields() {
+        var favoriteProductId = Guid.NewGuid();
+        var model = new ProductModel(
+            Guid.NewGuid(),
+            "4601234567890",
+            "Greek Yogurt",
+            "MilkCo",
+            "Food",
+            "Dairy",
+            "High protein yogurt",
+            "Owner note",
+            "https://cdn.example/yogurt.png",
+            null,
+            "G",
+            100,
+            150,
+            73,
+            9.5,
+            2.1,
+            3.8,
+            0,
+            0,
+            12,
+            "Private",
+            DateTime.UtcNow,
+            true,
+            88,
+            "green",
+            123456,
+            true,
+            favoriteProductId);
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal(model.Id, response.Id);
+        Assert.True(response.IsFavorite);
+        Assert.Equal(favoriteProductId, response.FavoriteProductId);
+        Assert.Equal(model.QualityScore, response.QualityScore);
+        Assert.Equal(model.QualityGrade, response.QualityGrade);
+    }
+
+    [Fact]
+    public void ProductOverviewModel_ToHttpResponse_MapsNestedCollections() {
+        var product = new ProductModel(
+            Guid.NewGuid(),
+            null,
+            "Protein Bar",
+            null,
+            "Food",
+            null,
+            null,
+            null,
+            null,
+            null,
+            "G",
+            100,
+            60,
+            380,
+            30,
+            10,
+            40,
+            5,
+            0,
+            4,
+            "Private",
+            DateTime.UtcNow,
+            true,
+            64,
+            "yellow",
+            null,
+            false,
+            null);
+        var favorite = new FavoriteProductModel(
+            Guid.NewGuid(),
+            product.Id,
+            "My bar",
+            DateTime.UtcNow,
+            product.Name,
+            product.Brand,
+            product.ImageUrl,
+            product.CaloriesPerBase,
+            product.BaseUnit,
+            product.DefaultPortionAmount);
+        var overview = new ProductOverviewModel(
+            [product],
+            new PagedResponse<ProductModel>([product], 1, 10, 1, 1),
+            [favorite],
+            1);
+
+        var response = overview.ToHttpResponse();
+
+        Assert.Single(response.RecentItems);
+        Assert.Single(response.AllProducts.Data);
+        Assert.Single(response.FavoriteItems);
+        Assert.Equal(1, response.FavoriteTotalCount);
+        Assert.Equal(product.Id, response.AllProducts.Data[0].Id);
+        Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
     }
 }

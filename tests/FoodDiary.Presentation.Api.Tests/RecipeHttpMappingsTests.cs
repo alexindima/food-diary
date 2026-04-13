@@ -1,3 +1,6 @@
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.FavoriteRecipes.Models;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 
@@ -137,5 +140,141 @@ public sealed class RecipeHttpMappingsTests {
         Assert.Equal(request.ManualFiber, command.ManualFiber);
         Assert.Equal(request.ManualAlcohol, command.ManualAlcohol);
         Assert.Null(command.Steps);
+    }
+
+    [Fact]
+    public void RecipeModel_ToHttpResponse_MapsFavoriteFieldsAndSteps() {
+        var favoriteRecipeId = Guid.NewGuid();
+        var stepId = Guid.NewGuid();
+        var ingredientId = Guid.NewGuid();
+        var model = new RecipeModel(
+            Guid.NewGuid(),
+            "Chicken Soup",
+            "Rich broth",
+            "Owner note",
+            "Lunch",
+            "https://cdn.example/soup.png",
+            null,
+            15,
+            30,
+            3,
+            320,
+            24,
+            12,
+            28,
+            4,
+            0,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "Private",
+            7,
+            DateTime.UtcNow,
+            true,
+            85,
+            "green",
+            [
+                new RecipeStepModel(
+                    stepId,
+                    1,
+                    "Prep",
+                    "Boil water",
+                    "https://cdn.example/step.png",
+                    null,
+                    [
+                        new RecipeIngredientModel(
+                            ingredientId,
+                            200,
+                            Guid.NewGuid(),
+                            "Chicken",
+                            "G",
+                            100,
+                            165,
+                            31,
+                            3.6,
+                            0,
+                            0,
+                            0,
+                            null,
+                            null)
+                    ])
+            ],
+            true,
+            favoriteRecipeId);
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal(model.Id, response.Id);
+        Assert.True(response.IsFavorite);
+        Assert.Equal(favoriteRecipeId, response.FavoriteRecipeId);
+        Assert.Equal(model.QualityScore, response.QualityScore);
+        Assert.Single(response.Steps);
+        Assert.Single(response.Steps[0].Ingredients);
+    }
+
+    [Fact]
+    public void RecipeOverviewModel_ToHttpResponse_MapsNestedCollections() {
+        var recipe = new RecipeModel(
+            Guid.NewGuid(),
+            "Protein Pancakes",
+            null,
+            null,
+            "Breakfast",
+            null,
+            null,
+            10,
+            15,
+            2,
+            430,
+            30,
+            12,
+            40,
+            5,
+            0,
+            false,
+            430,
+            30,
+            12,
+            40,
+            5,
+            0,
+            "Private",
+            4,
+            DateTime.UtcNow,
+            false,
+            68,
+            "yellow",
+            [],
+            false,
+            null);
+        var favorite = new FavoriteRecipeModel(
+            Guid.NewGuid(),
+            recipe.Id,
+            "Morning pancakes",
+            DateTime.UtcNow,
+            recipe.Name,
+            recipe.ImageUrl,
+            recipe.TotalCalories,
+            recipe.Servings,
+            25,
+            3);
+        var overview = new RecipeOverviewModel(
+            [recipe],
+            new PagedResponse<RecipeModel>([recipe], 1, 10, 1, 1),
+            [favorite],
+            1);
+
+        var response = overview.ToHttpResponse();
+
+        Assert.Single(response.RecentItems);
+        Assert.Single(response.AllRecipes.Data);
+        Assert.Single(response.FavoriteItems);
+        Assert.Equal(1, response.FavoriteTotalCount);
+        Assert.Equal(recipe.Id, response.AllRecipes.Data[0].Id);
+        Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
     }
 }

@@ -1,4 +1,6 @@
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.FavoriteMeals.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 
@@ -220,5 +222,99 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.False(response.IsNutritionAutoCalculated);
         Assert.Equal(500, response.ManualCalories);
         Assert.Equal(30, response.ManualProteins);
+    }
+
+    [Fact]
+    public void ConsumptionModel_ToHttpResponse_MapsFavoriteFields() {
+        var favoriteMealId = Guid.NewGuid();
+        var model = new ConsumptionModel(
+            Guid.NewGuid(),
+            DateTime.UtcNow,
+            "Dinner",
+            "Comment",
+            null,
+            null,
+            500,
+            30,
+            20,
+            60,
+            5,
+            0,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            3,
+            7,
+            70,
+            "green",
+            true,
+            favoriteMealId,
+            [],
+            []);
+
+        var response = model.ToHttpResponse();
+
+        Assert.True(response.IsFavorite);
+        Assert.Equal(favoriteMealId, response.FavoriteMealId);
+    }
+
+    [Fact]
+    public void ConsumptionOverviewModel_ToHttpResponse_MapsNestedCollections() {
+        var consumption = new ConsumptionModel(
+            Guid.NewGuid(),
+            DateTime.UtcNow,
+            "Breakfast",
+            null,
+            null,
+            null,
+            350,
+            20,
+            12,
+            30,
+            4,
+            0,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            2,
+            6,
+            66,
+            "yellow",
+            false,
+            null,
+            [],
+            []);
+        var favorite = new FavoriteMealModel(
+            Guid.NewGuid(),
+            consumption.Id,
+            "Morning meal",
+            DateTime.UtcNow,
+            consumption.Date,
+            consumption.MealType,
+            consumption.TotalCalories,
+            consumption.TotalProteins,
+            consumption.TotalFats,
+            consumption.TotalCarbs,
+            1);
+        var overview = new ConsumptionOverviewModel(
+            new PagedResponse<ConsumptionModel>([consumption], 1, 10, 1, 1),
+            [favorite],
+            1);
+
+        var response = overview.ToHttpResponse();
+
+        Assert.Single(response.AllConsumptions.Data);
+        Assert.Single(response.FavoriteItems);
+        Assert.Equal(1, response.FavoriteTotalCount);
+        Assert.Equal(consumption.Id, response.AllConsumptions.Data[0].Id);
+        Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
     }
 }
