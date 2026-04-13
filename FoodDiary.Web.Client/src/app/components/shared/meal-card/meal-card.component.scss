@@ -31,15 +31,13 @@ fd-media-card.meal-card {
 
 .meal-card__content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
-    gap: 10px 16px;
+    gap: 10px;
     min-width: 0;
 }
 
 .meal-card__title-block {
-    grid-column: 1;
-    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -169,33 +167,46 @@ fd-media-card.meal-card {
 }
 
 .meal-card__calories {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: clamp(52px, 7vw, 80px);
     font-weight: 800;
     color: variables.$color-text-main;
     white-space: nowrap;
     flex-shrink: 0;
     align-self: center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 50%;
+        width: 2px;
+        height: 82px;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(148, 163, 184, 0), rgba(148, 163, 184, 0.5), rgba(148, 163, 184, 0));
+        pointer-events: none;
+    }
 }
 
 .meal-card__calories-value {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     line-height: 1;
 }
 
 .meal-card__calories-unit {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: variables.$color-text-additional;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.04em;
 }
 
 .meal-card__nutrients {
-    grid-column: 1;
-    grid-row: 2;
     container-type: inline-size;
     width: 100%;
     display: flex;
@@ -209,7 +220,7 @@ fd-media-card.meal-card {
     }
 
     .meal-card__content {
-        gap: 6px 8px;
+        gap: 8px;
         align-items: center;
         justify-items: stretch;
     }
@@ -258,9 +269,17 @@ fd-media-card.meal-card {
     }
 
     .meal-card__calories {
+        position: static;
+        flex-direction: row;
         justify-self: end;
+        align-items: baseline;
         justify-content: flex-end;
         gap: 4px;
+        min-width: 0;
+
+        &::before {
+            display: none;
+        }
     }
 
     .meal-card__calories-value {
