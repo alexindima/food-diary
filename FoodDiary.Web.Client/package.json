@@ -62,7 +62,7 @@
     "@emnapi/core": "^1.9.2",
     "@emnapi/runtime": "^1.9.1",
     "@emnapi/wasi-threads": "^1.2.0",
-    "@storybook/angular": "^10.3.4",
+    "@storybook/angular": "^10.3.5",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
     "angular-eslint": "^21.3.1",
