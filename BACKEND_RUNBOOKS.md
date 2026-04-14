@@ -19,6 +19,11 @@ Use this baseline before applying any recovery step:
 - runtime env file copied during deploy: `/opt/fooddiary/.env`
 - container images pulled from `ghcr.io/alexindima/food-diary/*`
 - database service inside compose network: `postgres:5432`
+- observability stack currently runs on the host through `systemd`, not inside the app compose project:
+  - `grafana-server.service`
+  - `loki.service`
+  - `promtail.service`
+- repository-tracked promtail config baseline: `infra/observability/promtail-config.yaml`
 - public static directories:
   - `/var/www/fooddiary.club`
   - `/var/www/admin.fooddiary.club`
@@ -70,6 +75,9 @@ Run these checks after any production or staging deploy:
    - commit SHA
    - commit title
    - failing step if the workflow failed
+8. Confirm Loki still receives container logs after the deploy:
+   - `journalctl -u promtail -n 50 --no-pager`
+   - `curl -sG "http://localhost:3100/loki/api/v1/label/container/values"`
 
 ## General Incident Rules
 
@@ -466,6 +474,8 @@ Recovery:
   restore the collector or switch to the valid endpoint.
 - credential/config issue:
   restore telemetry settings and restart the host if needed.
+- container logs missing after Docker deploy changes:
+  verify `promtail` is scraping Docker `json-file` logs, not only `systemd journal`.
 - noisy retry loop:
   reduce exporter pressure if it risks affecting request handling.
 
@@ -475,6 +485,53 @@ Validation after recovery:
 - backend request latency and error rate stay normal during recovery
 - at least one auth flow, one AI flow, and one cleanup job metric appears again in the backend dashboard
 - output-cache hit/miss events appear again for cache-enabled routes after representative traffic
+
+## Loki Or Docker Log Ingestion Loss
+
+Symptoms:
+
+- Grafana Explore can query Loki, but app container logs do not appear
+- `docker logs <container>` shows fresh lines, while Loki queries stay empty
+- observability stack is healthy, but only host or `systemd` logs are visible
+
+Immediate actions:
+
+1. Confirm the issue is limited to log ingestion and not a broader app outage.
+2. Do not restart application containers first if `docker logs` already shows fresh output.
+
+Diagnosis:
+
+- Confirm the host observability services are running:
+  - `systemctl status grafana-server loki promtail --no-pager`
+- Confirm Docker is still using the default JSON log driver for the app containers:
+  - `docker inspect fooddiary-api-1 --format '{{json .HostConfig.LogConfig}}'`
+- Confirm Docker log files exist on disk:
+  - `docker inspect fooddiary-api-1 --format '{{.LogPath}}'`
+- Inspect the current promtail config:
+  - `sed -n '1,240p' /opt/promtail/promtail-config.yaml`
+- If the config only contains `job_name: journal`, Docker logs are not being scraped.
+- Check promtail service logs for Docker target discovery or Loki ingestion errors:
+  - `journalctl -u promtail -n 100 --no-pager`
+- Query Loki for discovered container labels:
+  - `curl -sG "http://localhost:3100/loki/api/v1/label/container/values"`
+
+Recovery:
+
+- Restore the repository baseline config:
+  - copy `infra/observability/promtail-config.yaml` to `/opt/promtail/promtail-config.yaml`
+- Validate syntax before restart:
+  - `/opt/promtail/promtail-linux-amd64 -config.file=/opt/promtail/promtail-config.yaml -check-syntax`
+- Restart promtail:
+  - `systemctl restart promtail`
+- Re-check service logs:
+  - `journalctl -u promtail -n 50 --no-pager`
+- If old Docker log files trigger `timestamp too old` warnings from Loki, treat that as historical backfill loss, not necessarily a live-ingestion failure.
+
+Validation after recovery:
+
+- Loki returns container labels such as `fooddiary-api-1`
+- Grafana Explore shows fresh entries for `{job="docker"}` or a specific `container=...`
+- `journalctl -u promtail` shows added Docker targets and no ongoing fatal push failures
 
 ## Cleanup Job Incident
 

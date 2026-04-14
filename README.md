@@ -106,6 +106,7 @@ Backend work should follow these repository documents:
 - CI runs .NET validation and Telegram failure notifications.
 - Deploy is performed through GitHub Actions.
 - Deploy copies `docker-compose.yml` to `/opt/fooddiary`, uses `/etc/fooddiary/fooddiary.env` as the server env source, runs migrations through `db-init`, starts `api` and `telegram-bot`, and publishes client static files from the `client` image.
+- Host-level observability configuration such as the current `promtail` baseline lives in `infra/observability/`.
 - Backend and deploy recovery steps are documented in `BACKEND_RUNBOOKS.md`.
 - PR review discipline now expects the security/release checklist from `BACKEND_SECURITY_HARDENING.md` to be reflected in the PR template for security-relevant changes.
 
