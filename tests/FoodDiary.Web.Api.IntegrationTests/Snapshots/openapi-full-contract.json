@@ -576,6 +576,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/consumptions/overview",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/consumptions/{id}",
       "Operations": [
         {
@@ -1743,7 +1758,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/products/recent",
+      "Path": "/api/v{version}/products/overview",
       "Operations": [
         {
           "Method": "get",
@@ -1758,7 +1773,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/products/overview",
+      "Path": "/api/v{version}/products/recent",
       "Operations": [
         {
           "Method": "get",
@@ -1865,7 +1880,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/recipes/recent",
+      "Path": "/api/v{version}/recipes/overview",
       "Operations": [
         {
           "Method": "get",
@@ -1880,7 +1895,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/recipes/overview",
+      "Path": "/api/v{version}/recipes/recent",
       "Operations": [
         {
           "Method": "get",
