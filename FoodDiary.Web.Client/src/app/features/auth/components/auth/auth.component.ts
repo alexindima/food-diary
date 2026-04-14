@@ -80,6 +80,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
     public registerForm: FormGroup<RegisterFormGroup>;
     public passwordResetForm: FormGroup<PasswordResetFormGroup>;
     public globalError = signal<string | null>(null);
+    public isSubmitting = signal<boolean>(false);
     public googleReady = signal<boolean>(false);
     public showRestoreAction = signal<boolean>(false);
     public isRestoring = signal<boolean>(false);
@@ -178,18 +179,21 @@ export class AuthComponent implements OnInit, AfterViewInit {
     }
 
     public async onLoginSubmit(): Promise<void> {
-        if (!this.loginForm.valid) {
+        if (!this.loginForm.valid || this.isSubmitting()) {
             return;
         }
 
         const loginRequest = new LoginRequest(this.loginForm.value);
+        this.isSubmitting.set(true);
 
         this.authService.login(loginRequest).subscribe({
             next: () => {
+                this.isSubmitting.set(false);
                 this.navigationService.navigateToReturnUrl(this.returnUrl);
                 this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
+                this.isSubmitting.set(false);
                 this.handleLoginError(error.error?.error);
             },
         });

@@ -85,8 +85,8 @@
                     </button>
 
                     <div class="auth__actions">
-                        <fd-ui-button type="submit" variant="primary" [disabled]="loginForm.invalid" [fullWidth]="true">
-                            {{ 'AUTH.LOGIN.LOGIN' | translate }}
+                        <fd-ui-button type="submit" variant="primary" [disabled]="loginForm.invalid || isSubmitting()" [fullWidth]="true">
+                            {{ (isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN') | translate }}
                         </fd-ui-button>
                         <fd-ui-form-error [error]="globalError()" />
                         @if (showRestoreAction()) {
@@ -94,7 +94,7 @@
                                 type="button"
                                 variant="secondary"
                                 fill="outline"
-                                [disabled]="loginForm.invalid || isRestoring()"
+                                [disabled]="loginForm.invalid || isRestoring() || isSubmitting()"
                                 [fullWidth]="true"
                                 (click)="onRestoreSubmit()"
                             >
