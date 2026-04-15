@@ -84,4 +84,16 @@
   <data name="Achievement_Body" xml:space="preserve">
     <value>Вы сохранили свою серию. Загляните посмотреть новый бейдж.</value>
   </data>
+  <data name="DietologistInvitationAccepted_Title" xml:space="preserve">
+    <value>Приглашение диетологу принято</value>
+  </data>
+  <data name="DietologistInvitationAccepted_Body" xml:space="preserve">
+    <value>{0} принял(а) ваше приглашение и теперь видит данные, которые вы открыли.</value>
+  </data>
+  <data name="DietologistInvitationDeclined_Title" xml:space="preserve">
+    <value>Приглашение диетологу отклонено</value>
+  </data>
+  <data name="DietologistInvitationDeclined_Body" xml:space="preserve">
+    <value>{0} отклонил(а) ваше приглашение. Вы можете отправить новое приглашение в любое время.</value>
+  </data>
 </root>

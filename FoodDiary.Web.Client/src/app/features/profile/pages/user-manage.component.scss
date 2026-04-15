@@ -466,6 +466,7 @@
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
+        flex-wrap: wrap;
         gap: 16px;
         padding: 16px 18px;
         border-radius: 18px;
@@ -518,6 +519,11 @@
 
     &__dietologist-email {
         max-width: 460px;
+
+        &--summary {
+            max-width: 520px;
+            padding-top: 8px;
+        }
     }
 
     &__dietologist-actions {
@@ -538,6 +544,14 @@
             border-color: rgba(148, 163, 184, 0.28);
             box-shadow: none;
         }
+    }
+
+    &__dietologist-summary-form {
+        display: grid;
+        grid-template-columns: minmax(260px, 1fr) auto;
+        gap: 16px;
+        align-items: end;
+        width: 100%;
     }
 
     &__dietologist-permission-list {
@@ -650,6 +664,10 @@
         &__dietologist-summary {
             flex-direction: column;
             align-items: stretch;
+        }
+
+        &__dietologist-summary-form {
+            grid-template-columns: 1fr;
         }
 
         &__dietologist-summary-actions {

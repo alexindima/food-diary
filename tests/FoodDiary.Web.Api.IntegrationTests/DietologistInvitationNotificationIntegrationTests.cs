@@ -60,6 +60,50 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.True(readNotification.IsRead);
     }
 
+    [Fact]
+    public async Task AcceptCurrentUser_CreatesClientNotification() {
+        var clientUser = await CreateAuthenticatedClientAsync("client");
+        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+
+        await InviteDietologistAsync(clientUser.Client, dietologistUser.Email);
+        var relationship = await GetRelationshipAsync(clientUser.Client);
+
+        var acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
+            $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user",
+            new { });
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
+
+        var notifications = await GetNotificationsAsync(clientUser.Client);
+        var notification = Assert.Single(notifications, x => x.Type == "DietologistInvitationAccepted");
+        Assert.Equal("DietologistInvitationAccepted", notification.Type);
+        Assert.Equal(relationship.InvitationId.ToString(), notification.ReferenceId);
+        Assert.Equal("/profile", notification.TargetUrl);
+        Assert.False(notification.IsRead);
+        Assert.False(string.IsNullOrWhiteSpace(notification.Title));
+    }
+
+    [Fact]
+    public async Task DeclineCurrentUser_CreatesClientNotification() {
+        var clientUser = await CreateAuthenticatedClientAsync("client");
+        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+
+        await InviteDietologistAsync(clientUser.Client, dietologistUser.Email);
+        var relationship = await GetRelationshipAsync(clientUser.Client);
+
+        var declineResponse = await dietologistUser.Client.PostAsJsonAsync(
+            $"/api/v1/dietologist/invitations/{relationship.InvitationId}/decline-current-user",
+            new { });
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, declineResponse);
+
+        var notifications = await GetNotificationsAsync(clientUser.Client);
+        var notification = Assert.Single(notifications, x => x.Type == "DietologistInvitationDeclined");
+        Assert.Equal("DietologistInvitationDeclined", notification.Type);
+        Assert.Equal(relationship.InvitationId.ToString(), notification.ReferenceId);
+        Assert.Equal("/profile", notification.TargetUrl);
+        Assert.False(notification.IsRead);
+        Assert.False(string.IsNullOrWhiteSpace(notification.Title));
+    }
+
     private async Task InviteDietologistAsync(HttpClient client, string dietologistEmail) {
         var inviteResponse = await client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
@@ -75,6 +119,14 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions);
         Assert.NotNull(notifications);
         return notifications;
+    }
+
+    private async Task<DietologistRelationshipPayload> GetRelationshipAsync(HttpClient client) {
+        var relationshipResponse = await client.GetAsync("/api/v1/dietologist/relationship");
+        await AssertStatusCodeAsync(HttpStatusCode.OK, relationshipResponse);
+        var relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
+        Assert.NotNull(relationship);
+        return relationship;
     }
 
     private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
@@ -114,4 +166,16 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         string? ReferenceId,
         bool IsRead,
         DateTime CreatedAtUtc);
+
+    private sealed record DietologistRelationshipPayload(
+        Guid InvitationId,
+        string Status,
+        string Email,
+        string? FirstName,
+        string? LastName,
+        Guid? DietologistUserId,
+        object Permissions,
+        DateTime CreatedAtUtc,
+        DateTime ExpiresAtUtc,
+        DateTime? AcceptedAtUtc);
 }

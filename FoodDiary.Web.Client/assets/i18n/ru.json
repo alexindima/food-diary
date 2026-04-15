@@ -1813,7 +1813,7 @@
         "DIETOLOGIST_PENDING_HINT": "Мы отправили приглашение на {{ email }}. Доступ включится после принятия.",
         "DIETOLOGIST_CONNECTED_TITLE": "Диетолог подключён",
         "DIETOLOGIST_CONNECTED_HINT": "Диетолог видит только те категории данных, которые включены ниже.",
-        "DIETOLOGIST_STATUS_PENDING": "Ожидает",
+        "DIETOLOGIST_STATUS_PENDING": "В ожидании",
         "DIETOLOGIST_STATUS_CONNECTED": "Подключён",
         "DIETOLOGIST_EMAIL": "Email диетолога",
         "DIETOLOGIST_EMAIL_PLACEHOLDER": "dietologist@example.com",

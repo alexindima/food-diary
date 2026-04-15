@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,7 +11,10 @@ namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentU
 
 public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    INotificationRepository notificationRepository,
+    INotificationPusher notificationPusher,
+    IWebPushNotificationSender webPushNotificationSender)
     : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -55,6 +59,19 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         }
 
         await invitationRepository.UpdateAsync(invitation, cancellationToken);
+        await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
+            notificationRepository,
+            notificationPusher,
+            webPushNotificationSender,
+            invitation.ClientUserId,
+            ResolveDietologistDisplayName(user),
+            invitation.Id.Value.ToString(),
+            cancellationToken);
         return Result.Success();
+    }
+
+    private static string ResolveDietologistDisplayName(FoodDiary.Domain.Entities.Users.User user) {
+        var fullName = $"{user.FirstName} {user.LastName}".Trim();
+        return string.IsNullOrWhiteSpace(fullName) ? user.Email : fullName;
     }
 }

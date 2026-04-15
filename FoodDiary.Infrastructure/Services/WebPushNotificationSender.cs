@@ -179,6 +179,8 @@ public sealed class WebPushNotificationSender(
             NotificationTypes.FastingWindowStarted => user.FastingPushNotificationsEnabled,
             NotificationTypes.FastingCheckInReminder => user.FastingPushNotificationsEnabled,
             NotificationTypes.DietologistInvitationReceived => user.SocialPushNotificationsEnabled,
+            NotificationTypes.DietologistInvitationAccepted => user.SocialPushNotificationsEnabled,
+            NotificationTypes.DietologistInvitationDeclined => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewRecommendation => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewComment => user.SocialPushNotificationsEnabled,
             _ => true

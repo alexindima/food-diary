@@ -30,6 +30,8 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
         return type switch {
             NotificationTypes.NewRecommendation => RenderNewRecommendation(payloadJson, locale),
             NotificationTypes.DietologistInvitationReceived => RenderDietologistInvitationReceived(payloadJson, locale),
+            NotificationTypes.DietologistInvitationAccepted => RenderDietologistInvitationDecision(NotificationTypes.DietologistInvitationAccepted, payloadJson, locale),
+            NotificationTypes.DietologistInvitationDeclined => RenderDietologistInvitationDecision(NotificationTypes.DietologistInvitationDeclined, payloadJson, locale),
             _ => Render(type, locale)
         };
     }
@@ -78,5 +80,14 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
             : payload.ClientName;
 
         return Render(NotificationTypes.DietologistInvitationReceived, locale, clientName);
+    }
+
+    private NotificationText RenderDietologistInvitationDecision(string type, string payloadJson, string? locale) {
+        var payload = NotificationPayloadSerializer.Deserialize<DietologistInvitationDecisionNotificationPayload>(payloadJson);
+        var dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
+            ? "Your dietologist"
+            : payload.DietologistName;
+
+        return Render(type, locale, dietologistName);
     }
 }

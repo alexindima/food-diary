@@ -5,6 +5,7 @@ using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
+using FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
 using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
@@ -86,6 +87,60 @@ public class DietologistFeatureTests {
             notificationPusher ?? new FakeNotificationPusher(),
             dateTimeProvider ?? new StubDateTimeProvider(),
             NullLogger<InviteDietologistCommandHandler>.Instance);
+
+    private static AcceptInvitationCommandHandler CreateAcceptHandler(
+        IDietologistInvitationRepository? invitationRepository = null,
+        IUserRepository? userRepository = null,
+        IPasswordHasher? passwordHasher = null,
+        INotificationRepository? notificationRepository = null,
+        INotificationPusher? notificationPusher = null,
+        IWebPushNotificationSender? webPushNotificationSender = null) =>
+        new(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            userRepository ?? new InMemoryUserRepository(),
+            passwordHasher ?? new StubPasswordHasher(),
+            notificationRepository ?? new InMemoryNotificationRepository(),
+            notificationPusher ?? new FakeNotificationPusher(),
+            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+
+    private static AcceptInvitationForCurrentUserCommandHandler CreateAcceptCurrentUserHandler(
+        IDietologistInvitationRepository? invitationRepository = null,
+        IUserRepository? userRepository = null,
+        INotificationRepository? notificationRepository = null,
+        INotificationPusher? notificationPusher = null,
+        IWebPushNotificationSender? webPushNotificationSender = null) =>
+        new(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            userRepository ?? new InMemoryUserRepository(),
+            notificationRepository ?? new InMemoryNotificationRepository(),
+            notificationPusher ?? new FakeNotificationPusher(),
+            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+
+    private static DeclineInvitationCommandHandler CreateDeclineHandler(
+        IDietologistInvitationRepository? invitationRepository = null,
+        IPasswordHasher? passwordHasher = null,
+        INotificationRepository? notificationRepository = null,
+        INotificationPusher? notificationPusher = null,
+        IWebPushNotificationSender? webPushNotificationSender = null) =>
+        new(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            passwordHasher ?? new StubPasswordHasher(),
+            notificationRepository ?? new InMemoryNotificationRepository(),
+            notificationPusher ?? new FakeNotificationPusher(),
+            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+
+    private static DeclineInvitationForCurrentUserCommandHandler CreateDeclineCurrentUserHandler(
+        IDietologistInvitationRepository? invitationRepository = null,
+        IUserRepository? userRepository = null,
+        INotificationRepository? notificationRepository = null,
+        INotificationPusher? notificationPusher = null,
+        IWebPushNotificationSender? webPushNotificationSender = null) =>
+        new(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            userRepository ?? new InMemoryUserRepository(),
+            notificationRepository ?? new InMemoryNotificationRepository(),
+            notificationPusher ?? new FakeNotificationPusher(),
+            webPushNotificationSender ?? new FakeWebPushNotificationSender());
 
     // ── InviteDietologist ──
 
@@ -240,8 +295,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task AcceptInvitation_WithNullUserId_ReturnsFailure() {
-        var handler = new AcceptInvitationCommandHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository(), new StubPasswordHasher());
+        var handler = CreateAcceptHandler();
 
         var result = await handler.Handle(
             new AcceptInvitationCommand(Guid.NewGuid(), "token", null),
@@ -257,8 +311,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = new AcceptInvitationCommandHandler(
-            new InMemoryInvitationRepository(), userRepo, new StubPasswordHasher());
+        var handler = CreateAcceptHandler(userRepository: userRepo);
 
         var result = await handler.Handle(
             new AcceptInvitationCommand(Guid.NewGuid(), "token", dietologistId.Value),
@@ -279,8 +332,10 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new AcceptInvitationCommandHandler(
-            invRepo, userRepo, new StubPasswordHasher(verifyResult: false));
+        var handler = CreateAcceptHandler(
+            invitationRepository: invRepo,
+            userRepository: userRepo,
+            passwordHasher: new StubPasswordHasher(verifyResult: false));
 
         var result = await handler.Handle(
             new AcceptInvitationCommand(invitation.Id.Value, "wrong-token", dietologistId.Value),
@@ -303,8 +358,7 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new AcceptInvitationCommandHandler(
-            invRepo, userRepo, new StubPasswordHasher());
+        var handler = CreateAcceptHandler(invitationRepository: invRepo, userRepository: userRepo);
 
         var result = await handler.Handle(
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
@@ -326,8 +380,16 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new AcceptInvitationCommandHandler(
-            invRepo, userRepo, new StubPasswordHasher());
+        var notificationRepo = new InMemoryNotificationRepository();
+        var notificationPusher = new FakeNotificationPusher();
+        var webPushSender = new FakeWebPushNotificationSender();
+
+        var handler = CreateAcceptHandler(
+            invitationRepository: invRepo,
+            userRepository: userRepo,
+            notificationRepository: notificationRepo,
+            notificationPusher: notificationPusher,
+            webPushNotificationSender: webPushSender);
 
         var result = await handler.Handle(
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
@@ -335,6 +397,11 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
+        var notification = Assert.Single(notificationRepo.Added);
+        Assert.Equal(NotificationTypes.DietologistInvitationAccepted, notification.Type);
+        Assert.Equal(clientId, notification.UserId);
+        Assert.True(notificationPusher.PushCalled);
+        Assert.True(webPushSender.SendCalled);
     }
 
     [Fact]
@@ -350,7 +417,16 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new AcceptInvitationForCurrentUserCommandHandler(invRepo, userRepo);
+        var notificationRepo = new InMemoryNotificationRepository();
+        var notificationPusher = new FakeNotificationPusher();
+        var webPushSender = new FakeWebPushNotificationSender();
+
+        var handler = CreateAcceptCurrentUserHandler(
+            invitationRepository: invRepo,
+            userRepository: userRepo,
+            notificationRepository: notificationRepo,
+            notificationPusher: notificationPusher,
+            webPushNotificationSender: webPushSender);
 
         var result = await handler.Handle(
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
@@ -358,6 +434,9 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
+        Assert.Contains(notificationRepo.Added, x => x.Type == NotificationTypes.DietologistInvitationAccepted && x.UserId == clientId);
+        Assert.True(notificationPusher.PushCalled);
+        Assert.True(webPushSender.SendCalled);
     }
 
     [Fact]
@@ -388,8 +467,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task DeclineInvitation_WhenNotFound_ReturnsFailure() {
-        var handler = new DeclineInvitationCommandHandler(
-            new InMemoryInvitationRepository(), new StubPasswordHasher());
+        var handler = CreateDeclineHandler();
 
         var result = await handler.Handle(
             new DeclineInvitationCommand(Guid.NewGuid(), "token", null),
@@ -405,8 +483,9 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new DeclineInvitationCommandHandler(
-            invRepo, new StubPasswordHasher(verifyResult: false));
+        var handler = CreateDeclineHandler(
+            invitationRepository: invRepo,
+            passwordHasher: new StubPasswordHasher(verifyResult: false));
 
         var result = await handler.Handle(
             new DeclineInvitationCommand(invitation.Id.Value, "wrong", null),
@@ -422,8 +501,15 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new DeclineInvitationCommandHandler(
-            invRepo, new StubPasswordHasher());
+        var notificationRepo = new InMemoryNotificationRepository();
+        var notificationPusher = new FakeNotificationPusher();
+        var webPushSender = new FakeWebPushNotificationSender();
+
+        var handler = CreateDeclineHandler(
+            invitationRepository: invRepo,
+            notificationRepository: notificationRepo,
+            notificationPusher: notificationPusher,
+            webPushNotificationSender: webPushSender);
 
         var result = await handler.Handle(
             new DeclineInvitationCommand(invitation.Id.Value, "token", null),
@@ -431,6 +517,45 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DietologistInvitationStatus.Declined, invitation.Status);
+        var notification = Assert.Single(notificationRepo.Added);
+        Assert.Equal(NotificationTypes.DietologistInvitationDeclined, notification.Type);
+        Assert.Equal(clientId, notification.UserId);
+        Assert.True(notificationPusher.PushCalled);
+        Assert.True(webPushSender.SendCalled);
+    }
+
+    [Fact]
+    public async Task DeclineInvitationForCurrentUser_WithMatchingEmail_Succeeds() {
+        var dietologistId = UserId.New();
+        var user = CreateUser(dietologistId, "diet@example.com");
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+
+        var clientId = UserId.New();
+        var invitation = CreatePendingInvitation(clientId, "diet@example.com");
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var notificationRepo = new InMemoryNotificationRepository();
+        var notificationPusher = new FakeNotificationPusher();
+        var webPushSender = new FakeWebPushNotificationSender();
+
+        var handler = CreateDeclineCurrentUserHandler(
+            invitationRepository: invRepo,
+            userRepository: userRepo,
+            notificationRepository: notificationRepo,
+            notificationPusher: notificationPusher,
+            webPushNotificationSender: webPushSender);
+
+        var result = await handler.Handle(
+            new DeclineInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DietologistInvitationStatus.Declined, invitation.Status);
+        Assert.Contains(notificationRepo.Added, x => x.Type == NotificationTypes.DietologistInvitationDeclined && x.UserId == clientId);
+        Assert.True(notificationPusher.PushCalled);
+        Assert.True(webPushSender.SendCalled);
     }
 
     // ── RevokeInvitation ──
@@ -1295,6 +1420,15 @@ public class DietologistFeatureTests {
 
         public Task PushNotificationsChangedAsync(Guid userId, CancellationToken ct = default) {
             PushCalled = true;
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeWebPushNotificationSender : IWebPushNotificationSender {
+        public bool SendCalled { get; private set; }
+
+        public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
+            SendCalled = true;
             return Task.CompletedTask;
         }
     }

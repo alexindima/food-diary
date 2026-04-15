@@ -9,6 +9,8 @@ public static class NotificationTargetUrlResolver {
             NotificationTypes.EatingWindowStarted => "/fasting?intent=eating-window",
             NotificationTypes.DietologistInvitationReceived when !string.IsNullOrWhiteSpace(referenceId) =>
                 $"/dietologist-invitations/{referenceId}",
+            NotificationTypes.DietologistInvitationAccepted => "/profile",
+            NotificationTypes.DietologistInvitationDeclined => "/profile",
             _ => null
         };
     }

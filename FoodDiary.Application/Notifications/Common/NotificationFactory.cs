@@ -24,6 +24,26 @@ public static class NotificationFactory {
             NotificationPayloads.DietologistInvitationReceived(clientName),
             referenceId);
 
+    public static Notification CreateDietologistInvitationAccepted(
+        UserId userId,
+        string dietologistName,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.DietologistInvitationAccepted,
+            NotificationPayloads.DietologistInvitationDecision(dietologistName),
+            referenceId);
+
+    public static Notification CreateDietologistInvitationDeclined(
+        UserId userId,
+        string dietologistName,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.DietologistInvitationDeclined,
+            NotificationPayloads.DietologistInvitationDecision(dietologistName),
+            referenceId);
+
     public static Notification CreateNewComment(
         UserId userId,
         string? referenceId = null) =>

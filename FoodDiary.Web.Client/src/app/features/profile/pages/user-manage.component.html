@@ -498,6 +498,42 @@
                                             {{ 'USER_MANAGE.DIETOLOGIST_DISCONNECT_ACTION' | translate }}
                                         </fd-ui-button>
                                     </div>
+                                } @else {
+                                    <div class="user-manage__dietologist-summary-form">
+                                        <div class="user-manage__dietologist-email user-manage__dietologist-email--summary">
+                                            <fd-ui-input
+                                                formControlName="email"
+                                                type="email"
+                                                size="lg"
+                                                [label]="'USER_MANAGE.DIETOLOGIST_EMAIL' | translate"
+                                                [placeholder]="'USER_MANAGE.DIETOLOGIST_EMAIL_PLACEHOLDER' | translate"
+                                                [error]="getControlError(dietologistForm.controls.email)"
+                                            />
+                                        </div>
+                                        <div class="user-manage__dietologist-summary-actions">
+                                            @if (!hasDietologistRelationship()) {
+                                                <fd-ui-button
+                                                    type="button"
+                                                    icon="person_add"
+                                                    [disabled]="dietologistForm.invalid || isSavingDietologist()"
+                                                    (click)="inviteDietologist()"
+                                                >
+                                                    {{ 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION' | translate }}
+                                                </fd-ui-button>
+                                            } @else {
+                                                <fd-ui-button
+                                                    type="button"
+                                                    fill="outline"
+                                                    variant="secondary"
+                                                    icon="link_off"
+                                                    [disabled]="isSavingDietologist()"
+                                                    (click)="revokeDietologistRelationship()"
+                                                >
+                                                    {{ 'USER_MANAGE.DIETOLOGIST_CANCEL_INVITE' | translate }}
+                                                </fd-ui-button>
+                                            }
+                                        </div>
+                                    </div>
                                 }
                                 @if (hasDietologistRelationship() && !isDietologistConnected()) {
                                     <div class="user-manage__notifications-meta">
@@ -506,29 +542,15 @@
                                         </span>
                                     </div>
                                 }
+                                @if (isDietologistPending() && dietologistRelationship()?.expiresAtUtc) {
+                                    <div class="user-manage__dietologist-meta">
+                                        {{
+                                            'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES'
+                                                | translate: { date: formatLocalizedDate(dietologistRelationship()?.expiresAtUtc) }
+                                        }}
+                                    </div>
+                                }
                             </div>
-
-                            @if (!isDietologistConnected()) {
-                                <div class="user-manage__dietologist-email">
-                                    <fd-ui-input
-                                        formControlName="email"
-                                        type="email"
-                                        size="lg"
-                                        [label]="'USER_MANAGE.DIETOLOGIST_EMAIL' | translate"
-                                        [placeholder]="'USER_MANAGE.DIETOLOGIST_EMAIL_PLACEHOLDER' | translate"
-                                        [error]="getControlError(dietologistForm.controls.email)"
-                                    />
-                                </div>
-                            }
-
-                            @if (!isDietologistConnected() && dietologistRelationship()?.expiresAtUtc) {
-                                <div class="user-manage__dietologist-meta">
-                                    {{
-                                        'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES'
-                                            | translate: { date: formatLocalizedDate(dietologistRelationship()?.expiresAtUtc) }
-                                    }}
-                                </div>
-                            }
 
                             <div class="user-manage__dietologist-permissions">
                                 <div class="user-manage__dietologist-permission-list">
@@ -644,34 +666,6 @@
                                         />
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="user-manage__dietologist-actions">
-                                @if (!hasDietologistRelationship()) {
-                                    <fd-ui-button
-                                        type="button"
-                                        icon="person_add"
-                                        [disabled]="dietologistForm.invalid || isSavingDietologist()"
-                                        (click)="inviteDietologist()"
-                                    >
-                                        {{ 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION' | translate }}
-                                    </fd-ui-button>
-                                } @else if (!isDietologistConnected()) {
-                                    <fd-ui-button
-                                        type="button"
-                                        fill="outline"
-                                        variant="secondary"
-                                        icon="link_off"
-                                        [disabled]="isSavingDietologist()"
-                                        (click)="revokeDietologistRelationship()"
-                                    >
-                                        @if (isDietologistPending()) {
-                                            {{ 'USER_MANAGE.DIETOLOGIST_CANCEL_INVITE' | translate }}
-                                        } @else {
-                                            {{ 'USER_MANAGE.DIETOLOGIST_DISCONNECT_ACTION' | translate }}
-                                        }
-                                    </fd-ui-button>
-                                }
                             </div>
 
                             <fd-ui-form-error class="user-manage__error user-manage__error--dietologist" [error]="dietologistError()" />

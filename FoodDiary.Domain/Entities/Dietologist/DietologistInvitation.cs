@@ -76,6 +76,7 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
 
         Status = DietologistInvitationStatus.Declined;
         SetModified();
+        RaiseDomainEvent(new DietologistInvitationDeclinedDomainEvent(Id, ClientUserId, DietologistEmail));
     }
 
     public void Revoke() {
