@@ -83,6 +83,10 @@ export class NavigationService {
         await this.router.navigate(['/profile']);
     }
 
+    public async navigateToDietologist(): Promise<void> {
+        await this.router.navigate(['/dietologist']);
+    }
+
     public async navigateToPremiumAccess(): Promise<void> {
         await this.router.navigate(['/premium']);
     }

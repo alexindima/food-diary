@@ -41,7 +41,7 @@
 .notifications-dialog__item {
     width: 100%;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto auto 1fr;
     gap: 0.875rem;
     align-items: start;
     padding: 0.875rem 1rem;
@@ -64,6 +64,18 @@
     &.is-read {
         background: #f8fafc;
         border-color: rgba(148, 163, 184, 0.18);
+    }
+
+    &--dietologist {
+        border-color: rgba(14, 116, 144, 0.18);
+        background:
+            radial-gradient(circle at top right, rgba(125, 211, 252, 0.18), transparent 45%),
+            linear-gradient(180deg, rgba(236, 254, 255, 0.95), #ffffff);
+
+        &:hover {
+            border-color: rgba(14, 116, 144, 0.3);
+            box-shadow: 0 16px 34px rgba(8, 47, 73, 0.1);
+        }
     }
 }
 
@@ -93,6 +105,12 @@
     gap: 1rem;
 }
 
+.notifications-dialog__item-head-main {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
 .notifications-dialog__item-title {
     font-weight: 700;
     color: #0f172a;
@@ -110,6 +128,51 @@
     line-height: 1.45;
 }
 
+.notifications-dialog__item-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+
+    mat-icon {
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    &--dietologist {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(14, 165, 233, 0.08));
+        color: #0f766e;
+    }
+}
+
+.notifications-dialog__item-badge {
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(8, 145, 178, 0.12);
+    color: #0f766e;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+
+.notifications-dialog__item-cta {
+    margin-top: 0.25rem;
+    width: fit-content;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(14, 116, 144, 0.08);
+    color: #0f766e;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
 .notifications-dialog__footer {
     display: flex;
     justify-content: flex-end;
@@ -123,6 +186,18 @@
     .notifications-dialog__item-head {
         flex-direction: column;
         gap: 0.3rem;
+    }
+
+    .notifications-dialog__item {
+        grid-template-columns: auto 1fr;
+    }
+
+    .notifications-dialog__item-indicator {
+        grid-row: span 2;
+    }
+
+    .notifications-dialog__item-icon {
+        display: none;
     }
 
     .notifications-dialog__footer {

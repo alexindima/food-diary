@@ -19,19 +19,6 @@ public class DietologistController(ISender mediator) : AuthorizedController(medi
     public Task<IActionResult> Invite([FromCurrentUser] Guid userId, [FromBody] InviteDietologistHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
 
-    [HttpPost("accept")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> Accept([FromCurrentUser] Guid userId, [FromBody] AcceptInvitationHttpRequest request) =>
-        HandleNoContent(request.ToCommand(userId));
-
-    [HttpPost("decline")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> Decline([FromCurrentUser] Guid userId, [FromBody] DeclineInvitationHttpRequest request) =>
-        HandleNoContent(request.ToCommand(userId));
-
     [HttpDelete("relationship")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
@@ -49,9 +36,8 @@ public class DietologistController(ISender mediator) : AuthorizedController(medi
     public Task<IActionResult> GetMyDietologist([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToMyDietologistQuery(), static value => value?.ToHttpResponse());
 
-    [HttpGet("invitation/{invitationId:guid}")]
-    [ProducesResponseType<InvitationHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetInvitation(Guid invitationId) =>
-        HandleOk(invitationId.ToInvitationQuery(), static value => value.ToHttpResponse());
+    [HttpGet("relationship")]
+    [ProducesResponseType<DietologistRelationshipHttpResponse>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetRelationship([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToMyDietologistRelationshipQuery(), static value => value?.ToHttpResponse());
 }

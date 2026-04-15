@@ -82,4 +82,12 @@ export class NotificationsDialogComponent {
     protected hasUnreadNotifications(): boolean {
         return this.notifications().some(item => !item.isRead);
     }
+
+    protected isDietologistInvitation(notification: NotificationItem): boolean {
+        return notification.type === 'DietologistInvitationReceived';
+    }
+
+    protected getNotificationIcon(notification: NotificationItem): string {
+        return this.isDietologistInvitation(notification) ? 'medical_information' : 'notifications';
+    }
 }

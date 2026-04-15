@@ -122,6 +122,15 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
     },
     {
+        path: 'dietologist-invitations/:invitationId',
+        canActivate: [authGuard],
+        loadComponent: () =>
+            import('./features/dietologist/pages/invitation/dietologist-invitation-page.component').then(
+                m => m.DietologistInvitationPageComponent,
+            ),
+        data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
+    },
+    {
         path: 'privacy-policy',
         loadComponent: () => import('./features/public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
         data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },

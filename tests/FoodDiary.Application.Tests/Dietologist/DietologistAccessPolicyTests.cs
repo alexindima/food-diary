@@ -82,7 +82,9 @@ public class DietologistAccessPolicyTests {
             Task.FromResult(invitation);
 
         public Task<DietologistInvitation?> GetByIdAsync(
-            DietologistInvitationId id, CancellationToken cancellationToken = default) =>
+            DietologistInvitationId id,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public Task<DietologistInvitation?> GetByClientAndStatusAsync(

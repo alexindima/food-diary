@@ -5,6 +5,19 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Dietologist.Mappings;
 
 public static class DietologistMappings {
+    public static DietologistRelationshipModel ToRelationshipModel(this DietologistInvitation invitation) =>
+        new(
+            invitation.Id.Value,
+            invitation.Status.ToString(),
+            invitation.DietologistUser?.Email ?? invitation.DietologistEmail,
+            invitation.DietologistUser?.FirstName,
+            invitation.DietologistUser?.LastName,
+            invitation.DietologistUserId?.Value,
+            invitation.GetPermissions().ToModel(),
+            invitation.CreatedOnUtc,
+            invitation.ExpiresAtUtc,
+            invitation.AcceptedAtUtc);
+
     public static DietologistInfoModel ToDietologistInfoModel(this DietologistInvitation invitation) =>
         new(
             invitation.Id.Value,
@@ -31,6 +44,17 @@ public static class DietologistMappings {
             invitation.ClientUser.FirstName,
             invitation.ClientUser.LastName,
             invitation.Status.ToString(),
+            invitation.CreatedOnUtc,
+            invitation.ExpiresAtUtc);
+
+    public static DietologistInvitationForCurrentUserModel ToCurrentUserInvitationModel(this DietologistInvitation invitation) =>
+        new(
+            invitation.Id.Value,
+            invitation.ClientUserId.Value,
+            invitation.ClientUser.Email,
+            invitation.ClientUser.FirstName,
+            invitation.ClientUser.LastName,
+            invitation.IsExpired() ? "Expired" : invitation.Status.ToString(),
             invitation.CreatedOnUtc,
             invitation.ExpiresAtUtc);
 

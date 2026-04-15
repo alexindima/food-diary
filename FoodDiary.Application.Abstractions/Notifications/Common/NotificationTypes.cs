@@ -2,6 +2,7 @@ namespace FoodDiary.Application.Notifications.Common;
 
 public static class NotificationTypes {
     public const string NewRecommendation = "NewRecommendation";
+    public const string DietologistInvitationReceived = "DietologistInvitationReceived";
     public const string NewComment = "NewComment";
     public const string FastingCompleted = "FastingCompleted";
     public const string EatingWindowStarted = "EatingWindowStarted";

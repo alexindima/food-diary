@@ -427,6 +427,325 @@
                         <!-- Fasting telemetry summary moved to fasting page. -->
                     </div>
                 </fd-ui-card>
+
+                <fd-ui-card class="user-manage__card user-manage__card--dietologist">
+                    <div class="user-manage__card-header">
+                        <div class="user-manage__card-icon user-manage__card-icon--dietologist"></div>
+                        <div class="user-manage__card-text">
+                            <div class="user-manage__card-title">{{ 'USER_MANAGE.DIETOLOGIST_SECTION' | translate }}</div>
+                            <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.DIETOLOGIST_DESC' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="user-manage__dietologist" [formGroup]="dietologistForm">
+                        @if (isLoadingDietologist()) {
+                            <div class="user-manage__dietologist-empty">
+                                {{ 'USER_MANAGE.DIETOLOGIST_LOADING' | translate }}
+                            </div>
+                        } @else {
+                            <div class="user-manage__dietologist-summary">
+                                <div class="user-manage__dietologist-copy">
+                                    <div class="user-manage__dietologist-label">
+                                        @if (isDietologistConnected()) {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_CONNECTED_TITLE' | translate }}
+                                        } @else if (isDietologistPending()) {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_PENDING_TITLE' | translate }}
+                                        } @else {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_EMPTY_TITLE' | translate }}
+                                        }
+                                    </div>
+                                    <div class="user-manage__dietologist-hint">
+                                        @if (isDietologistConnected()) {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_CONNECTED_HINT' | translate }}
+                                        } @else if (isDietologistPending()) {
+                                            {{
+                                                'USER_MANAGE.DIETOLOGIST_PENDING_HINT'
+                                                    | translate: { email: dietologistRelationship()?.email }
+                                            }}
+                                        } @else {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_EMPTY_HINT' | translate }}
+                                        }
+                                    </div>
+                                </div>
+                                @if (hasDietologistRelationship()) {
+                                    <div class="user-manage__notifications-meta">
+                                        <span class="user-manage__notifications-badge user-manage__notifications-badge--account">
+                                            @if (isDietologistConnected()) {
+                                                {{ 'USER_MANAGE.DIETOLOGIST_STATUS_CONNECTED' | translate }}
+                                            } @else {
+                                                {{ 'USER_MANAGE.DIETOLOGIST_STATUS_PENDING' | translate }}
+                                            }
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="user-manage__dietologist-email">
+                                <fd-ui-input
+                                    formControlName="email"
+                                    type="email"
+                                    size="lg"
+                                    [label]="'USER_MANAGE.DIETOLOGIST_EMAIL' | translate"
+                                    [placeholder]="'USER_MANAGE.DIETOLOGIST_EMAIL_PLACEHOLDER' | translate"
+                                    [error]="getControlError(dietologistForm.controls.email)"
+                                />
+                            </div>
+
+                            @if (dietologistRelationship()?.acceptedAtUtc) {
+                                <div class="user-manage__dietologist-meta">
+                                    {{
+                                        'USER_MANAGE.DIETOLOGIST_CONNECTED_SINCE'
+                                            | translate: { date: (dietologistRelationship()?.acceptedAtUtc | date: 'mediumDate') }
+                                    }}
+                                </div>
+                            } @else if (dietologistRelationship()?.expiresAtUtc) {
+                                <div class="user-manage__dietologist-meta">
+                                    {{
+                                        'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES'
+                                            | translate: { date: (dietologistRelationship()?.expiresAtUtc | date: 'mediumDate') }
+                                    }}
+                                </div>
+                            }
+
+                            <div class="user-manage__dietologist-permissions">
+                                <div class="user-manage__dietologist-permissions-header">
+                                    <div class="user-manage__dietologist-label">
+                                        {{ 'USER_MANAGE.DIETOLOGIST_PERMISSIONS_TITLE' | translate }}
+                                    </div>
+                                    <div class="user-manage__dietologist-hint">
+                                        {{ 'USER_MANAGE.DIETOLOGIST_PERMISSIONS_HINT' | translate }}
+                                    </div>
+                                </div>
+
+                                <div class="user-manage__dietologist-permission-list">
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate }}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="user-manage__switch"
+                                            role="switch"
+                                            [class.is-on]="dietologistForm.controls.shareMeals.value"
+                                            [class.is-disabled]="isSavingDietologist()"
+                                            [attr.aria-checked]="dietologistForm.controls.shareMeals.value"
+                                            [disabled]="isSavingDietologist()"
+                                            (click)="
+                                                dietologistForm.controls.shareMeals.setValue(!dietologistForm.controls.shareMeals.value)
+                                            "
+                                        >
+                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
+                                            <span class="user-manage__switch-label">
+                                                {{
+                                                    (dietologistForm.controls.shareMeals.value
+                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                    ) | translate
+                                                }}
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate }}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="user-manage__switch"
+                                            role="switch"
+                                            [class.is-on]="dietologistForm.controls.shareStatistics.value"
+                                            [class.is-disabled]="isSavingDietologist()"
+                                            [attr.aria-checked]="dietologistForm.controls.shareStatistics.value"
+                                            [disabled]="isSavingDietologist()"
+                                            (click)="
+                                                dietologistForm.controls.shareStatistics.setValue(
+                                                    !dietologistForm.controls.shareStatistics.value
+                                                )
+                                            "
+                                        >
+                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
+                                            <span class="user-manage__switch-label">
+                                                {{
+                                                    (dietologistForm.controls.shareStatistics.value
+                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                    ) | translate
+                                                }}
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate }}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="user-manage__switch"
+                                            role="switch"
+                                            [class.is-on]="dietologistForm.controls.shareWeight.value"
+                                            [class.is-disabled]="isSavingDietologist()"
+                                            [attr.aria-checked]="dietologistForm.controls.shareWeight.value"
+                                            [disabled]="isSavingDietologist()"
+                                            (click)="
+                                                dietologistForm.controls.shareWeight.setValue(!dietologistForm.controls.shareWeight.value)
+                                            "
+                                        >
+                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
+                                            <span class="user-manage__switch-label">
+                                                {{
+                                                    (dietologistForm.controls.shareWeight.value
+                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                    ) | translate
+                                                }}
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate }}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="user-manage__switch"
+                                            role="switch"
+                                            [class.is-on]="dietologistForm.controls.shareWaist.value"
+                                            [class.is-disabled]="isSavingDietologist()"
+                                            [attr.aria-checked]="dietologistForm.controls.shareWaist.value"
+                                            [disabled]="isSavingDietologist()"
+                                            (click)="
+                                                dietologistForm.controls.shareWaist.setValue(!dietologistForm.controls.shareWaist.value)
+                                            "
+                                        >
+                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
+                                            <span class="user-manage__switch-label">
+                                                {{
+                                                    (dietologistForm.controls.shareWaist.value
+                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                    ) | translate
+                                                }}
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate }}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="user-manage__switch"
+                                            role="switch"
+                                            [class.is-on]="dietologistForm.controls.shareGoals.value"
+                                            [class.is-disabled]="isSavingDietologist()"
+                                            [attr.aria-checked]="dietologistForm.controls.shareGoals.value"
+                                            [disabled]="isSavingDietologist()"
+                                            (click)="
+                                                dietologistForm.controls.shareGoals.setValue(!dietologistForm.controls.shareGoals.value)
+                                            "
+                                        >
+                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
+                                            <span class="user-manage__switch-label">
+                                                {{
+                                                    (dietologistForm.controls.shareGoals.value
+                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                    ) | translate
+                                                }}
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate }}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            class="user-manage__switch"
+                                            role="switch"
+                                            [class.is-on]="dietologistForm.controls.shareHydration.value"
+                                            [class.is-disabled]="isSavingDietologist()"
+                                            [attr.aria-checked]="dietologistForm.controls.shareHydration.value"
+                                            [disabled]="isSavingDietologist()"
+                                            (click)="
+                                                dietologistForm.controls.shareHydration.setValue(
+                                                    !dietologistForm.controls.shareHydration.value
+                                                )
+                                            "
+                                        >
+                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
+                                            <span class="user-manage__switch-label">
+                                                {{
+                                                    (dietologistForm.controls.shareHydration.value
+                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
+                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
+                                                    ) | translate
+                                                }}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="user-manage__dietologist-actions">
+                                @if (!hasDietologistRelationship()) {
+                                    <fd-ui-button
+                                        type="button"
+                                        icon="person_add"
+                                        [disabled]="dietologistForm.invalid || isSavingDietologist()"
+                                        (click)="inviteDietologist()"
+                                    >
+                                        {{ 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION' | translate }}
+                                    </fd-ui-button>
+                                } @else {
+                                    <fd-ui-button
+                                        type="button"
+                                        fill="outline"
+                                        variant="secondary"
+                                        icon="save"
+                                        [disabled]="isSavingDietologist()"
+                                        (click)="saveDietologistPermissions()"
+                                    >
+                                        {{ 'USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS' | translate }}
+                                    </fd-ui-button>
+                                    <fd-ui-button
+                                        type="button"
+                                        fill="outline"
+                                        variant="secondary"
+                                        icon="link_off"
+                                        [disabled]="isSavingDietologist()"
+                                        (click)="revokeDietologistRelationship()"
+                                    >
+                                        @if (isDietologistPending()) {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_CANCEL_INVITE' | translate }}
+                                        } @else {
+                                            {{ 'USER_MANAGE.DIETOLOGIST_DISCONNECT_ACTION' | translate }}
+                                        }
+                                    </fd-ui-button>
+                                }
+                            </div>
+
+                            <fd-ui-form-error class="user-manage__error user-manage__error--dietologist" [error]="dietologistError()" />
+                        }
+                    </div>
+                </fd-ui-card>
             </div>
 
             <fd-ui-card class="user-manage__card user-manage__card--privacy">

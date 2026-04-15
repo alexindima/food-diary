@@ -18,18 +18,37 @@
                         type="button"
                         class="notifications-dialog__item"
                         [class.is-read]="notification.isRead"
+                        [class.notifications-dialog__item--dietologist]="isDietologistInvitation(notification)"
                         (click)="openNotification(notification)"
                     >
                         <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
+                        <span
+                            class="notifications-dialog__item-icon"
+                            [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
+                        >
+                            <mat-icon>{{ getNotificationIcon(notification) }}</mat-icon>
+                        </span>
                         <div class="notifications-dialog__item-content">
                             <div class="notifications-dialog__item-head">
-                                <span class="notifications-dialog__item-title">{{ notification.title }}</span>
-                                <span class="notifications-dialog__item-date">
-                                    {{ notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm' }}
-                                </span>
+                                <div class="notifications-dialog__item-head-main">
+                                    @if (isDietologistInvitation(notification)) {
+                                        <span class="notifications-dialog__item-badge">
+                                            {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE' | translate }}
+                                        </span>
+                                    }
+                                    <span class="notifications-dialog__item-title">{{ notification.title }}</span>
+                                </div>
+                                <span class="notifications-dialog__item-date">{{
+                                    notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
+                                }}</span>
                             </div>
                             @if (notification.body) {
                                 <p class="notifications-dialog__item-body">{{ notification.body }}</p>
+                            }
+                            @if (isDietologistInvitation(notification)) {
+                                <div class="notifications-dialog__item-cta">
+                                    {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION' | translate }}
+                                </div>
                             }
                         </div>
                     </button>

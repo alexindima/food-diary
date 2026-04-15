@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../services/api.service';
 import { environment } from '../../../../environments/environment';
-import { ClientSummary, DietologistInfo, DietologistPermissions, InviteDietologistRequest } from '../models/dietologist.data';
+import {
+    ClientSummary,
+    DietologistInfo,
+    DietologistInvitationForCurrentUser,
+    DietologistPermissions,
+    DietologistRelationship,
+    InviteDietologistRequest,
+} from '../models/dietologist.data';
 
 @Injectable({ providedIn: 'root' })
 export class DietologistService extends ApiService {
@@ -12,12 +19,28 @@ export class DietologistService extends ApiService {
         return this.get<DietologistInfo | null>('my-dietologist');
     }
 
+    public getRelationship(): Observable<DietologistRelationship | null> {
+        return this.get<DietologistRelationship | null>('relationship');
+    }
+
+    public getInvitationForCurrentUser(invitationId: string): Observable<DietologistInvitationForCurrentUser> {
+        return this.get<DietologistInvitationForCurrentUser>(`invitations/${invitationId}/current-user`);
+    }
+
     public getMyClients(): Observable<ClientSummary[]> {
         return this.get<ClientSummary[]>('clients');
     }
 
     public invite(request: InviteDietologistRequest): Observable<void> {
         return this.post<void>('invite', request);
+    }
+
+    public acceptInvitationForCurrentUser(invitationId: string): Observable<void> {
+        return this.post<void>(`invitations/${invitationId}/accept-current-user`, {});
+    }
+
+    public declineInvitationForCurrentUser(invitationId: string): Observable<void> {
+        return this.post<void>(`invitations/${invitationId}/decline-current-user`, {});
     }
 
     public updatePermissions(permissions: DietologistPermissions): Observable<void> {

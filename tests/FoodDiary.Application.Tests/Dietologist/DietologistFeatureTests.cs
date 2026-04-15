@@ -2,6 +2,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
+using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
 using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
@@ -15,6 +16,7 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
+using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Queries.GetMyClients;
 using FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
 using FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
@@ -28,6 +30,7 @@ using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -46,11 +49,17 @@ public class DietologistFeatureTests {
 
     private static DietologistInvitation CreatePendingInvitation(
         UserId clientId, string email = "diet@example.com", string tokenHash = "hash",
-        DietologistPermissions? permissions = null) =>
-        DietologistInvitation.Create(
+        DietologistPermissions? permissions = null) {
+        var invitation = DietologistInvitation.Create(
             clientId, email, tokenHash,
             DateTime.UtcNow.AddDays(7),
             permissions ?? AllDomainPermissions);
+
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
+            .SetValue(invitation, CreateUser(clientId, "client@example.com"));
+
+        return invitation;
+    }
 
     private static DietologistInvitation CreateAcceptedInvitation(
         UserId clientId, UserId dietologistId,
@@ -60,16 +69,29 @@ public class DietologistFeatureTests {
         return invitation;
     }
 
+    private static InviteDietologistCommandHandler CreateInviteHandler(
+        IDietologistInvitationRepository? invitationRepository = null,
+        IUserRepository? userRepository = null,
+        IPasswordHasher? passwordHasher = null,
+        IDietologistEmailSender? emailSender = null,
+        INotificationRepository? notificationRepository = null,
+        INotificationPusher? notificationPusher = null,
+        IDateTimeProvider? dateTimeProvider = null) =>
+        new(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            userRepository ?? new InMemoryUserRepository(),
+            passwordHasher ?? new StubPasswordHasher(),
+            emailSender ?? new FakeEmailSender(),
+            notificationRepository ?? new InMemoryNotificationRepository(),
+            notificationPusher ?? new FakeNotificationPusher(),
+            dateTimeProvider ?? new StubDateTimeProvider(),
+            NullLogger<InviteDietologistCommandHandler>.Instance);
+
     // ── InviteDietologist ──
 
     [Fact]
     public async Task InviteDietologist_WithNullUserId_ReturnsFailure() {
-        var handler = new InviteDietologistCommandHandler(
-            new InMemoryInvitationRepository(),
-            new InMemoryUserRepository(),
-            new StubPasswordHasher(),
-            new FakeEmailSender(),
-            new StubDateTimeProvider());
+        var handler = CreateInviteHandler();
 
         var result = await handler.Handle(
             new InviteDietologistCommand(null, "diet@example.com", AllPermissions),
@@ -80,12 +102,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task InviteDietologist_WhenUserNotFound_ReturnsFailure() {
-        var handler = new InviteDietologistCommandHandler(
-            new InMemoryInvitationRepository(),
-            new InMemoryUserRepository(),
-            new StubPasswordHasher(),
-            new FakeEmailSender(),
-            new StubDateTimeProvider());
+        var handler = CreateInviteHandler();
 
         var result = await handler.Handle(
             new InviteDietologistCommand(Guid.NewGuid(), "diet@example.com", AllPermissions),
@@ -101,9 +118,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = new InviteDietologistCommandHandler(
-            new InMemoryInvitationRepository(), userRepo,
-            new StubPasswordHasher(), new FakeEmailSender(), new StubDateTimeProvider());
+        var handler = CreateInviteHandler(userRepository: userRepo);
 
         var result = await handler.Handle(
             new InviteDietologistCommand(userId.Value, "user@example.com", AllPermissions),
@@ -123,8 +138,7 @@ public class DietologistFeatureTests {
         var activeInvitation = CreateAcceptedInvitation(userId, UserId.New());
         invRepo.Seed(activeInvitation);
 
-        var handler = new InviteDietologistCommandHandler(
-            invRepo, userRepo, new StubPasswordHasher(), new FakeEmailSender(), new StubDateTimeProvider());
+        var handler = CreateInviteHandler(invitationRepository: invRepo, userRepository: userRepo);
 
         var result = await handler.Handle(
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
@@ -144,8 +158,7 @@ public class DietologistFeatureTests {
         var pending = CreatePendingInvitation(userId);
         invRepo.Seed(pending);
 
-        var handler = new InviteDietologistCommandHandler(
-            invRepo, userRepo, new StubPasswordHasher(), new FakeEmailSender(), new StubDateTimeProvider());
+        var handler = CreateInviteHandler(invitationRepository: invRepo, userRepository: userRepo);
 
         var result = await handler.Handle(
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
@@ -164,8 +177,7 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         var emailSender = new FakeEmailSender();
 
-        var handler = new InviteDietologistCommandHandler(
-            invRepo, userRepo, new StubPasswordHasher(), emailSender, new StubDateTimeProvider());
+        var handler = CreateInviteHandler(invitationRepository: invRepo, userRepository: userRepo, emailSender: emailSender);
 
         var result = await handler.Handle(
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
@@ -174,6 +186,54 @@ public class DietologistFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Single(invRepo.Added);
         Assert.True(emailSender.SentCount > 0);
+    }
+
+    [Fact]
+    public async Task InviteDietologist_WhenRegisteredDietologistExists_CreatesNotificationAndPushesUpdate() {
+        var userId = UserId.New();
+        var client = CreateUser(userId, "client@example.com");
+        var dietologist = CreateUser(UserId.New(), "diet@example.com");
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(client);
+        userRepo.Seed(dietologist);
+
+        var invitationRepo = new InMemoryInvitationRepository();
+        var notificationRepo = new InMemoryNotificationRepository();
+        var notificationPusher = new FakeNotificationPusher();
+
+        var handler = CreateInviteHandler(
+            invitationRepository: invitationRepo,
+            userRepository: userRepo,
+            notificationRepository: notificationRepo,
+            notificationPusher: notificationPusher);
+
+        var result = await handler.Handle(
+            new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(notificationRepo.Added);
+        Assert.True(notificationPusher.PushCalled);
+        Assert.Equal(dietologist.Id, notificationRepo.Added[0].UserId);
+    }
+
+    [Fact]
+    public async Task InviteDietologist_WhenEmailDispatchFails_StillSucceeds() {
+        var userId = UserId.New();
+        var user = CreateUser(userId);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+
+        var handler = CreateInviteHandler(
+            userRepository: userRepo,
+            emailSender: new ThrowingEmailSender());
+
+        var result = await handler.Handle(
+            new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
     }
 
     // ── AcceptInvitation ──
@@ -275,6 +335,53 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
+    }
+
+    [Fact]
+    public async Task AcceptInvitationForCurrentUser_WithMatchingEmail_Succeeds() {
+        var dietologistId = UserId.New();
+        var user = CreateUser(dietologistId, "diet@example.com");
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+        userRepo.SeedRoles(new[] { RoleNames.Dietologist });
+
+        var clientId = UserId.New();
+        var invitation = CreatePendingInvitation(clientId, "diet@example.com");
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var handler = new AcceptInvitationForCurrentUserCommandHandler(invRepo, userRepo);
+
+        var result = await handler.Handle(
+            new AcceptInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
+    }
+
+    [Fact]
+    public async Task GetInvitationForCurrentUser_AfterAccepted_ReturnsAcceptedStatus() {
+        var dietologistId = UserId.New();
+        var user = CreateUser(dietologistId, "diet@example.com");
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+
+        var invitation = CreateAcceptedInvitation(UserId.New(), dietologistId);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistEmail))!
+            .SetValue(invitation, "diet@example.com");
+
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var handler = new GetInvitationForCurrentUserQueryHandler(invRepo, userRepo);
+
+        var result = await handler.Handle(
+            new GetInvitationForCurrentUserQuery(dietologistId.Value, invitation.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("Accepted", result.Value.Status);
     }
 
     // ── DeclineInvitation ──
@@ -948,7 +1055,10 @@ public class DietologistFeatureTests {
 
         public void Seed(DietologistInvitation invitation) => _invitations.Add(invitation);
 
-        public Task<DietologistInvitation?> GetByIdAsync(DietologistInvitationId id, CancellationToken ct = default) =>
+        public Task<DietologistInvitation?> GetByIdAsync(
+            DietologistInvitationId id,
+            bool asTracking = false,
+            CancellationToken ct = default) =>
             Task.FromResult(_invitations.FirstOrDefault(i => i.Id == id));
 
         public Task<DietologistInvitation?> GetByClientAndStatusAsync(
@@ -1112,6 +1222,11 @@ public class DietologistFeatureTests {
             SentCount++;
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class ThrowingEmailSender : IDietologistEmailSender {
+        public Task SendDietologistInvitationAsync(DietologistInvitationMessage message, CancellationToken ct = default) =>
+            throw new InvalidOperationException("SMTP unavailable");
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {

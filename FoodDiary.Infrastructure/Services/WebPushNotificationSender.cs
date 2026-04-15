@@ -157,7 +157,7 @@ public sealed class WebPushNotificationSender(
     }
 
     private string ResolveUrl(Notification notification) {
-        var relativePath = NotificationTargetUrlResolver.Resolve(notification.Type) ?? options.DefaultUrl;
+        var relativePath = NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId) ?? options.DefaultUrl;
 
         if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out var absoluteBase)
             && Uri.TryCreate(absoluteBase, relativePath, out var targetUrl)) {
@@ -178,6 +178,7 @@ public sealed class WebPushNotificationSender(
             NotificationTypes.EatingWindowStarted => user.FastingPushNotificationsEnabled,
             NotificationTypes.FastingWindowStarted => user.FastingPushNotificationsEnabled,
             NotificationTypes.FastingCheckInReminder => user.FastingPushNotificationsEnabled,
+            NotificationTypes.DietologistInvitationReceived => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewRecommendation => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewComment => user.SocialPushNotificationsEnabled,
             _ => true

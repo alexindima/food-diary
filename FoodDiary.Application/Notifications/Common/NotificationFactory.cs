@@ -14,6 +14,16 @@ public static class NotificationFactory {
             NotificationPayloads.NewRecommendation(dietologistName),
             referenceId);
 
+    public static Notification CreateDietologistInvitationReceived(
+        UserId userId,
+        string clientName,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.DietologistInvitationReceived,
+            NotificationPayloads.DietologistInvitationReceived(clientName),
+            referenceId);
+
     public static Notification CreateNewComment(
         UserId userId,
         string? referenceId = null) =>

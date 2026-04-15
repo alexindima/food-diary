@@ -8,9 +8,16 @@ namespace FoodDiary.Infrastructure.Persistence.Dietologist;
 
 public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDietologistInvitationRepository {
     public async Task<DietologistInvitation?> GetByIdAsync(
-        DietologistInvitationId id, CancellationToken cancellationToken = default) {
-        return await context.DietologistInvitations
-            .AsNoTracking()
+        DietologistInvitationId id,
+        bool asTracking = false,
+        CancellationToken cancellationToken = default) {
+        IQueryable<DietologistInvitation> query = context.DietologistInvitations;
+
+        if (!asTracking) {
+            query = query.AsNoTracking();
+        }
+
+        return await query
             .Include(i => i.ClientUser)
             .Include(i => i.DietologistUser)
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
@@ -86,7 +93,20 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
 
     public async Task UpdateAsync(
         DietologistInvitation invitation, CancellationToken cancellationToken = default) {
-        context.DietologistInvitations.Update(invitation);
+        var entry = context.Entry(invitation);
+        if (entry.State == EntityState.Detached) {
+            context.Attach(invitation);
+            entry.State = EntityState.Modified;
+
+            if (invitation.ClientUser is not null) {
+                context.Entry(invitation.ClientUser).State = EntityState.Unchanged;
+            }
+
+            if (invitation.DietologistUser is not null) {
+                context.Entry(invitation.DietologistUser).State = EntityState.Unchanged;
+            }
+        }
+
         await context.SaveChangesAsync(cancellationToken);
     }
 }

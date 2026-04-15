@@ -1,4 +1,3 @@
-using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
@@ -7,14 +6,13 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
+namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 
-public class AcceptInvitationCommandHandler(
+public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository,
-    IPasswordHasher passwordHasher)
-    : ICommandHandler<AcceptInvitationCommand, Result> {
-    public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken cancellationToken) {
+    IUserRepository userRepository)
+    : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {
+    public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
@@ -25,28 +23,29 @@ public class AcceptInvitationCommandHandler(
             return Result.Failure(accessError);
         }
 
-        var invitationId = new DietologistInvitationId(command.InvitationId);
-        var invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken);
+        var user = await userRepository.GetByIdAsync(dietologistUserId, cancellationToken);
+        if (user is null) {
+            return Result.Failure(Errors.Authentication.InvalidToken);
+        }
 
-        if (invitation is null) {
+        var invitation = await invitationRepository.GetByIdAsync(
+            new DietologistInvitationId(command.InvitationId),
+            asTracking: true,
+            cancellationToken);
+        if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure(Errors.Dietologist.InvitationNotFound);
         }
 
-        if (invitation.Status != DietologistInvitationStatus.Pending) {
-            return Result.Failure(Errors.Dietologist.InvitationNotFound);
+        if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
+            return Result.Failure(Errors.Dietologist.AccessDenied);
         }
 
         if (invitation.IsExpired()) {
             return Result.Failure(Errors.Dietologist.InvitationExpired);
         }
 
-        if (!passwordHasher.Verify(command.Token, invitation.TokenHash)) {
-            return Result.Failure(Errors.Dietologist.InvitationInvalidToken);
-        }
-
         invitation.Accept(dietologistUserId);
 
-        var user = (await userRepository.GetByIdAsync(dietologistUserId, cancellationToken))!;
         if (!user.HasRole(RoleNames.Dietologist)) {
             var roles = user.GetRoleNames().ToList();
             roles.Add(RoleNames.Dietologist);

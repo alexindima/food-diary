@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
@@ -23,7 +24,17 @@ public class UpdateDietologistPermissionsCommandHandler(
             return Result.Failure(accessError);
         }
 
-        var invitation = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken);
+        var invitation = await invitationRepository.GetByClientAndStatusAsync(
+            userId,
+            DietologistInvitationStatus.Pending,
+            asTracking: true,
+            cancellationToken: cancellationToken);
+
+        invitation ??= await invitationRepository.GetActiveByClientAsync(
+            userId,
+            asTracking: true,
+            cancellationToken: cancellationToken);
+
         if (invitation is null) {
             return Result.Failure(Errors.Dietologist.NoActiveRelationship);
         }

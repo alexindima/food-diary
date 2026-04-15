@@ -29,6 +29,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
 
         return type switch {
             NotificationTypes.NewRecommendation => RenderNewRecommendation(payloadJson, locale),
+            NotificationTypes.DietologistInvitationReceived => RenderDietologistInvitationReceived(payloadJson, locale),
             _ => Render(type, locale)
         };
     }
@@ -68,5 +69,14 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
             : payload.DietologistName;
 
         return Render(NotificationTypes.NewRecommendation, locale, dietologistName);
+    }
+
+    private NotificationText RenderDietologistInvitationReceived(string payloadJson, string? locale) {
+        var payload = NotificationPayloadSerializer.Deserialize<DietologistInvitationReceivedNotificationPayload>(payloadJson);
+        var clientName = string.IsNullOrWhiteSpace(payload?.ClientName)
+            ? "A client"
+            : payload.ClientName;
+
+        return Render(NotificationTypes.DietologistInvitationReceived, locale, clientName);
     }
 }

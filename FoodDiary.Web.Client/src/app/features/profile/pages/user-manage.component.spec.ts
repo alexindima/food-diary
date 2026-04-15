@@ -1,0 +1,181 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
+import { of } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { UserManageComponent } from './user-manage.component';
+import { AuthService } from '../../../services/auth.service';
+import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
+import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { LocalizationService } from '../../../services/localization.service';
+import { NotificationService } from '../../../services/notification.service';
+import { PushNotificationService } from '../../../services/push-notification.service';
+import { DietologistService } from '../../dietologist/api/dietologist.service';
+import { ProfileManageFacade } from '../lib/profile-manage.facade';
+
+describe('UserManageComponent dietologist section', () => {
+    let fixture: ComponentFixture<UserManageComponent>;
+    let component: UserManageComponent;
+    let dietologistService: {
+        getRelationship: ReturnType<typeof vi.fn>;
+        invite: ReturnType<typeof vi.fn>;
+        updatePermissions: ReturnType<typeof vi.fn>;
+        revokeRelationship: ReturnType<typeof vi.fn>;
+    };
+    let facade: ReturnType<typeof createFacadeMock>;
+
+    async function createComponent(relationship: any): Promise<void> {
+        facade = createFacadeMock();
+        dietologistService = {
+            getRelationship: vi.fn().mockReturnValue(of(relationship)),
+            invite: vi.fn().mockReturnValue(of(undefined)),
+            updatePermissions: vi.fn().mockReturnValue(of(undefined)),
+            revokeRelationship: vi.fn().mockReturnValue(of(undefined)),
+        };
+
+        await TestBed.configureTestingModule({
+            imports: [UserManageComponent, TranslateModule.forRoot()],
+            providers: [
+                { provide: DietologistService, useValue: dietologistService },
+                { provide: ImageUploadService, useValue: { deleteAsset: vi.fn().mockReturnValue(of(undefined)) } },
+                { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
+                {
+                    provide: LocalizationService,
+                    useValue: {
+                        applyLanguagePreference: vi.fn().mockResolvedValue(undefined),
+                        getCurrentLanguage: vi.fn(() => 'en'),
+                    },
+                },
+                {
+                    provide: NotificationService,
+                    useValue: {
+                        scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
+                    },
+                },
+                {
+                    provide: PushNotificationService,
+                    useValue: {
+                        isSupported: signal(false),
+                        isSubscribed: signal(false),
+                        isBusy: signal(false),
+                        currentSubscriptionEndpoint: signal<string | null>(null),
+                        ensureSubscription: vi.fn().mockResolvedValue('unsupported'),
+                        removeSubscription: vi.fn().mockResolvedValue(true),
+                    },
+                },
+                {
+                    provide: FdUiToastService,
+                    useValue: {
+                        success: vi.fn(),
+                        info: vi.fn(),
+                        error: vi.fn(),
+                    },
+                },
+                {
+                    provide: FrontendObservabilityService,
+                    useValue: {
+                        recordNotificationSettingsViewed: vi.fn(),
+                        recordNotificationPreferenceChanged: vi.fn(),
+                        recordNotificationSubscriptionEvent: vi.fn(),
+                        recordFastingReminderPresetSelected: vi.fn(),
+                        recordFastingReminderTimingSaved: vi.fn(),
+                    },
+                },
+            ],
+        })
+            .overrideComponent(UserManageComponent, {
+                remove: { providers: [ProfileManageFacade] },
+                add: { providers: [{ provide: ProfileManageFacade, useValue: facade }] },
+            })
+            .compileComponents();
+
+        const translateService = TestBed.inject(TranslateService);
+        vi.spyOn(translateService, 'instant').mockImplementation(((key: string | string[]) => key as string) as never);
+        translateService.setDefaultLang('en');
+        translateService.use('en');
+
+        fixture = TestBed.createComponent(UserManageComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    }
+
+    it('keeps invite mode when no dietologist relationship exists', async () => {
+        await createComponent(null);
+
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
+        expect(component.hasDietologistRelationship()).toBe(false);
+        expect(component.dietologistForm.controls.email.enabled).toBe(true);
+        expect(component.dietologistForm.controls.shareMeals.value).toBe(true);
+        expect(fixture.nativeElement.textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
+    });
+
+    it('applies pending relationship state and disables email editing', async () => {
+        await createComponent({
+            invitationId: 'inv-1',
+            status: 'Pending',
+            email: 'diet@example.com',
+            firstName: null,
+            lastName: null,
+            dietologistUserId: null,
+            permissions: {
+                shareMeals: true,
+                shareStatistics: false,
+                shareWeight: true,
+                shareWaist: false,
+                shareGoals: true,
+                shareHydration: false,
+            },
+            createdAtUtc: '2026-04-15T00:00:00Z',
+            expiresAtUtc: '2026-04-22T00:00:00Z',
+            acceptedAtUtc: null,
+        });
+
+        expect(component.hasDietologistRelationship()).toBe(true);
+        expect(component.isDietologistPending()).toBe(true);
+        expect(component.dietologistForm.controls.email.disabled).toBe(true);
+        expect(component.dietologistForm.controls.email.getRawValue()).toBe('diet@example.com');
+        expect(component.dietologistForm.controls.shareStatistics.value).toBe(false);
+        expect(component.dietologistForm.controls.shareHydration.value).toBe(false);
+        expect(fixture.nativeElement.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
+    });
+});
+
+function createFacadeMock(): {
+    user: ReturnType<typeof signal<any>>;
+    globalError: ReturnType<typeof signal<string | null>>;
+    isDeleting: ReturnType<typeof signal<boolean>>;
+    isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
+    webPushSubscriptions: ReturnType<typeof signal<never[]>>;
+    isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
+    removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
+    initialize: ReturnType<typeof vi.fn>;
+    clearGlobalError: ReturnType<typeof vi.fn>;
+    submitUpdate: ReturnType<typeof vi.fn>;
+    openChangePasswordDialog: ReturnType<typeof vi.fn>;
+    revokeAiConsent: ReturnType<typeof vi.fn>;
+    deleteAccount: ReturnType<typeof vi.fn>;
+    updateNotificationPreferences: ReturnType<typeof vi.fn>;
+    refreshWebPushSubscriptions: ReturnType<typeof vi.fn>;
+    removeWebPushSubscription: ReturnType<typeof vi.fn>;
+    openAdminPanel: ReturnType<typeof vi.fn>;
+} {
+    return {
+        user: signal<any>(null),
+        globalError: signal<string | null>(null),
+        isDeleting: signal(false),
+        isUpdatingNotifications: signal(false),
+        webPushSubscriptions: signal([]),
+        isLoadingWebPushSubscriptions: signal(false),
+        removingWebPushSubscriptionEndpoint: signal<string | null>(null),
+        initialize: vi.fn(),
+        clearGlobalError: vi.fn(),
+        submitUpdate: vi.fn(),
+        openChangePasswordDialog: vi.fn(),
+        revokeAiConsent: vi.fn(),
+        deleteAccount: vi.fn(),
+        updateNotificationPreferences: vi.fn(),
+        refreshWebPushSubscriptions: vi.fn(),
+        removeWebPushSubscription: vi.fn(),
+        openAdminPanel: vi.fn(),
+    };
+}

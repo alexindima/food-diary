@@ -15,6 +15,12 @@
   <data name="NewRecommendation_Title" xml:space="preserve">
     <value>Новая рекомендация от {0}</value>
   </data>
+  <data name="DietologistInvitationReceived_Title" xml:space="preserve">
+    <value>Новое приглашение стать диетологом</value>
+  </data>
+  <data name="DietologistInvitationReceived_Body" xml:space="preserve">
+    <value>{0} приглашает вас стать своим диетологом. Откройте приглашение, чтобы принять или отклонить его.</value>
+  </data>
   <data name="NewComment_Title" xml:space="preserve">
     <value>Новый комментарий к вашему рецепту</value>
   </data>

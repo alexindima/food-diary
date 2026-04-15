@@ -1,0 +1,29 @@
+.dietologist-invitation {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
+.dietologist-invitation__card {
+    width: min(560px, 100%);
+}
+
+.dietologist-invitation__description {
+    margin: 0 0 16px;
+    color: var(--fd-text-muted, #6b7280);
+    line-height: 1.5;
+}
+
+.dietologist-invitation__meta {
+    margin: 0 0 16px;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.dietologist-invitation__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}

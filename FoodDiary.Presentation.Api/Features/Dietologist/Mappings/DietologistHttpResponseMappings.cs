@@ -4,6 +4,30 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 namespace FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 
 public static class DietologistHttpResponseMappings {
+    public static DietologistInvitationForCurrentUserHttpResponse ToHttpResponse(this DietologistInvitationForCurrentUserModel model) =>
+        new(
+            model.InvitationId,
+            model.ClientUserId,
+            model.ClientEmail,
+            model.ClientFirstName,
+            model.ClientLastName,
+            model.Status,
+            model.CreatedAtUtc,
+            model.ExpiresAtUtc);
+
+    public static DietologistRelationshipHttpResponse ToHttpResponse(this DietologistRelationshipModel model) =>
+        new(
+            model.InvitationId,
+            model.Status,
+            model.Email,
+            model.FirstName,
+            model.LastName,
+            model.DietologistUserId,
+            model.Permissions.ToHttpResponse(),
+            model.CreatedAtUtc,
+            model.ExpiresAtUtc,
+            model.AcceptedAtUtc);
+
     public static DietologistInfoHttpResponse ToHttpResponse(this DietologistInfoModel model) =>
         new(model.InvitationId, model.DietologistUserId, model.Email,
             model.FirstName, model.LastName,

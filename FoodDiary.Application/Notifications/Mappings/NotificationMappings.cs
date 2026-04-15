@@ -11,7 +11,7 @@ public static class NotificationMappings {
             notification.Type,
             notificationText.Title,
             notificationText.Body,
-            NotificationTargetUrlResolver.Resolve(notification.Type),
+            NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId),
             notification.ReferenceId,
             notification.IsRead,
             notification.CreatedOnUtc);

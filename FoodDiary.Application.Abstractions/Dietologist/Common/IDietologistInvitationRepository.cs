@@ -5,7 +5,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Dietologist.Common;
 
 public interface IDietologistInvitationRepository {
-    Task<DietologistInvitation?> GetByIdAsync(DietologistInvitationId id, CancellationToken cancellationToken = default);
+    Task<DietologistInvitation?> GetByIdAsync(
+        DietologistInvitationId id,
+        bool asTracking = false,
+        CancellationToken cancellationToken = default);
 
     Task<DietologistInvitation?> GetByClientAndStatusAsync(
         UserId clientUserId,

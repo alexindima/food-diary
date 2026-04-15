@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, FactoryProvider, inject, OnInit, signal } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
@@ -21,6 +22,8 @@ import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
+import { DietologistService } from '../../dietologist/api/dietologist.service';
+import { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import {
     FASTING_REMINDER_PRESETS,
     FastingReminderPreset,
@@ -50,6 +53,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         FormsModule,
         TranslatePipe,
+        DatePipe,
         NgIf,
         FdUiCardComponent,
         FdUiInputComponent,
@@ -76,8 +80,10 @@ export class UserManageComponent implements OnInit {
     private readonly facade = inject(ProfileManageFacade);
     private readonly notificationService = inject(NotificationService);
     private readonly pushNotifications = inject(PushNotificationService);
+    private readonly dietologistService = inject(DietologistService);
     private readonly toastService = inject(FdUiToastService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private lastUserData: Partial<UserFormValues> | null = null;
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
     private readonly hasTrackedNotificationsView = signal(false);
@@ -89,7 +95,12 @@ export class UserManageComponent implements OnInit {
     public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
     public languageOptions: FdUiSelectOption<string | null>[] = [];
     public userForm: FormGroup<UserFormData>;
+    public dietologistForm: FormGroup<DietologistFormData>;
     public readonly globalError = this.facade.globalError;
+    public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
+    public readonly dietologistError = signal<string | null>(null);
+    public readonly isLoadingDietologist = signal(false);
+    public readonly isSavingDietologist = signal(false);
     public readonly isDeleting = this.facade.isDeleting;
     public readonly isUpdatingNotifications = this.facade.isUpdatingNotifications;
     public readonly isSchedulingTestNotification = signal(false);
@@ -107,6 +118,9 @@ export class UserManageComponent implements OnInit {
     public readonly connectedDevices = this.facade.webPushSubscriptions;
     public readonly isLoadingConnectedDevices = this.facade.isLoadingWebPushSubscriptions;
     public readonly removingConnectedDeviceEndpoint = this.facade.removingWebPushSubscriptionEndpoint;
+    public readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
+    public readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
+    public readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
     public readonly pushNotificationsAccountStatusKey = computed(() =>
         this.pushNotificationsEnabled()
             ? 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED'
@@ -171,6 +185,15 @@ export class UserManageComponent implements OnInit {
             stepGoal: new FormControl<number | null>(null),
             profileImage: new FormControl<ImageSelection | null>(null),
         });
+        this.dietologistForm = new FormGroup<DietologistFormData>({
+            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+            shareMeals: new FormControl<boolean>(true, { nonNullable: true }),
+            shareStatistics: new FormControl<boolean>(true, { nonNullable: true }),
+            shareWeight: new FormControl<boolean>(true, { nonNullable: true }),
+            shareWaist: new FormControl<boolean>(true, { nonNullable: true }),
+            shareGoals: new FormControl<boolean>(true, { nonNullable: true }),
+            shareHydration: new FormControl<boolean>(true, { nonNullable: true }),
+        });
 
         this.buildSelectOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.buildSelectOptions());
@@ -199,6 +222,7 @@ export class UserManageComponent implements OnInit {
 
     public ngOnInit(): void {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.facade.clearGlobalError());
+        this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.dietologistError.set(null));
         this.userForm.controls.language.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(language => {
             if (!this.userForm.controls.language.dirty) {
                 return;
@@ -208,6 +232,7 @@ export class UserManageComponent implements OnInit {
         });
 
         this.facade.initialize();
+        this.loadDietologistRelationship();
     }
 
     public async onSubmit(): Promise<void> {
@@ -486,6 +511,111 @@ export class UserManageComponent implements OnInit {
         return this.authService.isAdmin();
     }
 
+    public inviteDietologist(): void {
+        if (this.isSavingDietologist()) {
+            return;
+        }
+
+        this.dietologistForm.controls.email.markAsTouched();
+        if (this.dietologistForm.invalid) {
+            return;
+        }
+
+        this.isSavingDietologist.set(true);
+        this.dietologistService
+            .invite({
+                dietologistEmail: this.dietologistForm.controls.email.getRawValue(),
+                permissions: this.getDietologistPermissions(),
+            })
+            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .subscribe({
+                next: () => {
+                    this.toastService.success(this.translateService.instant('USER_MANAGE.DIETOLOGIST_INVITE_SUCCESS'));
+                    this.loadDietologistRelationship();
+                },
+                error: () => {
+                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_INVITE_ERROR');
+                },
+            });
+    }
+
+    public saveDietologistPermissions(): void {
+        if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
+            return;
+        }
+
+        this.isSavingDietologist.set(true);
+        this.dietologistService
+            .updatePermissions(this.getDietologistPermissions())
+            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .subscribe({
+                next: () => {
+                    this.toastService.success(this.translateService.instant('USER_MANAGE.DIETOLOGIST_PERMISSIONS_SAVED'));
+                    this.loadDietologistRelationship();
+                },
+                error: () => {
+                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
+                },
+            });
+    }
+
+    public revokeDietologistRelationship(): void {
+        if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
+            return;
+        }
+
+        this.isSavingDietologist.set(true);
+        this.dietologistService
+            .revokeRelationship()
+            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .subscribe({
+                next: () => {
+                    this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));
+                    this.applyDietologistRelationship(null);
+                },
+                error: () => {
+                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');
+                },
+            });
+    }
+
+    public getControlError(control: AbstractControl | null): string | null {
+        if (!control || !control.invalid) {
+            return null;
+        }
+
+        const shouldShow = control.touched || control.dirty;
+        if (!shouldShow) {
+            return null;
+        }
+
+        const errors = control.errors;
+        if (!errors) {
+            return null;
+        }
+
+        for (const key of Object.keys(errors)) {
+            const resolver = this.validationErrors?.[key];
+            if (!resolver) {
+                continue;
+            }
+
+            const controlParams = typeof errors[key] === 'object' ? errors[key] : {};
+            const result = resolver(errors[key]);
+
+            if (typeof result === 'string') {
+                return this.translateService.instant(result, controlParams);
+            }
+
+            return this.translateService.instant(result.key, {
+                ...controlParams,
+                ...(result.params ?? {}),
+            });
+        }
+
+        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
     public openAdminPanel(): void {
         this.facade.openAdminPanel();
     }
@@ -502,6 +632,66 @@ export class UserManageComponent implements OnInit {
         this.userForm.patchValue(userData);
         this.userForm.markAsPristine();
         this.userForm.markAsUntouched();
+    }
+
+    private loadDietologistRelationship(): void {
+        this.isLoadingDietologist.set(true);
+        this.dietologistService
+            .getRelationship()
+            .pipe(finalize(() => this.isLoadingDietologist.set(false)))
+            .subscribe({
+                next: relationship => {
+                    this.applyDietologistRelationship(relationship);
+                    this.dietologistError.set(null);
+                },
+                error: () => {
+                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
+                },
+            });
+    }
+
+    private applyDietologistRelationship(relationship: DietologistRelationship | null): void {
+        this.dietologistRelationship.set(relationship);
+
+        if (relationship) {
+            this.dietologistForm.patchValue({
+                email: relationship.email,
+                ...relationship.permissions,
+            });
+            this.dietologistForm.controls.email.disable({ emitEvent: false });
+        } else {
+            this.dietologistForm.reset(
+                {
+                    email: '',
+                    shareMeals: true,
+                    shareStatistics: true,
+                    shareWeight: true,
+                    shareWaist: true,
+                    shareGoals: true,
+                    shareHydration: true,
+                },
+                { emitEvent: false },
+            );
+            this.dietologistForm.controls.email.enable({ emitEvent: false });
+        }
+
+        this.dietologistForm.markAsPristine();
+        this.dietologistForm.markAsUntouched();
+    }
+
+    private getDietologistPermissions(): DietologistPermissions {
+        return {
+            shareMeals: this.dietologistForm.controls.shareMeals.getRawValue(),
+            shareStatistics: this.dietologistForm.controls.shareStatistics.getRawValue(),
+            shareWeight: this.dietologistForm.controls.shareWeight.getRawValue(),
+            shareWaist: this.dietologistForm.controls.shareWaist.getRawValue(),
+            shareGoals: this.dietologistForm.controls.shareGoals.getRawValue(),
+            shareHydration: this.dietologistForm.controls.shareHydration.getRawValue(),
+        };
+    }
+
+    private setDietologistError(errorKey: string): void {
+        this.dietologistError.set(this.translateService.instant(errorKey));
     }
 
     private buildSelectOptions(): void {
@@ -658,3 +848,15 @@ export interface UserFormValues {
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;
+
+interface DietologistFormValues {
+    email: string;
+    shareMeals: boolean;
+    shareStatistics: boolean;
+    shareWeight: boolean;
+    shareWaist: boolean;
+    shareGoals: boolean;
+    shareHydration: boolean;
+}
+
+type DietologistFormData = FormGroupControls<DietologistFormValues>;

@@ -13,7 +13,7 @@ public class GetInvitationByTokenQueryHandler(
     : IQueryHandler<GetInvitationByTokenQuery, Result<InvitationModel>> {
     public async Task<Result<InvitationModel>> Handle(GetInvitationByTokenQuery query, CancellationToken cancellationToken) {
         var invitationId = new DietologistInvitationId(query.InvitationId);
-        var invitation = await invitationRepository.GetByIdAsync(invitationId, cancellationToken);
+        var invitation = await invitationRepository.GetByIdAsync(invitationId, cancellationToken: cancellationToken);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
