@@ -852,6 +852,53 @@
       ]
     },
     {
+      "Path": "/api/v{version}/dietologist/invitations/{invitationid}/accept-current-user",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/invitations/{invitationid}/current-user",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/invitations/{invitationid}/decline-current-user",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/dietologist/invite",
       "Operations": [
         {
@@ -906,6 +953,15 @@
             "204",
             "401",
             "404",
+            "500"
+          ]
+        },
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
             "500"
           ]
         }

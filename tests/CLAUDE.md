@@ -36,6 +36,7 @@ Each test class defines its own fakes inline. No shared test utility library.
 - **`RequiresDockerFact`**: custom attribute that skips tests when Docker is unavailable
 - **WebApplicationFactory**: `ApiWebApplicationFactory` replaces DbContext with InMemory, stubs S3. `TestAuthApiWebApplicationFactory` adds header-based auth bypass (`X-Test-Auth`, `X-Test-UserId`, `X-Test-Role`)
 - **Snapshot Testing**: JSON snapshots in `Web.Api.IntegrationTests/Snapshots/` for API contract verification
+- **Contract Snapshot Rule**: when public API contract changes intentionally, update and commit the affected snapshot JSON files; CI expects them to exist in the repo checkout
 
 ### Options in Tests
 Use `Options.Create(new T { ... })` to create `IOptions<T>` directly.

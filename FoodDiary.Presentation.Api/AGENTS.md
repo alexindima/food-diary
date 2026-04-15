@@ -61,6 +61,8 @@ Target shape:
   - `tests/FoodDiary.Presentation.Api.Tests`
   - `tests/FoodDiary.Web.Api.IntegrationTests`
 - Preserve OpenAPI and error-contract expectations unless the contract change is intentional.
+- If the public HTTP contract changes intentionally, update the matching snapshots in `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
+- For Swagger/OpenAPI changes, refresh at least `openapi-full-contract.json`, and update the narrower OpenAPI snapshots too when their selected endpoints changed.
 
 ## Migration Rules
 - Do not introduce new HTTP request DTOs into `FoodDiary.Contracts`.

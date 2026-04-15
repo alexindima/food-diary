@@ -98,6 +98,19 @@ Remove-Item Env:UPDATE_CONTRACT_SNAPSHOTS
 
 For a narrower update, run a filtered test command instead of the full project.
 
+Example for Swagger/OpenAPI only:
+
+```powershell
+$env:UPDATE_CONTRACT_SNAPSHOTS='1'
+dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --filter "SwaggerJson_" -c Release
+Remove-Item Env:UPDATE_CONTRACT_SNAPSHOTS
+```
+
+Notes:
+
+- Snapshot files live in the repository and must be committed when intentionally changed.
+- CI reads those checked-in files from `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`; if a Swagger snapshot fails in CI, the usual cause is stale committed contract snapshots, not a missing file in the build environment.
+
 ## Review Expectations
 
 When snapshots change, review:

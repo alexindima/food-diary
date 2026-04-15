@@ -22,6 +22,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Keep nullable enabled in C# projects and align namespaces with folders.
 - Use K&R brace style for C# code (opening brace on the same line).
 - Prefer C# primary constructors where applicable.
+- If backend HTTP routes, payloads, status codes, or Swagger-visible API surface change, update the relevant contract snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them with the feature.
 - For UI text changes, update both locales:
   - `FoodDiary.Web.Client/assets/i18n/en.json`
   - `FoodDiary.Web.Client/assets/i18n/ru.json`
