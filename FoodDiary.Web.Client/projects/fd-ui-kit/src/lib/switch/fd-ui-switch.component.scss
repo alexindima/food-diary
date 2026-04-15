@@ -1,0 +1,58 @@
+:host {
+    display: inline-flex;
+}
+
+.fd-ui-switch {
+    appearance: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    flex-shrink: 0;
+    color: var(--fd-color-text, #111827);
+
+    &--disabled {
+        cursor: default;
+        opacity: 0.6;
+    }
+
+    &__track {
+        width: 44px;
+        height: 26px;
+        border-radius: 999px;
+        background: #cbd5e1;
+        padding: 3px;
+        display: inline-flex;
+        align-items: center;
+        transition: background-color 0.2s ease;
+    }
+
+    &__thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: #ffffff;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.16);
+        transition: transform 0.2s ease;
+    }
+
+    &__label {
+        min-width: 28px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &--checked &__track {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    &--checked &__thumb {
+        transform: translateX(18px);
+    }
+}

@@ -9,7 +9,7 @@ public sealed class DietologistHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new InviteDietologistHttpRequest(
             "diet@example.com",
-            new DietologistPermissionsHttpRequest(true, false, true, false, true, false));
+            new DietologistPermissionsHttpRequest(true, false, true, false, true, false, true, false));
 
         var command = request.ToCommand(userId);
 
@@ -21,6 +21,8 @@ public sealed class DietologistHttpMappingsTests {
         Assert.False(command.Permissions.ShareWaist);
         Assert.True(command.Permissions.ShareGoals);
         Assert.False(command.Permissions.ShareHydration);
+        Assert.True(command.Permissions.ShareProfile);
+        Assert.False(command.Permissions.ShareFasting);
     }
 
     [Fact]

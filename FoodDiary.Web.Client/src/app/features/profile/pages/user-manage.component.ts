@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, FactoryProvider, inject, OnInit, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    FactoryProvider,
+    inject,
+    OnInit,
+    signal,
+} from '@angular/core';
 import { DatePipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,6 +23,7 @@ import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
@@ -34,6 +46,8 @@ import { FormGroupControls } from '../../../shared/lib/common.data';
 import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -61,6 +75,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiDateInputComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
+        FdUiSwitchComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -78,6 +93,8 @@ export class UserManageComponent implements OnInit {
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);
     private readonly facade = inject(ProfileManageFacade);
+    private readonly dialogService = inject(FdUiDialogService);
+    private readonly cdr = inject(ChangeDetectorRef);
     private readonly notificationService = inject(NotificationService);
     private readonly pushNotifications = inject(PushNotificationService);
     private readonly dietologistService = inject(DietologistService);
@@ -187,12 +204,14 @@ export class UserManageComponent implements OnInit {
         });
         this.dietologistForm = new FormGroup<DietologistFormData>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+            shareProfile: new FormControl<boolean>(true, { nonNullable: true }),
             shareMeals: new FormControl<boolean>(true, { nonNullable: true }),
             shareStatistics: new FormControl<boolean>(true, { nonNullable: true }),
             shareWeight: new FormControl<boolean>(true, { nonNullable: true }),
             shareWaist: new FormControl<boolean>(true, { nonNullable: true }),
             shareGoals: new FormControl<boolean>(true, { nonNullable: true }),
             shareHydration: new FormControl<boolean>(true, { nonNullable: true }),
+            shareFasting: new FormControl<boolean>(true, { nonNullable: true }),
         });
 
         this.buildSelectOptions();
@@ -539,7 +558,17 @@ export class UserManageComponent implements OnInit {
             });
     }
 
-    public saveDietologistPermissions(): void {
+    public updateDietologistPermission(controlName: DietologistPermissionControlName, nextValue: boolean): void {
+        if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
+            return;
+        }
+
+        const previousPermissions = this.getDietologistPermissions();
+        this.dietologistForm.controls[controlName].setValue(nextValue);
+        this.persistDietologistPermissions(previousPermissions);
+    }
+
+    public persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
         if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
             return;
         }
@@ -550,10 +579,17 @@ export class UserManageComponent implements OnInit {
             .pipe(finalize(() => this.isSavingDietologist.set(false)))
             .subscribe({
                 next: () => {
-                    this.toastService.success(this.translateService.instant('USER_MANAGE.DIETOLOGIST_PERMISSIONS_SAVED'));
+                    this.dietologistError.set(null);
                     this.loadDietologistRelationship();
                 },
                 error: () => {
+                    if (previousPermissions) {
+                        this.dietologistForm.patchValue(previousPermissions, { emitEvent: false });
+                        this.dietologistForm.markAsPristine();
+                        this.dietologistForm.markAsUntouched();
+                        this.cdr.markForCheck();
+                    }
+
                     this.setDietologistError('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
                 },
             });
@@ -576,6 +612,47 @@ export class UserManageComponent implements OnInit {
                 error: () => {
                     this.setDietologistError('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');
                 },
+            });
+    }
+
+    public onDietologistProfileToggle(nextValue: boolean): void {
+        if (this.isSavingDietologist()) {
+            return;
+        }
+
+        if (nextValue) {
+            this.dietologistForm.controls.shareProfile.setValue(nextValue);
+            if (this.hasDietologistRelationship()) {
+                this.persistDietologistPermissions({
+                    ...this.getDietologistPermissions(),
+                    shareProfile: !nextValue,
+                });
+            }
+            this.cdr.markForCheck();
+            return;
+        }
+
+        this.dialogService
+            .open(FdUiConfirmDialogComponent, {
+                size: 'sm',
+                data: {
+                    title: this.translateService.instant('USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_TITLE'),
+                    message: this.translateService.instant('USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_MESSAGE'),
+                    confirmLabel: this.translateService.instant('USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_CONFIRM'),
+                    cancelLabel: this.translateService.instant('USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_CANCEL'),
+                },
+            })
+            .afterClosed()
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    const previousPermissions = this.getDietologistPermissions();
+                    this.dietologistForm.controls.shareProfile.setValue(false);
+                    if (this.hasDietologistRelationship()) {
+                        this.persistDietologistPermissions(previousPermissions);
+                    }
+                }
+
+                this.cdr.markForCheck();
             });
     }
 
@@ -663,12 +740,14 @@ export class UserManageComponent implements OnInit {
             this.dietologistForm.reset(
                 {
                     email: '',
+                    shareProfile: true,
                     shareMeals: true,
                     shareStatistics: true,
                     shareWeight: true,
                     shareWaist: true,
                     shareGoals: true,
                     shareHydration: true,
+                    shareFasting: true,
                 },
                 { emitEvent: false },
             );
@@ -677,16 +756,19 @@ export class UserManageComponent implements OnInit {
 
         this.dietologistForm.markAsPristine();
         this.dietologistForm.markAsUntouched();
+        this.cdr.markForCheck();
     }
 
     private getDietologistPermissions(): DietologistPermissions {
         return {
+            shareProfile: this.dietologistForm.controls.shareProfile.getRawValue(),
             shareMeals: this.dietologistForm.controls.shareMeals.getRawValue(),
             shareStatistics: this.dietologistForm.controls.shareStatistics.getRawValue(),
             shareWeight: this.dietologistForm.controls.shareWeight.getRawValue(),
             shareWaist: this.dietologistForm.controls.shareWaist.getRawValue(),
             shareGoals: this.dietologistForm.controls.shareGoals.getRawValue(),
             shareHydration: this.dietologistForm.controls.shareHydration.getRawValue(),
+            shareFasting: this.dietologistForm.controls.shareFasting.getRawValue(),
         };
     }
 
@@ -851,12 +933,15 @@ export type UserFormData = FormGroupControls<UserFormValues>;
 
 interface DietologistFormValues {
     email: string;
+    shareProfile: boolean;
     shareMeals: boolean;
     shareStatistics: boolean;
     shareWeight: boolean;
     shareWaist: boolean;
     shareGoals: boolean;
     shareHydration: boolean;
+    shareFasting: boolean;
 }
 
 type DietologistFormData = FormGroupControls<DietologistFormValues>;
+type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;

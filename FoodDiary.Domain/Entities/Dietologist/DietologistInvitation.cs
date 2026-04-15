@@ -14,12 +14,14 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
     public string TokenHash { get; private set; } = string.Empty;
     public DateTime ExpiresAtUtc { get; private set; }
     public DietologistInvitationStatus Status { get; private set; }
+    public bool ShareProfile { get; private set; }
     public bool ShareMeals { get; private set; }
     public bool ShareStatistics { get; private set; }
     public bool ShareWeight { get; private set; }
     public bool ShareWaist { get; private set; }
     public bool ShareGoals { get; private set; }
     public bool ShareHydration { get; private set; }
+    public bool ShareFasting { get; private set; }
     public DateTime? AcceptedAtUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
 
@@ -95,15 +97,17 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
         Status == DietologistInvitationStatus.Pending && ExpiresAtUtc < DomainTime.UtcNow;
 
     public DietologistPermissions GetPermissions() => new(
-        ShareMeals, ShareStatistics, ShareWeight, ShareWaist, ShareGoals, ShareHydration);
+        ShareMeals, ShareStatistics, ShareWeight, ShareWaist, ShareGoals, ShareHydration, ShareProfile, ShareFasting);
 
     private void ApplyPermissions(DietologistPermissions permissions) {
+        ShareProfile = permissions.ShareProfile;
         ShareMeals = permissions.ShareMeals;
         ShareStatistics = permissions.ShareStatistics;
         ShareWeight = permissions.ShareWeight;
         ShareWaist = permissions.ShareWaist;
         ShareGoals = permissions.ShareGoals;
         ShareHydration = permissions.ShareHydration;
+        ShareFasting = permissions.ShareFasting;
     }
 
     private void EnsurePending() {

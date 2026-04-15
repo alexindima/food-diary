@@ -15,8 +15,21 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
             <div class="client-dashboard__header">
                 <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">Back to clients</fd-ui-button>
                 @if (client()) {
-                    <h1 class="client-dashboard__title">{{ client()!.firstName || '' }} {{ client()!.lastName || '' }}</h1>
+                    <h1 class="client-dashboard__title">{{ getClientTitle(client()!) }}</h1>
                     <span class="client-dashboard__email">{{ client()!.email }}</span>
+                    @if (client()!.permissions.shareProfile) {
+                        <div class="client-dashboard__profile-meta">
+                            @if (client()!.height) {
+                                <span class="client-dashboard__chip">{{ client()!.height }} cm</span>
+                            }
+                            @if (client()!.gender) {
+                                <span class="client-dashboard__chip">{{ client()!.gender }}</span>
+                            }
+                            @if (client()!.activityLevel) {
+                                <span class="client-dashboard__chip">{{ client()!.activityLevel }}</span>
+                            }
+                        </div>
+                    }
                 }
             </div>
 
@@ -26,6 +39,14 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 <p>Client not found.</p>
             } @else {
                 <div class="client-dashboard__sections">
+                    @if (client()!.permissions.shareProfile) {
+                        <fd-ui-card>
+                            <div class="client-dashboard__section">
+                                <h2>Profile</h2>
+                                <p class="client-dashboard__placeholder">Client profile data will be displayed here.</p>
+                            </div>
+                        </fd-ui-card>
+                    }
                     @if (client()!.permissions.shareStatistics) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
@@ -74,6 +95,14 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                             </div>
                         </fd-ui-card>
                     }
+                    @if (client()!.permissions.shareFasting) {
+                        <fd-ui-card>
+                            <div class="client-dashboard__section">
+                                <h2>Fasting</h2>
+                                <p class="client-dashboard__placeholder">Fasting data will be displayed here.</p>
+                            </div>
+                        </fd-ui-card>
+                    }
                     @if (!hasAnyPermission()) {
                         <p class="client-dashboard__no-data">Client has not shared any data.</p>
                     }
@@ -103,6 +132,23 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
             &__email {
                 color: var(--fd-text-secondary);
                 font-size: 14px;
+            }
+
+            &__profile-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            &__chip {
+                display: inline-flex;
+                align-items: center;
+                padding: 4px 10px;
+                border-radius: 999px;
+                background: #eff6ff;
+                color: #1d4ed8;
+                font-size: 13px;
+                font-weight: 600;
             }
 
             &__sections {
@@ -142,6 +188,11 @@ export class ClientDashboardComponent implements OnInit {
     public readonly client = signal<ClientSummary | null>(null);
     public readonly loading = signal(true);
 
+    public getClientTitle(client: ClientSummary): string {
+        const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
+        return fullName || client.email;
+    }
+
     public ngOnInit(): void {
         const clientId = this.route.snapshot.params['clientId'];
         this.dietologistService.getMyClients().subscribe({
@@ -159,7 +210,16 @@ export class ClientDashboardComponent implements OnInit {
         if (!p) {
             return false;
         }
-        return p.shareMeals || p.shareStatistics || p.shareWeight || p.shareWaist || p.shareGoals || p.shareHydration;
+        return (
+            p.shareProfile ||
+            p.shareMeals ||
+            p.shareStatistics ||
+            p.shareWeight ||
+            p.shareWaist ||
+            p.shareGoals ||
+            p.shareHydration ||
+            p.shareFasting
+        );
     }
 
     public goBack(): void {

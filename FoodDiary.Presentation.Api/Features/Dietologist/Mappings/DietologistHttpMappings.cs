@@ -76,5 +76,5 @@ public static class DietologistHttpMappings {
 
     private static DietologistPermissionsInput ToInput(this DietologistPermissionsHttpRequest request) =>
         new(request.ShareMeals, request.ShareStatistics, request.ShareWeight,
-            request.ShareWaist, request.ShareGoals, request.ShareHydration);
+            request.ShareWaist, request.ShareGoals, request.ShareHydration, request.ShareProfile, request.ShareFasting);
 }

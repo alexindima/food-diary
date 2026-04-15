@@ -55,6 +55,8 @@ describe('DietologistService', () => {
                     shareWaist: true,
                     shareGoals: true,
                     shareHydration: false,
+                    shareProfile: true,
+                    shareFasting: true,
                 },
             })
             .subscribe();
@@ -69,6 +71,8 @@ describe('DietologistService', () => {
                 shareWaist: true,
                 shareGoals: true,
                 shareHydration: false,
+                shareProfile: true,
+                shareFasting: true,
             },
         });
         inviteReq.flush(null);
@@ -95,6 +99,8 @@ describe('DietologistService', () => {
                 shareWaist: true,
                 shareGoals: false,
                 shareHydration: true,
+                shareProfile: true,
+                shareFasting: false,
             })
             .subscribe();
         const permissionsReq = httpMock.expectOne(`${baseUrl}/permissions`);
@@ -107,6 +113,8 @@ describe('DietologistService', () => {
                 shareWaist: true,
                 shareGoals: false,
                 shareHydration: true,
+                shareProfile: true,
+                shareFasting: false,
             },
         });
         permissionsReq.flush(null);

@@ -24,17 +24,21 @@ public static class DietologistAccessPolicy {
             permissions.ShareWeight,
             permissions.ShareWaist,
             permissions.ShareGoals,
-            permissions.ShareHydration));
+            permissions.ShareHydration,
+            permissions.ShareProfile,
+            permissions.ShareFasting));
     }
 
     public static Error? EnsurePermission(DietologistPermissionsModel permissions, string category) {
         return category switch {
+            "Profile" when !permissions.ShareProfile => Errors.Dietologist.PermissionDenied,
             "Meals" when !permissions.ShareMeals => Errors.Dietologist.PermissionDenied,
             "Statistics" when !permissions.ShareStatistics => Errors.Dietologist.PermissionDenied,
             "Weight" when !permissions.ShareWeight => Errors.Dietologist.PermissionDenied,
             "Waist" when !permissions.ShareWaist => Errors.Dietologist.PermissionDenied,
             "Goals" when !permissions.ShareGoals => Errors.Dietologist.PermissionDenied,
             "Hydration" when !permissions.ShareHydration => Errors.Dietologist.PermissionDenied,
+            "Fasting" when !permissions.ShareFasting => Errors.Dietologist.PermissionDenied,
             _ => null
         };
     }

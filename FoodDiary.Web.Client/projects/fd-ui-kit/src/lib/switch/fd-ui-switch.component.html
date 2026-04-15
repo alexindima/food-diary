@@ -1,0 +1,21 @@
+<button
+    type="button"
+    class="fd-ui-switch"
+    role="switch"
+    [class.fd-ui-switch--checked]="checked()"
+    [class.fd-ui-switch--disabled]="disabled()"
+    [attr.aria-checked]="checked()"
+    [attr.aria-label]="ariaLabel() || null"
+    [disabled]="disabled()"
+    (click)="toggle()"
+>
+    <span class="fd-ui-switch__track">
+        <span class="fd-ui-switch__thumb"></span>
+    </span>
+
+    @if (showStateLabel()) {
+        <span class="fd-ui-switch__label">
+            {{ checked() ? onLabel() : offLabel() }}
+        </span>
+    }
+</button>

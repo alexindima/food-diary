@@ -256,6 +256,17 @@ export interface FdUiRadioOption<T = unknown> {
 #### `fd-ui-segmented-toggle`
 Segmented toggle control.
 
+#### `fd-ui-switch`
+Compact boolean switch for settings and permission rows.
+
+**Inputs**
+- `checked?: boolean`
+- `disabled?: boolean`
+- `ariaLabel?: string`
+- `onLabel?: string`
+- `offLabel?: string`
+- `showStateLabel?: boolean`
+
 ### Navigation / UX
 
 #### `fd-ui-tabs`

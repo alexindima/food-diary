@@ -35,6 +35,7 @@ public static class DietologistHttpResponseMappings {
 
     public static ClientSummaryHttpResponse ToHttpResponse(this ClientSummaryModel model) =>
         new(model.UserId, model.Email, model.FirstName, model.LastName,
+            model.ProfileImage, model.BirthDate, model.Gender, model.Height, model.ActivityLevel,
             model.Permissions.ToHttpResponse(), model.AcceptedAtUtc);
 
     public static InvitationHttpResponse ToHttpResponse(this InvitationModel model) =>
@@ -43,7 +44,7 @@ public static class DietologistHttpResponseMappings {
 
     public static DietologistPermissionsHttpResponse ToHttpResponse(this DietologistPermissionsModel permissions) =>
         new(permissions.ShareMeals, permissions.ShareStatistics, permissions.ShareWeight,
-            permissions.ShareWaist, permissions.ShareGoals, permissions.ShareHydration);
+            permissions.ShareWaist, permissions.ShareGoals, permissions.ShareHydration, permissions.ShareProfile, permissions.ShareFasting);
 
     public static RecommendationHttpResponse ToHttpResponse(this RecommendationModel model) =>
         new(model.Id, model.DietologistUserId, model.DietologistFirstName,

@@ -1,10 +1,12 @@
 export interface DietologistPermissions {
+    shareProfile: boolean;
     shareMeals: boolean;
     shareStatistics: boolean;
     shareWeight: boolean;
     shareWaist: boolean;
     shareGoals: boolean;
     shareHydration: boolean;
+    shareFasting: boolean;
 }
 
 export interface ClientSummary {
@@ -12,6 +14,11 @@ export interface ClientSummary {
     email: string;
     firstName: string | null;
     lastName: string | null;
+    profileImage: string | null;
+    birthDate: string | null;
+    gender: string | null;
+    height: number | null;
+    activityLevel: string | null;
     permissions: DietologistPermissions;
     acceptedAtUtc: string;
 }

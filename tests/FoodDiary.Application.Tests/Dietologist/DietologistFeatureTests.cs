@@ -768,6 +768,58 @@ public class DietologistFeatureTests {
         Assert.Empty(result.Value);
     }
 
+    [Fact]
+    public async Task GetMyClients_WhenProfileSharingDisabled_HidesProfileFields() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var dietologist = CreateUser(dietologistId, "diet@example.com");
+        var client = CreateUser(clientId, "client@example.com");
+        typeof(User).GetProperty(nameof(User.FirstName))!.SetValue(client, "Alice");
+        typeof(User).GetProperty(nameof(User.LastName))!.SetValue(client, "Walker");
+        typeof(User).GetProperty(nameof(User.ProfileImage))!.SetValue(client, "https://cdn.example.com/avatar.jpg");
+        typeof(User).GetProperty(nameof(User.Gender))!.SetValue(client, "F");
+        typeof(User).GetProperty(nameof(User.Height))!.SetValue(client, 170d);
+        typeof(User).GetProperty(nameof(User.ActivityLevel))!.SetValue(client, ActivityLevel.High);
+        typeof(User).GetProperty(nameof(User.BirthDate))!.SetValue(client, new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+
+        var invitation = CreateAcceptedInvitation(
+            clientId,
+            dietologistId,
+            new DietologistPermissions(
+                ShareMeals: true,
+                ShareStatistics: true,
+                ShareWeight: true,
+                ShareWaist: true,
+                ShareGoals: true,
+                ShareHydration: true,
+                ShareProfile: false,
+                ShareFasting: true));
+
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!.SetValue(invitation, client);
+        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!.SetValue(invitation, dietologist);
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(dietologist);
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var handler = new GetMyClientsQueryHandler(invRepo, userRepo);
+
+        var result = await handler.Handle(new GetMyClientsQuery(dietologistId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var clientSummary = Assert.Single(result.Value);
+        Assert.Equal("client@example.com", clientSummary.Email);
+        Assert.Null(clientSummary.FirstName);
+        Assert.Null(clientSummary.LastName);
+        Assert.Null(clientSummary.ProfileImage);
+        Assert.Null(clientSummary.BirthDate);
+        Assert.Null(clientSummary.Gender);
+        Assert.Null(clientSummary.Height);
+        Assert.Null(clientSummary.ActivityLevel);
+        Assert.False(clientSummary.Permissions.ShareProfile);
+    }
+
     // ── GetInvitationByToken ──
 
     [Fact]

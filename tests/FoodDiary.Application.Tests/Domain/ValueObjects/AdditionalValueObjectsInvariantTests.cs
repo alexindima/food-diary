@@ -573,6 +573,8 @@ public class AdditionalValueObjectsInvariantTests {
         Assert.True(perms.ShareWaist);
         Assert.True(perms.ShareGoals);
         Assert.True(perms.ShareHydration);
+        Assert.True(perms.ShareProfile);
+        Assert.True(perms.ShareFasting);
     }
 
     [Fact]
@@ -585,5 +587,7 @@ public class AdditionalValueObjectsInvariantTests {
         Assert.True(perms.ShareWaist);
         Assert.True(perms.ShareGoals);
         Assert.True(perms.ShareHydration);
+        Assert.True(perms.ShareProfile);
+        Assert.True(perms.ShareFasting);
     }
 }

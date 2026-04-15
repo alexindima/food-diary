@@ -39,20 +39,24 @@ public class DietologistAccessPolicyTests {
         Assert.False(result.Value.ShareStatistics);
         Assert.True(result.Value.ShareWeight);
         Assert.False(result.Value.ShareWaist);
+        Assert.True(result.Value.ShareProfile);
+        Assert.True(result.Value.ShareFasting);
     }
 
     [Fact]
     public void EnsurePermission_WhenPermissionGranted_ReturnsNull() {
-        var perms = new DietologistPermissionsModel(true, true, true, true, true, true);
+        var perms = new DietologistPermissionsModel(true, true, true, true, true, true, true, true);
 
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Profile"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Meals"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Statistics"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Weight"));
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Fasting"));
     }
 
     [Fact]
     public void EnsurePermission_WhenMealsDenied_ReturnsError() {
-        var perms = new DietologistPermissionsModel(false, true, true, true, true, true);
+        var perms = new DietologistPermissionsModel(false, true, true, true, true, true, true, true);
 
         var error = DietologistAccessPolicy.EnsurePermission(perms, "Meals");
 
@@ -62,7 +66,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WhenHydrationDenied_ReturnsError() {
-        var perms = new DietologistPermissionsModel(true, true, true, true, true, false);
+        var perms = new DietologistPermissionsModel(true, true, true, true, true, false, true, true);
 
         var error = DietologistAccessPolicy.EnsurePermission(perms, "Hydration");
 
@@ -70,8 +74,26 @@ public class DietologistAccessPolicyTests {
     }
 
     [Fact]
+    public void EnsurePermission_WhenProfileDenied_ReturnsError() {
+        var perms = new DietologistPermissionsModel(true, true, true, true, true, true, false, true);
+
+        var error = DietologistAccessPolicy.EnsurePermission(perms, "Profile");
+
+        Assert.NotNull(error);
+    }
+
+    [Fact]
+    public void EnsurePermission_WhenFastingDenied_ReturnsError() {
+        var perms = new DietologistPermissionsModel(true, true, true, true, true, true, true, false);
+
+        var error = DietologistAccessPolicy.EnsurePermission(perms, "Fasting");
+
+        Assert.NotNull(error);
+    }
+
+    [Fact]
     public void EnsurePermission_WithUnknownCategory_ReturnsNull() {
-        var perms = new DietologistPermissionsModel(false, false, false, false, false, false);
+        var perms = new DietologistPermissionsModel(false, false, false, false, false, false, false, false);
 
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
     }

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { of } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { UserManageComponent } from './user-manage.component';
 import { AuthService } from '../../../services/auth.service';
@@ -23,14 +24,20 @@ describe('UserManageComponent dietologist section', () => {
         revokeRelationship: ReturnType<typeof vi.fn>;
     };
     let facade: ReturnType<typeof createFacadeMock>;
+    let dialogService: { open: ReturnType<typeof vi.fn> };
 
-    async function createComponent(relationship: any): Promise<void> {
+    async function createComponent(relationship: any, dialogResult = false): Promise<void> {
         facade = createFacadeMock();
         dietologistService = {
             getRelationship: vi.fn().mockReturnValue(of(relationship)),
             invite: vi.fn().mockReturnValue(of(undefined)),
             updatePermissions: vi.fn().mockReturnValue(of(undefined)),
             revokeRelationship: vi.fn().mockReturnValue(of(undefined)),
+        };
+        dialogService = {
+            open: vi.fn().mockReturnValue({
+                afterClosed: () => of(dialogResult),
+            }),
         };
 
         await TestBed.configureTestingModule({
@@ -71,6 +78,7 @@ describe('UserManageComponent dietologist section', () => {
                         error: vi.fn(),
                     },
                 },
+                { provide: FdUiDialogService, useValue: dialogService },
                 {
                     provide: FrontendObservabilityService,
                     useValue: {
@@ -105,7 +113,9 @@ describe('UserManageComponent dietologist section', () => {
         expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
         expect(component.hasDietologistRelationship()).toBe(false);
         expect(component.dietologistForm.controls.email.enabled).toBe(true);
+        expect(component.dietologistForm.controls.shareProfile.value).toBe(true);
         expect(component.dietologistForm.controls.shareMeals.value).toBe(true);
+        expect(component.dietologistForm.controls.shareFasting.value).toBe(true);
         expect(fixture.nativeElement.textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
     });
 
@@ -118,12 +128,14 @@ describe('UserManageComponent dietologist section', () => {
             lastName: null,
             dietologistUserId: null,
             permissions: {
+                shareProfile: true,
                 shareMeals: true,
                 shareStatistics: false,
                 shareWeight: true,
                 shareWaist: false,
                 shareGoals: true,
                 shareHydration: false,
+                shareFasting: true,
             },
             createdAtUtc: '2026-04-15T00:00:00Z',
             expiresAtUtc: '2026-04-22T00:00:00Z',
@@ -134,9 +146,67 @@ describe('UserManageComponent dietologist section', () => {
         expect(component.isDietologistPending()).toBe(true);
         expect(component.dietologistForm.controls.email.disabled).toBe(true);
         expect(component.dietologistForm.controls.email.getRawValue()).toBe('diet@example.com');
+        expect(component.dietologistForm.controls.shareProfile.value).toBe(true);
         expect(component.dietologistForm.controls.shareStatistics.value).toBe(false);
         expect(component.dietologistForm.controls.shareHydration.value).toBe(false);
+        expect(component.dietologistForm.controls.shareFasting.value).toBe(true);
         expect(fixture.nativeElement.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
+        expect(fixture.nativeElement.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS');
+    });
+
+    it('asks for confirmation before disabling profile sharing', async () => {
+        await createComponent(null, false);
+
+        component.onDietologistProfileToggle(false);
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(component.dietologistForm.controls.shareProfile.value).toBe(true);
+    });
+
+    it('disables profile sharing after confirmation', async () => {
+        await createComponent(null, true);
+
+        component.onDietologistProfileToggle(false);
+        fixture.detectChanges();
+
+        expect(component.dietologistForm.controls.shareProfile.value).toBe(false);
+    });
+
+    it('autosaves permissions when a relationship toggle changes', async () => {
+        await createComponent({
+            invitationId: 'inv-1',
+            status: 'Accepted',
+            email: 'diet@example.com',
+            firstName: null,
+            lastName: null,
+            dietologistUserId: 'diet-1',
+            permissions: {
+                shareProfile: true,
+                shareMeals: true,
+                shareStatistics: true,
+                shareWeight: true,
+                shareWaist: true,
+                shareGoals: true,
+                shareHydration: true,
+                shareFasting: true,
+            },
+            createdAtUtc: '2026-04-15T00:00:00Z',
+            expiresAtUtc: '2026-04-22T00:00:00Z',
+            acceptedAtUtc: '2026-04-15T01:00:00Z',
+        });
+
+        component.updateDietologistPermission('shareFasting', false);
+
+        expect(dietologistService.updatePermissions).toHaveBeenCalledWith({
+            shareProfile: true,
+            shareMeals: true,
+            shareStatistics: true,
+            shareWeight: true,
+            shareWaist: true,
+            shareGoals: true,
+            shareHydration: true,
+            shareFasting: false,
+        });
     });
 });
 

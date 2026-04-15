@@ -32,8 +32,13 @@ public static class DietologistMappings {
         new(
             invitation.ClientUserId.Value,
             invitation.ClientUser.Email,
-            invitation.ClientUser.FirstName,
-            invitation.ClientUser.LastName,
+            invitation.ShareProfile ? invitation.ClientUser.FirstName : null,
+            invitation.ShareProfile ? invitation.ClientUser.LastName : null,
+            invitation.ShareProfile ? invitation.ClientUser.ProfileImage : null,
+            invitation.ShareProfile ? invitation.ClientUser.BirthDate : null,
+            invitation.ShareProfile ? invitation.ClientUser.Gender : null,
+            invitation.ShareProfile ? invitation.ClientUser.Height : null,
+            invitation.ShareProfile ? invitation.ClientUser.ActivityLevel.ToString() : null,
             invitation.GetPermissions().ToModel(),
             invitation.AcceptedAtUtc!.Value);
 
@@ -65,7 +70,9 @@ public static class DietologistMappings {
             input.ShareWeight,
             input.ShareWaist,
             input.ShareGoals,
-            input.ShareHydration);
+            input.ShareHydration,
+            input.ShareProfile,
+            input.ShareFasting);
 
     public static DietologistPermissionsModel ToModel(this DietologistPermissions permissions) =>
         new(
@@ -74,7 +81,9 @@ public static class DietologistMappings {
             permissions.ShareWeight,
             permissions.ShareWaist,
             permissions.ShareGoals,
-            permissions.ShareHydration);
+            permissions.ShareHydration,
+            permissions.ShareProfile,
+            permissions.ShareFasting);
 
     public static RecommendationModel ToModel(this Recommendation recommendation) =>
         new(

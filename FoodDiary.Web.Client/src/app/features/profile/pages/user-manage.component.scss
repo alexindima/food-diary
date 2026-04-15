@@ -514,6 +514,13 @@
         gap: 12px;
     }
 
+    &__dietologist-permission-list {
+
+        ::ng-deep fd-ui-switch {
+            align-self: center;
+        }
+    }
+
     &__dietologist-empty {
         padding: 14px 16px;
         border-radius: 16px;

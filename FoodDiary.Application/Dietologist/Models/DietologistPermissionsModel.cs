@@ -6,4 +6,6 @@ public sealed record DietologistPermissionsModel(
     bool ShareWeight,
     bool ShareWaist,
     bool ShareGoals,
-    bool ShareHydration);
+    bool ShareHydration,
+    bool ShareProfile,
+    bool ShareFasting);

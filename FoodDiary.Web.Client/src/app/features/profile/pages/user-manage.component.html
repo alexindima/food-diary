@@ -521,31 +521,32 @@
                                     <div class="user-manage__notifications-item user-manage__notifications-item--nested">
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate }}
+                                            </div>
+                                            <div class="user-manage__notifications-hint">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE_HINT' | translate }}
+                                            </div>
+                                        </div>
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareProfile.value"
+                                            [disabled]="isSavingDietologist()"
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate"
+                                            (checkedChange)="onDietologistProfileToggle($event)"
+                                        />
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate }}
                                             </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="user-manage__switch"
-                                            role="switch"
-                                            [class.is-on]="dietologistForm.controls.shareMeals.value"
-                                            [class.is-disabled]="isSavingDietologist()"
-                                            [attr.aria-checked]="dietologistForm.controls.shareMeals.value"
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareMeals.value"
                                             [disabled]="isSavingDietologist()"
-                                            (click)="
-                                                dietologistForm.controls.shareMeals.setValue(!dietologistForm.controls.shareMeals.value)
-                                            "
-                                        >
-                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
-                                            <span class="user-manage__switch-label">
-                                                {{
-                                                    (dietologistForm.controls.shareMeals.value
-                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                    ) | translate
-                                                }}
-                                            </span>
-                                        </button>
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareMeals', $event)"
+                                        />
                                     </div>
 
                                     <div class="user-manage__notifications-item user-manage__notifications-item--nested">
@@ -554,30 +555,12 @@
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate }}
                                             </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="user-manage__switch"
-                                            role="switch"
-                                            [class.is-on]="dietologistForm.controls.shareStatistics.value"
-                                            [class.is-disabled]="isSavingDietologist()"
-                                            [attr.aria-checked]="dietologistForm.controls.shareStatistics.value"
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareStatistics.value"
                                             [disabled]="isSavingDietologist()"
-                                            (click)="
-                                                dietologistForm.controls.shareStatistics.setValue(
-                                                    !dietologistForm.controls.shareStatistics.value
-                                                )
-                                            "
-                                        >
-                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
-                                            <span class="user-manage__switch-label">
-                                                {{
-                                                    (dietologistForm.controls.shareStatistics.value
-                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                    ) | translate
-                                                }}
-                                            </span>
-                                        </button>
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareStatistics', $event)"
+                                        />
                                     </div>
 
                                     <div class="user-manage__notifications-item user-manage__notifications-item--nested">
@@ -586,28 +569,12 @@
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate }}
                                             </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="user-manage__switch"
-                                            role="switch"
-                                            [class.is-on]="dietologistForm.controls.shareWeight.value"
-                                            [class.is-disabled]="isSavingDietologist()"
-                                            [attr.aria-checked]="dietologistForm.controls.shareWeight.value"
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareWeight.value"
                                             [disabled]="isSavingDietologist()"
-                                            (click)="
-                                                dietologistForm.controls.shareWeight.setValue(!dietologistForm.controls.shareWeight.value)
-                                            "
-                                        >
-                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
-                                            <span class="user-manage__switch-label">
-                                                {{
-                                                    (dietologistForm.controls.shareWeight.value
-                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                    ) | translate
-                                                }}
-                                            </span>
-                                        </button>
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareWeight', $event)"
+                                        />
                                     </div>
 
                                     <div class="user-manage__notifications-item user-manage__notifications-item--nested">
@@ -616,28 +583,12 @@
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate }}
                                             </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="user-manage__switch"
-                                            role="switch"
-                                            [class.is-on]="dietologistForm.controls.shareWaist.value"
-                                            [class.is-disabled]="isSavingDietologist()"
-                                            [attr.aria-checked]="dietologistForm.controls.shareWaist.value"
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareWaist.value"
                                             [disabled]="isSavingDietologist()"
-                                            (click)="
-                                                dietologistForm.controls.shareWaist.setValue(!dietologistForm.controls.shareWaist.value)
-                                            "
-                                        >
-                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
-                                            <span class="user-manage__switch-label">
-                                                {{
-                                                    (dietologistForm.controls.shareWaist.value
-                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                    ) | translate
-                                                }}
-                                            </span>
-                                        </button>
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareWaist', $event)"
+                                        />
                                     </div>
 
                                     <div class="user-manage__notifications-item user-manage__notifications-item--nested">
@@ -646,28 +597,12 @@
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate }}
                                             </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="user-manage__switch"
-                                            role="switch"
-                                            [class.is-on]="dietologistForm.controls.shareGoals.value"
-                                            [class.is-disabled]="isSavingDietologist()"
-                                            [attr.aria-checked]="dietologistForm.controls.shareGoals.value"
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareGoals.value"
                                             [disabled]="isSavingDietologist()"
-                                            (click)="
-                                                dietologistForm.controls.shareGoals.setValue(!dietologistForm.controls.shareGoals.value)
-                                            "
-                                        >
-                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
-                                            <span class="user-manage__switch-label">
-                                                {{
-                                                    (dietologistForm.controls.shareGoals.value
-                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                    ) | translate
-                                                }}
-                                            </span>
-                                        </button>
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareGoals', $event)"
+                                        />
                                     </div>
 
                                     <div class="user-manage__notifications-item user-manage__notifications-item--nested">
@@ -676,30 +611,26 @@
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate }}
                                             </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="user-manage__switch"
-                                            role="switch"
-                                            [class.is-on]="dietologistForm.controls.shareHydration.value"
-                                            [class.is-disabled]="isSavingDietologist()"
-                                            [attr.aria-checked]="dietologistForm.controls.shareHydration.value"
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareHydration.value"
                                             [disabled]="isSavingDietologist()"
-                                            (click)="
-                                                dietologistForm.controls.shareHydration.setValue(
-                                                    !dietologistForm.controls.shareHydration.value
-                                                )
-                                            "
-                                        >
-                                            <span class="user-manage__switch-track"><span class="user-manage__switch-thumb"></span></span>
-                                            <span class="user-manage__switch-label">
-                                                {{
-                                                    (dietologistForm.controls.shareHydration.value
-                                                        ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                        : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                    ) | translate
-                                                }}
-                                            </span>
-                                        </button>
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareHydration', $event)"
+                                        />
+                                    </div>
+
+                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                        <div class="user-manage__notifications-copy">
+                                            <div class="user-manage__notifications-label">
+                                                {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate }}
+                                            </div>
+                                        </div>
+                                        <fd-ui-switch
+                                            [checked]="dietologistForm.controls.shareFasting.value"
+                                            [disabled]="isSavingDietologist()"
+                                            [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate"
+                                            (checkedChange)="updateDietologistPermission('shareFasting', $event)"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -715,16 +646,6 @@
                                         {{ 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION' | translate }}
                                     </fd-ui-button>
                                 } @else {
-                                    <fd-ui-button
-                                        type="button"
-                                        fill="outline"
-                                        variant="secondary"
-                                        icon="save"
-                                        [disabled]="isSavingDietologist()"
-                                        (click)="saveDietologistPermissions()"
-                                    >
-                                        {{ 'USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS' | translate }}
-                                    </fd-ui-button>
                                     <fd-ui-button
                                         type="button"
                                         fill="outline"
