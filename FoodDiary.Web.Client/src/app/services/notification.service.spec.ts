@@ -181,4 +181,15 @@ describe('NotificationService', () => {
         expect(removeReq.request.body).toEqual({ endpoint: 'https://push.example.com/subscriptions/1' });
         removeReq.flush(null);
     });
+
+    it('should increment notificationsChangedVersion when notifications change is reported', () => {
+        expect(service.notificationsChangedVersion()).toBe(0);
+
+        service.notifyNotificationsChanged();
+
+        expect(service.notificationsChangedVersion()).toBe(1);
+        const req = httpMock.expectOne(baseUrl);
+        expect(req.request.method).toBe('GET');
+        req.flush([]);
+    });
 });

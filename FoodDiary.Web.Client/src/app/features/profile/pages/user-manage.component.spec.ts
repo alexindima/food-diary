@@ -25,6 +25,10 @@ describe('UserManageComponent dietologist section', () => {
     };
     let facade: ReturnType<typeof createFacadeMock>;
     let dialogService: { open: ReturnType<typeof vi.fn> };
+    let notificationService: {
+        scheduleTestNotification: ReturnType<typeof vi.fn>;
+        notificationsChangedVersion: ReturnType<typeof signal<number>>;
+    };
 
     async function createComponent(relationship: any, dialogResult = false): Promise<void> {
         facade = createFacadeMock();
@@ -38,6 +42,10 @@ describe('UserManageComponent dietologist section', () => {
             open: vi.fn().mockReturnValue({
                 afterClosed: () => of(dialogResult),
             }),
+        };
+        notificationService = {
+            scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
+            notificationsChangedVersion: signal(0),
         };
 
         await TestBed.configureTestingModule({
@@ -55,9 +63,7 @@ describe('UserManageComponent dietologist section', () => {
                 },
                 {
                     provide: NotificationService,
-                    useValue: {
-                        scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
-                    },
+                    useValue: notificationService,
                 },
                 {
                     provide: PushNotificationService,
@@ -270,6 +276,16 @@ describe('UserManageComponent dietologist section', () => {
         component.revokeDietologistRelationship();
 
         expect(dietologistService.revokeRelationship).toHaveBeenCalledTimes(1);
+    });
+
+    it('reloads dietologist relationship when notifications realtime changes', async () => {
+        await createComponent(null);
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
+
+        notificationService.notificationsChangedVersion.set(1);
+        fixture.detectChanges();
+
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(2);
     });
 });
 

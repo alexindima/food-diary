@@ -81,6 +81,7 @@ export class NotificationService {
     public readonly notifications = signal<NotificationItem[]>([]);
     public readonly notificationsLoading = signal(false);
     public readonly notificationsLoaded = signal(false);
+    public readonly notificationsChangedVersion = signal(0);
 
     public constructor() {
         effect(() => {
@@ -187,6 +188,7 @@ export class NotificationService {
     }
 
     public notifyNotificationsChanged(): void {
+        this.notificationsChangedVersion.update(version => version + 1);
         this.refreshNotifications();
     }
 

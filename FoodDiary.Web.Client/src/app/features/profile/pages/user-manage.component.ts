@@ -101,6 +101,7 @@ export class UserManageComponent implements OnInit {
     private readonly frontendObservability = inject(FrontendObservabilityService);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private lastUserData: Partial<UserFormValues> | null = null;
+    private lastNotificationSyncVersion = -1;
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
     private readonly hasTrackedNotificationsView = signal(false);
 
@@ -235,6 +236,20 @@ export class UserManageComponent implements OnInit {
                 });
                 this.hasTrackedNotificationsView.set(true);
             }
+        });
+
+        effect(() => {
+            const version = this.notificationService.notificationsChangedVersion();
+            if (version === this.lastNotificationSyncVersion) {
+                return;
+            }
+
+            this.lastNotificationSyncVersion = version;
+            if (version === 0) {
+                return;
+            }
+
+            this.loadDietologistRelationship();
         });
     }
 
