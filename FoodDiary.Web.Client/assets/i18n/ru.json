@@ -2047,6 +2047,9 @@
     "SIDEBAR": {
         "PLAN_PRO": "Про",
         "PLAN_FREE": "Бесплатный аккаунт",
+        "STATUS_USER": "Юзер",
+        "STATUS_ADMIN": "Админ",
+        "STATUS_DIETOLOGIST": "Диетолог",
         "DASHBOARD": "Дашборд",
         "FOOD_TRACKING": "Дневник питания",
         "FOOD_DIARY": "Дневник",

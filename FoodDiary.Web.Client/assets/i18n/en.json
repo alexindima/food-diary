@@ -1381,6 +1381,9 @@
     "SIDEBAR": {
         "PLAN_PRO": "Pro",
         "PLAN_FREE": "Free Account",
+        "STATUS_USER": "User",
+        "STATUS_ADMIN": "Admin",
+        "STATUS_DIETOLOGIST": "Dietologist",
         "DASHBOARD": "Dashboard",
         "FOOD_TRACKING": "Food tracking",
         "FOOD_DIARY": "Food Diary",

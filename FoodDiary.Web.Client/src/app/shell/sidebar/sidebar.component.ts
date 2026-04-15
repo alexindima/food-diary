@@ -37,8 +37,20 @@ export class SidebarComponent {
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
     public isDietologist = this.authService.isDietologist;
+    public isAdmin = this.authService.isAdmin;
     public unreadNotificationCount = this.notificationService.unreadCount;
     protected readonly currentUser = this.userService.user;
+    protected readonly brandStatusKey = computed(() => {
+        if (this.isAdmin()) {
+            return 'SIDEBAR.STATUS_ADMIN';
+        }
+
+        if (this.isDietologist()) {
+            return 'SIDEBAR.STATUS_DIETOLOGIST';
+        }
+
+        return 'SIDEBAR.STATUS_USER';
+    });
     protected isFoodTrackingOpen = signal(true);
     protected isBodyTrackingOpen = signal(false);
     protected isUserMenuOpen = signal(false);
