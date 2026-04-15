@@ -26,6 +26,18 @@
             <mat-icon>dashboard</mat-icon>
             <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </a>
+        @if (isDietologist()) {
+            <a routerLink="/dietologist" routerLinkActive="is-active" class="sidebar__link">
+                <mat-icon>medical_services</mat-icon>
+                <span>{{ 'SIDEBAR.MY_CLIENTS' | translate }}</span>
+            </a>
+        }
+        @if (isAdmin()) {
+            <button type="button" class="sidebar__link sidebar__link--admin" (click)="openAdminPanel()">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
+            </button>
+        }
     </nav>
 
     <div class="sidebar__section">
@@ -111,15 +123,6 @@
         </a>
     </nav>
 
-    @if (isDietologist()) {
-        <nav class="sidebar__section">
-            <a routerLink="/dietologist" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                <mat-icon>medical_services</mat-icon>
-                <span>{{ 'SIDEBAR.MY_CLIENTS' | translate }}</span>
-            </a>
-        </nav>
-    }
-
     @if (currentUser(); as user) {
         <div class="sidebar__user-wrapper">
             <button type="button" class="sidebar__user" (click)="toggleUserMenu()">
@@ -145,7 +148,7 @@
                 <div class="sidebar__user-menu">
                     <a routerLink="/profile" routerLinkActive="is-active" class="sidebar__user-menu-link">
                         <mat-icon>settings</mat-icon>
-                        <span>{{ 'HEADER.ACCOUNT' | translate }}</span>
+                        <span>{{ 'HEADER.PROFILE' | translate }}</span>
                     </a>
                     <button type="button" class="sidebar__logout" (click)="logout()">
                         <mat-icon>logout</mat-icon>
@@ -315,8 +318,14 @@
         </button>
         <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>settings</mat-icon>
-            <span>{{ 'HEADER.ACCOUNT' | translate }}</span>
+            <span>{{ 'HEADER.PROFILE' | translate }}</span>
         </a>
+        @if (isAdmin()) {
+            <button type="button" class="sidebar-mobile__sheet-action" (click)="openAdminPanel(); closeMobileMenus()">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
+            </button>
+        }
         <button type="button" class="sidebar-mobile__sheet-logout" (click)="logout(); closeMobileMenus()">
             <mat-icon>logout</mat-icon>
             <span>{{ 'HEADER.LOGOUT' | translate }}</span>

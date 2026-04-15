@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AuthService } from '../../../services/auth.service';
@@ -35,6 +35,7 @@ describe('ProfileManageFacade', () => {
     };
 
     beforeEach(() => {
+        vi.useFakeTimers();
         userService = {
             getOverview: vi.fn().mockReturnValue(
                 of({
@@ -110,6 +111,10 @@ describe('ProfileManageFacade', () => {
         });
 
         facade = TestBed.inject(ProfileManageFacade);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     it('loads user and applies language on initialize', () => {
@@ -198,5 +203,42 @@ describe('ProfileManageFacade', () => {
 
         expect(updatedUser).toBeNull();
         expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
+    });
+
+    it('debounces profile autosave and updates user without success dialog', async () => {
+        facade.initialize();
+
+        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alex' }));
+        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alexa' }));
+
+        expect(userService.update).not.toHaveBeenCalled();
+
+        await vi.advanceTimersByTimeAsync(700);
+
+        expect(userService.update).toHaveBeenCalledTimes(1);
+        expect(userService.update.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+
+    it('queues the latest autosave payload while a save is in flight', async () => {
+        facade.initialize();
+
+        const inFlightUpdate = new Subject<any>();
+        userService.update.mockReturnValueOnce(inFlightUpdate.asObservable());
+
+        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alex' }));
+        await vi.advanceTimersByTimeAsync(700);
+        expect(userService.update).toHaveBeenCalledTimes(1);
+
+        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alexa' }));
+        expect(userService.update).toHaveBeenCalledTimes(1);
+
+        inFlightUpdate.next(user);
+        inFlightUpdate.complete();
+        await Promise.resolve();
+        await vi.advanceTimersByTimeAsync(700);
+
+        expect(userService.update).toHaveBeenCalledTimes(2);
+        expect(userService.update.mock.calls[1][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));
     });
 });

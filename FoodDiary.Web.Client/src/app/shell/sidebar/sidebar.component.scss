@@ -95,6 +95,12 @@
     }
 
     &__link {
+        appearance: none;
+        border: none;
+        width: 100%;
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
         display: grid;
         grid-template-columns: 24px 1fr;
         gap: 10px;
@@ -125,6 +131,19 @@
 
             mat-icon {
                 color: #fff;
+            }
+        }
+
+        &--admin {
+            color: #b91c1c;
+
+            mat-icon {
+                color: #dc2626;
+            }
+
+            &:hover {
+                background: rgba(220, 38, 38, 0.08);
+                color: #991b1b;
             }
         }
     }

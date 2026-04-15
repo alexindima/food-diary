@@ -15,7 +15,6 @@ variables.$color-primary: #2563eb;
     gap: 32px;
     margin: 0 auto;
     position: relative;
-    padding: 0 !important;
 
     &__header {
         margin-bottom: var(--fd-page-header-gap, 16px);
@@ -63,12 +62,6 @@ variables.$color-primary: #2563eb;
         margin-left: 0;
     }
 
-    &__primary-action {
-        --fd-button-padding-x: 18px;
-        --fd-button-padding-y: 10px;
-        --fd-button-border-radius: 14px;
-    }
-
     &__test-notification-action {
         --fd-button-padding-x: 14px;
         --fd-button-padding-y: 10px;
@@ -83,14 +76,6 @@ variables.$color-primary: #2563eb;
 
     @media #{variables.$media-sm} {
 
-        &__primary-action {
-            --fd-button-padding-x: 14px;
-            --fd-button-padding-y: 8px;
-            font-size: 0.95rem;
-            line-height: 1.1;
-            white-space: nowrap;
-        }
-
         &__test-notification-action {
             --fd-button-padding-x: 12px;
             --fd-button-padding-y: 8px;
@@ -107,20 +92,10 @@ variables.$color-primary: #2563eb;
             white-space: nowrap;
         }
 
-        &__primary-action ::ng-deep .fd-ui-button__label {
-            display: none;
-        }
     }
 
     @media #{variables.$media-xs} {
 
-        &__primary-action {
-            --fd-button-padding-x: 10px;
-            --fd-button-padding-y: 8px;
-            font-size: 0;
-            line-height: 0;
-        }
-
         &__test-notification-action {
             --fd-button-padding-x: 10px;
             --fd-button-padding-y: 8px;
@@ -133,39 +108,11 @@ variables.$color-primary: #2563eb;
             --fd-button-padding-y: 8px;
             font-size: 0;
             line-height: 0;
-        }
-
-        &__primary-action ::ng-deep .fd-ui-button__label {
-            display: none;
         }
 
         &__push-action ::ng-deep .fd-ui-button__label,
         &__test-notification-action ::ng-deep .fd-ui-button__label {
             display: none;
-        }
-    }
-
-    &__primary-action ::ng-deep button,
-    &__primary-action ::ng-deep .fd-ui-button {
-        background: linear-gradient(135deg, #4dabff, #2563eb);
-        color: #fff;
-        box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
-        border: none;
-        font-weight: 700;
-        transition:
-            transform 0.15s ease,
-            box-shadow 0.15s ease,
-            filter 0.15s ease;
-
-        &:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 16px 30px rgba(37, 99, 235, 0.32);
-            filter: brightness(1.02);
-        }
-
-        &:active {
-            transform: translateY(0);
-            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
         }
     }
 
@@ -192,8 +139,7 @@ variables.$color-primary: #2563eb;
 
         .dashboard__date-button,
         .dashboard__push-action,
-        .dashboard__test-notification-action,
-        .dashboard__primary-action {
+        .dashboard__test-notification-action {
             pointer-events: none;
         }
 
@@ -202,9 +148,7 @@ variables.$color-primary: #2563eb;
         .dashboard__push-action ::ng-deep button,
         .dashboard__push-action ::ng-deep .fd-ui-button,
         .dashboard__test-notification-action ::ng-deep button,
-        .dashboard__test-notification-action ::ng-deep .fd-ui-button,
-        .dashboard__primary-action ::ng-deep button,
-        .dashboard__primary-action ::ng-deep .fd-ui-button {
+        .dashboard__test-notification-action ::ng-deep .fd-ui-button {
             pointer-events: none;
             box-shadow: none;
         }
@@ -282,11 +226,56 @@ variables.$color-primary: #2563eb;
     &__body {
         position: relative;
         z-index: 2;
-        padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
+        padding: 0;
     }
 
     &__body > fd-page-body {
         position: relative;
+    }
+
+    &__quick-add {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    &__manual-add {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding-left: 4px;
+    }
+
+    &__manual-add-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: variables.$color-text-additional;
+    }
+
+    &__manual-add-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        padding: 0;
+        background: transparent;
+        color: #2563eb;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: #1d4ed8;
+        }
+    }
+
+    &__manual-add-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
     }
 
     &__edit-hint {
@@ -734,8 +723,7 @@ variables.$color-primary: #2563eb;
         &__date-button,
         &__settings-action,
         &__push-action,
-        &__test-notification-action,
-        &__primary-action {
+        &__test-notification-action {
             --fd-button-border-radius: 12px;
             --fd-button-padding-x: 0;
             --fd-button-padding-y: 0;
@@ -748,9 +736,7 @@ variables.$color-primary: #2563eb;
         &__push-action ::ng-deep button,
         &__push-action ::ng-deep .fd-ui-button,
         &__test-notification-action ::ng-deep button,
-        &__test-notification-action ::ng-deep .fd-ui-button,
-        &__primary-action ::ng-deep button,
-        &__primary-action ::ng-deep .fd-ui-button {
+        &__test-notification-action ::ng-deep .fd-ui-button {
             width: 38px;
             height: 38px;
             min-width: 38px;
@@ -759,18 +745,27 @@ variables.$color-primary: #2563eb;
 
         &__date-button ::ng-deep .fd-ui-button__label,
         &__push-action ::ng-deep .fd-ui-button__label,
-        &__test-notification-action ::ng-deep .fd-ui-button__label,
-        &__primary-action ::ng-deep .fd-ui-button__label {
+        &__test-notification-action ::ng-deep .fd-ui-button__label {
             display: none;
         }
 
-        &__primary-action ::ng-deep button,
-        &__primary-action ::ng-deep .fd-ui-button {
-            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+        &__body {
+            padding: 0;
         }
 
-        &__body {
-            padding: 10px 12px 12px;
+        &__quick-add {
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        &__manual-add {
+            gap: 8px;
+            padding-left: 2px;
+        }
+
+        &__manual-add-label,
+        &__manual-add-button {
+            font-size: 0.92rem;
         }
 
         &__grid {

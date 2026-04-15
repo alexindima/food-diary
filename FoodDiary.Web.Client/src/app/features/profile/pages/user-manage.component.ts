@@ -10,7 +10,6 @@ import {
     OnInit,
     signal,
 } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -67,7 +66,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         FormsModule,
         TranslatePipe,
-        NgIf,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
@@ -119,6 +117,7 @@ export class UserManageComponent implements OnInit {
     public readonly isLoadingDietologist = signal(false);
     public readonly isSavingDietologist = signal(false);
     public readonly isDeleting = this.facade.isDeleting;
+    public readonly isSavingProfile = this.facade.isSavingProfile;
     public readonly isUpdatingNotifications = this.facade.isUpdatingNotifications;
     public readonly isSchedulingTestNotification = signal(false);
     public readonly hasAiConsent = computed(() => !!this.facade.user()?.aiConsentAcceptedAt);
@@ -258,15 +257,11 @@ export class UserManageComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.facade.clearGlobalError());
-        this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.dietologistError.set(null));
-        this.userForm.controls.language.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(language => {
-            if (!this.userForm.controls.language.dirty) {
-                return;
-            }
-
-            this.applyLanguagePreference(language ?? null);
+        this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.facade.clearGlobalError();
+            this.queueUserAutosave();
         });
+        this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.dietologistError.set(null));
 
         this.facade.initialize();
     }
@@ -275,12 +270,7 @@ export class UserManageComponent implements OnInit {
         this.userForm.markAllAsTouched();
 
         if (this.userForm.valid) {
-            const formData = this.userForm.value;
-            const updateData = new UpdateUserDto({
-                ...formData,
-                profileImage: formData.profileImage as ImageSelection | null,
-            });
-            this.facade.submitUpdate(updateData);
+            this.facade.saveProfileNow(this.buildUserUpdateDto());
         }
     }
 
@@ -543,10 +533,6 @@ export class UserManageComponent implements OnInit {
             });
     }
 
-    public isAdminUser(): boolean {
-        return this.authService.isAdmin();
-    }
-
     public inviteDietologist(): void {
         if (this.isSavingDietologist()) {
             return;
@@ -720,10 +706,6 @@ export class UserManageComponent implements OnInit {
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
 
-    public openAdminPanel(): void {
-        this.facade.openAdminPanel();
-    }
-
     public formatMetric(value: number | null | undefined): string {
         if (value === null || value === undefined || Number.isNaN(value)) {
             return '—';
@@ -733,9 +715,25 @@ export class UserManageComponent implements OnInit {
     }
 
     private applyUserData(userData: Partial<UserFormValues>): void {
-        this.userForm.patchValue(userData);
+        this.userForm.patchValue(userData, { emitEvent: false });
         this.userForm.markAsPristine();
         this.userForm.markAsUntouched();
+    }
+
+    private queueUserAutosave(): void {
+        if (!this.userForm.dirty || !this.userForm.valid) {
+            return;
+        }
+
+        this.facade.queueProfileAutosave(this.buildUserUpdateDto());
+    }
+
+    private buildUserUpdateDto(): UpdateUserDto {
+        const formData = this.userForm.getRawValue();
+        return new UpdateUserDto({
+            ...formData,
+            profileImage: formData.profileImage as ImageSelection | null,
+        });
     }
 
     private loadDietologistRelationship(): void {
@@ -832,10 +830,6 @@ export class UserManageComponent implements OnInit {
             label: this.translateService.instant(`USER_MANAGE.LANGUAGE_OPTIONS.${code.toUpperCase()}`),
             value: code,
         }));
-    }
-
-    private applyLanguagePreference(language: string | null): void {
-        void this.localizationService.applyLanguagePreference(language);
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {

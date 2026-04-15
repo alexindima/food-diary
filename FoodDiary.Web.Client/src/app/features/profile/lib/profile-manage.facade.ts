@@ -1,8 +1,9 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom } from 'rxjs';
-import { finalize } from 'rxjs';
+import { Subject, finalize, firstValueFrom } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
@@ -14,7 +15,6 @@ import { NotificationPreferences, NotificationService, WebPushSubscriptionItem }
 import { UserService } from '../../../shared/api/user.service';
 import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { UpdateUserDto, User } from '../../../shared/models/user.data';
-import { environment } from '../../../../environments/environment';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
@@ -28,15 +28,25 @@ export class ProfileManageFacade {
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);
     private readonly notificationService = inject(NotificationService);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly profileAutosaveQueue = new Subject<void>();
+    private pendingProfileUpdate: UpdateUserDto | null = null;
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
     public readonly isDeleting = signal(false);
+    public readonly isSavingProfile = signal(false);
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
     public readonly isLoadingWebPushSubscriptions = signal(false);
     public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
+
+    public constructor() {
+        this.profileAutosaveQueue
+            .pipe(debounceTime(700), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.persistQueuedProfileUpdate());
+    }
 
     public initialize(): void {
         this.loadUser();
@@ -59,6 +69,15 @@ export class ProfileManageFacade {
                 this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
             },
         });
+    }
+
+    public queueProfileAutosave(updateData: UpdateUserDto): void {
+        this.pendingProfileUpdate = updateData;
+        if (this.isSavingProfile()) {
+            return;
+        }
+
+        this.profileAutosaveQueue.next();
     }
 
     public openChangePasswordDialog(): void {
@@ -162,25 +181,13 @@ export class ProfileManageFacade {
         }
     }
 
-    public openAdminPanel(): void {
-        if (!environment.adminAppUrl) {
-            return;
-        }
-
-        this.authService.startAdminSso().subscribe({
-            next: response => {
-                const url = new URL('/', environment.adminAppUrl);
-                url.searchParams.set('code', response.code);
-                window.location.href = url.toString();
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.ADMIN_SSO_ERROR');
-            },
-        });
-    }
-
     public clearGlobalError(): void {
         this.globalError.set(null);
+    }
+
+    public saveProfileNow(updateData: UpdateUserDto): void {
+        this.pendingProfileUpdate = null;
+        this.persistProfileUpdate(updateData);
     }
 
     private loadUser(): void {
@@ -215,6 +222,48 @@ export class ProfileManageFacade {
                 if (goToHome) {
                     void this.navigationService.navigateToHome();
                 }
+            });
+    }
+
+    private persistQueuedProfileUpdate(): void {
+        if (this.isSavingProfile()) {
+            return;
+        }
+
+        const updateData = this.pendingProfileUpdate;
+        this.pendingProfileUpdate = null;
+        if (!updateData) {
+            return;
+        }
+
+        this.persistProfileUpdate(updateData);
+    }
+
+    private persistProfileUpdate(updateData: UpdateUserDto): void {
+        this.isSavingProfile.set(true);
+        this.userService
+            .update(updateData)
+            .pipe(finalize(() => this.isSavingProfile.set(false)))
+            .subscribe({
+                next: user => {
+                    if (!user) {
+                        this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+                    } else {
+                        this.user.set(user);
+                        void this.localizationService.applyLanguagePreference(user.language ?? null);
+                        this.clearGlobalError();
+                    }
+
+                    if (this.pendingProfileUpdate) {
+                        this.profileAutosaveQueue.next();
+                    }
+                },
+                error: () => {
+                    this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+                    if (this.pendingProfileUpdate) {
+                        this.profileAutosaveQueue.next();
+                    }
+                },
             });
     }
 

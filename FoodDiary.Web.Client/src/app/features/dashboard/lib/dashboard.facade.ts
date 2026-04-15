@@ -176,6 +176,7 @@ export class DashboardFacade {
 
     public reload(showLoader = true): void {
         this.loadDashboardSnapshot(showLoader);
+        this.loadMicronutrients();
     }
 
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {

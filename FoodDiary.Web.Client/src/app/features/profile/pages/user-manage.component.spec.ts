@@ -287,12 +287,23 @@ describe('UserManageComponent dietologist section', () => {
 
         expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
     });
+
+    it('queues profile autosave when editable user fields change', async () => {
+        await createComponent(null);
+
+        component.userForm.controls.firstName.markAsDirty();
+        component.userForm.controls.firstName.setValue('Alex');
+
+        expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
+        expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alex' }));
+    });
 });
 
 function createFacadeMock(relationship: any): {
     user: ReturnType<typeof signal<any>>;
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
+    isSavingProfile: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: ReturnType<typeof signal<never[]>>;
     dietologistRelationship: ReturnType<typeof signal<any>>;
@@ -301,6 +312,8 @@ function createFacadeMock(relationship: any): {
     initialize: ReturnType<typeof vi.fn>;
     clearGlobalError: ReturnType<typeof vi.fn>;
     submitUpdate: ReturnType<typeof vi.fn>;
+    queueProfileAutosave: ReturnType<typeof vi.fn>;
+    saveProfileNow: ReturnType<typeof vi.fn>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
     revokeAiConsent: ReturnType<typeof vi.fn>;
     deleteAccount: ReturnType<typeof vi.fn>;
@@ -313,6 +326,7 @@ function createFacadeMock(relationship: any): {
         user: signal<any>(null),
         globalError: signal<string | null>(null),
         isDeleting: signal(false),
+        isSavingProfile: signal(false),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         dietologistRelationship: signal<any>(relationship),
@@ -321,6 +335,8 @@ function createFacadeMock(relationship: any): {
         initialize: vi.fn(),
         clearGlobalError: vi.fn(),
         submitUpdate: vi.fn(),
+        queueProfileAutosave: vi.fn(),
+        saveProfileNow: vi.fn(),
         openChangePasswordDialog: vi.fn(),
         revokeAiConsent: vi.fn(),
         deleteAccount: vi.fn(),

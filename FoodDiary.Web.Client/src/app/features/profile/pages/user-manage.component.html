@@ -3,27 +3,7 @@
         class="user-manage__header"
         [title]="'USER_MANAGE.EDIT_TITLE' | translate"
         [subtitle]="'USER_MANAGE.EDIT_SUBTITLE' | translate"
-    >
-        <ng-container fdPageHeaderActions>
-            <fd-ui-button
-                class="user-manage__header-action user-manage__header-action--ghost"
-                type="button"
-                fill="outline"
-                variant="secondary"
-                (click)="resetForm()"
-            >
-                {{ 'COMMON.CANCEL' | translate }}
-            </fd-ui-button>
-            <fd-ui-button
-                class="user-manage__header-action user-manage__header-action--primary"
-                type="button"
-                icon="save"
-                (click)="onSubmit()"
-            >
-                {{ 'COMMON.SAVE' | translate }}
-            </fd-ui-button>
-        </ng-container>
-    </fd-page-header>
+    />
 
     <fd-page-body>
         <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
@@ -128,13 +108,6 @@
                                     </fd-ui-button>
                                 </div>
                             </div>
-                            <div class="user-manage__account-row" *ngIf="isAdminUser()">
-                                <div class="user-manage__link-button user-manage__link-button--admin">
-                                    <fd-ui-button type="button" icon="shield" (click)="openAdminPanel()">
-                                        {{ 'USER_MANAGE.ADMIN_PANEL' | translate }}
-                                    </fd-ui-button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </fd-ui-card>
@@ -193,28 +166,12 @@
                                     {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE' | translate }}
                                 </div>
                             </div>
-                            <button
-                                type="button"
-                                class="user-manage__switch"
-                                role="switch"
-                                [class.is-on]="pushNotificationsEnabled()"
-                                [class.is-disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
-                                [attr.aria-checked]="pushNotificationsEnabled()"
+                            <fd-ui-switch
+                                [checked]="pushNotificationsEnabled()"
                                 [disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
-                                (click)="togglePushNotifications()"
-                            >
-                                <span class="user-manage__switch-track">
-                                    <span class="user-manage__switch-thumb"></span>
-                                </span>
-                                <span class="user-manage__switch-label">
-                                    {{
-                                        (pushNotificationsEnabled()
-                                            ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                            : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                        ) | translate
-                                    }}
-                                </span>
-                            </button>
+                                [ariaLabel]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
+                                (checkedChange)="togglePushNotifications()"
+                            />
                         </div>
 
                         @if (pushNotificationsEnabled()) {
@@ -228,28 +185,12 @@
                                             {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}
                                         </div>
                                     </div>
-                                    <button
-                                        type="button"
-                                        class="user-manage__switch"
-                                        role="switch"
-                                        [class.is-on]="fastingPushNotificationsEnabled()"
-                                        [class.is-disabled]="isUpdatingNotifications()"
-                                        [attr.aria-checked]="fastingPushNotificationsEnabled()"
+                                    <fd-ui-switch
+                                        [checked]="fastingPushNotificationsEnabled()"
                                         [disabled]="isUpdatingNotifications()"
-                                        (click)="toggleFastingPushNotifications()"
-                                    >
-                                        <span class="user-manage__switch-track">
-                                            <span class="user-manage__switch-thumb"></span>
-                                        </span>
-                                        <span class="user-manage__switch-label">
-                                            {{
-                                                (fastingPushNotificationsEnabled()
-                                                    ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                    : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                ) | translate
-                                            }}
-                                        </span>
-                                    </button>
+                                        [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
+                                        (checkedChange)="toggleFastingPushNotifications()"
+                                    />
                                 </div>
 
                                 @if (fastingPushNotificationsEnabled()) {
@@ -322,28 +263,12 @@
                                             {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}
                                         </div>
                                     </div>
-                                    <button
-                                        type="button"
-                                        class="user-manage__switch"
-                                        role="switch"
-                                        [class.is-on]="socialPushNotificationsEnabled()"
-                                        [class.is-disabled]="isUpdatingNotifications()"
-                                        [attr.aria-checked]="socialPushNotificationsEnabled()"
+                                    <fd-ui-switch
+                                        [checked]="socialPushNotificationsEnabled()"
                                         [disabled]="isUpdatingNotifications()"
-                                        (click)="toggleSocialPushNotifications()"
-                                    >
-                                        <span class="user-manage__switch-track">
-                                            <span class="user-manage__switch-thumb"></span>
-                                        </span>
-                                        <span class="user-manage__switch-label">
-                                            {{
-                                                (socialPushNotificationsEnabled()
-                                                    ? 'USER_MANAGE.NOTIFICATIONS_SWITCH_ON'
-                                                    : 'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF'
-                                                ) | translate
-                                            }}
-                                        </span>
-                                    </button>
+                                        [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
+                                        (checkedChange)="toggleSocialPushNotifications()"
+                                    />
                                 </div>
                             </div>
 

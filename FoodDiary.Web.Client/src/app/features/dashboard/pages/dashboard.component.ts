@@ -40,6 +40,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
 import { FASTING_PROTOCOLS, FastingOccurrenceKind, FastingSession } from '../../fasting/models/fasting.data';
+import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
 
 @Component({
     selector: 'fd-dashboard',
@@ -66,6 +67,7 @@ import { FASTING_PROTOCOLS, FastingOccurrenceKind, FastingSession } from '../../
         NoticeBannerComponent,
         FdUiLoaderComponent,
         FastingTimerCardComponent,
+        AiInputBarComponent,
     ],
     providers: [DashboardLayoutService, DashboardFacade, provideCharts(withDefaultRegisterables())],
     templateUrl: './dashboard.component.html',
@@ -228,7 +230,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             return this.layout.shouldRenderBlock('fasting');
         }
 
-        return this.layout.isBlockVisible('fasting') && this.fastingIsActive();
+        return this.isTodaySelected() && this.layout.isBlockVisible('fasting') && this.fastingIsActive();
     });
     public readonly hasRenderedAsideBlocks = computed(() => {
         if (this.layout.isEditingLayout()) {
@@ -307,6 +309,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     public async manageConsumptions(): Promise<void> {
         await this.navigationService.navigateToConsumptionList();
+    }
+
+    public onMealCreated(): void {
+        this.facade.reload(false);
     }
 
     public openConsumption(consumption: { id: string }): void {

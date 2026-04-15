@@ -113,7 +113,22 @@
       "Bash(claude plugin:*)",
       "Read(//c/Users/alexi/.claude/plugins/installed/**)",
       "Read(//c/Users/alexi/.claude/plugins/installed/rpiv-next@codemasters-claude-code-marketplace/**)",
-      "Read(//c/Users/alexi/.claude/plugins/**)"
+      "Read(//c/Users/alexi/.claude/plugins/**)",
+      "Bash(dotnet user-secrets:*)",
+      "Bash(DOTNET_ENVIRONMENT=Development dotnet run --project FoodDiary.Initializer -- update)",
+      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app -type f -name \"*.ts\" -exec grep -l \"profile\\\\|user\" {} \\\\;)",
+      "Bash(ls -la /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Infrastructure/Migrations/*.cs)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const f=process.argv[1];let c=fs.readFileSync\\(f,'utf8'\\);if\\(c.charCodeAt\\(0\\)===0xFEFF\\)c=c.slice\\(1\\);c=c.replace\\(/\\\\r\\\\n/g,'\\\\n'\\).replace\\(/^using System;\\\\n/,''\\).replace\\(/\\\\\\)\\\\s*\\\\n\\\\s*\\\\{/g,'\\) {'\\).replace\\(/=>\\\\s*\\\\n\\\\s*\\\\{/g,'=> {'\\).replace\\(/\\(\\\\w\\)\\\\s*\\\\n\\\\s*\\\\{/g,'\\\\$1 {'\\);fs.writeFileSync\\(f,c\\);\" \"FoodDiary.Infrastructure/Migrations/20260407162127_AddAiConsentAcceptedAt.cs\")",
+      "Bash(grep -i \"layout\\\\|app\\\\\\\\.component\")",
+      "Bash(npx prettier:*)",
+      "Bash(npx stylelint:*)",
+      "Bash(UPDATE_CONTRACT_SNAPSHOTS=1 dotnet test tests/FoodDiary.Web.Api.IntegrationTests --no-restore --filter \"FullyQualifiedName~PayloadContract || FullyQualifiedName~PresentationBoundary\")",
+      "Bash(UPDATE_CONTRACT_SNAPSHOTS=1 dotnet test tests/FoodDiary.Web.Api.IntegrationTests --filter \"FullyQualifiedName~PayloadContract || FullyQualifiedName~PresentationBoundary\")",
+      "Bash(UPDATE_CONTRACT_SNAPSHOTS=1 dotnet test tests/FoodDiary.Web.Api.IntegrationTests --filter \"FullyQualifiedName~PayloadContract|FullyQualifiedName~PresentationBoundary\")",
+      "Bash(grep -E '^\\\\./[^/]+$|^\\\\./[^/]+/[^/]+$')",
+      "Bash(find . -name \"*.cs\" -type f ! -path \"./obj/*\" ! -path \"./.codex-temp/*\" ! -path \"./.tmp/*\" ! -path \"./.idea/*\" ! -path \"./.git/*\" -exec wc -l {} +)",
+      "Bash(xargs cat:*)",
+      "Bash(find . -path \"*/tests/*\" -name \"*.csproj\" -exec basename {} \\\\;)"
     ],
     "deny": [],
     "ask": []

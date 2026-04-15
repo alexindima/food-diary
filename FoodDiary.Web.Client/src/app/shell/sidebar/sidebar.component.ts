@@ -1,10 +1,12 @@
 import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { MatIconModule } from '@angular/material/icon';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { UserService } from '../../shared/api/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
@@ -15,6 +17,7 @@ import {
     UnsavedChangesDialogResult,
 } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { NotificationsDialogComponent } from '../../components/shared/notifications-dialog/notifications-dialog.component';
 
@@ -27,9 +30,11 @@ import { NotificationsDialogComponent } from '../../components/shared/notificati
 export class SidebarComponent {
     protected readonly Math = Math;
     private readonly authService = inject(AuthService);
+    private readonly translateService = inject(TranslateService);
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly toastService = inject(FdUiToastService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly dashboardService = inject(DashboardService);
     private readonly notificationService = inject(NotificationService);
@@ -134,6 +139,25 @@ export class SidebarComponent {
     protected openNotificationsFromMobileMenu(): void {
         this.closeMobileMenus();
         this.openNotifications();
+    }
+
+    protected openAdminPanel(): void {
+        if (!this.isAdmin() || !environment.adminAppUrl) {
+            return;
+        }
+
+        const adminWindow = window.open('', '_blank', 'noopener');
+        this.authService.startAdminSso().subscribe({
+            next: response => {
+                const url = new URL('/', environment.adminAppUrl);
+                url.searchParams.set('code', response.code);
+                adminWindow?.location.assign(url.toString());
+            },
+            error: () => {
+                adminWindow?.close();
+                this.toastService.error(this.translateService.instant('USER_MANAGE.ADMIN_SSO_ERROR'));
+            },
+        });
     }
 
     protected toggleMobileFood(): void {

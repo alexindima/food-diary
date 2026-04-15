@@ -55,10 +55,6 @@
             >
                 {{ 'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate }}
             </fd-ui-button>
-
-            <fd-ui-button class="dashboard__primary-action" icon="add" (click)="addConsumption()">
-                {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
-            </fd-ui-button>
         </div>
     </header>
 
@@ -67,6 +63,18 @@
             @if (isLoading()) {
                 <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
             } @else {
+                @if (isTodaySelected() && !layout.isEditingLayout()) {
+                    <section class="dashboard__quick-add" aria-label="Quick meal add">
+                        <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
+                        <div class="dashboard__manual-add">
+                            <span class="dashboard__manual-add-label">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
+                            <button type="button" class="dashboard__manual-add-button" (click)="addConsumption()">
+                                <span class="material-icons dashboard__manual-add-icon" aria-hidden="true">add</span>
+                                <span>{{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}</span>
+                            </button>
+                        </div>
+                    </section>
+                }
                 <section
                     class="dashboard__grid"
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
