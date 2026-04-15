@@ -10,7 +10,7 @@ import {
     OnInit,
     signal,
 } from '@angular/core';
-import { DatePipe, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -67,7 +67,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         FormsModule,
         TranslatePipe,
-        DatePipe,
         NgIf,
         FdUiCardComponent,
         FdUiInputComponent,
@@ -600,19 +599,29 @@ export class UserManageComponent implements OnInit {
             return;
         }
 
-        this.isSavingDietologist.set(true);
-        this.dietologistService
-            .revokeRelationship()
-            .pipe(finalize(() => this.isSavingDietologist.set(false)))
-            .subscribe({
-                next: () => {
-                    this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));
-                    this.applyDietologistRelationship(null);
-                },
-                error: () => {
-                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');
-                },
-            });
+        if (this.isDietologistConnected()) {
+            this.dialogService
+                .open(FdUiConfirmDialogComponent, {
+                    size: 'sm',
+                    data: {
+                        title: this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECT_TITLE'),
+                        message: this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECT_MESSAGE'),
+                        confirmLabel: this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECT_CONFIRM'),
+                        cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+                    },
+                })
+                .afterClosed()
+                .subscribe(confirmed => {
+                    if (confirmed) {
+                        this.executeDietologistRevoke();
+                    }
+
+                    this.cdr.markForCheck();
+                });
+            return;
+        }
+
+        this.executeDietologistRevoke();
     }
 
     public onDietologistProfileToggle(nextValue: boolean): void {
@@ -776,6 +785,22 @@ export class UserManageComponent implements OnInit {
         this.dietologistError.set(this.translateService.instant(errorKey));
     }
 
+    private executeDietologistRevoke(): void {
+        this.isSavingDietologist.set(true);
+        this.dietologistService
+            .revokeRelationship()
+            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .subscribe({
+                next: () => {
+                    this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));
+                    this.applyDietologistRelationship(null);
+                },
+                error: () => {
+                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');
+                },
+            });
+    }
+
     private buildSelectOptions(): void {
         this.genderOptions = this.genders.map(gender => ({
             label: this.translateService.instant(`USER_MANAGE.GENDER_OPTIONS.${gender}`),
@@ -858,6 +883,21 @@ export class UserManageComponent implements OnInit {
         return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
             dateStyle: 'medium',
             timeStyle: 'short',
+        }).format(date);
+    }
+
+    public formatLocalizedDate(value: string | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+            dateStyle: 'medium',
         }).format(date);
     }
 

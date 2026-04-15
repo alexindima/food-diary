@@ -208,6 +208,69 @@ describe('UserManageComponent dietologist section', () => {
             shareFasting: false,
         });
     });
+
+    it('asks for confirmation before disconnecting an accepted dietologist relationship', async () => {
+        await createComponent(
+            {
+                invitationId: 'inv-1',
+                status: 'Accepted',
+                email: 'diet@example.com',
+                firstName: null,
+                lastName: null,
+                dietologistUserId: 'diet-1',
+                permissions: {
+                    shareProfile: true,
+                    shareMeals: true,
+                    shareStatistics: true,
+                    shareWeight: true,
+                    shareWaist: true,
+                    shareGoals: true,
+                    shareHydration: true,
+                    shareFasting: true,
+                },
+                createdAtUtc: '2026-04-15T00:00:00Z',
+                expiresAtUtc: '2026-04-22T00:00:00Z',
+                acceptedAtUtc: '2026-04-15T01:00:00Z',
+            },
+            false,
+        );
+
+        component.revokeDietologistRelationship();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(dietologistService.revokeRelationship).not.toHaveBeenCalled();
+    });
+
+    it('disconnects after confirmation for an accepted relationship', async () => {
+        await createComponent(
+            {
+                invitationId: 'inv-1',
+                status: 'Accepted',
+                email: 'diet@example.com',
+                firstName: null,
+                lastName: null,
+                dietologistUserId: 'diet-1',
+                permissions: {
+                    shareProfile: true,
+                    shareMeals: true,
+                    shareStatistics: true,
+                    shareWeight: true,
+                    shareWaist: true,
+                    shareGoals: true,
+                    shareHydration: true,
+                    shareFasting: true,
+                },
+                createdAtUtc: '2026-04-15T00:00:00Z',
+                expiresAtUtc: '2026-04-22T00:00:00Z',
+                acceptedAtUtc: '2026-04-15T01:00:00Z',
+            },
+            true,
+        );
+
+        component.revokeDietologistRelationship();
+
+        expect(dietologistService.revokeRelationship).toHaveBeenCalledTimes(1);
+    });
 });
 
 function createFacadeMock(): {
