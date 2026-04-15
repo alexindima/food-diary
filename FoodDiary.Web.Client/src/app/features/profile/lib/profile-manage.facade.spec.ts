@@ -12,11 +12,13 @@ import { ProfileManageFacade } from './profile-manage.facade';
 
 describe('ProfileManageFacade', () => {
     let facade: ProfileManageFacade;
-    let userService: { getInfo: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteCurrentUser: ReturnType<typeof vi.fn> };
+    let userService: {
+        getOverview: ReturnType<typeof vi.fn>;
+        update: ReturnType<typeof vi.fn>;
+        deleteCurrentUser: ReturnType<typeof vi.fn>;
+    };
     let notificationService: {
-        getNotificationPreferences: ReturnType<typeof vi.fn>;
         updateNotificationPreferences: ReturnType<typeof vi.fn>;
-        getWebPushSubscriptions: ReturnType<typeof vi.fn>;
         removeWebPushSubscription: ReturnType<typeof vi.fn>;
     };
     let dialogService: { open: ReturnType<typeof vi.fn> };
@@ -34,37 +36,42 @@ describe('ProfileManageFacade', () => {
 
     beforeEach(() => {
         userService = {
-            getInfo: vi.fn().mockReturnValue(of(user as any)),
+            getOverview: vi.fn().mockReturnValue(
+                of({
+                    user,
+                    notificationPreferences: {
+                        pushNotificationsEnabled: true,
+                        fastingPushNotificationsEnabled: false,
+                        socialPushNotificationsEnabled: true,
+                        fastingCheckInReminderHours: 12,
+                        fastingCheckInFollowUpReminderHours: 20,
+                    },
+                    webPushSubscriptions: [
+                        {
+                            endpoint: 'https://push.example.com/subscriptions/current',
+                            endpointHost: 'push.example.com',
+                            expirationTimeUtc: null,
+                            locale: 'en',
+                            userAgent: 'Chrome',
+                            createdAtUtc: '2026-04-10T10:00:00Z',
+                            updatedAtUtc: null,
+                        },
+                    ],
+                    dietologistRelationship: null,
+                }),
+            ),
             update: vi.fn().mockReturnValue(of(user as any)),
             deleteCurrentUser: vi.fn().mockReturnValue(of(true)),
         };
         notificationService = {
-            getNotificationPreferences: vi.fn().mockReturnValue(
-                of({
-                    pushNotificationsEnabled: true,
-                    fastingPushNotificationsEnabled: false,
-                    socialPushNotificationsEnabled: true,
-                }),
-            ),
             updateNotificationPreferences: vi.fn().mockReturnValue(
                 of({
                     pushNotificationsEnabled: false,
                     fastingPushNotificationsEnabled: true,
                     socialPushNotificationsEnabled: true,
+                    fastingCheckInReminderHours: 12,
+                    fastingCheckInFollowUpReminderHours: 20,
                 }),
-            ),
-            getWebPushSubscriptions: vi.fn().mockReturnValue(
-                of([
-                    {
-                        endpoint: 'https://push.example.com/subscriptions/current',
-                        endpointHost: 'push.example.com',
-                        expirationTimeUtc: null,
-                        locale: 'en',
-                        userAgent: 'Chrome',
-                        createdAtUtc: '2026-04-10T10:00:00Z',
-                        updatedAtUtc: null,
-                    },
-                ]),
             ),
             removeWebPushSubscription: vi.fn().mockReturnValue(of(undefined)),
         };
@@ -108,11 +115,9 @@ describe('ProfileManageFacade', () => {
     it('loads user and applies language on initialize', () => {
         facade.initialize();
 
-        expect(userService.getInfo).toHaveBeenCalledTimes(1);
+        expect(userService.getOverview).toHaveBeenCalledTimes(1);
         expect(facade.user()).toEqual(expect.objectContaining(user as any));
         expect(localizationService.applyLanguagePreference).toHaveBeenCalledWith('ru');
-        expect(notificationService.getNotificationPreferences).toHaveBeenCalledTimes(1);
-        expect(notificationService.getWebPushSubscriptions).toHaveBeenCalledTimes(1);
         expect(facade.user()?.pushNotificationsEnabled).toBe(true);
         expect(facade.webPushSubscriptions()).toHaveLength(1);
         expect(facade.globalError()).toBeNull();

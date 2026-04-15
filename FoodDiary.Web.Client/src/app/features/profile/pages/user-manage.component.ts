@@ -114,7 +114,7 @@ export class UserManageComponent implements OnInit {
     public userForm: FormGroup<UserFormData>;
     public dietologistForm: FormGroup<DietologistFormData>;
     public readonly globalError = this.facade.globalError;
-    public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
+    public readonly dietologistRelationship = this.facade.dietologistRelationship;
     public readonly dietologistError = signal<string | null>(null);
     public readonly isLoadingDietologist = signal(false);
     public readonly isSavingDietologist = signal(false);
@@ -239,6 +239,10 @@ export class UserManageComponent implements OnInit {
         });
 
         effect(() => {
+            this.syncDietologistFormFromRelationship(this.facade.dietologistRelationship());
+        });
+
+        effect(() => {
             const version = this.notificationService.notificationsChangedVersion();
             if (version === this.lastNotificationSyncVersion) {
                 return;
@@ -265,7 +269,6 @@ export class UserManageComponent implements OnInit {
         });
 
         this.facade.initialize();
-        this.loadDietologistRelationship();
     }
 
     public async onSubmit(): Promise<void> {
@@ -742,7 +745,7 @@ export class UserManageComponent implements OnInit {
             .pipe(finalize(() => this.isLoadingDietologist.set(false)))
             .subscribe({
                 next: relationship => {
-                    this.applyDietologistRelationship(relationship);
+                    this.facade.dietologistRelationship.set(relationship);
                     this.dietologistError.set(null);
                 },
                 error: () => {
@@ -751,9 +754,7 @@ export class UserManageComponent implements OnInit {
             });
     }
 
-    private applyDietologistRelationship(relationship: DietologistRelationship | null): void {
-        this.dietologistRelationship.set(relationship);
-
+    private syncDietologistFormFromRelationship(relationship: DietologistRelationship | null): void {
         if (relationship) {
             this.dietologistForm.patchValue({
                 email: relationship.email,
@@ -808,7 +809,7 @@ export class UserManageComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));
-                    this.applyDietologistRelationship(null);
+                    this.facade.dietologistRelationship.set(null);
                 },
                 error: () => {
                     this.setDietologistError('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');

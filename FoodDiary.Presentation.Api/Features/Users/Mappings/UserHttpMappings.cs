@@ -5,6 +5,7 @@ using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 using FoodDiary.Application.Users.Commands.UpdateUser;
+using FoodDiary.Application.Users.Queries.GetProfileOverview;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetUserById;
@@ -16,6 +17,8 @@ namespace FoodDiary.Presentation.Api.Features.Users.Mappings;
 
 public static class UserHttpMappings {
     public static GetUserByIdQuery ToUserQuery(this Guid userId) => new(userId);
+
+    public static GetProfileOverviewQuery ToProfileOverviewQuery(this Guid userId) => new(userId);
 
     public static GetDesiredWeightQuery ToDesiredWeightQuery(this Guid userId) => new(userId);
 

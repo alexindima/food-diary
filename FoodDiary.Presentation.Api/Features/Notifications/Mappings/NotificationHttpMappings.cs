@@ -51,6 +51,16 @@ public static class NotificationHttpMappings {
             subscription.CreatedOnUtc,
             subscription.ModifiedOnUtc);
 
+    public static WebPushSubscriptionHttpResponse ToHttpResponse(this WebPushSubscriptionModel subscription) =>
+        new(
+            subscription.Endpoint,
+            subscription.EndpointHost,
+            subscription.ExpirationTimeUtc,
+            subscription.Locale,
+            subscription.UserAgent,
+            subscription.CreatedAtUtc,
+            subscription.UpdatedAtUtc);
+
     private static string GetEndpointHost(string endpoint) {
         return Uri.TryCreate(endpoint, UriKind.Absolute, out var uri)
             ? uri.Host

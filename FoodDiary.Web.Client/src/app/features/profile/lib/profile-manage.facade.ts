@@ -12,6 +12,7 @@ import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { NotificationPreferences, NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { UserService } from '../../../shared/api/user.service';
+import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { UpdateUserDto, User } from '../../../shared/models/user.data';
 import { environment } from '../../../../environments/environment';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
@@ -33,6 +34,7 @@ export class ProfileManageFacade {
     public readonly isDeleting = signal(false);
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
+    public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
     public readonly isLoadingWebPushSubscriptions = signal(false);
     public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
 
@@ -182,20 +184,24 @@ export class ProfileManageFacade {
     }
 
     private loadUser(): void {
-        this.userService.getInfo().subscribe({
-            next: user => {
-                if (!user) {
+        this.userService.getOverview().subscribe({
+            next: overview => {
+                if (!overview) {
                     this.setGlobalError('USER_MANAGE.LOAD_ERROR');
                     return;
                 }
 
-                this.user.set(user);
+                this.user.set(overview.user);
+                this.applyNotificationPreferences(overview.notificationPreferences);
+                this.webPushSubscriptions.set(overview.webPushSubscriptions);
+                this.dietologistRelationship.set(overview.dietologistRelationship);
                 this.clearGlobalError();
-                void this.localizationService.applyLanguagePreference(user.language ?? null);
-                this.loadNotificationPreferences();
-                this.loadWebPushSubscriptions();
+                void this.localizationService.applyLanguagePreference(overview.user.language ?? null);
             },
             error: () => {
+                this.user.set(null);
+                this.webPushSubscriptions.set([]);
+                this.dietologistRelationship.set(null);
                 this.setGlobalError('USER_MANAGE.LOAD_ERROR');
             },
         });
@@ -218,15 +224,6 @@ export class ProfileManageFacade {
 
     private setGlobalError(errorKey: string): void {
         this.globalError.set(this.translateService.instant(errorKey));
-    }
-
-    private loadNotificationPreferences(): void {
-        this.notificationService.getNotificationPreferences().subscribe({
-            next: preferences => this.applyNotificationPreferences(preferences),
-            error: () => {
-                // Keep the profile responsive even if notification preferences fail separately.
-            },
-        });
     }
 
     private applyNotificationPreferences(preferences: NotificationPreferences): void {

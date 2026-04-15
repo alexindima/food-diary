@@ -3,6 +3,8 @@ import { catchError, map, Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../services/api.service';
+import { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
+import { DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {
     ChangePasswordRequest,
@@ -12,6 +14,13 @@ import {
     UpdateUserDto,
     User,
 } from '../models/user.data';
+
+export interface UserProfileOverview {
+    user: User;
+    notificationPreferences: NotificationPreferences;
+    webPushSubscriptions: WebPushSubscriptionItem[];
+    dietologistRelationship: DietologistRelationship | null;
+}
 
 @Injectable({
     providedIn: 'root',
@@ -27,6 +36,16 @@ export class UserService extends ApiService {
 
     public getUserCalories(): Observable<number | null> {
         return this.getInfo().pipe(map(user => user?.calories ?? null));
+    }
+
+    public getOverview(): Observable<UserProfileOverview | null> {
+        return this.get<UserProfileOverview>('overview').pipe(
+            tap(overview => this.userSignal.set(overview?.user ?? null)),
+            catchError(error => {
+                this.userSignal.set(null);
+                return fallbackApiError('Get user overview error', error, null);
+            }),
+        );
     }
 
     public getInfo(): Observable<User | null> {

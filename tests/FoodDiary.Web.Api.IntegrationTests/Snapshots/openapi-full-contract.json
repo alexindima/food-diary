@@ -2423,6 +2423,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/users/overview",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/users/password",
       "Operations": [
         {

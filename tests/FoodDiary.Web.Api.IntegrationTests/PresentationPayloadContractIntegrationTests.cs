@@ -236,6 +236,22 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     [Fact]
+    public async Task UserOverview_AfterRegister_MatchesNormalizedPayloadSnapshot() {
+        var client = apiFactory.CreateClient();
+        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await client.GetAsync("/api/v1/users/overview");
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var actual = JsonSerializer.Serialize(
+            BuildUserOverviewSnapshot(json.RootElement),
+            new JsonSerializerOptions { WriteIndented = true });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await AssertPayloadSnapshotAsync("user-overview", actual);
+    }
+
+    [Fact]
     public async Task HydrationDaily_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         var client = apiFactory.CreateClient();
         var accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -436,6 +452,22 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["dashboardLayoutKeys"] = dashboardLayout.ValueKind == JsonValueKind.Object
                 ? ToJsonArray(dashboardLayout.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal))
                 : new JsonArray()
+        };
+    }
+
+    private static JsonObject BuildUserOverviewSnapshot(JsonElement root) {
+        var user = root.GetProperty("user");
+        var notificationPreferences = root.GetProperty("notificationPreferences");
+        var webPushSubscriptions = root.GetProperty("webPushSubscriptions");
+        var dietologistRelationship = root.GetProperty("dietologistRelationship");
+
+        return new JsonObject {
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["userKeys"] = ToJsonArray(user.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["notificationPreferenceKeys"] = ToJsonArray(
+                notificationPreferences.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["webPushSubscriptionsCount"] = webPushSubscriptions.GetArrayLength(),
+            ["dietologistRelationshipIsNull"] = dietologistRelationship.ValueKind == JsonValueKind.Null
         };
     }
 

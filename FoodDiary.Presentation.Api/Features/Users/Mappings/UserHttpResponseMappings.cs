@@ -1,4 +1,6 @@
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
+using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 
@@ -48,6 +50,13 @@ public static class UserHttpResponseMappings {
 
     public static UserDesiredWaistHttpResponse ToHttpResponse(this UserDesiredWaistModel model)
         => new(model.DesiredWaist);
+
+    public static ProfileOverviewHttpResponse ToHttpResponse(this ProfileOverviewModel model) =>
+        new(
+            model.User.ToHttpResponse(),
+            model.NotificationPreferences.ToHttpResponse(),
+            model.WebPushSubscriptions.Select(static subscription => subscription.ToHttpResponse()).ToList(),
+            model.DietologistRelationship?.ToHttpResponse());
 
     private static DashboardLayoutHttpModel ToHttpModel(this DashboardLayoutModel model)
         => new(model.Web, model.Mobile);

@@ -64,4 +64,3 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public Task<IActionResult> DeleteCurrentUser([FromCurrentUser] Guid userId) =>
         HandleNoContent(userId.ToDeleteCommand());
 }
-

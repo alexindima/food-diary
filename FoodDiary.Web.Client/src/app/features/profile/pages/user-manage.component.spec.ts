@@ -31,7 +31,7 @@ describe('UserManageComponent dietologist section', () => {
     };
 
     async function createComponent(relationship: any, dialogResult = false): Promise<void> {
-        facade = createFacadeMock();
+        facade = createFacadeMock(relationship);
         dietologistService = {
             getRelationship: vi.fn().mockReturnValue(of(relationship)),
             invite: vi.fn().mockReturnValue(of(undefined)),
@@ -116,7 +116,7 @@ describe('UserManageComponent dietologist section', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
         await createComponent(null);
 
-        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
+        expect(dietologistService.getRelationship).not.toHaveBeenCalled();
         expect(component.hasDietologistRelationship()).toBe(false);
         expect(component.dietologistForm.controls.email.enabled).toBe(true);
         expect(component.dietologistForm.controls.shareProfile.value).toBe(true);
@@ -280,21 +280,22 @@ describe('UserManageComponent dietologist section', () => {
 
     it('reloads dietologist relationship when notifications realtime changes', async () => {
         await createComponent(null);
-        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(0);
 
         notificationService.notificationsChangedVersion.set(1);
         fixture.detectChanges();
 
-        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(2);
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
     });
 });
 
-function createFacadeMock(): {
+function createFacadeMock(relationship: any): {
     user: ReturnType<typeof signal<any>>;
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: ReturnType<typeof signal<never[]>>;
+    dietologistRelationship: ReturnType<typeof signal<any>>;
     isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
     removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     initialize: ReturnType<typeof vi.fn>;
@@ -314,6 +315,7 @@ function createFacadeMock(): {
         isDeleting: signal(false),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
+        dietologistRelationship: signal<any>(relationship),
         isLoadingWebPushSubscriptions: signal(false),
         removingWebPushSubscriptionEndpoint: signal<string | null>(null),
         initialize: vi.fn(),

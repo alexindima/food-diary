@@ -15,4 +15,20 @@ public static class NotificationMappings {
             notification.ReferenceId,
             notification.IsRead,
             notification.CreatedOnUtc);
+
+    public static WebPushSubscriptionModel ToModel(this WebPushSubscription subscription) =>
+        new(
+            subscription.Endpoint,
+            GetEndpointHost(subscription.Endpoint),
+            subscription.ExpirationTimeUtc,
+            subscription.Locale,
+            subscription.UserAgent,
+            subscription.CreatedOnUtc,
+            subscription.ModifiedOnUtc);
+
+    private static string GetEndpointHost(string endpoint) {
+        return Uri.TryCreate(endpoint, UriKind.Absolute, out var uri)
+            ? uri.Host
+            : endpoint;
+    }
 }

@@ -274,5 +274,57 @@
     "objectKeyStartsWithUsers": true,
     "objectKeyContainsImagesSegment": true,
     "assetIdIsGuid": true
+  },
+  "user-overview": {
+    "keys": [
+      "dietologistRelationship",
+      "notificationPreferences",
+      "user",
+      "webPushSubscriptions"
+    ],
+    "userKeys": [
+      "activityLevel",
+      "aiConsentAcceptedAt",
+      "birthDate",
+      "carbTarget",
+      "dailyCalorieTarget",
+      "dashboardLayout",
+      "desiredWaist",
+      "desiredWeight",
+      "email",
+      "fastingCheckInFollowUpReminderHours",
+      "fastingCheckInReminderHours",
+      "fastingPushNotificationsEnabled",
+      "fatTarget",
+      "fiberTarget",
+      "firstName",
+      "gender",
+      "height",
+      "hydrationGoal",
+      "id",
+      "isActive",
+      "isEmailConfirmed",
+      "language",
+      "lastLoginAtUtc",
+      "lastName",
+      "profileImage",
+      "profileImageAssetId",
+      "proteinTarget",
+      "pushNotificationsEnabled",
+      "socialPushNotificationsEnabled",
+      "stepGoal",
+      "username",
+      "waterGoal",
+      "weight"
+    ],
+    "notificationPreferenceKeys": [
+      "fastingCheckInFollowUpReminderHours",
+      "fastingCheckInReminderHours",
+      "fastingPushNotificationsEnabled",
+      "pushNotificationsEnabled",
+      "socialPushNotificationsEnabled"
+    ],
+    "webPushSubscriptionsCount": 0,
+    "dietologistRelationshipIsNull": true
   }
 }
