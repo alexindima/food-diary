@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /assets/i18n/
 
-Sitemap: https://fooddiary.club/sitemap.xml
+Sitemap: https://xn--b1adbcbrouc8l.xn--p1ai/sitemap.xml

@@ -33,7 +33,17 @@
                                 "output": "/"
                             },
                             {
+                                "glob": "robots-ru.txt",
+                                "input": "assets",
+                                "output": "/"
+                            },
+                            {
                                 "glob": "sitemap.xml",
+                                "input": "assets",
+                                "output": "/"
+                            },
+                            {
+                                "glob": "sitemap-ru.xml",
                                 "input": "assets",
                                 "output": "/"
                             },
