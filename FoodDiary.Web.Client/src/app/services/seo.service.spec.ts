@@ -75,6 +75,15 @@ describe('SeoService', () => {
             expect(metaService.getTag('property="og:image"')?.content).toContain('icon-512x512.png');
         });
 
+        it('should use current russian domain for canonical and og:url', () => {
+            vi.spyOn(service as any, 'getCurrentSiteUrl').mockReturnValue('https://xn--b1adbcbrouc8l.xn--p1ai');
+
+            service.update({ path: '/meals' });
+
+            expect(metaService.getTag('property="og:url"')?.content).toBe('https://xn--b1adbcbrouc8l.xn--p1ai/meals');
+            expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://xn--b1adbcbrouc8l.xn--p1ai/meals');
+        });
+
         it('should update Twitter card tags', () => {
             service.update({ titleKey: null, path: '/' });
 
@@ -96,6 +105,20 @@ describe('SeoService', () => {
             const links = document.querySelectorAll('link[rel="canonical"]');
             expect(links.length).toBe(1);
             expect(links[0].getAttribute('href')).toBe('https://fooddiary.club/second');
+        });
+
+        it('should create alternate hreflang links', () => {
+            service.update({ path: '/products' });
+
+            expect(document.querySelector('link[rel="alternate"][hreflang="en"]')?.getAttribute('href')).toBe(
+                'https://fooddiary.club/products',
+            );
+            expect(document.querySelector('link[rel="alternate"][hreflang="ru"]')?.getAttribute('href')).toBe(
+                'https://xn--b1adbcbrouc8l.xn--p1ai/products',
+            );
+            expect(document.querySelector('link[rel="alternate"][hreflang="x-default"]')?.getAttribute('href')).toBe(
+                'https://fooddiary.club/products',
+            );
         });
 
         it('should add robots noindex when noIndex is true', () => {

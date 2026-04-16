@@ -6,12 +6,7 @@ import { MeasurementUnit } from '../features/products/models/product.data';
 
 @Injectable()
 export class LocalizationService {
-    private static readonly russianDefaultHosts = new Set([
-        'дневникеды.рф',
-        'www.дневникеды.рф',
-        'xn--b1adbcbrouc8l.xn--p1ai',
-        'www.xn--b1adbcbrouc8l.xn--p1ai',
-    ]);
+    private static readonly russianDefaultHosts = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai']);
 
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);
