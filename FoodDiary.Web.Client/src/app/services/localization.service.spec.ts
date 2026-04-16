@@ -9,6 +9,7 @@ describe('LocalizationService', () => {
     let translateSpy: any;
     let langChangeSubject: Subject<LangChangeEvent>;
     let mockDocument: Document;
+    let documentLang: string | null;
     let currentLangValue: string;
 
     beforeEach(() => {
@@ -41,7 +42,18 @@ describe('LocalizationService', () => {
         translateSpy.getDefaultLang.mockReturnValue('en');
         translateSpy.getBrowserLang.mockReturnValue('en');
 
-        mockDocument = document;
+        documentLang = null;
+        mockDocument = {
+            location: { hostname: 'fooddiary.club' },
+            documentElement: {
+                setAttribute: vi.fn((name: string, value: string) => {
+                    if (name === 'lang') {
+                        documentLang = value;
+                    }
+                }),
+                getAttribute: vi.fn((name: string) => (name === 'lang' ? documentLang : null)),
+            },
+        } as unknown as Document;
 
         TestBed.configureTestingModule({
             providers: [
@@ -72,6 +84,23 @@ describe('LocalizationService', () => {
         await service.initializeLocalization();
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
+    });
+
+    it('should default to russian for the russian domain when no stored preference exists', async () => {
+        (mockDocument.location as Location).hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
+
+        await service.initializeLocalization();
+
+        expect(translateSpy.use).toHaveBeenCalledWith('ru');
+    });
+
+    it('should prefer stored language over domain default', async () => {
+        localStorage.setItem('fd_language', 'en');
+        (mockDocument.location as Location).hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
+
+        await service.initializeLocalization();
+
+        expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
 
     it("should normalize unknown language to 'en'", async () => {

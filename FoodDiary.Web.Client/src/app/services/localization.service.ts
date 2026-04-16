@@ -6,6 +6,13 @@ import { MeasurementUnit } from '../features/products/models/product.data';
 
 @Injectable()
 export class LocalizationService {
+    private static readonly russianDefaultHosts = new Set([
+        'дневникеды.рф',
+        'www.дневникеды.рф',
+        'xn--b1adbcbrouc8l.xn--p1ai',
+        'www.xn--b1adbcbrouc8l.xn--p1ai',
+    ]);
+
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);
     private readonly storageKey = 'fd_language';
@@ -24,7 +31,8 @@ export class LocalizationService {
 
         const browserLang = this.translateService.getBrowserLang();
         const storedLang = this.getStoredLanguage();
-        const normalizedLang = this.normalizeLanguage(storedLang ?? browserLang);
+        const domainLang = this.getDomainDefaultLanguage();
+        const normalizedLang = this.normalizeLanguage(storedLang ?? domainLang ?? browserLang);
 
         return firstValueFrom(this.translateService.use(normalizedLang)).then(() => void 0);
     }
@@ -85,6 +93,15 @@ export class LocalizationService {
             return null;
         }
         return value;
+    }
+
+    private getDomainDefaultLanguage(): string | null {
+        const hostname = this.document.location.hostname?.toLowerCase();
+        if (!hostname) {
+            return null;
+        }
+
+        return LocalizationService.russianDefaultHosts.has(hostname) ? 'ru' : null;
     }
 
     private setDocumentLang(lang: string): void {
