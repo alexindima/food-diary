@@ -7,6 +7,7 @@ const DEFAULT_TITLE = 'Food Diary';
 const ENGLISH_SITE_URL = 'https://fooddiary.club';
 const RUSSIAN_SITE_URL = 'https://xn--b1adbcbrouc8l.xn--p1ai';
 const RUSSIAN_HOSTS = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai']);
+const STRUCTURED_DATA_SELECTOR = 'script[data-seo-structured-data="app"]';
 
 export interface SeoData {
     titleKey?: string | null;
@@ -23,31 +24,33 @@ export class SeoService {
     private readonly translate = inject(TranslateService);
 
     public update(data: SeoData): void {
+        const currentSiteUrl = this.getCurrentSiteUrl();
         const translatedTitle = data.titleKey ? this.translate.instant(data.titleKey) : null;
         const pageTitle = translatedTitle ? `${translatedTitle} | ${DEFAULT_TITLE}` : DEFAULT_TITLE;
         const description = data.descriptionKey
             ? this.translate.instant(data.descriptionKey)
             : this.translate.instant('SEO.DEFAULT_DESCRIPTION');
-        const currentUrl = this.buildSiteUrl(this.getCurrentSiteUrl(), data.path);
+        const currentUrl = this.buildSiteUrl(currentSiteUrl, data.path);
 
         this.title.setTitle(pageTitle);
 
         this.meta.updateTag({ name: 'description', content: description });
-
         this.meta.updateTag({ property: 'og:title', content: pageTitle });
         this.meta.updateTag({ property: 'og:description', content: description });
         this.meta.updateTag({ property: 'og:url', content: currentUrl });
-        this.meta.updateTag({ property: 'og:image', content: `${this.getCurrentSiteUrl()}/assets/pwa/icon-512x512.png` });
+        this.meta.updateTag({ property: 'og:image', content: `${currentSiteUrl}/assets/pwa/icon-512x512.png` });
         this.meta.updateTag({ property: 'og:type', content: 'website' });
         this.meta.updateTag({ property: 'og:site_name', content: DEFAULT_TITLE });
+        this.meta.updateTag({ property: 'og:locale', content: this.getOpenGraphLocale() });
 
         this.meta.updateTag({ name: 'twitter:card', content: 'summary' });
         this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
         this.meta.updateTag({ name: 'twitter:description', content: description });
-        this.meta.updateTag({ name: 'twitter:image', content: `${this.getCurrentSiteUrl()}/assets/pwa/icon-512x512.png` });
+        this.meta.updateTag({ name: 'twitter:image', content: `${currentSiteUrl}/assets/pwa/icon-512x512.png` });
 
         this.updateCanonical(currentUrl);
         this.updateAlternateLinks(data.path);
+        this.updateStructuredData(pageTitle, description, currentUrl);
 
         if (data.noIndex) {
             this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
@@ -66,11 +69,32 @@ export class SeoService {
     }
 
     private buildSiteUrl(baseUrl: string, path?: string): string {
-        if (!path || path === '/') {
+        const normalizedPath = this.normalizePath(path);
+        if (!normalizedPath || normalizedPath === '/') {
             return baseUrl;
         }
 
-        return `${baseUrl}${path}`;
+        return `${baseUrl}${normalizedPath}`;
+    }
+
+    private normalizePath(path?: string): string {
+        if (!path) {
+            return '/';
+        }
+
+        const withoutHash = path.split('#', 1)[0] ?? '/';
+        const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
+
+        if (!withoutQuery || withoutQuery === '/') {
+            return '/';
+        }
+
+        return withoutQuery.endsWith('/') ? withoutQuery.slice(0, -1) : withoutQuery;
+    }
+
+    private getOpenGraphLocale(): string {
+        const currentLang = this.translate.currentLang?.toLowerCase();
+        return currentLang === 'ru' ? 'ru_RU' : 'en_US';
     }
 
     private updateCanonical(url: string): void {
@@ -101,5 +125,52 @@ export class SeoService {
 
             link.setAttribute('href', alternate.href);
         }
+    }
+
+    private updateStructuredData(pageTitle: string, description: string, currentUrl: string): void {
+        let script = this.document.querySelector(STRUCTURED_DATA_SELECTOR) as HTMLScriptElement | null;
+        if (!script) {
+            script = this.document.createElement('script');
+            script.type = 'application/ld+json';
+            script.setAttribute('data-seo-structured-data', 'app');
+            this.document.head.appendChild(script);
+        }
+
+        const currentSiteUrl = this.getCurrentSiteUrl();
+        const inLanguage = this.translate.currentLang === 'ru' ? 'ru' : 'en';
+        const structuredData = {
+            '@context': 'https://schema.org',
+            '@graph': [
+                {
+                    '@type': 'WebSite',
+                    name: DEFAULT_TITLE,
+                    url: currentSiteUrl,
+                    inLanguage,
+                },
+                {
+                    '@type': 'SoftwareApplication',
+                    name: DEFAULT_TITLE,
+                    applicationCategory: 'HealthApplication',
+                    operatingSystem: 'Web',
+                    url: currentUrl,
+                    description,
+                    inLanguage,
+                },
+                {
+                    '@type': 'WebPage',
+                    name: pageTitle,
+                    url: currentUrl,
+                    description,
+                    isPartOf: {
+                        '@type': 'WebSite',
+                        name: DEFAULT_TITLE,
+                        url: currentSiteUrl,
+                    },
+                    inLanguage,
+                },
+            ],
+        };
+
+        script.textContent = JSON.stringify(structuredData);
     }
 }

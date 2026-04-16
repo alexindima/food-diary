@@ -9,12 +9,13 @@ describe('SeoService', () => {
     let service: SeoService;
     let titleService: Title;
     let metaService: Meta;
-    let translateService: { instant: ReturnType<typeof vi.fn> };
+    let translateService: { instant: ReturnType<typeof vi.fn>; currentLang: string };
     let document: Document;
 
     beforeEach(() => {
         translateService = {
             instant: vi.fn((key: string) => key),
+            currentLang: 'en',
         };
 
         TestBed.configureTestingModule({
@@ -73,6 +74,7 @@ describe('SeoService', () => {
             expect(metaService.getTag('property="og:type"')?.content).toBe('website');
             expect(metaService.getTag('property="og:site_name"')?.content).toBe('Food Diary');
             expect(metaService.getTag('property="og:image"')?.content).toContain('icon-512x512.png');
+            expect(metaService.getTag('property="og:locale"')?.content).toBe('en_US');
         });
 
         it('should use current russian domain for canonical and og:url', () => {
@@ -119,6 +121,26 @@ describe('SeoService', () => {
             expect(document.querySelector('link[rel="alternate"][hreflang="x-default"]')?.getAttribute('href')).toBe(
                 'https://fooddiary.club/products',
             );
+        });
+
+        it('should strip query params and fragments from canonical urls', () => {
+            service.update({ path: '/products?utm_source=google#top' });
+
+            expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://fooddiary.club/products');
+            expect(metaService.getTag('property="og:url"')?.content).toBe('https://fooddiary.club/products');
+        });
+
+        it('should render structured data for the current page', () => {
+            translateService.instant.mockImplementation((key: string) => (key === 'SEO.DEFAULT_DESCRIPTION' ? 'Default description' : key));
+
+            service.update({ path: '/privacy-policy' });
+
+            const script = document.querySelector('script[data-seo-structured-data="app"]');
+            expect(script).not.toBeNull();
+
+            const payload = JSON.parse(script?.textContent ?? '{}') as { ['@graph']: Array<Record<string, string>> };
+            expect(payload['@graph'].some(item => item['@type'] === 'SoftwareApplication')).toBe(true);
+            expect(payload['@graph'].some(item => item['url'] === 'https://fooddiary.club/privacy-policy')).toBe(true);
         });
 
         it('should add robots noindex when noIndex is true', () => {
