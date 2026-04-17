@@ -64,7 +64,11 @@ export class DynamicProgressBarComponent {
 
     private toHex(channels: number[]): string {
         return `#${channels
-            .map(channel => Math.max(0, Math.min(255, Math.round(channel))).toString(16).padStart(2, '0'))
+            .map(channel =>
+                Math.max(0, Math.min(255, Math.round(channel)))
+                    .toString(16)
+                    .padStart(2, '0'),
+            )
             .join('')}`;
     }
 }

@@ -40,37 +40,43 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
         value: 4,
         titleKey: 'HUNGER_SCALE.LEVEL_4.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_4.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, var(--fd-color-yellow-300), color-mix(in srgb, var(--fd-color-yellow-300) 70%, var(--fd-color-white)))',
+        gradient:
+            'linear-gradient(135deg, var(--fd-color-yellow-300), color-mix(in srgb, var(--fd-color-yellow-300) 70%, var(--fd-color-white)))',
     },
     {
         value: 5,
         titleKey: 'HUNGER_SCALE.LEVEL_5.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_5.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-yellow-300) 70%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)))',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-yellow-300) 70%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)))',
     },
     {
         value: 6,
         titleKey: 'HUNGER_SCALE.LEVEL_6.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_6.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)))',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)))',
     },
     {
         value: 7,
         titleKey: 'HUNGER_SCALE.LEVEL_7.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_7.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-teal-500) 65%, var(--fd-color-green-500)))',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-teal-500) 65%, var(--fd-color-green-500)))',
     },
     {
         value: 8,
         titleKey: 'HUNGER_SCALE.LEVEL_8.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_8.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-teal-500) 65%, var(--fd-color-green-500)), color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)))',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-teal-500) 65%, var(--fd-color-green-500)), color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)))',
     },
     {
         value: 9,
         titleKey: 'HUNGER_SCALE.LEVEL_9.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_9.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)), var(--fd-color-sky-500))',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)), var(--fd-color-sky-500))',
     },
 ];
 
