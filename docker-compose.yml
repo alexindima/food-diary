@@ -106,5 +106,20 @@ services:
     profiles:
       - full
 
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/fooddiary.club:/var/www/fooddiary.club:ro
+      - /var/www/admin.fooddiary.club:/var/www/admin.fooddiary.club:ro
+      - /var/www/storybook.fooddiary.club:/var/www/storybook.fooddiary.club:ro
+      - /var/log/nginx:/var/log/nginx
+    profiles:
+      - full
+
 volumes:
   postgres-data:

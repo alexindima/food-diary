@@ -1,0 +1,19 @@
+server {
+    listen 80;
+    server_name storybook.fooddiary.club;
+
+    root /var/www/storybook.fooddiary.club;
+    index index.html;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/storybook.fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    error_log /var/log/nginx/fooddiary.storybook.error.log;
+    access_log /var/log/nginx/fooddiary.storybook.access.log;
+}

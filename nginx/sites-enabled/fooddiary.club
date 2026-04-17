@@ -1,0 +1,133 @@
+server {
+    if ($host = www.fooddiary.club) {
+        return 301 https://$host$request_uri;
+    }
+
+    if ($host = fooddiary.club) {
+        return 301 https://$host$request_uri;
+    }
+
+    listen 80;
+    server_name fooddiary.club www.fooddiary.club xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+
+    error_log /var/log/nginx/fooddiary.error.log;
+    access_log /var/log/nginx/fooddiary.access.log;
+}
+
+server {
+    listen 443 ssl;
+    listen 443 quic reuseport;
+    http2 on;
+    server_name fooddiary.club www.fooddiary.club xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
+    ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    add_header Alt-Svc 'h3=":443"; ma=86400' always;
+
+    root /var/www/fooddiary.club;
+    index index.html;
+
+    location = /sitemap.xml {
+        if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
+            rewrite ^ /sitemap-ru.xml break;
+        }
+
+        try_files $uri =404;
+    }
+
+    location = /robots.txt {
+        if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
+            rewrite ^ /robots-ru.txt break;
+        }
+
+        try_files $uri =404;
+    }
+
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location ~* \.(?:js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|gif|ico|webp)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    error_log /var/log/nginx/fooddiary.error.log;
+    access_log /var/log/nginx/fooddiary.access.log;
+}
+
+server {
+    if ($host = admin.fooddiary.club) {
+        return 301 https://$host$request_uri;
+    }
+
+    listen 80;
+    server_name admin.fooddiary.club;
+
+    return 301 https://$host$request_uri;
+
+    error_log /var/log/nginx/fooddiary.admin.error.log;
+    access_log /var/log/nginx/fooddiary.admin.access.log;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name admin.fooddiary.club;
+    ssl_certificate /etc/letsencrypt/live/fooddiary.club/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/fooddiary.club/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    location /assets/ {
+        root /var/www/admin.fooddiary.club;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location ~* \.(?:js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|gif|ico|webp)$ {
+        root /var/www/admin.fooddiary.club;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location / {
+        root /var/www/admin.fooddiary.club;
+        index index.html;
+        try_files $uri /index.html;
+    }
+
+    error_log /var/log/nginx/fooddiary.admin.error.log;
+    access_log /var/log/nginx/fooddiary.admin.access.log;
+}

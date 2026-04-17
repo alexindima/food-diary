@@ -226,8 +226,12 @@ jobs:
           SCP_CMD="scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
-          $SSH_CMD "mkdir -p /opt/fooddiary"
+          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /var/www/storybook.fooddiary.club /var/log/nginx"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
+          $SCP_CMD nginx.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx.conf
+          $SCP_CMD nginx/sites-enabled/fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/fooddiary.club
+          $SCP_CMD nginx/sites-enabled/grafana.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/grafana.fooddiary.club
+          $SCP_CMD nginx/sites-enabled/storybook.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/storybook.fooddiary.club
 
           DEPLOY_COMMIT_SHA="${{ github.sha }}"
 
@@ -284,7 +288,11 @@ jobs:
           docker cp $id:/usr/share/nginx/html/. /var/www/fooddiary.club/
           rm -rf /var/www/admin.fooddiary.club/*
           docker cp $id:/usr/share/nginx/html-admin/. /var/www/admin.fooddiary.club/
+          mkdir -p /var/www/storybook.fooddiary.club
+          rm -rf /var/www/storybook.fooddiary.club/*
+          docker cp $id:/usr/share/nginx/html-storybook/. /var/www/storybook.fooddiary.club/
           docker rm $id
+          docker compose --profile full up -d --force-recreate --no-deps nginx
 
           docker image prune -a --force --filter "until=24h"
 
