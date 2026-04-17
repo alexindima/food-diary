@@ -19,7 +19,7 @@
                     "options": {
                         "outputPath": {
                             "base": "dist",
-                            "browser": ""
+                            "browser": "browser"
                         },
                         "index": "src/index.html",
                         "browser": "src/main.ts",
@@ -53,20 +53,22 @@
                                 "output": "/assets"
                             }
                         ],
-                        "styles": [
-                            "src/styles/design-tokens.global.scss",
-                            "src/styles/material-theme.scss",
-                            "src/styles.scss"
-                        ],
-                        "allowedCommonJsDependencies": [
-                            "cropperjs"
-                        ],
+                        "styles": ["src/styles/design-tokens.global.scss", "src/styles/material-theme.scss", "src/styles.scss"],
+                        "allowedCommonJsDependencies": ["cropperjs"],
                         "scripts": [],
                         "stylePreprocessorOptions": {
-                            "includePaths": [
-                                "src/styles",
-                                "projects/fd-ui-kit/src/lib"
-                            ]
+                            "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
+                        },
+                        "server": "src/main.server.ts",
+                        "security": {
+                            "allowedHosts": []
+                        },
+                        "ssr": {
+                            "entry": "src/server.ts"
+                        },
+                        "prerender": {
+                            "discoverRoutes": false,
+                            "routesFile": "src/prerender-routes.txt"
                         }
                     },
                     "configurations": {
@@ -141,217 +143,194 @@
                 "test": {
                     "builder": "@angular/build:unit-test",
                     "options": {
-                        "setupFiles": [
-                            "src/test-setup.ts"
-                        ]
+                        "setupFiles": ["src/test-setup.ts"]
                     }
                 }
             }
         },
         "fd-ui-kit": {
-          "projectType": "library",
-          "root": "projects/fd-ui-kit",
-          "sourceRoot": "projects/fd-ui-kit/src",
-          "prefix": "fd",
-          "architect": {
-            "build": {
-              "builder": "@angular/build:ng-packagr",
-              "configurations": {
-                "production": {
-                  "tsConfig": "projects/fd-ui-kit/tsconfig.lib.prod.json"
+            "projectType": "library",
+            "root": "projects/fd-ui-kit",
+            "sourceRoot": "projects/fd-ui-kit/src",
+            "prefix": "fd",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/fd-ui-kit/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/fd-ui-kit/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
                 },
-                "development": {
-                  "tsConfig": "projects/fd-ui-kit/tsconfig.lib.json"
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "setupFiles": ["src/test-setup.ts"]
+                    }
+                },
+                "storybook": {
+                    "builder": "@storybook/angular:start-storybook",
+                    "options": {
+                        "configDir": ".storybook",
+                        "browserTarget": "fd-ui-kit:build",
+                        "port": 6006,
+                        "styles": ["src/styles/design-tokens.global.scss", "src/styles/material-theme.scss", "src/styles.scss"],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
+                        },
+                        "compodoc": false
+                    }
+                },
+                "build-storybook": {
+                    "builder": "@storybook/angular:build-storybook",
+                    "options": {
+                        "configDir": ".storybook",
+                        "browserTarget": "fd-ui-kit:build",
+                        "outputDir": "dist-storybook",
+                        "styles": ["src/styles/design-tokens.global.scss", "src/styles/material-theme.scss", "src/styles.scss"],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
+                        },
+                        "compodoc": false
+                    }
                 }
-              },
-              "defaultConfiguration": "production"
-            },
-            "test": {
-              "builder": "@angular/build:unit-test",
-              "options": {
-                "setupFiles": [
-                  "src/test-setup.ts"
-                ]
-              }
-            },
-            "storybook": {
-              "builder": "@storybook/angular:start-storybook",
-              "options": {
-                "configDir": ".storybook",
-                "browserTarget": "fd-ui-kit:build",
-                "port": 6006,
-                "styles": [
-                  "src/styles/design-tokens.global.scss",
-                  "src/styles/material-theme.scss",
-                  "src/styles.scss"
-                ],
-                "stylePreprocessorOptions": {
-                  "includePaths": [
-                    "src/styles",
-                    "projects/fd-ui-kit/src/lib"
-                  ]
-                },
-                "compodoc": false
-              }
-            },
-            "build-storybook": {
-              "builder": "@storybook/angular:build-storybook",
-              "options": {
-                "configDir": ".storybook",
-                "browserTarget": "fd-ui-kit:build",
-                "outputDir": "dist-storybook",
-                "styles": [
-                  "src/styles/design-tokens.global.scss",
-                  "src/styles/material-theme.scss",
-                  "src/styles.scss"
-                ],
-                "stylePreprocessorOptions": {
-                  "includePaths": [
-                    "src/styles",
-                    "projects/fd-ui-kit/src/lib"
-                  ]
-                },
-                "compodoc": false
-              }
             }
-          }
         },
         "fooddiary-admin": {
-          "projectType": "application",
-          "schematics": {
-            "@schematics/angular:component": {
-              "style": "scss"
-            }
-          },
-          "root": "projects/fooddiary-admin",
-          "sourceRoot": "projects/fooddiary-admin/src",
-          "prefix": "app",
-          "architect": {
-            "build": {
-              "builder": "@angular/build:application",
-              "options": {
-                "outputPath": {
-                  "base": "dist-admin",
-                  "browser": ""
-                },
-                "index": "projects/fooddiary-admin/src/index.html",
-                "browser": "projects/fooddiary-admin/src/main.ts",
-                "polyfills": [],
-                "tsConfig": "projects/fooddiary-admin/tsconfig.app.json",
-                "inlineStyleLanguage": "scss",
-                "assets": [
-                  {
-                    "glob": "**/*",
-                    "input": "projects/fooddiary-admin/public"
-                  },
-                  {
-                    "glob": "**/*",
-                    "input": "assets",
-                    "output": "/assets"
-                  }
-                ],
-                "styles": [
-                  "src/styles/design-tokens.global.scss",
-                  "src/styles/material-theme.scss",
-                  "projects/fooddiary-admin/src/styles.scss"
-                ],
-                "stylePreprocessorOptions": {
-                  "includePaths": [
-                    "src/styles",
-                    "projects/fd-ui-kit/src/lib"
-                  ]
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
                 }
-              },
-              "configurations": {
-                "production": {
-                  "fileReplacements": [
-                    {
-                      "replace": "projects/fooddiary-admin/src/environments/environment.ts",
-                      "with": "projects/fooddiary-admin/src/environments/environment.prod.ts"
-                    }
-                  ],
-                  "budgets": [
-                    {
-                      "type": "initial",
-                      "maximumWarning": "500kB",
-                      "maximumError": "1MB"
+            },
+            "root": "projects/fooddiary-admin",
+            "sourceRoot": "projects/fooddiary-admin/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist-admin",
+                            "browser": ""
+                        },
+                        "index": "projects/fooddiary-admin/src/index.html",
+                        "browser": "projects/fooddiary-admin/src/main.ts",
+                        "polyfills": [],
+                        "tsConfig": "projects/fooddiary-admin/tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "projects/fooddiary-admin/public"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "assets",
+                                "output": "/assets"
+                            }
+                        ],
+                        "styles": [
+                            "src/styles/design-tokens.global.scss",
+                            "src/styles/material-theme.scss",
+                            "projects/fooddiary-admin/src/styles.scss"
+                        ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
+                        }
                     },
-                    {
-                      "type": "anyComponentStyle",
-                      "maximumWarning": "12kB",
-                      "maximumError": "16kB"
-                    }
-                  ],
-                  "outputHashing": "all"
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "projects/fooddiary-admin/src/environments/environment.ts",
+                                    "with": "projects/fooddiary-admin/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "500kB",
+                                    "maximumError": "1MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "12kB",
+                                    "maximumError": "16kB"
+                                }
+                            ],
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "projects/fooddiary-admin/src/environments/environment.ts",
+                                    "with": "projects/fooddiary-admin/src/environments/environment.ts"
+                                }
+                            ],
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
                 },
-                "development": {
-                  "fileReplacements": [
-                    {
-                      "replace": "projects/fooddiary-admin/src/environments/environment.ts",
-                      "with": "projects/fooddiary-admin/src/environments/environment.ts"
-                    }
-                  ],
-                  "optimization": false,
-                  "extractLicenses": false,
-                  "sourceMap": true
-                }
-              },
-              "defaultConfiguration": "production"
-            },
-            "serve": {
-              "builder": "@angular/build:dev-server",
-              "options": {
-                "port": 4300,
-                "hmr": false
-              },
-              "configurations": {
-                "production": {
-                  "buildTarget": "fooddiary-admin:build:production"
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "port": 4300,
+                        "hmr": false
+                    },
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "fooddiary-admin:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "fooddiary-admin:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
                 },
-                "development": {
-                  "buildTarget": "fooddiary-admin:build:development"
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "setupFiles": ["src/test-setup.ts"]
+                    }
                 }
-              },
-              "defaultConfiguration": "development"
-            },
-            "test": {
-              "builder": "@angular/build:unit-test",
-              "options": {
-                "setupFiles": [
-                  "src/test-setup.ts"
-                ]
-              }
             }
-          }
         }
     },
     "schematics": {
-      "@schematics/angular:component": {
-        "type": "component"
-      },
-      "@schematics/angular:directive": {
-        "type": "directive"
-      },
-      "@schematics/angular:service": {
-        "type": "service"
-      },
-      "@schematics/angular:guard": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:interceptor": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:module": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:pipe": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:resolver": {
-        "typeSeparator": "."
-      }
+        "@schematics/angular:component": {
+            "type": "component"
+        },
+        "@schematics/angular:directive": {
+            "type": "directive"
+        },
+        "@schematics/angular:service": {
+            "type": "service"
+        },
+        "@schematics/angular:guard": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:interceptor": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:module": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:resolver": {
+            "typeSeparator": "."
+        }
     },
     "cli": {
-      "analytics": "5b2a8cdf-fdcd-4012-b917-b6cc7300d3e0"
+        "analytics": "5b2a8cdf-fdcd-4012-b917-b6cc7300d3e0"
     }
 }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { Component, DestroyRef, Injector, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map, mergeMap } from 'rxjs';
@@ -24,12 +24,16 @@ export class AppComponent implements OnInit {
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly seoService = inject(SeoService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly notificationRealtimeService = inject(NotificationRealtimeService);
-    private readonly pushNotificationService = inject(PushNotificationService);
+    private readonly injector = inject(Injector);
 
     public isAuthenticated = this.authService.isAuthenticated;
 
     public ngOnInit(): void {
+        if (typeof window !== 'undefined') {
+            this.injector.get(NotificationRealtimeService);
+            this.injector.get(PushNotificationService);
+        }
+
         this.router.events
             .pipe(
                 filter(event => event instanceof NavigationEnd),

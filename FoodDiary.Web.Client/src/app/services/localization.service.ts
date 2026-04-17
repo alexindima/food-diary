@@ -11,6 +11,7 @@ export class LocalizationService {
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);
     private readonly storageKey = 'fd_language';
+    private readonly localStorageRef = typeof localStorage === 'undefined' ? null : localStorage;
 
     public constructor() {
         this.translateService.onLangChange.subscribe(event => {
@@ -54,7 +55,7 @@ export class LocalizationService {
     }
 
     public clearStoredLanguage(): void {
-        localStorage.removeItem(this.storageKey);
+        this.localStorageRef?.removeItem(this.storageKey);
     }
 
     public getServingUnitName(unit: MeasurementUnit): string {
@@ -79,11 +80,11 @@ export class LocalizationService {
     }
 
     private persistLanguage(lang: string): void {
-        localStorage.setItem(this.storageKey, lang);
+        this.localStorageRef?.setItem(this.storageKey, lang);
     }
 
     private getStoredLanguage(): string | null {
-        const value = localStorage.getItem(this.storageKey);
+        const value = this.localStorageRef?.getItem(this.storageKey) ?? null;
         if (!value || value === 'undefined' || value === 'null') {
             return null;
         }

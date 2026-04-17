@@ -15,7 +15,7 @@ RUN npx ng build fd-ui-kit && npm run build:prod && npm run build:admin
 
 FROM nginx:alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/browser/. /usr/share/nginx/html
 COPY --from=build /app/dist-admin /usr/share/nginx/html-admin
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

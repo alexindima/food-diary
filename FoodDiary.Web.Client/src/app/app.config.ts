@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './services/localization.service';
@@ -27,10 +27,13 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import { GlobalErrorHandler } from './services/error-handler.service';
 import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+
+const isBrowserEnvironment = typeof window !== 'undefined';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        ...(environment.enableGlobalErrorHandler
+        ...(environment.enableGlobalErrorHandler && isBrowserEnvironment
             ? [
                   provideBrowserGlobalErrorListeners(),
                   {
@@ -77,19 +80,24 @@ export const appConfig: ApplicationConfig = {
         provideAnimationsAsync(),
         provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding(), withPreloading(IdleSelectivePreloadingStrategy)),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withInterceptorsFromDi(), withFetch()),
         importProvidersFrom(TranslateModule.forRoot()),
         provideTranslateHttpLoader({
             prefix: './assets/i18n/',
             suffix: `.json?v=${environment.buildVersion ?? 'dev'}`,
         }),
-        provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000',
-        }),
+        ...(isBrowserEnvironment
+            ? [
+                  provideServiceWorker('ngsw-worker.js', {
+                      enabled: !isDevMode(),
+                      registrationStrategy: 'registerWhenStable:30000',
+                  }),
+              ]
+            : []),
         TranslateService,
         FrontendObservabilityService,
         LocalizationService,
         LoggingApiService,
+        ...(isBrowserEnvironment ? [provideClientHydration(withEventReplay())] : []),
     ],
 };
