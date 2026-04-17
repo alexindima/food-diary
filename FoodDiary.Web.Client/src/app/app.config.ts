@@ -9,7 +9,7 @@ import {
     provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection,
 } from '@angular/core';
-import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ import { UserService } from './shared/api/user.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import { GlobalErrorHandler } from './services/error-handler.service';
+import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -75,7 +76,7 @@ export const appConfig: ApplicationConfig = {
         }),
         provideAnimationsAsync(),
         provideZonelessChangeDetection(),
-        provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
+        provideRouter(routes, withComponentInputBinding(), withPreloading(IdleSelectivePreloadingStrategy)),
         provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(TranslateModule.forRoot()),
         provideTranslateHttpLoader({

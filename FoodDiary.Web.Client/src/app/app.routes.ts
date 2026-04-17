@@ -17,13 +17,13 @@ export const routes: Routes = [
         path: 'products',
         canActivate: [authGuard],
         loadChildren: () => import('./features/products/product.routes'),
-        data: { seo: { titleKey: 'SEO.PRODUCTS', descriptionKey: 'SEO.PRODUCTS_DESCRIPTION', noIndex: true } },
+        data: { preload: true, seo: { titleKey: 'SEO.PRODUCTS', descriptionKey: 'SEO.PRODUCTS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'meals',
         canActivate: [authGuard],
         loadChildren: () => import('./features/meals/meals.routes'),
-        data: { seo: { titleKey: 'SEO.MEALS', descriptionKey: 'SEO.MEALS_DESCRIPTION', noIndex: true } },
+        data: { preload: true, seo: { titleKey: 'SEO.MEALS', descriptionKey: 'SEO.MEALS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'recipes',
@@ -113,7 +113,7 @@ export const routes: Routes = [
         path: 'profile',
         canActivate: [authGuard],
         loadChildren: () => import('./features/profile/profile.routes'),
-        data: { seo: { titleKey: 'SEO.PROFILE', descriptionKey: 'SEO.PROFILE_DESCRIPTION', noIndex: true } },
+        data: { preload: true, seo: { titleKey: 'SEO.PROFILE', descriptionKey: 'SEO.PROFILE_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'dietologist',
