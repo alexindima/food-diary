@@ -1,21 +1,63 @@
 <section class="features">
     <div class="features__inner">
         <header class="features__header">
-            <span class="features__eyebrow">{{ 'FEATURES.EYEBROW' | translate }}</span>
-            <div>
-                <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
-                <p class="features__subtitle">{{ 'FEATURES.SUBTITLE' | translate }}</p>
+            <div class="features__intro">
+                <span class="features__eyebrow">{{ 'FEATURES.EYEBROW' | translate }}</span>
+                <div>
+                    <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
+                    <p class="features__subtitle">{{ 'FEATURES.SUBTITLE' | translate }}</p>
+                </div>
+            </div>
+
+            <div class="features__summary">
+                <span class="features__summary-badge">{{ 'FEATURES.SUMMARY.BADGE' | translate }}</span>
+                <p class="features__summary-title">{{ 'FEATURES.SUMMARY.TITLE' | translate }}</p>
+                <p class="features__summary-text">{{ 'FEATURES.SUMMARY.TEXT' | translate }}</p>
             </div>
         </header>
 
-        <div class="features__grid">
-            @for (feature of features; track feature.key) {
-                <article class="features__item">
-                    <div class="features__icon">{{ feature.icon }}</div>
-                    <h3 class="features__item-title">{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h3>
-                    <p class="features__item-description">{{ 'FEATURES.' + feature.key + '.DESCRIPTION' | translate }}</p>
-                </article>
+        <div class="features__category-strip" role="tablist" aria-label="{{ 'FEATURES.CATEGORY_ARIA' | translate }}">
+            @for (category of categories; track category.key) {
+                <button
+                    type="button"
+                    role="tab"
+                    class="features__category-chip"
+                    [class.features__category-chip--active]="activeCategoryKey() === category.key"
+                    [attr.aria-selected]="activeCategoryKey() === category.key"
+                    [attr.aria-controls]="'features-panel-' + category.key"
+                    [attr.id]="'features-tab-' + category.key"
+                    (click)="selectCategory(category.key)"
+                >
+                    <mat-icon aria-hidden="true">{{ category.icon }}</mat-icon>
+                    <span>{{ 'FEATURES.CATEGORIES.' + category.key + '.LABEL' | translate }}</span>
+                </button>
             }
         </div>
+
+        @if (activeCategory(); as category) {
+            <section
+                class="features__panel"
+                role="tabpanel"
+                [attr.id]="'features-panel-' + category.key"
+                [attr.aria-labelledby]="'features-tab-' + category.key"
+            >
+                <div class="features__panel-copy">
+                    <span class="features__panel-eyebrow">{{ 'FEATURES.CATEGORIES.' + category.key + '.EYEBROW' | translate }}</span>
+                    <h3 class="features__panel-title">{{ 'FEATURES.CATEGORIES.' + category.key + '.TITLE' | translate }}</h3>
+                    <p class="features__panel-text">{{ 'FEATURES.CATEGORIES.' + category.key + '.DESCRIPTION' | translate }}</p>
+                </div>
+
+                <div class="features__cards" aria-live="polite">
+                    @for (itemKey of category.itemKeys; track itemKey) {
+                        <article class="features__card">
+                            <div class="features__card-accent"></div>
+                            <p class="features__card-kicker">{{ 'FEATURES.ITEMS.' + itemKey + '.KICKER' | translate }}</p>
+                            <h4 class="features__card-title">{{ 'FEATURES.ITEMS.' + itemKey + '.TITLE' | translate }}</h4>
+                            <p class="features__card-description">{{ 'FEATURES.ITEMS.' + itemKey + '.DESCRIPTION' | translate }}</p>
+                        </article>
+                    }
+                </div>
+            </section>
+        }
     </div>
 </section>

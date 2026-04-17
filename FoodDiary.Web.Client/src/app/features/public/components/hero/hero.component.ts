@@ -3,16 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import {
-    DashboardSummaryCardComponent,
-    NutrientBar,
-} from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { LocalizationService } from '../../../../services/localization.service';
 
 @Component({
     selector: 'fd-hero',
-    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule, DashboardSummaryCardComponent],
+    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.scss',
 })
@@ -29,59 +25,6 @@ export class HeroComponent {
 
     protected language = this.getCurrentLanguage();
     protected currentLanguage = this.language;
-
-    protected readonly ringData = {
-        dailyGoal: 2000,
-        dailyConsumed: 1450,
-        weeklyConsumed: 8200,
-        weeklyGoal: 14000,
-        nutrientBars: [
-            {
-                id: 'protein',
-                label: 'Protein',
-                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                current: 110,
-                target: 140,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#4dabff',
-                colorEnd: '#2563eb',
-            },
-            {
-                id: 'carbs',
-                label: 'Carbs',
-                labelKey: 'GENERAL.NUTRIENTS.CARB',
-                current: 180,
-                target: 250,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#2dd4bf',
-                colorEnd: '#0ea5e9',
-            },
-            {
-                id: 'fats',
-                label: 'Fats',
-                labelKey: 'GENERAL.NUTRIENTS.FAT',
-                current: 45,
-                target: 70,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fbbf24',
-                colorEnd: '#f97316',
-            },
-            {
-                id: 'fiber',
-                label: 'Fiber',
-                labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                current: 18,
-                target: 30,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fb7185',
-                colorEnd: '#ec4899',
-            },
-        ] satisfies NutrientBar[],
-    };
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {

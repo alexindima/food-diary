@@ -10,9 +10,11 @@ import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick
 import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 import { MealsPreviewComponent, MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview.component';
-import { StatisticsSummaryComponent, SummaryMetrics } from '../../../../components/shared/statistics-summary/statistics-summary.component';
-import { StatisticsNutritionComponent } from '../../../../components/shared/statistics-nutrition/statistics-nutrition.component';
-import { StatisticsBodyComponent } from '../../../../components/shared/statistics-body/statistics-body.component';
+import {
+    DashboardSummaryCardComponent,
+    NutrientBar,
+} from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import { SummaryMetrics } from '../../../../components/shared/statistics-summary/statistics-summary.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { AuthService } from '../../../../services/auth.service';
@@ -25,10 +27,8 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
     standalone: true,
     imports: [
         TranslateModule,
+        DashboardSummaryCardComponent,
         MealsPreviewComponent,
-        StatisticsSummaryComponent,
-        StatisticsNutritionComponent,
-        StatisticsBodyComponent,
         ProductCardComponent,
         RecipeCardComponent,
         QuickConsumptionDrawerComponent,
@@ -46,6 +46,58 @@ export class LandingPreviewTourComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
 
     public isAuthenticated = this.authService.isAuthenticated;
+    public readonly heroSummaryCard = {
+        dailyGoal: 2000,
+        dailyConsumed: 1450,
+        weeklyConsumed: 8200,
+        weeklyGoal: 14000,
+        nutrientBars: [
+            {
+                id: 'protein',
+                label: 'Protein',
+                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
+                current: 110,
+                target: 140,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#4dabff',
+                colorEnd: '#2563eb',
+            },
+            {
+                id: 'carbs',
+                label: 'Carbs',
+                labelKey: 'GENERAL.NUTRIENTS.CARB',
+                current: 180,
+                target: 250,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#2dd4bf',
+                colorEnd: '#0ea5e9',
+            },
+            {
+                id: 'fats',
+                label: 'Fats',
+                labelKey: 'GENERAL.NUTRIENTS.FAT',
+                current: 45,
+                target: 70,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#fbbf24',
+                colorEnd: '#f97316',
+            },
+            {
+                id: 'fiber',
+                label: 'Fiber',
+                labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
+                current: 18,
+                target: 30,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#fb7185',
+                colorEnd: '#ec4899',
+            },
+        ] satisfies NutrientBar[],
+    };
     public guestMealEntries: MealPreviewEntry[] = [];
     public guestSummary = this.buildGuestSummary();
     public guestSummarySparkline = this.buildSparkline();
@@ -153,7 +205,7 @@ export class LandingPreviewTourComponent implements OnInit {
             preMealSatietyLevel: null,
             postMealSatietyLevel: null,
             comment,
-            imageUrl: 'assets/images/stubs/meals/salad.svg',
+            imageUrl: 'assets/images/stubs/meals/lunch-soup-photo.png',
             imageAssetId: null,
             items: [],
         };
@@ -345,7 +397,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 category: yogurtCategory,
                 description: yogurtDescription,
                 comment: null,
-                imageUrl: null,
+                imageUrl: 'assets/images/stubs/products/greek-yogurt-photo.png',
                 imageAssetId: null,
                 visibility: ProductVisibility.Public,
                 usageCount: 0,
@@ -372,7 +424,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 category: granolaCategory,
                 description: granolaDescription,
                 comment: null,
-                imageUrl: null,
+                imageUrl: 'assets/images/stubs/products/granola-photo.png',
                 imageAssetId: null,
                 visibility: ProductVisibility.Public,
                 usageCount: 0,
@@ -400,7 +452,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 name: bowlName,
                 description: bowlDescription,
                 category: bowlCategory,
-                imageUrl: null,
+                imageUrl: 'assets/images/stubs/products/salmon-bowl-photo.png',
                 imageAssetId: null,
                 prepTime: 10,
                 cookTime: 10,
@@ -409,6 +461,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 usageCount: 0,
                 createdAt: new Date().toISOString(),
                 isOwnedByCurrentUser: true,
+                qualityScore: 81,
+                qualityGrade: 'green',
                 totalCalories: 520,
                 totalProteins: 32,
                 totalFats: 18,
@@ -436,7 +490,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 name: saladName,
                 description: saladDescription,
                 category: saladCategory,
-                imageUrl: null,
+                imageUrl: 'assets/images/stubs/products/chicken-avocado-salad-photo.png',
                 imageAssetId: null,
                 prepTime: 12,
                 cookTime: 0,
@@ -445,6 +499,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 usageCount: 0,
                 createdAt: new Date().toISOString(),
                 isOwnedByCurrentUser: true,
+                qualityScore: 76,
+                qualityGrade: 'green',
                 totalCalories: 340,
                 totalProteins: 28,
                 totalFats: 18,

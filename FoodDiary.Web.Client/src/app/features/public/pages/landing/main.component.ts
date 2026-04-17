@@ -8,6 +8,7 @@ import { DashboardComponent } from '../../../dashboard/pages/dashboard.component
 import { LandingPreviewTourComponent } from '../../components/landing-preview-tour/landing-preview-tour.component';
 import { LandingStepsComponent } from '../../components/landing-steps/landing-steps.component';
 import { LandingCtaComponent } from '../../components/landing-cta/landing-cta.component';
+import { DietologistPromoComponent } from '../../components/dietologist-promo/dietologist-promo.component';
 
 @Component({
     selector: 'fd-main',
@@ -18,6 +19,7 @@ import { LandingCtaComponent } from '../../components/landing-cta/landing-cta.co
         LandingPreviewTourComponent,
         LandingStepsComponent,
         LandingCtaComponent,
+        DietologistPromoComponent,
     ],
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],

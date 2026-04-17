@@ -1,8 +1,10 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .features {
     padding: clamp(28px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
-    background: var(--fd-color-surface-muted, #f8fafc);
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32%),
+        linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
     --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
 
     &__inner {
@@ -11,23 +13,32 @@
         padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
         display: flex;
         flex-direction: column;
-        gap: clamp(variables.$gap-s, 2vw, variables.$gap-l);
+        gap: clamp(variables.$gap-m, 3vw, variables.$gap-xxl);
         min-width: 0;
     }
 
     &__header {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: variables.$gap-m;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+        gap: variables.$gap-l;
+        align-items: start;
+        animation: landingFadeUp 640ms ease-out both;
     }
 
-    &__eyebrow {
+    &__intro {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$gap-m;
+    }
+
+    &__eyebrow,
+    &__panel-eyebrow,
+    &__summary-badge {
         display: inline-flex;
+        width: fit-content;
         padding: 6px 12px;
         border-radius: 999px;
-        background: rgba(59, 130, 246, 0.1);
+        background: rgba(59, 130, 246, 0.12);
         color: variables.$color-primary;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -36,75 +47,189 @@
 
     &__title {
         margin: 0;
-        font-size: clamp(24px, 3vw, 32px);
+        font-size: clamp(24px, 3vw, 34px);
         color: variables.$color-text-main;
     }
 
-    &__subtitle {
-        margin: 6px 0 0;
+    &__subtitle,
+    &__panel-text,
+    &__summary-text {
+        margin: 8px 0 0;
         color: variables.$color-text-additional;
         font-size: 1rem;
+        line-height: 1.6;
     }
 
-    &__grid {
+    &__summary {
+        padding: clamp(16px, 2vw, 24px);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(37, 99, 235, 0.12);
+        box-shadow: 0 18px 42px rgba(37, 99, 235, 0.08);
+        backdrop-filter: blur(16px);
+    }
+
+    &__summary-title {
+        margin: 14px 0 0;
+        color: variables.$color-text-main;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    &__category-strip {
+        display: flex;
+        gap: variables.$gap-s;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: thin;
+        animation: landingFadeUp 760ms ease-out both;
+    }
+
+    &__category-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(255, 255, 255, 0.78);
+        color: variables.$color-text-main;
+        border-radius: 999px;
+        padding: 12px 16px;
+        font: inherit;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+
+        &:hover {
+            transform: translateY(-1px);
+            border-color: rgba(37, 99, 235, 0.45);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+        }
+
+        &--active {
+            background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
+        }
+    }
+
+    &__panel {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: variables.$gap-m variables.$gap-l;
-        justify-items: center;
+        grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
+        gap: variables.$gap-l;
+        align-items: start;
+        background: rgba(255, 255, 255, 0.68);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 28px;
+        padding: clamp(18px, 2vw, 28px);
+        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+        animation: landingFadeUp 860ms ease-out both;
+    }
+
+    &__panel-copy {
+        position: sticky;
+        top: 12px;
+    }
+
+    &__panel-title {
+        margin: 14px 0 0;
+        color: variables.$color-text-main;
+        font-size: clamp(22px, 2.4vw, 30px);
+    }
+
+    &__cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: variables.$gap-m;
         min-width: 0;
     }
 
-    &__item {
+    &__card {
+        position: relative;
+        overflow: hidden;
+        min-height: 220px;
+        padding: 20px;
+        border-radius: 22px;
         background: #fff;
-        border-radius: 14px;
-        padding: variables.$gap-m;
         border: 1px solid rgba(17, 24, 39, 0.06);
         box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-s;
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
-        max-width: 280px;
-        width: 100%;
-
-        &:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
-        }
+        scroll-snap-align: start;
+        animation: landingFadeUp 620ms ease-out both;
     }
 
-    &__icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        background: rgba(59, 130, 246, 0.1);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        color: variables.$color-primary;
+    &__card-accent {
+        width: 64px;
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #2563eb 0%, #22c55e 100%);
     }
 
-    &__item-title {
+    &__card-kicker {
         margin: 0;
-        font-size: 1.1rem;
+        color: variables.$color-primary;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.76rem;
+        font-weight: 700;
+    }
+
+    &__card-title {
+        margin: 0;
+        font-size: 1.15rem;
         color: variables.$color-text-main;
     }
 
-    &__item-description {
+    &__card-description {
         margin: 0;
         color: variables.$color-text-additional;
-        line-height: 1.5;
+        line-height: 1.55;
         font-size: 0.97rem;
+    }
+
+    @media #{variables.$media-desktop} {
+
+        &__header,
+        &__panel {
+            grid-template-columns: 1fr;
+        }
+
+        &__panel-copy {
+            position: static;
+        }
+
+        &__cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
     @media #{variables.$media-phablet} {
         --fd-layout-page-horizontal-padding: 16px;
 
-        &__item {
-            max-width: none;
+        &__cards {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 82vw);
+            overflow-x: auto;
+            scroll-snap-type: x proximity;
+            padding-bottom: 4px;
+        }
+
+        &__card {
+            min-height: 200px;
         }
     }
 }

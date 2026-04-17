@@ -26,17 +26,36 @@
             <p class="hero__reassurance">{{ 'LANDING_HERO.REASSURANCE' | translate }}</p>
         </div>
 
-        <div class="hero__visual">
-            <div class="hero__blob"></div>
-            <div class="hero__preview-card">
-                <fd-dashboard-summary-card
-                    [dailyGoal]="ringData.dailyGoal"
-                    [dailyConsumed]="ringData.dailyConsumed"
-                    [weeklyConsumed]="ringData.weeklyConsumed"
-                    [weeklyGoal]="ringData.weeklyGoal"
-                    [nutrientBars]="ringData.nutrientBars"
-                />
-            </div>
+        <div class="hero__visual" aria-hidden="true">
+            <div class="hero__blob hero__blob--primary"></div>
+            <div class="hero__blob hero__blob--secondary"></div>
+
+            <article class="hero__feature-panel">
+                <div class="hero__feature-head">
+                    <div>
+                        <p class="hero__glass-label">{{ 'LANDING_HERO.PANEL.EYEBROW' | translate }}</p>
+                        <h2 class="hero__feature-title">{{ 'LANDING_HERO.PANEL.TITLE' | translate }}</h2>
+                    </div>
+                    <span class="hero__feature-badge">{{ 'LANDING_HERO.PANEL.BADGE' | translate }}</span>
+                </div>
+
+                <p class="hero__feature-description">{{ 'LANDING_HERO.PANEL.DESCRIPTION' | translate }}</p>
+
+                <div class="hero__feature-section">
+                    <p class="hero__feature-section-title">{{ 'LANDING_HERO.PANEL.SECTION_TITLE' | translate }}</p>
+                    <div class="hero__feature-list">
+                        <span class="hero__feature-chip">{{ 'LANDING_HERO.PANEL.FEATURE_1' | translate }}</span>
+                        <span class="hero__feature-chip">{{ 'LANDING_HERO.PANEL.FEATURE_2' | translate }}</span>
+                        <span class="hero__feature-chip">{{ 'LANDING_HERO.PANEL.FEATURE_3' | translate }}</span>
+                        <span class="hero__feature-chip">{{ 'LANDING_HERO.PANEL.FEATURE_4' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="hero__feature-note">
+                    <strong>{{ 'LANDING_HERO.PANEL.NOTE_TITLE' | translate }}</strong>
+                    <span>{{ 'LANDING_HERO.PANEL.NOTE_TEXT' | translate }}</span>
+                </div>
+            </article>
         </div>
     </div>
 </section>

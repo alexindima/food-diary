@@ -14,16 +14,18 @@
 
     &__title {
         margin: 0;
-        font-size: clamp(26px, 3vw, 34px);
-        color: variables.$color-text-main;
-        letter-spacing: -0.01em;
+        font-size: clamp(28px, 3vw, 38px);
+        color: #f8fafc;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
     }
 
     &__subtitle {
-        margin: 6px 0 0;
-        color: variables.$color-text-additional;
+        margin: 8px 0 0;
+        color: rgba(226, 232, 240, 0.86);
         font-size: 1.02rem;
         max-width: 620px;
+        line-height: 1.65;
     }
 
     &__actions {
@@ -33,20 +35,47 @@
     }
 
     &--cta {
-        padding: clamp(30px, 3vw, 50px) 0 clamp(36px, 4vw, 60px);
+        padding: clamp(34px, 4vw, 60px) 0 clamp(42px, 5vw, 76px);
     }
 
     &__inner--cta {
         max-width: 1180px;
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(16, 185, 129, 0.12));
-        border-radius: 16px;
-        padding: clamp(variables.$gap-m, 2.5vw, variables.$gap-xl);
-        border: 1px solid rgba(59, 130, 246, 0.18);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(37, 99, 235, 0.94) 55%, rgba(20, 184, 166, 0.9));
+        border-radius: 28px;
+        padding: clamp(variables.$gap-l, 3vw, 32px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 28px 60px rgba(15, 23, 42, 0.18);
         display: flex;
         justify-content: space-between;
-        gap: variables.$gap-s;
+        gap: variables.$gap-m;
         align-items: center;
+        animation: landingFadeUp 780ms ease-out both;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        &::before {
+            width: 260px;
+            height: 260px;
+            right: -40px;
+            top: -80px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 70%);
+        }
+
+        &::after {
+            width: 240px;
+            height: 240px;
+            left: -60px;
+            bottom: -110px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.22), transparent 70%);
+        }
 
         @media #{variables.$media-tablet} {
             flex-direction: column;
