@@ -291,6 +291,7 @@ jobs:
           mkdir -p /var/www/storybook.fooddiary.club
           rm -rf /var/www/storybook.fooddiary.club/*
           docker cp $id:/usr/share/nginx/html-storybook/. /var/www/storybook.fooddiary.club/
+          chmod -R a+rX /var/www/storybook.fooddiary.club
           docker rm $id
           docker compose --profile full up -d --force-recreate --no-deps nginx
 
