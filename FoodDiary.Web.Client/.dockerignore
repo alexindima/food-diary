@@ -6,4 +6,3 @@ coverage/
 *.md
 .editorconfig
 .prettierrc
-.storybook/
