@@ -10,12 +10,12 @@ export const APP_THEMES: readonly AppThemeDefinition[] = [
     {
         name: 'ocean',
         labelKey: 'SIDEBAR.THEME_OCEAN',
-        browserThemeColor: '#1d4ed8',
+        browserThemeColor: 'var(--fd-color-primary-700)',
     },
     {
         name: 'leaf',
         labelKey: 'SIDEBAR.THEME_LEAF',
-        browserThemeColor: '#047857',
+        browserThemeColor: 'var(--fd-color-emerald-700)',
     },
 ] as const;
 

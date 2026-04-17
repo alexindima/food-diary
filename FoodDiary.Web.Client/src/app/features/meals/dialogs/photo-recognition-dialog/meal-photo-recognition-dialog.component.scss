@@ -20,10 +20,10 @@
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.01em;
-    background: #ffffff;
-    color: #1d4ed8;
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+    background: var(--fd-color-white);
+    color: var(--fd-color-primary-700);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     z-index: 2;
     text-transform: uppercase;
 }
@@ -31,7 +31,7 @@
 .photo-ai-dialog__status--loading {
     color: #1e3a8a;
     border-color: rgba(59, 130, 246, 0.45);
-    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.18);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
 }
 
 .photo-ai-dialog__scan-overlay {
@@ -40,11 +40,11 @@
     border-radius: 24px;
     overflow: hidden;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent), color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent));
 }
 
 .photo-ai-dialog__scan-overlay:has(.photo-ai-dialog__scan-line--nutrition) {
-    background: linear-gradient(180deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-green-500) 8%, transparent), color-mix(in srgb, var(--fd-color-green-500) 0%, transparent));
 }
 
 .photo-ai-dialog__scan-line {
@@ -55,11 +55,11 @@
     border-radius: 999px;
     background: linear-gradient(
         90deg,
-        rgba(59, 130, 246, 0),
-        rgba(59, 130, 246, 1),
+        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
+        var(--fd-color-blue-500),
         rgba(96, 165, 250, 0.95),
-        rgba(59, 130, 246, 1),
-        rgba(59, 130, 246, 0)
+        var(--fd-color-blue-500),
+        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
     );
     box-shadow:
         0 0 22px rgba(59, 130, 246, 0.8),
@@ -71,11 +71,11 @@
 .photo-ai-dialog__scan-line--nutrition {
     background: linear-gradient(
         90deg,
-        rgba(34, 197, 94, 0),
-        rgba(34, 197, 94, 1),
+        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
+        var(--fd-color-green-500),
         rgba(74, 222, 128, 0.95),
-        rgba(34, 197, 94, 1),
-        rgba(34, 197, 94, 0)
+        var(--fd-color-green-500),
+        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
     );
     box-shadow:
         0 0 22px rgba(34, 197, 94, 0.75),
@@ -103,8 +103,8 @@
 
 .photo-ai-dialog__error {
     background: rgba(239, 68, 68, 0.08);
-    color: #b91c1c;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--fd-color-red-700);
+    border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 12px;
     padding: 12px 14px;
     font-size: 0.95rem;
@@ -155,8 +155,8 @@
     gap: 10px;
     padding: 12px;
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    background: #ffffff;
+    border: 1px solid var(--fd-color-slate-200);
+    background: var(--fd-color-white);
 }
 
 .photo-ai-dialog__edit-row {
@@ -166,13 +166,13 @@
     align-items: center;
     padding: 8px 10px;
     border-radius: 14px;
-    border: 1px solid #e2e8f0;
-    background: #f8fafc;
+    border: 1px solid var(--fd-color-slate-200);
+    background: var(--fd-color-slate-50);
 }
 
 .photo-ai-dialog__edit-handle {
     cursor: grab;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -182,10 +182,10 @@
 .photo-ai-dialog__edit-select {
     height: 38px;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--fd-color-slate-200);
     padding: 0 12px;
     font-size: 0.95rem;
-    background: #fff;
+    background: var(--fd-color-white);
 }
 
 .photo-ai-dialog__edit-input--amount {
@@ -196,7 +196,7 @@
     appearance: none;
     border: none;
     background: transparent;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -212,16 +212,16 @@
     width: 100%;
     height: 42px;
     border-radius: 999px;
-    border: 1px dashed #cbd5f5;
-    background: #f8fbff;
+    border: 1px dashed color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
+    background: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white));
     font-weight: 600;
-    color: #64748b;
+    color: var(--fd-color-slate-500);
     cursor: pointer;
 }
 
 .photo-ai-dialog__edit-add:hover {
-    color: #334155;
-    border-color: #94a3b8;
+    color: var(--fd-color-slate-700);
+    border-color: var(--fd-color-slate-400);
 }
 
 .photo-ai-dialog__title-actions {
@@ -257,21 +257,21 @@
 }
 
 .photo-ai-dialog__action-button:not(:disabled):hover .photo-ai-dialog__action-icon {
-    color: #64748b;
+    color: var(--fd-color-slate-500);
 }
 
 .photo-ai-dialog__action-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
 }
 
 .photo-ai-dialog__table {
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--fd-color-slate-200);
     border-radius: 16px;
     overflow: hidden;
-    background: #fff;
+    background: var(--fd-color-white);
 }
 
 .photo-ai-dialog__table-head,
@@ -283,8 +283,8 @@
 }
 
 .photo-ai-dialog__table-head {
-    background: #f8fafc;
-    color: #64748b;
+    background: var(--fd-color-slate-50);
+    color: var(--fd-color-slate-500);
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -300,8 +300,8 @@
 .photo-ai-dialog__table-row {
     padding: 12px 16px;
     font-size: 0.95rem;
-    color: #0f172a;
-    border-top: 1px solid #e2e8f0;
+    color: var(--fd-color-slate-900);
+    border-top: 1px solid var(--fd-color-slate-200);
 }
 
 .photo-ai-dialog__table-row:first-child {
@@ -317,9 +317,9 @@
 .photo-ai-dialog__nutrition {
     margin-top: 14px;
     padding: 14px 16px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--fd-color-slate-200);
     border-radius: 16px;
-    background: #fff;
+    background: var(--fd-color-white);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -327,7 +327,7 @@
 
 .photo-ai-dialog__nutrition-title {
     font-weight: 600;
-    color: #0f172a;
+    color: var(--fd-color-slate-900);
     font-size: 0.95rem;
 }
 
@@ -345,7 +345,7 @@
 
 .photo-ai-dialog__nutrition-label {
     font-size: 0.78rem;
-    color: #64748b;
+    color: var(--fd-color-slate-500);
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
@@ -360,8 +360,8 @@
     margin-top: 14px;
     padding: 12px 14px;
     border-radius: 12px;
-    border: 1px dashed #cbd5f5;
-    background: #f8fbff;
+    border: 1px dashed color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
+    background: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white));
     display: flex;
     align-items: center;
     gap: 12px;
@@ -390,14 +390,14 @@
 
 .photo-ai-dialog__nutrition-text {
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--fd-color-slate-600);
 }
 
 .photo-ai-dialog__nutrition-error {
     margin-top: 12px;
     background: rgba(239, 68, 68, 0.08);
-    color: #b91c1c;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--fd-color-red-700);
+    border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 12px;
     padding: 10px 12px;
     font-size: 0.9rem;
@@ -445,7 +445,7 @@
     height: 100%;
     object-fit: contain !important;
     border-radius: 24px;
-    background: #f8fafc;
+    background: var(--fd-color-slate-50);
 }
 
 @media #{variables.$media-phablet} {
@@ -473,3 +473,7 @@
         width: 100%;
     }
 }
+
+
+
+

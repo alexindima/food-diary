@@ -73,8 +73,8 @@
     gap: 16px;
     padding: 14px 18px;
     border-radius: 16px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
 
     &__type {
         min-width: 80px;
@@ -112,3 +112,7 @@
         flex-wrap: wrap;
     }
 }
+
+
+
+

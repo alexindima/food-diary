@@ -89,7 +89,7 @@ interface ProviderConfig {
 
             .provider-status {
                 font-size: 12px;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .provider-status.connected {

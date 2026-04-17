@@ -8,7 +8,7 @@
     padding: clamp(24px, 3vw, 44px) 0;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(236, 253, 245, 0.7) 100%),
-        #fff;
+        var(--fd-color-white);
 
     &__inner {
         max-width: 1180px;
@@ -30,8 +30,8 @@
         display: inline-flex;
         padding: 6px 12px;
         border-radius: 999px;
-        background: rgba(16, 185, 129, 0.12);
-        color: #0f766e;
+        background: color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent);
+        color: var(--fd-color-teal-700);
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
@@ -66,7 +66,7 @@
         border-radius: 18px;
         background: rgba(255, 255, 255, 0.92);
         border: 1px solid rgba(15, 118, 110, 0.1);
-        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+        box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
         animation: landingFadeUp 820ms ease-out both;
     }
 
@@ -74,8 +74,8 @@
         width: 40px;
         height: 40px;
         border-radius: 14px;
-        background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
-        color: #fff;
+        background: linear-gradient(135deg, var(--fd-color-emerald-500) 0%, var(--fd-color-teal-500) 100%);
+        color: var(--fd-color-white);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -105,9 +105,9 @@
     &__card {
         border-radius: 28px;
         background: linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(15, 118, 110, 0.94));
-        color: #fff;
+        color: var(--fd-color-white);
         padding: clamp(20px, 2vw, 28px);
-        box-shadow: 0 24px 54px rgba(15, 23, 42, 0.18);
+        box-shadow: 0 24px 54px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
@@ -136,7 +136,7 @@
         padding: 8px 12px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.14);
-        color: #ecfeff;
+        color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
         font-size: 0.9rem;
         white-space: nowrap;
 
@@ -171,26 +171,26 @@
         gap: 8px;
         padding: 10px 12px;
         border-radius: 14px;
-        background: rgba(255, 255, 255, 0.1);
-        color: #f8fafc;
+        background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
+        color: var(--fd-color-slate-50);
         line-height: 1.45;
 
         mat-icon {
             width: 18px;
             height: 18px;
             font-size: 18px;
-            color: #86efac;
+            color: color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-white));
             flex: 0 0 auto;
         }
     }
 
     &__note {
         margin-top: auto;
-        background: rgba(255, 255, 255, 0.08);
+        background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         color: rgba(226, 232, 240, 0.92);
 
         mat-icon {
-            color: #67e8f9;
+            color: color-mix(in srgb, var(--fd-color-sky-500) 55%, var(--fd-color-white));
         }
     }
 
@@ -201,3 +201,6 @@
         }
     }
 }
+
+
+

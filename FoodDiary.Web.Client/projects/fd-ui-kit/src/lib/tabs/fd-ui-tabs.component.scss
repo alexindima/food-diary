@@ -5,7 +5,7 @@
 
 .fd-ui-tabs {
     width: 100%;
-    --fd-tabs-color: #0f172a;
+    --fd-tabs-color: var(--fd-color-slate-900);
     --fd-tabs-height: 40px;
 
     .mdc-tab__text-label {
@@ -16,7 +16,7 @@
 
     .mdc-tab--active .mdc-tab__text-label {
         opacity: 1;
-        color: #2563eb;
+        color: var(--fd-color-primary-600);
     }
 
     .mat-mdc-tab-group.mat-primary .mat-mdc-tab .mdc-tab-indicator__content--underline {
@@ -43,3 +43,5 @@
         align-items: center;
     }
 }
+
+

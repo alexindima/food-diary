@@ -7,21 +7,21 @@
 .recipe-basic-info {
 
     &__card {
-        --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
-        --fd-ui-card-title-color: #0f172a;
-        --fd-ui-card-meta-color: #94a3b8;
-        --fd-shadow-sm: 0 20px 45px rgba(15, 23, 42, 0.08);
+        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-ui-card-title-color: var(--fd-color-slate-900);
+        --fd-ui-card-meta-color: var(--fd-color-slate-400);
+        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-radius-lg: 22px;
-        --fd-color-surface: #ffffff;
+        --fd-color-surface: var(--fd-color-white);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
-        border: 1px solid rgba(15, 23, 42, 0.06);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
         &--basic {
-            --fd-ui-card-border-color: rgba(37, 99, 235, 0.16);
+            --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
 
             ::ng-deep .fd-ui-card {
                 padding-bottom: variables.$gap-l;
@@ -137,13 +137,13 @@
         ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain) {
             display: block;
             font-size: 0.72rem;
-            color: #64748b;
+            color: var(--fd-color-slate-500);
         }
 
         ::ng-deep .image-upload-field__hint {
             display: block;
             font-size: 0.68rem;
-            color: #94a3b8;
+            color: var(--fd-color-slate-400);
         }
     }
 
@@ -165,3 +165,6 @@
         }
     }
 }
+
+
+

@@ -13,8 +13,8 @@
     line-height: 1.4;
     text-transform: none;
     letter-spacing: 0;
-    background-color: var(--fd-badge-bg, rgba(15, 23, 42, 0.04));
-    color: var(--fd-badge-fg, #0f172a);
+    background-color: var(--fd-badge-bg, color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent));
+    color: var(--fd-badge-fg, var(--fd-color-slate-900));
     border: 1px solid var(--fd-badge-border, rgba(15, 23, 42, 0.07));
 
     &__icon {
@@ -30,30 +30,33 @@
     &.fd-badge--primary {
         --fd-badge-bg: rgba(59, 130, 246, 0.14);
         --fd-badge-border: rgba(59, 130, 246, 0.25);
-        --fd-badge-fg: #1d4ed8;
+        --fd-badge-fg: var(--fd-color-primary-700);
     }
 
     &.fd-badge--success {
-        --fd-badge-bg: rgba(16, 185, 129, 0.12);
+        --fd-badge-bg: color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent);
         --fd-badge-border: rgba(16, 185, 129, 0.25);
-        --fd-badge-fg: #047857;
+        --fd-badge-fg: var(--fd-color-emerald-700);
     }
 
     &.fd-badge--warning {
         --fd-badge-bg: rgba(251, 146, 60, 0.18);
         --fd-badge-border: rgba(251, 146, 60, 0.28);
-        --fd-badge-fg: #c2410c;
+        --fd-badge-fg: var(--fd-color-orange-700);
     }
 
     &.fd-badge--danger {
         --fd-badge-bg: rgba(239, 68, 68, 0.16);
         --fd-badge-border: rgba(239, 68, 68, 0.28);
-        --fd-badge-fg: #b91c1c;
+        --fd-badge-fg: var(--fd-color-red-700);
     }
 
     &.fd-badge--neutral {
-        --fd-badge-bg: rgba(148, 163, 184, 0.2);
-        --fd-badge-border: rgba(148, 163, 184, 0.35);
-        --fd-badge-fg: #475569;
+        --fd-badge-bg: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+        --fd-badge-border: color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+        --fd-badge-fg: var(--fd-color-slate-600);
     }
 }
+
+
+

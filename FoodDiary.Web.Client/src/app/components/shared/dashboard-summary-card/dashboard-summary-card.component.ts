@@ -45,10 +45,10 @@ export class DashboardSummaryCardComponent {
         { percent: 50, color: '#3f8df0' },
         { percent: 70, color: '#3f8df0' },
         { percent: 80, color: '#34d399' },
-        { percent: 90, color: '#22c55e' },
+        { percent: 90, color: 'var(--fd-color-green-500)' },
         { percent: 100, color: '#16a34a' },
-        { percent: 110, color: '#f59e0b' },
-        { percent: 120, color: '#f97316' },
+        { percent: 110, color: 'var(--fd-color-amber-500)' },
+        { percent: 120, color: 'var(--fd-color-orange-500)' },
         { percent: 130, color: '#ef4444' },
     ];
 
@@ -295,8 +295,8 @@ export class DashboardSummaryCardComponent {
                 target: 140,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#4dabff',
-                colorEnd: '#2563eb',
+                colorStart: 'var(--fd-gradient-brand-start)',
+                colorEnd: 'var(--fd-color-primary-600)',
             },
             {
                 id: 'carbs',
@@ -307,7 +307,7 @@ export class DashboardSummaryCardComponent {
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#2dd4bf',
-                colorEnd: '#0ea5e9',
+                colorEnd: 'var(--fd-color-sky-500)',
             },
             {
                 id: 'fats',
@@ -318,7 +318,7 @@ export class DashboardSummaryCardComponent {
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#fbbf24',
-                colorEnd: '#f97316',
+                colorEnd: 'var(--fd-color-orange-500)',
             },
             {
                 id: 'fiber',
@@ -329,14 +329,14 @@ export class DashboardSummaryCardComponent {
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#fb7185',
-                colorEnd: '#ec4899',
+                colorEnd: 'var(--fd-color-rose-500)',
             },
         ];
     }
 
     public getBarColor(bar: NutrientBar): string {
         if (!bar.target || bar.target <= 0) {
-            return '#6b7280';
+            return 'var(--fd-color-gray-500-static)';
         }
         const pct = (bar.current / bar.target) * 100;
         return this.getColorForPercent(pct);

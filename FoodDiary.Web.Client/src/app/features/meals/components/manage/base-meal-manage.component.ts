@@ -362,7 +362,8 @@ export class BaseMealManageComponent implements OnInit {
             return {
                 label: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_TITLE'),
                 description: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_DESCRIPTION'),
-                gradient: 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+                gradient:
+                    'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
             };
         }
 
@@ -370,7 +371,9 @@ export class BaseMealManageComponent implements OnInit {
         return {
             label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
             description: this.translateService.instant(config?.descriptionKey ?? ''),
-            gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+            gradient:
+                config?.gradient ??
+                'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
         };
     }
 

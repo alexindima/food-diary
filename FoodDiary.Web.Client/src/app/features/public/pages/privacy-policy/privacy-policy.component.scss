@@ -1,12 +1,12 @@
 .privacy-policy {
     min-height: 100vh;
-    background: #f8fafc;
+    background: var(--fd-color-slate-50);
     padding: 40px 20px 80px;
 
     &__container {
         max-width: 720px;
         margin: 0 auto;
-        background: #fff;
+        background: var(--fd-color-white);
         border-radius: 16px;
         padding: 40px;
         box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
@@ -15,12 +15,12 @@
     &__title {
         font-size: 1.6rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         margin: 0 0 24px;
     }
 
     &__content {
-        color: #334155;
+        color: var(--fd-color-slate-700);
         font-size: 0.95rem;
         line-height: 1.7;
 
@@ -29,7 +29,7 @@
             h2 {
                 font-size: 1.15rem;
                 font-weight: 600;
-                color: #1e293b;
+                color: var(--fd-color-slate-800);
                 margin: 28px 0 12px;
             }
 
@@ -52,3 +52,5 @@
         }
     }
 }
+
+

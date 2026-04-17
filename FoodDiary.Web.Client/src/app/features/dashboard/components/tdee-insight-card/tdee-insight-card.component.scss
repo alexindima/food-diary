@@ -8,7 +8,7 @@
     border-radius: 22px;
     padding: 18px;
     background: linear-gradient(180deg, #fff8f0 0%, #fff4e8 100%);
-    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+    box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     color: variables.$color-text-main;
     display: flex;
     flex-direction: column;
@@ -32,8 +32,8 @@
         width: 32px;
         height: 32px;
         border-radius: 10px;
-        background: linear-gradient(135deg, #f97316, #fb923c);
-        color: #fff;
+        background: linear-gradient(135deg, var(--fd-color-orange-500), #fb923c);
+        color: var(--fd-color-white);
 
         mat-icon {
             font-size: 18px;
@@ -170,7 +170,10 @@
         padding: 2px 0;
 
         mat-icon {
-            color: #f97316;
+            color: var(--fd-color-orange-500);
         }
     }
 }
+
+
+

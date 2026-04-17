@@ -4,12 +4,12 @@
 
 .fasting-safety-dialog__message {
     margin: 0;
-    color: #475569;
+    color: var(--fd-color-slate-600);
     font-size: 15px;
     line-height: 1.5;
 
     &--danger {
-        color: #b91c1c;
+        color: var(--fd-color-red-700);
         font-weight: 600;
     }
 }
@@ -19,3 +19,5 @@
     flex-direction: column;
     gap: 12px;
 }
+
+

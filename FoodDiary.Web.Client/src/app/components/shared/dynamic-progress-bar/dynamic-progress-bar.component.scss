@@ -16,7 +16,7 @@
 .dynamic-progress-bar-line {
     height: 100%;
     text-align: center;
-    color: #fff;
+    color: var(--fd-color-white);
     line-height: 25px;
     font-weight: bold;
     transition:
@@ -37,7 +37,7 @@
     }
 
     &.text-white {
-        color: #fff;
+        color: var(--fd-color-white);
     }
 }
 
@@ -76,7 +76,9 @@
     top: calc(100% + 6px);
     transform: translateX(-50%);
     font-size: 0.75rem;
-    color: rgba(15, 23, 42, 0.6);
+    color: var(--fd-color-dialog-overlay);
     line-height: 1;
     white-space: nowrap;
 }
+
+

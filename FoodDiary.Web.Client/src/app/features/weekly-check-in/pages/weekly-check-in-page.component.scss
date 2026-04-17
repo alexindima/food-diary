@@ -12,9 +12,9 @@
     &__trend {
         padding: 14px;
         border-radius: 14px;
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        border: 1px solid var(--fd-color-slate-200);
+        background: var(--fd-color-white);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
     }
 
     &__trend-row {
@@ -30,13 +30,13 @@
 
     &__trend-label {
         font-size: 0.8rem;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
     }
 
     &__trend-value {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__grid {
@@ -64,11 +64,11 @@
         font-size: 0.9rem;
 
         span {
-            color: #475569;
+            color: var(--fd-color-slate-600);
         }
 
         strong {
-            color: #0f172a;
+            color: var(--fd-color-slate-900);
         }
 
         &:last-child {
@@ -87,12 +87,12 @@
         align-items: flex-start;
         gap: 8px;
         font-size: 0.9rem;
-        color: #334155;
+        color: var(--fd-color-slate-700);
         line-height: 1.4;
     }
 
     &__suggestion-icon {
-        color: #f59e0b;
+        color: var(--fd-color-amber-500);
         flex-shrink: 0;
         font-size: 20px;
         width: 20px;
@@ -103,6 +103,8 @@
     &__loader {
         margin: 0;
         padding: 12px 4px;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
     }
 }
+
+

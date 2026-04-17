@@ -321,7 +321,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
                     this.cdr.markForCheck();
                     return;
                 }
-                ctx.fillStyle = '#fff';
+                ctx.fillStyle = 'var(--fd-color-white)';
                 ctx.fillRect(0, 0, targetWidth, targetHeight);
                 ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
                 canvas = resized;

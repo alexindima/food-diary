@@ -3,8 +3,8 @@
 .features {
     padding: clamp(28px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
     background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32%),
-        linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
+        radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent), transparent 32%),
+        linear-gradient(180deg, var(--fd-color-slate-50) 0%, #eef4ff 100%);
     --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
 
     &__inner {
@@ -38,7 +38,7 @@
         width: fit-content;
         padding: 6px 12px;
         border-radius: 999px;
-        background: rgba(59, 130, 246, 0.12);
+        background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
         color: variables.$color-primary;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -63,9 +63,9 @@
     &__summary {
         padding: clamp(16px, 2vw, 24px);
         border-radius: 24px;
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(37, 99, 235, 0.12);
-        box-shadow: 0 18px 42px rgba(37, 99, 235, 0.08);
+        background: color-mix(in srgb, var(--fd-color-white) 80%, transparent);
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
+        box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
         backdrop-filter: blur(16px);
     }
 
@@ -89,8 +89,8 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+        background: color-mix(in srgb, var(--fd-color-white) 78%, transparent);
         color: variables.$color-text-main;
         border-radius: 999px;
         padding: 12px 16px;
@@ -113,12 +113,12 @@
         &:hover {
             transform: translateY(-1px);
             border-color: rgba(37, 99, 235, 0.45);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
         }
 
         &--active {
-            background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
+            color: var(--fd-color-white);
             border-color: transparent;
             box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
         }
@@ -130,10 +130,10 @@
         gap: variables.$gap-l;
         align-items: start;
         background: rgba(255, 255, 255, 0.68);
-        border: 1px solid rgba(148, 163, 184, 0.18);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
         border-radius: 28px;
         padding: clamp(18px, 2vw, 28px);
-        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+        box-shadow: 0 20px 48px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         animation: landingFadeUp 860ms ease-out both;
     }
 
@@ -161,9 +161,9 @@
         min-height: 220px;
         padding: 20px;
         border-radius: 22px;
-        background: #fff;
-        border: 1px solid rgba(17, 24, 39, 0.06);
-        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+        background: var(--fd-color-white);
+        border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
+        box-shadow: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-s;
@@ -175,7 +175,7 @@
         width: 64px;
         height: 6px;
         border-radius: 999px;
-        background: linear-gradient(90deg, #2563eb 0%, #22c55e 100%);
+        background: linear-gradient(90deg, var(--fd-color-primary-600) 0%, var(--fd-color-green-500) 100%);
     }
 
     &__card-kicker {
@@ -233,3 +233,6 @@
         }
     }
 }
+
+
+

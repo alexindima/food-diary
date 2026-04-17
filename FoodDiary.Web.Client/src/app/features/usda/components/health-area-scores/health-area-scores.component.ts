@@ -76,7 +76,7 @@ interface HealthAreaDisplay {
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.3px;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .area-score-ring {
@@ -149,7 +149,7 @@ interface HealthAreaDisplay {
                 color: var(--fd-error, #f44336);
             }
             .area-card--unknown .area-grade {
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             @media (max-width: 600px) {

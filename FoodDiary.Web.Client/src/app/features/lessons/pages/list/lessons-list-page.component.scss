@@ -32,7 +32,7 @@
         flex: 1;
         height: 8px;
         border-radius: 4px;
-        background: rgba(15, 23, 42, 0.08);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         overflow: hidden;
         max-width: 200px;
     }
@@ -40,7 +40,7 @@
     &__progress-fill {
         height: 100%;
         border-radius: 4px;
-        background: linear-gradient(90deg, #22c55e, #16a34a);
+        background: linear-gradient(90deg, var(--fd-color-green-500), #16a34a);
         transition: width 0.3s ease;
     }
 
@@ -84,8 +84,8 @@
 .lesson-card {
     border-radius: 22px;
     padding: 20px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
+        box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
     }
 
     &--read {
@@ -112,7 +112,7 @@
         padding: 4px 10px;
         border-radius: 10px;
         background: rgba(139, 92, 246, 0.12);
-        color: #7c3aed;
+        color: var(--fd-color-purple-500);
         font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -120,7 +120,7 @@
     }
 
     &__check {
-        color: #22c55e;
+        color: var(--fd-color-green-500);
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -152,3 +152,7 @@
         color: variables.$color-text-additional;
     }
 }
+
+
+
+

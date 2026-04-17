@@ -1,5 +1,5 @@
 /* Food Diary color tokens */
-$fd-color-primary-50: #eef2ff;
+$fd-color-primary-50: var(--fd-color-primary-50, #eef2ff);
 $fd-color-primary-100: #e0eaff;
 $fd-color-primary-200: #c2d4ff;
 $fd-color-primary-300: #9bb8ff;
@@ -82,7 +82,7 @@ $fd-color-chart-fiber: #9b51e0;
 
 $fd-color-dialog-surface: #ffffff;
 $fd-color-dialog-surface-muted: #f8faff;
-$fd-color-dialog-border: rgba(17, 24, 39, 0.08);
+$fd-color-dialog-border: color-mix(in srgb, var(--fd-color-gray-900-static, #111827) 8%, transparent);
 $fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
 
 /* Button tokens derived from the palette */
@@ -256,27 +256,27 @@ $fd-button-tokens: (
 :root,
 html[data-theme='ocean'],
 html[data-theme='leaf'] {
-    --fd-color-gray-50: #f8fafc;
-    --fd-color-gray-100: #f1f5f9;
-    --fd-color-gray-200: #e2e8f0;
-    --fd-color-gray-300: #cbd5e1;
-    --fd-color-gray-400: #94a3b8;
-    --fd-color-gray-500: #64748b;
-    --fd-color-gray-600: #475569;
-    --fd-color-gray-700: #334155;
-    --fd-color-gray-800: #1e293b;
-    --fd-color-gray-900: #0f172a;
+    --fd-color-gray-50: var(--fd-color-slate-50);
+    --fd-color-gray-100: var(--fd-color-slate-100);
+    --fd-color-gray-200: var(--fd-color-slate-200);
+    --fd-color-gray-300: var(--fd-color-slate-300);
+    --fd-color-gray-400: var(--fd-color-slate-400);
+    --fd-color-gray-500: var(--fd-color-slate-500);
+    --fd-color-gray-600: var(--fd-color-slate-600);
+    --fd-color-gray-700: var(--fd-color-slate-700);
+    --fd-color-gray-800: var(--fd-color-slate-800);
+    --fd-color-gray-900: var(--fd-color-slate-900);
 
-    --fd-color-secondary-50: #f8fafc;
-    --fd-color-secondary-100: #f1f5f9;
-    --fd-color-secondary-200: #e2e8f0;
-    --fd-color-secondary-300: #cbd5e1;
-    --fd-color-secondary-400: #94a3b8;
-    --fd-color-secondary-500: #64748b;
-    --fd-color-secondary-600: #475569;
-    --fd-color-secondary-700: #334155;
-    --fd-color-secondary-800: #1e293b;
-    --fd-color-secondary-900: #0f172a;
+    --fd-color-secondary-50: var(--fd-color-slate-50);
+    --fd-color-secondary-100: var(--fd-color-slate-100);
+    --fd-color-secondary-200: var(--fd-color-slate-200);
+    --fd-color-secondary-300: var(--fd-color-slate-300);
+    --fd-color-secondary-400: var(--fd-color-slate-400);
+    --fd-color-secondary-500: var(--fd-color-slate-500);
+    --fd-color-secondary-600: var(--fd-color-slate-600);
+    --fd-color-secondary-700: var(--fd-color-slate-700);
+    --fd-color-secondary-800: var(--fd-color-slate-800);
+    --fd-color-secondary-900: var(--fd-color-slate-900);
 
     --fd-color-success-50: #{$fd-color-success-50};
     --fd-color-success-100: #{$fd-color-success-100};
@@ -315,40 +315,42 @@ html[data-theme='leaf'] {
     --fd-color-bg-card: var(--fd-color-surface, #ffffff);
     --fd-color-bg-muted: var(--fd-color-surface-muted, #f8fafc);
 
-    --fd-color-chart-calories: #f2994a;
-    --fd-color-chart-proteins: #2d9cdb;
-    --fd-color-chart-fats: #f2c94c;
-    --fd-color-chart-carbs: #27ae60;
-    --fd-color-chart-fiber: #9b51e0;
+    --fd-color-chart-calories: var(--fd-color-orange-500);
+    --fd-color-chart-proteins: var(--fd-color-blue-500);
+    --fd-color-chart-fats: var(--fd-color-yellow-300);
+    --fd-color-chart-carbs: var(--fd-color-emerald-500);
+    --fd-color-chart-fiber: var(--fd-color-purple-500);
+    --fd-color-chart-radar-background: color-mix(in srgb, var(--fd-color-chart-proteins) 20%, transparent);
+    --fd-color-chart-radar-border: var(--fd-color-chart-proteins);
 
-    --fd-color-nutrition-calories: #e11d48;
-    --fd-color-nutrition-proteins: #0284c7;
-    --fd-color-nutrition-fats: #c2410c;
-    --fd-color-nutrition-carbs: #0f766e;
-    --fd-color-nutrition-fiber: #7e22ce;
-    --fd-color-nutrition-alcohol: #64748b;
+    --fd-color-nutrition-calories: var(--fd-color-rose-500);
+    --fd-color-nutrition-proteins: var(--fd-color-chart-proteins);
+    --fd-color-nutrition-fats: var(--fd-color-orange-700);
+    --fd-color-nutrition-carbs: var(--fd-color-teal-700);
+    --fd-color-nutrition-fiber: var(--fd-color-purple-700);
+    --fd-color-nutrition-alcohol: var(--fd-color-slate-500);
 
-    --fd-color-nutrition-calories-fill: rgba(225, 29, 72, 0.14);
-    --fd-color-nutrition-proteins-fill: rgba(2, 132, 199, 0.14);
-    --fd-color-nutrition-fats-fill: rgba(194, 65, 12, 0.14);
-    --fd-color-nutrition-carbs-fill: rgba(15, 118, 110, 0.14);
-    --fd-color-nutrition-fiber-fill: rgba(126, 34, 206, 0.14);
-    --fd-color-nutrition-alcohol-fill: rgba(100, 116, 139, 0.1);
-    --fd-color-nutrition-macro-bar-bg: rgba(148, 163, 184, 0.18);
-    --fd-color-nutrition-error-border: rgba(239, 68, 68, 0.2);
-    --fd-color-nutrition-error-bg: rgba(254, 226, 226, 0.7);
-    --fd-color-nutrition-error-text: #b91c1c;
-    --fd-color-nutrition-warning-border: rgba(245, 158, 11, 0.3);
-    --fd-color-nutrition-warning-bg: rgba(255, 251, 235, 0.9);
-    --fd-color-nutrition-warning-text: #92400e;
+    --fd-color-nutrition-calories-fill: color-mix(in srgb, var(--fd-color-nutrition-calories) 14%, transparent);
+    --fd-color-nutrition-proteins-fill: color-mix(in srgb, var(--fd-color-nutrition-proteins) 14%, transparent);
+    --fd-color-nutrition-fats-fill: color-mix(in srgb, var(--fd-color-nutrition-fats) 14%, transparent);
+    --fd-color-nutrition-carbs-fill: color-mix(in srgb, var(--fd-color-nutrition-carbs) 14%, transparent);
+    --fd-color-nutrition-fiber-fill: color-mix(in srgb, var(--fd-color-nutrition-fiber) 14%, transparent);
+    --fd-color-nutrition-alcohol-fill: color-mix(in srgb, var(--fd-color-nutrition-alcohol) 10%, transparent);
+    --fd-color-nutrition-macro-bar-bg: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+    --fd-color-nutrition-error-border: color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
+    --fd-color-nutrition-error-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
+    --fd-color-nutrition-error-text: var(--fd-color-red-700);
+    --fd-color-nutrition-warning-border: color-mix(in srgb, var(--fd-color-amber-500) 30%, transparent);
+    --fd-color-nutrition-warning-bg: color-mix(in srgb, var(--fd-color-amber-500) 10%, var(--fd-color-white));
+    --fd-color-nutrition-warning-text: var(--fd-color-orange-700);
     --fd-color-dialog-surface: var(--fd-color-surface, #ffffff);
     --fd-color-dialog-surface-muted: var(--fd-color-surface-muted, #f8fafc);
-    --fd-color-dialog-border: var(--fd-color-border, rgba(17, 24, 39, 0.08));
+    --fd-color-dialog-border: var(--fd-color-border, color-mix(in srgb, var(--fd-color-gray-900-static, #111827) 8%, transparent));
     --fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
 
-    --fd-color-warn-strong: #f97316;
-    --fd-color-success-strong: #16a34a;
-    --fd-color-danger-strong: #dc2626;
+    --fd-color-warn-strong: var(--fd-color-orange-500);
+    --fd-color-success-strong: var(--fd-color-green-500);
+    --fd-color-danger-strong: var(--fd-color-red-600);
 
     --fd-button-outline-background-default: transparent;
     --fd-button-outline-background-hover: var(--fd-color-primary-50);
@@ -547,3 +549,4 @@ $fd-button-styles: $fd-button-tokens;
  * 2) Component CSS variables: color: var(--fd-color-primary-500);
  * 3) Component SCSS variables: background-color: $fd-color-bg-card;
  */
+

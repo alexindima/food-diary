@@ -6,7 +6,7 @@
     &__label {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         margin: 0;
     }
 
@@ -18,7 +18,7 @@
     &__hint {
         margin: 0;
         font-size: 0.85rem;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
     }
 
     &__list {
@@ -64,12 +64,12 @@
         background: rgba(15, 23, 42, 0.02);
         cursor: pointer;
         text-align: left;
-        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+        box-shadow: 0 4px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         transition:
             transform 0.25s ease,
             box-shadow 0.25s ease,
             border 0.25s ease;
-        border: 1px solid rgba(15, 23, 42, 0.05);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
 
         &:hover:not(:disabled) {
             transform: translateY(-2px);
@@ -85,7 +85,7 @@
     &__option--selected {
         border-color: rgba(59, 130, 246, 0.5);
         box-shadow:
-            0 12px 30px rgba(15, 23, 42, 0.18),
+            0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent),
             0 0 24px rgba(59, 130, 246, 0.35);
     }
 
@@ -93,12 +93,12 @@
         width: 32px;
         height: 32px;
         border-radius: 999px;
-        background: rgba(15, 23, 42, 0.08);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         flex-shrink: 0;
         transition:
             background 0.25s ease,
@@ -120,34 +120,36 @@
     &__title {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         margin: 0;
         transition: color 0.25s ease;
     }
 
     &__description {
         font-size: 0.85rem;
-        color: #475569;
+        color: var(--fd-color-slate-600);
         margin: 0;
         transition: color 0.25s ease;
     }
 
     &__error {
-        color: #dc2626;
+        color: var(--fd-color-red-600);
         font-size: 0.85rem;
         margin-top: 4px;
     }
 
     &__option--selected &__indicator {
         background: rgba(255, 255, 255, 0.85);
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__option--selected &__title {
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__option--selected &__description {
         color: rgba(15, 23, 42, 0.85);
     }
 }
+
+

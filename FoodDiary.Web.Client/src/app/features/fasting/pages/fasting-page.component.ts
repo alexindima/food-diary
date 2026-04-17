@@ -152,7 +152,7 @@ export class FastingPageComponent implements OnInit {
     public readonly currentRingColor = computed(() => {
         const session = this.currentSession();
         if (session?.planType === 'Cyclic' && session.occurrenceKind === 'EatDay' && !session.endedAtUtc) {
-            return '#22c55e';
+            return 'var(--fd-color-green-500)';
         }
 
         return this.currentStage()?.color ?? null;
@@ -431,15 +431,15 @@ export class FastingPageComponent implements OnInit {
     public getHistoryAccentColor(session: FastingSession): string {
         switch (session.status) {
             case 'Completed':
-                return '#22c55e';
+                return 'var(--fd-color-green-500)';
             case 'Interrupted':
-                return '#f97316';
+                return 'var(--fd-color-orange-500)';
             case 'Skipped':
-                return '#0ea5e9';
+                return 'var(--fd-color-sky-500)';
             case 'Postponed':
                 return '#a855f7';
             default:
-                return '#94a3b8';
+                return 'var(--fd-color-slate-400)';
         }
     }
 

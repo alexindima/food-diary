@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -7,8 +7,8 @@
 .daily-advice-card {
     border-radius: 22px;
     padding: 18px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     color: variables.$color-text-main;
     display: flex;
     flex-direction: column;
@@ -52,7 +52,7 @@
         padding: 6px 10px;
         border-radius: 12px;
         background: rgba(14, 165, 233, 0.14);
-        color: #0ea5e9;
+        color: var(--fd-color-sky-500);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.04em;
@@ -75,7 +75,11 @@
         padding: 2px 0;
 
         mat-icon {
-            color: #0ea5e9;
+            color: var(--fd-color-sky-500);
         }
     }
 }
+
+
+
+

@@ -20,9 +20,9 @@
         gap: 4px;
         padding: 20px 14px;
         border-radius: 14px;
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        border: 1px solid var(--fd-color-slate-200);
+        background: var(--fd-color-white);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
         text-align: center;
     }
 
@@ -32,31 +32,31 @@
         height: 28px;
 
         &--streak {
-            color: #f97316;
+            color: var(--fd-color-orange-500);
         }
 
         &--longest {
-            color: #7c3aed;
+            color: var(--fd-color-purple-500);
         }
 
         &--meals {
-            color: #0ea5e9;
+            color: var(--fd-color-sky-500);
         }
 
         &--adherence {
-            color: #22c55e;
+            color: var(--fd-color-green-500);
         }
     }
 
     &__stat-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__stat-label {
         font-size: 0.85rem;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
     }
 
     &__grid {
@@ -90,11 +90,11 @@
     }
 
     &__score-track {
-        stroke: #e2e8f0;
+        stroke: var(--fd-color-slate-200);
     }
 
     &__score-progress {
-        stroke: #22c55e;
+        stroke: var(--fd-color-green-500);
         transition: stroke-dashoffset 0.5s ease;
     }
 
@@ -110,18 +110,18 @@
     &__score-value {
         font-size: 2.4rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__score-label {
         font-size: 0.9rem;
-        color: #94a3b8;
+        color: var(--fd-color-slate-400);
     }
 
     &__score-hint {
         margin: 0;
         font-size: 0.85rem;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
         text-align: center;
         max-width: 280px;
     }
@@ -139,15 +139,15 @@
         gap: 4px;
         padding: 14px 8px;
         border-radius: 12px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--fd-color-slate-200);
         text-align: center;
         transition:
             transform 0.15s,
             box-shadow 0.15s;
 
         &--earned {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fef3c7, var(--fd-color-yellow-300));
+            border-color: var(--fd-color-amber-500);
             box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
 
             .gamification__badge-icon {
@@ -156,11 +156,11 @@
         }
 
         &--locked {
-            background: #f8fafc;
+            background: var(--fd-color-slate-50);
             opacity: 0.6;
 
             .gamification__badge-icon {
-                color: #94a3b8;
+                color: var(--fd-color-slate-400);
             }
         }
     }
@@ -174,20 +174,22 @@
     &__badge-label {
         font-size: 0.7rem;
         font-weight: 600;
-        color: #334155;
+        color: var(--fd-color-slate-700);
         line-height: 1.2;
     }
 
     &__badge-threshold {
         font-size: 0.75rem;
         font-weight: 700;
-        color: #475569;
+        color: var(--fd-color-slate-600);
     }
 
     &__empty,
     &__loader {
         margin: 0;
         padding: 12px 4px;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
     }
 }
+
+

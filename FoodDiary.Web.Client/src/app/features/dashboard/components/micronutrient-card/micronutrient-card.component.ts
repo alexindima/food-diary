@@ -62,7 +62,7 @@ export class MicronutrientCardComponent {
     public getBarColor(nutrient: DailyMicronutrient): string {
         const pct = nutrient.percentDailyValue ?? 0;
         if (pct >= 80) {
-            return '#22c55e';
+            return 'var(--fd-color-green-500)';
         }
         if (pct >= 50) {
             return '#eab308';

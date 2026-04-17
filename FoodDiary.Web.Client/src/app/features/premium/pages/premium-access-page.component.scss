@@ -13,17 +13,17 @@
 .premium-access-page__title {
     margin: 0;
     font-size: 1.25rem;
-    color: #0f172a;
+    color: var(--fd-color-slate-900);
 }
 
 .premium-access-page__text {
     margin: 0;
-    color: #475569;
+    color: var(--fd-color-slate-600);
     line-height: 1.6;
 }
 
 .premium-access-page__link {
-    color: #2563eb;
+    color: var(--fd-color-primary-600);
     text-decoration: none;
     font-weight: 600;
 }
@@ -32,3 +32,5 @@
 .premium-access-page__link:focus {
     text-decoration: underline;
 }
+
+

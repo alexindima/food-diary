@@ -1,12 +1,12 @@
-﻿:host {
+:host {
     display: block;
 }
 
 .fd-ui-input {
     --fd-input-height: 40px;
     --fd-input-radius: 14px;
-    --fd-input-border: rgba(148, 163, 184, 0.38);
-    --fd-input-label-bg: var(--fd-color-surface, #fff);
+    --fd-input-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
+    --fd-input-label-bg: var(--fd-color-surface, var(--fd-color-white));
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -25,7 +25,7 @@
 }
 
 .fd-ui-input__label {
-    color: #64748b;
+    color: var(--fd-color-slate-500);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.2;
@@ -50,14 +50,14 @@
 
 .fd-ui-input__required {
     margin-left: 0;
-    color: #ef4444;
+    color: var(--fd-color-danger);
 }
 
 .fd-ui-input__control-wrap {
     min-height: var(--fd-input-height);
     border: 1px solid var(--fd-input-border);
     border-radius: var(--fd-input-radius);
-    background: #fff;
+    background: var(--fd-color-white);
     display: flex;
     align-items: center;
     padding: 0 44px 0 12px;
@@ -79,7 +79,7 @@
 }
 
 .fd-ui-input__control-wrap:focus-within {
-    border-color: #3b82f6;
+    border-color: var(--fd-color-primary-500);
 }
 
 .fd-ui-input__control {
@@ -89,7 +89,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: #1e293b;
+    color: var(--fd-color-slate-800);
     font: inherit;
     margin-top: 0;
 }
@@ -104,12 +104,12 @@
     justify-content: center;
     width: 28px;
     height: 28px;
-    color: #64748b;
+    color: var(--fd-color-slate-500);
     pointer-events: none;
 }
 
 .fd-ui-input__control::placeholder {
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
 }
 
 .fd-ui-input__suffix {
@@ -119,7 +119,7 @@
     transform: translateY(-50%);
     border: none;
     background: transparent;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -134,7 +134,7 @@
 }
 
 .fd-ui-input--has-error .fd-ui-input__control-wrap {
-    border-color: #ef4444;
+    border-color: var(--fd-color-danger);
 }
 
 .fd-ui-input--floating .fd-ui-input__label {
@@ -149,7 +149,7 @@
 }
 
 .fd-ui-input__error {
-    color: #ef4444;
+    color: var(--fd-color-danger);
     font-size: 0.75rem;
     line-height: 1.2;
     margin-top: 2px;
@@ -173,3 +173,5 @@
 .fd-ui-input__control[type='time']::-webkit-calendar-picker-indicator {
     margin-right: -2px;
 }
+
+

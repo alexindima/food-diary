@@ -20,7 +20,7 @@
         font-size: var(--fd-page-title-size, 2rem);
         line-height: var(--fd-page-title-line-height, 1.2);
         font-weight: var(--fd-page-title-weight, 700);
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         width: 100%;
     }
 
@@ -57,7 +57,7 @@
 
     &__empty-chart {
         margin: 0;
-        color: #94a3b8;
+        color: var(--fd-color-slate-400);
         font-size: 0.95rem;
         text-align: center;
     }
@@ -101,15 +101,15 @@
         align-items: center;
         justify-content: center;
         font-size: 0.7rem;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
 
     &__bmi-segment--under {
-        background: linear-gradient(90deg, #bfdbfe, #93c5fd);
-        color: #1d4ed8;
+        background: linear-gradient(90deg, var(--fd-color-primary-200), var(--fd-color-primary-300));
+        color: var(--fd-color-primary-700);
     }
 
     &__bmi-segment--normal {
@@ -118,7 +118,7 @@
     }
 
     &__bmi-segment--over {
-        background: linear-gradient(90deg, #fde68a, #fbbf24);
+        background: linear-gradient(90deg, var(--fd-color-yellow-300), #fbbf24);
         color: #92400e;
     }
 
@@ -141,8 +141,8 @@
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        border: 2px solid #0f172a;
-        background-color: #fff;
+        border: 2px solid var(--fd-color-slate-900);
+        background-color: var(--fd-color-white);
         box-shadow: 0 3px 8px rgba(15, 23, 42, 0.25);
         transform: translateY(-50%);
     }
@@ -150,7 +150,7 @@
     &__bmi-pointer span {
         font-size: 0.8rem;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         transform: translateY(-6px);
     }
 
@@ -183,13 +183,13 @@
     }
 
     &__bmi-status--under {
-        background-color: #dbeafe;
-        color: #1d4ed8;
+        background-color: var(--fd-color-primary-100);
+        color: var(--fd-color-primary-700);
     }
 
     &__bmi-status--normal {
         background-color: #dcfce7;
-        color: #047857;
+        color: var(--fd-color-emerald-700);
     }
 
     &__bmi-status--over {
@@ -199,7 +199,7 @@
 
     &__bmi-status--obese {
         background-color: #fee2e2;
-        color: #b91c1c;
+        color: var(--fd-color-red-700);
     }
 
     &__bmi-description {
@@ -268,7 +268,7 @@
         gap: 8px;
         align-items: center;
         padding: 8px 0;
-        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
 
         &:last-child {
             border-bottom: none;
@@ -277,13 +277,13 @@
 
     &__entry-date {
         font-weight: 600;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__entry-weight {
         font-size: 1.1rem;
         font-weight: 600;
-        color: #2563eb;
+        color: var(--fd-color-primary-600);
     }
 
     &__entry-actions {
@@ -296,7 +296,7 @@
     &__loader,
     &__empty {
         text-align: center;
-        color: #94a3b8;
+        color: var(--fd-color-slate-400);
         padding: 16px;
     }
 
@@ -312,3 +312,6 @@
         }
     }
 }
+
+
+

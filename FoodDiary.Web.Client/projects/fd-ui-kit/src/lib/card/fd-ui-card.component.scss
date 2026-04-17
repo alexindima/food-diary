@@ -1,8 +1,8 @@
 :host {
     display: block;
-    --fd-ui-card-border-color: var(--fd-color-border, rgba(15, 23, 42, 0.08));
-    --fd-ui-card-title-color: var(--fd-color-text-muted, #6b7280);
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+    --fd-ui-card-border-color: var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
+    --fd-ui-card-title-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
 }
 
 .fd-ui-card {
@@ -70,8 +70,8 @@
 
 .fd-ui-card--appearance-product {
     --fd-ui-card-border-color: rgba(46, 144, 250, 0.25);
-    --fd-ui-card-title-color: var(--fd-color-text, #111827);
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
 
     .fd-ui-card__title {
         font-size: 1.2rem;
@@ -80,8 +80,8 @@
 
 .fd-ui-card--appearance-recipe {
     --fd-ui-card-border-color: rgba(16, 185, 129, 0.25);
-    --fd-ui-card-title-color: var(--fd-color-text, #111827);
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
 
     .fd-ui-card__title {
         font-size: 1.2rem;
@@ -90,14 +90,14 @@
 
 .fd-ui-card--appearance-info {
     --fd-ui-card-border-color: rgba(148, 163, 184, 0.4);
-    --fd-ui-card-title-color: var(--fd-color-text, #111827);
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, #64748b);
+    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-slate-500));
 }
 
 .fd-ui-card--appearance-entry {
-    --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
-    --fd-ui-card-title-color: var(--fd-color-text, #111827);
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+    --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
 
     .fd-ui-card__title {
         font-size: 1.05rem;
@@ -109,3 +109,5 @@
 .fd-ui-card--appearance-default {
     gap: 0;
 }
+
+

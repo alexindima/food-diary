@@ -43,7 +43,7 @@
 }
 
 .stats-nutrition-card__chart-card {
-    background: #f8fafc;
+    background: var(--fd-color-slate-50);
     border-radius: 16px;
     padding: 16px;
     display: flex;
@@ -91,3 +91,5 @@
         grid-template-columns: 1fr;
     }
 }
+
+

@@ -1,11 +1,11 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .card {
     cursor: pointer;
     margin-bottom: variables.$gap-m;
     border: 1px solid variables.$color-box-shadow;
     border-radius: variables.$border-radius-m;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 8px variables.$color-box-shadow;
@@ -18,3 +18,5 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 }
+
+

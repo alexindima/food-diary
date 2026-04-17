@@ -3,9 +3,9 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--fd-color-slate-200);
     border-radius: 14px;
-    background: #fff;
+    background: var(--fd-color-white);
 
     &__hidden-upload {
         position: fixed;
@@ -25,7 +25,7 @@
     }
 
     &__icon {
-        color: #7c3aed;
+        color: var(--fd-color-purple-500);
         flex-shrink: 0;
     }
 
@@ -34,11 +34,11 @@
         border: none;
         outline: none;
         font-size: 0.95rem;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         background: transparent;
 
         &::placeholder {
-            color: #94a3b8;
+            color: var(--fd-color-slate-400);
         }
 
         &:disabled {
@@ -52,10 +52,10 @@
         justify-content: center;
         width: 36px;
         height: 36px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--fd-color-slate-200);
         border-radius: 10px;
-        background: #fff;
-        color: #64748b;
+        background: var(--fd-color-white);
+        color: var(--fd-color-slate-500);
         cursor: pointer;
         flex-shrink: 0;
         transition:
@@ -64,19 +64,19 @@
             border-color 0.15s;
 
         &:hover:not(:disabled) {
-            color: #7c3aed;
-            border-color: #7c3aed;
+            color: var(--fd-color-purple-500);
+            border-color: var(--fd-color-purple-500);
         }
 
         &--mic-active {
             background: #ef4444;
             border-color: #ef4444;
-            color: #fff;
+            color: var(--fd-color-white);
 
             &:hover:not(:disabled) {
-                background: #dc2626;
-                border-color: #dc2626;
-                color: #fff;
+                background: var(--fd-color-red-600);
+                border-color: var(--fd-color-red-600);
+                color: var(--fd-color-white);
             }
         }
 
@@ -100,8 +100,8 @@
         height: 36px;
         border: none;
         border-radius: 10px;
-        background: #7c3aed;
-        color: #fff;
+        background: var(--fd-color-purple-500);
+        color: var(--fd-color-white);
         cursor: pointer;
         flex-shrink: 0;
         transition:
@@ -109,7 +109,7 @@
             opacity 0.15s;
 
         &:hover:not(:disabled) {
-            background: #6d28d9;
+            background: var(--fd-color-purple-700);
         }
 
         &:disabled {
@@ -137,7 +137,7 @@
         align-items: center;
         font-weight: 600;
         font-size: 0.9rem;
-        color: #7c3aed;
+        color: var(--fd-color-purple-500);
         margin-bottom: 10px;
     }
 
@@ -150,7 +150,7 @@
         border: none;
         border-radius: 6px;
         background: transparent;
-        color: #94a3b8;
+        color: var(--fd-color-slate-400);
         cursor: pointer;
 
         &:hover {
@@ -172,18 +172,18 @@
         align-items: center;
         padding: 8px 10px;
         border-radius: 8px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--fd-color-white);
+        border: 1px solid var(--fd-color-slate-200);
         font-size: 0.9rem;
     }
 
     &__item-name {
         font-weight: 500;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__item-amount {
-        color: #64748b;
+        color: var(--fd-color-slate-500);
         font-size: 0.85rem;
     }
 
@@ -197,3 +197,5 @@
     display: block;
     margin-top: -1px;
 }
+
+

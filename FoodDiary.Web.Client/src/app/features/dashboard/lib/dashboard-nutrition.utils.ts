@@ -48,8 +48,8 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 target: s.statistics.proteinGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#4dabff',
-                colorEnd: '#2563eb',
+                colorStart: 'var(--fd-gradient-brand-start)',
+                colorEnd: 'var(--fd-color-primary-600)',
             },
             {
                 id: 'carbs',
@@ -60,7 +60,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#2dd4bf',
-                colorEnd: '#0ea5e9',
+                colorEnd: 'var(--fd-color-sky-500)',
             },
             {
                 id: 'fats',
@@ -71,7 +71,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#fbbf24',
-                colorEnd: '#f97316',
+                colorEnd: 'var(--fd-color-orange-500)',
             },
             {
                 id: 'fiber',
@@ -82,7 +82,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#fb7185',
-                colorEnd: '#ec4899',
+                colorEnd: 'var(--fd-color-rose-500)',
             },
         ];
     });

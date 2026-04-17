@@ -15,7 +15,7 @@ export function applyAlpha(hexColor: string, alpha: number): string {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export const TICK_COLOR = '#475569';
+export const TICK_COLOR = 'var(--fd-color-slate-600)';
 
 export function createCaloriesLineChartOptions(formatTooltip: (label: string, value: number) => string): ChartConfiguration['options'] {
     return {
@@ -84,8 +84,8 @@ export const radarChartOptions: ChartOptions<'radar'> = {
     scales: {
         r: {
             beginAtZero: true,
-            angleLines: { color: '#cbd5f5' },
-            grid: { color: '#e2e8f0' },
+            angleLines: { color: 'color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white))' },
+            grid: { color: 'var(--fd-color-slate-200)' },
             ticks: { showLabelBackdrop: false },
         },
     },

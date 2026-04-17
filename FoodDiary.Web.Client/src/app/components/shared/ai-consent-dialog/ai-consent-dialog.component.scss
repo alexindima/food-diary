@@ -8,7 +8,7 @@
     }
 
     &__text {
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         font-size: 0.95rem;
         line-height: 1.7;
 
@@ -18,7 +18,7 @@
                 margin: 16px 0 8px;
                 font-size: 1rem;
                 font-weight: 600;
-                color: #1e293b;
+                color: var(--fd-color-slate-800);
             }
 
             p {
@@ -43,7 +43,7 @@
         margin-top: 16px;
         cursor: pointer;
         font-size: 0.9rem;
-        color: #334155;
+        color: var(--fd-color-slate-700);
         line-height: 1.4;
 
         input[type='checkbox'] {
@@ -51,7 +51,7 @@
             width: 18px;
             height: 18px;
             flex-shrink: 0;
-            accent-color: #7c3aed;
+            accent-color: var(--fd-color-purple-500);
             cursor: pointer;
         }
     }
@@ -62,3 +62,5 @@
         gap: 12px;
     }
 }
+
+

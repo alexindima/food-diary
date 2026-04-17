@@ -45,7 +45,7 @@
                             <fd-ui-accent-surface
                                 class="cycle-tracking__summary-item"
                                 accentSide="top"
-                                accentColor="#7c3aed"
+                                accentColor="var(--fd-color-purple-500)"
                                 [tinted]="true"
                             >
                                 <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.STARTED' | translate }}</span>
@@ -54,7 +54,7 @@
                             <fd-ui-accent-surface
                                 class="cycle-tracking__summary-item"
                                 accentSide="top"
-                                accentColor="#0ea5e9"
+                                accentColor="var(--fd-color-sky-500)"
                                 [tinted]="true"
                             >
                                 <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.AVG_LENGTH' | translate }}</span>
@@ -65,7 +65,7 @@
                             <fd-ui-accent-surface
                                 class="cycle-tracking__summary-item"
                                 accentSide="top"
-                                accentColor="#14b8a6"
+                                accentColor="var(--fd-color-teal-500)"
                                 [tinted]="true"
                             >
                                 <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.LUTEAL_LENGTH' | translate }}</span>
@@ -80,7 +80,7 @@
                                 <fd-ui-accent-surface
                                     class="cycle-tracking__prediction"
                                     accentSide="top"
-                                    accentColor="#f97316"
+                                    accentColor="var(--fd-color-orange-500)"
                                     [tinted]="true"
                                 >
                                     <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_NEXT' | translate }}</span>
@@ -91,7 +91,7 @@
                                 <fd-ui-accent-surface
                                     class="cycle-tracking__prediction"
                                     accentSide="top"
-                                    accentColor="#22c55e"
+                                    accentColor="var(--fd-color-green-500)"
                                     [tinted]="true"
                                 >
                                     <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_OVULATION' | translate }}</span>
@@ -176,7 +176,11 @@
                                 <fd-ui-accent-surface
                                     class="cycle-tracking__day"
                                     accentSide="left"
-                                    [accentColor]="day.isPeriod ? 'linear-gradient(135deg, #dc2626, #f97316)' : '#0ea5e9'"
+                                    [accentColor]="
+                                        day.isPeriod
+                                            ? 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))'
+                                            : 'var(--fd-color-sky-500)'
+                                    "
                                     [tinted]="true"
                                 >
                                     <div class="cycle-tracking__day-header">

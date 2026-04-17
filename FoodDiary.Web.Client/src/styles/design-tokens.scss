@@ -33,6 +33,40 @@ $fd-elevation-tokens: (
     md: 0 4px 12px rgba(24, 39, 75, 0.15),
 );
 
+$fd-static-color-tokens: (
+    white: #ffffff,
+    slate-50: #f8fafc,
+    slate-100: #f1f5f9,
+    slate-200: #e2e8f0,
+    slate-300: #cbd5e1,
+    slate-400: #94a3b8,
+    slate-500: #64748b,
+    slate-600: #475569,
+    slate-700: #334155,
+    slate-800: #1e293b,
+    slate-900: #0f172a,
+    gray-500: #6b7280,
+    gray-900: #111827,
+    neutral-600: #666666,
+    purple-500: #7c3aed,
+    purple-700: #6d28d9,
+    sky-500: #0ea5e9,
+    sky-700: #0369a1,
+    blue-500: #3b82f6,
+    amber-500: #f59e0b,
+    orange-500: #f97316,
+    orange-700: #c2410c,
+    teal-500: #14b8a6,
+    teal-700: #0f766e,
+    green-500: #22c55e,
+    emerald-500: #10b981,
+    emerald-700: #047857,
+    red-600: #dc2626,
+    red-700: #b91c1c,
+    rose-500: #ec4899,
+    yellow-300: #fde68a,
+);
+
 $fd-period-filter-tokens: (
     gap: 24px,
 );
@@ -54,6 +88,7 @@ $fd-page-header-base-tokens: (
 );
 
 $fd-static-design-tokens: (
+    colors: $fd-static-color-tokens,
     radius: $fd-radius-tokens,
     spacing: $fd-spacing-tokens,
     typography: $fd-typography-tokens,
@@ -82,8 +117,8 @@ $fd-theme-design-tokens: (
             on-brand: #ffffff,
             primary-rgb: 37 99 235,
             danger-rgb: 239 68 68,
-            primary-50: #eef2ff,
-            primary-100: #dbeafe,
+            primary-50: var(--fd-color-primary-50, #eef2ff),
+            primary-100: var(--fd-color-primary-100, #dbeafe),
             primary-200: #bfdbfe,
             primary-300: #93c5fd,
             primary-400: #60a5fa,
@@ -98,7 +133,7 @@ $fd-theme-design-tokens: (
             brand-end: #2563eb,
             brand-hover-start: #60b6ff,
             brand-hover-end: #2f6df2,
-            sidebar-start: #f8fbff,
+            sidebar-start: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50, #eef2ff)) 35%, var(--fd-color-white, #fff)),
             sidebar-end: #eef4ff,
             premium-start: #0f172a,
             premium-end: #1e293b,
@@ -284,6 +319,38 @@ $fd-theme-design-tokens: (
         --fd-radius-lg: #{fd-token(radius, lg)};
         --fd-radius-pill: #{fd-token(radius, pill)};
 
+        --fd-color-white: #{fd-token(colors, white)};
+        --fd-color-slate-50: #{fd-token(colors, slate-50)};
+        --fd-color-slate-100: #{fd-token(colors, slate-100)};
+        --fd-color-slate-200: #{fd-token(colors, slate-200)};
+        --fd-color-slate-300: #{fd-token(colors, slate-300)};
+        --fd-color-slate-400: #{fd-token(colors, slate-400)};
+        --fd-color-slate-500: #{fd-token(colors, slate-500)};
+        --fd-color-slate-600: #{fd-token(colors, slate-600)};
+        --fd-color-slate-700: #{fd-token(colors, slate-700)};
+        --fd-color-slate-800: #{fd-token(colors, slate-800)};
+        --fd-color-slate-900: #{fd-token(colors, slate-900)};
+        --fd-color-gray-500-static: #{fd-token(colors, gray-500)};
+        --fd-color-gray-900-static: #{fd-token(colors, gray-900)};
+        --fd-color-neutral-600: #{fd-token(colors, neutral-600)};
+        --fd-color-purple-500: #{fd-token(colors, purple-500)};
+        --fd-color-purple-700: #{fd-token(colors, purple-700)};
+        --fd-color-sky-500: #{fd-token(colors, sky-500)};
+        --fd-color-sky-700: #{fd-token(colors, sky-700)};
+        --fd-color-blue-500: #{fd-token(colors, blue-500)};
+        --fd-color-amber-500: #{fd-token(colors, amber-500)};
+        --fd-color-orange-500: #{fd-token(colors, orange-500)};
+        --fd-color-orange-700: #{fd-token(colors, orange-700)};
+        --fd-color-teal-500: #{fd-token(colors, teal-500)};
+        --fd-color-teal-700: #{fd-token(colors, teal-700)};
+        --fd-color-green-500: #{fd-token(colors, green-500)};
+        --fd-color-emerald-500: #{fd-token(colors, emerald-500)};
+        --fd-color-emerald-700: #{fd-token(colors, emerald-700)};
+        --fd-color-red-600: #{fd-token(colors, red-600)};
+        --fd-color-red-700: #{fd-token(colors, red-700)};
+        --fd-color-rose-500: #{fd-token(colors, rose-500)};
+        --fd-color-yellow-300: #{fd-token(colors, yellow-300)};
+
         --fd-spacing-xxs: #{fd-token(spacing, xxs)};
         --fd-spacing-xs: #{fd-token(spacing, xs)};
         --fd-spacing-sm: #{fd-token(spacing, sm)};
@@ -332,3 +399,4 @@ $fd-theme-design-tokens: (
         --fd-page-header-mobile-border-color: #{fd-theme-token($theme, page-header, mobile-border-color)};
     }
 }
+

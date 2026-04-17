@@ -73,19 +73,19 @@ interface WearableMetric {
 
             .metric-unit {
                 font-size: 11px;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .metric-label {
                 font-size: 11px;
                 font-weight: 600;
                 text-transform: uppercase;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .empty-state {
                 text-align: center;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 padding: 16px;
                 font-size: 13px;
             }

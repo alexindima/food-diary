@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .unsaved-changes-dialog__message {
     margin: 0;
@@ -28,9 +28,9 @@
     line-height: 1.2;
     border-radius: 12px;
     font-weight: 600;
-    background: #ffffff;
-    color: #475569;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: var(--fd-color-white);
+    color: var(--fd-color-slate-600);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
     box-shadow: none;
     transition:
         background 0.2s ease,
@@ -40,20 +40,23 @@
 
 :host ::ng-deep .unsaved-changes-dialog__action button:hover,
 :host ::ng-deep .unsaved-changes-dialog__action .fd-ui-button:hover {
-    background: rgba(37, 99, 235, 0.08);
-    color: #0f172a;
+    background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+    color: var(--fd-color-slate-900);
 }
 
 :host ::ng-deep .unsaved-changes-dialog__action--primary button,
 :host ::ng-deep .unsaved-changes-dialog__action--primary .fd-ui-button {
-    background: linear-gradient(135deg, #4dabff, #2563eb);
-    color: #fff;
+    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
+    color: var(--fd-color-white);
     border-color: transparent;
-    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+    box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
 }
 
 :host ::ng-deep .unsaved-changes-dialog__action--primary button:hover,
 :host ::ng-deep .unsaved-changes-dialog__action--primary .fd-ui-button:hover {
     background: linear-gradient(135deg, #5ab5ff, #2d6df0);
-    color: #fff;
+    color: var(--fd-color-white);
 }
+
+
+

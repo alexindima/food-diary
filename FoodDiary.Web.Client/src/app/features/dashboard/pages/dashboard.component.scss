@@ -7,7 +7,7 @@
 }
 
 $color-text-secondary: variables.$color-text-additional;
-variables.$color-primary: #2563eb;
+variables.$color-primary: var(--fd-color-primary-600);
 
 .dashboard {
     display: flex;
@@ -118,10 +118,10 @@ variables.$color-primary: #2563eb;
 
     &__settings-action--active ::ng-deep button,
     &__settings-action--active ::ng-deep .fd-ui-button {
-        background: #ffffff;
+        background: var(--fd-color-white);
         border-color: rgba(37, 99, 235, 0.4);
-        color: #1d4ed8;
-        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
+        color: var(--fd-color-primary-700);
+        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     }
 
     &__settings-action {
@@ -207,14 +207,14 @@ variables.$color-primary: #2563eb;
         }
 
         .dashboard__block--meals {
-            background: #fff;
+            background: var(--fd-color-white);
             border-radius: 20px;
             padding: 16px;
-            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 16px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         }
 
         .dashboard__block--meals ::ng-deep .fd-ui-card {
-            background: #fff;
+            background: var(--fd-color-white);
             box-shadow: none;
         }
 
@@ -261,14 +261,14 @@ variables.$color-primary: #2563eb;
         border: none;
         padding: 0;
         background: transparent;
-        color: #2563eb;
+        color: var(--fd-color-primary-600);
         font-size: 1rem;
         font-weight: 700;
         cursor: pointer;
         transition: color 0.15s ease;
 
         &:hover {
-            color: #1d4ed8;
+            color: var(--fd-color-primary-700);
         }
     }
 
@@ -318,12 +318,12 @@ variables.$color-primary: #2563eb;
         }
 
         &:hover ::ng-deep .fasting-timer-card > .fd-ui-card {
-            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
             transform: translateY(-2px);
         }
 
         &:focus-visible {
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
         }
     }
 
@@ -336,7 +336,7 @@ variables.$color-primary: #2563eb;
         gap: 6px;
         padding: 18px;
         border-radius: 18px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.88));
+        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-white) 8%, transparent), rgba(255, 255, 255, 0.88));
         backdrop-filter: blur(3px);
         pointer-events: none;
         z-index: 2;
@@ -388,7 +388,7 @@ variables.$color-primary: #2563eb;
                     transform 0.2s ease;
 
                 &:hover {
-                    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+                    box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
                     transform: translateY(-2px);
                 }
             }
@@ -462,7 +462,7 @@ variables.$color-primary: #2563eb;
         right: 12px;
         padding: 4px 10px;
         border-radius: 999px;
-        background: rgba(15, 23, 42, 0.08);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         color: variables.$color-text-main;
         font-size: 0.75rem;
         font-weight: 600;
@@ -472,12 +472,12 @@ variables.$color-primary: #2563eb;
 
     &__block-label--hidden {
         background: rgba(148, 163, 184, 0.3);
-        color: #334155;
+        color: var(--fd-color-slate-700);
     }
 
     &__block-label--locked {
-        background: rgba(37, 99, 235, 0.16);
-        color: #1d4ed8;
+        background: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
+        color: var(--fd-color-primary-700);
     }
 
     &__weight-summary {
@@ -566,7 +566,7 @@ variables.$color-primary: #2563eb;
         justify-content: space-between;
         gap: 12px;
         padding: 14px 16px;
-        border: 1px dashed rgba(37, 99, 235, 0.3);
+        border: 1px dashed color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
         border-radius: 18px;
         background: rgba(37, 99, 235, 0.03);
         color: variables.$color-text-main;
@@ -579,8 +579,8 @@ variables.$color-primary: #2563eb;
 
         &:hover {
             transform: translateY(-1px);
-            box-shadow: 0 12px 22px rgba(37, 99, 235, 0.18);
-            border-color: rgba(37, 99, 235, 0.5);
+            box-shadow: 0 12px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+            border-color: color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent);
             background: rgba(37, 99, 235, 0.05);
         }
 
@@ -597,7 +597,7 @@ variables.$color-primary: #2563eb;
             background: linear-gradient(135deg, #e0ecff, #f1f5ff);
             display: grid;
             place-items: center;
-            color: #2563eb;
+            color: var(--fd-color-primary-600);
         }
 
         &__text {
@@ -611,11 +611,11 @@ variables.$color-primary: #2563eb;
             border-radius: 10px;
             display: grid;
             place-items: center;
-            background: linear-gradient(135deg, #4dabff, #2563eb);
+            background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
             box-shadow: 0 10px 22px rgba(37, 99, 235, 0.26);
 
             mat-icon {
-                color: #fff;
+                color: var(--fd-color-white);
             }
         }
     }
@@ -682,8 +682,8 @@ variables.$color-primary: #2563eb;
         &__header {
             padding: 10px 12px 8px;
             margin: 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-            background: #f8fafc;
+            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
+            background: var(--fd-color-slate-50);
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
             grid-template-areas:
@@ -791,3 +791,6 @@ variables.$color-primary: #2563eb;
         }
     }
 }
+
+
+

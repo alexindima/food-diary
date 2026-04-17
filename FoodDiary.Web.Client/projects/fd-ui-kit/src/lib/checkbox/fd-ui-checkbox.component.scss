@@ -13,12 +13,14 @@
 
     ::ng-deep .mdc-form-field > label {
         font-weight: 500;
-        color: var(--fd-color-text, #111827);
+        color: var(--fd-color-text, var(--fd-color-gray-900-static));
     }
 
     &__hint {
         margin-left: 36px;
         font-size: 0.8rem;
-        color: var(--fd-color-text-muted, #6b7280);
+        color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
     }
 }
+
+

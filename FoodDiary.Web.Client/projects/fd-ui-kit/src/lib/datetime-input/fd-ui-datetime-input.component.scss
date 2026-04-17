@@ -1,4 +1,4 @@
-﻿@use '../../../../../src/styles/variables' as variables;
+@use '../../../../../src/styles/variables' as variables;
 
 :host {
     display: block;
@@ -7,8 +7,8 @@
 .fd-ui-datetime-input {
     --fd-datetime-height: 48px;
     --fd-datetime-radius: 14px;
-    --fd-datetime-border: rgba(148, 163, 184, 0.38);
-    --fd-datetime-label-bg: var(--fd-color-surface, #fff);
+    --fd-datetime-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
+    --fd-datetime-label-bg: var(--fd-color-surface, var(--fd-color-white));
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -24,7 +24,7 @@
 }
 
 .fd-ui-datetime-input__label {
-    color: #64748b;
+    color: var(--fd-color-slate-500);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.2;
@@ -49,14 +49,14 @@
 
 .fd-ui-datetime-input__required {
     margin-left: 0;
-    color: #ef4444;
+    color: var(--fd-color-danger);
 }
 
 .fd-ui-datetime-input__control-wrap {
     min-height: var(--fd-datetime-height);
     border: 1px solid var(--fd-datetime-border);
     border-radius: var(--fd-datetime-radius);
-    background: #fff;
+    background: var(--fd-color-white);
     display: flex;
     align-items: center;
     padding: 0;
@@ -65,7 +65,7 @@
 }
 
 .fd-ui-datetime-input__control-wrap:focus-within {
-    border-color: #3b82f6;
+    border-color: var(--fd-color-primary-500);
 }
 
 .fd-ui-datetime-input__fields {
@@ -82,7 +82,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: #1e293b;
+    color: var(--fd-color-slate-800);
     font: inherit;
 }
 
@@ -115,7 +115,7 @@
     transform: translateY(-50%);
     border: none;
     background: transparent;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -125,7 +125,7 @@
 }
 
 .fd-ui-datetime-input--has-error .fd-ui-datetime-input__control-wrap {
-    border-color: #ef4444;
+    border-color: var(--fd-color-danger);
 }
 
 .fd-ui-datetime-input--floating .fd-ui-datetime-input__label {
@@ -140,7 +140,7 @@
 }
 
 .fd-ui-datetime-input__error {
-    color: #ef4444;
+    color: var(--fd-color-danger);
     font-size: 0.75rem;
     line-height: 1.2;
     margin-top: 2px;
@@ -148,3 +148,5 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
+

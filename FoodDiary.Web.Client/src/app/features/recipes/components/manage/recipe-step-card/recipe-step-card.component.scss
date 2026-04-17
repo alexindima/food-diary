@@ -17,8 +17,8 @@
     justify-content: space-between;
     align-items: center;
     gap: variables.$gap-m;
-    background: #f8fafc;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    background: var(--fd-color-slate-50);
+    border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     padding: 12px var(--fd-spacing-lg);
     margin: calc(var(--fd-spacing-sm) * -1) calc(var(--fd-spacing-lg) * -1) 0;
 }
@@ -40,7 +40,7 @@
     width: 18px;
     height: 18px;
     border-radius: 6px;
-    background-image: radial-gradient(#94a3b8 1.6px, transparent 1.6px);
+    background-image: radial-gradient(var(--fd-color-slate-400) 1.6px, transparent 1.6px);
     background-size: 6px 6px;
     background-position: center;
     opacity: 0.95;
@@ -77,7 +77,7 @@
 
 .recipe-step-card__edit {
     margin-left: 2px;
-    color: #64748b;
+    color: var(--fd-color-slate-500);
 }
 
 .recipe-step-card__summary {
@@ -96,7 +96,7 @@
 }
 
 .recipe-step-card__summary-meta {
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     font-size: 0.85rem;
 }
 
@@ -132,7 +132,7 @@
 .recipe-step-card__subtitle {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #64748b;
+    color: var(--fd-color-slate-500);
 }
 
 .recipe-step-card__add-ingredient {
@@ -142,8 +142,8 @@
     ::ng-deep .fd-ui-button,
     ::ng-deep button {
         border-style: dashed;
-        border-color: rgba(148, 163, 184, 0.6);
-        background: rgba(248, 250, 252, 0.6);
+        border-color: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
+        background: color-mix(in srgb, var(--fd-color-slate-50) 60%, transparent);
         color: #3b82f6;
         font-weight: 600;
     }
@@ -176,3 +176,6 @@
 .recipe-ingredient__amount ::ng-deep .fd-ui-input__control-wrap {
     min-height: 48px;
 }
+
+
+

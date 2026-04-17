@@ -7,10 +7,10 @@
     max-width: 280px;
     padding: 10px 12px;
     border-radius: 12px;
-    background: #ffffff;
-    color: var(--fd-color-text, #111827);
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: var(--fd-color-white);
+    color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
     font-size: 0.85rem;
     line-height: 1.4;
 }
@@ -18,3 +18,6 @@
 .fd-ui-hint__content {
     word-break: break-word;
 }
+
+
+

@@ -145,8 +145,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 align-items: center;
                 padding: 4px 10px;
                 border-radius: 999px;
-                background: #eff6ff;
-                color: #1d4ed8;
+                background: color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white));
+                color: var(--fd-color-primary-700);
                 font-size: 13px;
                 font-weight: 600;
             }

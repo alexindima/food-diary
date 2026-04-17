@@ -79,7 +79,7 @@ import { DailyMicronutrient } from '../../models/usda.data';
                 padding: 2px 8px;
                 border-radius: 12px;
                 background: var(--fd-surface-variant, #e0e0e0);
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .nutrients-grid {
@@ -108,7 +108,7 @@ import { DailyMicronutrient } from '../../models/usda.data';
 
             .nutrient-value {
                 font-size: 12px;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .dv-text {
@@ -151,7 +151,7 @@ import { DailyMicronutrient } from '../../models/usda.data';
 
             .empty-state {
                 text-align: center;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 padding: 16px;
                 font-size: 13px;
             }

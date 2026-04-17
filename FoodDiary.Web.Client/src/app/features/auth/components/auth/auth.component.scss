@@ -84,8 +84,8 @@
             border-radius: 12px;
 
             ::ng-deep button {
-                background: linear-gradient(135deg, #4dabff, #2563eb);
-                color: #fff;
+                background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
+                color: var(--fd-color-white);
                 font-weight: 700;
                 font-size: 16px;
                 border: none;
@@ -98,7 +98,7 @@
                 &:hover {
                     transform: translateY(-1px);
                     filter: brightness(0.98);
-                    box-shadow: 0 14px 34px rgba(37, 99, 235, 0.3);
+                    box-shadow: 0 14px 34px color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
                 }
 
                 &:disabled {
@@ -197,7 +197,7 @@
 
 :host ::ng-deep fd-ui-input .fd-ui-input__control-wrap {
     border-radius: 12px;
-    background: #fff;
+    background: var(--fd-color-white);
     border: 1px solid #d5d9e2;
     padding: 0 16px;
     transition:
@@ -223,7 +223,7 @@
     width: 18px;
     height: 18px;
     border-radius: 6px;
-    border: 1px solid rgba(148, 163, 184, 0.6);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
 }
 
 :host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__input:checked + .fd-ui-checkbox__control {
@@ -234,3 +234,5 @@
 :host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__label {
     color: #5b6275;
 }
+
+

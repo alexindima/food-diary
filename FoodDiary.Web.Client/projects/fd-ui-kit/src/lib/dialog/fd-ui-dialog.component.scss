@@ -1,15 +1,15 @@
 :host {
     display: block;
-    color: var(--fd-color-gray-900, #111827);
+    color: var(--fd-color-gray-900, var(--fd-color-gray-900-static));
 }
 
 .fd-ui-dialog {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
-    background: var(--fd-color-dialog-surface, #ffffff);
+    background: var(--fd-color-dialog-surface, var(--fd-color-white));
     border-radius: 1rem;
     box-shadow: 0 20px 60px rgba(15, 23, 42, 0.14);
-    border: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
+    border: 1px solid var(--fd-color-dialog-border, color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent));
     padding: 1.25rem;
     box-sizing: border-box;
     max-height: 80vh;
@@ -35,7 +35,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 0.75rem;
-    border-bottom: var(--fd-dialog-header-border, 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08)));
+    border-bottom: var(--fd-dialog-header-border, 1px solid var(--fd-color-dialog-border, color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent)));
     padding-bottom: var(--fd-dialog-header-padding-bottom, 0.75rem);
     margin-bottom: var(--fd-dialog-header-margin-bottom, 1rem);
 }
@@ -69,14 +69,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--fd-color-gray-500, #6b7280);
+    color: var(--fd-color-gray-500, var(--fd-color-gray-500-static));
     cursor: pointer;
     transition:
         background-color 0.15s ease,
         color 0.15s ease;
 
     &:hover {
-        background: var(--fd-color-primary-50, #eef2ff);
+        background: var(--fd-color-primary-50, var(--fd-color-primary-50));
         color: var(--fd-color-primary-500, #4a6cf7);
     }
 }
@@ -100,7 +100,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
-    border-top: var(--fd-dialog-footer-border, 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08)));
+    border-top: var(--fd-dialog-footer-border, 1px solid var(--fd-color-dialog-border, color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent)));
     padding-top: var(--fd-dialog-footer-padding-top, 0.75rem);
     margin-top: var(--fd-dialog-footer-margin-top, 0.75rem);
 
@@ -151,7 +151,7 @@
     max-width: 100vw;
     max-height: 100vh;
     border-radius: 0;
-    background: var(--fd-color-dialog-surface, #ffffff);
+    background: var(--fd-color-dialog-surface, var(--fd-color-white));
     padding: 24px;
     overflow: auto;
 }
@@ -171,7 +171,7 @@
 }
 
 .fd-ui-dialog-backdrop {
-    background: var(--fd-color-dialog-overlay, rgba(15, 23, 42, 0.6));
+    background: var(--fd-color-dialog-overlay, var(--fd-color-dialog-overlay));
     backdrop-filter: blur(4px);
 }
 
@@ -192,3 +192,7 @@
         border-radius: 16px 16px 0 0 !important;
     }
 }
+
+
+
+

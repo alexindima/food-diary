@@ -22,7 +22,7 @@
         padding: 4px 10px;
         border-radius: 10px;
         background: rgba(139, 92, 246, 0.12);
-        color: #7c3aed;
+        color: var(--fd-color-purple-500);
         font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -57,7 +57,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #22c55e;
+        color: var(--fd-color-green-500);
         font-weight: 700;
         font-size: 0.9rem;
 
@@ -68,3 +68,5 @@
         }
     }
 }
+
+

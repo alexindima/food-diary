@@ -15,25 +15,26 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
         value: 0,
         titleKey: 'HUNGER_SCALE.LEVEL_0.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_0.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+        gradient:
+            'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
     },
     {
         value: 1,
         titleKey: 'HUNGER_SCALE.LEVEL_1.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_1.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, #b91c1c, #ef4444)',
+        gradient: 'linear-gradient(135deg, var(--fd-color-red-700), #ef4444)',
     },
     {
         value: 2,
         titleKey: 'HUNGER_SCALE.LEVEL_2.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_2.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, #dc2626, #f97316)',
+        gradient: 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))',
     },
     {
         value: 3,
         titleKey: 'HUNGER_SCALE.LEVEL_3.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_3.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, #f97316, #fbbf24)',
+        gradient: 'linear-gradient(135deg, var(--fd-color-orange-500), #fbbf24)',
     },
     {
         value: 4,
@@ -69,7 +70,7 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
         value: 9,
         titleKey: 'HUNGER_SCALE.LEVEL_9.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_9.DESCRIPTION',
-        gradient: 'linear-gradient(135deg, #22d3ee, #0ea5e9)',
+        gradient: 'linear-gradient(135deg, #22d3ee, var(--fd-color-sky-500))',
     },
 ];
 

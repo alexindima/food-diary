@@ -84,7 +84,7 @@ import { Micronutrient } from '../../models/usda.data';
                 font-size: 13px;
                 font-weight: 600;
                 text-transform: uppercase;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 margin: 0 0 8px;
                 letter-spacing: 0.5px;
             }
@@ -103,7 +103,7 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             .nutrient-amount {
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 text-align: right;
                 min-width: 60px;
             }
@@ -133,14 +133,14 @@ import { Micronutrient } from '../../models/usda.data';
 
             .dv-percent {
                 font-size: 12px;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 min-width: 36px;
                 text-align: right;
             }
 
             .empty-state {
                 text-align: center;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 padding: 24px;
             }
         `,

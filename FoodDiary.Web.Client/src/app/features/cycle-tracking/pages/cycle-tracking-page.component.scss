@@ -63,15 +63,15 @@
     &__prediction {
         padding: 14px;
         border-radius: 14px;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        border: 1px solid var(--fd-color-slate-200);
+        background: var(--fd-color-white);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
     }
 
     &__label {
         display: block;
         font-size: 0.9rem;
-        color: #475569;
+        color: var(--fd-color-slate-600);
         margin-bottom: 4px;
     }
 
@@ -79,7 +79,7 @@
         display: block;
         font-size: 1.2rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__symptom-grid {
@@ -97,9 +97,9 @@
     &__day {
         padding: 12px;
         border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        border: 1px solid var(--fd-color-slate-200);
+        background: var(--fd-color-white);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
     }
 
     &__day-header {
@@ -112,20 +112,20 @@
 
     &__day-date {
         font-weight: 700;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__day-badge {
         padding: 4px 10px;
         border-radius: 999px;
-        background: rgba(14, 165, 233, 0.12);
-        color: #0369a1;
+        background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+        color: var(--fd-color-sky-700);
         font-weight: 600;
         font-size: 0.9rem;
 
         &--period {
             background: rgba(248, 113, 113, 0.18);
-            color: #b91c1c;
+            color: var(--fd-color-red-700);
         }
     }
 
@@ -134,13 +134,13 @@
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 8px;
         font-size: 0.95rem;
-        color: #334155;
+        color: var(--fd-color-slate-700);
         margin-bottom: 6px;
     }
 
     &__day-notes {
         margin: 0;
-        color: #475569;
+        color: var(--fd-color-slate-600);
         font-size: 0.95rem;
         line-height: 1.4;
     }
@@ -149,6 +149,9 @@
     &__loader {
         margin: 0;
         padding: 12px 4px;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
     }
 }
+
+
+

@@ -101,8 +101,12 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 width: 52px;
                 height: 52px;
                 border-radius: 50%;
-                background: linear-gradient(145deg, #dbeafe, #eff6ff);
-                color: #1d4ed8;
+                background: linear-gradient(
+                    145deg,
+                    var(--fd-color-primary-100),
+                    color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white))
+                );
+                color: var(--fd-color-primary-700);
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -129,8 +133,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 align-items: center;
                 padding: 4px 10px;
                 border-radius: 999px;
-                background: #eff6ff;
-                color: #1d4ed8;
+                background: color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white));
+                color: var(--fd-color-primary-700);
                 font-size: 12px;
                 font-weight: 600;
             }

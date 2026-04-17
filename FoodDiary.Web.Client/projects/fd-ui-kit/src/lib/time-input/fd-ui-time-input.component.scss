@@ -1,4 +1,4 @@
-﻿@use '../../../../../src/styles/variables' as variables;
+@use '../../../../../src/styles/variables' as variables;
 
 :host {
     display: block;
@@ -7,8 +7,8 @@
 .fd-ui-time-input {
     --fd-time-height: 48px;
     --fd-time-radius: 14px;
-    --fd-time-border: rgba(148, 163, 184, 0.38);
-    --fd-time-label-bg: var(--fd-color-surface, #fff);
+    --fd-time-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
+    --fd-time-label-bg: var(--fd-color-surface, var(--fd-color-white));
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -24,7 +24,7 @@
 }
 
 .fd-ui-time-input__label {
-    color: #64748b;
+    color: var(--fd-color-slate-500);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.2;
@@ -49,7 +49,7 @@
 
 .fd-ui-time-input__required {
     margin-left: 0;
-    color: #ef4444;
+    color: var(--fd-color-danger);
 }
 
 .fd-ui-time-input__control-wrap {
@@ -57,7 +57,7 @@
     box-sizing: border-box;
     border: 1px solid var(--fd-time-border);
     border-radius: var(--fd-time-radius);
-    background: #fff;
+    background: var(--fd-color-white);
     display: flex;
     align-items: center;
     padding: 0;
@@ -66,7 +66,7 @@
 }
 
 .fd-ui-time-input__control-wrap:focus-within {
-    border-color: #3b82f6;
+    border-color: var(--fd-color-primary-500);
 }
 
 .fd-ui-time-input__segment {
@@ -85,7 +85,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: #1e293b;
+    color: var(--fd-color-slate-800);
     font: inherit;
 }
 
@@ -95,7 +95,7 @@
     transform: none;
     border: none;
     background: transparent;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -105,7 +105,7 @@
 }
 
 .fd-ui-time-input--has-error .fd-ui-time-input__control-wrap {
-    border-color: #ef4444;
+    border-color: var(--fd-color-danger);
 }
 
 .fd-ui-time-input--floating .fd-ui-time-input__label {
@@ -120,7 +120,7 @@
 }
 
 .fd-ui-time-input__error {
-    color: #ef4444;
+    color: var(--fd-color-danger);
     font-size: 0.75rem;
     line-height: 1.2;
     margin-top: 2px;
@@ -128,3 +128,5 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
+

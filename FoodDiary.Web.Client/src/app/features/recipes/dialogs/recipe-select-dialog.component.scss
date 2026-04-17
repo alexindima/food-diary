@@ -47,16 +47,16 @@
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            background: #ffffff;
+            border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+            background: var(--fd-color-white);
         }
 
         &--active {
 
             ::ng-deep button,
             ::ng-deep .fd-ui-button {
-                border-color: #0ea5e9;
-                background: rgba(14, 165, 233, 0.12);
+                border-color: var(--fd-color-sky-500);
+                background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
             }
         }
     }
@@ -74,9 +74,9 @@
         align-items: center;
         padding: 12px 14px;
         border-radius: 16px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        background: #ffffff;
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        background: var(--fd-color-white);
+        box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         text-align: left;
         cursor: pointer;
     }
@@ -88,7 +88,7 @@
         overflow: hidden;
         display: grid;
         place-items: center;
-        background: #eef2ff;
+        background: var(--fd-color-primary-50);
 
         img {
             width: 100%;
@@ -97,7 +97,7 @@
         }
 
         mat-icon {
-            color: #2563eb;
+            color: var(--fd-color-primary-600);
         }
     }
 
@@ -149,3 +149,7 @@
         color: variables.$color-no-results;
     }
 }
+
+
+
+

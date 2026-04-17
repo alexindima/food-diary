@@ -1,4 +1,4 @@
-﻿@use 'mixins' as *;
+@use 'mixins' as *;
 @use 'variables' as variables;
 
 :host {
@@ -56,7 +56,7 @@
 
 .not-found__button--primary {
     background-color: #007bff;
-    color: #fff;
+    color: var(--fd-color-white);
 }
 
 .not-found__button--primary:hover {
@@ -78,3 +78,5 @@
 .not-found__button:active {
     transform: scale(1);
 }
+
+

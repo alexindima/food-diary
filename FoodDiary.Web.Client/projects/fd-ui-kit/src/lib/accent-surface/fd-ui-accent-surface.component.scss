@@ -1,5 +1,5 @@
 :host {
-    --fd-accent-color: #2563eb;
+    --fd-accent-color: var(--fd-color-primary-600);
     --fd-accent-thickness: 6px;
     --fd-accent-thickness-active: 10px;
     --fd-accent-overlay-opacity: 0;
@@ -96,3 +96,5 @@
     position: relative;
     z-index: 2;
 }
+
+

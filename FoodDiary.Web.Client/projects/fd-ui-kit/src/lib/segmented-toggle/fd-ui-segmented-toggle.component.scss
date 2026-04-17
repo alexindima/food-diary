@@ -8,7 +8,7 @@
     gap: 4px;
     padding: 4px;
     border-radius: var(--fd-radius-pill, 999px);
-    background: var(--fd-color-surface, #fff);
+    background: var(--fd-color-surface, var(--fd-color-white));
     border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.1);
     box-shadow:
         0 12px 24px rgb(15 23 42 / 0.08),
@@ -21,7 +21,7 @@
     border: none;
     border-radius: 999px;
     background: transparent;
-    color: var(--fd-color-text-muted, #6b7280);
+    color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -44,8 +44,10 @@
 
     &.is-active {
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-        color: var(--fd-color-on-brand, #fff);
+        color: var(--fd-color-on-brand, var(--fd-color-white));
         box-shadow: 0 10px 18px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
         transform: translateY(-1px);
     }
 }
+
+

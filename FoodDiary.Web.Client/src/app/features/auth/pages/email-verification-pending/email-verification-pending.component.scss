@@ -12,7 +12,7 @@
 
 .email-verify-pending__description {
     margin: 0 0 16px;
-    color: var(--fd-text-muted, #6b7280);
+    color: var(--fd-text-muted, var(--fd-color-gray-500-static));
     line-height: 1.5;
 }
 
@@ -29,6 +29,8 @@
 
 .email-verify-pending__cooldown {
     margin-top: 12px;
-    color: var(--fd-text-muted, #6b7280);
+    color: var(--fd-text-muted, var(--fd-color-gray-500-static));
     font-size: 0.9rem;
 }
+
+

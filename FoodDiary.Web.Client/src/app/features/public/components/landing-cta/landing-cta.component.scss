@@ -15,7 +15,7 @@
     &__title {
         margin: 0;
         font-size: clamp(28px, 3vw, 38px);
-        color: #f8fafc;
+        color: var(--fd-color-slate-50);
         letter-spacing: -0.02em;
         line-height: 1.05;
     }
@@ -45,8 +45,8 @@
         background: linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(37, 99, 235, 0.94) 55%, rgba(20, 184, 166, 0.9));
         border-radius: 28px;
         padding: clamp(variables.$gap-l, 3vw, 32px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 28px 60px rgba(15, 23, 42, 0.18);
+        border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+        box-shadow: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         display: flex;
         justify-content: space-between;
         gap: variables.$gap-m;
@@ -83,3 +83,5 @@
         }
     }
 }
+
+

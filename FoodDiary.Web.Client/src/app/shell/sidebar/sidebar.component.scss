@@ -10,7 +10,7 @@
     gap: 16px;
     padding: 20px 16px 24px;
     background: linear-gradient(180deg, var(--fd-gradient-sidebar-start) 0%, var(--fd-gradient-sidebar-end) 100%);
-    border-right: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.06));
+    border-right: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
     box-shadow: 6px 0 24px rgb(15 23 42 / 0.06);
 
     &__brand {
@@ -19,7 +19,7 @@
         gap: 10px;
         padding: 10px 12px;
         border-radius: 14px;
-        background: var(--fd-color-surface, #fff);
+        background: var(--fd-color-surface, var(--fd-color-white));
         box-shadow: 0 10px 30px rgb(15 23 42 / 0.06);
     }
 
@@ -39,12 +39,12 @@
 
     &__brand-title {
         font-weight: 800;
-        color: var(--fd-color-text-strong, #0f172a);
+        color: var(--fd-color-text-strong, var(--fd-color-slate-900));
     }
 
     &__brand-plan {
         font-size: 0.85rem;
-        color: var(--fd-color-primary-600, #2563eb);
+        color: var(--fd-color-primary-600);
         font-weight: 700;
     }
 
@@ -58,7 +58,7 @@
         border: none;
         border-radius: 12px;
         background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.08);
-        color: var(--fd-color-primary-600, #2563eb);
+        color: var(--fd-color-primary-600);
         cursor: pointer;
         transition:
             background 0.2s ease,
@@ -83,8 +83,8 @@
         width: 10px;
         height: 10px;
         border-radius: 999px;
-        background: #ef4444;
-        border: 2px solid var(--fd-color-surface, #fff);
+        background: var(--fd-color-danger);
+        border: 2px solid var(--fd-color-surface, var(--fd-color-white));
         box-shadow: 0 0 0 2px rgb(255 255 255 / 0.8);
     }
 
@@ -107,7 +107,7 @@
         align-items: center;
         padding: 10px 12px;
         border-radius: 12px;
-        color: var(--fd-color-text-muted, #475569);
+        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         text-decoration: none;
         font-weight: 600;
         transition:
@@ -116,41 +116,41 @@
 
         mat-icon {
             font-size: 20px;
-            color: var(--fd-color-primary-600, #2563eb);
+            color: var(--fd-color-primary-600);
         }
 
         &:hover {
             background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.08);
-            color: var(--fd-color-text-strong, #0f172a);
+            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         }
 
         &.is-active {
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-            color: var(--fd-color-on-brand, #fff);
+            color: var(--fd-color-on-brand, var(--fd-color-white));
             box-shadow: 0 10px 26px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
 
             mat-icon {
-                color: var(--fd-color-on-brand, #fff);
+                color: var(--fd-color-on-brand, var(--fd-color-white));
             }
         }
 
         &--admin {
-            color: #b91c1c;
+            color: var(--fd-color-red-700);
 
             mat-icon {
-                color: #dc2626;
+                color: var(--fd-color-red-600);
             }
 
             &:hover {
-                background: rgba(220, 38, 38, 0.08);
-                color: #991b1b;
+                background: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
+                color: var(--fd-color-red-700);
             }
         }
     }
 
     &__section {
         padding-top: 8px;
-        border-top: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.06));
+        border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
     }
 
     &__section-header {
@@ -162,7 +162,7 @@
         padding: 8px 4px;
         background: transparent;
         border: none;
-        color: var(--fd-color-text-muted, #475569);
+        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         font-weight: 700;
         font-size: 0.95rem;
         cursor: pointer;
@@ -184,7 +184,7 @@
     &__nav--bottom {
         margin-top: 4px;
         padding-top: 4px;
-        border-top: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.06));
+        border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
     }
 
     &__link--secondary {
@@ -204,7 +204,7 @@
         padding: 14px 12px;
         border-radius: 14px;
         background: linear-gradient(135deg, var(--fd-gradient-premium-start), var(--fd-gradient-premium-end));
-        color: #e2e8f0;
+        color: var(--fd-color-slate-200);
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -213,7 +213,7 @@
 
     &__premium-title {
         font-weight: 700;
-        color: #fff;
+        color: var(--fd-color-white);
     }
 
     &__premium-text {
@@ -241,8 +241,8 @@
         align-items: center;
         padding: 10px 12px;
         border-radius: 12px;
-        background: var(--fd-color-surface, #fff);
-        border: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.06));
+        background: var(--fd-color-surface, var(--fd-color-white));
+        border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
         box-shadow: 0 8px 20px rgb(15 23 42 / 0.08);
         cursor: pointer;
         text-align: left;
@@ -257,7 +257,7 @@
     }
 
     &__user-arrow {
-        color: var(--fd-color-gray-500, #64748b);
+        color: var(--fd-color-gray-500, var(--fd-color-slate-500));
         transition: transform 0.2s ease;
 
         &.is-open {
@@ -279,7 +279,7 @@
         display: grid;
         place-items: center;
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-        color: var(--fd-color-on-brand, #fff);
+        color: var(--fd-color-on-brand, var(--fd-color-white));
         font-weight: 800;
 
         &--image {
@@ -298,7 +298,7 @@
 
     &__user-name {
         font-weight: 700;
-        color: var(--fd-color-text-strong, #0f172a);
+        color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -306,14 +306,14 @@
 
     &__user-plan {
         font-size: 0.9rem;
-        color: var(--fd-color-gray-400, #94a3b8);
+        color: var(--fd-color-gray-400, var(--fd-color-slate-400));
     }
 
     &__user-menu {
         padding: 6px;
         border-radius: 12px;
-        background: var(--fd-color-surface-muted, #f8fafc);
-        border: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.06));
+        background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
+        border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
         box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6);
         display: flex;
         flex-direction: column;
@@ -331,7 +331,7 @@
         font-weight: 800;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--fd-color-text-muted, #475569);
+        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
     }
 
     &__theme-toggle {
@@ -346,8 +346,8 @@
         padding: 10px 12px;
         border-radius: 10px;
         border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.18);
-        background: var(--fd-color-surface, #fff);
-        color: var(--fd-color-text-strong, #0f172a);
+        background: var(--fd-color-surface, var(--fd-color-white));
+        color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         font-weight: 700;
         text-decoration: none;
         transition:
@@ -357,7 +357,7 @@
 
         mat-icon {
             font-size: 18px;
-            color: var(--fd-color-primary-600, #2563eb);
+            color: var(--fd-color-primary-600);
         }
 
         &:hover {
@@ -368,12 +368,12 @@
 
         &.is-active {
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-            color: var(--fd-color-on-brand, #fff);
+            color: var(--fd-color-on-brand, var(--fd-color-white));
             border-color: transparent;
             box-shadow: none;
 
             mat-icon {
-                color: var(--fd-color-on-brand, #fff);
+                color: var(--fd-color-on-brand, var(--fd-color-white));
             }
         }
     }
@@ -385,9 +385,9 @@
         gap: 10px;
         padding: 10px 12px;
         border-radius: 10px;
-        border: 1px solid rgba(239, 68, 68, 0.22);
-        background: rgba(254, 242, 242, 0.9);
-        color: #b91c1c;
+        border: 1px solid color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
+        background: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
+        color: var(--fd-color-red-700);
         font-weight: 700;
         cursor: pointer;
         transition:
@@ -399,7 +399,7 @@
         }
 
         &:hover {
-            background: rgba(254, 242, 242, 1);
+            background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
             transform: translateY(-1px);
         }
     }
@@ -413,8 +413,8 @@
     display: none;
     gap: 8px;
     padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
-    background: var(--fd-color-surface, #ffffff);
-    border-top: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.08));
+    background: var(--fd-color-surface, var(--fd-color-white));
+    border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
     box-shadow: 0 -12px 30px rgb(15 23 42 / 0.12);
     z-index: 1200;
 
@@ -438,19 +438,19 @@
     &__progress-value {
         font-size: 0.74rem;
         font-weight: 700;
-        color: var(--fd-color-text-muted, #475569);
+        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         white-space: nowrap;
     }
 
     &__progress-value {
-        color: var(--fd-color-primary-700, #1d4ed8);
+        color: var(--fd-color-primary-700);
     }
 
     &__progress-track {
         height: 5px;
         border-radius: 999px;
         overflow: hidden;
-        background: rgba(148, 163, 184, 0.26);
+        background: color-mix(in srgb, var(--fd-color-slate-400) 26%, transparent);
     }
 
     &__progress-fill {
@@ -472,7 +472,7 @@
         appearance: none;
         border: none;
         background: transparent;
-        color: var(--fd-color-text-muted, #475569);
+        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -490,7 +490,7 @@
 
         mat-icon {
             font-size: 22px;
-            color: var(--fd-color-primary-600, #2563eb);
+            color: var(--fd-color-primary-600);
         }
 
         &:hover {
@@ -504,7 +504,7 @@
                 rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.2),
                 rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.14)
             );
-            color: var(--fd-color-text-strong, #0f172a);
+            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         }
     }
 
@@ -515,9 +515,9 @@
         width: 10px;
         height: 10px;
         border-radius: 999px;
-        background: #ef4444;
-        border: 2px solid #fff;
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+        background: var(--fd-color-danger);
+        border: 2px solid var(--fd-color-white);
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 85%, transparent);
     }
 
     &__label {
@@ -538,11 +538,11 @@
         left: 12px;
         right: 12px;
         bottom: 126px;
-        background: var(--fd-color-surface, #ffffff);
+        background: var(--fd-color-surface, var(--fd-color-white));
         border-radius: 16px;
         padding: 10px;
         box-shadow: 0 16px 40px rgb(15 23 42 / 0.18);
-        border: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.08));
+        border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
         display: grid;
         gap: 6px;
         z-index: 1190;
@@ -555,10 +555,10 @@
             gap: 10px;
             padding: 10px 12px;
             border-radius: 12px;
-            background: var(--fd-color-surface-muted, #f8fafc);
-            color: var(--fd-color-text-strong, #0f172a);
+            background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
+            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
             text-decoration: none;
-            border: 1px solid var(--fd-color-border, rgba(15, 23, 42, 0.06));
+            border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
             font-weight: 600;
         }
 
@@ -573,14 +573,14 @@
             font-weight: 800;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--fd-color-text-muted, #475569);
+            color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         }
 
         .sidebar-mobile__sheet-action {
             justify-content: flex-start;
             border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.18);
-            background: var(--fd-color-surface, #fff);
-            color: var(--fd-color-text-strong, #0f172a);
+            background: var(--fd-color-surface, var(--fd-color-white));
+            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         }
 
         .sidebar-mobile__sheet-badge {
@@ -592,17 +592,17 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #ef4444;
-            color: #fff;
+            background: var(--fd-color-danger);
+            color: var(--fd-color-white);
             font-size: 0.75rem;
             font-weight: 800;
             line-height: 1;
         }
 
         .sidebar-mobile__sheet-logout {
-            border: 1px solid rgba(239, 68, 68, 0.18);
-            background: rgba(254, 242, 242, 0.9);
-            color: #b91c1c;
+            border: 1px solid color-mix(in srgb, var(--fd-color-danger) 18%, transparent);
+            background: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
+            color: var(--fd-color-red-700);
         }
     }
 }
@@ -624,3 +624,6 @@
         display: none;
     }
 }
+
+
+

@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .recipe-manage {
-    --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
+    --fd-layout-page-background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, #f1f5f9 45%, #eef2f7 100%);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -75,16 +75,16 @@
     }
 
     &__card {
-        --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
-        --fd-ui-card-title-color: #0f172a;
-        --fd-ui-card-meta-color: #94a3b8;
-        --fd-shadow-sm: 0 20px 45px rgba(15, 23, 42, 0.08);
+        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-ui-card-title-color: var(--fd-color-slate-900);
+        --fd-ui-card-meta-color: var(--fd-color-slate-400);
+        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-radius-lg: 22px;
-        --fd-color-surface: #ffffff;
+        --fd-color-surface: var(--fd-color-white);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
-        border: 1px solid rgba(15, 23, 42, 0.06);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
@@ -178,21 +178,21 @@
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
+            background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
             border: none;
-            color: #ffffff;
-            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+            color: var(--fd-color-white);
+            box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
         }
 
         ::ng-deep button:hover:not(:disabled),
         ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: linear-gradient(135deg, #60b6ff, #2f6df2);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+            background: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
+            box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
         }
 
         ::ng-deep button:active:not(:disabled),
         ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
+            background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
             box-shadow: none;
         }
     }
@@ -220,7 +220,7 @@
         ::ng-deep .fd-ui-segmented-toggle {
             width: 100%;
             justify-content: space-between;
-            background: rgba(148, 163, 184, 0.14);
+            background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
             border: 1px solid rgba(148, 163, 184, 0.24);
             box-shadow: none;
         }
@@ -231,7 +231,7 @@
     }
 
     &__drag-placeholder {
-        border: 2px dashed fade(variables.$color-text-additional, 40%);
+        border: 2px dashed color-mix(in srgb, variables.$color-text-additional 40%, transparent);
         border-radius: variables.$border-radius-m;
         padding: variables.$gap-m;
         text-align: center;
@@ -239,3 +239,7 @@
         font-size: 0.9rem;
     }
 }
+
+
+
+

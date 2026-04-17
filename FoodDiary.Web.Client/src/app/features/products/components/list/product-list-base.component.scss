@@ -1,6 +1,12 @@
 @use 'variables' as variables;
 
 .product-list {
+    --g1: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
+    --g2: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
+    --s1: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
+    --s2: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
+    --b1: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    --b2: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
@@ -43,7 +49,7 @@
 
     &__mobile-search {
         display: none;
-        background: #f8fafc;
+        background: var(--fd-color-slate-50);
 
         &--open {
             display: block;
@@ -66,9 +72,9 @@
 
             ::ng-deep .fd-ui-button,
             ::ng-deep button {
-                border-color: #0ea5e9;
-                background: rgba(14, 165, 233, 0.12);
-                color: #0369a1;
+                border-color: var(--fd-color-sky-500);
+                background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+                color: var(--fd-color-sky-700);
             }
         }
     }
@@ -84,8 +90,8 @@
             height: 38px;
             min-width: 38px;
             padding: 0;
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            background: #ffffff;
+            border: 1px solid var(--b1);
+            background: var(--fd-color-white);
         }
 
         &--primary {
@@ -93,13 +99,13 @@
             ::ng-deep .fd-ui-button,
             ::ng-deep button {
                 border: none;
-                background: linear-gradient(135deg, #4dabff, #2563eb);
-                color: #ffffff;
-                box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+                background: var(--g1);
+                color: var(--fd-color-white);
+                box-shadow: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
             }
 
             ::ng-deep .material-icons {
-                color: #ffffff;
+                color: var(--fd-color-white);
             }
         }
     }
@@ -119,26 +125,26 @@
         font-weight: 800;
         border: none;
         background: transparent;
-        color: #ffffff;
+        color: var(--fd-color-white);
         box-shadow: none;
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
+            background: var(--g1);
             border: none;
-            color: #ffffff;
-            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+            color: var(--fd-color-white);
+            box-shadow: var(--s1);
         }
 
         ::ng-deep button:hover:not(:disabled),
         ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: linear-gradient(135deg, #60b6ff, #2f6df2);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+            background: var(--g2);
+            box-shadow: var(--s2);
         }
 
         ::ng-deep button:active:not(:disabled),
         ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
+            background: var(--g1);
             box-shadow: none;
         }
     }
@@ -167,8 +173,8 @@
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            background: #ffffff;
+            border: 1px solid var(--b1);
+            background: var(--fd-color-white);
             color: variables.$color-text-main;
         }
 
@@ -176,8 +182,8 @@
 
             ::ng-deep button,
             ::ng-deep .fd-ui-button {
-                border-color: #0ea5e9;
-                background: rgba(14, 165, 233, 0.12);
+                border-color: var(--fd-color-sky-500);
+                background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
             }
         }
     }
@@ -207,9 +213,9 @@
     &__empty-state {
         @extend .product-list__no-results;
         padding: 24px;
-        border: 1px dashed rgba(148, 163, 184, 0.35);
+        border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         border-radius: 20px;
-        background: linear-gradient(180deg, rgba(248, 250, 252, 0.9), rgba(255, 255, 255, 0.95));
+        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent), color-mix(in srgb, var(--fd-color-white) 95%, transparent));
     }
 
     &__empty-title {
@@ -230,9 +236,9 @@
     }
 
     &__favorites {
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--fd-color-slate-200);
         border-radius: 14px;
-        background: #fff;
+        background: var(--fd-color-white);
         overflow: hidden;
         margin-bottom: 18px;
     }
@@ -248,7 +254,7 @@
         cursor: pointer;
         font-size: 0.95rem;
         font-weight: 600;
-        color: #334155;
+        color: var(--fd-color-slate-700);
 
         mat-icon {
             transition: transform 0.2s;
@@ -260,7 +266,7 @@
     }
 
     &__favorites-star {
-        color: #f59e0b;
+        color: var(--fd-color-amber-500);
     }
 
     &__favorites-grid {
@@ -277,8 +283,8 @@
         gap: 8px;
         padding: 10px 12px;
         border-radius: 10px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: var(--fd-color-slate-50);
+        border: 1px solid var(--fd-color-slate-200);
     }
 
     &__favorite-info {
@@ -295,7 +301,7 @@
     &__favorite-name {
         font-weight: 600;
         font-size: 0.9rem;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -303,7 +309,7 @@
 
     &__favorite-meta {
         font-size: 0.8rem;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
         margin-top: 2px;
         display: flex;
         gap: 4px;
@@ -324,19 +330,19 @@
         border: none;
         border-radius: 8px;
         background: transparent;
-        color: #64748b;
+        color: var(--fd-color-slate-500);
         cursor: pointer;
         transition:
             background 0.15s,
             color 0.15s;
 
         &:hover {
-            background: #e2e8f0;
-            color: #7c3aed;
+            background: var(--fd-color-slate-200);
+            color: var(--fd-color-purple-500);
         }
 
         &--remove:hover {
-            color: #ef4444;
+            color: var(--fd-color-danger);
         }
 
         mat-icon {
@@ -374,7 +380,7 @@
     &__section-line {
         flex: 1;
         height: 1px;
-        background: rgba(15, 23, 42, 0.08);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         border-radius: 999px;
     }
 
@@ -406,14 +412,14 @@
         gap: 12px;
         padding: 12px;
         border-radius: 12px;
-        background: rgba(248, 250, 252, 0.95);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        cursor: pointer;
-        transition: all 0.15s ease;
+        background: color-mix(in srgb, var(--fd-color-slate-50) 95%, transparent);
+            border: 1px solid var(--b2);
+            cursor: pointer;
+            transition: all 0.15s ease;
 
         &:hover {
-            background: rgba(241, 245, 249, 1);
-            border-color: rgba(148, 163, 184, 0.35);
+            background: #f1f5f9;
+            border-color: color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         }
     }
 
@@ -429,7 +435,7 @@
         width: 48px;
         height: 48px;
         border-radius: 8px;
-        background: rgba(148, 163, 184, 0.15);
+        background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -477,8 +483,8 @@
         &__header {
             padding: 10px 12px 8px;
             margin: 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-            background: #f8fafc;
+            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
+            background: var(--fd-color-slate-50);
         }
 
         &__mobile-toolbar {
@@ -514,11 +520,11 @@
         &__section-grid {
             gap: 0;
             margin: 0;
-            background: #ffffff;
-            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            background: var(--fd-color-white);
+            border-top: 1px solid var(--b2);
 
             fd-product-card {
-                border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+                border-bottom: 1px solid var(--b2);
             }
         }
 
@@ -606,8 +612,8 @@
     &__container {
         padding: 20px;
         border-radius: 24px;
-        background: linear-gradient(145deg, #f8fbff, #ffffff);
-        box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+        background: linear-gradient(145deg, color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)), var(--fd-color-white));
+        box-shadow: 0 18px 36px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         display: flex;
         flex-direction: column;
         gap: 16px;
@@ -630,7 +636,7 @@
         border-radius: 24px;
         overflow: hidden;
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+        background: linear-gradient(135deg, var(--fd-color-slate-200), var(--fd-color-slate-50));
         display: grid;
         place-items: center;
 
@@ -671,7 +677,7 @@
         flex-direction: column;
         align-items: flex-end;
         gap: 2px;
-        color: #0f172a;
+        color: var(--fd-color-slate-900);
     }
 
     &__calories-value {
@@ -706,8 +712,8 @@
         gap: 6px;
         padding: 6px 10px;
         border-radius: 12px;
-        background: #eef2ff;
-        color: #475569;
+        background: var(--fd-color-primary-50);
+        color: var(--fd-color-slate-600);
         font-weight: 700;
         font-size: 0.9rem;
 
@@ -715,7 +721,7 @@
             font-size: 16px;
             width: 16px;
             height: 16px;
-            color: #0ea5e9;
+            color: var(--fd-color-sky-500);
         }
     }
 
@@ -732,8 +738,8 @@
         gap: 12px;
         padding: 14px 16px;
         border-radius: 18px;
-        background: #f8fafc;
-        border: 1px solid rgba(148, 163, 184, 0.18);
+        background: var(--fd-color-slate-50);
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
     }
 
     &__macro {
@@ -753,19 +759,19 @@
         grid-row: span 2;
 
         &--protein {
-            background: #8b5cf6;
+            background: var(--fd-color-purple-500);
         }
 
         &--carb {
-            background: #22c55e;
+            background: var(--fd-color-green-500);
         }
 
         &--fat {
-            background: #f59e0b;
+            background: var(--fd-color-amber-500);
         }
 
         &--fiber {
-            background: #94a3b8;
+            background: var(--fd-color-slate-400);
         }
     }
 
@@ -788,12 +794,12 @@
         --fd-button-padding-y: 12px;
         --fd-button-padding-x: 16px;
         font-weight: 800;
-        background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
-        color: #fff;
-        box-shadow: 0 14px 28px rgba(14, 165, 233, 0.28);
+        background: linear-gradient(135deg, var(--fd-color-primary-700), var(--fd-color-sky-500));
+        color: var(--fd-color-white);
+        box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-sky-500) 28%, transparent);
 
         ::ng-deep button {
-            color: #fff;
+            color: var(--fd-color-white);
         }
     }
 
@@ -829,3 +835,7 @@
         margin: 0 auto;
     }
 }
+
+
+
+

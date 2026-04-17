@@ -37,10 +37,10 @@ export class FastingTimerCardComponent {
 
     public getProgressStrokeColor(): string {
         if (this.isOvertime()) {
-            return '#22c55e';
+            return 'var(--fd-color-green-500)';
         }
 
-        return this.ringColor() ?? '#7c3aed';
+        return this.ringColor() ?? 'var(--fd-color-purple-500)';
     }
 
     public getRingGlow(): string | null {
@@ -49,7 +49,7 @@ export class FastingTimerCardComponent {
         }
 
         if (this.isOvertime()) {
-            return '0 0 0 10px rgba(34, 197, 94, 0.14), 0 18px 36px rgba(34, 197, 94, 0.12)';
+            return '0 0 0 10px rgba(34, 197, 94, 0.14), 0 18px 36px color-mix(in srgb, var(--fd-color-green-500) 12%, transparent)';
         }
 
         const glowColor = this.glowColor();

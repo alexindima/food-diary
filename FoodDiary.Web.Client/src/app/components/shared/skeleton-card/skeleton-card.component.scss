@@ -3,7 +3,7 @@
 .fd-skeleton-card {
     border: 1px solid variables.$color-border;
     border-radius: variables.$border-radius-m;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
     padding: variables.$gap-m;
     display: flex;
     flex-direction: column;
@@ -17,3 +17,5 @@
     gap: variables.$gap-xxs;
     margin-top: variables.$gap-xs;
 }
+
+

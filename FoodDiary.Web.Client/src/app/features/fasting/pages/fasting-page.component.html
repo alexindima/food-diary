@@ -362,15 +362,30 @@
                 <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">
                     @if (stats(); as s) {
                         <div class="fasting__stats fasting__stats--primary">
-                            <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#7c3aed" [tinted]="true">
+                            <fd-ui-accent-surface
+                                class="fasting__stat"
+                                accentSide="top"
+                                accentColor="var(--fd-color-purple-500)"
+                                [tinted]="true"
+                            >
                                 <span class="fasting__stat-label">{{ 'FASTING.TOTAL_COMPLETED' | translate }}</span>
                                 <strong class="fasting__stat-value">{{ s.totalCompleted }}</strong>
                             </fd-ui-accent-surface>
-                            <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#f97316" [tinted]="true">
+                            <fd-ui-accent-surface
+                                class="fasting__stat"
+                                accentSide="top"
+                                accentColor="var(--fd-color-orange-500)"
+                                [tinted]="true"
+                            >
                                 <span class="fasting__stat-label">{{ 'FASTING.CURRENT_STREAK' | translate }}</span>
                                 <strong class="fasting__stat-value">{{ s.currentStreak }} {{ 'FASTING.DAYS' | translate }}</strong>
                             </fd-ui-accent-surface>
-                            <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#0ea5e9" [tinted]="true">
+                            <fd-ui-accent-surface
+                                class="fasting__stat"
+                                accentSide="top"
+                                accentColor="var(--fd-color-sky-500)"
+                                [tinted]="true"
+                            >
                                 <span class="fasting__stat-label">{{ 'FASTING.AVG_DURATION' | translate }}</span>
                                 <strong class="fasting__stat-value"
                                     >{{ s.averageDurationHours | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong
@@ -392,7 +407,7 @@
                                         <fd-ui-accent-surface
                                             class="fasting__stat fasting__stat--compact"
                                             accentSide="top"
-                                            accentColor="#0f766e"
+                                            accentColor="var(--fd-color-teal-700)"
                                             [tinted]="true"
                                         >
                                             <span class="fasting__stat-label fasting__stat-label--compact">
@@ -405,7 +420,7 @@
                                         <fd-ui-accent-surface
                                             class="fasting__stat fasting__stat--compact"
                                             accentSide="top"
-                                            accentColor="#2563eb"
+                                            accentColor="var(--fd-color-primary-600)"
                                             [tinted]="true"
                                         >
                                             <span class="fasting__stat-label fasting__stat-label--compact">

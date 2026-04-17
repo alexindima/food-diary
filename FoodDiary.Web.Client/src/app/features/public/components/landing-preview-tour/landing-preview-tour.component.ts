@@ -60,8 +60,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 target: 140,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#4dabff',
-                colorEnd: '#2563eb',
+                colorStart: 'var(--fd-gradient-brand-start)',
+                colorEnd: 'var(--fd-color-primary-600)',
             },
             {
                 id: 'carbs',
@@ -72,7 +72,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#2dd4bf',
-                colorEnd: '#0ea5e9',
+                colorEnd: 'var(--fd-color-sky-500)',
             },
             {
                 id: 'fats',
@@ -83,7 +83,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#fbbf24',
-                colorEnd: '#f97316',
+                colorEnd: 'var(--fd-color-orange-500)',
             },
             {
                 id: 'fiber',
@@ -94,7 +94,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: '#fb7185',
-                colorEnd: '#ec4899',
+                colorEnd: 'var(--fd-color-rose-500)',
             },
         ] satisfies NutrientBar[],
     };
@@ -141,8 +141,8 @@ export class LandingPreviewTourComponent implements OnInit {
         maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-            y: { beginAtZero: true, ticks: { color: '#475569' } },
-            x: { ticks: { color: '#475569', maxRotation: 0 } },
+            y: { beginAtZero: true, ticks: { color: 'var(--fd-color-slate-600)' } },
+            x: { ticks: { color: 'var(--fd-color-slate-600)', maxRotation: 0 } },
         },
     };
     public lineOptionsWithLegend: ChartConfiguration['options'] = {
@@ -236,8 +236,8 @@ export class LandingPreviewTourComponent implements OnInit {
             datasets: [
                 {
                     data: [1600, 1700, 1800, 1500, 1900, 1750, 1820],
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.18)',
+                    borderColor: 'var(--fd-color-primary-600)',
+                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent)',
                     tension: 0.35,
                     borderWidth: 2,
                     fill: true,
@@ -276,8 +276,8 @@ export class LandingPreviewTourComponent implements OnInit {
             datasets: [
                 {
                     data: values,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.16)',
+                    borderColor: 'var(--fd-color-primary-600)',
+                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent)',
                     tension: 0.35,
                     borderWidth: 2,
                     fill: true,
@@ -332,9 +332,9 @@ export class LandingPreviewTourComponent implements OnInit {
                 {
                     data: [70, 55, 80, 60],
                     label: 'Macros',
-                    backgroundColor: 'rgba(37, 99, 235, 0.12)',
-                    borderColor: '#2563eb',
-                    pointBackgroundColor: '#2563eb',
+                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent)',
+                    borderColor: 'var(--fd-color-primary-600)',
+                    pointBackgroundColor: 'var(--fd-color-primary-600)',
                 },
             ],
         };
@@ -359,8 +359,8 @@ export class LandingPreviewTourComponent implements OnInit {
             datasets: [
                 {
                     data: values,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.16)',
+                    borderColor: 'var(--fd-color-primary-600)',
+                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent)',
                     tension: 0.3,
                     borderWidth: 2,
                     pointRadius: 3,

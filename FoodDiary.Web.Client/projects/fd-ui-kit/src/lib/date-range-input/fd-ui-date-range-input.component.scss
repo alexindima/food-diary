@@ -1,4 +1,4 @@
-﻿@use '../../../../../src/styles/variables' as variables;
+@use '../../../../../src/styles/variables' as variables;
 
 :host {
     display: block;
@@ -12,8 +12,10 @@
 }
 
 .fd-ui-date-range-input__divider {
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
     font-size: 0.95rem;
     font-weight: 600;
     line-height: 1;
 }
+
+

@@ -61,7 +61,7 @@ const COLOR_CHART = {
 const COLOR_DIALOG = {
     surface: '#FFFFFF',
     surfaceMuted: '#F8FAFF',
-    border: 'rgba(17, 24, 39, 0.08)',
+    border: 'color-mix(in srgb, var(--fd-color-gray-900-static, #111827) 8%, transparent)',
     overlay: 'rgba(15, 23, 42, 0.6)',
 } as const;
 

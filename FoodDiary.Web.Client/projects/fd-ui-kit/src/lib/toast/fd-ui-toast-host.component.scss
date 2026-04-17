@@ -41,10 +41,10 @@
     position: relative;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
     animation: fd-ui-toast-enter 250ms ease-out forwards;
     background: #2b2d33;
-    color: #ffffff;
+    color: var(--fd-color-white);
 
     &.is-leaving {
         animation: fd-ui-toast-exit 200ms ease-out forwards;
@@ -127,7 +127,7 @@
         opacity 0.15s ease;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         opacity: 1;
     }
 }
@@ -171,3 +171,6 @@
         padding: 12px 44px 12px 14px;
     }
 }
+
+
+

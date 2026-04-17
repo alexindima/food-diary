@@ -40,9 +40,9 @@ export class WeeklyCheckInFacade {
 
     public getTrendColor(value: number, invertPositive = false): string {
         if (value === 0) {
-            return '#64748b';
+            return 'var(--fd-color-slate-500)';
         }
         const isPositive = invertPositive ? value < 0 : value > 0;
-        return isPositive ? '#22c55e' : '#ef4444';
+        return isPositive ? 'var(--fd-color-green-500)' : '#ef4444';
     }
 }

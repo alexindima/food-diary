@@ -55,7 +55,7 @@ export class FdCardHoverDirective implements OnInit {
     private applyHoverStyles(): void {
         const element = this.elementRef.nativeElement;
         const transform = this.fdCardHoverTransform() ?? 'translateY(-2px)';
-        const boxShadow = this.fdCardHoverShadow() ?? '0 22px 40px rgba(15, 23, 42, 0.18)';
+        const boxShadow = this.fdCardHoverShadow() ?? '0 22px 40px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent)';
         this.renderer.setStyle(element, 'transform', transform);
         this.renderer.setStyle(element, 'box-shadow', boxShadow);
     }

@@ -3,7 +3,7 @@
 }
 
 .fd-ui-nutrient-input {
-    --fd-nutrient-tint: rgba(148, 163, 184, 0.2);
+    --fd-nutrient-tint: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     --fd-nutrient-text-color: rgba(15, 23, 42, 0.65);
     display: flex;
     flex-direction: column;
@@ -11,8 +11,8 @@
     padding: 16px 18px;
     border-radius: 20px;
     background: var(--fd-nutrient-tint);
-    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
-    border: 1px solid rgba(15, 23, 42, 0.04);
+    box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent);
     cursor: default;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .fd-ui-nutrient-input__control::placeholder {
-    color: color-mix(in srgb, var(--fd-nutrient-text-color) 45%, #fff);
+    color: color-mix(in srgb, var(--fd-nutrient-text-color) 45%, var(--fd-color-white));
 }
 
 input.fd-ui-nutrient-input__control[type='number'] {
@@ -121,9 +121,9 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--outline {
-    background: #ffffff;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    background: var(--fd-color-white);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
 
     .fd-ui-nutrient-input__control {
         text-align: left;
@@ -154,7 +154,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 .fd-ui-nutrient-input__unit {
     font-size: 1em;
     font-weight: 700;
-    color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, #fff);
+    color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, var(--fd-color-white));
     letter-spacing: 0.02em;
     text-transform: lowercase;
     flex: 0 0 auto;
@@ -169,3 +169,6 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
     width: 100%;
     margin: 0;
 }
+
+
+

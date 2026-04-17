@@ -49,9 +49,9 @@ export type BodyTargetKey = 'weight' | 'waist';
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
 
-    private readonly colorBlue = '#2563eb';
+    private readonly colorBlue = 'var(--fd-color-primary-600)';
     private readonly colorGreen = '#16a34a';
-    private readonly colorOrange = '#f59e0b';
+    private readonly colorOrange = 'var(--fd-color-amber-500)';
     private readonly colorRed = '#ef4444';
 
     private readonly macroConfigs: MacroItem[] = [

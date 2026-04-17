@@ -75,11 +75,11 @@
 
     &__summary-total,
     &__summary-average {
-        background: #f8fafc;
+        background: var(--fd-color-slate-50);
         border-radius: 20px;
         padding: 20px;
         flex: 1;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--fd-color-slate-200);
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -114,7 +114,7 @@
         flex-direction: column;
         gap: 4px;
         padding-top: 8px;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid var(--fd-color-slate-200);
     }
 
     &__summary-trend {
@@ -125,8 +125,8 @@
     &__macro-card {
         padding: 16px;
         border-radius: 16px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        background: var(--fd-color-white);
+        border: 1px solid var(--fd-color-slate-200);
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -147,7 +147,7 @@
 
     &__summary-note {
         font-size: 0.75rem;
-        color: #94a3b8;
+        color: var(--fd-color-slate-400);
         text-transform: uppercase;
         letter-spacing: 0.08em;
     }
@@ -167,7 +167,7 @@
     }
 
     &__chart-card {
-        background: #f8fafc;
+        background: var(--fd-color-slate-50);
         border-radius: 16px;
         padding: 16px;
         display: flex;
@@ -209,3 +209,6 @@
         }
     }
 }
+
+
+

@@ -96,7 +96,7 @@ import { UsdaFood } from '../../models/usda.data';
 
             .food-category {
                 font-size: 12px;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 margin-top: 2px;
             }
 
@@ -104,7 +104,7 @@ import { UsdaFood } from '../../models/usda.data';
             .no-results {
                 padding: 24px;
                 text-align: center;
-                color: var(--fd-text-secondary, #666);
+                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .dialog-footer {

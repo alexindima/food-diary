@@ -33,7 +33,7 @@
         background-color: var(--fd-button-background-hover, var(--fd-button-background-default));
         border-color: var(--fd-button-border-hover, var(--fd-button-border-default));
         color: var(--fd-button-text-hover, var(--fd-button-text-default));
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
         transform: translateY(-1px);
     }
 
@@ -95,7 +95,7 @@
 .fd-ui-button--primary.fd-ui-button--solid {
     background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
     border: none;
-    color: var(--fd-color-on-brand, #ffffff);
+    color: var(--fd-color-on-brand, var(--fd-color-white));
     box-shadow: 0 10px 26px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
 
     &:hover:not(:disabled) {
@@ -110,7 +110,7 @@
 
     &:disabled {
         background: var(--fd-color-gray-300, #cbd5e1);
-        color: var(--fd-color-surface-muted, #f8fafc);
+        color: var(--fd-color-surface-muted, var(--fd-color-slate-50));
         box-shadow: none;
     }
 }
@@ -282,3 +282,6 @@
 .fd-ui-button--icon-xl {
     --fd-button-icon-size: 1.6rem;
 }
+
+
+

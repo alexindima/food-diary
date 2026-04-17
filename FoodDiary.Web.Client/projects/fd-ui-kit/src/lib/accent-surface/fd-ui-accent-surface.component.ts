@@ -22,7 +22,7 @@ export type FdUiAccentSide = 'top' | 'right' | 'bottom' | 'left';
 })
 export class FdUiAccentSurfaceComponent {
     public readonly accentSide = input<FdUiAccentSide>('top');
-    public readonly accentColor = input<string>('#2563eb');
+    public readonly accentColor = input<string>('var(--fd-color-primary-600)');
     public readonly active = input(false);
     public readonly tinted = input(false);
 }
