@@ -6,7 +6,9 @@ HAS_HTML=$(echo "$STAGED_FILES" | grep -c '\.html$' || true)
 HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
 HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
 HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n/.*\.json|scripts/check-i18n\.mjs|package\.json|src/.*\.html)$' || true)
+HAS_STORYBOOK=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
+HAS_API_CONTRACT=$(echo "$STAGED_FILES" | grep -Ec '^(FoodDiary\.Web\.Api/|FoodDiary\.Presentation\.Api/|FoodDiary\.Contracts/|tests/FoodDiary\.Web\.Api\.IntegrationTests/|tests/FoodDiary\.Web\.Api\.IntegrationTests/Snapshots/)' || true)
 HAS_INFRA_MIGRATIONS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Infrastructure/Migrations/.*\.cs$' || true)
 
 cd FoodDiary.Web.Client
@@ -50,9 +52,19 @@ else
   echo "=== Skipping frontend tests (no frontend files changed) ==="
 fi
 
+if [ "$HAS_STORYBOOK" -gt 0 ]; then
+  echo "=== Running Storybook build ==="
+  npm run build:storybook || exit 1
+else
+  echo "=== Skipping Storybook build (no Storybook files changed) ==="
+fi
+
 cd ..
 
 if [ "$HAS_CS" -gt 0 ]; then
+  echo "=== Running backend solution build ==="
+  dotnet build FoodDiary.slnx --no-restore || exit 1
+
   echo "=== Running dotnet format check ==="
   STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
   dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES" 2>&1 | grep "error" && { echo "Run 'dotnet format FoodDiary.slnx' to fix formatting."; exit 1; } || true
@@ -75,4 +87,11 @@ if [ "$HAS_CS" -gt 0 ]; then
   dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore || exit 1
 else
   echo "=== Skipping backend tests (no .cs files changed) ==="
+fi
+
+if [ "$HAS_API_CONTRACT" -gt 0 ]; then
+  echo "=== Running API contract integration tests ==="
+  dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
+else
+  echo "=== Skipping API contract integration tests (no API contract files changed) ==="
 fi
