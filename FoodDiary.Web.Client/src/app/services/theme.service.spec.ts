@@ -45,9 +45,7 @@ describe('ThemeService', () => {
 
         expect(service.theme()).toBe('leaf');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
-        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-            'var(--fd-color-emerald-700)',
-        );
+        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
     });
 
     it('should persist a selected theme', () => {
@@ -55,8 +53,6 @@ describe('ThemeService', () => {
 
         expect(localStorage.getItem('fd_theme')).toBe('leaf');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
-        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-            'var(--fd-color-emerald-700)',
-        );
+        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
     });
 });

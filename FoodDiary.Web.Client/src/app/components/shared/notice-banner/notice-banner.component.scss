@@ -1,10 +1,10 @@
 @use 'variables';
 
 .fd-notice {
-    --fd-notice-bg: rgba(219, 234, 254, 0.7);
-    --fd-notice-border: rgba(59, 130, 246, 0.18);
-    --fd-notice-text: #1e3a8a;
-    --fd-notice-icon-bg: #3b82f6;
+    --fd-notice-bg: color-mix(in srgb, var(--fd-color-primary-100) 70%, transparent);
+    --fd-notice-border: color-mix(in srgb, var(--fd-color-blue-500) 18%, transparent);
+    --fd-notice-text: var(--fd-color-primary-900);
+    --fd-notice-icon-bg: var(--fd-color-blue-500);
     --fd-notice-icon-fg: var(--fd-color-white);
     --fd-notice-action: var(--fd-color-primary-600);
     display: flex;
@@ -75,18 +75,18 @@
 }
 
 .fd-notice--warning {
-    --fd-notice-bg: rgba(254, 243, 199, 0.9);
-    --fd-notice-border: rgba(245, 158, 11, 0.35);
-    --fd-notice-text: #92400e;
+    --fd-notice-bg: color-mix(in srgb, var(--fd-color-yellow-300) 58%, var(--fd-color-white));
+    --fd-notice-border: color-mix(in srgb, var(--fd-color-amber-500) 35%, transparent);
+    --fd-notice-text: var(--fd-color-orange-700);
     --fd-notice-icon-bg: var(--fd-color-amber-500);
-    --fd-notice-action: #b45309;
+    --fd-notice-action: var(--fd-color-orange-700);
 }
 
 .fd-notice--error {
-    --fd-notice-bg: rgba(254, 226, 226, 0.85);
-    --fd-notice-border: rgba(239, 68, 68, 0.35);
-    --fd-notice-text: #991b1b;
-    --fd-notice-icon-bg: #ef4444;
+    --fd-notice-bg: color-mix(in srgb, var(--fd-color-danger) 15%, var(--fd-color-white));
+    --fd-notice-border: color-mix(in srgb, var(--fd-color-danger) 35%, transparent);
+    --fd-notice-text: var(--fd-color-red-700);
+    --fd-notice-icon-bg: var(--fd-color-danger);
     --fd-notice-action: var(--fd-color-red-700);
 }
 

@@ -23,7 +23,7 @@ const FASTING_STAGE_DEFINITIONS: readonly FastingStageDefinition[] = [
         titleKey: 'FASTING.STAGES.EARLY.TITLE',
         descriptionKey: 'FASTING.STAGES.EARLY.DESCRIPTION',
         color: 'var(--fd-color-slate-500)',
-        glowColor: 'rgba(100, 116, 139, 0.18)',
+        glowColor: 'color-mix(in srgb, var(--fd-color-slate-500) 18%, transparent)',
     },
     {
         startsAtHours: 4,
@@ -37,14 +37,14 @@ const FASTING_STAGE_DEFINITIONS: readonly FastingStageDefinition[] = [
         titleKey: 'FASTING.STAGES.STORED_ENERGY.TITLE',
         descriptionKey: 'FASTING.STAGES.STORED_ENERGY.DESCRIPTION',
         color: 'var(--fd-color-purple-500)',
-        glowColor: 'rgba(124, 58, 237, 0.2)',
+        glowColor: 'color-mix(in srgb, var(--fd-color-purple-500) 20%, transparent)',
     },
     {
         startsAtHours: 16,
         titleKey: 'FASTING.STAGES.DEEP.TITLE',
         descriptionKey: 'FASTING.STAGES.DEEP.DESCRIPTION',
         color: 'var(--fd-color-amber-500)',
-        glowColor: 'rgba(245, 158, 11, 0.2)',
+        glowColor: 'color-mix(in srgb, var(--fd-color-amber-500) 20%, transparent)',
     },
 ] as const;
 

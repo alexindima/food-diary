@@ -11,7 +11,7 @@
 .detail-dialog-shell {
 
     ::ng-deep .cdk-overlay-backdrop {
-        background: rgba(0, 0, 0, 0.25);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);
         opacity: 0;
         animation: detailBackdrop 180ms ease forwards;
         backdrop-filter: blur(2px);
@@ -20,7 +20,7 @@
     ::ng-deep .fd-ui-dialog {
         border-radius: 16px;
         box-shadow: 0 18px 45px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        border: 1px solid color-mix(in srgb, var(--fd-color-white) 40%, transparent);
         background: radial-gradient(circle at top, color-mix(in srgb, var(--fd-color-primary-100) 28%, var(--fd-color-white)) 0%, color-mix(in srgb, var(--fd-color-slate-100) 92%, var(--fd-color-white)) 40%, color-mix(in srgb, var(--fd-color-slate-100) 72%, var(--fd-color-white)) 100%);
         max-height: 90vh;
         overflow: hidden;
@@ -77,7 +77,7 @@
     }
 
     &__surface--comment {
-        background: var(--fd-color-primary-25, #f5f8ff);
+        background: color-mix(in srgb, var(--fd-color-primary-50) 58%, var(--fd-color-white));
     }
 
     &__surface--quality {
@@ -120,15 +120,15 @@
         border-radius: inherit;
 
         &--green {
-            background: linear-gradient(90deg, #6fcf97, #4fba7a);
+            background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-color-white)));
         }
 
         &--yellow {
-            background: linear-gradient(90deg, #e9ca63, #d7b347);
+            background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300)));
         }
 
         &--red {
-            background: linear-gradient(90deg, #e78a8a, #d96b6b);
+            background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-color-white)));
         }
     }
 
@@ -173,7 +173,7 @@
     }
 
     &__text--muted {
-        color: var(--fd-color-gray-600, #4b5563);
+        color: var(--fd-color-gray-600, var(--fd-color-slate-600));
     }
 
     &__footer {

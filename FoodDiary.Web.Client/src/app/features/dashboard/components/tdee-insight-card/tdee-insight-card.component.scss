@@ -7,9 +7,13 @@
 .tdee-card {
     border-radius: 22px;
     padding: 18px;
-    background: linear-gradient(180deg, #fff8f0 0%, #fff4e8 100%);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-yellow-300) 28%, var(--fd-color-white)) 0%,
+        color-mix(in srgb, var(--fd-color-orange-500) 12%, var(--fd-color-white)) 100%
+    );
     box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -32,7 +36,7 @@
         width: 32px;
         height: 32px;
         border-radius: 10px;
-        background: linear-gradient(135deg, var(--fd-color-orange-500), #fb923c);
+        background: linear-gradient(135deg, var(--fd-color-orange-500), color-mix(in srgb, var(--fd-color-orange-500) 78%, var(--fd-color-white)));
         color: var(--fd-color-white);
 
         mat-icon {
@@ -63,13 +67,13 @@
         font-size: 2rem;
         font-weight: 800;
         line-height: 1;
-        color: #ea580c;
+        color: var(--fd-color-orange-700);
     }
 
     &__unit {
         font-size: 0.85rem;
         font-weight: 600;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__confidence {
@@ -91,18 +95,18 @@
         }
 
         &--low {
-            background: rgba(239, 68, 68, 0.12);
-            color: #ef4444;
+            background: color-mix(in srgb, var(--fd-color-danger) 12%, transparent);
+            color: var(--fd-color-danger);
         }
 
         &--medium {
-            background: rgba(234, 179, 8, 0.14);
-            color: #ca8a04;
+            background: color-mix(in srgb, var(--fd-color-yellow-300) 20%, transparent);
+            color: var(--fd-color-orange-700);
         }
 
         &--high {
-            background: rgba(34, 197, 94, 0.14);
-            color: #16a34a;
+            background: color-mix(in srgb, var(--fd-color-green-500) 14%, transparent);
+            color: var(--fd-color-emerald-700);
         }
     }
 
@@ -115,7 +119,7 @@
     }
 
     &__meta-label {
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 500;
     }
 
@@ -129,8 +133,8 @@
         gap: 8px;
         padding: 10px 12px;
         border-radius: 12px;
-        background: rgba(14, 165, 233, 0.1);
-        color: #0284c7;
+        background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
+        color: var(--fd-color-sky-700);
         font-size: 0.85rem;
         font-weight: 600;
         line-height: 1.5;
@@ -151,13 +155,13 @@
         gap: 12px;
         padding: 10px 12px;
         border-radius: 12px;
-        background: rgba(34, 197, 94, 0.1);
+        background: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
     }
 
     &__suggestion-text {
         font-size: 0.85rem;
         font-weight: 600;
-        color: #15803d;
+        color: var(--fd-color-emerald-700);
     }
 
     &__loading,
@@ -165,7 +169,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 600;
         padding: 2px 0;
 

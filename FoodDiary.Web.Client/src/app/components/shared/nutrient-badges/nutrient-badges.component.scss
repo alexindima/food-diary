@@ -10,7 +10,7 @@
     flex-wrap: wrap;
     border-radius: 999px;
     background: var(--fd-color-slate-50);
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     width: fit-content;
     max-width: 100%;
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
@@ -25,7 +25,7 @@
     background: transparent;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--chip-color, variables.$color-text-main);
+    color: var(--chip-color, var(--fd-color-text));
     box-shadow: none;
     border-right: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
 }

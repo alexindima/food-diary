@@ -4,11 +4,11 @@
     display: flex;
     flex-direction: column;
     background:
-        radial-gradient(circle at 10% 10%, rgba(147, 197, 253, 0.08), transparent 22%),
-        radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.04), transparent 25%), #f9fafb;
-    --tui-chart-categorical-00: variables.$color-proteins;
-    --tui-chart-categorical-01: variables.$color-fats;
-    --tui-chart-categorical-02: variables.$color-carbs;
+        radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 22%),
+        radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--fd-color-emerald-500) 4%, transparent), transparent 25%), var(--fd-color-slate-50);
+    --tui-chart-categorical-00: var(--fd-color-chart-proteins);
+    --tui-chart-categorical-01: var(--fd-color-chart-fats);
+    --tui-chart-categorical-02: var(--fd-color-chart-carbs);
 }
 
 @keyframes landingFadeUp {
@@ -80,7 +80,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
-        color: variables.$color-primary;
+        color: var(--fd-color-primary-600);
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
@@ -89,13 +89,13 @@
     &__title {
         margin: 0;
         font-size: clamp(26px, 3vw, 34px);
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         letter-spacing: -0.01em;
     }
 
     &__subtitle {
         margin: 6px 0 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 1.02rem;
         max-width: 620px;
     }
@@ -126,10 +126,10 @@
 
     &__inner--cta {
         max-width: 1180px;
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
+        background: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
         border-radius: 16px;
         padding: clamp(variables.$gap-m, 2.5vw, variables.$gap-xl);
-        border: 1px solid rgba(59, 130, 246, 0.18);
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
         box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         display: flex;
         justify-content: space-between;
@@ -178,7 +178,7 @@
 
     &__group-title {
         font-weight: 800;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         letter-spacing: -0.01em;
     }
 
@@ -194,8 +194,8 @@
 
     &__drawer {
         position: relative;
-        background: linear-gradient(180deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02));
-        border: 1px solid rgba(59, 130, 246, 0.15);
+        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 15%, transparent);
         border-radius: 16px;
         padding: variables.$gap-m;
         box-shadow: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
@@ -206,7 +206,7 @@
 
     &__hint {
         margin: 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 0.95rem;
     }
 }
@@ -233,7 +233,7 @@
         height: 36px;
         border-radius: 12px;
         background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
-        color: variables.$color-primary;
+        color: var(--fd-color-primary-600);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -242,13 +242,13 @@
 
     &__title {
         margin: 0;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         font-size: 1.05rem;
     }
 
     &__text {
         margin: 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         line-height: 1.5;
     }
 }

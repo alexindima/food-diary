@@ -19,7 +19,7 @@
 
     &__subtitle {
         margin: 4px 0 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__controls {
@@ -112,7 +112,7 @@
 
     &__name {
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -120,7 +120,7 @@
 
     &__meta {
         font-size: 0.85rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -143,7 +143,7 @@
 
     &__no-results {
         text-align: center;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         display: grid;
         gap: variables.$gap-xs;
         justify-items: center;
@@ -151,7 +151,7 @@
 
     &__no-results-icon {
         font-size: 2rem;
-        color: variables.$color-no-results;
+        color: var(--fd-color-danger);
     }
 }
 

@@ -18,7 +18,7 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
 }
 
 .meals-preview__list {
@@ -28,11 +28,11 @@
 }
 
 .meals-preview__empty {
-    border: 1px dashed rgba(15, 23, 42, 0.2);
+    border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
     border-radius: 16px;
     padding: 24px;
     text-align: center;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     font-size: 0.95rem;
 }
 
@@ -44,8 +44,8 @@
     padding: 14px 16px;
     border: 1px dashed color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
     border-radius: 18px;
-    background: rgba(37, 99, 235, 0.03);
-    color: variables.$color-text-main;
+    background: color-mix(in srgb, var(--fd-color-primary-600) 3%, transparent);
+    color: var(--fd-color-text);
     cursor: pointer;
     transition:
         transform 0.15s ease,
@@ -66,7 +66,7 @@
         transform: translateY(-1px);
         box-shadow: 0 12px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         border-color: color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent);
-        background: rgba(37, 99, 235, 0.05);
+        background: color-mix(in srgb, var(--fd-color-primary-600) 5%, transparent);
     }
 }
 
@@ -80,7 +80,11 @@
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #e0ecff, #f1f5ff);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--fd-color-primary-500) 14%, var(--fd-color-white)),
+        color-mix(in srgb, var(--fd-color-primary-500) 4%, var(--fd-color-white))
+    );
     display: grid;
     place-items: center;
     color: var(--fd-color-primary-600);
@@ -98,7 +102,7 @@
     display: grid;
     place-items: center;
     background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.26);
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 26%, transparent);
 
     mat-icon {
         color: var(--fd-color-white);

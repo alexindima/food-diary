@@ -11,7 +11,7 @@
         border: 2px dashed var(--fd-color-primary-200);
         border-radius: 24px;
         min-height: 190px;
-        background: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white));
+        background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
         color: var(--fd-color-slate-900);
         display: grid;
         place-items: center;
@@ -23,7 +23,7 @@
         &--dragging {
             border-color: var(--fd-color-primary-600);
             background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 10px 25px color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent);
         }
 
         &--uploading {
@@ -50,7 +50,7 @@
         width: auto;
         height: auto;
         display: block;
-        color: #3b82f6;
+        color: var(--fd-color-primary-500);
         font-size: 36px;
         line-height: 1;
         margin: 0 auto;
@@ -88,7 +88,7 @@
     &__overlay {
         position: absolute;
         inset: 0;
-        background: rgba(15, 23, 42, 0.5);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 50%, transparent);
         color: var(--fd-color-white);
         display: grid;
         place-items: center;
@@ -120,15 +120,15 @@
         display: inline-flex;
         border-radius: 12px;
         overflow: hidden;
-        background: rgba(15, 23, 42, 0.85);
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
     }
 
     &__control-btn {
         appearance: none;
         border: none;
         background: transparent;
-        color: #e5e7eb;
+        color: var(--fd-color-slate-200);
         padding: 8px 10px;
         cursor: pointer;
         font-size: 16px;
@@ -143,12 +143,12 @@
         }
 
         &--danger:hover {
-            color: #f87171;
-            background: rgba(248, 113, 113, 0.1);
+            color: color-mix(in srgb, var(--fd-color-danger) 70%, var(--fd-color-white));
+            background: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
         }
 
         &:not(:last-child) {
-            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            border-right: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent);
         }
     }
 
@@ -180,7 +180,7 @@
     &__cropper-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(15, 23, 42, 0.55);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 55%, transparent);
         display: grid;
         place-items: center;
         z-index: 1000;
@@ -191,7 +191,7 @@
         width: min(720px, 100%);
         background: var(--fd-color-white);
         border-radius: 18px;
-        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.22);
+        box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 22%, transparent);
         display: flex;
         flex-direction: column;
         gap: 16px;
@@ -224,7 +224,7 @@
         overflow: hidden;
         border-radius: 14px;
         border: 1px solid var(--fd-color-slate-200);
-        background: var(--fd-color-slate-900)0d;
+        background: color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
     }
 
     &__cropper-image {

@@ -10,11 +10,11 @@
     &__label {
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--fd-color-text, #111);
+        color: var(--fd-color-text);
         margin: 0;
 
         span {
-            color: var(--fd-color-warn, #ff6b6b);
+            color: var(--fd-color-warn);
             margin-left: 2px;
         }
     }
@@ -37,15 +37,15 @@
     }
 
     &__error {
-        color: var(--fd-color-warn, #ff6b6b);
+        color: var(--fd-color-warn);
     }
 }
 
 .fd-ui-radio {
     padding: var(--fd-spacing-xs, 8px) var(--fd-spacing-sm, 12px);
-    border: 1px solid var(--fd-color-border, #e0e0e0);
+    border: 1px solid var(--fd-color-border);
     border-radius: var(--fd-radius-md, 8px);
-    background-color: var(--fd-color-surface, var(--fd-color-white));
+    background-color: var(--fd-color-surface);
     width: 100%;
 
     .mdc-form-field {
@@ -55,11 +55,11 @@
     &__text {
         display: flex;
         flex-direction: column;
-        color: var(--fd-color-text, #111);
+        color: var(--fd-color-text);
     }
 
     &__description {
-        color: var(--fd-color-text-muted, var(--fd-color-neutral-600));
+        color: var(--fd-color-text-muted);
     }
 }
 

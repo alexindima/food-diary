@@ -17,7 +17,7 @@
     }
 
     &__subtitle {
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         margin: 4px 0 0;
     }
 
@@ -40,14 +40,14 @@
     &__progress-fill {
         height: 100%;
         border-radius: 4px;
-        background: linear-gradient(90deg, var(--fd-color-green-500), #16a34a);
+        background: linear-gradient(90deg, var(--fd-color-green-500), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-slate-900)));
         transition: width 0.3s ease;
     }
 
     &__progress-text {
         font-size: 0.85rem;
         font-weight: 600;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__filters {
@@ -69,14 +69,14 @@
         align-items: center;
         gap: 12px;
         padding: 48px 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 600;
 
         mat-icon {
             font-size: 48px;
             width: 48px;
             height: 48px;
-            color: #8b5cf6;
+            color: var(--fd-color-purple-500);
         }
     }
 }
@@ -111,7 +111,7 @@
         display: inline-flex;
         padding: 4px 10px;
         border-radius: 10px;
-        background: rgba(139, 92, 246, 0.12);
+        background: color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent);
         color: var(--fd-color-purple-500);
         font-size: 0.72rem;
         font-weight: 700;
@@ -130,13 +130,13 @@
         font-size: 1.1rem;
         font-weight: 800;
         margin: 0;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__summary {
         margin: 0;
         font-size: 0.85rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -149,7 +149,7 @@
         gap: 12px;
         font-size: 0.8rem;
         font-weight: 600;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 }
 

@@ -81,7 +81,7 @@
     &__bmi-note {
         margin: 0 0 (variables.$gap-xs);
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__bmi-scale {
@@ -113,18 +113,18 @@
     }
 
     &__bmi-segment--normal {
-        background: linear-gradient(90deg, #bbf7d0, #4ade80);
-        color: #065f46;
+        background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-green-500) 26%, var(--fd-color-white)), var(--fd-color-green-500));
+        color: var(--fd-color-emerald-700);
     }
 
     &__bmi-segment--over {
-        background: linear-gradient(90deg, var(--fd-color-yellow-300), #fbbf24);
-        color: #92400e;
+        background: linear-gradient(90deg, var(--fd-color-yellow-300), var(--fd-color-amber-500));
+        color: var(--fd-color-orange-700);
     }
 
     &__bmi-segment--obese {
-        background: linear-gradient(90deg, #fecaca, #f87171);
-        color: #7f1d1d;
+        background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-danger) 68%, var(--fd-color-white)));
+        color: var(--fd-color-red-700);
     }
 
     &__bmi-pointer {
@@ -143,7 +143,7 @@
         border-radius: 50%;
         border: 2px solid var(--fd-color-slate-900);
         background-color: var(--fd-color-white);
-        box-shadow: 0 3px 8px rgba(15, 23, 42, 0.25);
+        box-shadow: 0 3px 8px color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);
         transform: translateY(-50%);
     }
 
@@ -188,23 +188,23 @@
     }
 
     &__bmi-status--normal {
-        background-color: #dcfce7;
+        background-color: color-mix(in srgb, var(--fd-color-green-500) 18%, var(--fd-color-white));
         color: var(--fd-color-emerald-700);
     }
 
     &__bmi-status--over {
-        background-color: #fef3c7;
-        color: #92400e;
+        background-color: color-mix(in srgb, var(--fd-color-yellow-300) 55%, var(--fd-color-white));
+        color: var(--fd-color-orange-700);
     }
 
     &__bmi-status--obese {
-        background-color: #fee2e2;
+        background-color: color-mix(in srgb, var(--fd-color-danger) 18%, var(--fd-color-white));
         color: var(--fd-color-red-700);
     }
 
     &__bmi-description {
         margin: 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 0.9rem;
     }
 

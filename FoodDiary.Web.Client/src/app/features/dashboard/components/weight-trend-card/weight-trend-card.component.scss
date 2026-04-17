@@ -5,8 +5,8 @@
 }
 
 .weight-trend-card {
-    --wt-accent: #1b84ff;
-    --wt-accent-muted: #e4f1ff;
+    --wt-accent: var(--fd-color-blue-500);
+    --wt-accent-muted: color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white));
     --wt-surface: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
     width: 100%;
     min-width: 0;
@@ -14,7 +14,7 @@
     padding: 18px 18px 14px;
     box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     background: var(--wt-surface);
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     overflow: hidden;
 
     &--loading {
@@ -34,13 +34,13 @@
         width: 46px;
         height: 46px;
         border-radius: 14px;
-        background: linear-gradient(135deg, #ff4f85, #ff7e9c);
+        background: linear-gradient(135deg, var(--fd-color-rose-500), color-mix(in srgb, var(--fd-color-rose-500) 70%, var(--fd-color-white)));
         color: var(--fd-color-white);
         display: grid;
         place-items: center;
         font-weight: 800;
         letter-spacing: 0.02em;
-        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.14);
+        box-shadow: 0 10px 20px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
     }
 
     &__title-block {
@@ -54,7 +54,7 @@
         font-weight: 700;
         font-size: 1.05rem;
         line-height: 1.1;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__delta {
@@ -63,20 +63,20 @@
         gap: 6px;
         padding: 6px 10px;
         border-radius: 999px;
-        background: #eaf4ff;
+        background: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-white));
         color: var(--fd-color-slate-900);
         font-weight: 600;
         font-size: 0.9rem;
         width: fit-content;
 
         &--positive {
-            background: #e7f8ef;
-            color: #0a7a46;
+            background: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-color-white));
+            color: var(--fd-color-emerald-700);
         }
 
         &--negative {
-            background: #fff4e8;
-            color: #b45309;
+            background: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-white));
+            color: var(--fd-color-orange-700);
         }
     }
 
@@ -92,12 +92,12 @@
         font-size: 2.6rem;
         font-weight: 800;
         letter-spacing: -0.03em;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         line-height: 1;
     }
 
     &__unit {
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 600;
     }
 
@@ -108,14 +108,14 @@
 
     &__empty {
         margin: 8px 0 4px;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 0.95rem;
     }
 
     &__footer {
         margin-top: 6px;
         font-size: 0.95rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     @media #{variables.$media-compact} {

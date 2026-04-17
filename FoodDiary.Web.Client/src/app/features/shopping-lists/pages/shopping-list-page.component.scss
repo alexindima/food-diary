@@ -154,12 +154,12 @@
 
     &__item-name {
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__item-meta {
         font-size: 0.85rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__item-remove {
@@ -171,7 +171,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         cursor: pointer;
         transition: background 0.2s ease;
 
@@ -187,7 +187,7 @@
         flex-direction: column;
         align-items: center;
         gap: variables.$gap-xs;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 600;
         padding: variables.$gap-xl 0;
     }
@@ -202,7 +202,7 @@
     &__empty-title {
         font-size: 1rem;
         font-weight: 800;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         text-align: center;
     }
 

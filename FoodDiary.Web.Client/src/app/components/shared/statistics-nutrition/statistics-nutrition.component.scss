@@ -55,7 +55,7 @@
         margin: 0;
         font-size: 0.95rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     canvas {
@@ -68,7 +68,7 @@
 .stats-nutrition-card__empty {
     margin: 0;
     text-align: center;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     padding: 24px 0;
 }
 

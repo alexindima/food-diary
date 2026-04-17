@@ -101,7 +101,7 @@
 
 .stats-summary-card__label {
     font-size: 0.85rem;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     margin: 0;
 }
 
@@ -109,7 +109,7 @@
     margin: 0;
     font-size: 1.4rem;
     font-weight: 700;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
 }
 
 .stats-summary-card__note {
@@ -145,7 +145,7 @@
 .stats-summary-card__empty {
     margin: 0;
     text-align: center;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     padding: 12px 0;
 }
 

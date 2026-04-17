@@ -25,7 +25,7 @@
 
     &__title {
         margin: 0;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__form {
@@ -96,7 +96,7 @@
     &__summary-calories {
         margin: 0;
         font-size: 0.95rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
 
         strong {
             font-weight: 600;
@@ -106,7 +106,7 @@
     &__summary-alcohol {
         margin: 0;
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
 
         strong {
             font-weight: 600;
@@ -353,7 +353,7 @@
     &__footer-error {
         width: 100%;
         text-align: left;
-        color: variables.$color-no-results;
+        color: var(--fd-color-danger);
     }
 
     @media #{variables.$media-tablet} {
@@ -396,7 +396,7 @@
     &__satiety-note {
         margin: 0 0 variables.$gap-m;
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__satiety-field {
@@ -409,7 +409,7 @@
         margin: 0;
         font-size: 0.95rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__satiety-card {
@@ -423,7 +423,7 @@
         text-align: left;
         cursor: pointer;
         background: color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent);
-        box-shadow: 0 8px 20px color-mix(in srgb, variables.$color-text-main 8%, transparent);
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-text) 8%, transparent);
         position: relative;
         overflow: hidden;
         transition:
@@ -441,11 +441,11 @@
 
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 26px color-mix(in srgb, variables.$color-text-main 14%, transparent);
+            box-shadow: 0 12px 26px color-mix(in srgb, var(--fd-color-text) 14%, transparent);
         }
 
         mat-icon {
-            color: variables.$color-text-main;
+            color: var(--fd-color-text);
             position: relative;
             z-index: 1;
         }
@@ -461,7 +461,7 @@
         justify-content: center;
         font-size: 1.1rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         position: relative;
         z-index: 1;
     }
@@ -477,12 +477,12 @@
 
     &__satiety-card-title {
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__satiety-card-description {
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__items-header {
@@ -497,13 +497,13 @@
         margin: 0;
         font-size: 1.3rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__items-hint {
         margin: 0;
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__ai-summary {
@@ -553,19 +553,19 @@
         flex-direction: column;
         gap: 4px;
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__ai-summary-calories {
         display: inline-flex;
         align-items: baseline;
         gap: 6px;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         font-weight: 600;
     }
 
     &__ai-summary-label {
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 600;
     }
 
@@ -573,7 +573,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 500;
     }
 
@@ -587,7 +587,7 @@
         appearance: none;
         border: none;
         background: transparent;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         cursor: pointer;
         display: inline-flex;
         align-items: center;
@@ -603,11 +603,11 @@
     }
 
     &__ai-summary-action:hover {
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__ai-summary-action--danger {
-        color: variables.$color-no-results;
+        color: var(--fd-color-danger);
     }
 
     &__ai-summary-action--danger:hover {
@@ -630,7 +630,7 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__ai-summary-image img {
@@ -651,7 +651,7 @@
         justify-content: space-between;
         gap: variables.$gap-m;
         font-size: 0.95rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__ai-summary-name {
@@ -664,13 +664,13 @@
 
     &__ai-summary-amount {
         font-variant-numeric: tabular-nums;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__ai-summary-more {
         margin-top: 2px;
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 600;
         background: none;
         border: none;
@@ -680,7 +680,7 @@
     }
 
     &__ai-summary-more:hover {
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 }
 
@@ -732,7 +732,7 @@
 .consumption-item-card__title {
     font-weight: 600;
     font-size: 1rem;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -740,10 +740,10 @@
 
 .consumption-item-card__meta {
     font-size: 0.85rem;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     padding: 0 variables.$gap-s;
     border-radius: variables.$border-radius-m;
-    background-color: color-mix(in srgb, variables.$color-text-additional 10%, transparent);
+    background-color: color-mix(in srgb, var(--fd-color-text-muted) 10%, transparent);
 }
 
 .consumption-item__fields {
@@ -850,7 +850,7 @@
     &-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         margin: 0 0 variables.$gap-l;
     }
 

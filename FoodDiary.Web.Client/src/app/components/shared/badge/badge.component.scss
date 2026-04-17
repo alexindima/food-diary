@@ -15,7 +15,7 @@
     letter-spacing: 0;
     background-color: var(--fd-badge-bg, color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent));
     color: var(--fd-badge-fg, var(--fd-color-slate-900));
-    border: 1px solid var(--fd-badge-border, rgba(15, 23, 42, 0.07));
+    border: 1px solid var(--fd-badge-border, color-mix(in srgb, var(--fd-color-slate-900) 7%, transparent));
 
     &__icon {
         font-size: 1rem;
@@ -28,26 +28,26 @@
     }
 
     &.fd-badge--primary {
-        --fd-badge-bg: rgba(59, 130, 246, 0.14);
-        --fd-badge-border: rgba(59, 130, 246, 0.25);
+        --fd-badge-bg: color-mix(in srgb, var(--fd-color-blue-500) 14%, transparent);
+        --fd-badge-border: color-mix(in srgb, var(--fd-color-blue-500) 25%, transparent);
         --fd-badge-fg: var(--fd-color-primary-700);
     }
 
     &.fd-badge--success {
         --fd-badge-bg: color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent);
-        --fd-badge-border: rgba(16, 185, 129, 0.25);
+        --fd-badge-border: color-mix(in srgb, var(--fd-color-emerald-500) 25%, transparent);
         --fd-badge-fg: var(--fd-color-emerald-700);
     }
 
     &.fd-badge--warning {
-        --fd-badge-bg: rgba(251, 146, 60, 0.18);
-        --fd-badge-border: rgba(251, 146, 60, 0.28);
+        --fd-badge-bg: color-mix(in srgb, var(--fd-color-orange-500) 18%, transparent);
+        --fd-badge-border: color-mix(in srgb, var(--fd-color-orange-500) 28%, transparent);
         --fd-badge-fg: var(--fd-color-orange-700);
     }
 
     &.fd-badge--danger {
-        --fd-badge-bg: rgba(239, 68, 68, 0.16);
-        --fd-badge-border: rgba(239, 68, 68, 0.28);
+        --fd-badge-bg: color-mix(in srgb, var(--fd-color-danger) 16%, transparent);
+        --fd-badge-border: color-mix(in srgb, var(--fd-color-danger) 28%, transparent);
         --fd-badge-fg: var(--fd-color-red-700);
     }
 

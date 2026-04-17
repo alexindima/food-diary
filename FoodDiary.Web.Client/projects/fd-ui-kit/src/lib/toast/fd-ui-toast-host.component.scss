@@ -43,7 +43,7 @@
     overflow: hidden;
     box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
     animation: fd-ui-toast-enter 250ms ease-out forwards;
-    background: #2b2d33;
+    background: var(--fd-color-slate-800);
     color: var(--fd-color-white);
 
     &.is-leaving {
@@ -51,23 +51,23 @@
     }
 
     &--default {
-        background: #2b2d33;
+        background: var(--fd-color-slate-800);
     }
 
     &--positive {
-        background: #2b2d33;
+        background: var(--fd-color-slate-800);
     }
 
     &--negative {
-        background: #2b2d33;
+        background: var(--fd-color-slate-800);
     }
 
     &--warning {
-        background: #2b2d33;
+        background: var(--fd-color-slate-800);
     }
 
     &--info {
-        background: #2b2d33;
+        background: var(--fd-color-slate-800);
     }
 }
 

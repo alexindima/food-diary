@@ -1,8 +1,8 @@
 :host {
     display: block;
-    --fd-ui-card-border-color: var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
-    --fd-ui-card-title-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+    --fd-ui-card-border-color: var(--fd-color-border);
+    --fd-ui-card-title-color: var(--fd-color-text-muted);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted);
 }
 
 .fd-ui-card {
@@ -18,7 +18,7 @@
 
     &--subtle {
         box-shadow: none;
-        border-color: rgba(0, 0, 0, 0.04);
+        border-color: color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent);
     }
 
     &__header {
@@ -69,9 +69,9 @@
 }
 
 .fd-ui-card--appearance-product {
-    --fd-ui-card-border-color: rgba(46, 144, 250, 0.25);
-    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+    --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-sky-500) 25%, transparent);
+    --fd-ui-card-title-color: var(--fd-color-text);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted);
 
     .fd-ui-card__title {
         font-size: 1.2rem;
@@ -79,9 +79,9 @@
 }
 
 .fd-ui-card--appearance-recipe {
-    --fd-ui-card-border-color: rgba(16, 185, 129, 0.25);
-    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+    --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-emerald-500) 25%, transparent);
+    --fd-ui-card-title-color: var(--fd-color-text);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted);
 
     .fd-ui-card__title {
         font-size: 1.2rem;
@@ -89,15 +89,15 @@
 }
 
 .fd-ui-card--appearance-info {
-    --fd-ui-card-border-color: rgba(148, 163, 184, 0.4);
-    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-slate-500));
+    --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-400) 40%, transparent);
+    --fd-ui-card-title-color: var(--fd-color-text);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted);
 }
 
 .fd-ui-card--appearance-entry {
     --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    --fd-ui-card-title-color: var(--fd-color-text, var(--fd-color-gray-900-static));
-    --fd-ui-card-meta-color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+    --fd-ui-card-title-color: var(--fd-color-text);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted);
 
     .fd-ui-card__title {
         font-size: 1.05rem;

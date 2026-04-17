@@ -17,7 +17,7 @@
 
 .not-found__icon {
     font-size: 4em;
-    color: variables.$color-no-results;
+    color: var(--fd-color-danger);
     margin-bottom: 20px;
 }
 
@@ -25,13 +25,13 @@
     font-size: 2.5em;
     font-weight: bold;
     line-height: 36px;
-    color: variables.$color-no-results;
+    color: var(--fd-color-danger);
     margin-bottom: 20px;
 }
 
 .not-found__description {
     font-size: 1.2em;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     margin-bottom: 20px;
 }
 
@@ -55,23 +55,24 @@
 }
 
 .not-found__button--primary {
-    background-color: #007bff;
+    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
     color: var(--fd-color-white);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
 }
 
 .not-found__button--primary:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
     transform: scale(1.05);
 }
 
 .not-found__button--secondary {
     background-color: transparent;
-    color: #007bff;
-    border: 2px solid #007bff;
+    color: var(--fd-color-primary-600);
+    border: 2px solid color-mix(in srgb, var(--fd-color-primary-600) 45%, transparent);
 }
 
 .not-found__button--secondary:hover {
-    background-color: #e0f0ff;
+    background-color: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-white));
     transform: scale(1.05);
 }
 

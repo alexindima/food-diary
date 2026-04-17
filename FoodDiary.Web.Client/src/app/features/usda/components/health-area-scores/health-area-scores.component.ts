@@ -63,7 +63,7 @@ interface HealthAreaDisplay {
                 align-items: center;
                 padding: 12px 8px;
                 border-radius: 12px;
-                background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
+                background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
                 gap: 4px;
             }
 
@@ -93,7 +93,7 @@ interface HealthAreaDisplay {
 
             .ring-bg {
                 fill: none;
-                stroke: var(--fd-surface-variant, #e0e0e0);
+                stroke: var(--fd-surface-variant, var(--fd-color-slate-200));
                 stroke-width: 3;
             }
 
@@ -105,19 +105,19 @@ interface HealthAreaDisplay {
             }
 
             .area-card--excellent .ring-fill {
-                stroke: var(--fd-success, #4caf50);
+                stroke: var(--fd-success, var(--fd-color-green-500));
             }
             .area-card--good .ring-fill {
-                stroke: var(--fd-primary, #1976d2);
+                stroke: var(--fd-primary, var(--fd-color-primary-600));
             }
             .area-card--fair .ring-fill {
-                stroke: var(--fd-warning, #ff9800);
+                stroke: var(--fd-warning, var(--fd-color-orange-500));
             }
             .area-card--low .ring-fill {
-                stroke: var(--fd-error, #f44336);
+                stroke: var(--fd-error, var(--fd-color-danger));
             }
             .area-card--unknown .ring-fill {
-                stroke: var(--fd-surface-variant, #e0e0e0);
+                stroke: var(--fd-surface-variant, var(--fd-color-slate-200));
             }
 
             .score-text {
@@ -137,16 +137,16 @@ interface HealthAreaDisplay {
             }
 
             .area-card--excellent .area-grade {
-                color: var(--fd-success, #4caf50);
+                color: var(--fd-success, var(--fd-color-green-500));
             }
             .area-card--good .area-grade {
-                color: var(--fd-primary, #1976d2);
+                color: var(--fd-primary, var(--fd-color-primary-600));
             }
             .area-card--fair .area-grade {
-                color: var(--fd-warning, #ff9800);
+                color: var(--fd-warning, var(--fd-color-orange-500));
             }
             .area-card--low .area-grade {
-                color: var(--fd-error, #f44336);
+                color: var(--fd-error, var(--fd-color-danger));
             }
             .area-card--unknown .area-grade {
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));

@@ -33,7 +33,7 @@
     &__time {
         font-size: 0.8rem;
         font-weight: 600;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__title {
@@ -45,7 +45,7 @@
     &__content {
         font-size: 1rem;
         line-height: 1.8;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         white-space: pre-wrap;
     }
 

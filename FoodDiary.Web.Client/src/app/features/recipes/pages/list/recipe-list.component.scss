@@ -181,7 +181,7 @@
     &__section-label {
         font-weight: 800;
         font-size: 1.05rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         white-space: nowrap;
     }
 
@@ -206,7 +206,7 @@
     &__no-results {
         font-size: 1.2em;
         font-weight: bold;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: variables.$gap-l;
         display: flex;
@@ -216,7 +216,7 @@
 
         &-icon {
             font-size: 2em;
-            color: variables.$color-no-results;
+            color: var(--fd-color-danger);
         }
     }
 
@@ -231,7 +231,7 @@
     &__empty-title {
         font-size: 1rem;
         font-weight: 800;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__empty-copy {

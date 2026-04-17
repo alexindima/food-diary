@@ -78,7 +78,7 @@ import { DailyMicronutrient } from '../../models/usda.data';
                 font-size: 11px;
                 padding: 2px 8px;
                 border-radius: 12px;
-                background: var(--fd-surface-variant, #e0e0e0);
+                background: var(--fd-surface-variant, var(--fd-color-slate-200));
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
@@ -91,7 +91,7 @@ import { DailyMicronutrient } from '../../models/usda.data';
             .nutrient-item {
                 padding: 8px;
                 border-radius: 8px;
-                background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
+                background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
             }
 
             .nutrient-header {
@@ -117,18 +117,18 @@ import { DailyMicronutrient } from '../../models/usda.data';
             }
 
             .dv-low {
-                color: var(--fd-error, #f44336);
+                color: var(--fd-error, var(--fd-color-danger));
             }
             .dv-mid {
-                color: var(--fd-warning, #ff9800);
+                color: var(--fd-warning, var(--fd-color-orange-500));
             }
             .dv-good {
-                color: var(--fd-success, #4caf50);
+                color: var(--fd-success, var(--fd-color-green-500));
             }
 
             .progress-bar {
                 height: 4px;
-                background: var(--fd-surface-variant, #e0e0e0);
+                background: var(--fd-surface-variant, var(--fd-color-slate-200));
                 border-radius: 2px;
                 overflow: hidden;
             }
@@ -140,13 +140,13 @@ import { DailyMicronutrient } from '../../models/usda.data';
             }
 
             .fill-low {
-                background-color: var(--fd-error, #f44336);
+                background-color: var(--fd-error, var(--fd-color-danger));
             }
             .fill-mid {
-                background-color: var(--fd-warning, #ff9800);
+                background-color: var(--fd-warning, var(--fd-color-orange-500));
             }
             .fill-good {
-                background-color: var(--fd-success, #4caf50);
+                background-color: var(--fd-success, var(--fd-color-green-500));
             }
 
             .empty-state {

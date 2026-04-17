@@ -11,7 +11,7 @@
     }
 
     &__required {
-        color: #ef4444;
+        color: var(--fd-color-danger);
         margin-left: 4px;
     }
 
@@ -61,7 +61,7 @@
         display: flex;
         gap: 12px;
         align-items: center;
-        background: rgba(15, 23, 42, 0.02);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent);
         cursor: pointer;
         text-align: left;
         box-shadow: 0 4px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -73,7 +73,7 @@
 
         &:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+            box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
         }
 
         &:disabled {
@@ -83,10 +83,10 @@
     }
 
     &__option--selected {
-        border-color: rgba(59, 130, 246, 0.5);
+        border-color: color-mix(in srgb, var(--fd-color-primary-500) 50%, transparent);
         box-shadow:
             0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent),
-            0 0 24px rgba(59, 130, 246, 0.35);
+            0 0 24px color-mix(in srgb, var(--fd-color-primary-500) 35%, transparent);
     }
 
     &__indicator {
@@ -139,7 +139,7 @@
     }
 
     &__option--selected &__indicator {
-        background: rgba(255, 255, 255, 0.85);
+        background: color-mix(in srgb, var(--fd-color-white) 85%, transparent);
         color: var(--fd-color-slate-900);
     }
 
@@ -148,7 +148,7 @@
     }
 
     &__option--selected &__description {
-        color: rgba(15, 23, 42, 0.85);
+        color: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
     }
 }
 

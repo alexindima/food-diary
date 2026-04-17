@@ -84,7 +84,7 @@ import { Micronutrient } from '../../models/usda.data';
                 font-size: 13px;
                 font-weight: 600;
                 text-transform: uppercase;
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+                color: var(--fd-color-text-muted);
                 margin: 0 0 8px;
                 letter-spacing: 0.5px;
             }
@@ -103,14 +103,14 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             .nutrient-amount {
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+                color: var(--fd-color-text-muted);
                 text-align: right;
                 min-width: 60px;
             }
 
             .dv-bar-container {
                 height: 6px;
-                background: var(--fd-surface-variant, #e0e0e0);
+                background: var(--fd-color-slate-200);
                 border-radius: 3px;
                 overflow: hidden;
             }
@@ -122,25 +122,25 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             .dv-low {
-                background-color: var(--fd-warning, #ff9800);
+                background-color: var(--fd-color-orange-500);
             }
             .dv-good {
-                background-color: var(--fd-success, #4caf50);
+                background-color: var(--fd-color-green-500);
             }
             .dv-high {
-                background-color: var(--fd-primary, #1976d2);
+                background-color: var(--fd-color-primary-500);
             }
 
             .dv-percent {
                 font-size: 12px;
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+                color: var(--fd-color-text-muted);
                 min-width: 36px;
                 text-align: right;
             }
 
             .empty-state {
                 text-align: center;
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+                color: var(--fd-color-text-muted);
                 padding: 24px;
             }
         `,

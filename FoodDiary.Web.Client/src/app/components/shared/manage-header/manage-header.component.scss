@@ -21,7 +21,7 @@
     font-size: var(--fd-page-title-size, 2rem);
     line-height: var(--fd-page-title-line-height, 1.2);
     font-weight: var(--fd-page-title-weight, 700);
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
 }
 
 .fd-manage-header__subtitle {
@@ -29,7 +29,7 @@
     font-size: var(--fd-page-subtitle-size, 1rem);
     line-height: var(--fd-page-subtitle-line-height, 1.5);
     font-weight: var(--fd-page-subtitle-weight, 500);
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
 }
 
 .fd-manage-header__actions {
@@ -53,7 +53,7 @@
         border: none;
         background: transparent;
         box-shadow: none;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     ::ng-deep .fd-ui-button:hover:not(:disabled),
@@ -63,7 +63,7 @@
         border: none;
         background: transparent;
         box-shadow: none;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 }
 

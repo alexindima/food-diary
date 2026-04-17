@@ -1,14 +1,14 @@
 @use 'variables' as variables;
 
 .fd-skeleton-card {
-    border: 1px solid variables.$color-border;
+    border: 1px solid var(--fd-color-border);
     border-radius: variables.$border-radius-m;
     background-color: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
     padding: variables.$gap-m;
     display: flex;
     flex-direction: column;
     gap: variables.$gap-xs;
-    box-shadow: 0 4px 8px variables.$color-box-shadow;
+    box-shadow: 0 4px 8px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
 }
 
 .fd-skeleton-card__content {

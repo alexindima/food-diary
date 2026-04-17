@@ -2,7 +2,7 @@
 
 .unsaved-changes-dialog__message {
     margin: 0;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     font-size: 0.95rem;
     line-height: 1.5;
 }

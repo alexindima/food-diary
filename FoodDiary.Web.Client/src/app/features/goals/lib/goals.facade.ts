@@ -50,9 +50,9 @@ export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
 
     private readonly colorBlue = 'var(--fd-color-primary-600)';
-    private readonly colorGreen = '#16a34a';
+    private readonly colorGreen = 'var(--fd-color-green-500)';
     private readonly colorOrange = 'var(--fd-color-amber-500)';
-    private readonly colorRed = '#ef4444';
+    private readonly colorRed = 'var(--fd-color-danger)';
 
     private readonly macroConfigs: MacroItem[] = [
         {
@@ -455,14 +455,7 @@ export class GoalsFacade {
     }
 
     private withAlpha(color: string, alpha: number): string {
-        if (color.startsWith('#')) {
-            const r = parseInt(color.slice(1, 3), 16);
-            const g = parseInt(color.slice(3, 5), 16);
-            const b = parseInt(color.slice(5, 7), 16);
-            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        }
-
-        return color;
+        return `color-mix(in srgb, ${color} ${Math.round(alpha * 100)}%, transparent)`;
     }
 
     private applyPresetPercent(percent: MacroPercent): void {

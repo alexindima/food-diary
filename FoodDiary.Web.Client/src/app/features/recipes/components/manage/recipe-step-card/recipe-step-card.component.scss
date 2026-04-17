@@ -58,7 +58,7 @@
 
 .recipe-step-card__title {
     font-weight: 600;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
 }
 
 .recipe-step-card__title-input {
@@ -88,7 +88,7 @@
 }
 
 .recipe-step-card__summary-description {
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;

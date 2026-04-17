@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .summary-wrapper {
     display: flex;
@@ -27,13 +27,13 @@
 
 .fiber-highlight {
     margin: 0 0 variables.$gap-m;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     font-weight: 600;
 }
 
 .alcohol-highlight {
     margin: 0 0 variables.$gap-m;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     font-weight: 600;
 }
 
@@ -48,7 +48,7 @@
     .nutrient {
         display: flex;
         align-items: center;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
 
         .nutrient-color {
             margin-right: variables.$gap-xs;

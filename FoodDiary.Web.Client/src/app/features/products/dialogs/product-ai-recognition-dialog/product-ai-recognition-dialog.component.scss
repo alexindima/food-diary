@@ -41,7 +41,7 @@
     font-weight: 600;
     letter-spacing: 0.01em;
     background: var(--fd-color-white);
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     z-index: 2;
@@ -49,8 +49,8 @@
 }
 
 .product-ai-dialog__status--loading {
-    color: #1e3a8a;
-    border-color: rgba(59, 130, 246, 0.45);
+    color: var(--fd-color-primary-900);
+    border-color: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
     box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
 }
 
@@ -77,14 +77,14 @@
         90deg,
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
         var(--fd-color-blue-500),
-        rgba(96, 165, 250, 0.95),
+        color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-white)),
         var(--fd-color-blue-500),
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
     );
     box-shadow:
-        0 0 22px rgba(59, 130, 246, 0.8),
-        0 0 40px rgba(96, 165, 250, 0.6);
-    filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.9));
+        0 0 22px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
+        0 0 40px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-white));
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-blue-500) 90%, var(--fd-color-white)));
     animation: product-ai-scan 4s ease-in-out infinite;
 }
 
@@ -93,14 +93,14 @@
         90deg,
         color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
         var(--fd-color-green-500),
-        rgba(74, 222, 128, 0.95),
+        color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-white)),
         var(--fd-color-green-500),
         color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
     );
     box-shadow:
-        0 0 22px rgba(34, 197, 94, 0.75),
-        0 0 40px rgba(74, 222, 128, 0.6);
-    filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.9));
+        0 0 22px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
+        0 0 40px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-green-500) 90%, var(--fd-color-white)));
 }
 
 @keyframes product-ai-scan {
@@ -138,7 +138,7 @@
     padding: 10px 12px;
     border-radius: 12px;
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
-    background: rgba(254, 226, 226, 0.7);
+    background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
     color: var(--fd-color-red-700);
     font-size: 0.9rem;
 }
@@ -158,7 +158,7 @@
 .product-ai-dialog__items-label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
 }
 
 .product-ai-dialog__items-list {
@@ -180,7 +180,7 @@
     padding: 10px 12px;
     border-radius: 12px;
     background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     font-size: 0.85rem;
     line-height: 1.4;
 }

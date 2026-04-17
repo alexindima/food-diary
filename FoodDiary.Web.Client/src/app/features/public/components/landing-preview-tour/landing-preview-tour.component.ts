@@ -71,7 +71,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 target: 250,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#2dd4bf',
+                colorStart: 'var(--fd-color-teal-500)',
                 colorEnd: 'var(--fd-color-sky-500)',
             },
             {
@@ -82,7 +82,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 target: 70,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fbbf24',
+                colorStart: 'var(--fd-color-yellow-300)',
                 colorEnd: 'var(--fd-color-orange-500)',
             },
             {
@@ -93,7 +93,7 @@ export class LandingPreviewTourComponent implements OnInit {
                 target: 30,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fb7185',
+                colorStart: 'var(--fd-color-rose-500)',
                 colorEnd: 'var(--fd-color-rose-500)',
             },
         ] satisfies NutrientBar[],
@@ -222,10 +222,10 @@ export class LandingPreviewTourComponent implements OnInit {
             totalCalories: 1820,
             averageCard: { consumption: 1740, steps: 6400, burned: 215 },
             macros: [
-                { key: 'proteins', labelKey: 'GENERAL.NUTRIENTS.PROTEIN', value: 110, color: '#36A2EB' },
-                { key: 'fats', labelKey: 'GENERAL.NUTRIENTS.FAT', value: 45, color: '#FFCE56' },
-                { key: 'carbs', labelKey: 'GENERAL.NUTRIENTS.CARB', value: 180, color: '#4BC0C0' },
-                { key: 'fiber', labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER', value: 18, color: '#8E44AD' },
+                { key: 'proteins', labelKey: 'GENERAL.NUTRIENTS.PROTEIN', value: 110, color: 'var(--fd-color-sky-500)' },
+                { key: 'fats', labelKey: 'GENERAL.NUTRIENTS.FAT', value: 45, color: 'var(--fd-color-yellow-300)' },
+                { key: 'carbs', labelKey: 'GENERAL.NUTRIENTS.CARB', value: 180, color: 'var(--fd-color-teal-500)' },
+                { key: 'fiber', labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER', value: 18, color: 'var(--fd-color-purple-500)' },
             ],
         };
     }
@@ -263,10 +263,10 @@ export class LandingPreviewTourComponent implements OnInit {
             ],
         });
         return {
-            proteins: template('#36A2EB'),
-            fats: template('#FFCE56'),
-            carbs: template('#4BC0C0'),
-            fiber: template('#8E44AD'),
+            proteins: template('var(--fd-color-sky-500)'),
+            fats: template('var(--fd-color-yellow-300)'),
+            carbs: template('var(--fd-color-teal-500)'),
+            fiber: template('var(--fd-color-purple-500)'),
         };
     }
 
@@ -295,15 +295,21 @@ export class LandingPreviewTourComponent implements OnInit {
                 {
                     data: [110, 120, 130, 125, 140, 135, 138],
                     label: nutrientLabels.proteins,
-                    borderColor: '#36A2EB',
+                    borderColor: 'var(--fd-color-sky-500)',
                     tension: 0.35,
                     borderWidth: 2,
                 },
-                { data: [40, 42, 45, 44, 46, 48, 47], label: nutrientLabels.fats, borderColor: '#FFCE56', tension: 0.35, borderWidth: 2 },
+                {
+                    data: [40, 42, 45, 44, 46, 48, 47],
+                    label: nutrientLabels.fats,
+                    borderColor: 'var(--fd-color-yellow-300)',
+                    tension: 0.35,
+                    borderWidth: 2,
+                },
                 {
                     data: [160, 170, 180, 175, 185, 190, 195],
                     label: nutrientLabels.carbs,
-                    borderColor: '#4BC0C0',
+                    borderColor: 'var(--fd-color-teal-500)',
                     tension: 0.35,
                     borderWidth: 2,
                 },
@@ -318,7 +324,7 @@ export class LandingPreviewTourComponent implements OnInit {
             datasets: [
                 {
                     data: [24, 18, 58],
-                    backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+                    backgroundColor: ['var(--fd-color-sky-500)', 'var(--fd-color-yellow-300)', 'var(--fd-color-teal-500)'],
                 },
             ],
         };
@@ -347,7 +353,7 @@ export class LandingPreviewTourComponent implements OnInit {
             datasets: [
                 {
                     data: [110, 45, 180],
-                    backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+                    backgroundColor: ['var(--fd-color-sky-500)', 'var(--fd-color-yellow-300)', 'var(--fd-color-teal-500)'],
                 },
             ],
         };

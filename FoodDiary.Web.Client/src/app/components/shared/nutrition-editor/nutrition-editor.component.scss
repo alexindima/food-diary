@@ -48,7 +48,7 @@
     &__hint {
         margin: 0;
         font-size: 0.9rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__warning {

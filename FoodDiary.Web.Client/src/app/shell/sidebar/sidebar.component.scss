@@ -11,7 +11,7 @@
     padding: 20px 16px 24px;
     background: linear-gradient(180deg, var(--fd-gradient-sidebar-start) 0%, var(--fd-gradient-sidebar-end) 100%);
     border-right: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
-    box-shadow: 6px 0 24px rgb(15 23 42 / 0.06);
+    box-shadow: 6px 0 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
 
     &__brand {
         display: flex;
@@ -20,7 +20,7 @@
         padding: 10px 12px;
         border-radius: 14px;
         background: var(--fd-color-surface, var(--fd-color-white));
-        box-shadow: 0 10px 30px rgb(15 23 42 / 0.06);
+        box-shadow: 0 10px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
     }
 
     &__logo img {
@@ -57,7 +57,7 @@
         place-items: center;
         border: none;
         border-radius: 12px;
-        background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.08);
+        background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
         color: var(--fd-color-primary-600);
         cursor: pointer;
         transition:
@@ -70,9 +70,9 @@
         }
 
         &:hover {
-            background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.14);
+            background: color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent);
             transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.16);
+            box-shadow: 0 10px 20px color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
         }
     }
 
@@ -85,7 +85,7 @@
         border-radius: 999px;
         background: var(--fd-color-danger);
         border: 2px solid var(--fd-color-surface, var(--fd-color-white));
-        box-shadow: 0 0 0 2px rgb(255 255 255 / 0.8);
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 80%, transparent);
     }
 
     &__nav {
@@ -120,14 +120,14 @@
         }
 
         &:hover {
-            background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.08);
+            background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
             color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         }
 
         &.is-active {
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
             color: var(--fd-color-on-brand, var(--fd-color-white));
-            box-shadow: 0 10px 26px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
+            box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
 
             mat-icon {
                 color: var(--fd-color-on-brand, var(--fd-color-white));
@@ -208,7 +208,7 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.35);
+        box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
     }
 
     &__premium-title {
@@ -219,7 +219,7 @@
     &__premium-text {
         font-size: 0.9rem;
         line-height: 1.4;
-        color: #cbd5e1;
+        color: var(--fd-color-slate-300);
     }
 
     &__premium-button {
@@ -243,7 +243,7 @@
         border-radius: 12px;
         background: var(--fd-color-surface, var(--fd-color-white));
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
-        box-shadow: 0 8px 20px rgb(15 23 42 / 0.08);
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         cursor: pointer;
         text-align: left;
         transition:
@@ -251,7 +251,7 @@
             transform 0.15s ease;
 
         &:hover {
-            box-shadow: 0 10px 24px rgb(15 23 42 / 0.12);
+            box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
             transform: translateY(-1px);
         }
     }
@@ -314,7 +314,7 @@
         border-radius: 12px;
         background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
-        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6);
+        box-shadow: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 60%, transparent);
         display: flex;
         flex-direction: column;
         gap: 4px;
@@ -345,7 +345,7 @@
         gap: 10px;
         padding: 10px 12px;
         border-radius: 10px;
-        border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.18);
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         background: var(--fd-color-surface, var(--fd-color-white));
         color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         font-weight: 700;
@@ -361,9 +361,9 @@
         }
 
         &:hover {
-            background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.06);
+            background: color-mix(in srgb, var(--fd-color-primary-600) 6%, transparent);
             transform: translateY(-1px);
-            box-shadow: 0 8px 18px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.12);
+            box-shadow: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
         }
 
         &.is-active {
@@ -415,7 +415,7 @@
     padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
     background: var(--fd-color-surface, var(--fd-color-white));
     border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
-    box-shadow: 0 -12px 30px rgb(15 23 42 / 0.12);
+    box-shadow: 0 -12px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     z-index: 1200;
 
     &__progress {
@@ -423,8 +423,8 @@
         gap: 5px;
         padding: 8px 10px;
         border-radius: 12px;
-        background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.08);
-        border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.18);
+        background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     }
 
     &__progress-head {
@@ -494,15 +494,15 @@
         }
 
         &:hover {
-            background: rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.08);
+            background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
         }
 
         &.is-active,
         &.is-open {
             background: linear-gradient(
                 135deg,
-                rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.2),
-                rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.14)
+                color-mix(in srgb, var(--fd-color-primary-600) 20%, transparent),
+                color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent)
             );
             color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         }
@@ -527,7 +527,7 @@
     &__backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(15, 23, 42, 0.32);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 32%, transparent);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
         z-index: 1180;
@@ -541,7 +541,7 @@
         background: var(--fd-color-surface, var(--fd-color-white));
         border-radius: 16px;
         padding: 10px;
-        box-shadow: 0 16px 40px rgb(15 23 42 / 0.18);
+        box-shadow: 0 16px 40px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
         display: grid;
         gap: 6px;
@@ -578,7 +578,7 @@
 
         .sidebar-mobile__sheet-action {
             justify-content: flex-start;
-            border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.18);
+            border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
             background: var(--fd-color-surface, var(--fd-color-white));
             color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         }

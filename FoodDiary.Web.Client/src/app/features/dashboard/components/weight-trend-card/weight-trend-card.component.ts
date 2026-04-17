@@ -27,8 +27,10 @@ export class WeightTrendCardComponent {
     public readonly isLoading = input<boolean>(false);
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
     public readonly iconLabel = input<string>('WT');
-    public readonly accentColor = input<string>('#1b84ff');
-    public readonly iconGradient = input<string>('linear-gradient(135deg, #ff4f85, #ff7e9c)');
+    public readonly accentColor = input<string>('var(--fd-color-blue-500)');
+    public readonly iconGradient = input<string>(
+        'linear-gradient(135deg, var(--fd-color-rose-500), color-mix(in srgb, var(--fd-color-rose-500) 70%, var(--fd-color-white)))',
+    );
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
         const ordered = [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -155,19 +157,6 @@ export class WeightTrendCardComponent {
     });
 
     private getFillColor(): string {
-        const color = this.accentColor();
-        const rgba = this.hexToRgba(color, 0.15);
-        return rgba ?? 'rgba(27, 132, 255, 0.14)';
-    }
-
-    private hexToRgba(hex: string, alpha: number): string | null {
-        const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        if (!match) {
-            return null;
-        }
-        const r = parseInt(match[1], 16);
-        const g = parseInt(match[2], 16);
-        const b = parseInt(match[3], 16);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        return `color-mix(in srgb, ${this.accentColor()} 15%, transparent)`;
     }
 }

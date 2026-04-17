@@ -14,19 +14,19 @@
     font-size: 48px;
     width: 48px;
     height: 48px;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     margin-bottom: variables.$gap-xs;
 }
 
 .fd-error-state__title {
     font-size: 1.1rem;
     font-weight: 700;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
 }
 
 .fd-error-state__message {
     font-size: 0.9rem;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     max-width: 320px;
     margin-bottom: variables.$gap-xs;
 }

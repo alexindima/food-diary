@@ -77,7 +77,7 @@ fd-media-card.entity-card {
     border: none;
     border-radius: 50%;
     background: transparent;
-    color: rgba(148, 163, 184, 0.95);
+    color: color-mix(in srgb, var(--fd-color-slate-400) 95%, transparent);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -112,14 +112,14 @@ fd-media-card.entity-card {
     width: 16px;
     height: 16px;
     line-height: 1;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     flex-shrink: 0;
 }
 
 .entity-card__name {
     font-size: 1.2rem;
     font-weight: 800;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     line-height: 1.35;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -130,7 +130,7 @@ fd-media-card.entity-card {
 
 .entity-card__title-muted {
     font-size: 0.9rem;
-    color: rgba(148, 163, 184, 0.9);
+    color: color-mix(in srgb, var(--fd-color-slate-400) 90%, transparent);
     font-weight: 700;
     white-space: nowrap;
     flex-shrink: 0;
@@ -138,7 +138,7 @@ fd-media-card.entity-card {
 
 .entity-card__description {
     font-size: 0.9rem;
-    color: rgba(148, 163, 184, 0.9);
+    color: color-mix(in srgb, var(--fd-color-slate-400) 90%, transparent);
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -161,7 +161,7 @@ fd-media-card.entity-card {
     font-size: 0.74rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: rgba(100, 116, 139, 0.92);
+    color: color-mix(in srgb, var(--fd-color-slate-500) 92%, transparent);
     white-space: nowrap;
 }
 
@@ -180,22 +180,34 @@ fd-media-card.entity-card {
     transition: width 0.2s ease;
 
     &--green {
-        background: linear-gradient(90deg, #6fcf97, #4fba7a);
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-color-white))
+        );
     }
 
     &--yellow {
-        background: linear-gradient(90deg, #e9ca63, #d7b347);
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300))
+        );
     }
 
     &--red {
-        background: linear-gradient(90deg, #e78a8a, #d96b6b);
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-color-white))
+        );
     }
 }
 
 .entity-card__quality-value {
     font-size: 0.85rem;
     font-weight: 800;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     line-height: 1;
     min-width: 2ch;
     text-align: right;
@@ -235,7 +247,12 @@ fd-media-card.entity-card {
         height: calc(100% - 2px);
         transform: translateY(-50%);
         border-radius: 999px;
-        background: linear-gradient(180deg, rgba(148, 163, 184, 0), rgba(148, 163, 184, 0.5), rgba(148, 163, 184, 0));
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent),
+            color-mix(in srgb, var(--fd-color-slate-400) 50%, transparent),
+            color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent)
+        );
         pointer-events: none;
     }
 }
@@ -246,7 +263,7 @@ fd-media-card.entity-card {
     align-items: center;
     gap: 2px;
     font-weight: 800;
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -259,7 +276,7 @@ fd-media-card.entity-card {
 .entity-card__calories-unit {
     font-size: 0.7rem;
     font-weight: 600;
-    color: variables.$color-text-additional;
+    color: var(--fd-color-text-muted);
     letter-spacing: 0.04em;
 }
 
@@ -279,22 +296,34 @@ fd-media-card.entity-card {
         width: 44px;
         height: 40px;
         border-radius: 14px;
-        background: linear-gradient(180deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.96));
-        border: 1px solid rgba(59, 130, 246, 0.22);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white))
+        );
+        border: 1px solid color-mix(in srgb, var(--fd-color-blue-500) 22%, transparent);
         color: var(--fd-color-primary-600);
         box-shadow: none;
     }
 
     ::ng-deep button:hover:not(:disabled),
     ::ng-deep .fd-ui-button:hover:not(:disabled) {
-        background: linear-gradient(180deg, rgba(219, 234, 254, 1), rgba(191, 219, 254, 0.98));
-        border-color: rgba(59, 130, 246, 0.3);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-200) 78%, var(--fd-color-white))
+        );
+        border-color: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
         box-shadow: none;
     }
 
     ::ng-deep button:active:not(:disabled),
     ::ng-deep .fd-ui-button:active:not(:disabled) {
-        background: linear-gradient(180deg, rgba(219, 234, 254, 0.96), rgba(191, 219, 254, 0.94));
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-200) 74%, var(--fd-color-white))
+        );
         box-shadow: none;
     }
 
@@ -360,24 +389,24 @@ fd-media-card.entity-card {
         &--green {
 
             ::ng-deep .nutrient-badges {
-                border-color: rgba(79, 186, 122, 0.68);
-                box-shadow: inset 0 0 0 1px rgba(111, 207, 151, 0.28);
+                border-color: color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
+                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-emerald-500) 28%, transparent);
             }
         }
 
         &--yellow {
 
             ::ng-deep .nutrient-badges {
-                border-color: rgba(215, 179, 71, 0.68);
-                box-shadow: inset 0 0 0 1px rgba(233, 202, 99, 0.28);
+                border-color: color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
+                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-yellow-300) 28%, transparent);
             }
         }
 
         &--red {
 
             ::ng-deep .nutrient-badges {
-                border-color: rgba(217, 107, 107, 0.64);
-                box-shadow: inset 0 0 0 1px rgba(231, 138, 138, 0.26);
+                border-color: color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);
+                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
             }
         }
     }

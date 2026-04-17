@@ -4,7 +4,7 @@
     padding: clamp(28px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
     background:
         radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent), transparent 32%),
-        linear-gradient(180deg, var(--fd-color-slate-50) 0%, #eef4ff 100%);
+        linear-gradient(180deg, var(--fd-color-slate-50) 0%, color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-white)) 100%);
     --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
 
     &__inner {
@@ -39,7 +39,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
-        color: variables.$color-primary;
+        color: var(--fd-color-primary-600);
         font-weight: 700;
         letter-spacing: 0.02em;
         font-size: 0.9rem;
@@ -48,14 +48,14 @@
     &__title {
         margin: 0;
         font-size: clamp(24px, 3vw, 34px);
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__subtitle,
     &__panel-text,
     &__summary-text {
         margin: 8px 0 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 1rem;
         line-height: 1.6;
     }
@@ -71,7 +71,7 @@
 
     &__summary-title {
         margin: 14px 0 0;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         font-size: 1.1rem;
         font-weight: 700;
     }
@@ -91,7 +91,7 @@
         gap: 10px;
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         background: color-mix(in srgb, var(--fd-color-white) 78%, transparent);
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         border-radius: 999px;
         padding: 12px 16px;
         font: inherit;
@@ -112,7 +112,7 @@
 
         &:hover {
             transform: translateY(-1px);
-            border-color: rgba(37, 99, 235, 0.45);
+            border-color: color-mix(in srgb, var(--fd-color-primary-600) 45%, transparent);
             box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
         }
 
@@ -120,7 +120,7 @@
             background: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
             color: var(--fd-color-white);
             border-color: transparent;
-            box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-primary-600) 25%, transparent);
         }
     }
 
@@ -129,7 +129,7 @@
         grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
         gap: variables.$gap-l;
         align-items: start;
-        background: rgba(255, 255, 255, 0.68);
+        background: color-mix(in srgb, var(--fd-color-white) 68%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
         border-radius: 28px;
         padding: clamp(18px, 2vw, 28px);
@@ -144,7 +144,7 @@
 
     &__panel-title {
         margin: 14px 0 0;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         font-size: clamp(22px, 2.4vw, 30px);
     }
 
@@ -180,7 +180,7 @@
 
     &__card-kicker {
         margin: 0;
-        color: variables.$color-primary;
+        color: var(--fd-color-primary-600);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         font-size: 0.76rem;
@@ -190,12 +190,12 @@
     &__card-title {
         margin: 0;
         font-size: 1.15rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__card-description {
         margin: 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         line-height: 1.55;
         font-size: 0.97rem;
     }

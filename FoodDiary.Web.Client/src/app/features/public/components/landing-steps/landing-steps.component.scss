@@ -35,7 +35,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
-        color: variables.$color-primary;
+        color: var(--fd-color-primary-600);
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;

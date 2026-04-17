@@ -1,15 +1,15 @@
 :host {
     display: block;
-    color: var(--fd-color-gray-900, var(--fd-color-gray-900-static));
+    color: var(--fd-color-text);
 }
 
 .fd-ui-dialog {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
-    background: var(--fd-color-dialog-surface, var(--fd-color-white));
+    background: var(--fd-color-dialog-surface);
     border-radius: 1rem;
-    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.14);
-    border: 1px solid var(--fd-color-dialog-border, color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent));
+    box-shadow: 0 20px 60px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
+    border: 1px solid var(--fd-color-dialog-border);
     padding: 1.25rem;
     box-sizing: border-box;
     max-height: 80vh;
@@ -56,12 +56,12 @@
 .fd-ui-dialog__subtitle {
     margin: 0;
     font-size: 0.95rem;
-    color: var(--fd-color-gray-600, #4b5563);
+    color: var(--fd-color-text-muted);
 }
 
 .fd-ui-dialog__close-button {
     border: none;
-    background: var(--fd-color-dialog-surface-muted, #f8faff);
+    background: var(--fd-color-dialog-surface-muted);
     border-radius: 999px;
     width: 32px;
     height: 32px;
@@ -69,15 +69,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--fd-color-gray-500, var(--fd-color-gray-500-static));
+    color: var(--fd-color-slate-500);
     cursor: pointer;
     transition:
         background-color 0.15s ease,
         color 0.15s ease;
 
     &:hover {
-        background: var(--fd-color-primary-50, var(--fd-color-primary-50));
-        color: var(--fd-color-primary-500, #4a6cf7);
+        background: var(--fd-color-primary-50);
+        color: var(--fd-color-primary-500);
     }
 }
 
@@ -100,7 +100,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
-    border-top: var(--fd-dialog-footer-border, 1px solid var(--fd-color-dialog-border, color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent)));
+    border-top: var(--fd-dialog-footer-border, 1px solid var(--fd-color-dialog-border));
     padding-top: var(--fd-dialog-footer-padding-top, 0.75rem);
     margin-top: var(--fd-dialog-footer-margin-top, 0.75rem);
 
@@ -151,7 +151,7 @@
     max-width: 100vw;
     max-height: 100vh;
     border-radius: 0;
-    background: var(--fd-color-dialog-surface, var(--fd-color-white));
+    background: var(--fd-color-dialog-surface);
     padding: 24px;
     overflow: auto;
 }
@@ -171,7 +171,7 @@
 }
 
 .fd-ui-dialog-backdrop {
-    background: var(--fd-color-dialog-overlay, var(--fd-color-dialog-overlay));
+    background: var(--fd-color-dialog-overlay);
     backdrop-filter: blur(4px);
 }
 

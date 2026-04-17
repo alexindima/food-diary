@@ -69,8 +69,8 @@
         }
 
         &--mic-active {
-            background: #ef4444;
-            border-color: #ef4444;
+            background: var(--fd-color-danger);
+            border-color: var(--fd-color-danger);
             color: var(--fd-color-white);
 
             &:hover:not(:disabled) {
@@ -125,9 +125,9 @@
     }
 
     &__result {
-        border: 1px solid #c4b5fd;
+        border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, transparent);
         border-radius: 14px;
-        background: #faf5ff;
+        background: color-mix(in srgb, var(--fd-color-purple-500) 6%, var(--fd-color-white));
         padding: 14px;
     }
 
@@ -154,8 +154,8 @@
         cursor: pointer;
 
         &:hover {
-            color: #ef4444;
-            background: #fee2e2;
+            color: var(--fd-color-danger);
+            background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
         }
     }
 

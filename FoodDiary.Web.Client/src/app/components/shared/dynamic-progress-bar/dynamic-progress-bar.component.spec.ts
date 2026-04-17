@@ -83,16 +83,15 @@ describe('DynamicProgressBarComponent', () => {
         it('should be green-ish at low progress', () => {
             setInputs(10, 100);
             const color = component.barColor();
-            expect(color).toMatch(/^rgb\(80, \d+, 80\)$/);
             // At 10%, greenIntensity = 10, so green channel = 160
-            expect(color).toBe('rgb(80, 160, 80)');
+            expect(color).toBe('#50a050');
         });
 
         it('should be brighter green at higher (but under 100%) progress', () => {
             setInputs(100, 100);
             const color = component.barColor();
             // At 100%, greenIntensity = 100, so green channel = 250
-            expect(color).toBe('rgb(80, 250, 80)');
+            expect(color).toBe('#50fa50');
         });
 
         it('should transition to orange between 100-125%', () => {
@@ -100,20 +99,20 @@ describe('DynamicProgressBarComponent', () => {
             const color = component.barColor();
             // progress = 112, orangeIntensity = round((12/25)*100) = 48
             // green channel = 200 - 48 = 152
-            expect(color).toBe('rgb(255, 152, 80)');
+            expect(color).toBe('#ff9850');
         });
 
         it('should be red-ish above 125%', () => {
             setInputs(175, 100);
             const color = component.barColor();
-            expect(color).toMatch(/^rgb\(255, /);
+            expect(color).toBe('#ff0000');
         });
 
         it('should be pure green-range at 0% progress', () => {
             setInputs(0, 100);
             const color = component.barColor();
             // greenIntensity = 0, green channel = 150
-            expect(color).toBe('rgb(80, 150, 80)');
+            expect(color).toBe('#509650');
         });
     });
 

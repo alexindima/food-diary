@@ -134,7 +134,7 @@
 
     &__summary-label {
         font-size: 0.85rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         margin: 0;
     }
 
@@ -142,7 +142,7 @@
         margin: 0;
         font-size: 1.4rem;
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__summary-note {
@@ -179,7 +179,7 @@
             margin: 0;
             font-size: 0.95rem;
             font-weight: 600;
-            color: variables.$color-text-main;
+            color: var(--fd-color-text);
         }
 
         canvas {
@@ -190,7 +190,7 @@
 
     &__loader {
         text-align: center;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         padding: 24px 0;
         font-weight: 600;
     }
@@ -198,7 +198,7 @@
     &__empty {
         margin: 0;
         text-align: center;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         padding: 24px 0;
     }
 

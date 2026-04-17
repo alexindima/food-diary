@@ -169,13 +169,13 @@
         font-weight: 700;
         border: none;
         background: transparent;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
             border: 1px solid var(--b1);
             background: var(--fd-color-white);
-            color: variables.$color-text-main;
+            color: var(--fd-color-text);
         }
 
         &--active {
@@ -196,7 +196,7 @@
     &__no-results {
         font-size: 1.2em;
         font-weight: bold;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: variables.$gap-l;
         display: flex;
@@ -206,7 +206,7 @@
 
         &-icon {
             font-size: 2em;
-            color: variables.$color-no-results;
+            color: var(--fd-color-danger);
         }
     }
 
@@ -221,7 +221,7 @@
     &__empty-title {
         font-size: 1rem;
         font-weight: 800;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__empty-copy {
@@ -373,7 +373,7 @@
     &__section-label {
         font-weight: 800;
         font-size: 1.05rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         white-space: nowrap;
     }
 
@@ -440,7 +440,7 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__off-info {
@@ -451,7 +451,7 @@
     &__off-name {
         font-weight: 600;
         font-size: 0.95rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -459,7 +459,7 @@
 
     &__off-brand {
         font-size: 0.85rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -467,12 +467,12 @@
 
     &__off-kcal {
         font-size: 0.8rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-weight: 500;
     }
 
     &__off-arrow {
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         flex-shrink: 0;
     }
 
@@ -665,7 +665,7 @@
     &__name {
         font-size: 1.6rem;
         font-weight: 800;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         line-height: 1.2;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -689,7 +689,7 @@
         font-size: 0.75rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__serving-row {
@@ -697,13 +697,13 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 1rem;
         font-weight: 600;
     }
 
     &__serving {
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__barcode-chip {
@@ -778,14 +778,14 @@
     &__macro-value {
         font-weight: 800;
         font-size: 1rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__macro-label {
         font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__action {

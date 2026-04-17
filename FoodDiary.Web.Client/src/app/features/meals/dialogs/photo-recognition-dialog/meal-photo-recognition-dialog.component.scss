@@ -29,8 +29,8 @@
 }
 
 .photo-ai-dialog__status--loading {
-    color: #1e3a8a;
-    border-color: rgba(59, 130, 246, 0.45);
+    color: var(--fd-color-primary-900);
+    border-color: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
     box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
 }
 
@@ -57,14 +57,14 @@
         90deg,
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
         var(--fd-color-blue-500),
-        rgba(96, 165, 250, 0.95),
+        color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-white)),
         var(--fd-color-blue-500),
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
     );
     box-shadow:
-        0 0 22px rgba(59, 130, 246, 0.8),
-        0 0 40px rgba(96, 165, 250, 0.6);
-    filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.9));
+        0 0 22px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
+        0 0 40px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-white));
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-blue-500) 90%, var(--fd-color-white)));
     animation: photo-ai-scan 4s ease-in-out infinite;
 }
 
@@ -73,14 +73,14 @@
         90deg,
         color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
         var(--fd-color-green-500),
-        rgba(74, 222, 128, 0.95),
+        color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-white)),
         var(--fd-color-green-500),
         color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
     );
     box-shadow:
-        0 0 22px rgba(34, 197, 94, 0.75),
-        0 0 40px rgba(74, 222, 128, 0.6);
-    filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.9));
+        0 0 22px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
+        0 0 40px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-green-500) 90%, var(--fd-color-white)));
 }
 
 @keyframes photo-ai-scan {
@@ -102,7 +102,7 @@
 }
 
 .photo-ai-dialog__error {
-    background: rgba(239, 68, 68, 0.08);
+    background: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
     color: var(--fd-color-red-700);
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 12px;
@@ -118,7 +118,7 @@
 
 .photo-ai-dialog__results-title {
     font-weight: 600;
-    color: var(--fd-color-gray-800, #1f2937);
+    color: var(--fd-color-slate-800);
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -140,7 +140,7 @@
 
 .photo-ai-dialog__edit-title {
     font-weight: 600;
-    color: var(--fd-color-gray-800, #1f2937);
+    color: var(--fd-color-slate-800);
 }
 
 .photo-ai-dialog__edit-done ::ng-deep button,
@@ -204,7 +204,7 @@
 }
 
 .photo-ai-dialog__edit-remove:hover {
-    color: #ef4444;
+    color: var(--fd-color-danger);
 }
 
 .photo-ai-dialog__edit-add {
@@ -311,7 +311,7 @@
 .photo-ai-dialog__cell--amount {
     text-align: right;
     font-variant-numeric: tabular-nums;
-    color: #1f2937;
+    color: var(--fd-color-slate-800);
 }
 
 .photo-ai-dialog__nutrition {
@@ -352,7 +352,7 @@
 
 .photo-ai-dialog__nutrition-value {
     font-weight: 600;
-    color: #1f2937;
+    color: var(--fd-color-slate-800);
     font-variant-numeric: tabular-nums;
 }
 
@@ -372,7 +372,7 @@
     width: 160px;
     height: 6px;
     border-radius: 999px;
-    background: rgba(59, 130, 246, 0.15);
+    background: color-mix(in srgb, var(--fd-color-blue-500) 15%, transparent);
     overflow: hidden;
 }
 
@@ -384,7 +384,12 @@
     width: 45%;
     height: 100%;
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.85), transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--fd-color-blue-500) 85%, transparent),
+        transparent
+    );
     animation: nutrition-progress 1.8s ease-in-out infinite;
 }
 
@@ -395,7 +400,7 @@
 
 .photo-ai-dialog__nutrition-error {
     margin-top: 12px;
-    background: rgba(239, 68, 68, 0.08);
+    background: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
     color: var(--fd-color-red-700);
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 12px;

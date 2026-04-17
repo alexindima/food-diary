@@ -3,7 +3,7 @@
     align-items: center;
     gap: 6px;
     background: none;
-    border: 1px solid var(--fd-border-color, #e0e0e0);
+    border: 1px solid var(--fd-border-color, var(--fd-color-slate-200));
     border-radius: 20px;
     padding: 6px 14px;
     cursor: pointer;
@@ -18,16 +18,16 @@
     }
 
     &:hover:not(:disabled) {
-        border-color: var(--fd-error, #d32f2f);
-        color: var(--fd-error, #d32f2f);
+        border-color: var(--fd-error, var(--fd-color-red-700));
+        color: var(--fd-error, var(--fd-color-red-700));
     }
 
     &--liked {
-        color: var(--fd-error, #d32f2f);
-        border-color: var(--fd-error, #d32f2f);
+        color: var(--fd-error, var(--fd-color-red-700));
+        border-color: var(--fd-error, var(--fd-color-red-700));
 
         mat-icon {
-            color: var(--fd-error, #d32f2f);
+            color: var(--fd-error, var(--fd-color-red-700));
         }
     }
 

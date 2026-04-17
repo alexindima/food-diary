@@ -18,8 +18,8 @@
         width: fit-content;
         padding: 4px 12px;
         border-radius: 10px;
-        background: rgba(249, 115, 22, 0.12);
-        color: #ea580c;
+        background: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
+        color: var(--fd-color-orange-700);
         font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -34,7 +34,7 @@
 
     &__desc {
         margin: 0;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         line-height: 1.6;
     }
 
@@ -57,7 +57,7 @@
         font-size: 1.1rem;
         font-weight: 700;
         margin: 0 0 12px;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__meals {
@@ -82,13 +82,13 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        color: #0284c7;
+        color: var(--fd-color-sky-600);
     }
 
     &__recipe {
         flex: 1;
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__nutrition {
@@ -96,7 +96,7 @@
         gap: 10px;
         font-size: 0.85rem;
         font-weight: 600;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 }
 

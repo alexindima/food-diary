@@ -20,7 +20,7 @@
         gap: variables.$gap-xs;
         padding: clamp(18px, 2vw, 24px);
         border-radius: 26px;
-        background: rgba(255, 255, 255, 0.76);
+        background: color-mix(in srgb, var(--fd-color-white) 76%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
         box-shadow: 0 20px 46px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         animation: landingFadeUp 680ms ease-out both;
@@ -50,7 +50,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
-        color: variables.$color-primary;
+        color: var(--fd-color-primary-600);
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
@@ -78,7 +78,11 @@
         padding: clamp(34px, 4vw, 56px) 0;
         background:
             radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent), transparent 24%),
-            linear-gradient(180deg, #f6fbff 0%, #eef6ff 100%);
+            linear-gradient(
+                180deg,
+                color-mix(in srgb, var(--fd-color-primary-50) 20%, var(--fd-color-white)) 0%,
+                color-mix(in srgb, var(--fd-color-primary-100) 34%, var(--fd-color-white)) 100%
+            );
     }
 }
 
@@ -114,7 +118,7 @@
         min-width: 0;
         padding: clamp(16px, 2vw, 22px);
         border-radius: 30px;
-        background: rgba(255, 255, 255, 0.62);
+        background: color-mix(in srgb, var(--fd-color-white) 62%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
         box-shadow: 0 22px 52px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         animation: landingFadeUp 760ms ease-out both;
@@ -146,7 +150,7 @@
         align-self: flex-start;
         padding: 6px 12px;
         border-radius: 999px;
-        background: rgba(14, 165, 233, 0.1);
+        background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
         font-weight: 700;
         font-size: 0.84rem;
@@ -205,7 +209,7 @@
     gap: clamp(variables.$gap-m, 3vw, 28px);
     padding: clamp(20px, 2.2vw, 28px);
     border-radius: 34px;
-    background: rgba(255, 255, 255, 0.68);
+    background: color-mix(in srgb, var(--fd-color-white) 68%, transparent);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
     box-shadow: 0 24px 54px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
     animation: landingFadeUp 720ms ease-out both;
@@ -223,7 +227,7 @@
     gap: variables.$gap-s;
     padding: clamp(14px, 1.8vw, 18px);
     border-radius: 30px;
-    background: rgba(255, 255, 255, 0.76);
+    background: color-mix(in srgb, var(--fd-color-white) 76%, transparent);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
     box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
     min-width: 0;
@@ -234,7 +238,11 @@
     gap: 6px;
     padding: 14px 16px;
     border-radius: 22px;
-    background: linear-gradient(180deg, rgba(239, 246, 255, 0.96), rgba(248, 250, 252, 0.92));
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-primary-100) 34%, var(--fd-color-white)) 0%,
+        color-mix(in srgb, var(--fd-color-slate-50) 92%, transparent) 100%
+    );
     color: var(--fd-color-slate-600);
 
     strong {
@@ -276,7 +284,11 @@
     min-width: 0;
     padding: clamp(18px, 2vw, 24px);
     border-radius: 32px;
-    background: linear-gradient(160deg, rgba(15, 23, 42, 0.97), rgba(15, 118, 110, 0.94));
+    background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--fd-color-slate-900) 97%, transparent),
+        color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
+    );
     box-shadow: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
     animation: landingFadeUp 860ms ease-out both;
 
@@ -306,7 +318,7 @@
     &__catalog-subtitle {
         margin: 0;
         max-width: 760px;
-        color: rgba(226, 232, 240, 0.85);
+        color: color-mix(in srgb, var(--fd-color-slate-200) 85%, transparent);
         font-size: 1rem;
         line-height: 1.6;
     }
@@ -359,7 +371,7 @@
     &__draft-subtitle,
     &__draft-note {
         margin: 0;
-        color: rgba(226, 232, 240, 0.84);
+        color: color-mix(in srgb, var(--fd-color-slate-200) 84%, transparent);
         font-size: 1rem;
         line-height: 1.65;
     }
@@ -401,7 +413,7 @@
     }
 
     .landing-section__subtitle {
-        color: rgba(226, 232, 240, 0.85);
+        color: color-mix(in srgb, var(--fd-color-slate-200) 85%, transparent);
     }
 
     @media #{variables.$media-desktop} {
@@ -429,7 +441,7 @@
         display: grid;
         gap: variables.$gap-s;
         border-radius: 24px;
-        background: rgba(255, 255, 255, 0.09);
+        background: color-mix(in srgb, var(--fd-color-white) 9%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
     }
 
@@ -466,7 +478,7 @@
 
     &__hint {
         margin: 0;
-        color: rgba(226, 232, 240, 0.82);
+        color: color-mix(in srgb, var(--fd-color-slate-200) 82%, transparent);
         font-size: 0.95rem;
         line-height: 1.55;
     }

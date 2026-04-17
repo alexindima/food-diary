@@ -25,6 +25,7 @@ export interface NutrientBar {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardSummaryCardComponent {
+    private static readonly COLOR_FALLBACK_RGB: [number, number, number] = [90, 169, 250];
     public readonly goalAction = output<void>();
     public readonly dailyGoal = input<number>(0);
     public readonly dailyConsumed = input<number>(0);
@@ -41,15 +42,15 @@ export class DashboardSummaryCardComponent {
     private readonly gradientIdDaily = `consumption-ring-daily-${Math.random().toString(36).slice(2, 9)}`;
     private readonly gradientIdWeekly = `consumption-ring-weekly-${Math.random().toString(36).slice(2, 9)}`;
     private readonly colorStops = [
-        { percent: 0, color: '#5aa9fa' },
-        { percent: 50, color: '#3f8df0' },
-        { percent: 70, color: '#3f8df0' },
-        { percent: 80, color: '#34d399' },
+        { percent: 0, color: 'var(--fd-color-sky-500)' },
+        { percent: 50, color: 'var(--fd-color-blue-500)' },
+        { percent: 70, color: 'var(--fd-color-blue-500)' },
+        { percent: 80, color: 'var(--fd-color-emerald-500)' },
         { percent: 90, color: 'var(--fd-color-green-500)' },
-        { percent: 100, color: '#16a34a' },
+        { percent: 100, color: 'var(--fd-color-emerald-700)' },
         { percent: 110, color: 'var(--fd-color-amber-500)' },
         { percent: 120, color: 'var(--fd-color-orange-500)' },
-        { percent: 130, color: '#ef4444' },
+        { percent: 130, color: 'var(--fd-color-danger)' },
     ];
 
     public readonly normalizedDailyGoal = computed(() => Math.max(this.dailyGoal(), 0));
@@ -220,9 +221,9 @@ export class DashboardSummaryCardComponent {
         return stops[stops.length - 1].color;
     }
 
-    private lerpColor(hexA: string, hexB: string, t: number): string {
-        const [r1, g1, b1] = this.hexToRgb(hexA);
-        const [r2, g2, b2] = this.hexToRgb(hexB);
+    private lerpColor(colorA: string, colorB: string, t: number): string {
+        const [r1, g1, b1] = this.parseColor(colorA);
+        const [r2, g2, b2] = this.parseColor(colorB);
         const lerp = (a: number, b: number): number => Math.round(a + (b - a) * t);
         const r = lerp(r1, r2);
         const g = lerp(g1, g2);
@@ -230,7 +231,7 @@ export class DashboardSummaryCardComponent {
         return `#${this.toHex(r)}${this.toHex(g)}${this.toHex(b)}`;
     }
 
-    private hexToRgb(hex: string): [number, number, number] {
+    private hexToChannels(hex: string): [number, number, number] {
         const normalized = hex.replace('#', '');
         const value =
             normalized.length === 3
@@ -254,27 +255,35 @@ export class DashboardSummaryCardComponent {
 
     private parseColor(value: string): [number, number, number] {
         if (value.startsWith('#')) {
-            return this.hexToRgb(value);
+            return this.hexToChannels(value);
         }
 
-        const match = value.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
-        if (match) {
-            return [Number(match[1]), Number(match[2]), Number(match[3])];
+        if (typeof document !== 'undefined') {
+            const sample = document.createElement('span');
+            sample.style.color = value;
+            sample.style.display = 'none';
+            document.body.appendChild(sample);
+            const resolved = getComputedStyle(sample).color;
+            document.body.removeChild(sample);
+            const channels = resolved.match(/\d+/g)?.slice(0, 3).map(Number);
+            if (channels?.length === 3) {
+                return [channels[0], channels[1], channels[2]];
+            }
         }
 
-        return this.hexToRgb(this.colorStops[0]?.color ?? '#000000');
+        return DashboardSummaryCardComponent.COLOR_FALLBACK_RGB;
     }
 
     private mixWithWhite(color: string, ratio: number): string {
         const [r, g, b] = this.parseColor(color);
         const mix = (c: number): number => Math.round(c + (255 - c) * ratio);
-        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+        return `#${this.toHex(mix(r))}${this.toHex(mix(g))}${this.toHex(mix(b))}`;
     }
 
     private mixWithDark(color: string, ratio: number): string {
         const [r, g, b] = this.parseColor(color);
         const mix = (c: number): number => Math.round(c * (1 - ratio));
-        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+        return `#${this.toHex(mix(r))}${this.toHex(mix(g))}${this.toHex(mix(b))}`;
     }
 
     public get dailyGradientId(): string {
@@ -306,7 +315,7 @@ export class DashboardSummaryCardComponent {
                 target: 250,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#2dd4bf',
+                colorStart: 'var(--fd-color-teal-500)',
                 colorEnd: 'var(--fd-color-sky-500)',
             },
             {
@@ -317,7 +326,7 @@ export class DashboardSummaryCardComponent {
                 target: 70,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fbbf24',
+                colorStart: 'var(--fd-color-yellow-300)',
                 colorEnd: 'var(--fd-color-orange-500)',
             },
             {
@@ -328,7 +337,7 @@ export class DashboardSummaryCardComponent {
                 target: 30,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fb7185',
+                colorStart: 'var(--fd-color-rose-500)',
                 colorEnd: 'var(--fd-color-rose-500)',
             },
         ];

@@ -62,7 +62,7 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
                 label: this.translateService.instant('FASTING.CHECK_IN.HUNGER'),
                 data: this.points().map(point => point.hungerLevel),
                 borderColor: 'var(--fd-color-orange-500)',
-                backgroundColor: 'rgba(249, 115, 22, 0.12)',
+                backgroundColor: 'color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent)',
                 tension: 0.3,
                 borderWidth: 2,
                 pointRadius: 4,
@@ -90,7 +90,7 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
                 label: this.translateService.instant('FASTING.CHECK_IN.MOOD'),
                 data: this.points().map(point => point.moodLevel),
                 borderColor: 'var(--fd-color-purple-500)',
-                backgroundColor: 'rgba(124, 58, 237, 0.12)',
+                backgroundColor: 'color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent)',
                 tension: 0.3,
                 borderWidth: 2,
                 pointRadius: 4,
@@ -127,7 +127,7 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
                 backgroundColor: 'var(--fd-color-slate-900)',
                 titleColor: 'var(--fd-color-slate-200)',
                 bodyColor: 'var(--fd-color-slate-200)',
-                footerColor: '#cbd5e1',
+                footerColor: 'var(--fd-color-slate-300)',
                 padding: 10,
                 callbacks: {
                     title: items => {
@@ -165,7 +165,7 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
         scales: {
             x: {
                 grid: {
-                    color: 'rgba(226, 232, 240, 0.8)',
+                    color: 'color-mix(in srgb, var(--fd-color-slate-200) 80%, transparent)',
                 },
                 ticks: {
                     color: 'var(--fd-color-slate-500)',
@@ -183,7 +183,7 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
                     color: 'var(--fd-color-slate-500)',
                 },
                 grid: {
-                    color: 'rgba(226, 232, 240, 0.9)',
+                    color: 'color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent)',
                 },
             },
         },

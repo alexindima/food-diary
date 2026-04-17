@@ -1,7 +1,7 @@
 .ai-photo-result {
-    border: 1px solid #c4b5fd;
+    border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
     border-radius: 14px;
-    background: #faf5ff;
+    background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-color-white));
     padding: 14px;
     display: flex;
     flex-direction: column;
@@ -35,8 +35,8 @@
     cursor: pointer;
 
     &:hover {
-        color: #ef4444;
-        background: #fee2e2;
+        color: var(--fd-color-danger);
+        background: color-mix(in srgb, var(--fd-color-danger) 16%, var(--fd-color-white));
     }
 }
 
@@ -45,7 +45,7 @@
     border-radius: 12px;
     overflow: hidden;
     max-height: 200px;
-    background: #f3f4f6;
+    background: var(--fd-color-slate-100);
 }
 
 .ai-photo-result__preview {
@@ -66,7 +66,11 @@
     gap: 10px;
     padding: 18px 24px;
     background:
-        linear-gradient(135deg, color-mix(in srgb, var(--fd-color-purple-500) 8%, transparent), rgba(59, 130, 246, 0.04)),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--fd-color-purple-500) 8%, transparent),
+            color-mix(in srgb, var(--fd-color-blue-500) 4%, transparent)
+        ),
         var(--fd-color-slate-50);
 }
 
@@ -129,13 +133,13 @@
         90deg,
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
         var(--fd-color-blue-500),
-        rgba(96, 165, 250, 0.95),
+        color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-white)),
         var(--fd-color-blue-500),
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
     );
     box-shadow:
-        0 0 16px rgba(59, 130, 246, 0.8),
-        0 0 30px rgba(96, 165, 250, 0.6);
+        0 0 16px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
+        0 0 30px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-white));
     animation: ai-photo-scan 4s ease-in-out infinite;
 }
 
@@ -144,13 +148,13 @@
         90deg,
         color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
         var(--fd-color-green-500),
-        rgba(74, 222, 128, 0.95),
+        color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-white)),
         var(--fd-color-green-500),
         color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
     );
     box-shadow:
-        0 0 16px rgba(34, 197, 94, 0.75),
-        0 0 30px rgba(74, 222, 128, 0.6);
+        0 0 16px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
+        0 0 30px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
 }
 
 @keyframes ai-photo-scan {
@@ -172,7 +176,7 @@
 }
 
 .ai-photo-result__error {
-    background: rgba(239, 68, 68, 0.08);
+    background: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
     color: var(--fd-color-red-700);
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 10px;
@@ -309,7 +313,7 @@
     }
 
     &:hover {
-        color: #ef4444;
+        color: var(--fd-color-danger);
     }
 }
 
@@ -358,7 +362,7 @@
 
 .ai-photo-result__nutrition-value {
     font-weight: 600;
-    color: #1f2937;
+    color: var(--fd-color-slate-800);
     font-size: 0.85rem;
     font-variant-numeric: tabular-nums;
 }
@@ -437,7 +441,7 @@
 .ai-photo-result__detail-input,
 .ai-photo-result__detail-textarea {
     width: 100%;
-    border: 1px solid #dbe4f0;
+    border: 1px solid var(--fd-color-slate-200);
     border-radius: 12px;
     background: var(--fd-color-white);
     color: var(--fd-color-slate-900);
@@ -476,7 +480,7 @@
 
 .ai-photo-result__satiety-card {
     --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
-    border: 1px solid #dbe4f0;
+    border: 1px solid var(--fd-color-slate-200);
     border-radius: 14px;
     padding: 12px;
     display: flex;
@@ -516,7 +520,7 @@
     width: 40px;
     height: 40px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.86);
+    background: color-mix(in srgb, var(--fd-color-white) 86%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;

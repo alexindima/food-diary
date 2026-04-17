@@ -49,7 +49,7 @@
     }
 
     &__array-error {
-        color: variables.$color-no-results;
+        color: var(--fd-color-danger);
         font-size: 0.9rem;
     }
 }

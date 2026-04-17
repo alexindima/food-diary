@@ -112,7 +112,7 @@
             color: var(--fd-color-white);
 
             &:hover {
-                background: #ea580c;
+                background: var(--fd-color-orange-700);
                 color: var(--fd-color-white);
             }
         }
@@ -134,19 +134,19 @@
 
             &:hover {
                 background: color-mix(in srgb, var(--fd-color-purple-500) 8%, transparent);
-                border-color: rgba(124, 58, 237, 0.2);
+                border-color: color-mix(in srgb, var(--fd-color-purple-500) 20%, transparent);
                 color: inherit;
             }
         }
 
         &--emoji#{&}--active {
-            background: rgba(124, 58, 237, 0.18);
+            background: color-mix(in srgb, var(--fd-color-purple-500) 18%, transparent);
             border-color: transparent;
             color: inherit;
             transform: scale(1.08);
 
             &:hover {
-                background: rgba(124, 58, 237, 0.22);
+                background: color-mix(in srgb, var(--fd-color-purple-500) 22%, transparent);
                 color: inherit;
             }
         }
@@ -193,12 +193,16 @@
         padding: 14px 16px;
         border: 1px solid var(--fd-color-slate-200);
         border-radius: 18px;
-        background: linear-gradient(180deg, #fbfdff 0%, var(--fd-color-slate-50) 100%);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 14%, var(--fd-color-white)) 0%, var(--fd-color-slate-50) 100%);
+        box-shadow: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 75%, transparent);
 
         &--subtle {
-            background: linear-gradient(180deg, #fffaf5 0%, #f7f7ed 100%);
-            border-color: #fed7aa;
+            background: linear-gradient(
+                180deg,
+                color-mix(in srgb, var(--fd-color-yellow-300) 20%, var(--fd-color-white)) 0%,
+                color-mix(in srgb, var(--fd-color-slate-50) 75%, var(--fd-color-yellow-300)) 100%
+            );
+            border-color: color-mix(in srgb, var(--fd-color-orange-500) 30%, var(--fd-color-white));
         }
     }
 
@@ -374,7 +378,7 @@
     &__textarea {
         width: 100%;
         min-height: 108px;
-        border: 1px solid #d7dee8;
+        border: 1px solid color-mix(in srgb, var(--fd-color-slate-300) 60%, var(--fd-color-white));
         border-radius: 14px;
         padding: 12px 14px;
         font: inherit;
@@ -385,7 +389,7 @@
         &:focus {
             outline: none;
             border-color: var(--fd-color-purple-500);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent);
         }
     }
 
@@ -472,7 +476,7 @@
         padding: 14px;
         border: 1px solid var(--fd-color-slate-200);
         border-radius: 16px;
-        background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, #fdfefe 100%);
+        background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-slate-50)) 100%);
     }
 
     &__pattern-symptom {
@@ -648,18 +652,18 @@
     &__history-badge {
         padding: 4px 10px;
         border-radius: 999px;
-        background: rgba(148, 163, 184, 0.12);
+        background: color-mix(in srgb, var(--fd-color-slate-400) 12%, transparent);
         color: var(--fd-color-slate-600);
         font-weight: 600;
         font-size: 0.85rem;
 
         &--completed {
             background: color-mix(in srgb, var(--fd-color-green-500) 12%, transparent);
-            color: #15803d;
+            color: var(--fd-color-emerald-700);
         }
 
         &--interrupted {
-            background: rgba(249, 115, 22, 0.12);
+            background: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
             color: var(--fd-color-orange-700);
         }
 
@@ -669,8 +673,8 @@
         }
 
         &--postponed {
-            background: rgba(168, 85, 247, 0.12);
-            color: #7e22ce;
+            background: color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent);
+            color: var(--fd-color-purple-700);
         }
     }
 
@@ -730,7 +734,7 @@
         cursor: pointer;
 
         &:hover {
-            color: #5b21b6;
+            color: var(--fd-color-purple-700);
         }
 
         &--muted {

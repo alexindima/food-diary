@@ -6,7 +6,7 @@
 }
 
 .custom-group {
-    border: 2px solid #d9d9d9;
+    border: 2px solid var(--fd-color-border);
     border-radius: variables.$border-radius-m;
     padding: variables.$gap-l;
     position: relative;
@@ -17,7 +17,7 @@
     position: absolute;
     top: -11px;
     background: var(--fd-color-white);
-    border: 2px solid #d9d9d9;
+    border: 2px solid var(--fd-color-border);
     border-radius: variables.$border-radius-s;
     padding: 0 variables.$gap-xs;
     font-weight: bold;
@@ -30,7 +30,7 @@
     top: -11px;
     left: 10px;
     background: var(--fd-color-white);
-    border: 2px solid #d9d9d9;
+    border: 2px solid var(--fd-color-border);
     border-radius: variables.$border-radius-s;
     padding: 0;
     width: 24px;
@@ -43,7 +43,7 @@
     position: absolute;
     top: -11px;
     right: 15px;
-    background: #ff7043;
+    background: var(--fd-color-orange-500);
     border-radius: variables.$border-radius-s;
     padding: 0 variables.$gap-xs;
     font-weight: bold;
@@ -54,7 +54,7 @@
 
 .custom-group__hint {
     margin: 0;
-    color: #888;
+    color: var(--fd-color-text-muted);
     font-size: 0.9rem;
     font-style: italic;
     white-space: nowrap;

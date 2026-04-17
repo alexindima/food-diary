@@ -9,7 +9,7 @@
     padding: 18px;
     background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
     box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
-    color: variables.$color-text-main;
+    color: var(--fd-color-text);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -51,7 +51,7 @@
 
     &__status {
         font-size: 0.95rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 }
 

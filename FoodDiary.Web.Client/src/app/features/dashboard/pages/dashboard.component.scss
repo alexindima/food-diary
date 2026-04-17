@@ -6,8 +6,7 @@
     min-height: 100%;
 }
 
-$color-text-secondary: variables.$color-text-additional;
-variables.$color-primary: var(--fd-color-primary-600);
+$color-text-secondary: var(--fd-color-text-muted);
 
 .dashboard {
     display: flex;
@@ -39,7 +38,7 @@ variables.$color-primary: var(--fd-color-primary-600);
         font-size: 0.95rem;
         line-height: 1.35;
         font-weight: 500;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__header-actions {
@@ -119,7 +118,7 @@ variables.$color-primary: var(--fd-color-primary-600);
     &__settings-action--active ::ng-deep button,
     &__settings-action--active ::ng-deep .fd-ui-button {
         background: var(--fd-color-white);
-        border-color: rgba(37, 99, 235, 0.4);
+        border-color: color-mix(in srgb, var(--fd-color-primary-600) 40%, transparent);
         color: var(--fd-color-primary-700);
         box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     }
@@ -168,7 +167,7 @@ variables.$color-primary: var(--fd-color-primary-600);
         font-size: var(--fd-page-title-size, 2rem);
         line-height: var(--fd-page-title-line-height, 1.2);
         font-weight: var(--fd-page-title-weight, 700);
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__date-field {
@@ -251,7 +250,7 @@ variables.$color-primary: var(--fd-color-primary-600);
     &__manual-add-label {
         font-size: 0.95rem;
         font-weight: 600;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__manual-add-button {
@@ -291,7 +290,7 @@ variables.$color-primary: var(--fd-color-primary-600);
         left: var(--fd-layout-sidebar-width, 0px);
         width: calc(100vw - var(--fd-layout-sidebar-width, 0px));
         height: 100vh;
-        background: rgba(15, 23, 42, 0.28);
+        background: color-mix(in srgb, var(--fd-color-slate-900) 28%, transparent);
         pointer-events: none;
         z-index: 1;
     }
@@ -336,7 +335,11 @@ variables.$color-primary: var(--fd-color-primary-600);
         gap: 6px;
         padding: 18px;
         border-radius: 18px;
-        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-white) 8%, transparent), rgba(255, 255, 255, 0.88));
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-white) 8%, transparent),
+            color-mix(in srgb, var(--fd-color-white) 88%, transparent)
+        );
         backdrop-filter: blur(3px);
         pointer-events: none;
         z-index: 2;
@@ -345,13 +348,13 @@ variables.$color-primary: var(--fd-color-primary-600);
     &__fasting-overlay-title {
         font-size: 0.95rem;
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__fasting-overlay-text {
         font-size: 0.84rem;
         line-height: 1.45;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         max-width: 26ch;
     }
 
@@ -447,10 +450,10 @@ variables.$color-primary: var(--fd-color-primary-600);
         border-radius: 22px;
         background-image: repeating-linear-gradient(
             -45deg,
-            rgba(100, 116, 139, 0.32),
-            rgba(100, 116, 139, 0.32) 10px,
-            rgba(255, 255, 255, 0) 10px,
-            rgba(255, 255, 255, 0) 20px
+            color-mix(in srgb, var(--fd-color-slate-500) 32%, transparent),
+            color-mix(in srgb, var(--fd-color-slate-500) 32%, transparent) 10px,
+            color-mix(in srgb, var(--fd-color-white) 0%, transparent) 10px,
+            color-mix(in srgb, var(--fd-color-white) 0%, transparent) 20px
         );
         pointer-events: none;
         z-index: 3;
@@ -463,7 +466,7 @@ variables.$color-primary: var(--fd-color-primary-600);
         padding: 4px 10px;
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
         font-size: 0.75rem;
         font-weight: 600;
         pointer-events: none;
@@ -471,7 +474,7 @@ variables.$color-primary: var(--fd-color-primary-600);
     }
 
     &__block-label--hidden {
-        background: rgba(148, 163, 184, 0.3);
+        background: color-mix(in srgb, var(--fd-color-slate-400) 30%, transparent);
         color: var(--fd-color-slate-700);
     }
 
@@ -489,7 +492,7 @@ variables.$color-primary: var(--fd-color-primary-600);
     &__weight-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__weight-trend {
@@ -520,7 +523,7 @@ variables.$color-primary: var(--fd-color-primary-600);
         margin: 0;
         font-size: 1.4rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__section-header {
@@ -535,7 +538,7 @@ variables.$color-primary: var(--fd-color-primary-600);
         margin: 0;
         font-size: 1.5rem;
         font-weight: 600;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__meals {
@@ -546,7 +549,7 @@ variables.$color-primary: var(--fd-color-primary-600);
 
     &__loader,
     &__empty {
-        border: 1px dashed rgba(15, 23, 42, 0.2);
+        border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
         border-radius: 16px;
         padding: 24px;
         text-align: center;
@@ -568,8 +571,8 @@ variables.$color-primary: var(--fd-color-primary-600);
         padding: 14px 16px;
         border: 1px dashed color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
         border-radius: 18px;
-        background: rgba(37, 99, 235, 0.03);
-        color: variables.$color-text-main;
+        background: color-mix(in srgb, var(--fd-color-primary-600) 3%, transparent);
+        color: var(--fd-color-text);
         cursor: pointer;
         transition:
             transform 0.15s ease,
@@ -581,7 +584,7 @@ variables.$color-primary: var(--fd-color-primary-600);
             transform: translateY(-1px);
             box-shadow: 0 12px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
             border-color: color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent);
-            background: rgba(37, 99, 235, 0.05);
+            background: color-mix(in srgb, var(--fd-color-primary-600) 5%, transparent);
         }
 
         &__left {
@@ -594,7 +597,11 @@ variables.$color-primary: var(--fd-color-primary-600);
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            background: linear-gradient(135deg, #e0ecff, #f1f5ff);
+            background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-white)),
+                color-mix(in srgb, var(--fd-color-primary-50) 82%, var(--fd-color-white))
+            );
             display: grid;
             place-items: center;
             color: var(--fd-color-primary-600);
@@ -612,7 +619,7 @@ variables.$color-primary: var(--fd-color-primary-600);
             display: grid;
             place-items: center;
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.26);
+            box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 26%, transparent);
 
             mat-icon {
                 color: var(--fd-color-white);
@@ -622,7 +629,7 @@ variables.$color-primary: var(--fd-color-primary-600);
 
     .consumption-card__meta {
         font-size: 0.9em;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         display: flex;
         justify-content: space-between;
         align-items: center;

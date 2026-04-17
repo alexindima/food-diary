@@ -1,7 +1,12 @@
 @use 'variables' as variables;
 
 .recipe-manage {
-    --fd-layout-page-background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, #f1f5f9 45%, #eef2f7 100%);
+    --fd-layout-page-background: linear-gradient(
+        180deg,
+        var(--fd-color-slate-50) 0%,
+        color-mix(in srgb, var(--fd-color-slate-200) 36%, var(--fd-color-white)) 45%,
+        color-mix(in srgb, var(--fd-color-slate-300) 22%, var(--fd-color-white)) 100%
+    );
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -28,7 +33,7 @@
 
     &__title {
         margin: 0;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__form {
@@ -41,8 +46,8 @@
     &__error {
         padding: variables.$gap-s;
         border-radius: variables.$border-radius-m;
-        background: #fdecee;
-        color: #b3261e;
+        background: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
+        color: var(--fd-color-danger-700);
         font-weight: 500;
     }
 
@@ -135,7 +140,7 @@
     &__summary-calories {
         margin: 0;
         font-size: 0.95rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
 
         strong {
             font-weight: 600;
@@ -221,7 +226,7 @@
             width: 100%;
             justify-content: space-between;
             background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
-            border: 1px solid rgba(148, 163, 184, 0.24);
+            border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 24%, transparent);
             box-shadow: none;
         }
     }
@@ -231,11 +236,11 @@
     }
 
     &__drag-placeholder {
-        border: 2px dashed color-mix(in srgb, variables.$color-text-additional 40%, transparent);
+        border: 2px dashed color-mix(in srgb, var(--fd-color-text-muted) 40%, transparent);
         border-radius: variables.$border-radius-m;
         padding: variables.$gap-m;
         text-align: center;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
         font-size: 0.9rem;
     }
 }

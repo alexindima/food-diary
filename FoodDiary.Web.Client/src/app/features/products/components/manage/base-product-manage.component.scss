@@ -37,12 +37,12 @@
     &__delete-button {
 
         ::ng-deep .fd-ui-button {
-            border-color: variables.$color-no-results;
-            color: variables.$color-no-results;
+            border-color: var(--fd-color-danger);
+            color: var(--fd-color-danger);
         }
 
         ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background-color: color-mix(in srgb, variables.$color-no-results 10%, transparent);
+            background-color: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
         }
 
         ::ng-deep .fd-ui-button:disabled {
@@ -175,7 +175,7 @@
     &__summary-calories {
         margin: 0;
         font-size: 0.9rem;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
 
         strong {
             font-size: 1.1rem;
@@ -359,12 +359,12 @@
     &__ai-title {
         font-size: 0.95rem;
         font-weight: 700;
-        color: variables.$color-text-main;
+        color: var(--fd-color-text);
     }
 
     &__ai-subtitle {
         font-size: 0.85rem;
-        color: variables.$color-text-additional;
+        color: var(--fd-color-text-muted);
     }
 
     &__footer-actions {
@@ -413,7 +413,7 @@
     &__footer-error {
         width: 100%;
         text-align: left;
-        color: variables.$color-no-results;
+        color: var(--fd-color-danger);
     }
 
     @media #{variables.$media-tablet} {
@@ -464,7 +464,7 @@
         &-title {
             font-size: 1.5rem;
             font-weight: bold;
-            color: variables.$color-text-main;
+            color: var(--fd-color-text);
             margin: 0 0 variables.$gap-l;
         }
 

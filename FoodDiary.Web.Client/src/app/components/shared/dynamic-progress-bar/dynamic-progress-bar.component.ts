@@ -51,14 +51,20 @@ export class DynamicProgressBarComponent {
     public barColor = computed(() => {
         if (this.progress() <= 100) {
             const greenIntensity = Math.round((this.progress() / 100) * 100);
-            return `rgb(80, ${150 + greenIntensity}, 80)`;
+            return this.toHex([80, 150 + greenIntensity, 80]);
         } else if (this.progress() > 100 && this.progress() <= 125) {
             const orangeIntensity = Math.round(((this.progress() - 100) / 25) * 100);
-            return `rgb(255, ${200 - orangeIntensity}, 80)`;
+            return this.toHex([255, 200 - orangeIntensity, 80]);
         } else {
             const redIntensity = Math.min(255, Math.round(((this.progress() - 125) / 50) * 255));
-            return `rgb(255, ${100 - redIntensity}, ${80 - redIntensity / 2})`;
+            return this.toHex([255, 100 - redIntensity, 80 - redIntensity / 2]);
         }
     });
     public textColorClass = computed(() => (this.progress() < 100 * 0.5 ? 'text-black' : 'text-white'));
+
+    private toHex(channels: number[]): string {
+        return `#${channels
+            .map(channel => Math.max(0, Math.min(255, Math.round(channel))).toString(16).padStart(2, '0'))
+            .join('')}`;
+    }
 }
