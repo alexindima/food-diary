@@ -7,12 +7,12 @@
     align-items: center;
     gap: 4px;
     padding: 4px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill, 999px);
     background: var(--fd-color-surface, #fff);
-    border: 1px solid rgba(37, 99, 235, 0.08);
+    border: 1px solid rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.1);
     box-shadow:
-        0 12px 24px rgba(15, 23, 42, 0.08),
-        0 2px 6px rgba(15, 23, 42, 0.06);
+        0 12px 24px rgb(15 23 42 / 0.08),
+        0 2px 6px rgb(15 23 42 / 0.06);
 }
 
 .fd-ui-segmented-toggle__item {
@@ -43,9 +43,9 @@
     }
 
     &.is-active {
-        background: var(--fd-color-primary-500, #4a6cf7);
-        color: #fff;
-        box-shadow: 0 10px 18px rgba(74, 108, 247, 0.28);
+        background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+        color: var(--fd-color-on-brand, #fff);
+        box-shadow: 0 10px 18px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
         transform: translateY(-1px);
     }
 }

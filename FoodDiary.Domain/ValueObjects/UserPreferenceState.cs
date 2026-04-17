@@ -3,6 +3,7 @@ namespace FoodDiary.Domain.ValueObjects;
 public readonly record struct UserPreferenceState(
     string? DashboardLayoutJson,
     string? Language,
+    string? Theme,
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,
@@ -12,6 +13,7 @@ public readonly record struct UserPreferenceState(
         return new UserPreferenceState(
             DashboardLayoutJson: null,
             Language: null,
+            Theme: ThemeCode.Default.Value,
             PushNotificationsEnabled: false,
             FastingPushNotificationsEnabled: true,
             SocialPushNotificationsEnabled: true,

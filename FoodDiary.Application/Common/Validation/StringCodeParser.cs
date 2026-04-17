@@ -24,6 +24,16 @@ public static class StringCodeParser {
             : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
     }
 
+    public static Result<string?> ParseOptionalTheme(string? value, string fieldName, string message) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return Result.Success<string?>(null);
+        }
+
+        return ThemeCode.TryParse(value, out var theme)
+            ? Result.Success<string?>(theme.Value)
+            : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
+    }
+
     public static Result<string> ParseRequiredLanguage(string value, string fieldName, string message) {
         return LanguageCode.TryParse(value, out var language)
             ? Result.Success(language.Value)

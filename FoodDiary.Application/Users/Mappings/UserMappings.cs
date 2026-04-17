@@ -7,6 +7,7 @@ namespace FoodDiary.Application.Users.Mappings;
 public static class UserMappings {
     public static UserModel ToModel(this User user) {
         const string defaultLanguage = "en";
+        const string defaultTheme = "ocean";
         DashboardLayoutModel? layout = null;
         if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson)) {
             try {
@@ -38,6 +39,7 @@ public static class UserMappings {
             user.WaterGoal,
             user.HydrationGoal,
             user.Language ?? defaultLanguage,
+            user.Theme ?? defaultTheme,
             user.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
             user.SocialPushNotificationsEnabled,

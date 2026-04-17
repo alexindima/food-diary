@@ -30,6 +30,7 @@ public static class UserHttpResponseMappings {
             model.WaterGoal,
             model.HydrationGoal,
             model.Language,
+            model.Theme,
             model.PushNotificationsEnabled,
             model.FastingPushNotificationsEnabled,
             model.SocialPushNotificationsEnabled,

@@ -24,6 +24,7 @@ public sealed record UserHttpResponse(
     double? WaterGoal,
     double? HydrationGoal,
     string? Language,
+    string? Theme,
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,

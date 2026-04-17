@@ -31,6 +31,7 @@ public sealed partial class User {
         if (ApplyPreferencesChanges(
             dashboardLayoutJson: null,
             language: language,
+            theme: null,
             pushNotificationsEnabled: null,
             fastingPushNotificationsEnabled: null,
             socialPushNotificationsEnabled: null,
@@ -101,6 +102,7 @@ public sealed partial class User {
     public void UpdatePreferences(
         string? dashboardLayoutJson = null,
         string? language = null,
+        string? theme = null,
         bool? pushNotificationsEnabled = null,
         bool? fastingPushNotificationsEnabled = null,
         bool? socialPushNotificationsEnabled = null,
@@ -109,6 +111,7 @@ public sealed partial class User {
         UpdatePreferences(new UserPreferenceUpdate(
             dashboardLayoutJson,
             language,
+            theme,
             pushNotificationsEnabled,
             fastingPushNotificationsEnabled,
             socialPushNotificationsEnabled,
@@ -121,6 +124,7 @@ public sealed partial class User {
         if (ApplyPreferencesChanges(
             update.DashboardLayoutJson,
             update.Language,
+            update.Theme,
             update.PushNotificationsEnabled,
             update.FastingPushNotificationsEnabled,
             update.SocialPushNotificationsEnabled,
@@ -261,6 +265,7 @@ public sealed partial class User {
     private bool ApplyPreferencesChanges(
         string? dashboardLayoutJson,
         string? language,
+        string? theme,
         bool? pushNotificationsEnabled,
         bool? fastingPushNotificationsEnabled,
         bool? socialPushNotificationsEnabled,
@@ -268,9 +273,11 @@ public sealed partial class User {
         int? fastingCheckInFollowUpReminderHours) {
         var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
         var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
+        var normalizedTheme = NormalizeOptionalTheme(theme, nameof(theme));
         var state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
+        EnsureTheme(theme, nameof(theme));
         EnsureReminderHours(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
         EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
@@ -283,6 +290,11 @@ public sealed partial class User {
 
         if (language is not null && state.Language != normalizedLanguage) {
             state = state with { Language = normalizedLanguage };
+            changed = true;
+        }
+
+        if (theme is not null && state.Theme != normalizedTheme) {
+            state = state with { Theme = normalizedTheme };
             changed = true;
         }
 

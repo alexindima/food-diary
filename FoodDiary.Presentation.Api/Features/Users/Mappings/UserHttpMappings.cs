@@ -50,6 +50,7 @@ public static class UserHttpMappings {
             StepGoal: request.StepGoal,
             HydrationGoal: request.HydrationGoal,
             Language: request.Language,
+            Theme: request.Theme,
             PushNotificationsEnabled: request.PushNotificationsEnabled,
             FastingPushNotificationsEnabled: request.FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled: request.SocialPushNotificationsEnabled,

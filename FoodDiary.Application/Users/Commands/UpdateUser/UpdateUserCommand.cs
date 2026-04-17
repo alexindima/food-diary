@@ -17,6 +17,7 @@ public record UpdateUserCommand(
     int? StepGoal,
     double? HydrationGoal,
     string? Language,
+    string? Theme,
     bool? PushNotificationsEnabled,
     bool? FastingPushNotificationsEnabled,
     bool? SocialPushNotificationsEnabled,

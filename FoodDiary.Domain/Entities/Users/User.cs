@@ -58,6 +58,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public ImageAssetId? ProfileImageAssetId { get; private set; }
     public string? DashboardLayoutJson { get; private set; }
     public string? Language { get; private set; }
+    public string? Theme { get; private set; }
     public bool PushNotificationsEnabled { get; private set; }
     public bool FastingPushNotificationsEnabled { get; private set; }
     public bool SocialPushNotificationsEnabled { get; private set; }
@@ -284,6 +285,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             ProfileImageAssetId,
             DashboardLayoutJson,
             Language,
+            Theme,
             PushNotificationsEnabled,
             FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled,
@@ -316,6 +318,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         ProfileImageAssetId = state.ProfileImageAssetId;
         DashboardLayoutJson = state.DashboardLayoutJson;
         Language = state.Language;
+        Theme = state.Theme;
     }
 
     private void ApplyPersonalProfileState(UserPersonalProfileState state) {
@@ -332,6 +335,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     private void ApplyPreferenceState(UserPreferenceState state) {
         DashboardLayoutJson = state.DashboardLayoutJson;
         Language = state.Language;
+        Theme = state.Theme;
         PushNotificationsEnabled = state.PushNotificationsEnabled;
         FastingPushNotificationsEnabled = state.FastingPushNotificationsEnabled;
         SocialPushNotificationsEnabled = state.SocialPushNotificationsEnabled;
@@ -405,6 +409,16 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    private static void EnsureTheme(string? value, string paramName) {
+        if (value is null) {
+            return;
+        }
+
+        if (!ThemeCode.TryParse(value, out _)) {
+            throw new ArgumentOutOfRangeException(paramName, "Theme must be one of the supported codes.");
+        }
+    }
+
     private static void EnsureDesiredWeight(double? value, string paramName) {
         if (!value.HasValue) {
             return;
@@ -455,6 +469,16 @@ public sealed partial class User : AggregateRoot<UserId> {
         return !LanguageCode.TryParse(value, out var languageCode)
             ? throw new ArgumentOutOfRangeException(paramName, "Language must be one of the supported codes.")
             : languageCode.Value;
+    }
+
+    private static string NormalizeOptionalTheme(string? value, string paramName) {
+        if (value is null) {
+            return string.Empty;
+        }
+
+        return !ThemeCode.TryParse(value, out var themeCode)
+            ? throw new ArgumentOutOfRangeException(paramName, "Theme must be one of the supported codes.")
+            : themeCode.Value;
     }
 
     private static string? NormalizeOptionalProfileText(string? value) {

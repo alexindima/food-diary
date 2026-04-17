@@ -19,25 +19,26 @@ public sealed class UpdateUserCommandHandlerTests {
 
         var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
         var command = new UpdateUserCommand(
-            user.Id.Value,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            layout,
-            null);
+            UserId: user.Id.Value,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            Weight: null,
+            Height: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: null,
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: null,
+            DashboardLayout: layout,
+            IsActive: null);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
@@ -62,25 +63,26 @@ public sealed class UpdateUserCommandHandlerTests {
 
         var newAssetId = ImageAssetId.New();
         var command = new UpdateUserCommand(
-            user.Id.Value,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            newAssetId.Value,
-            null,
-            null);
+            UserId: user.Id.Value,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            Weight: null,
+            Height: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: null,
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: newAssetId.Value,
+            DashboardLayout: null,
+            IsActive: null);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
@@ -98,30 +100,67 @@ public sealed class UpdateUserCommandHandlerTests {
 
         var result = await handler.Handle(
             new UpdateUserCommand(
-                user.Id.Value,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                Guid.Empty,
-                null,
-                null),
+                UserId: user.Id.Value,
+                Username: null,
+                FirstName: null,
+                LastName: null,
+                BirthDate: null,
+                Gender: null,
+                Weight: null,
+                Height: null,
+                ActivityLevel: null,
+                StepGoal: null,
+                HydrationGoal: null,
+                Language: null,
+                Theme: null,
+                PushNotificationsEnabled: null,
+                FastingPushNotificationsEnabled: null,
+                SocialPushNotificationsEnabled: null,
+                ProfileImage: null,
+                ProfileImageAssetId: Guid.Empty,
+                DashboardLayout: null,
+                IsActive: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProfileImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithTheme_UpdatesUserTheme() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService());
+
+        var command = new UpdateUserCommand(
+            UserId: user.Id.Value,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            Weight: null,
+            Height: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: "leaf",
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: null,
+            DashboardLayout: null,
+            IsActive: null);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("leaf", user.Theme);
+        Assert.Equal("leaf", result.Value.Theme);
     }
 
     private sealed class SingleUserRepository(User user) : IUserRepository {

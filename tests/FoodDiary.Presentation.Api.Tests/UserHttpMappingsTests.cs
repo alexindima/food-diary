@@ -22,6 +22,7 @@ public sealed class UserHttpMappingsTests {
             StepGoal: 9000,
             HydrationGoal: 2.7,
             Language: "en",
+            Theme: "leaf",
             PushNotificationsEnabled: true,
             FastingPushNotificationsEnabled: false,
             SocialPushNotificationsEnabled: true,
@@ -46,6 +47,7 @@ public sealed class UserHttpMappingsTests {
         Assert.Equal(request.StepGoal, command.StepGoal);
         Assert.Equal(request.HydrationGoal, command.HydrationGoal);
         Assert.Equal(request.Language, command.Language);
+        Assert.Equal(request.Theme, command.Theme);
         Assert.Equal(request.PushNotificationsEnabled, command.PushNotificationsEnabled);
         Assert.Equal(request.FastingPushNotificationsEnabled, command.FastingPushNotificationsEnabled);
         Assert.Equal(request.SocialPushNotificationsEnabled, command.SocialPushNotificationsEnabled);

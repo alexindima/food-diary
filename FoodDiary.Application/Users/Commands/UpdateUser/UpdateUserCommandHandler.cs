@@ -47,6 +47,14 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserModel>(languageResult.Error);
         }
 
+        var themeResult = StringCodeParser.ParseOptionalTheme(
+            command.Theme,
+            nameof(UpdateUserCommand.Theme),
+            "Invalid theme value.");
+        if (themeResult.IsFailure) {
+            return Result.Failure<UserModel>(themeResult.Error);
+        }
+
         var profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
         if (profileImageAssetIdResult.IsFailure) {
             return Result.Failure<UserModel>(profileImageAssetIdResult.Error);
@@ -82,6 +90,7 @@ public class UpdateUserCommandHandler(
         currentUser.UpdatePreferences(new UserPreferenceUpdate(
             DashboardLayoutJson: dashboardLayoutJson,
             Language: languageResult.Value,
+            Theme: themeResult.Value,
             PushNotificationsEnabled: command.PushNotificationsEnabled,
             FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));

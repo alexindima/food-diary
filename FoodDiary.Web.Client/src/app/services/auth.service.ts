@@ -20,6 +20,7 @@ import { LocalizationService } from './localization.service';
 import { TokenStorageService } from './token-storage.service';
 import { JwtDecoderService } from './jwt-decoder.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import { ThemeService } from './theme.service';
 
 @Injectable({
     providedIn: 'root',
@@ -28,6 +29,7 @@ export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
     private readonly quickConsumptionService = inject(QuickMealService);
     private readonly localizationService = inject(LocalizationService);
+    private readonly themeService = inject(ThemeService);
     private readonly tokenStorage = inject(TokenStorageService);
     private readonly jwtDecoder = inject(JwtDecoderService);
     protected readonly baseUrl = environment.apiUrls.auth;
@@ -207,6 +209,8 @@ export class AuthService extends ApiService {
         if (preferredLanguage) {
             void this.localizationService.applyLanguagePreference(preferredLanguage);
         }
+
+        this.themeService.syncWithUserTheme(authResponse.user?.theme);
 
         if (typeof authResponse.user?.isEmailConfirmed === 'boolean') {
             this.setEmailConfirmed(authResponse.user.isEmailConfirmed);

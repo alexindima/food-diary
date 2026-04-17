@@ -505,6 +505,23 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdatePreferences_WithUnsupportedTheme_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdatePreferences(new UserPreferenceUpdate(Theme: "sunset")));
+    }
+
+    [Fact]
+    public void UpdatePreferences_WithSupportedTheme_UpdatesValue() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdatePreferences(theme: "leaf");
+
+        Assert.Equal("leaf", user.Theme);
+    }
+
+    [Fact]
     public void UpdatePreferences_WithTypedUpdate_UpdatesDashboardLayoutAndLanguage() {
         var user = User.Create("test@example.com", "hash");
 
@@ -514,6 +531,13 @@ public class UserInvariantTests {
 
         Assert.Equal("{\"layout\":\"compact\"}", user.DashboardLayoutJson);
         Assert.Equal("ru", user.Language);
+    }
+
+    [Fact]
+    public void User_Create_SetsDefaultTheme() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Equal("ocean", user.Theme);
     }
 
     [Fact]

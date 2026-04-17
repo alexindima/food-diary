@@ -1,19 +1,5 @@
 @use 'sass:map';
 
-$fd-color-tokens: (
-    primary: #667c89,
-    accent: #f5a623,
-    success: #50e3c2,
-    info: #4a90e2,
-    warn: #ff6b6b,
-    surface: #ffffff,
-    surface-muted: #f5f5f5,
-    text: #333333,
-    text-muted: #757575,
-    border: #e0e0e0,
-    shadow: rgba(15, 23, 42, 0.08),
-);
-
 $fd-radius-tokens: (
     xs: 4px,
     sm: 6px,
@@ -47,15 +33,6 @@ $fd-elevation-tokens: (
     md: 0 4px 12px rgba(24, 39, 75, 0.15),
 );
 
-$fd-layout-page-tokens: (
-    background: #f5f7fb,
-    top-padding: clamp(6px, 1.5vw, 10px),
-    horizontal-padding: clamp(12px, 3vw, 32px),
-    vertical-padding: clamp(32px, 6vw, 64px),
-    content-max-width: 1200px,
-    section-spacing: clamp(24px, 4vw, 40px),
-);
-
 $fd-period-filter-tokens: (
     gap: 24px,
 );
@@ -64,16 +41,7 @@ $fd-page-body-tokens: (
     gap: 16px,
 );
 
-$fd-layout-header-tokens: (
-    height: 56px,
-    background: #1b2a80,
-    text-color: #ffffff,
-    horizontal-padding-left: clamp(12px, 3vw, 32px),
-    horizontal-padding-right: clamp(8px, 2vw, 16px),
-    shadow: 0 12px 34px rgba(15, 23, 42, 0.12),
-);
-
-$fd-page-header-tokens: (
+$fd-page-header-base-tokens: (
     title-size: clamp(1.4rem, 3vw, 2rem),
     title-line-height: 1.2,
     title-weight: 700,
@@ -83,52 +51,232 @@ $fd-page-header-tokens: (
     subtitle-weight: 500,
     gap: clamp(10px, 2vw, 16px),
     actions-gap: 12px,
-    mobile-background: #f8fafc,
-    mobile-border-color: rgba(148, 163, 184, 0.22),
 );
 
-$fd-design-tokens: (
-    colors: $fd-color-tokens,
+$fd-static-design-tokens: (
     radius: $fd-radius-tokens,
     spacing: $fd-spacing-tokens,
     typography: $fd-typography-tokens,
     elevation: $fd-elevation-tokens,
-    layout-page: $fd-layout-page-tokens,
-    layout-header: $fd-layout-header-tokens,
-    page-header: $fd-page-header-tokens,
     period-filter: $fd-period-filter-tokens,
     page-body: $fd-page-body-tokens,
 );
 
+$fd-theme-design-tokens: (
+    ocean: (
+        colors: (
+            primary: #2563eb,
+            accent: #f59e0b,
+            success: #10b981,
+            info: #0ea5e9,
+            warn: #ef4444,
+            surface: #ffffff,
+            surface-muted: #f8fafc,
+            surface-raised: #ffffff,
+            text: #0f172a,
+            text-strong: #020617,
+            text-muted: #475569,
+            border: rgba(15, 23, 42, 0.08),
+            border-strong: rgba(148, 163, 184, 0.28),
+            shadow: rgba(15, 23, 42, 0.08),
+            on-brand: #ffffff,
+            primary-rgb: 37 99 235,
+            danger-rgb: 239 68 68,
+            primary-50: #eef2ff,
+            primary-100: #dbeafe,
+            primary-200: #bfdbfe,
+            primary-300: #93c5fd,
+            primary-400: #60a5fa,
+            primary-500: #3b82f6,
+            primary-600: #2563eb,
+            primary-700: #1d4ed8,
+            primary-800: #1e40af,
+            primary-900: #1e3a8a,
+        ),
+        gradients: (
+            brand-start: #4dabff,
+            brand-end: #2563eb,
+            brand-hover-start: #60b6ff,
+            brand-hover-end: #2f6df2,
+            sidebar-start: #f8fbff,
+            sidebar-end: #eef4ff,
+            premium-start: #0f172a,
+            premium-end: #1e293b,
+            hero-start: #2563eb,
+            hero-end: #0ea5e9,
+        ),
+        layout-page: (
+            background: #f5f7fb,
+            top-padding: clamp(6px, 1.5vw, 10px),
+            horizontal-padding: clamp(12px, 3vw, 32px),
+            vertical-padding: clamp(32px, 6vw, 64px),
+            content-max-width: 1200px,
+            section-spacing: clamp(24px, 4vw, 40px),
+        ),
+        layout-header: (
+            height: 56px,
+            background: #1d4ed8,
+            text-color: #ffffff,
+            horizontal-padding-left: clamp(12px, 3vw, 32px),
+            horizontal-padding-right: clamp(8px, 2vw, 16px),
+            shadow: 0 12px 34px rgba(15, 23, 42, 0.12),
+        ),
+        page-header: map.merge(
+            $fd-page-header-base-tokens,
+            (
+                mobile-background: #f8fafc,
+                mobile-border-color: rgba(148, 163, 184, 0.22),
+            )
+        ),
+    ),
+    leaf: (
+        colors: (
+            primary: #059669,
+            accent: #f59e0b,
+            success: #16a34a,
+            info: #0f766e,
+            warn: #ef4444,
+            surface: #ffffff,
+            surface-muted: #f6fbf7,
+            surface-raised: #ffffff,
+            text: #10231a,
+            text-strong: #08130d,
+            text-muted: #486257,
+            border: rgba(6, 78, 59, 0.1),
+            border-strong: rgba(134, 239, 172, 0.34),
+            shadow: rgba(6, 78, 59, 0.08),
+            on-brand: #ffffff,
+            primary-rgb: 5 150 105,
+            danger-rgb: 239 68 68,
+            primary-50: #ecfdf5,
+            primary-100: #d1fae5,
+            primary-200: #a7f3d0,
+            primary-300: #6ee7b7,
+            primary-400: #34d399,
+            primary-500: #10b981,
+            primary-600: #059669,
+            primary-700: #047857,
+            primary-800: #065f46,
+            primary-900: #064e3b,
+        ),
+        gradients: (
+            brand-start: #34d399,
+            brand-end: #059669,
+            brand-hover-start: #4ade80,
+            brand-hover-end: #047857,
+            sidebar-start: #f7fcf8,
+            sidebar-end: #ebf8ef,
+            premium-start: #123b2d,
+            premium-end: #065f46,
+            hero-start: #10b981,
+            hero-end: #0f766e,
+        ),
+        layout-page: (
+            background: #f3faf6,
+            top-padding: clamp(6px, 1.5vw, 10px),
+            horizontal-padding: clamp(12px, 3vw, 32px),
+            vertical-padding: clamp(32px, 6vw, 64px),
+            content-max-width: 1200px,
+            section-spacing: clamp(24px, 4vw, 40px),
+        ),
+        layout-header: (
+            height: 56px,
+            background: #047857,
+            text-color: #ffffff,
+            horizontal-padding-left: clamp(12px, 3vw, 32px),
+            horizontal-padding-right: clamp(8px, 2vw, 16px),
+            shadow: 0 12px 34px rgba(6, 78, 59, 0.16),
+        ),
+        page-header: map.merge(
+            $fd-page-header-base-tokens,
+            (
+                mobile-background: #f3faf6,
+                mobile-border-color: rgba(52, 211, 153, 0.22),
+            )
+        ),
+    ),
+);
+
 @function fd-token($group, $name) {
-    $group-map: map.get($fd-design-tokens, $group);
+    $group-map: map.get($fd-static-design-tokens, $group);
 
     @if $group-map == null {
-        @error 'Unknown design token group: #{$group}';
+        @error 'Unknown static design token group: #{$group}';
     }
 
     $value: map.get($group-map, $name);
 
     @if $value == null {
-        @error 'Unknown design token "#{$name}" in group "#{$group}"';
+        @error 'Unknown design token "#{$name}" in static group "#{$group}"';
     }
 
     @return $value;
 }
 
-@mixin fd-emit-css-variables($selector: ':root') {
+@function fd-theme-token($theme, $group, $name) {
+    $theme-map: map.get($fd-theme-design-tokens, $theme);
+
+    @if $theme-map == null {
+        @error 'Unknown theme: #{$theme}';
+    }
+
+    $group-map: map.get($theme-map, $group);
+
+    @if $group-map == null {
+        @error 'Unknown theme token group "#{$group}" for theme "#{$theme}"';
+    }
+
+    $value: map.get($group-map, $name);
+
+    @if $value == null {
+        @error 'Unknown theme token "#{$name}" in group "#{$group}" for theme "#{$theme}"';
+    }
+
+    @return $value;
+}
+
+@mixin fd-emit-css-variables($theme, $selector) {
     #{$selector} {
-        --fd-color-primary: #{fd-token(colors, primary)};
-        --fd-color-accent: #{fd-token(colors, accent)};
-        --fd-color-success: #{fd-token(colors, success)};
-        --fd-color-info: #{fd-token(colors, info)};
-        --fd-color-warn: #{fd-token(colors, warn)};
-        --fd-color-surface: #{fd-token(colors, surface)};
-        --fd-color-surface-muted: #{fd-token(colors, surface-muted)};
-        --fd-color-text: #{fd-token(colors, text)};
-        --fd-color-text-muted: #{fd-token(colors, text-muted)};
-        --fd-color-border: #{fd-token(colors, border)};
-        --fd-color-shadow: #{fd-token(colors, shadow)};
+        --fd-color-primary: #{fd-theme-token($theme, colors, primary)};
+        --fd-color-accent: #{fd-theme-token($theme, colors, accent)};
+        --fd-color-success: #{fd-theme-token($theme, colors, success)};
+        --fd-color-info: #{fd-theme-token($theme, colors, info)};
+        --fd-color-warn: #{fd-theme-token($theme, colors, warn)};
+        --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
+        --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
+        --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
+        --fd-color-background: #{fd-theme-token($theme, layout-page, background)};
+        --fd-color-text: #{fd-theme-token($theme, colors, text)};
+        --fd-color-text-strong: #{fd-theme-token($theme, colors, text-strong)};
+        --fd-color-text-muted: #{fd-theme-token($theme, colors, text-muted)};
+        --fd-color-border: #{fd-theme-token($theme, colors, border)};
+        --fd-color-border-strong: #{fd-theme-token($theme, colors, border-strong)};
+        --fd-color-shadow: #{fd-theme-token($theme, colors, shadow)};
+        --fd-color-on-brand: #{fd-theme-token($theme, colors, on-brand)};
+        --fd-color-primary-rgb: #{fd-theme-token($theme, colors, primary-rgb)};
+        --fd-color-danger-rgb: #{fd-theme-token($theme, colors, danger-rgb)};
+
+        --fd-color-primary-50: #{fd-theme-token($theme, colors, primary-50)};
+        --fd-color-primary-100: #{fd-theme-token($theme, colors, primary-100)};
+        --fd-color-primary-200: #{fd-theme-token($theme, colors, primary-200)};
+        --fd-color-primary-300: #{fd-theme-token($theme, colors, primary-300)};
+        --fd-color-primary-400: #{fd-theme-token($theme, colors, primary-400)};
+        --fd-color-primary-500: #{fd-theme-token($theme, colors, primary-500)};
+        --fd-color-primary-600: #{fd-theme-token($theme, colors, primary-600)};
+        --fd-color-primary-700: #{fd-theme-token($theme, colors, primary-700)};
+        --fd-color-primary-800: #{fd-theme-token($theme, colors, primary-800)};
+        --fd-color-primary-900: #{fd-theme-token($theme, colors, primary-900)};
+
+        --fd-gradient-brand-start: #{fd-theme-token($theme, gradients, brand-start)};
+        --fd-gradient-brand-end: #{fd-theme-token($theme, gradients, brand-end)};
+        --fd-gradient-brand-hover-start: #{fd-theme-token($theme, gradients, brand-hover-start)};
+        --fd-gradient-brand-hover-end: #{fd-theme-token($theme, gradients, brand-hover-end)};
+        --fd-gradient-sidebar-start: #{fd-theme-token($theme, gradients, sidebar-start)};
+        --fd-gradient-sidebar-end: #{fd-theme-token($theme, gradients, sidebar-end)};
+        --fd-gradient-premium-start: #{fd-theme-token($theme, gradients, premium-start)};
+        --fd-gradient-premium-end: #{fd-theme-token($theme, gradients, premium-end)};
+        --fd-gradient-hero-start: #{fd-theme-token($theme, gradients, hero-start)};
+        --fd-gradient-hero-end: #{fd-theme-token($theme, gradients, hero-end)};
 
         --fd-radius-xs: #{fd-token(radius, xs)};
         --fd-radius-sm: #{fd-token(radius, sm)};
@@ -155,32 +303,32 @@ $fd-design-tokens: (
         --fd-shadow-sm: #{fd-token(elevation, sm)};
         --fd-shadow-md: #{fd-token(elevation, md)};
 
-        --fd-layout-page-background: #{fd-token(layout-page, background)};
-        --fd-layout-page-top-padding: #{fd-token(layout-page, top-padding)};
-        --fd-layout-page-horizontal-padding: #{fd-token(layout-page, horizontal-padding)};
-        --fd-layout-page-vertical-padding: #{fd-token(layout-page, vertical-padding)};
-        --fd-layout-page-content-max-width: #{fd-token(layout-page, content-max-width)};
-        --fd-layout-page-section-spacing: #{fd-token(layout-page, section-spacing)};
+        --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
+        --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};
+        --fd-layout-page-horizontal-padding: #{fd-theme-token($theme, layout-page, horizontal-padding)};
+        --fd-layout-page-vertical-padding: #{fd-theme-token($theme, layout-page, vertical-padding)};
+        --fd-layout-page-content-max-width: #{fd-theme-token($theme, layout-page, content-max-width)};
+        --fd-layout-page-section-spacing: #{fd-theme-token($theme, layout-page, section-spacing)};
         --fd-period-gap: #{fd-token(period-filter, gap)};
         --fd-page-body-gap: #{fd-token(page-body, gap)};
 
-        --fd-layout-header-height: #{fd-token(layout-header, height)};
-        --fd-layout-header-background: #{fd-token(layout-header, background)};
-        --fd-layout-header-text-color: #{fd-token(layout-header, text-color)};
-        --fd-layout-header-horizontal-padding-left: #{fd-token(layout-header, horizontal-padding-left)};
-        --fd-layout-header-horizontal-padding-right: #{fd-token(layout-header, horizontal-padding-right)};
-        --fd-layout-header-shadow: #{fd-token(layout-header, shadow)};
+        --fd-layout-header-height: #{fd-theme-token($theme, layout-header, height)};
+        --fd-layout-header-background: #{fd-theme-token($theme, layout-header, background)};
+        --fd-layout-header-text-color: #{fd-theme-token($theme, layout-header, text-color)};
+        --fd-layout-header-horizontal-padding-left: #{fd-theme-token($theme, layout-header, horizontal-padding-left)};
+        --fd-layout-header-horizontal-padding-right: #{fd-theme-token($theme, layout-header, horizontal-padding-right)};
+        --fd-layout-header-shadow: #{fd-theme-token($theme, layout-header, shadow)};
 
-        --fd-page-title-size: #{fd-token(page-header, title-size)};
-        --fd-page-title-line-height: #{fd-token(page-header, title-line-height)};
-        --fd-page-title-weight: #{fd-token(page-header, title-weight)};
-        --fd-page-header-height: #{fd-token(page-header, height)};
-        --fd-page-subtitle-size: #{fd-token(page-header, subtitle-size)};
-        --fd-page-subtitle-line-height: #{fd-token(page-header, subtitle-line-height)};
-        --fd-page-subtitle-weight: #{fd-token(page-header, subtitle-weight)};
-        --fd-page-header-gap: #{fd-token(page-header, gap)};
-        --fd-page-actions-gap: #{fd-token(page-header, actions-gap)};
-        --fd-page-header-mobile-background: #{fd-token(page-header, mobile-background)};
-        --fd-page-header-mobile-border-color: #{fd-token(page-header, mobile-border-color)};
+        --fd-page-title-size: #{fd-theme-token($theme, page-header, title-size)};
+        --fd-page-title-line-height: #{fd-theme-token($theme, page-header, title-line-height)};
+        --fd-page-title-weight: #{fd-theme-token($theme, page-header, title-weight)};
+        --fd-page-header-height: #{fd-theme-token($theme, page-header, height)};
+        --fd-page-subtitle-size: #{fd-theme-token($theme, page-header, subtitle-size)};
+        --fd-page-subtitle-line-height: #{fd-theme-token($theme, page-header, subtitle-line-height)};
+        --fd-page-subtitle-weight: #{fd-theme-token($theme, page-header, subtitle-weight)};
+        --fd-page-header-gap: #{fd-theme-token($theme, page-header, gap)};
+        --fd-page-actions-gap: #{fd-theme-token($theme, page-header, actions-gap)};
+        --fd-page-header-mobile-background: #{fd-theme-token($theme, page-header, mobile-background)};
+        --fd-page-header-mobile-border-color: #{fd-theme-token($theme, page-header, mobile-border-color)};
     }
 }

@@ -69,6 +69,17 @@ export class UserService extends ApiService {
         );
     }
 
+    public updateTheme(theme: string): Observable<User | null> {
+        return this.patch<User>('info', { theme }).pipe(
+            tap(user => {
+                if (user) {
+                    this.userSignal.set(user);
+                }
+            }),
+            catchError(error => fallbackApiError('Update user theme error', error, null)),
+        );
+    }
+
     public updateDashboardLayout(layout: DashboardLayoutSettings): Observable<User | null> {
         return this.patch<User>('info', { dashboardLayout: layout }).pipe(
             tap(user => {

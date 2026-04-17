@@ -1,4 +1,5 @@
 @use 'colors';
 @use './design-tokens';
 
-@include design-tokens.fd-emit-css-variables();
+@include design-tokens.fd-emit-css-variables(ocean, ':root, html[data-theme="ocean"]');
+@include design-tokens.fd-emit-css-variables(leaf, 'html[data-theme="leaf"]');

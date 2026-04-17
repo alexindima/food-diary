@@ -12,6 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { NotificationPreferences, NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
+import { ThemeService } from '../../../services/theme.service';
 import { UserService } from '../../../shared/api/user.service';
 import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { UpdateUserDto, User } from '../../../shared/models/user.data';
@@ -28,6 +29,7 @@ export class ProfileManageFacade {
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);
     private readonly notificationService = inject(NotificationService);
+    private readonly themeService = inject(ThemeService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly profileAutosaveQueue = new Subject<void>();
     private pendingProfileUpdate: UpdateUserDto | null = null;
@@ -62,6 +64,7 @@ export class ProfileManageFacade {
 
                 this.user.set(user);
                 void this.localizationService.applyLanguagePreference(user.language ?? null);
+                this.themeService.syncWithUserTheme(user.theme);
                 this.clearGlobalError();
                 this.showSuccessDialog();
             },
@@ -204,6 +207,7 @@ export class ProfileManageFacade {
                 this.dietologistRelationship.set(overview.dietologistRelationship);
                 this.clearGlobalError();
                 void this.localizationService.applyLanguagePreference(overview.user.language ?? null);
+                this.themeService.syncWithUserTheme(overview.user.theme);
             },
             error: () => {
                 this.user.set(null);
@@ -251,6 +255,7 @@ export class ProfileManageFacade {
                     } else {
                         this.user.set(user);
                         void this.localizationService.applyLanguagePreference(user.language ?? null);
+                        this.themeService.syncWithUserTheme(user.theme);
                         this.clearGlobalError();
                     }
 

@@ -3,6 +3,7 @@ namespace FoodDiary.Domain.ValueObjects;
 public readonly record struct UserPreferenceUpdate(
     string? DashboardLayoutJson = null,
     string? Language = null,
+    string? Theme = null,
     bool? PushNotificationsEnabled = null,
     bool? FastingPushNotificationsEnabled = null,
     bool? SocialPushNotificationsEnabled = null,

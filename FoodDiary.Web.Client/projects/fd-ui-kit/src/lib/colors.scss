@@ -253,39 +253,30 @@ $fd-button-tokens: (
 
 /* CSS custom properties for runtime theming */
 
-:root {
-    --fd-color-primary-50: #eef2ff;
-    --fd-color-primary-100: #e0eaff;
-    --fd-color-primary-200: #c2d4ff;
-    --fd-color-primary-300: #9bb8ff;
-    --fd-color-primary-400: #7094ff;
-    --fd-color-primary-500: #4a6cf7;
-    --fd-color-primary-600: #3451d6;
-    --fd-color-primary-700: #2439b0;
-    --fd-color-primary-800: #1b2a80;
-    --fd-color-primary-900: #121c54;
+:root,
+html[data-theme='ocean'],
+html[data-theme='leaf'] {
+    --fd-color-gray-50: #f8fafc;
+    --fd-color-gray-100: #f1f5f9;
+    --fd-color-gray-200: #e2e8f0;
+    --fd-color-gray-300: #cbd5e1;
+    --fd-color-gray-400: #94a3b8;
+    --fd-color-gray-500: #64748b;
+    --fd-color-gray-600: #475569;
+    --fd-color-gray-700: #334155;
+    --fd-color-gray-800: #1e293b;
+    --fd-color-gray-900: #0f172a;
 
-    --fd-color-secondary-50: #f3eeff;
-    --fd-color-secondary-100: #e6ddff;
-    --fd-color-secondary-200: #cfc1ff;
-    --fd-color-secondary-300: #b49eff;
-    --fd-color-secondary-400: #977aff;
-    --fd-color-secondary-500: #7b61ff;
-    --fd-color-secondary-600: #644cdb;
-    --fd-color-secondary-700: #4c39b7;
-    --fd-color-secondary-800: #362787;
-    --fd-color-secondary-900: #241856;
-
-    --fd-color-gray-50: #f9fafb;
-    --fd-color-gray-100: #f3f4f6;
-    --fd-color-gray-200: #e5e7eb;
-    --fd-color-gray-300: #d1d5db;
-    --fd-color-gray-400: #9ca3af;
-    --fd-color-gray-500: #6b7280;
-    --fd-color-gray-600: #4b5563;
-    --fd-color-gray-700: #374151;
-    --fd-color-gray-800: #1f2933;
-    --fd-color-gray-900: #111827;
+    --fd-color-secondary-50: #f8fafc;
+    --fd-color-secondary-100: #f1f5f9;
+    --fd-color-secondary-200: #e2e8f0;
+    --fd-color-secondary-300: #cbd5e1;
+    --fd-color-secondary-400: #94a3b8;
+    --fd-color-secondary-500: #64748b;
+    --fd-color-secondary-600: #475569;
+    --fd-color-secondary-700: #334155;
+    --fd-color-secondary-800: #1e293b;
+    --fd-color-secondary-900: #0f172a;
 
     --fd-color-success-50: #{$fd-color-success-50};
     --fd-color-success-100: #{$fd-color-success-100};
@@ -320,14 +311,9 @@ $fd-button-tokens: (
     --fd-color-danger-800: #{$fd-color-danger-800};
     --fd-color-danger-900: #{$fd-color-danger-900};
 
-    --fd-color-success: #4bb543;
-    --fd-color-warning: #ffcc00;
-    --fd-color-danger: #ff3b3b;
-    --fd-color-info: #2f80ed;
-
-    --fd-color-bg-page: #f5f7fb;
-    --fd-color-bg-card: #ffffff;
-    --fd-color-bg-muted: #f0f4fa;
+    --fd-color-bg-page: var(--fd-color-background, #f5f7fb);
+    --fd-color-bg-card: var(--fd-color-surface, #ffffff);
+    --fd-color-bg-muted: var(--fd-color-surface-muted, #f8fafc);
 
     --fd-color-chart-calories: #f2994a;
     --fd-color-chart-proteins: #2d9cdb;
@@ -355,24 +341,102 @@ $fd-button-tokens: (
     --fd-color-nutrition-warning-border: rgba(245, 158, 11, 0.3);
     --fd-color-nutrition-warning-bg: rgba(255, 251, 235, 0.9);
     --fd-color-nutrition-warning-text: #92400e;
-    --fd-color-dialog-surface: #ffffff;
-    --fd-color-dialog-surface-muted: #f8faff;
-    --fd-color-dialog-border: rgba(17, 24, 39, 0.08);
+    --fd-color-dialog-surface: var(--fd-color-surface, #ffffff);
+    --fd-color-dialog-surface-muted: var(--fd-color-surface-muted, #f8fafc);
+    --fd-color-dialog-border: var(--fd-color-border, rgba(17, 24, 39, 0.08));
     --fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
 
-    /* Extended semantic accents */
     --fd-color-warn-strong: #f97316;
     --fd-color-success-strong: #16a34a;
     --fd-color-danger-strong: #dc2626;
 
-    /* Button design tokens */
-    @each $variant, $tokens in $fd-button-tokens {
-        @each $token-type, $states in $tokens {
-            @each $state, $value in $states {
-                --fd-button-#{$variant}-#{$token-type}-#{$state}: #{$value};
-            }
-        }
-    }
+    --fd-button-outline-background-default: transparent;
+    --fd-button-outline-background-hover: var(--fd-color-primary-50);
+    --fd-button-outline-background-active: var(--fd-color-primary-100);
+    --fd-button-outline-background-disabled: transparent;
+    --fd-button-outline-border-default: var(--fd-color-primary-500);
+    --fd-button-outline-border-hover: var(--fd-color-primary-600);
+    --fd-button-outline-border-active: var(--fd-color-primary-600);
+    --fd-button-outline-border-disabled: var(--fd-color-gray-300);
+    --fd-button-outline-text-default: var(--fd-color-primary-600);
+    --fd-button-outline-text-disabled: var(--fd-color-gray-400);
+
+    --fd-button-ghost-background-default: transparent;
+    --fd-button-ghost-background-hover: var(--fd-color-primary-50);
+    --fd-button-ghost-background-active: var(--fd-color-primary-100);
+    --fd-button-ghost-background-disabled: transparent;
+    --fd-button-ghost-border-default: transparent;
+    --fd-button-ghost-border-hover: transparent;
+    --fd-button-ghost-border-active: transparent;
+    --fd-button-ghost-border-disabled: transparent;
+    --fd-button-ghost-text-default: var(--fd-color-primary-600);
+    --fd-button-ghost-text-disabled: var(--fd-color-gray-400);
+
+    --fd-button-secondary-background-default: var(--fd-color-surface);
+    --fd-button-secondary-background-hover: var(--fd-color-gray-100);
+    --fd-button-secondary-background-active: var(--fd-color-gray-200);
+    --fd-button-secondary-background-disabled: var(--fd-color-gray-200);
+    --fd-button-secondary-border-default: var(--fd-color-gray-300);
+    --fd-button-secondary-border-hover: var(--fd-color-gray-400);
+    --fd-button-secondary-border-active: var(--fd-color-gray-400);
+    --fd-button-secondary-border-disabled: var(--fd-color-gray-200);
+    --fd-button-secondary-text-default: var(--fd-color-text);
+    --fd-button-secondary-text-disabled: var(--fd-color-gray-500);
+
+    --fd-button-secondary-text-background-default: transparent;
+    --fd-button-secondary-text-background-hover: var(--fd-color-gray-100);
+    --fd-button-secondary-text-background-active: var(--fd-color-gray-200);
+    --fd-button-secondary-text-background-disabled: transparent;
+    --fd-button-secondary-text-border-default: transparent;
+    --fd-button-secondary-text-border-hover: transparent;
+    --fd-button-secondary-text-border-active: transparent;
+    --fd-button-secondary-text-border-disabled: transparent;
+    --fd-button-secondary-text-text-default: var(--fd-color-text);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-gray-500);
+
+    --fd-button-danger-background-default: var(--fd-color-danger);
+    --fd-button-danger-background-hover: #e03535;
+    --fd-button-danger-background-active: #c42f2f;
+    --fd-button-danger-background-disabled: #ffb3b3;
+    --fd-button-danger-border-default: transparent;
+    --fd-button-danger-border-hover: transparent;
+    --fd-button-danger-border-active: transparent;
+    --fd-button-danger-border-disabled: transparent;
+    --fd-button-danger-text-default: #ffffff;
+    --fd-button-danger-text-disabled: rgba(255, 255, 255, 0.63);
+
+    --fd-button-danger-ghost-background-default: transparent;
+    --fd-button-danger-ghost-background-hover: rgb(var(--fd-color-danger-rgb) / 0.08);
+    --fd-button-danger-ghost-background-active: rgb(var(--fd-color-danger-rgb) / 0.16);
+    --fd-button-danger-ghost-background-disabled: rgb(var(--fd-color-danger-rgb) / 0.04);
+    --fd-button-danger-ghost-border-default: transparent;
+    --fd-button-danger-ghost-border-hover: transparent;
+    --fd-button-danger-ghost-border-active: transparent;
+    --fd-button-danger-ghost-border-disabled: transparent;
+    --fd-button-danger-ghost-text-default: var(--fd-color-danger);
+    --fd-button-danger-ghost-text-disabled: #ffb3b3;
+
+    --fd-button-info-background-default: color-mix(in srgb, var(--fd-color-info) 10%, #fff);
+    --fd-button-info-background-hover: color-mix(in srgb, var(--fd-color-info) 14%, #fff);
+    --fd-button-info-background-active: color-mix(in srgb, var(--fd-color-info) 18%, #fff);
+    --fd-button-info-background-disabled: color-mix(in srgb, var(--fd-color-info) 8%, #fff);
+    --fd-button-info-border-default: transparent;
+    --fd-button-info-border-hover: transparent;
+    --fd-button-info-border-active: transparent;
+    --fd-button-info-border-disabled: transparent;
+    --fd-button-info-text-default: var(--fd-color-info);
+    --fd-button-info-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, #fff);
+
+    --fd-button-info-text-background-default: transparent;
+    --fd-button-info-text-background-hover: color-mix(in srgb, var(--fd-color-info) 12%, transparent);
+    --fd-button-info-text-background-active: color-mix(in srgb, var(--fd-color-info) 20%, transparent);
+    --fd-button-info-text-background-disabled: transparent;
+    --fd-button-info-text-border-default: transparent;
+    --fd-button-info-text-border-hover: transparent;
+    --fd-button-info-text-border-active: transparent;
+    --fd-button-info-text-border-disabled: transparent;
+    --fd-button-info-text-text-default: var(--fd-color-info);
+    --fd-button-info-text-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, #fff);
 }
 
 /* SCSS maps for programmatic usage */

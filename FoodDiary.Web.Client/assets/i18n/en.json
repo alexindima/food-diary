@@ -1307,6 +1307,8 @@
         "EMAIL_PLACEHOLDER": "user@example.com",
         "LANGUAGE": "Language",
         "LANGUAGE_PLACEHOLDER": "Select language",
+        "THEME": "Theme",
+        "THEME_PLACEHOLDER": "Select theme",
         "NEW_PASSWORD": "New Password",
         "NEW_PASSWORD_PLACEHOLDER": "Enter a new password",
         "CONFIRM_NEW_PASSWORD": "Confirm New Password",
@@ -1352,6 +1354,10 @@
         "LANGUAGE_OPTIONS": {
             "EN": "English",
             "RU": "Russian"
+        },
+        "THEME_OPTIONS": {
+            "OCEAN": "Blue",
+            "LEAF": "Green"
         },
         "NUTRITION_SECTION": "Nutrition goals",
         "DAILY_CALORIES": "Daily calorie target",
@@ -1568,7 +1574,11 @@
         "FASTING": "Fasting",
         "ACHIEVEMENTS": "Achievements",
         "LESSONS": "Academy",
-        "WEEKLY_CHECK_IN": "Weekly review"
+        "WEEKLY_CHECK_IN": "Weekly review",
+        "THEME": "Theme",
+        "THEME_OCEAN": "Blue",
+        "THEME_LEAF": "Green",
+        "THEME_UPDATE_ERROR": "Could not save theme preference."
     },
     "NOTIFICATIONS": {
         "TITLE": "Notifications",

@@ -47,6 +47,7 @@ import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
+import { APP_THEMES, AppThemeName } from '../../../theme/app-theme.config';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -109,6 +110,7 @@ export class UserManageComponent implements OnInit {
     public genderOptions: FdUiSelectOption<Gender | null>[] = [];
     public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
     public languageOptions: FdUiSelectOption<string | null>[] = [];
+    public themeOptions: FdUiSelectOption<AppThemeName | null>[] = [];
     public userForm: FormGroup<UserFormData>;
     public dietologistForm: FormGroup<DietologistFormData>;
     public readonly globalError = this.facade.globalError;
@@ -196,6 +198,7 @@ export class UserManageComponent implements OnInit {
             birthDate: new FormControl<string | null>(null),
             gender: new FormControl<Gender | null>(null),
             language: new FormControl<string | null>(null),
+            theme: new FormControl<AppThemeName | null>(null),
             height: new FormControl<number | null>(null),
             activityLevel: new FormControl<ActivityLevelOption | null>(null),
             stepGoal: new FormControl<number | null>(null),
@@ -830,6 +833,11 @@ export class UserManageComponent implements OnInit {
             label: this.translateService.instant(`USER_MANAGE.LANGUAGE_OPTIONS.${code.toUpperCase()}`),
             value: code,
         }));
+
+        this.themeOptions = APP_THEMES.map(theme => ({
+            label: this.translateService.instant(`USER_MANAGE.THEME_OPTIONS.${theme.name.toUpperCase()}`),
+            value: theme.name,
+        }));
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {
@@ -854,6 +862,7 @@ export class UserManageComponent implements OnInit {
             lastName: user.lastName ?? null,
             gender: user.gender as Gender | null,
             language: this.normalizeLanguage(user.language),
+            theme: this.normalizeTheme(user.theme),
             birthDate: user.birthDate ? this.formatDateInput(new Date(user.birthDate)) : null,
             height: user.height ?? null,
             activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
@@ -870,6 +879,10 @@ export class UserManageComponent implements OnInit {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    private normalizeTheme(value: string | null | undefined): AppThemeName | null {
+        return value === 'ocean' || value === 'leaf' ? value : null;
     }
 
     private readNotificationPermission(): NotificationPermission | 'unsupported' {
@@ -970,6 +983,7 @@ export interface UserFormValues {
     birthDate: string | null;
     gender: Gender | null;
     language: string | null;
+    theme: AppThemeName | null;
     height: number | null;
     activityLevel: ActivityLevelOption | null;
     stepGoal: number | null;

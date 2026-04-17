@@ -1,15 +1,15 @@
-$color-border: #e0e0e0;
-$color-background: #ffffff;
-$color-box-shadow: rgba(0, 0, 0, 0.1);
-$color-tabs-bg: #f5f5f5;
-$color-text-main: #333333;
-$color-text-additional: #757575;
+$color-border: var(--fd-color-border, #e0e0e0);
+$color-background: var(--fd-color-surface, #ffffff);
+$color-box-shadow: var(--fd-color-shadow, rgba(0, 0, 0, 0.1));
+$color-tabs-bg: var(--fd-color-surface-muted, #f5f5f5);
+$color-text-main: var(--fd-color-text, #0f172a);
+$color-text-additional: var(--fd-color-text-muted, #475569);
 $color-no-results: #ff6b6b;
-$color-primary: #2563eb;
-$color-calories: #ff6384;
-$color-proteins: #4a90e2;
-$color-fats: #50e3c2;
-$color-carbs: #f5a623;
+$color-primary: var(--fd-color-primary-600, #2563eb);
+$color-calories: var(--fd-color-chart-calories, #ff6384);
+$color-proteins: var(--fd-color-chart-proteins, #4a90e2);
+$color-fats: var(--fd-color-chart-fats, #50e3c2);
+$color-carbs: var(--fd-color-chart-carbs, #f5a623);
 
 $border-radius-s: 4px;
 $border-radius-m: 8px;

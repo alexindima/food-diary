@@ -29,6 +29,7 @@ export interface User {
     waterGoal?: number;
     hydrationGoal?: number;
     language?: string;
+    theme?: string;
     pushNotificationsEnabled: boolean;
     fastingPushNotificationsEnabled: boolean;
     socialPushNotificationsEnabled: boolean;
@@ -72,6 +73,7 @@ export class UpdateUserDto {
     public stepGoal?: number;
     public hydrationGoal?: number;
     public language?: string;
+    public theme?: string;
     public pushNotificationsEnabled?: boolean;
     public fastingPushNotificationsEnabled?: boolean;
     public socialPushNotificationsEnabled?: boolean;
@@ -91,6 +93,7 @@ export class UpdateUserDto {
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);
         this.language = normalizeLanguage((formValues as { language?: string | null }).language);
+        this.theme = normalizeTheme((formValues as { theme?: string | null }).theme);
         this.pushNotificationsEnabled = normalizeBoolean(
             (formValues as { pushNotificationsEnabled?: boolean | null }).pushNotificationsEnabled,
         );
@@ -142,6 +145,15 @@ const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): 
 };
 
 const normalizeLanguage = (value: string | null | undefined): string | undefined => {
+    if (!value) {
+        return undefined;
+    }
+
+    const normalized = value.trim().toLowerCase();
+    return normalized ? normalized : undefined;
+};
+
+const normalizeTheme = (value: string | null | undefined): string | undefined => {
     if (!value) {
         return undefined;
     }

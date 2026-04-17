@@ -1861,6 +1861,8 @@
         "EMAIL_PLACEHOLDER": "user@example.com",
         "LANGUAGE": "Язык",
         "LANGUAGE_PLACEHOLDER": "Выберите язык",
+        "THEME": "Тема",
+        "THEME_PLACEHOLDER": "Выберите тему",
         "NEW_PASSWORD": "Новый пароль",
         "NEW_PASSWORD_PLACEHOLDER": "Введите новый пароль",
         "CONFIRM_NEW_PASSWORD": "Подтвердите новый пароль",
@@ -2044,6 +2046,10 @@
         "LANGUAGE_OPTIONS": {
             "EN": "Английский",
             "RU": "Русский"
+        },
+        "THEME_OPTIONS": {
+            "OCEAN": "Синяя",
+            "LEAF": "Зелёная"
         },
         "NUTRITION_SECTION": "Цели по питанию",
         "EDIT_GOALS": "Редактировать цели",
@@ -2234,7 +2240,11 @@
         "FASTING": "Голодание",
         "ACHIEVEMENTS": "Достижения",
         "LESSONS": "Академия",
-        "WEEKLY_CHECK_IN": "Недельный обзор"
+        "WEEKLY_CHECK_IN": "Недельный обзор",
+        "THEME": "Тема",
+        "THEME_OCEAN": "Синяя",
+        "THEME_LEAF": "Зелёная",
+        "THEME_UPDATE_ERROR": "Не удалось сохранить выбранную тему."
     },
     "NOTIFICATIONS": {
         "TITLE": "Уведомления",

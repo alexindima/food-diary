@@ -110,6 +110,8 @@ export class SidebarComponent {
         }
     });
 
+    public constructor() {}
+
     protected toggleFoodTracking(): void {
         const next = !this.isFoodTrackingOpen();
         this.isFoodTrackingOpen.set(next);

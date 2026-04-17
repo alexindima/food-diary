@@ -2,7 +2,7 @@
   "name": "Food Diary",
   "short_name": "Food Diary",
   "id": "/",
-  "theme_color": "#1976d2",
+  "theme_color": "#1d4ed8",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/",

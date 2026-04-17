@@ -16,6 +16,7 @@ public readonly record struct UserProfileState(
     ImageAssetId? ProfileImageAssetId,
     string? DashboardLayoutJson,
     string? Language,
+    string? Theme,
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,
@@ -35,6 +36,7 @@ public readonly record struct UserProfileState(
             ProfileImageAssetId: null,
             DashboardLayoutJson: null,
             Language: null,
+            Theme: ThemeCode.Default.Value,
             PushNotificationsEnabled: false,
             FastingPushNotificationsEnabled: true,
             SocialPushNotificationsEnabled: true,
@@ -57,6 +59,7 @@ public readonly record struct UserProfileState(
     public UserPreferenceState Preferences => new(
         DashboardLayoutJson,
         Language,
+        Theme,
         PushNotificationsEnabled,
         FastingPushNotificationsEnabled,
         SocialPushNotificationsEnabled,

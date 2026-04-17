@@ -1,9 +1,9 @@
-﻿@use '@angular/material' as mat;
+@use '@angular/material' as mat;
 @use './design-tokens';
 
 @include mat.core();
 
-$fd-theme: mat.define-theme(
+$fd-ocean-theme: mat.define-theme(
     (
         color: (
             theme-type: light,
@@ -23,11 +23,41 @@ $fd-theme: mat.define-theme(
     )
 );
 
-:root {
-    @include mat.all-component-themes($fd-theme);
-    @include mat.typography-hierarchy($fd-theme);
-    @include mat.system-level-colors($fd-theme);
+$fd-leaf-theme: mat.define-theme(
+    (
+        color: (
+            theme-type: light,
+            primary: mat.$green-palette,
+            tertiary: mat.$cyan-palette,
+        ),
+        typography: (
+            plain-family: design-tokens.fd-token(typography, font-family),
+            brand-family: design-tokens.fd-token(typography, font-family),
+            bold-weight: design-tokens.fd-token(typography, font-weight-bold),
+            medium-weight: design-tokens.fd-token(typography, font-weight-medium),
+            regular-weight: design-tokens.fd-token(typography, font-weight-regular),
+        ),
+        density: (
+            scale: 0,
+        ),
+    )
+);
 
+:root,
+html[data-theme='ocean'] {
+    @include mat.all-component-themes($fd-ocean-theme);
+    @include mat.typography-hierarchy($fd-ocean-theme);
+    @include mat.system-level-colors($fd-ocean-theme);
+}
+
+html[data-theme='leaf'] {
+    @include mat.all-component-colors($fd-leaf-theme);
+    @include mat.system-level-colors($fd-leaf-theme);
+}
+
+:root,
+html[data-theme='ocean'],
+html[data-theme='leaf'] {
     --mdc-outlined-text-field-container-height: 40px;
     --mat-form-field-container-height: 40px;
 }

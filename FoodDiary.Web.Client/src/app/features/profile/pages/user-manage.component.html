@@ -96,6 +96,16 @@
                                     [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
                                     [options]="languageOptions"
                                 />
+                                <fd-ui-select
+                                    class="user-manage__account-row-field"
+                                    formControlName="theme"
+                                    size="lg"
+                                    [label]="'USER_MANAGE.THEME' | translate"
+                                    [placeholder]="'USER_MANAGE.THEME_PLACEHOLDER' | translate"
+                                    [options]="themeOptions"
+                                />
+                            </div>
+                            <div class="user-manage__account-row">
                                 <div class="user-manage__link-button">
                                     <fd-ui-button
                                         type="button"

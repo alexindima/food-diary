@@ -1,7 +1,7 @@
 /** @type {import('stylelint').Config} */
 export default {
     customSyntax: 'postcss-scss',
-    ignoreFiles: ['dist/**/*.css', 'dist-admin/**/*.css'],
+    ignoreFiles: ['dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
     rules: {
         'color-named': 'never',
         'no-duplicate-selectors': true,

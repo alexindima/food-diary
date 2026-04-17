@@ -28,6 +28,7 @@ import { environment } from '../environments/environment';
 import { GlobalErrorHandler } from './services/error-handler.service';
 import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { ThemeService } from './services/theme.service';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
 
@@ -59,8 +60,12 @@ export const appConfig: ApplicationConfig = {
             multi: true,
         },
         provideAppInitializer(() => {
+            inject(ThemeService).initializeTheme();
+        }),
+        provideAppInitializer(() => {
             const localizationService = inject(LocalizationService);
             const authService = inject(AuthService);
+            const themeService = inject(ThemeService);
             const userService = inject(UserService);
 
             return localizationService.initializeLocalization().then(async () => {
@@ -72,6 +77,7 @@ export const appConfig: ApplicationConfig = {
 
                 const user = await firstValueFrom(userService.getInfo());
                 await localizationService.applyLanguagePreference(user?.language ?? null);
+                themeService.syncWithUserTheme(user?.theme);
             });
         }),
         provideAppInitializer(() => {
@@ -97,6 +103,7 @@ export const appConfig: ApplicationConfig = {
         TranslateService,
         FrontendObservabilityService,
         LocalizationService,
+        ThemeService,
         LoggingApiService,
         ...(isBrowserEnvironment ? [provideClientHydration(withEventReplay())] : []),
     ],

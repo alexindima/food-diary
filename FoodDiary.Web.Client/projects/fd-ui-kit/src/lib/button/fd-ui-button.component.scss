@@ -93,24 +93,24 @@
 /* Primary solid */
 
 .fd-ui-button--primary.fd-ui-button--solid {
-    background: linear-gradient(135deg, #4dabff, #2563eb);
+    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
     border: none;
-    color: #ffffff;
-    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+    color: var(--fd-color-on-brand, #ffffff);
+    box-shadow: 0 10px 26px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
 
     &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #60b6ff, #2f6df2);
-        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+        background: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
+        box-shadow: 0 12px 30px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.32);
     }
 
     &:active:not(:disabled) {
-        background: linear-gradient(135deg, #4dabff, #2563eb);
+        background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
         box-shadow: none;
     }
 
     &:disabled {
-        background: #cbd5e1;
-        color: #f8fafc;
+        background: var(--fd-color-gray-300, #cbd5e1);
+        color: var(--fd-color-surface-muted, #f8fafc);
         box-shadow: none;
     }
 }

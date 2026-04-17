@@ -14,6 +14,7 @@ public sealed record UpdateUserHttpRequest(
     int? StepGoal,
     double? HydrationGoal,
     string? Language,
+    string? Theme,
     bool? PushNotificationsEnabled,
     bool? FastingPushNotificationsEnabled,
     bool? SocialPushNotificationsEnabled,
