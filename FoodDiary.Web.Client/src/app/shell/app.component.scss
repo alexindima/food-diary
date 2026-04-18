@@ -47,14 +47,10 @@
         min-height: 0;
         padding: 0;
         overflow: hidden;
+        background: var(--fd-layout-page-background);
     }
 
-    &__content {
-        display: block;
-        width: 100%;
-    }
-
-    &__main > * {
+    &__viewport {
         flex: 1 1 auto;
         min-height: 0;
         display: flex;
@@ -64,12 +60,13 @@
         -webkit-overflow-scrolling: touch;
         padding-bottom: calc(24px + env(safe-area-inset-bottom));
         box-sizing: border-box;
+        background: var(--fd-layout-page-background);
     }
 
-    &__main > router-outlet {
+    &__content {
         flex: 0 0 auto;
         display: none;
-        overflow: visible;
+        width: 100%;
     }
 
     &__footer {
@@ -135,12 +132,9 @@ html.cdk-global-scrollblock .fd-root__sidebar {
         overflow: visible;
     }
 
-    .fd-root__main > * {
+    .fd-root__viewport {
         overflow: visible;
         min-height: auto;
-    }
-
-    .fd-root__main > :not(router-outlet) {
         padding-bottom: calc(132px + env(safe-area-inset-bottom));
     }
 

@@ -2049,7 +2049,8 @@
         },
         "THEME_OPTIONS": {
             "OCEAN": "Синяя",
-            "LEAF": "Зелёная"
+            "LEAF": "Зелёная",
+            "DARK": "Тёмная"
         },
         "NUTRITION_SECTION": "Цели по питанию",
         "EDIT_GOALS": "Редактировать цели",
@@ -2244,6 +2245,7 @@
         "THEME": "Тема",
         "THEME_OCEAN": "Синяя",
         "THEME_LEAF": "Зелёная",
+        "THEME_DARK": "Тёмная",
         "THEME_UPDATE_ERROR": "Не удалось сохранить выбранную тему."
     },
     "NOTIFICATIONS": {

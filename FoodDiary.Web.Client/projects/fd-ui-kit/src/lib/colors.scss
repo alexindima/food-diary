@@ -255,7 +255,8 @@ $fd-button-tokens: (
 
 :root,
 html[data-theme='ocean'],
-html[data-theme='leaf'] {
+html[data-theme='leaf'],
+html[data-theme='dark'] {
     --fd-color-gray-50: var(--fd-color-slate-50);
     --fd-color-gray-100: var(--fd-color-slate-100);
     --fd-color-gray-200: var(--fd-color-slate-200);
@@ -375,26 +376,26 @@ html[data-theme='leaf'] {
     --fd-button-ghost-text-disabled: var(--fd-color-gray-400);
 
     --fd-button-secondary-background-default: var(--fd-color-surface);
-    --fd-button-secondary-background-hover: var(--fd-color-gray-100);
-    --fd-button-secondary-background-active: var(--fd-color-gray-200);
-    --fd-button-secondary-background-disabled: var(--fd-color-gray-200);
-    --fd-button-secondary-border-default: var(--fd-color-gray-300);
-    --fd-button-secondary-border-hover: var(--fd-color-gray-400);
-    --fd-button-secondary-border-active: var(--fd-color-gray-400);
-    --fd-button-secondary-border-disabled: var(--fd-color-gray-200);
+    --fd-button-secondary-background-hover: var(--fd-color-surface-raised);
+    --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-surface-raised) 86%, var(--fd-color-text) 14%);
+    --fd-button-secondary-background-disabled: color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-text) 8%);
+    --fd-button-secondary-border-default: var(--fd-color-border-strong);
+    --fd-button-secondary-border-hover: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-color-text) 28%);
+    --fd-button-secondary-border-active: color-mix(in srgb, var(--fd-color-border-strong) 58%, var(--fd-color-text) 42%);
+    --fd-button-secondary-border-disabled: color-mix(in srgb, var(--fd-color-border) 70%, transparent);
     --fd-button-secondary-text-default: var(--fd-color-text);
-    --fd-button-secondary-text-disabled: var(--fd-color-gray-500);
+    --fd-button-secondary-text-disabled: var(--fd-color-text-muted);
 
     --fd-button-secondary-text-background-default: transparent;
-    --fd-button-secondary-text-background-hover: var(--fd-color-gray-100);
-    --fd-button-secondary-text-background-active: var(--fd-color-gray-200);
+    --fd-button-secondary-text-background-hover: color-mix(in srgb, var(--fd-color-text) 8%, transparent);
+    --fd-button-secondary-text-background-active: color-mix(in srgb, var(--fd-color-text) 14%, transparent);
     --fd-button-secondary-text-background-disabled: transparent;
     --fd-button-secondary-text-border-default: transparent;
     --fd-button-secondary-text-border-hover: transparent;
     --fd-button-secondary-text-border-active: transparent;
     --fd-button-secondary-text-border-disabled: transparent;
     --fd-button-secondary-text-text-default: var(--fd-color-text);
-    --fd-button-secondary-text-text-disabled: var(--fd-color-gray-500);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-text-muted);
 
     --fd-button-danger-background-default: var(--fd-color-danger);
     --fd-button-danger-background-hover: #e03535;
@@ -418,16 +419,16 @@ html[data-theme='leaf'] {
     --fd-button-danger-ghost-text-default: var(--fd-color-danger);
     --fd-button-danger-ghost-text-disabled: #ffb3b3;
 
-    --fd-button-info-background-default: color-mix(in srgb, var(--fd-color-info) 10%, #fff);
-    --fd-button-info-background-hover: color-mix(in srgb, var(--fd-color-info) 14%, #fff);
-    --fd-button-info-background-active: color-mix(in srgb, var(--fd-color-info) 18%, #fff);
-    --fd-button-info-background-disabled: color-mix(in srgb, var(--fd-color-info) 8%, #fff);
+    --fd-button-info-background-default: color-mix(in srgb, var(--fd-color-info) 12%, var(--fd-color-surface));
+    --fd-button-info-background-hover: color-mix(in srgb, var(--fd-color-info) 18%, var(--fd-color-surface-raised));
+    --fd-button-info-background-active: color-mix(in srgb, var(--fd-color-info) 24%, var(--fd-color-surface-raised));
+    --fd-button-info-background-disabled: color-mix(in srgb, var(--fd-color-info) 8%, var(--fd-color-surface));
     --fd-button-info-border-default: transparent;
     --fd-button-info-border-hover: transparent;
     --fd-button-info-border-active: transparent;
     --fd-button-info-border-disabled: transparent;
     --fd-button-info-text-default: var(--fd-color-info);
-    --fd-button-info-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, #fff);
+    --fd-button-info-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, var(--fd-color-surface));
 
     --fd-button-info-text-background-default: transparent;
     --fd-button-info-text-background-hover: color-mix(in srgb, var(--fd-color-info) 12%, transparent);
@@ -438,7 +439,7 @@ html[data-theme='leaf'] {
     --fd-button-info-text-border-active: transparent;
     --fd-button-info-text-border-disabled: transparent;
     --fd-button-info-text-text-default: var(--fd-color-info);
-    --fd-button-info-text-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, #fff);
+    --fd-button-info-text-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, var(--fd-color-surface));
 }
 
 /* SCSS maps for programmatic usage */

@@ -6,7 +6,11 @@
 }
 
 .dashboard-summary-card {
-    --crc-surface: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    --crc-surface: linear-gradient(
+        180deg,
+        var(--fd-color-surface-raised) 0%,
+        color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-surface-raised)) 100%
+    );
     border-radius: 22px;
     padding: 18px 18px 20px;
     background: var(--crc-surface);
@@ -92,7 +96,7 @@
     }
 
     &__track {
-        stroke: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-white));
+        stroke: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-surface-raised));
         opacity: 0.9;
         stroke-linecap: round;
         transition:
@@ -169,7 +173,7 @@
         gap: 4px;
         font-weight: 800;
         line-height: 1;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
         transition:
             transform 0.25s ease,
             opacity 0.25s ease;

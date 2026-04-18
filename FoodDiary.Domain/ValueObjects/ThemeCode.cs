@@ -3,6 +3,7 @@ namespace FoodDiary.Domain.ValueObjects;
 public readonly record struct ThemeCode {
     private const string Ocean = "ocean";
     private const string Leaf = "leaf";
+    private const string Dark = "dark";
 
     public string Value { get; }
 
@@ -17,7 +18,7 @@ public readonly record struct ThemeCode {
         }
 
         var normalized = value.Trim().ToLowerInvariant();
-        if (normalized is Ocean or Leaf) {
+        if (normalized is Ocean or Leaf or Dark) {
             theme = new ThemeCode(normalized);
             return true;
         }

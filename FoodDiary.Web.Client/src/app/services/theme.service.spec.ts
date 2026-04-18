@@ -48,6 +48,15 @@ describe('ThemeService', () => {
         expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
     });
 
+    it('should apply dark color scheme for the dark theme', () => {
+        service.setTheme('dark');
+
+        expect(localStorage.getItem('fd_theme')).toBe('dark');
+        expect(documentRef.documentElement.getAttribute('data-theme')).toBe('dark');
+        expect(documentRef.documentElement.style.colorScheme).toBe('dark');
+        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('#191c21');
+    });
+
     it('should persist a selected theme', () => {
         service.setTheme('leaf');
 

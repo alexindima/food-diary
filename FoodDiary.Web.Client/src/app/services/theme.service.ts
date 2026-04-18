@@ -43,7 +43,7 @@ export class ThemeService {
 
         const root = this.document.documentElement;
         root.setAttribute('data-theme', theme);
-        root.style.colorScheme = 'light';
+        root.style.colorScheme = this.getThemeDefinition(theme).colorScheme;
 
         this.updateBrowserThemeColor(this.getThemeDefinition(theme).browserThemeColor);
 

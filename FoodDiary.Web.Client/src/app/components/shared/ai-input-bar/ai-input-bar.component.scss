@@ -3,9 +3,9 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    border: 1px solid var(--fd-color-slate-200);
+    border: 1px solid var(--fd-color-border);
     border-radius: 14px;
-    background: var(--fd-color-white);
+    background: var(--fd-color-surface-raised);
 
     &__hidden-upload {
         position: fixed;
@@ -34,11 +34,11 @@
         border: none;
         outline: none;
         font-size: 0.95rem;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
         background: transparent;
 
         &::placeholder {
-            color: var(--fd-color-slate-400);
+            color: var(--fd-color-text-muted);
         }
 
         &:disabled {
@@ -52,10 +52,10 @@
         justify-content: center;
         width: 36px;
         height: 36px;
-        border: 1px solid var(--fd-color-slate-200);
+        border: 1px solid var(--fd-color-border);
         border-radius: 10px;
-        background: var(--fd-color-white);
-        color: var(--fd-color-slate-500);
+        background: var(--fd-color-surface);
+        color: var(--fd-color-text-muted);
         cursor: pointer;
         flex-shrink: 0;
         transition:
@@ -127,7 +127,7 @@
     &__result {
         border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, transparent);
         border-radius: 14px;
-        background: color-mix(in srgb, var(--fd-color-purple-500) 6%, var(--fd-color-white));
+        background: color-mix(in srgb, var(--fd-color-purple-500) 8%, var(--fd-color-surface-raised));
         padding: 14px;
     }
 
@@ -155,7 +155,7 @@
 
         &:hover {
             color: var(--fd-color-danger);
-            background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
+            background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-surface-raised));
         }
     }
 
@@ -172,18 +172,18 @@
         align-items: center;
         padding: 8px 10px;
         border-radius: 8px;
-        background: var(--fd-color-white);
-        border: 1px solid var(--fd-color-slate-200);
+        background: var(--fd-color-surface);
+        border: 1px solid var(--fd-color-border);
         font-size: 0.9rem;
     }
 
     &__item-name {
         font-weight: 500;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
     }
 
     &__item-amount {
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
         font-size: 0.85rem;
     }
 

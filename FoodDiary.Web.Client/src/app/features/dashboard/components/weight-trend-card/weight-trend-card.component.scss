@@ -6,8 +6,12 @@
 
 .weight-trend-card {
     --wt-accent: var(--fd-color-blue-500);
-    --wt-accent-muted: color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white));
-    --wt-surface: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    --wt-accent-muted: color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-surface-raised));
+    --wt-surface: linear-gradient(
+        180deg,
+        var(--fd-color-surface-raised) 0%,
+        color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-surface-raised)) 100%
+    );
     width: 100%;
     min-width: 0;
     border-radius: 22px;
@@ -63,19 +67,19 @@
         gap: 6px;
         padding: 6px 10px;
         border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-white));
-        color: var(--fd-color-slate-900);
+        background: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-surface-raised));
+        color: var(--fd-color-text);
         font-weight: 600;
         font-size: 0.9rem;
         width: fit-content;
 
         &--positive {
-            background: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-color-white));
+            background: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-color-surface-raised));
             color: var(--fd-color-emerald-700);
         }
 
         &--negative {
-            background: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-white));
+            background: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-surface-raised));
             color: var(--fd-color-orange-700);
         }
     }

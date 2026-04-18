@@ -47,7 +47,7 @@ import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
-import { APP_THEMES, AppThemeName } from '../../../theme/app-theme.config';
+import { APP_THEMES, AppThemeName, isAppThemeName } from '../../../theme/app-theme.config';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -882,7 +882,7 @@ export class UserManageComponent implements OnInit {
     }
 
     private normalizeTheme(value: string | null | undefined): AppThemeName | null {
-        return value === 'ocean' || value === 'leaf' ? value : null;
+        return isAppThemeName(value) ? value : null;
     }
 
     private readNotificationPermission(): NotificationPermission | 'unsupported' {

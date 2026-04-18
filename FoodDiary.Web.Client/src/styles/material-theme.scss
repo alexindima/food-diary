@@ -43,6 +43,26 @@ $fd-leaf-theme: mat.define-theme(
     )
 );
 
+$fd-dark-theme: mat.define-theme(
+    (
+        color: (
+            theme-type: dark,
+            primary: mat.$green-palette,
+            tertiary: mat.$cyan-palette,
+        ),
+        typography: (
+            plain-family: design-tokens.fd-token(typography, font-family),
+            brand-family: design-tokens.fd-token(typography, font-family),
+            bold-weight: design-tokens.fd-token(typography, font-weight-bold),
+            medium-weight: design-tokens.fd-token(typography, font-weight-medium),
+            regular-weight: design-tokens.fd-token(typography, font-weight-regular),
+        ),
+        density: (
+            scale: 0,
+        ),
+    )
+);
+
 :root,
 html[data-theme='ocean'] {
     @include mat.all-component-themes($fd-ocean-theme);
@@ -55,9 +75,16 @@ html[data-theme='leaf'] {
     @include mat.system-level-colors($fd-leaf-theme);
 }
 
+html[data-theme='dark'] {
+    @include mat.all-component-colors($fd-dark-theme);
+    @include mat.system-level-colors($fd-dark-theme);
+    @include mat.color-variants-backwards-compatibility($fd-dark-theme);
+}
+
 :root,
 html[data-theme='ocean'],
-html[data-theme='leaf'] {
+html[data-theme='leaf'],
+html[data-theme='dark'] {
     --mdc-outlined-text-field-container-height: 40px;
     --mat-form-field-container-height: 40px;
 }

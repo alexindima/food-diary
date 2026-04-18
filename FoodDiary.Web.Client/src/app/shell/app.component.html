@@ -9,7 +9,9 @@
         }
     }
     <div class="fd-root__main" id="main-content" tabindex="-1">
-        <router-outlet class="fd-root__content" />
+        <div class="fd-root__viewport">
+            <router-outlet class="fd-root__content" />
+        </div>
     </div>
 </div>
 <fd-ui-toast-host />
