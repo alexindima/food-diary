@@ -5,7 +5,7 @@
 }
 
 .fd-ui-datetime-input {
-    --fd-datetime-height: 48px;
+    --fd-datetime-height: 40px;
     --fd-datetime-radius: 14px;
     --fd-datetime-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
     --fd-datetime-label-bg: var(--fd-color-surface, var(--fd-color-white));
@@ -18,7 +18,10 @@
     --fd-datetime-height: 32px;
 }
 
-.fd-ui-datetime-input--size-md,
+.fd-ui-datetime-input--size-md {
+    --fd-datetime-height: 40px;
+}
+
 .fd-ui-datetime-input--size-lg {
     --fd-datetime-height: 48px;
 }

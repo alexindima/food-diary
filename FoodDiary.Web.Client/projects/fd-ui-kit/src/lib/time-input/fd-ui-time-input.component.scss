@@ -5,7 +5,7 @@
 }
 
 .fd-ui-time-input {
-    --fd-time-height: 48px;
+    --fd-time-height: 40px;
     --fd-time-radius: var(--fd-radius-input, 14px);
     --fd-time-border: var(--fd-color-border);
     --fd-time-label-bg: var(--fd-color-surface-raised);
@@ -18,7 +18,10 @@
     --fd-time-height: 32px;
 }
 
-.fd-ui-time-input--size-md,
+.fd-ui-time-input--size-md {
+    --fd-time-height: 40px;
+}
+
 .fd-ui-time-input--size-lg {
     --fd-time-height: 48px;
 }

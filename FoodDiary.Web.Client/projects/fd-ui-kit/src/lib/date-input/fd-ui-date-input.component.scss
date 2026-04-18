@@ -5,7 +5,7 @@
 }
 
 .fd-ui-date-input {
-    --fd-date-height: 48px;
+    --fd-date-height: 40px;
     --fd-date-radius: var(--fd-radius-input, 14px);
     --fd-date-border: var(--fd-color-border);
     --fd-date-label-bg: var(--fd-color-surface-raised);
@@ -18,7 +18,10 @@
     --fd-date-height: 32px;
 }
 
-.fd-ui-date-input--size-md,
+.fd-ui-date-input--size-md {
+    --fd-date-height: 40px;
+}
+
 .fd-ui-date-input--size-lg {
     --fd-date-height: 48px;
 }

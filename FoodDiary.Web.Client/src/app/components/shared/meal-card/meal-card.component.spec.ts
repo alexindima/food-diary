@@ -147,4 +147,19 @@ describe('MealCardComponent', () => {
         expect(valueEl?.textContent?.trim()).toBe('42');
         expect(fillEl?.style.width).toBe('42%');
     });
+
+    it('should apply red quality fill class for low quality score', () => {
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            qualityScore: 26,
+            qualityGrade: 'red',
+        });
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
+
+        expect(fillEl?.classList.contains('entity-card__quality-fill--red')).toBe(true);
+        expect(fillEl?.style.width).toBe('26%');
+    });
 });

@@ -394,6 +394,7 @@ $fd-theme-design-tokens: (
         --fd-color-success: #{fd-theme-token($theme, colors, success)};
         --fd-color-info: #{fd-theme-token($theme, colors, info)};
         --fd-color-warn: #{fd-theme-token($theme, colors, warn)};
+        --fd-color-danger: #{fd-theme-token($theme, colors, warn)};
         --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
         --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
         --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
