@@ -114,8 +114,8 @@
     width: 100%;
 }
 
-.recipe-step-card__image ::ng-deep .image-upload-field__dropzone {
-    min-height: 180px;
+.recipe-step-card__image-upload {
+    --fd-image-upload-dropzone-min-height: 180px;
 }
 
 .recipe-step-card__description {
