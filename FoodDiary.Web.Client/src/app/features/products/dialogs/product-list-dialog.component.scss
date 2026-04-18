@@ -46,23 +46,14 @@
     }
 
     &__filter-button {
-        --fd-button-border-radius: 18px;
-        --fd-button-padding-x: 12px;
-        --fd-button-padding-y: 8px;
-
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-            background: var(--fd-color-white);
-        }
 
         &--active {
-
-            ::ng-deep button,
-            ::ng-deep .fd-ui-button {
-                border-color: var(--fd-color-sky-500);
-                background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            }
+            --fd-button-border-default: var(--fd-color-sky-500);
+            --fd-button-border-hover: var(--fd-color-sky-500);
+            --fd-button-border-active: var(--fd-color-sky-500);
+            --fd-button-background-default: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-background-hover: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-background-active: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
         }
     }
 

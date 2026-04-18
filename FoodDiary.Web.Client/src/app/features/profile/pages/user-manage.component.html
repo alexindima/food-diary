@@ -118,6 +118,7 @@
                             <div class="user-manage__account-row">
                                 <div class="user-manage__link-button">
                                     <fd-ui-button
+                                        class="user-manage__link-button-control"
                                         type="button"
                                         fill="outline"
                                         variant="secondary"
@@ -231,6 +232,7 @@
                                                 <div class="user-manage__notifications-reminder-presets-list">
                                                     @for (preset of fastingReminderPresets; track preset.id) {
                                                         <fd-ui-button
+                                                            class="user-manage__preset-button"
                                                             type="button"
                                                             fill="outline"
                                                             variant="secondary"
@@ -262,6 +264,7 @@
                                                 (ngModelChange)="onFastingReminderHoursChange($event, 'followUp')"
                                             />
                                             <fd-ui-button
+                                                class="user-manage__notifications-reminder-save"
                                                 type="button"
                                                 fill="outline"
                                                 variant="secondary"
@@ -294,6 +297,7 @@
 
                             <div class="user-manage__notifications-actions">
                                 <fd-ui-button
+                                    class="user-manage__notifications-action-button"
                                     type="button"
                                     fill="outline"
                                     variant="secondary"
@@ -433,6 +437,7 @@
                                 @if (isDietologistConnected()) {
                                     <div class="user-manage__dietologist-summary-actions">
                                         <fd-ui-button
+                                            class="user-manage__dietologist-summary-button"
                                             type="button"
                                             fill="outline"
                                             variant="secondary"
@@ -458,6 +463,7 @@
                                         <div class="user-manage__dietologist-summary-actions">
                                             @if (!hasDietologistRelationship()) {
                                                 <fd-ui-button
+                                                    class="user-manage__dietologist-summary-button"
                                                     type="button"
                                                     icon="person_add"
                                                     [disabled]="dietologistForm.invalid || isSavingDietologist()"
@@ -467,6 +473,7 @@
                                                 </fd-ui-button>
                                             } @else {
                                                 <fd-ui-button
+                                                    class="user-manage__dietologist-summary-button"
                                                     type="button"
                                                     fill="outline"
                                                     variant="secondary"

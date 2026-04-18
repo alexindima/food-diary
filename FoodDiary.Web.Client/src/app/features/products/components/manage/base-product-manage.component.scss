@@ -35,33 +35,16 @@
     }
 
     &__delete-button {
-
-        ::ng-deep .fd-ui-button {
-            border-color: var(--fd-color-danger);
-            color: var(--fd-color-danger);
-        }
-
-        ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background-color: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
-        }
-
-        ::ng-deep .fd-ui-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        --fd-button-disabled-opacity: 0.6;
 
         &--icon {
             --fd-button-padding-x: 0;
             --fd-button-height: 40px;
+            --fd-button-width: 100%;
+            --fd-button-min-width: 40px;
             width: 40px;
             min-width: 40px;
             display: inline-flex;
-
-            ::ng-deep .fd-ui-button {
-                width: 100%;
-                min-width: 40px;
-                justify-content: center;
-            }
         }
     }
 
@@ -385,29 +368,12 @@
 
     &__action-button--add {
         --fd-button-border-radius: 18px;
-        --fd-button-padding-x: 16px;
-        --fd-button-padding-y: 8px;
-        font-weight: 800;
-
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            background: var(--fd-brand-gradient);
-            border: none;
-            color: var(--fd-color-white);
-            box-shadow: var(--fd-brand-shadow);
-        }
-
-        ::ng-deep button:hover:not(:disabled),
-        ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: var(--fd-brand-gradient-hover);
-            box-shadow: var(--fd-brand-shadow-hover);
-        }
-
-        ::ng-deep button:active:not(:disabled),
-        ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: var(--fd-brand-gradient);
-            box-shadow: none;
-        }
+        --fd-button-background-default: var(--fd-brand-gradient);
+        --fd-button-background-hover: var(--fd-brand-gradient-hover);
+        --fd-button-background-active: var(--fd-brand-gradient);
+        --fd-button-shadow-default: var(--fd-brand-shadow);
+        --fd-button-shadow-hover: var(--fd-brand-shadow-hover);
+        --fd-button-shadow-active: none;
     }
 
     &__footer-error {

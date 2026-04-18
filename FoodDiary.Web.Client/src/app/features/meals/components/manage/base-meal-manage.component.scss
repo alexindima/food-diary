@@ -324,29 +324,12 @@
 
     &__action-button--add {
         --fd-button-border-radius: var(--fd-radius-button);
-        --fd-button-padding-x: 16px;
-        --fd-button-padding-y: 8px;
-        font-weight: 800;
-
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            background: var(--g1);
-            border: none;
-            color: var(--fd-color-white);
-            box-shadow: var(--s1);
-        }
-
-        ::ng-deep button:hover:not(:disabled),
-        ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: var(--g2);
-            box-shadow: var(--s2);
-        }
-
-        ::ng-deep button:active:not(:disabled),
-        ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: var(--g1);
-            box-shadow: none;
-        }
+        --fd-button-background-default: var(--g1);
+        --fd-button-background-hover: var(--g2);
+        --fd-button-background-active: var(--g1);
+        --fd-button-shadow-default: var(--s1);
+        --fd-button-shadow-hover: var(--s2);
+        --fd-button-shadow-active: none;
     }
 
     &__footer-error {

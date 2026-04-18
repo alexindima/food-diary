@@ -53,6 +53,6 @@ export class FdUiButtonComponent {
 export type FdUiButtonType = 'button' | 'submit' | 'reset';
 export type FdUiButtonVariant = 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline';
 export type FdUiButtonFill = 'solid' | 'outline' | 'text' | 'ghost';
-export type FdUiButtonAppearance = 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon';
+export type FdUiButtonAppearance = 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon' | 'brand-action' | 'chip';
 export type FdUiButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 export type FdUiButtonIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

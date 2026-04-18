@@ -80,33 +80,10 @@
 
     &__add-button {
         --fd-button-border-radius: 18px;
-        --fd-button-padding-x: 16px;
-        --fd-button-padding-y: 8px;
-        font-weight: 800;
         border: none;
         background: transparent;
         color: var(--fd-color-white);
         box-shadow: none;
-
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-            border: none;
-            color: var(--fd-color-white);
-            box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-        }
-
-        ::ng-deep button:hover:not(:disabled),
-        ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-            box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
-        }
-
-        ::ng-deep button:active:not(:disabled),
-        ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-            box-shadow: none;
-        }
     }
 
     @media #{variables.$media-xs} {
