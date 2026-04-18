@@ -126,7 +126,11 @@
                 color-mix(in srgb, var(--fd-color-orange-500) 18%, transparent) 70% 90%,
                 color-mix(in srgb, var(--fd-color-danger) 18%, transparent) 90% 100%
             ),
-            radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--fd-color-white) 90%, transparent), var(--fd-color-white));
+            radial-gradient(
+                circle at 50% 35%,
+                color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
+                color-mix(in srgb, var(--fd-color-surface) 88%, var(--fd-color-slate-900) 12%)
+            );
         box-shadow:
             0 18px 38px color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent),
             0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -136,10 +140,15 @@
             position: absolute;
             inset: var(--goals-ring-thickness);
             border-radius: 50%;
-            background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--fd-color-white) 92%, transparent), var(--fd-color-white));
+            background: radial-gradient(
+                circle at 50% 35%,
+                color-mix(in srgb, var(--fd-color-surface-raised) 98%, var(--fd-color-white) 2%),
+                color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+            );
             box-shadow:
-                inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 60%, transparent),
-                inset 0 -2px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+                inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 16%, transparent),
+                inset 0 -2px 12px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent),
+                inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 82%, transparent);
             z-index: 1;
         }
     }
@@ -153,7 +162,7 @@
         flex-direction: column;
         gap: 4px;
         text-align: center;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
         font-weight: 700;
         z-index: 2;
         pointer-events: none;
@@ -164,7 +173,7 @@
         font-size: 0.8rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--fd-color-text-muted);
+        color: color-mix(in srgb, var(--fd-color-text-muted) 88%, var(--fd-color-text) 12%);
     }
 
     &__calorie-input {
@@ -172,12 +181,18 @@
         font-size: clamp(2rem, 3.5vw, 2.6rem);
         font-weight: 800;
         border: none;
-        background: transparent;
-        color: var(--fd-color-slate-900);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%),
+            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+        );
+        color: var(--fd-color-text-strong);
         outline: none;
         padding: 4px 8px;
         border-radius: 12px;
-        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        box-shadow:
+            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
+            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 80%, transparent);
         transition: box-shadow 0.2s ease;
         pointer-events: auto;
 
@@ -206,7 +221,7 @@
     }
 
     &__ring-unit {
-        color: var(--fd-color-text-muted);
+        color: color-mix(in srgb, var(--fd-color-text-muted) 82%, var(--fd-color-text) 18%);
         font-size: 0.95rem;
         font-weight: 600;
     }
@@ -272,40 +287,15 @@
 
     &__preset {
         display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    &__preset-label {
-        font-weight: 700;
-        color: var(--fd-color-text-muted);
+        width: min(320px, 100%);
     }
 
     &__preset-select {
-        min-width: 220px;
-        padding: 8px 12px;
-        border-radius: 10px;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
-        background: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
-        font-weight: 700;
-        color: var(--fd-color-slate-900);
-        box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 80%, transparent),
-            0 6px 14px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
-        appearance: none;
-        background-image:
-            linear-gradient(45deg, transparent 50%, var(--fd-color-slate-900) 50%), linear-gradient(135deg, var(--fd-color-slate-900) 50%, transparent 50%),
-            linear-gradient(to right, color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent), color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent));
-        background-position:
-            calc(100% - 18px) calc(50% - 2px),
-            calc(100% - 12px) calc(50% - 2px),
-            calc(100% - 28px) 50%;
-        background-size:
-            6px 6px,
-            6px 6px,
-            1px 60%;
-        background-repeat: no-repeat;
+        width: 100%;
+
+        ::ng-deep .fd-ui-select {
+            width: 100%;
+        }
     }
 
     &__macro {
@@ -330,17 +320,23 @@
         align-items: center;
         gap: 10px;
         font-weight: 700;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
     }
 
     &__macro-value-block {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: color-mix(in srgb, var(--fd-color-white) 80%, transparent);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%),
+            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+        );
         border-radius: 12px;
         padding: 4px 8px;
-        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        box-shadow:
+            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
+            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 80%, transparent);
     }
 
     &__macro-input {
@@ -351,7 +347,7 @@
         font-weight: 800;
         font-size: 1rem;
         text-align: right;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
@@ -365,7 +361,7 @@
     }
 
     &__macro-unit {
-        color: var(--fd-color-text-muted);
+        color: color-mix(in srgb, var(--fd-color-text-muted) 82%, var(--fd-color-text) 18%);
         font-weight: 700;
         font-size: 0.9rem;
     }
@@ -375,10 +371,15 @@
         width: 100%;
         height: 16px;
         border-radius: 999px;
-        background: var(--macro-gradient, linear-gradient(90deg, color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent), color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent)));
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-border) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 88%, var(--fd-color-slate-900) 12%)
+        );
         overflow: visible;
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 60%, transparent),
+            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 22%, transparent),
+            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border-strong) 86%, transparent),
             0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --macro-thumb-size: 16px;
 
@@ -409,6 +410,14 @@
         position: absolute;
         inset: 0;
         border-radius: 999px;
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 90%, var(--fd-color-white) 10%),
+            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+        );
+        box-shadow:
+            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
+            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border-strong) 92%, transparent);
         z-index: 0;
     }
 
@@ -416,7 +425,7 @@
         position: absolute;
         inset: 0;
         width: var(--macro-progress, 50%);
-        background: linear-gradient(90deg, var(--macro-accent, var(--fd-color-primary-600)), var(--macro-accent, var(--fd-color-primary-600)));
+        background: var(--macro-gradient, linear-gradient(90deg, var(--macro-accent, var(--fd-color-primary-600)), var(--macro-accent, var(--fd-color-primary-600))));
         border-radius: 999px 0 0 999px;
         box-shadow: 0 10px 18px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         z-index: 1;

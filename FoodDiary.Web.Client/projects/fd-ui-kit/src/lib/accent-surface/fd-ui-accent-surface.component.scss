@@ -85,11 +85,11 @@
 }
 
 :host(.fd-ui-accent-surface--tinted) {
-    --fd-accent-overlay-opacity: 0.12;
+    --fd-accent-overlay-opacity: 0.07;
 }
 
 :host(.fd-ui-accent-surface--tinted).fd-ui-accent-surface--active {
-    --fd-accent-overlay-opacity: 0.25;
+    --fd-accent-overlay-opacity: 0.14;
 }
 
 :host > * {

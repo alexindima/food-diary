@@ -410,9 +410,10 @@
     &__stat {
         padding: 14px;
         border-radius: 14px;
-        border: 1px solid var(--fd-color-slate-200);
-        background: var(--fd-color-white);
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        border: 1px solid var(--fd-color-border);
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
+        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
 
         &--compact {
             padding: 12px 14px;
@@ -424,7 +425,7 @@
     &__stat-label {
         display: block;
         font-size: 0.9rem;
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text-muted);
         margin-bottom: 4px;
 
         &--compact {
@@ -437,7 +438,7 @@
         display: block;
         font-size: 1.35rem;
         font-weight: 700;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
 
         &--compact {
             font-size: 1.08rem;
@@ -466,7 +467,7 @@
 
     &__personal-summary-window {
         font-size: 0.84rem;
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
     }
 
     &__pattern-panel {
@@ -474,9 +475,10 @@
         flex-direction: column;
         gap: 12px;
         padding: 14px;
-        border: 1px solid var(--fd-color-slate-200);
+        border: 1px solid var(--fd-color-border);
         border-radius: 16px;
-        background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-slate-50)) 100%);
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
     }
 
     &__pattern-symptom {
@@ -489,7 +491,7 @@
     &__personal-summary-text {
         font-size: 1rem;
         font-weight: 700;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
     }
 
     @media (max-width: 767px) {
@@ -616,9 +618,10 @@
     &__history-item {
         padding: 12px;
         border-radius: 12px;
-        border: 1px solid var(--fd-color-slate-200);
-        background: var(--fd-color-white);
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+        border: 1px solid var(--fd-color-border);
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
+        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
     }
 
     &__history-header {
@@ -641,7 +644,7 @@
 
     &__history-date {
         font-weight: 700;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
         white-space: nowrap;
     }
 
@@ -652,41 +655,41 @@
     &__history-badge {
         padding: 4px 10px;
         border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-slate-400) 12%, transparent);
-        color: var(--fd-color-slate-600);
+        background: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
+        color: var(--fd-color-text-muted);
         font-weight: 600;
         font-size: 0.85rem;
 
         &--completed {
-            background: color-mix(in srgb, var(--fd-color-green-500) 12%, transparent);
-            color: var(--fd-color-emerald-700);
+            background: color-mix(in srgb, var(--fd-color-green-500) 14%, var(--fd-color-surface));
+            color: var(--fd-color-emerald-300);
         }
 
         &--interrupted {
-            background: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
-            color: var(--fd-color-orange-700);
+            background: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-surface));
+            color: var(--fd-color-orange-300);
         }
 
         &--skipped {
-            background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            color: var(--fd-color-sky-700);
+            background: color-mix(in srgb, var(--fd-color-sky-500) 14%, var(--fd-color-surface));
+            color: var(--fd-color-sky-300);
         }
 
         &--postponed {
-            background: color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent);
-            color: var(--fd-color-purple-700);
+            background: color-mix(in srgb, var(--fd-color-purple-500) 14%, var(--fd-color-surface));
+            color: var(--fd-color-purple-300);
         }
     }
 
     &__history-details {
         font-size: 0.95rem;
-        color: var(--fd-color-slate-700);
+        color: var(--fd-color-text);
         min-width: 0;
     }
 
     &__history-notes {
         margin: 4px 0 0;
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text-muted);
         font-size: 0.95rem;
         line-height: 1.4;
     }
@@ -697,7 +700,7 @@
         gap: 6px;
         margin-top: 8px;
         padding-top: 8px;
-        border-top: 1px solid var(--fd-color-slate-200);
+        border-top: 1px solid var(--fd-color-border);
     }
 
     &__history-toggle-row {
@@ -750,7 +753,7 @@
         margin-top: 8px;
         padding-top: 8px;
         padding-left: 18px;
-        border-top: 1px solid var(--fd-color-slate-200);
+        border-top: 1px solid var(--fd-color-border);
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -764,7 +767,7 @@
             bottom: 0;
             width: 2px;
             border-radius: 999px;
-            background: color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+            background: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
         }
     }
 
@@ -781,7 +784,7 @@
         padding: 8px 0;
 
         &:not(:last-child) {
-            border-bottom: 1px dashed var(--fd-color-slate-200);
+            border-bottom: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
         }
     }
 
@@ -795,11 +798,11 @@
     &__history-checkin-time {
         font-size: 0.84rem;
         font-weight: 600;
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
     }
 
     &__history-checkin-summary {
-        color: var(--fd-color-slate-700);
+        color: var(--fd-color-text);
         font-size: 0.92rem;
         font-weight: 600;
     }
@@ -813,8 +816,8 @@
     &__history-symptom {
         padding: 4px 10px;
         border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-purple-500) 8%, transparent);
-        color: var(--fd-color-purple-700);
+        background: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-color-surface));
+        color: var(--fd-color-purple-300);
         font-size: 0.8rem;
         font-weight: 600;
     }
@@ -823,7 +826,7 @@
     &__loader {
         margin: 0;
         padding: 12px 4px;
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
     }
 
     @media (max-width: 767px) {

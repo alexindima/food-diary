@@ -7,16 +7,16 @@
 .recipe-basic-info {
 
     &__card {
-        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-ui-card-title-color: var(--fd-color-slate-900);
-        --fd-ui-card-meta-color: var(--fd-color-slate-400);
-        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-ui-card-border-color: var(--fd-color-border);
+        --fd-ui-card-title-color: var(--fd-color-text-strong);
+        --fd-ui-card-meta-color: var(--fd-color-text-muted);
+        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-black) 22%, transparent);
         --fd-radius-lg: 22px;
-        --fd-color-surface: var(--fd-color-white);
+        --fd-color-surface: var(--fd-color-surface-raised);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        border: 1px solid var(--fd-color-border);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
@@ -33,6 +33,11 @@
             ::ng-deep .fd-ui-card {
                 padding-bottom: variables.$gap-l;
             }
+        }
+
+        ::ng-deep .fd-ui-card {
+            background:
+                linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent), var(--fd-color-surface));
         }
 
         ::ng-deep .fd-ui-card__header {
@@ -137,13 +142,13 @@
         ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain) {
             display: block;
             font-size: 0.72rem;
-            color: var(--fd-color-slate-500);
+            color: var(--fd-color-text-muted);
         }
 
         ::ng-deep .image-upload-field__hint {
             display: block;
             font-size: 0.68rem;
-            color: var(--fd-color-slate-400);
+            color: color-mix(in srgb, var(--fd-color-text-muted) 80%, transparent);
         }
     }
 

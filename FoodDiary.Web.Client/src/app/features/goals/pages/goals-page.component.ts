@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
@@ -29,9 +32,11 @@ type TimeframeOption = {
     providers: [GoalsFacade],
     imports: [
         CommonModule,
+        FormsModule,
         TranslateModule,
         FdUiButtonComponent,
         FdUiCardComponent,
+        FdUiSelectComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -41,6 +46,8 @@ type TimeframeOption = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsPageComponent implements OnInit {
+    private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly facade = inject(GoalsFacade);
 
     protected readonly minCalories = this.facade.minCalories;
@@ -60,9 +67,14 @@ export class GoalsPageComponent implements OnInit {
     protected readonly calorieCyclingEnabled = this.facade.calorieCyclingEnabled;
     protected readonly dayCalories = this.facade.dayCalories;
     protected readonly daysOfWeek = DAYS_OF_WEEK;
+    protected macroPresetOptions: FdUiSelectOption<MacroPresetKey>[] = [];
     private activeRingElement: HTMLElement | null = null;
 
     public ngOnInit(): void {
+        this.buildMacroPresetOptions();
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.buildMacroPresetOptions();
+        });
         this.facade.initialize();
     }
 
@@ -109,6 +121,14 @@ export class GoalsPageComponent implements OnInit {
     protected onMacroPresetChange(event: Event): void {
         const target = event.target as HTMLSelectElement;
         this.facade.changeMacroPreset(target.value as MacroPresetKey);
+    }
+
+    protected onMacroPresetModelChange(value: MacroPresetKey | null): void {
+        if (!value) {
+            return;
+        }
+
+        this.facade.changeMacroPreset(value);
     }
 
     protected onMacroSliderChange(key: MacroKey, event: Event): void {
@@ -216,6 +236,13 @@ export class GoalsPageComponent implements OnInit {
         const outerRadius = Math.min(rect.width, rect.height) / 2;
         const innerRadius = outerRadius - 30;
         return { rect, centerX, centerY, distanceFromCenter, innerRadius, outerRadius };
+    }
+
+    private buildMacroPresetOptions(): void {
+        this.macroPresetOptions = this.macroPresets.map(preset => ({
+            value: preset.key,
+            label: this.translateService.instant(preset.labelKey),
+        }));
     }
 
     protected readonly bodyTargets: BodyTarget[] = [

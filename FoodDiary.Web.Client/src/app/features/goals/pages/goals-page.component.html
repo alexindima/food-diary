@@ -133,21 +133,14 @@
                         <fd-ui-card class="goals__card goals__card--macros" [title]="'GOALS_PAGE.CORE_MACROS' | translate">
                             <div class="goals__card-inner goals__card-inner--column">
                                 <div class="goals__preset">
-                                    <label class="goals__preset-label" for="macroPreset">
-                                        {{ 'GOALS_PAGE.MACRO_PRESET_LABEL' | translate }}
-                                    </label>
-                                    <select
-                                        id="macroPreset"
+                                    <fd-ui-select
                                         class="goals__preset-select"
-                                        [value]="selectedPreset()"
-                                        (change)="onMacroPresetChange($event)"
-                                    >
-                                        @for (preset of macroPresets; track preset.key) {
-                                            <option [value]="preset.key">
-                                                {{ preset.labelKey | translate }}
-                                            </option>
-                                        }
-                                    </select>
+                                        [label]="'GOALS_PAGE.MACRO_PRESET_LABEL' | translate"
+                                        [options]="macroPresetOptions"
+                                        [ngModel]="selectedPreset()"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (ngModelChange)="onMacroPresetModelChange($event)"
+                                    />
                                 </div>
                                 @for (macro of coreMacroStates(); track macro.key) {
                                     <div class="goals__macro goals__macro--slider">

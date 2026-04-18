@@ -20,10 +20,31 @@
         gap: 4px;
         padding: 20px 14px;
         border-radius: 14px;
-        border: 1px solid var(--fd-color-slate-200);
-        background: var(--fd-color-white);
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        border: 1px solid var(--fd-color-border);
+        background:
+            linear-gradient(
+                180deg,
+                color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--accent-color, var(--fd-color-primary-500)) 8%),
+                color-mix(in srgb, var(--fd-color-surface) 96%, var(--accent-color, var(--fd-color-primary-500)) 4%)
+            );
+        box-shadow: 0 12px 32px color-mix(in srgb, rgb(0 0 0) 24%, transparent);
         text-align: center;
+    }
+
+    &__stat:nth-child(1) {
+        --accent-color: var(--fd-color-orange-500);
+    }
+
+    &__stat:nth-child(2) {
+        --accent-color: var(--fd-color-purple-500);
+    }
+
+    &__stat:nth-child(3) {
+        --accent-color: var(--fd-color-sky-500);
+    }
+
+    &__stat:nth-child(4) {
+        --accent-color: var(--fd-color-green-500);
     }
 
     &__stat-icon {
@@ -51,12 +72,12 @@
     &__stat-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
     }
 
     &__stat-label {
         font-size: 0.85rem;
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
     }
 
     &__grid {
@@ -90,7 +111,7 @@
     }
 
     &__score-track {
-        stroke: var(--fd-color-slate-200);
+        stroke: color-mix(in srgb, var(--fd-color-border-strong) 85%, transparent);
     }
 
     &__score-progress {
@@ -110,18 +131,18 @@
     &__score-value {
         font-size: 2.4rem;
         font-weight: 700;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
     }
 
     &__score-label {
         font-size: 0.9rem;
-        color: var(--fd-color-slate-400);
+        color: var(--fd-color-text-muted);
     }
 
     &__score-hint {
         margin: 0;
         font-size: 0.85rem;
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
         text-align: center;
         max-width: 280px;
     }
@@ -139,28 +160,33 @@
         gap: 4px;
         padding: 14px 8px;
         border-radius: 12px;
-        border: 1px solid var(--fd-color-slate-200);
+        border: 1px solid var(--fd-color-border);
         text-align: center;
         transition:
             transform 0.15s,
             box-shadow 0.15s;
 
         &--earned {
-            background: linear-gradient(135deg, #fef3c7, var(--fd-color-yellow-300));
-            border-color: var(--fd-color-amber-500);
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+            background:
+                linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-yellow-400) 12%),
+                    color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-yellow-500) 8%)
+                );
+            border-color: color-mix(in srgb, var(--fd-color-amber-500) 55%, var(--fd-color-border));
+            box-shadow: 0 8px 20px color-mix(in srgb, rgb(0 0 0) 18%, transparent);
 
             .gamification__badge-icon {
-                color: #d97706;
+                color: var(--fd-color-amber-300);
             }
         }
 
         &--locked {
-            background: var(--fd-color-slate-50);
+            background: var(--fd-color-surface-raised);
             opacity: 0.6;
 
             .gamification__badge-icon {
-                color: var(--fd-color-slate-400);
+                color: var(--fd-color-text-muted);
             }
         }
     }
@@ -174,21 +200,21 @@
     &__badge-label {
         font-size: 0.7rem;
         font-weight: 600;
-        color: var(--fd-color-slate-700);
+        color: var(--fd-color-text);
         line-height: 1.2;
     }
 
     &__badge-threshold {
         font-size: 0.75rem;
         font-weight: 700;
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text-muted);
     }
 
     &__empty,
     &__loader {
         margin: 0;
         padding: 12px 4px;
-        color: var(--fd-color-slate-500);
+        color: var(--fd-color-text-muted);
     }
 }
 

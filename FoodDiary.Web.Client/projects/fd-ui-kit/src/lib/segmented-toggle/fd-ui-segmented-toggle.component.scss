@@ -4,7 +4,7 @@
 
 .fd-ui-segmented-toggle {
     display: inline-flex;
-    align-items: center;
+    align-items: stretch;
     gap: 4px;
     padding: 4px;
     border-radius: var(--fd-radius-pill, 999px);
@@ -16,14 +16,21 @@
 }
 
 .fd-ui-segmented-toggle__item {
+    display: inline-flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
     min-width: 54px;
+    min-height: 44px;
     padding: 8px 16px;
     border: none;
     border-radius: 999px;
+    appearance: none;
     background: transparent;
     color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
     font-size: 0.85rem;
     font-weight: 700;
+    line-height: 1;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
@@ -46,7 +53,6 @@
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
         color: var(--fd-color-on-brand, var(--fd-color-white));
         box-shadow: 0 10px 18px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-        transform: translateY(-1px);
     }
 }
 

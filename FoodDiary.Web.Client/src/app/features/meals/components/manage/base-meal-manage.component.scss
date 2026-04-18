@@ -6,7 +6,7 @@
     --s1: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
     --s2: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
     --b3: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
-    --fd-layout-page-background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, #f1f5f9 45%, #eef2f7 100%);
+    --fd-layout-page-background: var(--fd-layout-page-background-base, var(--fd-color-background));
     margin: 0 auto;
     box-sizing: border-box;
     display: flex;
@@ -141,16 +141,16 @@
     }
 
     &__card {
-        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-ui-card-title-color: var(--fd-color-slate-900);
-        --fd-ui-card-meta-color: var(--fd-color-slate-400);
-        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-ui-card-border-color: var(--fd-color-border);
+        --fd-ui-card-title-color: var(--fd-color-text-strong);
+        --fd-ui-card-meta-color: var(--fd-color-text-muted);
+        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         --fd-radius-lg: 22px;
-        --fd-color-surface: var(--fd-color-white);
+        --fd-color-surface: var(--fd-color-surface-raised);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        border: 1px solid var(--fd-color-border);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
@@ -247,13 +247,13 @@
         ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain) {
             display: block;
             font-size: 0.72rem;
-            color: var(--fd-color-slate-500);
+            color: var(--fd-color-text-muted);
         }
 
         ::ng-deep .image-upload-field__hint {
             display: block;
             font-size: 0.68rem;
-            color: var(--fd-color-slate-400);
+            color: var(--fd-color-text-muted);
         }
     }
 
@@ -414,7 +414,7 @@
 
     &__satiety-card {
         --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
-        border: none;
+        border: 1px solid var(--fd-color-border);
         border-radius: variables.$border-radius-l;
         padding: variables.$gap-m;
         display: flex;
@@ -422,7 +422,11 @@
         gap: variables.$gap-m;
         text-align: left;
         cursor: pointer;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
+            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+        );
         box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-text) 8%, transparent);
         position: relative;
         overflow: hidden;
@@ -455,7 +459,7 @@
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        background: color-mix(in srgb, var(--fd-color-white) 80%, transparent);
+        background: color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-white) 12%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -511,10 +515,14 @@
         flex-direction: column;
         gap: variables.$gap-m;
         padding: variables.$gap-m;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+        border: 1px solid var(--fd-color-border);
         border-radius: 20px;
-        background: var(--fd-color-white);
-        box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
+            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+        );
+        box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
     }
 
     &__ai-summary-listing {
@@ -798,28 +806,28 @@
     flex-wrap: wrap;
 }
 
-.consumption-item__actions--stack {
+    .consumption-item__actions--stack {
     flex-direction: column;
     align-items: stretch;
     gap: variables.$gap-s;
     justify-content: flex-start;
     margin-top: variables.$gap-s;
 
-    .consumption-item__add {
-        width: 100%;
-        --fd-radius-md: 22px;
-
-        ::ng-deep .fd-ui-button,
-        ::ng-deep button {
+        .consumption-item__add {
             width: 100%;
-            border-style: dashed;
-            border-color: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
-            color: var(--fd-color-slate-500);
-            font-weight: 600;
-            background: color-mix(in srgb, var(--fd-color-slate-50) 60%, transparent);
+            --fd-radius-md: 22px;
+
+            ::ng-deep .fd-ui-button,
+            ::ng-deep button {
+                width: 100%;
+                border-style: dashed;
+                border-color: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
+                color: var(--fd-color-text-muted);
+                font-weight: 600;
+                background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
+            }
         }
     }
-}
 
 .consumption-item__error {
     margin-top: variables.$gap-s;
