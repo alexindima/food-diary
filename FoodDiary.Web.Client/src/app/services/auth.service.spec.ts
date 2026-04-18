@@ -300,6 +300,27 @@ describe('AuthService', () => {
             expect(service.isAuthenticated()).toBe(true);
         });
 
+        it('should share a single refresh request across concurrent subscribers', () => {
+            localStorage.setItem('refreshToken', 'existing-refresh-token');
+            const newToken = createFakeJwt({ sub: 'user-1' });
+            const results: Array<string | null> = [];
+
+            service.refreshToken().subscribe(result => results.push(result));
+            service.refreshToken().subscribe(result => results.push(result));
+
+            const requests = httpMock.match(`${authBaseUrl}/refresh`);
+            expect(requests).toHaveLength(1);
+
+            requests[0].flush({
+                accessToken: newToken,
+                refreshToken: 'rotated-refresh-token',
+                user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            });
+
+            expect(results).toEqual([newToken, newToken]);
+            expect(localStorage.getItem('refreshToken')).toBe('rotated-refresh-token');
+        });
+
         it('should rotate stored refresh token on success', () => {
             localStorage.setItem('refreshToken', 'existing-refresh-token');
 

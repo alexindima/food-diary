@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, finalize, map, Observable, of, shareReplay, tap } from 'rxjs';
 import {
     AuthResponse,
     ConfirmPasswordResetRequest,
@@ -37,6 +37,7 @@ export class AuthService extends ApiService {
     private authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
     private userSignal = signal<string | null>(this.tokenStorage.loadUserId());
     private emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
+    private refreshInFlight$: Observable<string | null> | null = null;
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
@@ -150,13 +151,17 @@ export class AuthService extends ApiService {
     }
 
     public refreshToken(): Observable<string | null> {
+        if (this.refreshInFlight$) {
+            return this.refreshInFlight$;
+        }
+
         const refreshToken = this.tokenStorage.getRefreshToken();
         if (!refreshToken) {
             void this.onLogout(true);
             return of(null);
         }
 
-        return this.post<AuthResponse>('refresh', { refreshToken }).pipe(
+        const refreshRequest$ = this.post<AuthResponse>('refresh', { refreshToken }).pipe(
             map(response => {
                 const accessToken = response?.accessToken ?? null;
                 if (accessToken) {
@@ -170,7 +175,14 @@ export class AuthService extends ApiService {
                 void this.onLogout(true);
                 return fallbackApiError('refreshToken error', error, null);
             }),
+            finalize(() => {
+                this.refreshInFlight$ = null;
+            }),
+            shareReplay(1),
         );
+
+        this.refreshInFlight$ = refreshRequest$;
+        return refreshRequest$;
     }
 
     public async onLogout(redirectToAuth = false): Promise<void> {
