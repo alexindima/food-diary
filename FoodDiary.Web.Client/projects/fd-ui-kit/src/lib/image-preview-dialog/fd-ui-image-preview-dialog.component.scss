@@ -7,30 +7,30 @@
     --fd-color-dialog-border: transparent;
     --fd-color-dialog-shadow: color-mix(in srgb, var(--fd-color-slate-900) 45%, transparent);
     --fd-color-dialog-text-shadow: color-mix(in srgb, var(--fd-color-slate-900) 60%, transparent);
+}
 
-    ::ng-deep .mat-mdc-dialog-surface {
-        background: transparent;
-    }
+.fd-ui-image-preview-dialog .mat-mdc-dialog-surface {
+    background: transparent;
+}
 
-    ::ng-deep .fd-ui-dialog {
-        padding: 0;
-        background: var(--fd-color-dialog-surface);
-        box-shadow: none;
-        border: none;
-        border-radius: 28px;
-        max-height: min(90vh, 980px);
-    }
+.fd-ui-image-preview-dialog .fd-ui-dialog {
+    padding: 0;
+    background: var(--fd-color-dialog-surface);
+    box-shadow: none;
+    border: none;
+    border-radius: 28px;
+    max-height: min(90vh, 980px);
+}
 
-    ::ng-deep .fd-ui-dialog__header,
-    ::ng-deep .fd-ui-dialog__footer {
-        display: none;
-    }
+.fd-ui-image-preview-dialog .fd-ui-dialog__header,
+.fd-ui-image-preview-dialog .fd-ui-dialog__footer {
+    display: none;
+}
 
-    ::ng-deep .fd-ui-dialog__body {
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
-    }
+.fd-ui-image-preview-dialog .fd-ui-dialog__body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
 }
 
 .fd-ui-image-preview-dialog__viewport {
