@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { calculateCaloriesFromMacros, calculateCalorieMismatchWarning, calculateMacroBarState } from './nutrition-form.utils';
 
 describe('nutrition-form.utils', () => {

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NutrientBadgesComponent } from './nutrient-badges.component';
 import { TranslateModule } from '@ngx-translate/core';
