@@ -14,6 +14,7 @@ export class FdUiButtonComponent {
     public readonly type = input<FdUiButtonType>('button');
     public readonly variant = input<FdUiButtonVariant>('primary');
     public readonly fill = input<FdUiButtonFill>('solid');
+    public readonly appearance = input<FdUiButtonAppearance>('default');
     public readonly size = input<FdUiButtonSize>('md');
     public readonly icon = input<string | undefined>(undefined);
     public readonly iconSize = input<FdUiButtonIconSize>('md');
@@ -41,6 +42,7 @@ export class FdUiButtonComponent {
             'fd-ui-button',
             `fd-ui-button--${this.variant()}`,
             `fd-ui-button--${this.normalizedFill()}`,
+            `fd-ui-button--appearance-${this.appearance()}`,
             `fd-ui-button--size-${this.size()}`,
             `fd-ui-button--icon-${this.iconSize()}`,
             this.fullWidth() ? 'fd-ui-button--full-width' : '',
@@ -51,5 +53,6 @@ export class FdUiButtonComponent {
 export type FdUiButtonType = 'button' | 'submit' | 'reset';
 export type FdUiButtonVariant = 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline';
 export type FdUiButtonFill = 'solid' | 'outline' | 'text' | 'ghost';
+export type FdUiButtonAppearance = 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon';
 export type FdUiButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 export type FdUiButtonIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

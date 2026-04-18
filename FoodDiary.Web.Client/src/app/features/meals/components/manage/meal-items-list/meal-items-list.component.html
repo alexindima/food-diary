@@ -47,7 +47,15 @@
         }
     </div>
     <div class="consumption-item__actions consumption-item__actions--stack">
-        <fd-ui-button type="button" icon="add" class="consumption-item__add" variant="secondary" fill="outline" (click)="onAddItem()">
+        <fd-ui-button
+            type="button"
+            icon="add"
+            appearance="dashed"
+            class="consumption-item__add"
+            variant="secondary"
+            fill="outline"
+            (click)="onAddItem()"
+        >
             {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
         </fd-ui-button>
     </div>

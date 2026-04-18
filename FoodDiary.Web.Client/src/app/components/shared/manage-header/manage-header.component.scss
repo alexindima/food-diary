@@ -40,31 +40,9 @@
 }
 
 .fd-manage-header__back {
-    --fd-button-border-radius: 12px;
-    --fd-button-padding-x: 0;
-    --fd-button-padding-y: 0;
-
-    ::ng-deep .fd-ui-button,
-    ::ng-deep button {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        box-shadow: none;
-        color: var(--fd-color-text);
-    }
-
-    ::ng-deep .fd-ui-button:hover:not(:disabled),
-    ::ng-deep button:hover:not(:disabled),
-    ::ng-deep .fd-ui-button:active:not(:disabled),
-    ::ng-deep button:active:not(:disabled) {
-        border: none;
-        background: transparent;
-        box-shadow: none;
-        color: var(--fd-color-text);
-    }
+    --fd-button-text-default: var(--fd-color-text);
+    --fd-button-text-hover: var(--fd-color-text);
+    --fd-button-text-active: var(--fd-color-text);
 }
 
 :host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {

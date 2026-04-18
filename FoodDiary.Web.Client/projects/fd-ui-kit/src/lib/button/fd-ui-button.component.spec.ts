@@ -26,8 +26,18 @@ describe('FdUiButtonComponent', () => {
         expect(classes).toContain('fd-ui-button');
         expect(classes).toContain('fd-ui-button--primary');
         expect(classes).toContain('fd-ui-button--solid');
+        expect(classes).toContain('fd-ui-button--appearance-default');
         expect(classes).toContain('fd-ui-button--size-md');
         expect(classes).toContain('fd-ui-button--icon-md');
+    });
+
+    it('should update classes when appearance changes', () => {
+        fixture.componentRef.setInput('appearance', 'toolbar');
+        fixture.detectChanges();
+
+        const classes = component.classes();
+        expect(classes).toContain('fd-ui-button--appearance-toolbar');
+        expect(classes).not.toContain('fd-ui-button--appearance-default');
     });
 
     it('should update classes when variant changes', () => {

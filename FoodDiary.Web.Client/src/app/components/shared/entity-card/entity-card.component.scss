@@ -280,55 +280,12 @@ fd-media-card.entity-card {
 }
 
 .entity-card__action-button {
-    --fd-button-border-radius: var(--fd-radius-button);
-    --fd-button-padding-y: 0;
-    --fd-button-padding-x: 0;
     width: 44px;
     height: 40px;
     background: transparent;
     color: inherit;
     box-shadow: none;
     border: none;
-
-    ::ng-deep button,
-    ::ng-deep .fd-ui-button {
-        width: 44px;
-        height: 40px;
-        border-radius: var(--fd-radius-button);
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white))
-        );
-        border: 1px solid color-mix(in srgb, var(--fd-color-blue-500) 22%, transparent);
-        color: var(--fd-color-primary-600);
-        box-shadow: none;
-    }
-
-    ::ng-deep button:hover:not(:disabled),
-    ::ng-deep .fd-ui-button:hover:not(:disabled) {
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-primary-200) 78%, var(--fd-color-white))
-        );
-        border-color: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
-        box-shadow: none;
-    }
-
-    ::ng-deep button:active:not(:disabled),
-    ::ng-deep .fd-ui-button:active:not(:disabled) {
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-primary-200) 74%, var(--fd-color-white))
-        );
-        box-shadow: none;
-    }
-
-    ::ng-deep .fd-ui-button__label {
-        display: none;
-    }
 }
 
 @container (max-width: 760px) {
@@ -448,22 +405,11 @@ fd-media-card.entity-card {
         width: 34px;
         min-width: 34px;
         height: 34px;
-        --fd-button-border-radius: var(--fd-radius-button);
+        --fd-button-width: 34px;
+        --fd-button-min-width: 34px;
+        --fd-button-height-explicit: 34px;
         --fd-button-height: 34px;
         flex: 0 0 34px;
-    }
-
-    .entity-card__action-button ::ng-deep button,
-    .entity-card__action-button ::ng-deep .fd-ui-button {
-        width: 34px;
-        min-width: 34px;
-        height: 34px;
-        min-height: 34px;
-        padding: 0;
-        margin: 0;
-        border-radius: var(--fd-radius-button);
-        box-shadow: none;
-        transform: none;
     }
 }
 

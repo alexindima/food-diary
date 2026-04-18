@@ -170,6 +170,7 @@ Primary button component.
 - `type?: 'button' | 'submit' | 'reset'`
 - `variant?: 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline'`
 - `fill?: 'solid' | 'outline' | 'text' | 'ghost'`
+- `appearance?: 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon'`
 - `size?: 'xs' | 'sm' | 'md' | 'lg'`
 - `icon?: string` (material icon)
 - `iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'`

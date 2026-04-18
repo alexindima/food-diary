@@ -33,7 +33,15 @@
                 </div>
             }
         </div>
-        <fd-ui-button type="button" icon="add" class="recipe-steps-list__add-step" variant="secondary" fill="outline" (click)="onAddStep()">
+        <fd-ui-button
+            type="button"
+            icon="add"
+            appearance="dashed"
+            class="recipe-steps-list__add-step"
+            variant="secondary"
+            fill="outline"
+            (click)="onAddStep()"
+        >
             {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
         </fd-ui-button>
         @if (stepsFormArray().invalid && stepsFormArray().touched) {

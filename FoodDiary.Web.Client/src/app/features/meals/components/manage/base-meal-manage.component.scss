@@ -815,16 +815,6 @@
         .consumption-item__add {
             width: 100%;
             --fd-radius-md: var(--fd-radius-button);
-
-            ::ng-deep .fd-ui-button,
-            ::ng-deep button {
-                width: 100%;
-                border-style: dashed;
-                border-color: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
-                color: var(--fd-color-text-muted);
-                font-weight: 600;
-                background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
-            }
         }
     }
 

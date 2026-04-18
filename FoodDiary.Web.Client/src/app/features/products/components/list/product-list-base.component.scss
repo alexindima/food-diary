@@ -65,44 +65,15 @@
         min-width: auto;
 
         &--active {
-
-            ::ng-deep .fd-ui-button,
-            ::ng-deep button {
-                border-color: var(--fd-color-sky-500);
-                background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-                color: var(--fd-color-sky-700);
-            }
-        }
-    }
-
-    &__icon-button {
-        --fd-button-border-radius: 12px;
-        --fd-button-padding-x: 0;
-        --fd-button-padding-y: 0;
-
-        ::ng-deep .fd-ui-button,
-        ::ng-deep button {
-            width: 38px;
-            height: 38px;
-            min-width: 38px;
-            padding: 0;
-            border: 1px solid var(--fd-color-border);
-            background: var(--fd-color-surface-raised);
-        }
-
-        &--primary {
-
-            ::ng-deep .fd-ui-button,
-            ::ng-deep button {
-                border: none;
-                background: var(--g1);
-                color: var(--fd-color-white);
-                box-shadow: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
-            }
-
-            ::ng-deep .material-icons {
-                color: var(--fd-color-white);
-            }
+            --fd-button-border-default: var(--fd-color-sky-500);
+            --fd-button-border-hover: var(--fd-color-sky-500);
+            --fd-button-border-active: var(--fd-color-sky-500);
+            --fd-button-background-default: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-background-hover: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-background-active: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-text-default: var(--fd-color-sky-700);
+            --fd-button-text-hover: var(--fd-color-sky-700);
+            --fd-button-text-active: var(--fd-color-sky-700);
         }
     }
 
@@ -117,43 +88,30 @@
         --fd-button-border-radius: 18px;
         --fd-button-padding-x: 16px;
         --fd-button-padding-y: 8px;
+        --fd-button-border-width: 0;
+        --fd-button-background-default: var(--g1);
+        --fd-button-background-hover: var(--g2);
+        --fd-button-background-active: var(--g1);
+        --fd-button-text-default: var(--fd-color-white);
+        --fd-button-text-hover: var(--fd-color-white);
+        --fd-button-text-active: var(--fd-color-white);
+        --fd-button-shadow-default: var(--s1);
+        --fd-button-shadow-hover: var(--s2);
+        --fd-button-shadow-active: none;
         font-weight: 800;
         border: none;
         background: transparent;
         color: var(--fd-color-white);
         box-shadow: none;
-
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            background: var(--g1);
-            border: none;
-            color: var(--fd-color-white);
-            box-shadow: var(--s1);
-        }
-
-        ::ng-deep button:hover:not(:disabled),
-        ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background: var(--g2);
-            box-shadow: var(--s2);
-        }
-
-        ::ng-deep button:active:not(:disabled),
-        ::ng-deep .fd-ui-button:active:not(:disabled) {
-            background: var(--g1);
-            box-shadow: none;
-        }
     }
 
     @media #{variables.$media-xs} {
 
         &__add-button {
             --fd-button-padding-x: 10px;
+            --fd-button-label-display: none;
             font-size: 0;
             line-height: 0;
-        }
-
-        &__add-button ::ng-deep .fd-ui-button__label {
-            display: none;
         }
     }
 
@@ -161,25 +119,27 @@
         --fd-button-border-radius: 18px;
         --fd-button-padding-x: 14px;
         --fd-button-padding-y: 8px;
+        --fd-button-border-default: var(--b1);
+        --fd-button-border-hover: var(--b1);
+        --fd-button-border-active: var(--b1);
+        --fd-button-background-default: var(--fd-color-white);
+        --fd-button-background-hover: var(--fd-color-white);
+        --fd-button-background-active: var(--fd-color-white);
+        --fd-button-text-default: var(--fd-color-text);
+        --fd-button-text-hover: var(--fd-color-text);
+        --fd-button-text-active: var(--fd-color-text);
         font-weight: 700;
         border: none;
         background: transparent;
         color: var(--fd-color-text);
 
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            border: 1px solid var(--b1);
-            background: var(--fd-color-white);
-            color: var(--fd-color-text);
-        }
-
         &--active {
-
-            ::ng-deep button,
-            ::ng-deep .fd-ui-button {
-                border-color: var(--fd-color-sky-500);
-                background: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            }
+            --fd-button-border-default: var(--fd-color-sky-500);
+            --fd-button-border-hover: var(--fd-color-sky-500);
+            --fd-button-border-active: var(--fd-color-sky-500);
+            --fd-button-background-default: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-background-hover: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+            --fd-button-background-active: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
         }
     }
 
@@ -523,33 +483,18 @@
         &__controls .product-list__pill {
             flex: 1 1 auto;
             min-width: 0;
-        }
-
-        &__controls .product-list__filter-button ::ng-deep .fd-ui-button,
-        &__controls .product-list__filter-button ::ng-deep button,
-        &__controls .product-list__pill ::ng-deep .fd-ui-button,
-        &__controls .product-list__pill ::ng-deep button {
-            width: 100%;
-            padding-left: 12px;
-            padding-right: 12px;
+            --fd-button-width: 100%;
+            --fd-button-padding-x: 12px;
+            --fd-button-white-space: nowrap;
             font-size: 0.92rem;
-            white-space: nowrap;
         }
 
         &__controls .product-list__add-button {
             flex: 0 0 auto;
             min-width: 44px;
-        }
-
-        &__controls .product-list__add-button ::ng-deep .fd-ui-button,
-        &__controls .product-list__add-button ::ng-deep button {
-            width: 44px;
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        &__controls .product-list__add-button ::ng-deep .fd-ui-button__label {
-            display: none;
+            --fd-button-width: 44px;
+            --fd-button-padding-x: 0;
+            --fd-button-label-display: none;
         }
     }
 
@@ -558,17 +503,9 @@
         &__controls .product-list__pill {
             flex: 0 0 auto;
             min-width: 44px;
-        }
-
-        &__controls .product-list__pill ::ng-deep .fd-ui-button,
-        &__controls .product-list__pill ::ng-deep button {
-            width: 44px;
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        &__controls .product-list__pill ::ng-deep .fd-ui-button__label {
-            display: none;
+            --fd-button-width: 44px;
+            --fd-button-padding-x: 0;
+            --fd-button-label-display: none;
         }
     }
 }
@@ -767,14 +704,13 @@
         --fd-button-border-radius: 18px;
         --fd-button-padding-y: 12px;
         --fd-button-padding-x: 16px;
+        --fd-button-text-default: var(--fd-color-white);
+        --fd-button-text-hover: var(--fd-color-white);
+        --fd-button-text-active: var(--fd-color-white);
         font-weight: 800;
         background: linear-gradient(135deg, var(--fd-color-primary-700), var(--fd-color-sky-500));
         color: var(--fd-color-white);
         box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-sky-500) 28%, transparent);
-
-        ::ng-deep button {
-            color: var(--fd-color-white);
-        }
     }
 
     @media #{variables.$media-mobile} {
