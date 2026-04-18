@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnIni
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
@@ -34,7 +33,6 @@ type TimeframeOption = {
         CommonModule,
         FormsModule,
         TranslateModule,
-        FdUiButtonComponent,
         FdUiCardComponent,
         FdUiSelectComponent,
         PageHeaderComponent,
@@ -55,6 +53,7 @@ export class GoalsPageComponent implements OnInit {
     protected readonly calorieTarget = this.facade.calorieTarget;
     protected readonly isLoadingGoals = this.facade.isLoadingGoals;
     protected readonly isSavingGoals = this.facade.isSavingGoals;
+    protected readonly saveStatusKey = this.facade.saveStatusKey;
     protected readonly macroPresets = this.facade.macroPresets;
     protected readonly selectedPreset = this.facade.selectedPreset;
     protected readonly macroStates = this.facade.macroStates;
@@ -134,10 +133,6 @@ export class GoalsPageComponent implements OnInit {
     protected onMacroSliderChange(key: MacroKey, event: Event): void {
         const target = event.target as HTMLInputElement;
         this.facade.updateMacroValue(key, Number(target.value));
-    }
-
-    protected saveGoals(): void {
-        this.facade.saveGoals();
     }
 
     protected onMacroInputChange(key: MacroKey, event: Event): void {

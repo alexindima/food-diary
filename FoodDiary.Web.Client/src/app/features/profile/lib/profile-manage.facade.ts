@@ -1,9 +1,7 @@
-import { DestroyRef, Injectable, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Injectable, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { Subject, finalize, firstValueFrom } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { finalize, firstValueFrom } from 'rxjs';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
@@ -16,6 +14,7 @@ import { ThemeService } from '../../../services/theme.service';
 import { UserService } from '../../../shared/api/user.service';
 import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { UpdateUserDto, User } from '../../../shared/models/user.data';
+import { AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
@@ -30,9 +29,11 @@ export class ProfileManageFacade {
     private readonly localizationService = inject(LocalizationService);
     private readonly notificationService = inject(NotificationService);
     private readonly themeService = inject(ThemeService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly profileAutosaveQueue = new Subject<void>();
-    private pendingProfileUpdate: UpdateUserDto | null = null;
+    private readonly profileAutosaveQueue: AutosaveQueue<UpdateUserDto> = createAutosaveQueue({
+        debounceMs: 700,
+        isBusy: () => this.isSavingProfile(),
+        persist: updateData => this.persistProfileUpdate(updateData),
+    });
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
@@ -44,11 +45,7 @@ export class ProfileManageFacade {
     public readonly isLoadingWebPushSubscriptions = signal(false);
     public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
 
-    public constructor() {
-        this.profileAutosaveQueue
-            .pipe(debounceTime(700), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.persistQueuedProfileUpdate());
-    }
+    public constructor() {}
 
     public initialize(): void {
         this.loadUser();
@@ -75,12 +72,7 @@ export class ProfileManageFacade {
     }
 
     public queueProfileAutosave(updateData: UpdateUserDto): void {
-        this.pendingProfileUpdate = updateData;
-        if (this.isSavingProfile()) {
-            return;
-        }
-
-        this.profileAutosaveQueue.next();
+        this.profileAutosaveQueue.schedule(updateData);
     }
 
     public openChangePasswordDialog(): void {
@@ -189,8 +181,7 @@ export class ProfileManageFacade {
     }
 
     public saveProfileNow(updateData: UpdateUserDto): void {
-        this.pendingProfileUpdate = null;
-        this.persistProfileUpdate(updateData);
+        this.profileAutosaveQueue.flushNow(updateData);
     }
 
     private loadUser(): void {
@@ -229,20 +220,6 @@ export class ProfileManageFacade {
             });
     }
 
-    private persistQueuedProfileUpdate(): void {
-        if (this.isSavingProfile()) {
-            return;
-        }
-
-        const updateData = this.pendingProfileUpdate;
-        this.pendingProfileUpdate = null;
-        if (!updateData) {
-            return;
-        }
-
-        this.persistProfileUpdate(updateData);
-    }
-
     private persistProfileUpdate(updateData: UpdateUserDto): void {
         this.isSavingProfile.set(true);
         this.userService
@@ -259,15 +236,17 @@ export class ProfileManageFacade {
                         this.clearGlobalError();
                     }
 
-                    if (this.pendingProfileUpdate) {
-                        this.profileAutosaveQueue.next();
-                    }
+                    this.profileAutosaveQueue.scheduleIfPending();
                 },
                 error: () => {
                     this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                    if (this.pendingProfileUpdate) {
-                        this.profileAutosaveQueue.next();
+                    const hasQueuedUpdate = this.profileAutosaveQueue.hasPending();
+                    if (!hasQueuedUpdate) {
+                        this.profileAutosaveQueue.restore(updateData);
+                        return;
                     }
+
+                    this.profileAutosaveQueue.scheduleIfPending();
                 },
             });
     }

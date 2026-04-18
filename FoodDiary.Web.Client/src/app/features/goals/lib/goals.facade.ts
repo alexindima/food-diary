@@ -1,6 +1,10 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 import { GoalsService } from '../api/goals.service';
+import { AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { UpdateGoalsRequest } from '../models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -48,6 +52,8 @@ export type BodyTargetKey = 'weight' | 'waist';
 @Injectable()
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
+    private readonly toastService = inject(FdUiToastService);
+    private readonly translateService = inject(TranslateService);
 
     private readonly colorBlue = 'var(--fd-color-primary-600)';
     private readonly colorGreen = 'var(--fd-color-green-500)';
@@ -127,6 +133,12 @@ export class GoalsFacade {
         ],
     };
 
+    private readonly autosaveQueue: AutosaveQueue<UpdateGoalsRequest> = createAutosaveQueue({
+        debounceMs: 700,
+        isBusy: () => this.isSavingGoals(),
+        persist: request => this.persistGoals(request),
+    });
+
     public readonly minCalories = 0;
     public readonly maxCalories = 5000;
     public readonly calorieTarget = signal(0);
@@ -154,6 +166,8 @@ export class GoalsFacade {
     public readonly isLoadingGoals = signal(true);
     public readonly isSavingGoals = signal(false);
     public readonly selectedPreset = signal<MacroPresetKey>('custom');
+    public readonly hasPendingAutosave = signal(false);
+    public readonly hasAutosaveError = signal(false);
 
     public readonly macroPresets: MacroPreset[] = [
         { key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' },
@@ -245,6 +259,21 @@ export class GoalsFacade {
         }
         return this.colorRed;
     });
+    public readonly saveStatusKey = computed(() => {
+        if (this.isLoadingGoals()) {
+            return 'GOALS_PAGE.STATUS_LOADING';
+        }
+        if (this.isSavingGoals()) {
+            return 'GOALS_PAGE.STATUS_SAVING';
+        }
+        if (this.hasAutosaveError()) {
+            return 'GOALS_PAGE.STATUS_ERROR';
+        }
+        if (this.hasPendingAutosave()) {
+            return 'GOALS_PAGE.STATUS_PENDING';
+        }
+        return null;
+    });
 
     public initialize(): void {
         this.loadGoals();
@@ -257,12 +286,14 @@ export class GoalsFacade {
 
         this.calorieTarget.set(this.clampCalories(rawValue));
         this.reapplyPresetIfNeeded();
+        this.queueAutosave();
     }
 
     public normalizeCaloriesInput(value: number): number {
         const clamped = this.clampCalories(value);
         this.calorieTarget.set(clamped);
         this.reapplyPresetIfNeeded();
+        this.queueAutosave();
         return clamped;
     }
 
@@ -276,6 +307,7 @@ export class GoalsFacade {
             ...current,
             [key]: clamped,
         }));
+        this.queueAutosave();
         return clamped;
     }
 
@@ -285,6 +317,7 @@ export class GoalsFacade {
             this.applyPresetPercent(preset.percent);
         }
         this.selectedPreset.set(next);
+        this.queueAutosave();
     }
 
     public updateMacroValue(key: MacroKey, value: number): number | null {
@@ -299,6 +332,7 @@ export class GoalsFacade {
             [key]: clamped,
         }));
         this.selectedPreset.set('custom');
+        this.queueAutosave();
         return clamped;
     }
 
@@ -309,6 +343,7 @@ export class GoalsFacade {
 
         const clamped = this.clampValue(value, this.waterConfig.max);
         this.waterValue.set(clamped);
+        this.queueAutosave();
         return clamped;
     }
 
@@ -331,6 +366,7 @@ export class GoalsFacade {
                 });
             }
         }
+        this.queueAutosave();
     }
 
     public updateDayCalories(key: string, value: number): void {
@@ -340,32 +376,7 @@ export class GoalsFacade {
 
         const clamped = this.clampCalories(value);
         this.dayCalories.update(current => ({ ...current, [key]: clamped }));
-    }
-
-    public saveGoals(): void {
-        if (this.isSavingGoals()) {
-            return;
-        }
-
-        const macros = this.macroValues();
-        const bodyTargets = this.bodyTargetValues();
-
-        this.isSavingGoals.set(true);
-        this.goalsService
-            .updateGoals({
-                dailyCalorieTarget: this.calorieTarget(),
-                proteinTarget: macros.protein,
-                fatTarget: macros.fats,
-                carbTarget: macros.carbs,
-                fiberTarget: macros.fiber,
-                waterGoal: this.waterValue(),
-                desiredWeight: this.normalizeDesiredBodyTarget(bodyTargets.weight),
-                desiredWaist: this.normalizeDesiredBodyTarget(bodyTargets.waist),
-                calorieCyclingEnabled: this.calorieCyclingEnabled(),
-                ...(this.calorieCyclingEnabled() ? this.dayCalories() : {}),
-            })
-            .pipe(finalize(() => this.isSavingGoals.set(false)))
-            .subscribe();
+        this.queueAutosave();
     }
 
     private loadGoals(): void {
@@ -425,7 +436,74 @@ export class GoalsFacade {
                     saturdayCalories: goals?.saturdayCalories ?? 0,
                     sundayCalories: goals?.sundayCalories ?? 0,
                 });
+
+                this.hasAutosaveError.set(false);
+                this.hasPendingAutosave.set(false);
             });
+    }
+
+    private queueAutosave(): void {
+        this.hasAutosaveError.set(false);
+        this.hasPendingAutosave.set(true);
+        this.autosaveQueue.schedule(this.buildGoalsRequest());
+    }
+
+    private persistGoals(request: UpdateGoalsRequest): void {
+        this.hasPendingAutosave.set(false);
+        this.isSavingGoals.set(true);
+        this.goalsService
+            .updateGoals(request)
+            .pipe(finalize(() => this.isSavingGoals.set(false)))
+            .subscribe({
+                next: goals => {
+                    if (!goals) {
+                        const hasQueuedUpdate = this.autosaveQueue.hasPending();
+                        if (!hasQueuedUpdate) {
+                            this.autosaveQueue.restore(request);
+                        } else {
+                            this.autosaveQueue.scheduleIfPending();
+                        }
+
+                        this.hasAutosaveError.set(true);
+                        this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
+                        return;
+                    }
+
+                    this.hasAutosaveError.set(false);
+                    this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
+                    this.autosaveQueue.scheduleIfPending();
+                    this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
+                },
+                error: () => {
+                    const hasQueuedUpdate = this.autosaveQueue.hasPending();
+                    if (!hasQueuedUpdate) {
+                        this.autosaveQueue.restore(request);
+                    } else {
+                        this.autosaveQueue.scheduleIfPending();
+                    }
+
+                    this.hasAutosaveError.set(true);
+                    this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
+                },
+            });
+    }
+
+    private buildGoalsRequest(): UpdateGoalsRequest {
+        const macros = this.macroValues();
+        const bodyTargets = this.bodyTargetValues();
+
+        return {
+            dailyCalorieTarget: this.calorieTarget(),
+            proteinTarget: macros.protein,
+            fatTarget: macros.fats,
+            carbTarget: macros.carbs,
+            fiberTarget: macros.fiber,
+            waterGoal: this.waterValue(),
+            desiredWeight: this.normalizeDesiredBodyTarget(bodyTargets.weight),
+            desiredWaist: this.normalizeDesiredBodyTarget(bodyTargets.waist),
+            calorieCyclingEnabled: this.calorieCyclingEnabled(),
+            ...(this.calorieCyclingEnabled() ? this.dayCalories() : {}),
+        };
     }
 
     private normalizeDesiredBodyTarget(value: number): number | null {

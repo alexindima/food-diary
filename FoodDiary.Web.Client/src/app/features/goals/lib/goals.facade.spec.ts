@@ -1,13 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { Subject, of, throwError } from 'rxjs';
 import { GoalsService } from '../api/goals.service';
 import { GoalsFacade } from './goals.facade';
 
 describe('GoalsFacade', () => {
     let facade: GoalsFacade;
     let goalsService: { getGoals: ReturnType<typeof vi.fn>; updateGoals: ReturnType<typeof vi.fn> };
+    let toastService: { success: ReturnType<typeof vi.fn> };
 
     beforeEach(() => {
+        vi.useFakeTimers();
+
         goalsService = {
             getGoals: vi.fn().mockReturnValue(
                 of({
@@ -21,14 +26,31 @@ describe('GoalsFacade', () => {
                     desiredWaist: 80,
                 }),
             ),
-            updateGoals: vi.fn().mockReturnValue(of(null)),
+            updateGoals: vi.fn().mockReturnValue(of({})),
+        };
+        toastService = {
+            success: vi.fn(),
         };
 
         TestBed.configureTestingModule({
-            providers: [GoalsFacade, { provide: GoalsService, useValue: goalsService }],
+            providers: [
+                GoalsFacade,
+                { provide: GoalsService, useValue: goalsService },
+                { provide: FdUiToastService, useValue: toastService },
+                {
+                    provide: TranslateService,
+                    useValue: {
+                        instant: vi.fn((key: string) => key),
+                    },
+                },
+            ],
         });
 
         facade = TestBed.inject(GoalsFacade);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     it('loads saved goals on initialize', () => {
@@ -69,7 +91,7 @@ describe('GoalsFacade', () => {
         expect(facade.macroValues().protein).toBe(160);
     });
 
-    it('saves normalized goals payload', () => {
+    it('debounces autosave and sends the latest payload', async () => {
         facade.updateCalories(2000);
         facade.updateMacroValue('protein', 140);
         facade.updateMacroValue('fats', 60);
@@ -79,7 +101,9 @@ describe('GoalsFacade', () => {
         facade.updateBodyTarget('weight', 70);
         facade.updateBodyTarget('waist', 0);
 
-        facade.saveGoals();
+        expect(goalsService.updateGoals).not.toHaveBeenCalled();
+
+        await vi.advanceTimersByTimeAsync(700);
 
         expect(goalsService.updateGoals).toHaveBeenCalledWith({
             dailyCalorieTarget: 2000,
@@ -92,5 +116,66 @@ describe('GoalsFacade', () => {
             desiredWaist: null,
             calorieCyclingEnabled: false,
         });
+        expect(toastService.success).toHaveBeenCalledWith('GOALS_PAGE.SAVED_TOAST');
+    });
+
+    it('queues the latest autosave payload while a save is in flight', async () => {
+        const inFlightUpdate = new Subject<any>();
+        goalsService.updateGoals.mockReturnValueOnce(inFlightUpdate.asObservable());
+
+        facade.updateCalories(1800);
+        await vi.advanceTimersByTimeAsync(700);
+        expect(goalsService.updateGoals).toHaveBeenCalledTimes(1);
+
+        facade.updateWaterValue(2500);
+        expect(goalsService.updateGoals).toHaveBeenCalledTimes(1);
+
+        inFlightUpdate.next({});
+        inFlightUpdate.complete();
+        await Promise.resolve();
+        await vi.advanceTimersByTimeAsync(700);
+
+        expect(goalsService.updateGoals).toHaveBeenCalledTimes(2);
+        expect(goalsService.updateGoals.mock.calls[1][0]).toEqual(
+            expect.objectContaining({
+                dailyCalorieTarget: 1800,
+                waterGoal: 2500,
+            }),
+        );
+        expect(toastService.success).toHaveBeenCalledTimes(2);
+    });
+
+    it('preserves the latest queued payload when the in-flight autosave fails', async () => {
+        const inFlightUpdate = new Subject<any>();
+        goalsService.updateGoals.mockReturnValueOnce(inFlightUpdate.asObservable()).mockReturnValue(of({}));
+
+        facade.updateCalories(1800);
+        await vi.advanceTimersByTimeAsync(700);
+        expect(goalsService.updateGoals).toHaveBeenCalledTimes(1);
+
+        facade.updateWaterValue(2300);
+        inFlightUpdate.error(new Error('save failed'));
+        await Promise.resolve();
+        await vi.advanceTimersByTimeAsync(700);
+
+        expect(goalsService.updateGoals).toHaveBeenCalledTimes(2);
+        expect(goalsService.updateGoals.mock.calls[1][0]).toEqual(
+            expect.objectContaining({
+                dailyCalorieTarget: 1800,
+                waterGoal: 2300,
+            }),
+        );
+    });
+
+    it('surfaces autosave error state when the save fails without newer changes', async () => {
+        facade.initialize();
+        goalsService.updateGoals.mockReturnValueOnce(throwError(() => new Error('save failed')));
+
+        facade.updateCalories(1900);
+        await vi.advanceTimersByTimeAsync(700);
+
+        expect(facade.hasAutosaveError()).toBe(true);
+        expect(facade.saveStatusKey()).toBe('GOALS_PAGE.STATUS_ERROR');
+        expect(toastService.success).not.toHaveBeenCalled();
     });
 });
