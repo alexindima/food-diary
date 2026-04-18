@@ -1,4 +1,4 @@
-﻿<div class="product-list" fdPageContainer>
+<div class="product-list" fdPageContainer>
     <fd-page-header
         class="product-list__header"
         [title]="'PRODUCT_LIST.TITLE' | translate"
@@ -103,73 +103,62 @@
             </div>
         } @else {
             @if (favorites().length > 0) {
-                <div class="product-list__favorites">
-                    <button type="button" class="product-list__favorites-header" (click)="toggleFavorites()">
-                        <mat-icon class="product-list__favorites-star">star</mat-icon>
-                        <span>{{ 'PRODUCT_LIST.FAVORITES_TITLE' | translate }} ({{ favoriteTotalCount() }})</span>
-                        <mat-icon [class.is-open]="isFavoritesOpen()">expand_more</mat-icon>
-                    </button>
-                    @if (isFavoritesOpen()) {
-                        <div class="product-list__favorites-grid">
-                            @for (favorite of favorites(); track favorite.id) {
-                                <div class="product-list__favorite-card">
-                                    <button type="button" class="product-list__favorite-info" (click)="openFavoriteProduct(favorite)">
-                                        <div class="product-list__favorite-name">
-                                            {{ favorite.name || favorite.productName || ('PRODUCT_LIST.FAVORITE_UNNAMED' | translate) }}
-                                        </div>
-                                        <div class="product-list__favorite-meta">
-                                            @if (favorite.brand) {
-                                                <span>{{ favorite.brand }}</span>
-                                                <span>·</span>
-                                            }
-                                            <span
-                                                >{{ favorite.caloriesPerBase | number: '1.0-0' }}
-                                                {{ 'GENERAL.UNITS.KCAL' | translate }}</span
-                                            >
-                                        </div>
-                                    </button>
-                                    <div class="product-list__favorite-actions">
-                                        <button
-                                            type="button"
-                                            class="product-list__favorite-btn"
-                                            (click)="openFavoriteProduct(favorite)"
-                                            [title]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                                        >
-                                            <mat-icon>open_in_new</mat-icon>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="product-list__favorite-btn"
-                                            (click)="addFavoriteProductToMeal(favorite)"
-                                            [title]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                        >
-                                            <mat-icon>add</mat-icon>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="product-list__favorite-btn product-list__favorite-btn--remove"
-                                            (click)="removeFavorite(favorite)"
-                                            [title]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                                        >
-                                            <mat-icon>close</mat-icon>
-                                        </button>
+                <fd-favorites-section
+                    class="product-list__favorites"
+                    [title]="'PRODUCT_LIST.FAVORITES_TITLE' | translate"
+                    [count]="favoriteTotalCount()"
+                    [isOpen]="isFavoritesOpen()"
+                    [showLoadMore]="hasMoreFavorites"
+                    [isLoadingMore]="isFavoritesLoadingMore()"
+                    [loadMoreLabel]="'PRODUCT_LIST.FAVORITES_LOAD_MORE' | translate"
+                    (toggle)="toggleFavorites()"
+                    (loadMore)="loadFavorites()"
+                >
+                    <div class="product-list__favorites-grid">
+                        @for (favorite of favorites(); track favorite.id) {
+                            <div class="product-list__favorite-card">
+                                <button type="button" class="product-list__favorite-info" (click)="openFavoriteProduct(favorite)">
+                                    <div class="product-list__favorite-name">
+                                        {{ favorite.name || favorite.productName || ('PRODUCT_LIST.FAVORITE_UNNAMED' | translate) }}
                                     </div>
+                                    <div class="product-list__favorite-meta">
+                                        @if (favorite.brand) {
+                                            <span>{{ favorite.brand }}</span>
+                                            <span>·</span>
+                                        }
+                                        <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                                    </div>
+                                </button>
+                                <div class="product-list__favorite-actions">
+                                    <button
+                                        type="button"
+                                        class="product-list__favorite-btn"
+                                        (click)="openFavoriteProduct(favorite)"
+                                        [title]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
+                                    >
+                                        <mat-icon>open_in_new</mat-icon>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="product-list__favorite-btn"
+                                        (click)="addFavoriteProductToMeal(favorite)"
+                                        [title]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                    >
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="product-list__favorite-btn product-list__favorite-btn--remove"
+                                        (click)="removeFavorite(favorite)"
+                                        [title]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
+                                    >
+                                        <mat-icon>close</mat-icon>
+                                    </button>
                                 </div>
-                            }
-                        </div>
-                        @if (hasMoreFavorites) {
-                            <fd-ui-button
-                                class="product-list__favorites-load-more"
-                                variant="secondary"
-                                fill="outline"
-                                [disabled]="isFavoritesLoadingMore()"
-                                (click)="loadFavorites()"
-                            >
-                                {{ 'PRODUCT_LIST.FAVORITES_LOAD_MORE' | translate }}
-                            </fd-ui-button>
+                            </div>
                         }
-                    }
-                </div>
+                    </div>
+                </fd-favorites-section>
             }
 
             @if (hasVisibleProducts) {

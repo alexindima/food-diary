@@ -105,10 +105,15 @@
         grid-template-columns: minmax(200px, 1.4fr) 110px 140px minmax(160px, 1fr) auto;
         gap: variables.$gap-s;
         align-items: end;
-        background: var(--fd-color-white);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
+        );
+        border: 1px solid var(--fd-color-border);
         border-radius: 16px;
         padding: variables.$gap-m;
-        box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+        box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-shadow) 28%, transparent);
 
         ::ng-deep .fd-ui-input,
         ::ng-deep .fd-ui-select {
@@ -129,9 +134,13 @@
         align-items: center;
         padding: variables.$gap-s variables.$gap-m;
         border-radius: 14px;
-        background: var(--fd-color-white);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
-        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent);
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-50) 6%),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-100) 4%)
+        );
+        border: 1px solid var(--fd-color-border);
+        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-shadow) 20%, transparent);
 
         &--checked {
             opacity: 0.6;
@@ -195,7 +204,11 @@
     &__empty-state {
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         border-radius: 20px;
-        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent), color-mix(in srgb, var(--fd-color-white) 95%, transparent));
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-50) 4%)
+        );
         padding: 28px 20px;
     }
 
@@ -253,7 +266,7 @@
             gap: 0;
             border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
-            background: var(--fd-color-white);
+            background: var(--fd-color-surface);
         }
 
         &__item {

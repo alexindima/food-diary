@@ -408,6 +408,17 @@ html[data-theme='dark'] {
     --fd-button-danger-text-default: #ffffff;
     --fd-button-danger-text-disabled: rgba(255, 255, 255, 0.63);
 
+    --fd-button-danger-outline-background-default: transparent;
+    --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
+    --fd-button-danger-outline-background-active: color-mix(in srgb, var(--fd-color-danger) 16%, transparent);
+    --fd-button-danger-outline-background-disabled: transparent;
+    --fd-button-danger-outline-border-default: var(--fd-color-danger);
+    --fd-button-danger-outline-border-hover: color-mix(in srgb, var(--fd-color-danger) 82%, var(--fd-color-text) 18%);
+    --fd-button-danger-outline-border-active: color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text) 28%);
+    --fd-button-danger-outline-border-disabled: color-mix(in srgb, var(--fd-color-danger) 36%, transparent);
+    --fd-button-danger-outline-text-default: var(--fd-color-danger);
+    --fd-button-danger-outline-text-disabled: color-mix(in srgb, var(--fd-color-danger) 45%, var(--fd-color-surface));
+
     --fd-button-danger-ghost-background-default: transparent;
     --fd-button-danger-ghost-background-hover: rgb(var(--fd-color-danger-rgb) / 0.08);
     --fd-button-danger-ghost-background-active: rgb(var(--fd-color-danger-rgb) / 0.16);

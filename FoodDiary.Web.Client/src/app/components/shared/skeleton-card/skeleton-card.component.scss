@@ -3,12 +3,16 @@
 .fd-skeleton-card {
     border: 1px solid var(--fd-color-border);
     border-radius: variables.$border-radius-m;
-    background-color: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50) 8%),
+        color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
+    );
     padding: variables.$gap-m;
     display: flex;
     flex-direction: column;
     gap: variables.$gap-xs;
-    box-shadow: 0 4px 8px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    box-shadow: 0 4px 8px color-mix(in srgb, var(--fd-color-shadow) 45%, transparent);
 }
 
 .fd-skeleton-card__content {

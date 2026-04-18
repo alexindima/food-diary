@@ -10,9 +10,13 @@
     --fd-media-card-content-padding-y: 18px;
     --fd-media-card-content-padding-y-mobile: 12px;
     --fd-media-card-radius: 22px;
-    --fd-media-card-background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    --fd-media-card-background: linear-gradient(
+        180deg,
+        var(--fd-color-surface-raised) 0%,
+        color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-surface-raised)) 100%
+    );
     --fd-media-card-background-mobile: transparent;
-    --fd-media-card-border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent);
+    --fd-media-card-border: 1px solid var(--fd-color-border);
     --fd-media-card-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     --fd-media-card-hover-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
 }
@@ -38,6 +42,8 @@
     border-radius: var(--fd-media-card-radius);
     background: var(--fd-media-card-background);
     border: var(--fd-media-card-border);
+    box-sizing: border-box;
+    overflow: hidden;
     box-shadow: var(--fd-media-card-shadow);
     transition:
         transform 0.2s ease,

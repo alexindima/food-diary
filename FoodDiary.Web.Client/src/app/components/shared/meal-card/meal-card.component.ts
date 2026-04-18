@@ -89,11 +89,11 @@ export class MealCardComponent {
         return manualCount + aiCount;
     });
     public readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
-    public readonly mealTitle = computed(() =>
-        this.meal().mealType
-            ? this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${this.meal().mealType}`)
-            : this.translateService.instant('MEAL_CARD.MEAL_TYPES.OTHER'),
-    );
+    public readonly mealTitle = computed(() => {
+        const mealType = this.meal().mealType?.trim();
+        const normalizedMealType = mealType ? mealType.toUpperCase() : 'OTHER';
+        return this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${normalizedMealType}`);
+    });
 
     public ngOnInit(): void {
         this.isFavorite.set(this.meal().isFavorite ?? false);

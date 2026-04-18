@@ -187,6 +187,24 @@ export const DESIGN_TOKEN_VALUES = {
                 disabled: '#FFFFFF',
             },
         },
+        'danger-outline': {
+            background: {
+                default: 'transparent',
+                hover: 'color-mix(in srgb, var(--fd-color-danger) 10%, transparent)',
+                active: 'color-mix(in srgb, var(--fd-color-danger) 16%, transparent)',
+                disabled: 'transparent',
+            },
+            border: {
+                default: 'var(--fd-color-danger)',
+                hover: 'color-mix(in srgb, var(--fd-color-danger) 82%, var(--fd-color-text) 18%)',
+                active: 'color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text) 28%)',
+                disabled: 'color-mix(in srgb, var(--fd-color-danger) 36%, transparent)',
+            },
+            text: {
+                default: 'var(--fd-color-danger)',
+                disabled: 'color-mix(in srgb, var(--fd-color-danger) 45%, var(--fd-color-surface))',
+            },
+        },
         'secondary-text': {
             background: {
                 default: 'transparent',
@@ -433,6 +451,24 @@ export const DESIGN_TOKEN_CSS_VARIABLES = {
             text: {
                 default: '--fd-button-danger-text-default',
                 disabled: '--fd-button-danger-text-disabled',
+            },
+        },
+        'danger-outline': {
+            background: {
+                default: '--fd-button-danger-outline-background-default',
+                hover: '--fd-button-danger-outline-background-hover',
+                active: '--fd-button-danger-outline-background-active',
+                disabled: '--fd-button-danger-outline-background-disabled',
+            },
+            border: {
+                default: '--fd-button-danger-outline-border-default',
+                hover: '--fd-button-danger-outline-border-hover',
+                active: '--fd-button-danger-outline-border-active',
+                disabled: '--fd-button-danger-outline-border-disabled',
+            },
+            text: {
+                default: '--fd-button-danger-outline-text-default',
+                disabled: '--fd-button-danger-outline-text-disabled',
             },
         },
         'secondary-text': {

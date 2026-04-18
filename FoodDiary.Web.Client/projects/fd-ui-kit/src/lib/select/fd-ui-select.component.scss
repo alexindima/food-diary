@@ -5,8 +5,12 @@
 .fd-ui-select {
     --fd-select-height: 48px;
     --fd-select-radius: 14px;
-    --fd-select-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
-    --fd-select-label-bg: var(--fd-color-surface, var(--fd-color-white));
+    --fd-select-border: var(--fd-color-border);
+    --fd-select-border-strong: var(--fd-color-border-strong);
+    --fd-select-surface: var(--fd-color-surface-raised);
+    --fd-select-text: var(--fd-color-text);
+    --fd-select-text-muted: var(--fd-color-text-muted);
+    --fd-select-label-bg: var(--fd-select-surface);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -25,7 +29,7 @@
 }
 
 .fd-ui-select__label {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-select-text-muted);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.2;
@@ -45,6 +49,7 @@
         font-size 0.15s ease;
     background: var(--fd-select-label-bg);
     padding: 0 4px;
+    border-radius: 8px;
     pointer-events: none;
 }
 
@@ -57,16 +62,19 @@
     min-height: var(--fd-select-height);
     border: 1px solid var(--fd-select-border);
     border-radius: var(--fd-select-radius);
-    background: var(--fd-color-white);
+    background: var(--fd-select-surface);
     display: flex;
     align-items: center;
     position: relative;
     padding: 0 44px 0 12px;
-    transition: border-color 0.15s ease;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 .fd-ui-select__control-wrap:focus-within {
     border-color: var(--fd-color-primary-500);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
 }
 
 .fd-ui-select__control {
@@ -74,7 +82,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: var(--fd-color-slate-800);
+    color: var(--fd-select-text);
     font: inherit;
     padding: 0;
     min-width: 0;
@@ -89,7 +97,7 @@
 }
 
 .fd-ui-select__control--placeholder {
-    color: var(--fd-color-slate-400);
+    color: var(--fd-select-text-muted);
 }
 
 .fd-ui-select__suffix {
@@ -102,7 +110,7 @@
     justify-content: center;
     width: 32px;
     height: 32px;
-    color: var(--fd-color-slate-400);
+    color: var(--fd-select-text-muted);
     pointer-events: none;
     transition:
         transform 0.15s ease,
@@ -116,6 +124,10 @@
 
 .fd-ui-select--has-error .fd-ui-select__control-wrap {
     border-color: var(--fd-color-danger);
+}
+
+.fd-ui-select--has-error .fd-ui-select__control-wrap:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-danger) 14%, transparent);
 }
 
 .fd-ui-select--floating .fd-ui-select__label {

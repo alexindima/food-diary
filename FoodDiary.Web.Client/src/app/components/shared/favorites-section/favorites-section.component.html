@@ -1,0 +1,27 @@
+<div class="fd-favorites-section">
+    <button type="button" class="fd-favorites-section__header" (click)="onToggle()">
+        <span class="fd-favorites-section__title-group">
+            <mat-icon class="fd-favorites-section__star">star</mat-icon>
+            <span>{{ title() }} ({{ count() }})</span>
+        </span>
+        <mat-icon class="fd-favorites-section__chevron" [class.is-open]="isOpen()">expand_more</mat-icon>
+    </button>
+
+    @if (isOpen()) {
+        <div class="fd-favorites-section__body">
+            <ng-content />
+
+            @if (showLoadMore() && loadMoreLabel()) {
+                <fd-ui-button
+                    class="fd-favorites-section__load-more"
+                    variant="secondary"
+                    fill="outline"
+                    [disabled]="isLoadingMore()"
+                    (click)="onLoadMore()"
+                >
+                    {{ loadMoreLabel() }}
+                </fd-ui-button>
+            }
+        </div>
+    }
+</div>

@@ -12,6 +12,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { ProductDetailComponent, ProductDetailActionResult } from '../../components/detail/product-detail.component';
 import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
+import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
@@ -33,6 +34,7 @@ import { Product } from '../../models/product.data';
         SkeletonCardComponent,
         ErrorStateComponent,
         FdUiIconModule,
+        FavoritesSectionComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

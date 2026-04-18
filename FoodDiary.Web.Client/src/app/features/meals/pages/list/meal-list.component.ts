@@ -21,6 +21,7 @@ import { MealDetailActionResult, MealDetailComponent } from '../../components/de
 import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -50,6 +51,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
         FdPageContainerDirective,
         MealCardComponent,
         AiInputBarComponent,
+        FavoritesSectionComponent,
         LocalizedDatePipe,
     ],
 })

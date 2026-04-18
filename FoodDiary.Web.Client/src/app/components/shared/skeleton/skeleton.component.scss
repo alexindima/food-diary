@@ -1,19 +1,21 @@
 .fd-skeleton {
-    background: #e0e0e0;
-    animation: fd-skeleton-pulse 1.5s ease-in-out infinite;
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--fd-color-surface) 78%, var(--fd-color-text-muted) 22%) 0%,
+        color-mix(in srgb, var(--fd-color-surface-raised) 86%, var(--fd-color-text) 14%) 50%,
+        color-mix(in srgb, var(--fd-color-surface) 78%, var(--fd-color-text-muted) 22%) 100%
+    );
+    background-size: 200% 100%;
+    animation: fd-skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
-@keyframes fd-skeleton-pulse {
+@keyframes fd-skeleton-shimmer {
 
     0% {
-        opacity: 0.4;
-    }
-
-    50% {
-        opacity: 1;
+        background-position: 200% 0;
     }
 
     100% {
-        opacity: 0.4;
+        background-position: -200% 0;
     }
 }

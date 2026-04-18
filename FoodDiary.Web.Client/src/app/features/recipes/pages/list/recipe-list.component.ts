@@ -8,6 +8,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
+import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { debounceTime, distinctUntilChanged, finalize, map, switchMap } from 'rxjs';
@@ -40,6 +41,7 @@ import { RecipeListFacade } from '../../lib/recipe-list.facade';
         FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
+        FavoritesSectionComponent,
         FdUiIconModule,
         PageHeaderComponent,
         PageBodyComponent,

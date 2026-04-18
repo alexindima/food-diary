@@ -5,8 +5,8 @@
 .fd-ui-input {
     --fd-input-height: 40px;
     --fd-input-radius: 14px;
-    --fd-input-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
-    --fd-input-label-bg: var(--fd-color-surface, var(--fd-color-white));
+    --fd-input-border: var(--fd-color-border);
+    --fd-input-label-bg: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -25,7 +25,7 @@
 }
 
 .fd-ui-input__label {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.2;
@@ -45,6 +45,7 @@
         font-size 0.15s ease;
     background: var(--fd-input-label-bg);
     padding: 0 4px;
+    border-radius: 999px;
     pointer-events: none;
 }
 
@@ -57,11 +58,14 @@
     min-height: var(--fd-input-height);
     border: 1px solid var(--fd-input-border);
     border-radius: var(--fd-input-radius);
-    background: var(--fd-color-white);
+    background: var(--fd-color-surface-raised);
     display: flex;
     align-items: center;
     padding: 0 44px 0 12px;
-    transition: border-color 0.15s ease;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
     position: relative;
 }
 
@@ -80,6 +84,7 @@
 
 .fd-ui-input__control-wrap:focus-within {
     border-color: var(--fd-color-primary-500);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
 }
 
 .fd-ui-input__control {
@@ -89,7 +94,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: var(--fd-color-slate-800);
+    color: var(--fd-color-text);
     font: inherit;
     margin-top: 0;
 }
@@ -104,12 +109,12 @@
     justify-content: center;
     width: 28px;
     height: 28px;
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
     pointer-events: none;
 }
 
 .fd-ui-input__control::placeholder {
-    color: var(--fd-color-slate-400);
+    color: var(--fd-color-text-muted);
 }
 
 .fd-ui-input__suffix {
@@ -119,7 +124,7 @@
     transform: translateY(-50%);
     border: none;
     background: transparent;
-    color: var(--fd-color-slate-400);
+    color: var(--fd-color-text-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -131,6 +136,10 @@
 .fd-ui-input__suffix:disabled {
     opacity: 0.6;
     cursor: default;
+}
+
+.fd-ui-input__suffix:hover:not(:disabled) {
+    color: var(--fd-color-text);
 }
 
 .fd-ui-input--has-error .fd-ui-input__control-wrap {

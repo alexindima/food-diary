@@ -14,6 +14,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
+import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
@@ -46,6 +47,7 @@ import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } fro
         SkeletonCardComponent,
         ErrorStateComponent,
         FdUiIconModule,
+        FavoritesSectionComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

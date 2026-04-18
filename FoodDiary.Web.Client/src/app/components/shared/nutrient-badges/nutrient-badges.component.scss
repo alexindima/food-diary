@@ -9,11 +9,11 @@
     align-items: center;
     flex-wrap: wrap;
     border-radius: 999px;
-    background: var(--fd-color-slate-50);
+    background: var(--fd-color-surface);
     color: var(--fd-color-text);
     width: fit-content;
     max-width: 100%;
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+    border: 1px solid var(--fd-color-border);
 }
 
 .nutrient-badges__chip {
@@ -27,7 +27,7 @@
     font-weight: 600;
     color: var(--chip-color, var(--fd-color-text));
     box-shadow: none;
-    border-right: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--fd-color-border) 72%, transparent);
 }
 
 .nutrient-badges__chip:last-child {
@@ -51,7 +51,7 @@
 }
 
 .nutrient-badges__chip--protein {
-    --chip-color: #0284c7;
+    --chip-color: var(--fd-color-sky-600);
 }
 
 .nutrient-badges__chip--carb {
@@ -63,7 +63,7 @@
 }
 
 .nutrient-badges__chip--fiber {
-    --chip-color: #7e22ce;
+    --chip-color: var(--fd-color-purple-700);
 }
 
 .nutrient-badges__chip--alcohol {
@@ -76,7 +76,7 @@
         gap: 0;
         padding: 6px 8px;
         border-radius: 16px;
-        background: var(--fd-color-slate-50);
+        background: var(--fd-color-surface);
         display: inline-grid;
         grid-auto-flow: column;
         grid-auto-columns: minmax(0, 1fr);
@@ -89,7 +89,7 @@
         justify-content: center;
         gap: 4px;
         padding: 6px 8px;
-        border-right: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+        border-right: 1px solid color-mix(in srgb, var(--fd-color-border) 72%, transparent);
         min-width: 0;
     }
 

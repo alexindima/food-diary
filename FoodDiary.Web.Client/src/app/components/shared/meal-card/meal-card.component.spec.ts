@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { MealCardComponent, MealCardItem } from './meal-card.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 // eslint-disable-next-line no-restricted-imports
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
@@ -10,6 +10,7 @@ import { AuthService } from '../../../services/auth.service';
 describe('MealCardComponent', () => {
     let component: MealCardComponent;
     let fixture: ComponentFixture<MealCardComponent>;
+    let translateService: TranslateService;
 
     const mockMeal: MealCardItem = {
         id: 'meal-1',
@@ -50,6 +51,7 @@ describe('MealCardComponent', () => {
 
         fixture = TestBed.createComponent(MealCardComponent);
         component = fixture.componentInstance;
+        translateService = TestBed.inject(TranslateService);
         fixture.componentRef.setInput('meal', mockMeal);
     });
 
@@ -119,6 +121,18 @@ describe('MealCardComponent', () => {
         fixture.componentRef.setInput('meal', { ...mockMeal, imageUrl: null, mealType: null });
         fixture.detectChanges();
         expect(component.coverImage()).toBe('assets/images/stubs/meals/other.svg');
+    });
+
+    it('should resolve meal title when api returns mixed-case mealType', () => {
+        const instantSpy = vi
+            .spyOn(translateService, 'instant')
+            .mockImplementation(key => (key === 'MEAL_CARD.MEAL_TYPES.DINNER' ? 'Dinner' : String(key)));
+
+        fixture.componentRef.setInput('meal', { ...mockMeal, mealType: 'Dinner' });
+        fixture.detectChanges();
+
+        expect(component.mealTitle()).toBe('Dinner');
+        expect(instantSpy).toHaveBeenCalledWith('MEAL_CARD.MEAL_TYPES.DINNER');
     });
 
     it('should display quality score progress', () => {
