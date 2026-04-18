@@ -77,16 +77,15 @@
     }
 
     &__column--primary {
-
-        ::ng-deep .fd-ui-card__content {
-            gap: 28px;
-        }
+        --fd-ui-card-content-gap: 28px;
     }
 
     &__card {
         --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-ui-card-title-color: var(--fd-color-slate-900);
         --fd-ui-card-meta-color: var(--fd-color-slate-400);
+        --fd-ui-card-header-margin-bottom: #{variables.$gap-s};
+        --fd-ui-card-header-align-items: center;
         --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-radius-lg: 22px;
         --fd-color-surface: var(--fd-color-white);
@@ -96,47 +95,21 @@
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
-
-        ::ng-deep .fd-ui-card__header {
-            margin-bottom: variables.$gap-s;
-            align-items: center;
-        }
-
-        ::ng-deep .fd-ui-card__title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            text-transform: none;
-            letter-spacing: normal;
-        }
-
-        ::ng-deep .fd-ui-card__meta {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
     }
 
     &__card--basic {
         --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
-
-        ::ng-deep .fd-ui-card {
-            padding-bottom: variables.$gap-l;
-        }
+        --fd-ui-card-padding-bottom: #{variables.$gap-l};
     }
 
     &__card--nutrition {
         --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-green-500) 18%, transparent);
+        --fd-ui-card-padding-bottom: #{variables.$gap-l};
         container-type: inline-size;
-
-        ::ng-deep .fd-ui-card {
-            padding-bottom: variables.$gap-l;
-        }
     }
 
     &__card--tracking {
-
-        ::ng-deep .fd-ui-card {
-            padding-bottom: variables.$gap-l;
-        }
+        --fd-ui-card-padding-bottom: #{variables.$gap-l};
     }
 
     &__actions-panel {

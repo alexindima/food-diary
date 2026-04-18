@@ -5,6 +5,11 @@
     > .fd-ui-card {
         border-radius: 22px;
         overflow: hidden;
+        box-shadow: var(--fasting-timer-card-box-shadow, var(--fd-shadow-sm));
+        transform: var(--fasting-timer-card-transform, none);
+        transition:
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
     }
 
     &__content {

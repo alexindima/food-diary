@@ -215,11 +215,6 @@ $color-text-secondary: var(--fd-color-text-muted);
             box-shadow: 0 16px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         }
 
-        .dashboard__block--meals ::ng-deep .fd-ui-card {
-            background: var(--fd-color-surface-raised);
-            box-shadow: none;
-        }
-
         .dashboard__block--fasting > .dashboard__card {
             pointer-events: none;
         }
@@ -313,19 +308,13 @@ $color-text-secondary: var(--fd-color-text-muted);
         border-radius: var(--fd-radius-card, 22px);
         outline: none;
 
-        ::ng-deep .fasting-timer-card > .fd-ui-card {
-            transition:
-                box-shadow 0.2s ease,
-                transform 0.2s ease;
-        }
-
-        &:hover ::ng-deep .fasting-timer-card > .fd-ui-card {
-            box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
-            transform: translateY(-2px);
-        }
-
         &:focus-visible {
             box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
+        }
+
+        &:hover {
+            --fasting-timer-card-box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
+            --fasting-timer-card-transform: translateY(-2px);
         }
     }
 

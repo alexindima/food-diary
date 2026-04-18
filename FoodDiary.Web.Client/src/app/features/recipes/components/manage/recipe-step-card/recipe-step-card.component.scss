@@ -5,14 +5,11 @@
 }
 
 .recipe-step-card {
-
-    ::ng-deep .fd-ui-card {
-        overflow: hidden;
-        padding-bottom: variables.$gap-l;
-        background:
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent), var(--fd-color-surface));
-        border-color: var(--fd-color-border);
-    }
+    --fd-ui-card-border-color: var(--fd-color-border);
+    --fd-ui-card-background:
+        linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent), var(--fd-color-surface));
+    --fd-ui-card-padding-bottom: #{variables.$gap-l};
+    overflow: hidden;
 }
 
 .recipe-step-card__header {
