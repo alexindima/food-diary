@@ -98,8 +98,8 @@
         padding: variables.$gap-m;
         box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-shadow) 28%, transparent);
 
-        ::ng-deep .fd-ui-input,
-        ::ng-deep .fd-ui-select {
+        fd-ui-input,
+        fd-ui-select {
             width: 100%;
         }
     }

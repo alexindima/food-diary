@@ -22,11 +22,11 @@
         max-width: 100% !important;
     }
 
-    ::ng-deep .fd-ui-input {
+    fd-ui-input {
         --fd-input-height: 48px;
     }
 
-    ::ng-deep .fd-ui-select {
+    fd-ui-select {
         --fd-select-height: 48px;
     }
 

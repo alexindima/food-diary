@@ -44,6 +44,19 @@ Universal single-line input.
 - `suffixButtonIcon?: string` (material icon name)
 - `suffixButtonAriaLabel?: string`
 
+**CSS variables**
+- `--fd-input-height`
+- `--fd-input-radius`
+- `--fd-input-border`
+- `--fd-input-hover-border`
+- `--fd-input-focus-border`
+- `--fd-input-focus-shadow`
+- `--fd-input-surface`
+- `--fd-input-label-bg`
+- `--fd-input-control-padding-left`
+- `--fd-input-control-padding-right`
+- `--fd-input-control-font-size`
+
 **Outputs**
 - `suffixButtonClicked`
 
@@ -84,6 +97,12 @@ Dropdown select based on `MatMenu`.
 - `size?: 'sm' | 'md' | 'lg'`
 - `fillColor?: string | null`
 - `options?: FdUiSelectOption<T>[]`
+
+**CSS variables**
+- `--fd-select-height`
+- `--fd-select-radius`
+- `--fd-select-border`
+- `--fd-select-surface`
 
 **Types**
 ```ts

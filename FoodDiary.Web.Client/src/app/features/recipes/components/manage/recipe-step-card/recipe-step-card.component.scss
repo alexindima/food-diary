@@ -63,16 +63,9 @@
 
 .recipe-step-card__title-input {
     min-width: 200px;
-
-    ::ng-deep .fd-ui-input__label {
-        display: none;
-    }
-
-    ::ng-deep .fd-ui-input__control {
-        height: 32px;
-        font-size: 0.95rem;
-        padding: 0 10px;
-    }
+    --fd-input-control-font-size: 0.95rem;
+    --fd-input-control-padding-left: 10px;
+    --fd-input-control-padding-right: 10px;
 }
 
 .recipe-step-card__edit {
@@ -165,10 +158,6 @@
     @media #{variables.$media-mobile} {
         width: 100%;
     }
-}
-
-.recipe-ingredient__amount ::ng-deep .fd-ui-input__control-wrap {
-    min-height: 48px;
 }
 
 

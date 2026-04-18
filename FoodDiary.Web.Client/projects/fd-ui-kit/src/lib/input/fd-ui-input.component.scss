@@ -6,7 +6,14 @@
     --fd-input-height: 40px;
     --fd-input-radius: var(--fd-radius-input, 14px);
     --fd-input-border: var(--fd-color-border);
-    --fd-input-label-bg: var(--fd-color-surface-raised);
+    --fd-input-hover-border: var(--fd-input-border);
+    --fd-input-focus-border: var(--fd-color-primary-500);
+    --fd-input-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-input-focus-border) 16%, transparent);
+    --fd-input-surface: var(--fd-color-surface-raised);
+    --fd-input-label-bg: var(--fd-input-surface);
+    --fd-input-control-padding-left: 12px;
+    --fd-input-control-padding-right: 44px;
+    --fd-input-control-font-size: 1rem;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -58,10 +65,10 @@
     min-height: var(--fd-input-height);
     border: 1px solid var(--fd-input-border);
     border-radius: var(--fd-input-radius);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-input-surface);
     display: flex;
     align-items: center;
-    padding: 0 44px 0 12px;
+    padding: 0 var(--fd-input-control-padding-right) 0 var(--fd-input-control-padding-left);
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -70,7 +77,7 @@
 }
 
 .fd-ui-input__control-wrap--with-prefix {
-    padding-left: 44px;
+    padding-left: calc(var(--fd-input-control-padding-left) + 32px);
 }
 
 .fd-ui-input__control-wrap--date {
@@ -78,13 +85,17 @@
 }
 
 .fd-ui-input__control-wrap--with-prefix .fd-ui-input__label {
-    left: 44px;
-    max-width: calc(100% - 58px);
+    left: calc(var(--fd-input-control-padding-left) + 32px);
+    max-width: calc(100% - (var(--fd-input-control-padding-left) + 46px));
+}
+
+.fd-ui-input__control-wrap:hover {
+    border-color: var(--fd-input-hover-border);
 }
 
 .fd-ui-input__control-wrap:focus-within {
-    border-color: var(--fd-color-primary-500);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
+    border-color: var(--fd-input-focus-border);
+    box-shadow: var(--fd-input-focus-shadow);
 }
 
 .fd-ui-input__control {
@@ -96,6 +107,7 @@
     background: transparent;
     color: var(--fd-color-text);
     font: inherit;
+    font-size: var(--fd-input-control-font-size);
     margin-top: 0;
 }
 
