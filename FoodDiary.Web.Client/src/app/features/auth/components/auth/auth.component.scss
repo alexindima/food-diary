@@ -208,20 +208,13 @@
     --fd-input-control-font-size: 16px;
 }
 
-:host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__control {
-    width: 18px;
-    height: 18px;
-    border-radius: 6px;
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
-}
-
-:host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__input:checked + .fd-ui-checkbox__control {
-    background: var(--fd-color-primary-600);
-    border-color: var(--fd-color-primary-600);
-}
-
-:host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__label {
-    color: var(--fd-color-slate-600);
+:host fd-ui-checkbox {
+    --fd-checkbox-control-size: 18px;
+    --fd-checkbox-control-radius: 6px;
+    --fd-checkbox-control-border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
+    --fd-checkbox-control-checked-background: var(--fd-color-primary-600);
+    --fd-checkbox-control-checked-border: var(--fd-color-primary-600);
+    --fd-checkbox-label-color: var(--fd-color-slate-600);
 }
 
 

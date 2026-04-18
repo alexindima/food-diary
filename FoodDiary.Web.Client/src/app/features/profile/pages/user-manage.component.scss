@@ -485,10 +485,7 @@
     }
 
     &__dietologist-permission-list {
-
-        ::ng-deep fd-ui-switch {
-            align-self: center;
-        }
+        --fd-switch-align-self: center;
     }
 
     &__dietologist-empty {

@@ -180,14 +180,11 @@
 
     &__nutrition-toggle {
         width: 100%;
-
-        ::ng-deep .fd-ui-segmented-toggle {
-            width: 100%;
-            justify-content: space-between;
-            background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
-            border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 24%, transparent);
-            box-shadow: none;
-        }
+        --fd-segmented-toggle-width: 100%;
+        --fd-segmented-toggle-justify-content: space-between;
+        --fd-segmented-toggle-background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
+        --fd-segmented-toggle-border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 24%, transparent);
+        --fd-segmented-toggle-shadow: none;
     }
 
     &__drag-card {

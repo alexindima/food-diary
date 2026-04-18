@@ -234,21 +234,15 @@
 
     &__nutrition-toggle {
         width: 100%;
-
-        ::ng-deep .fd-ui-segmented-toggle {
-            width: 100%;
-            justify-content: space-between;
-            background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
-            border: 1px solid var(--fd-slate-border-24);
-            box-shadow: none;
-        }
-
-        ::ng-deep .fd-ui-segmented-toggle__item {
-            flex: 1;
-            min-width: 0;
-            text-transform: none;
-            letter-spacing: normal;
-        }
+        --fd-segmented-toggle-width: 100%;
+        --fd-segmented-toggle-justify-content: space-between;
+        --fd-segmented-toggle-background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
+        --fd-segmented-toggle-border: 1px solid var(--fd-slate-border-24);
+        --fd-segmented-toggle-shadow: none;
+        --fd-segmented-toggle-item-flex: 1;
+        --fd-segmented-toggle-item-min-width: 0;
+        --fd-segmented-toggle-item-text-transform: none;
+        --fd-segmented-toggle-item-letter-spacing: normal;
     }
 
     &__ai {

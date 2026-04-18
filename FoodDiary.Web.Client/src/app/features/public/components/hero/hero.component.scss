@@ -431,8 +431,8 @@
     }
 }
 
-:host ::ng-deep .hero__language-toggle .fd-ui-segmented-toggle__item {
-    min-width: 0;
+:host ::ng-deep .hero__language-toggle {
+    --fd-segmented-toggle-item-min-width: 0;
 }
 
 
