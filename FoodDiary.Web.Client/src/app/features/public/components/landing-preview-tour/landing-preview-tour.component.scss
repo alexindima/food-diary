@@ -525,8 +525,7 @@
     }
 }
 
-:host ::ng-deep .landing-tour__card .product-card,
-:host ::ng-deep .landing-tour__card .recipe-card {
+.landing-tour__card {
     width: 100%;
     max-width: 100%;
 }

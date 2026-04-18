@@ -143,6 +143,8 @@ export class RecipeListComponent implements OnInit {
             .open<RecipeDetailComponent, Recipe, RecipeDetailActionResult>(RecipeDetailComponent, {
                 size: 'lg',
                 data: recipe,
+                panelClass: 'fd-ui-dialog-panel--detail',
+                backdropClass: 'fd-ui-dialog-backdrop--detail',
             })
             .afterClosed()
             .subscribe(result => {

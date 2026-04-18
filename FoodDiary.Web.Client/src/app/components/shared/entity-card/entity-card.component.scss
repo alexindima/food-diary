@@ -343,27 +343,18 @@ fd-media-card.entity-card {
     .entity-card__nutrients-container {
 
         &--green {
-
-            ::ng-deep .nutrient-badges {
-                border-color: color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
-                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-emerald-500) 28%, transparent);
-            }
+            --fd-nutrient-badges-border: 1px solid color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
+            --fd-nutrient-badges-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-emerald-500) 28%, transparent);
         }
 
         &--yellow {
-
-            ::ng-deep .nutrient-badges {
-                border-color: color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
-                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-yellow-300) 28%, transparent);
-            }
+            --fd-nutrient-badges-border: 1px solid color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
+            --fd-nutrient-badges-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-yellow-300) 28%, transparent);
         }
 
         &--red {
-
-            ::ng-deep .nutrient-badges {
-                border-color: color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);
-                box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
-            }
+            --fd-nutrient-badges-border: 1px solid color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);
+            --fd-nutrient-badges-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
         }
     }
 

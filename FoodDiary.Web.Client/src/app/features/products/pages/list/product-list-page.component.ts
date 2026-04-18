@@ -51,6 +51,8 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
             .open<ProductDetailComponent, Product, ProductDetailActionResult>(ProductDetailComponent, {
                 size: 'lg',
                 data: product,
+                panelClass: 'fd-ui-dialog-panel--detail',
+                backdropClass: 'fd-ui-dialog-backdrop--detail',
             })
             .afterClosed()
             .subscribe(data => {

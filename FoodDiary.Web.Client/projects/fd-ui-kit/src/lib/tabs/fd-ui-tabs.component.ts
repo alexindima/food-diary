@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, model, output } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -15,6 +15,7 @@ export interface FdUiTab {
     templateUrl: './fd-ui-tabs.component.html',
     styleUrls: ['./fd-ui-tabs.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class FdUiTabsComponent {
     public readonly tabs = input<FdUiTab[]>([]);

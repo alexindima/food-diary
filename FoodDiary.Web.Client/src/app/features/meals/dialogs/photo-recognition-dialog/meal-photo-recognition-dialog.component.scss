@@ -143,10 +143,9 @@
     color: var(--fd-color-slate-800);
 }
 
-.photo-ai-dialog__edit-done ::ng-deep button,
-.photo-ai-dialog__edit-done ::ng-deep .fd-ui-button {
-    height: 36px;
-    padding: 0 16px;
+.photo-ai-dialog__edit-done {
+    --fd-button-height: 36px;
+    --fd-button-padding-x: 16px;
 }
 
 .photo-ai-dialog__edit-list {
@@ -232,10 +231,9 @@
     margin-left: auto;
 }
 
-.photo-ai-dialog__edit-toggle ::ng-deep button,
-.photo-ai-dialog__edit-toggle ::ng-deep .fd-ui-button {
-    height: 30px;
-    padding: 0 14px;
+.photo-ai-dialog__edit-toggle {
+    --fd-button-height: 30px;
+    --fd-button-padding-x: 14px;
     font-weight: 600;
 }
 

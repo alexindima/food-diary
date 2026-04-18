@@ -7,11 +7,21 @@
     width: 100%;
     --fd-tabs-color: var(--fd-color-slate-900);
     --fd-tabs-height: 40px;
+    --fd-tabs-labels-flex-wrap: nowrap;
+    --fd-tabs-labels-row-gap: 0;
+    --fd-tabs-item-min-width: auto;
+    --fd-tabs-item-padding-inline: 24px;
+    --fd-tabs-label-white-space: nowrap;
+    --fd-tabs-label-line-height: 1;
+    --fd-tabs-label-text-align: center;
 
     .mdc-tab__text-label {
         font-weight: 600;
         color: var(--fd-tabs-color);
         opacity: 0.6;
+        white-space: var(--fd-tabs-label-white-space);
+        line-height: var(--fd-tabs-label-line-height);
+        text-align: var(--fd-tabs-label-text-align);
     }
 
     .mdc-tab--active .mdc-tab__text-label {
@@ -27,18 +37,26 @@
         width: 100%;
     }
 
-    ::ng-deep .mat-mdc-tab {
+    .mat-mdc-tab-labels {
+        flex-wrap: var(--fd-tabs-labels-flex-wrap);
+        row-gap: var(--fd-tabs-labels-row-gap);
+    }
+
+    .mat-mdc-tab {
         --mdc-tab-height: var(--fd-tabs-height);
         min-height: var(--fd-tabs-height);
         height: var(--fd-tabs-height);
+        min-width: var(--fd-tabs-item-min-width);
     }
 
-    ::ng-deep .mat-mdc-tab .mdc-tab {
+    .mat-mdc-tab .mdc-tab {
         min-height: var(--fd-tabs-height);
         height: var(--fd-tabs-height);
+        min-width: var(--fd-tabs-item-min-width);
+        padding-inline: var(--fd-tabs-item-padding-inline);
     }
 
-    ::ng-deep .mat-mdc-tab .mdc-tab__content {
+    .mat-mdc-tab .mdc-tab__content {
         height: var(--fd-tabs-height);
         align-items: center;
     }

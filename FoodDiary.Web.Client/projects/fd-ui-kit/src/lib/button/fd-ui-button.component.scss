@@ -35,11 +35,14 @@
     box-shadow: var(--fd-button-shadow-default, none);
     transform: var(--fd-button-transform-default, none);
     transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.15s ease;
+        var(
+            --fd-button-transition,
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
+            box-shadow 0.15s ease,
+            transform 0.15s ease
+        );
 
     &:hover:not(:disabled) {
         background-color: var(--fd-button-background-hover, var(--fd-button-background-default));

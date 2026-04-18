@@ -212,6 +212,8 @@ export class MealListComponent implements OnInit {
             .open<MealDetailComponent, Meal, MealDetailActionResult>(MealDetailComponent, {
                 size: 'lg',
                 data: consumption,
+                panelClass: 'fd-ui-dialog-panel--detail',
+                backdropClass: 'fd-ui-dialog-backdrop--detail',
             })
             .afterClosed()
             .subscribe(data => {

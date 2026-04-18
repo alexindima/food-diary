@@ -78,6 +78,8 @@ export class ExplorePageComponent implements OnInit {
         this.fdDialogService.open<RecipeDetailComponent, Recipe>(RecipeDetailComponent, {
             size: 'lg',
             data: recipe as Recipe,
+            panelClass: 'fd-ui-dialog-panel--detail',
+            backdropClass: 'fd-ui-dialog-backdrop--detail',
         });
     }
 

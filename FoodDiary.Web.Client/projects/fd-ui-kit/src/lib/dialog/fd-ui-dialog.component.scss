@@ -5,17 +5,20 @@
 
 .fd-ui-dialog {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    background: var(--fd-color-dialog-surface);
-    border-radius: 1rem;
-    box-shadow: 0 20px 60px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
-    border: 1px solid var(--fd-color-dialog-border);
+    grid-template-rows: var(--fd-dialog-grid-template-rows, auto minmax(0, 1fr) auto);
+    background: var(--fd-dialog-background, var(--fd-color-dialog-surface));
+    border-radius: var(--fd-dialog-radius, 1rem);
+    box-shadow: var(--fd-dialog-shadow, 0 20px 60px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent));
+    border: var(--fd-dialog-border, 1px solid var(--fd-color-dialog-border));
     padding: 1.25rem;
     box-sizing: border-box;
-    max-height: 80vh;
+    max-height: var(--fd-dialog-max-height, 80vh);
     min-width: 0;
     width: 100%;
-    overflow: hidden;
+    overflow: var(--fd-dialog-overflow, hidden);
+    transform: var(--fd-dialog-transform, none);
+    opacity: var(--fd-dialog-opacity, 1);
+    animation: var(--fd-dialog-animation, none);
 }
 
 .fd-ui-dialog--size-sm {
@@ -84,11 +87,11 @@
 .fd-ui-dialog__body {
     color: inherit;
     min-height: 0;
-    padding-block: 0.25rem;
+    padding-block: var(--fd-dialog-body-padding-block, 0.25rem);
     scrollbar-gutter: stable;
     --fd-dialog-scrollbar-offset: 12px;
-    padding-inline-end: var(--fd-dialog-scrollbar-offset);
-    margin-inline-end: calc(-1 * var(--fd-dialog-scrollbar-offset));
+    padding-inline-end: var(--fd-dialog-body-padding-inline-end, var(--fd-dialog-scrollbar-offset));
+    margin-inline-end: var(--fd-dialog-body-margin-inline-end, calc(-1 * var(--fd-dialog-scrollbar-offset)));
     overflow-y: auto;
 }
 
@@ -175,6 +178,55 @@
     backdrop-filter: blur(4px);
 }
 
+.fd-ui-dialog-panel--detail .fd-ui-dialog {
+    --fd-dialog-radius: 16px;
+    --fd-dialog-shadow: 0 18px 45px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
+    --fd-dialog-border: 1px solid color-mix(in srgb, var(--fd-color-white) 40%, transparent);
+    --fd-dialog-background:
+        radial-gradient(
+            circle at top,
+            color-mix(in srgb, var(--fd-color-primary-100) 28%, var(--fd-color-white)) 0%,
+            color-mix(in srgb, var(--fd-color-slate-100) 92%, var(--fd-color-white)) 40%,
+            color-mix(in srgb, var(--fd-color-slate-100) 72%, var(--fd-color-white)) 100%
+        );
+    --fd-dialog-max-height: 90vh;
+    --fd-dialog-transform: scale(0.97);
+    --fd-dialog-opacity: 0;
+    --fd-dialog-animation: detailDialogIn 180ms ease-out forwards;
+    --fd-dialog-grid-template-rows: 1fr;
+}
+
+.fd-ui-dialog-backdrop--detail {
+    background: color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);
+    opacity: 0;
+    animation: detailBackdrop 180ms ease forwards;
+    backdrop-filter: blur(2px);
+}
+
+@keyframes detailDialogIn {
+
+    0% {
+        opacity: 0;
+        transform: scale(0.97) translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes detailBackdrop {
+
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 @media (max-width: 420px) {
 
     .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile {
@@ -190,6 +242,15 @@
     .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile .mat-mdc-dialog-surface {
         margin: 0 !important;
         border-radius: 16px 16px 0 0 !important;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .fd-ui-dialog-panel--detail .fd-ui-dialog {
+        --fd-dialog-body-padding-block: 28px 32px;
+        --fd-dialog-body-padding-inline-end: calc(20px + var(--fd-dialog-scrollbar-offset));
+        --fd-dialog-body-margin-inline-end: calc(-1 * var(--fd-dialog-scrollbar-offset));
     }
 }
 

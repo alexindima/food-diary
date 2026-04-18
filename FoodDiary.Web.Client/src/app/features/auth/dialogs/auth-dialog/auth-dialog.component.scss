@@ -1,13 +1,13 @@
 @use 'variables';
 
-:host ::ng-deep fd-auth {
+.auth-dialog__auth {
     display: block;
     padding: 28px 24px 32px;
 }
 
 @media #{variables.$media-compact} {
 
-    :host ::ng-deep fd-auth {
+    .auth-dialog__auth {
         padding: 28px 20px 32px;
     }
 }

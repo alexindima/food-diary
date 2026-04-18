@@ -8,7 +8,7 @@ import { AuthComponent } from '../../components/auth/auth.component';
     standalone: true,
     template: `
         <fd-ui-dialog-shell [title]="''" size="md" [dismissible]="false" [flush]="true">
-            <fd-auth [useRouting]="false" [initialMode]="data.mode" />
+            <fd-auth class="auth-dialog__auth" [useRouting]="false" [initialMode]="data.mode" />
         </fd-ui-dialog-shell>
     `,
     styleUrls: ['./auth-dialog.component.scss'],

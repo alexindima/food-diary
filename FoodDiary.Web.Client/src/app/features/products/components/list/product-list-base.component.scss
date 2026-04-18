@@ -323,11 +323,6 @@
         fd-product-card {
             width: 100%;
         }
-
-        ::ng-deep .product-card {
-            max-width: 100%;
-            margin: 0;
-        }
     }
 
     &__off-grid {

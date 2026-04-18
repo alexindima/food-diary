@@ -11,29 +11,26 @@
         color: var(--fd-color-slate-900);
         font-size: 0.95rem;
         line-height: 1.7;
+    }
 
-        ::ng-deep {
+    &__text h3 {
+        margin: 16px 0 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--fd-color-slate-800);
+    }
 
-            h3 {
-                margin: 16px 0 8px;
-                font-size: 1rem;
-                font-weight: 600;
-                color: var(--fd-color-slate-800);
-            }
+    &__text p {
+        margin: 0 0 12px;
+    }
 
-            p {
-                margin: 0 0 12px;
-            }
+    &__text ul {
+        margin: 0 0 12px;
+        padding-left: 20px;
+    }
 
-            ul {
-                margin: 0 0 12px;
-                padding-left: 20px;
-            }
-
-            li {
-                margin-bottom: 6px;
-            }
-        }
+    &__text li {
+        margin-bottom: 6px;
     }
 
     &__checkbox {

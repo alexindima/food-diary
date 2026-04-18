@@ -13,22 +13,12 @@
 
 .stats-nutrition-card__tabs {
     width: 100%;
-}
-
-.stats-nutrition-card__tabs ::ng-deep .mat-mdc-tab-labels {
-    flex-wrap: wrap;
-    row-gap: 6px;
-}
-
-.stats-nutrition-card__tabs ::ng-deep .mdc-tab {
-    min-width: 0;
-    padding-inline: 12px;
-}
-
-.stats-nutrition-card__tabs ::ng-deep .mdc-tab__text-label {
-    white-space: normal;
-    line-height: 1.1;
-    text-align: center;
+    --fd-tabs-labels-flex-wrap: wrap;
+    --fd-tabs-labels-row-gap: 6px;
+    --fd-tabs-item-min-width: 0;
+    --fd-tabs-item-padding-inline: 12px;
+    --fd-tabs-label-white-space: normal;
+    --fd-tabs-label-line-height: 1.1;
 }
 
 .stats-nutrition-card__chart-area {

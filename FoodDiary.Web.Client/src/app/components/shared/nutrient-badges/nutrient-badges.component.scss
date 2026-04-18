@@ -13,7 +13,8 @@
     color: var(--fd-color-text);
     width: fit-content;
     max-width: 100%;
-    border: 1px solid var(--fd-color-border);
+    border: var(--fd-nutrient-badges-border, 1px solid var(--fd-color-border));
+    box-shadow: var(--fd-nutrient-badges-shadow, none);
 }
 
 .nutrient-badges__chip {
