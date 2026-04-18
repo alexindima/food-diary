@@ -7,6 +7,7 @@ export default {
         'color-named': 'never',
         'no-duplicate-selectors': true,
         'no-descending-specificity': null,
+        'selector-disallowed-list': [/::ng-deep/],
         'rule-empty-line-before': ['always-multi-line'],
         'declaration-empty-line-before': ['never'],
     },
