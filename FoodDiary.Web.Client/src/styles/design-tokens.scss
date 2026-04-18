@@ -1,10 +1,12 @@
 @use 'sass:map';
 
 $fd-radius-tokens: (
+    none: 0,
     xs: 4px,
     sm: 6px,
     md: 8px,
     lg: 12px,
+    xl: 16px,
     pill: 999px,
 );
 
@@ -336,6 +338,51 @@ $fd-theme-design-tokens: (
     @return $value;
 }
 
+@function fd-ui-style-radius-token($style, $name) {
+    $style-map: (
+        classic: (
+            button: fd-token(radius, lg),
+            input: 14px,
+            card: 20px,
+            panel: 24px,
+            dialog: 24px,
+            badge: fd-token(radius, pill),
+            chip: fd-token(radius, pill),
+            toggle: fd-token(radius, pill),
+            switch: fd-token(radius, pill),
+            field-label: fd-token(radius, pill),
+            menu-item: 10px,
+        ),
+        modern: (
+            button: fd-token(radius, sm),
+            input: fd-token(radius, sm),
+            card: fd-token(radius, md),
+            panel: fd-token(radius, md),
+            dialog: fd-token(radius, md),
+            badge: fd-token(radius, sm),
+            chip: fd-token(radius, sm),
+            toggle: fd-token(radius, md),
+            switch: fd-token(radius, pill),
+            field-label: fd-token(radius, sm),
+            menu-item: fd-token(radius, sm),
+        ),
+    );
+
+    $tokens: map.get($style-map, $style);
+
+    @if $tokens == null {
+        @error 'Unknown UI style: #{$style}';
+    }
+
+    $value: map.get($tokens, $name);
+
+    @if $value == null {
+        @error 'Unknown UI style radius token "#{$name}" for style "#{$style}"';
+    }
+
+    @return $value;
+}
+
 @mixin fd-emit-css-variables($theme, $selector) {
     #{$selector} {
         --fd-color-primary: #{fd-theme-token($theme, colors, primary)};
@@ -383,6 +430,7 @@ $fd-theme-design-tokens: (
         --fd-radius-sm: #{fd-token(radius, sm)};
         --fd-radius-md: #{fd-token(radius, md)};
         --fd-radius-lg: #{fd-token(radius, lg)};
+        --fd-radius-xl: #{fd-token(radius, xl)};
         --fd-radius-pill: #{fd-token(radius, pill)};
 
         --fd-color-white: #{fd-token(colors, white)};
@@ -463,6 +511,22 @@ $fd-theme-design-tokens: (
         --fd-page-actions-gap: #{fd-theme-token($theme, page-header, actions-gap)};
         --fd-page-header-mobile-background: #{fd-theme-token($theme, page-header, mobile-background)};
         --fd-page-header-mobile-border-color: #{fd-theme-token($theme, page-header, mobile-border-color)};
+    }
+}
+
+@mixin fd-emit-ui-style-variables($style, $selector) {
+    #{$selector} {
+        --fd-radius-button: #{fd-ui-style-radius-token($style, button)};
+        --fd-radius-input: #{fd-ui-style-radius-token($style, input)};
+        --fd-radius-card: #{fd-ui-style-radius-token($style, card)};
+        --fd-radius-panel: #{fd-ui-style-radius-token($style, panel)};
+        --fd-radius-dialog: #{fd-ui-style-radius-token($style, dialog)};
+        --fd-radius-badge: #{fd-ui-style-radius-token($style, badge)};
+        --fd-radius-chip: #{fd-ui-style-radius-token($style, chip)};
+        --fd-radius-toggle: #{fd-ui-style-radius-token($style, toggle)};
+        --fd-radius-switch: #{fd-ui-style-radius-token($style, switch)};
+        --fd-radius-field-label: #{fd-ui-style-radius-token($style, field-label)};
+        --fd-radius-menu-item: #{fd-ui-style-radius-token($style, menu-item)};
     }
 }
 

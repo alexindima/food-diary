@@ -5,8 +5,9 @@
 }
 
 .tdee-card {
-    border-radius: 22px;
+    border-radius: var(--fd-radius-card, 22px);
     padding: 18px;
+    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-yellow-300) 28%, var(--fd-color-white)) 0%,
@@ -35,7 +36,7 @@
         justify-content: center;
         width: 32px;
         height: 32px;
-        border-radius: 10px;
+        border-radius: var(--fd-radius-button, 10px);
         background: linear-gradient(135deg, var(--fd-color-orange-500), color-mix(in srgb, var(--fd-color-orange-500) 78%, var(--fd-color-white)));
         color: var(--fd-color-white);
 
@@ -85,7 +86,7 @@
         text-transform: uppercase;
         letter-spacing: 0.04em;
         padding: 4px 10px;
-        border-radius: 10px;
+        border-radius: var(--fd-radius-button, 10px);
         width: fit-content;
 
         mat-icon {
@@ -132,7 +133,7 @@
         align-items: flex-start;
         gap: 8px;
         padding: 10px 12px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
         font-size: 0.85rem;
@@ -154,7 +155,7 @@
         justify-content: space-between;
         gap: 12px;
         padding: 10px 12px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
     }
 

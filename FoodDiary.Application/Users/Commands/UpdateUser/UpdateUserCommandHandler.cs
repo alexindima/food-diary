@@ -55,6 +55,14 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserModel>(themeResult.Error);
         }
 
+        var uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
+            command.UiStyle,
+            nameof(UpdateUserCommand.UiStyle),
+            "Invalid UI style value.");
+        if (uiStyleResult.IsFailure) {
+            return Result.Failure<UserModel>(uiStyleResult.Error);
+        }
+
         var profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
         if (profileImageAssetIdResult.IsFailure) {
             return Result.Failure<UserModel>(profileImageAssetIdResult.Error);
@@ -91,6 +99,7 @@ public class UpdateUserCommandHandler(
             DashboardLayoutJson: dashboardLayoutJson,
             Language: languageResult.Value,
             Theme: themeResult.Value,
+            UiStyle: uiStyleResult.Value,
             PushNotificationsEnabled: command.PushNotificationsEnabled,
             FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));

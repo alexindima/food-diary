@@ -32,6 +32,7 @@ public sealed class UpdateUserCommandHandlerTests {
             HydrationGoal: null,
             Language: null,
             Theme: null,
+            UiStyle: null,
             PushNotificationsEnabled: null,
             FastingPushNotificationsEnabled: null,
             SocialPushNotificationsEnabled: null,
@@ -76,6 +77,7 @@ public sealed class UpdateUserCommandHandlerTests {
             HydrationGoal: null,
             Language: null,
             Theme: null,
+            UiStyle: null,
             PushNotificationsEnabled: null,
             FastingPushNotificationsEnabled: null,
             SocialPushNotificationsEnabled: null,
@@ -113,6 +115,7 @@ public sealed class UpdateUserCommandHandlerTests {
                 HydrationGoal: null,
                 Language: null,
                 Theme: null,
+                UiStyle: null,
                 PushNotificationsEnabled: null,
                 FastingPushNotificationsEnabled: null,
                 SocialPushNotificationsEnabled: null,
@@ -148,6 +151,7 @@ public sealed class UpdateUserCommandHandlerTests {
             HydrationGoal: null,
             Language: null,
             Theme: "leaf",
+            UiStyle: "modern",
             PushNotificationsEnabled: null,
             FastingPushNotificationsEnabled: null,
             SocialPushNotificationsEnabled: null,
@@ -161,6 +165,8 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("leaf", user.Theme);
         Assert.Equal("leaf", result.Value.Theme);
+        Assert.Equal("modern", user.UiStyle);
+        Assert.Equal("modern", result.Value.UiStyle);
     }
 
     private sealed class SingleUserRepository(User user) : IUserRepository {

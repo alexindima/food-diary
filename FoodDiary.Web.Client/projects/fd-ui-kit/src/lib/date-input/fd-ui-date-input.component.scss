@@ -6,7 +6,7 @@
 
 .fd-ui-date-input {
     --fd-date-height: 48px;
-    --fd-date-radius: 14px;
+    --fd-date-radius: var(--fd-radius-input, 14px);
     --fd-date-border: var(--fd-color-border);
     --fd-date-label-bg: var(--fd-color-surface-raised);
     display: flex;
@@ -44,7 +44,7 @@
         font-size 0.15s ease;
     background: var(--fd-date-label-bg);
     padding: 0 4px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-field-label, 999px);
     pointer-events: none;
 }
 

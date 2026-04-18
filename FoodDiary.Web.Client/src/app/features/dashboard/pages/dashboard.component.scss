@@ -216,7 +216,7 @@ $color-text-secondary: var(--fd-color-text-muted);
 
         .dashboard__block--meals {
             background: var(--fd-color-surface-raised);
-            border-radius: 20px;
+            border-radius: var(--fd-radius-card, 20px);
             padding: 16px;
             box-shadow: 0 16px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         }
@@ -316,7 +316,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         display: flex;
         position: relative;
         min-width: 0;
-        border-radius: 22px;
+        border-radius: var(--fd-radius-card, 22px);
         outline: none;
 
         ::ng-deep .fasting-timer-card > .fd-ui-card {
@@ -343,7 +343,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         justify-content: flex-end;
         gap: 6px;
         padding: 18px;
-        border-radius: 18px;
+        border-radius: var(--fd-radius-panel, 18px);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-muted) 22%, transparent),
@@ -456,7 +456,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         content: '';
         position: absolute;
         inset: 0;
-        border-radius: 22px;
+        border-radius: var(--fd-radius-card, 22px);
         background-image: repeating-linear-gradient(
             -45deg,
             color-mix(in srgb, var(--fd-color-slate-500) 32%, transparent),
@@ -559,7 +559,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     &__loader,
     &__empty {
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
-        border-radius: 16px;
+        border-radius: var(--fd-radius-panel, 16px);
         padding: 24px;
         text-align: center;
         color: $color-text-secondary;
@@ -579,7 +579,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         gap: 12px;
         padding: 14px 16px;
         border: 1px dashed color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
-        border-radius: 18px;
+        border-radius: var(--fd-radius-panel, 18px);
         background: color-mix(in srgb, var(--fd-color-primary-600) 3%, transparent);
         color: var(--fd-color-text);
         cursor: pointer;
@@ -605,7 +605,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         &__icon {
             width: 36px;
             height: 36px;
-            border-radius: 10px;
+            border-radius: var(--fd-radius-button, 10px);
             background: linear-gradient(
                 135deg,
                 color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-surface-raised)),
@@ -624,7 +624,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         &__action {
             width: 32px;
             height: 32px;
-            border-radius: 10px;
+            border-radius: var(--fd-radius-button, 10px);
             display: grid;
             place-items: center;
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));

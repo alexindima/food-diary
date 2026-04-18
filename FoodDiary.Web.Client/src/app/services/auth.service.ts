@@ -210,7 +210,7 @@ export class AuthService extends ApiService {
             void this.localizationService.applyLanguagePreference(preferredLanguage);
         }
 
-        this.themeService.syncWithUserTheme(authResponse.user?.theme);
+        this.themeService.syncWithUserPreferences(authResponse.user?.theme, authResponse.user?.uiStyle);
 
         if (typeof authResponse.user?.isEmailConfirmed === 'boolean') {
             this.setEmailConfirmed(authResponse.user.isEmailConfirmed);

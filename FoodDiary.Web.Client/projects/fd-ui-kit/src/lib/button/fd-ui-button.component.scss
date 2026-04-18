@@ -9,7 +9,7 @@
     appearance: none;
     background-color: var(--fd-button-background-default);
     border: 1px solid var(--fd-button-border-default);
-    border-radius: var(--fd-radius-md, 8px);
+    border-radius: var(--fd-radius-button, var(--fd-radius-md, 8px));
     color: var(--fd-button-text-default);
     cursor: pointer;
     display: inline-flex;

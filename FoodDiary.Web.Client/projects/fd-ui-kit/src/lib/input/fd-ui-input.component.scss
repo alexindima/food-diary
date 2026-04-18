@@ -4,7 +4,7 @@
 
 .fd-ui-input {
     --fd-input-height: 40px;
-    --fd-input-radius: 14px;
+    --fd-input-radius: var(--fd-radius-input, 14px);
     --fd-input-border: var(--fd-color-border);
     --fd-input-label-bg: var(--fd-color-surface-raised);
     display: flex;
@@ -45,7 +45,7 @@
         font-size 0.15s ease;
     background: var(--fd-input-label-bg);
     padding: 0 4px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-field-label, 999px);
     pointer-events: none;
 }
 

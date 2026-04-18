@@ -4,3 +4,6 @@
 @include design-tokens.fd-emit-css-variables(ocean, ':root, html[data-theme="ocean"]');
 @include design-tokens.fd-emit-css-variables(leaf, 'html[data-theme="leaf"]');
 @include design-tokens.fd-emit-css-variables(dark, 'html[data-theme="dark"]');
+
+@include design-tokens.fd-emit-ui-style-variables(classic, ':root, html[data-ui-style="classic"]');
+@include design-tokens.fd-emit-ui-style-variables(modern, 'html[data-ui-style="modern"]');

@@ -32,6 +32,7 @@ public sealed partial class User {
             dashboardLayoutJson: null,
             language: language,
             theme: null,
+            uiStyle: null,
             pushNotificationsEnabled: null,
             fastingPushNotificationsEnabled: null,
             socialPushNotificationsEnabled: null,
@@ -99,32 +100,13 @@ public sealed partial class User {
         }
     }
 
-    public void UpdatePreferences(
-        string? dashboardLayoutJson = null,
-        string? language = null,
-        string? theme = null,
-        bool? pushNotificationsEnabled = null,
-        bool? fastingPushNotificationsEnabled = null,
-        bool? socialPushNotificationsEnabled = null,
-        int? fastingCheckInReminderHours = null,
-        int? fastingCheckInFollowUpReminderHours = null) {
-        UpdatePreferences(new UserPreferenceUpdate(
-            dashboardLayoutJson,
-            language,
-            theme,
-            pushNotificationsEnabled,
-            fastingPushNotificationsEnabled,
-            socialPushNotificationsEnabled,
-            fastingCheckInReminderHours,
-            fastingCheckInFollowUpReminderHours));
-    }
-
     public void UpdatePreferences(UserPreferenceUpdate update) {
         EnsureNotDeleted();
         if (ApplyPreferencesChanges(
             update.DashboardLayoutJson,
             update.Language,
             update.Theme,
+            update.UiStyle,
             update.PushNotificationsEnabled,
             update.FastingPushNotificationsEnabled,
             update.SocialPushNotificationsEnabled,
@@ -266,6 +248,7 @@ public sealed partial class User {
         string? dashboardLayoutJson,
         string? language,
         string? theme,
+        string? uiStyle,
         bool? pushNotificationsEnabled,
         bool? fastingPushNotificationsEnabled,
         bool? socialPushNotificationsEnabled,
@@ -274,10 +257,12 @@ public sealed partial class User {
         var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
         var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
         var normalizedTheme = NormalizeOptionalTheme(theme, nameof(theme));
+        var normalizedUiStyle = NormalizeOptionalUiStyle(uiStyle, nameof(uiStyle));
         var state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
         EnsureTheme(theme, nameof(theme));
+        EnsureUiStyle(uiStyle, nameof(uiStyle));
         EnsureReminderHours(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
         EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
@@ -295,6 +280,11 @@ public sealed partial class User {
 
         if (theme is not null && state.Theme != normalizedTheme) {
             state = state with { Theme = normalizedTheme };
+            changed = true;
+        }
+
+        if (uiStyle is not null && state.UiStyle != normalizedUiStyle) {
+            state = state with { UiStyle = normalizedUiStyle };
             changed = true;
         }
 

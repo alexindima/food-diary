@@ -1,6 +1,7 @@
 import { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
+export type UiStyleOption = 'classic' | 'modern';
 
 export interface DashboardLayoutSettings {
     web?: string[];
@@ -30,6 +31,7 @@ export interface User {
     hydrationGoal?: number;
     language?: string;
     theme?: string;
+    uiStyle?: string;
     pushNotificationsEnabled: boolean;
     fastingPushNotificationsEnabled: boolean;
     socialPushNotificationsEnabled: boolean;
@@ -60,6 +62,8 @@ export interface UpdateUserFormValues {
     pushNotificationsEnabled?: boolean | null;
     fastingPushNotificationsEnabled?: boolean | null;
     socialPushNotificationsEnabled?: boolean | null;
+    theme?: string | null;
+    uiStyle?: UiStyleOption | null;
 }
 
 export class UpdateUserDto {
@@ -74,6 +78,7 @@ export class UpdateUserDto {
     public hydrationGoal?: number;
     public language?: string;
     public theme?: string;
+    public uiStyle?: string;
     public pushNotificationsEnabled?: boolean;
     public fastingPushNotificationsEnabled?: boolean;
     public socialPushNotificationsEnabled?: boolean;
@@ -94,6 +99,7 @@ export class UpdateUserDto {
         this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);
         this.language = normalizeLanguage((formValues as { language?: string | null }).language);
         this.theme = normalizeTheme((formValues as { theme?: string | null }).theme);
+        this.uiStyle = normalizeUiStyle((formValues as { uiStyle?: UiStyleOption | null }).uiStyle);
         this.pushNotificationsEnabled = normalizeBoolean(
             (formValues as { pushNotificationsEnabled?: boolean | null }).pushNotificationsEnabled,
         );
@@ -154,6 +160,15 @@ const normalizeLanguage = (value: string | null | undefined): string | undefined
 };
 
 const normalizeTheme = (value: string | null | undefined): string | undefined => {
+    if (!value) {
+        return undefined;
+    }
+
+    const normalized = value.trim().toLowerCase();
+    return normalized ? normalized : undefined;
+};
+
+const normalizeUiStyle = (value: UiStyleOption | string | null | undefined): string | undefined => {
     if (!value) {
         return undefined;
     }

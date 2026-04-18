@@ -6,7 +6,7 @@
 
 .fd-ui-time-input {
     --fd-time-height: 48px;
-    --fd-time-radius: 14px;
+    --fd-time-radius: var(--fd-radius-input, 14px);
     --fd-time-border: var(--fd-color-border);
     --fd-time-label-bg: var(--fd-color-surface-raised);
     display: flex;
@@ -44,7 +44,7 @@
         font-size 0.15s ease;
     background: var(--fd-time-label-bg);
     padding: 0 4px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-field-label, 999px);
     pointer-events: none;
 }
 

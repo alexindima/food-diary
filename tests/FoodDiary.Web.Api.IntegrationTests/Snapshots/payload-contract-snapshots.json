@@ -250,6 +250,7 @@
         "socialPushNotificationsEnabled",
         "stepGoal",
         "theme",
+        "uiStyle",
         "username",
         "waterGoal",
         "weight"
@@ -315,6 +316,7 @@
         "socialPushNotificationsEnabled",
         "stepGoal",
         "theme",
+        "uiStyle",
         "username",
         "waterGoal",
         "weight"

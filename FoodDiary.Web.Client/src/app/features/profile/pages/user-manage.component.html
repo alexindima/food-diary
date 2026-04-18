@@ -106,6 +106,16 @@
                                 />
                             </div>
                             <div class="user-manage__account-row">
+                                <fd-ui-select
+                                    class="user-manage__account-row-field"
+                                    formControlName="uiStyle"
+                                    size="lg"
+                                    [label]="'USER_MANAGE.UI_STYLE' | translate"
+                                    [placeholder]="'USER_MANAGE.UI_STYLE_PLACEHOLDER' | translate"
+                                    [options]="uiStyleOptions"
+                                />
+                            </div>
+                            <div class="user-manage__account-row">
                                 <div class="user-manage__link-button">
                                     <fd-ui-button
                                         type="button"

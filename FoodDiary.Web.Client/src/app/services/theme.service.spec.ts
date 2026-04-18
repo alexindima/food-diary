@@ -18,6 +18,7 @@ describe('ThemeService', () => {
         documentRef = TestBed.inject(DOCUMENT);
         localStorage.clear();
         documentRef.documentElement.removeAttribute('data-theme');
+        documentRef.documentElement.removeAttribute('data-ui-style');
         documentRef.documentElement.style.colorScheme = '';
 
         let metaThemeColor = documentRef.querySelector('meta[name="theme-color"]');
@@ -34,17 +35,22 @@ describe('ThemeService', () => {
         service.initializeTheme();
 
         expect(service.theme()).toBe('ocean');
+        expect(service.uiStyle()).toBe('classic');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('ocean');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('classic');
         expect(documentRef.documentElement.style.colorScheme).toBe('light');
     });
 
-    it('should restore a stored theme', () => {
+    it('should restore stored theme and ui style', () => {
         localStorage.setItem('fd_theme', 'leaf');
+        localStorage.setItem('fd_ui_style', 'modern');
 
         service.initializeTheme();
 
         expect(service.theme()).toBe('leaf');
+        expect(service.uiStyle()).toBe('modern');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
         expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
     });
 
@@ -63,5 +69,12 @@ describe('ThemeService', () => {
         expect(localStorage.getItem('fd_theme')).toBe('leaf');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
         expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
+    });
+
+    it('should persist a selected ui style', () => {
+        service.setUiStyle('modern');
+
+        expect(localStorage.getItem('fd_ui_style')).toBe('modern');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
     });
 });

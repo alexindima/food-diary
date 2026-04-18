@@ -23,6 +23,7 @@ public sealed record UserModel(
     double? HydrationGoal,
     string? Language,
     string? Theme,
+    string? UiStyle,
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,

@@ -1863,6 +1863,8 @@
         "LANGUAGE_PLACEHOLDER": "Выберите язык",
         "THEME": "Тема",
         "THEME_PLACEHOLDER": "Выберите тему",
+        "UI_STYLE": "Стиль интерфейса",
+        "UI_STYLE_PLACEHOLDER": "Выберите стиль",
         "NEW_PASSWORD": "Новый пароль",
         "NEW_PASSWORD_PLACEHOLDER": "Введите новый пароль",
         "CONFIRM_NEW_PASSWORD": "Подтвердите новый пароль",
@@ -2051,6 +2053,10 @@
             "OCEAN": "Синяя",
             "LEAF": "Зелёная",
             "DARK": "Тёмная"
+        },
+        "UI_STYLE_OPTIONS": {
+            "CLASSIC": "Классический",
+            "MODERN": "Модерн"
         },
         "NUTRITION_SECTION": "Цели по питанию",
         "EDIT_GOALS": "Редактировать цели",

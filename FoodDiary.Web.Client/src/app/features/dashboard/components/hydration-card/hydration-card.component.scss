@@ -5,7 +5,7 @@
     width: 100%;
     min-width: 0;
     overflow: hidden;
-    border-radius: 20px;
+    border-radius: var(--fd-radius-card, 20px);
     background: linear-gradient(145deg, var(--fd-color-blue-500), color-mix(in srgb, var(--fd-color-sky-500) 72%, var(--fd-color-white)));
     color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-sky-500));
     padding: 18px 18px 20px;

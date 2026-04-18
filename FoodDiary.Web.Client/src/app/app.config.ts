@@ -77,7 +77,7 @@ export const appConfig: ApplicationConfig = {
 
                 const user = await firstValueFrom(userService.getInfo());
                 await localizationService.applyLanguagePreference(user?.language ?? null);
-                themeService.syncWithUserTheme(user?.theme);
+                themeService.syncWithUserPreferences(user?.theme, user?.uiStyle);
             });
         }),
         provideAppInitializer(() => {

@@ -8,6 +8,7 @@ public static class UserMappings {
     public static UserModel ToModel(this User user) {
         const string defaultLanguage = "en";
         const string defaultTheme = "ocean";
+        const string defaultUiStyle = "classic";
         DashboardLayoutModel? layout = null;
         if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson)) {
             try {
@@ -40,6 +41,7 @@ public static class UserMappings {
             user.HydrationGoal,
             user.Language ?? defaultLanguage,
             user.Theme ?? defaultTheme,
+            user.UiStyle ?? defaultUiStyle,
             user.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
             user.SocialPushNotificationsEnabled,

@@ -14,8 +14,9 @@
     );
     width: 100%;
     min-width: 0;
-    border-radius: 22px;
+    border-radius: var(--fd-radius-card, 22px);
     padding: 18px 18px 14px;
+    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     background: var(--wt-surface);
     color: var(--fd-color-text);
@@ -37,7 +38,7 @@
     &__icon {
         width: 46px;
         height: 46px;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-button, 14px);
         background: linear-gradient(135deg, var(--fd-color-rose-500), color-mix(in srgb, var(--fd-color-rose-500) 70%, var(--fd-color-white)));
         color: var(--fd-color-white);
         display: grid;

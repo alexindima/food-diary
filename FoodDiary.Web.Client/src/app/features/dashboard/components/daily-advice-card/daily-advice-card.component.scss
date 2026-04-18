@@ -5,8 +5,9 @@
 }
 
 .daily-advice-card {
-    border-radius: 22px;
+    border-radius: var(--fd-radius-card, 22px);
     padding: 18px;
+    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: linear-gradient(
         180deg,
         var(--fd-color-surface-raised) 0%,
@@ -54,7 +55,7 @@
         align-items: center;
         gap: 6px;
         padding: 6px 10px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-panel, 12px);
         background: rgba(14, 165, 233, 0.14);
         color: var(--fd-color-sky-500);
         font-weight: 700;

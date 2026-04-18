@@ -42,12 +42,12 @@ import {
 } from '../../../shared/lib/fasting-reminder-presets';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { FormGroupControls } from '../../../shared/lib/common.data';
-import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
+import { ActivityLevelOption, Gender, UpdateUserDto, UiStyleOption, User } from '../../../shared/models/user.data';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
-import { APP_THEMES, AppThemeName, isAppThemeName } from '../../../theme/app-theme.config';
+import { APP_THEMES, APP_UI_STYLES, AppThemeName, AppUiStyleName, isAppThemeName, isAppUiStyleName } from '../../../theme/app-theme.config';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -111,6 +111,7 @@ export class UserManageComponent implements OnInit {
     public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
     public languageOptions: FdUiSelectOption<string | null>[] = [];
     public themeOptions: FdUiSelectOption<AppThemeName | null>[] = [];
+    public uiStyleOptions: FdUiSelectOption<AppUiStyleName | null>[] = [];
     public userForm: FormGroup<UserFormData>;
     public dietologistForm: FormGroup<DietologistFormData>;
     public readonly globalError = this.facade.globalError;
@@ -199,6 +200,7 @@ export class UserManageComponent implements OnInit {
             gender: new FormControl<Gender | null>(null),
             language: new FormControl<string | null>(null),
             theme: new FormControl<AppThemeName | null>(null),
+            uiStyle: new FormControl<AppUiStyleName | null>(null),
             height: new FormControl<number | null>(null),
             activityLevel: new FormControl<ActivityLevelOption | null>(null),
             stepGoal: new FormControl<number | null>(null),
@@ -838,6 +840,11 @@ export class UserManageComponent implements OnInit {
             label: this.translateService.instant(`USER_MANAGE.THEME_OPTIONS.${theme.name.toUpperCase()}`),
             value: theme.name,
         }));
+
+        this.uiStyleOptions = APP_UI_STYLES.map(style => ({
+            label: this.translateService.instant(`USER_MANAGE.UI_STYLE_OPTIONS.${style.name.toUpperCase()}`),
+            value: style.name,
+        }));
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {
@@ -863,6 +870,7 @@ export class UserManageComponent implements OnInit {
             gender: user.gender as Gender | null,
             language: this.normalizeLanguage(user.language),
             theme: this.normalizeTheme(user.theme),
+            uiStyle: this.normalizeUiStyle(user.uiStyle),
             birthDate: user.birthDate ? this.formatDateInput(new Date(user.birthDate)) : null,
             height: user.height ?? null,
             activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
@@ -883,6 +891,10 @@ export class UserManageComponent implements OnInit {
 
     private normalizeTheme(value: string | null | undefined): AppThemeName | null {
         return isAppThemeName(value) ? value : null;
+    }
+
+    private normalizeUiStyle(value: string | null | undefined): AppUiStyleName | null {
+        return isAppUiStyleName(value) ? value : null;
     }
 
     private readNotificationPermission(): NotificationPermission | 'unsupported' {
@@ -984,6 +996,7 @@ export interface UserFormValues {
     gender: Gender | null;
     language: string | null;
     theme: AppThemeName | null;
+    uiStyle: UiStyleOption | null;
     height: number | null;
     activityLevel: ActivityLevelOption | null;
     stepGoal: number | null;

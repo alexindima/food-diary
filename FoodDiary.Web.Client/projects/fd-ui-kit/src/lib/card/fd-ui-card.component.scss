@@ -7,7 +7,7 @@
 
 .fd-ui-card {
     border: 1px solid var(--fd-ui-card-border-color);
-    border-radius: var(--fd-radius-lg);
+    border-radius: var(--fd-radius-card, var(--fd-radius-lg));
     background-color: var(--fd-color-surface);
     box-shadow: var(--fd-shadow-sm);
     padding: var(--fd-spacing-sm) var(--fd-spacing-lg);

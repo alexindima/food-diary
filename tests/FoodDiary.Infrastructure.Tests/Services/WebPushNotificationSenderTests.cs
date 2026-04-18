@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -25,7 +26,9 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenCategoryDisabled_DoesNotLoadSubscriptions() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(pushNotificationsEnabled: true, fastingPushNotificationsEnabled: false);
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: false));
         var subscriptionRepository = new RecordingSubscriptionRepository();
         var sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
@@ -38,7 +41,9 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenCategoryEnabled_LoadsSubscriptions() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(pushNotificationsEnabled: true, socialPushNotificationsEnabled: true);
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            SocialPushNotificationsEnabled: true));
         var subscriptionRepository = new RecordingSubscriptionRepository();
         var sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.NewComment, "{}");
@@ -51,7 +56,9 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenSubscriptionExpired_PrunesItBeforeSending() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(pushNotificationsEnabled: true, fastingPushNotificationsEnabled: true);
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: true));
         var expiredSubscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/expired",

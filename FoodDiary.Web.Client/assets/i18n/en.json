@@ -1309,6 +1309,8 @@
         "LANGUAGE_PLACEHOLDER": "Select language",
         "THEME": "Theme",
         "THEME_PLACEHOLDER": "Select theme",
+        "UI_STYLE": "Interface style",
+        "UI_STYLE_PLACEHOLDER": "Select style",
         "NEW_PASSWORD": "New Password",
         "NEW_PASSWORD_PLACEHOLDER": "Enter a new password",
         "CONFIRM_NEW_PASSWORD": "Confirm New Password",
@@ -1359,6 +1361,10 @@
             "OCEAN": "Blue",
             "LEAF": "Green",
             "DARK": "Dark"
+        },
+        "UI_STYLE_OPTIONS": {
+            "CLASSIC": "Classic",
+            "MODERN": "Modern"
         },
         "NUTRITION_SECTION": "Nutrition goals",
         "DAILY_CALORIES": "Daily calorie target",

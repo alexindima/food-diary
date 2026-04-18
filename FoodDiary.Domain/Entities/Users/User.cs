@@ -59,6 +59,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public string? DashboardLayoutJson { get; private set; }
     public string? Language { get; private set; }
     public string? Theme { get; private set; }
+    public string? UiStyle { get; private set; }
     public bool PushNotificationsEnabled { get; private set; }
     public bool FastingPushNotificationsEnabled { get; private set; }
     public bool SocialPushNotificationsEnabled { get; private set; }
@@ -286,6 +287,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             DashboardLayoutJson,
             Language,
             Theme,
+            UiStyle,
             PushNotificationsEnabled,
             FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled,
@@ -319,6 +321,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         DashboardLayoutJson = state.DashboardLayoutJson;
         Language = state.Language;
         Theme = state.Theme;
+        UiStyle = state.UiStyle;
     }
 
     private void ApplyPersonalProfileState(UserPersonalProfileState state) {
@@ -336,6 +339,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         DashboardLayoutJson = state.DashboardLayoutJson;
         Language = state.Language;
         Theme = state.Theme;
+        UiStyle = state.UiStyle;
         PushNotificationsEnabled = state.PushNotificationsEnabled;
         FastingPushNotificationsEnabled = state.FastingPushNotificationsEnabled;
         SocialPushNotificationsEnabled = state.SocialPushNotificationsEnabled;
@@ -419,6 +423,16 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    private static void EnsureUiStyle(string? value, string paramName) {
+        if (value is null) {
+            return;
+        }
+
+        if (!UiStyleCode.TryParse(value, out _)) {
+            throw new ArgumentOutOfRangeException(paramName, "UI style must be one of the supported codes.");
+        }
+    }
+
     private static void EnsureDesiredWeight(double? value, string paramName) {
         if (!value.HasValue) {
             return;
@@ -479,6 +493,16 @@ public sealed partial class User : AggregateRoot<UserId> {
         return !ThemeCode.TryParse(value, out var themeCode)
             ? throw new ArgumentOutOfRangeException(paramName, "Theme must be one of the supported codes.")
             : themeCode.Value;
+    }
+
+    private static string NormalizeOptionalUiStyle(string? value, string paramName) {
+        if (value is null) {
+            return string.Empty;
+        }
+
+        return !UiStyleCode.TryParse(value, out var uiStyleCode)
+            ? throw new ArgumentOutOfRangeException(paramName, "UI style must be one of the supported codes.")
+            : uiStyleCode.Value;
     }
 
     private static string? NormalizeOptionalProfileText(string? value) {

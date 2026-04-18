@@ -9,7 +9,7 @@
     --fd-media-card-right-padding-mobile: 14px;
     --fd-media-card-content-padding-y: 18px;
     --fd-media-card-content-padding-y-mobile: 12px;
-    --fd-media-card-radius: 22px;
+    --fd-media-card-radius: var(--fd-radius-card, 22px);
     --fd-media-card-background: linear-gradient(
         180deg,
         var(--fd-color-surface-raised) 0%,

@@ -499,7 +499,7 @@ public class UserInvariantTests {
     public void UpdatePreferences_WithSupportedLanguage_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(language: "ru");
+        user.UpdatePreferences(new UserPreferenceUpdate(Language: "ru"));
 
         Assert.Equal("ru", user.Language);
     }
@@ -516,9 +516,26 @@ public class UserInvariantTests {
     public void UpdatePreferences_WithSupportedTheme_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(theme: "leaf");
+        user.UpdatePreferences(new UserPreferenceUpdate(Theme: "leaf"));
 
         Assert.Equal("leaf", user.Theme);
+    }
+
+    [Fact]
+    public void UpdatePreferences_WithUnsupportedUiStyle_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdatePreferences(new UserPreferenceUpdate(UiStyle: "retro")));
+    }
+
+    [Fact]
+    public void UpdatePreferences_WithSupportedUiStyle_UpdatesValue() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdatePreferences(new UserPreferenceUpdate(UiStyle: "modern"));
+
+        Assert.Equal("modern", user.UiStyle);
     }
 
     [Fact]
@@ -538,6 +555,13 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Equal("ocean", user.Theme);
+    }
+
+    [Fact]
+    public void User_Create_SetsDefaultUiStyle() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Equal("classic", user.UiStyle);
     }
 
     [Fact]

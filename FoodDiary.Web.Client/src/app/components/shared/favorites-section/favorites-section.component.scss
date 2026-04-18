@@ -1,6 +1,6 @@
 .fd-favorites-section {
     border: 1px solid var(--fd-color-border);
-    border-radius: 18px;
+    border-radius: var(--fd-radius-card, 18px);
     background: var(--fd-color-surface);
     overflow: hidden;
     box-shadow: 0 16px 40px color-mix(in srgb, var(--fd-color-shadow) 14%, transparent);

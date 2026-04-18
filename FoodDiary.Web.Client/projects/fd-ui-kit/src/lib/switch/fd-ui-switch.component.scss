@@ -22,7 +22,7 @@
     &__track {
         width: 44px;
         height: 26px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-switch, 999px);
         background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, var(--fd-color-border-strong));
         border: 1px solid var(--fd-color-border);
         padding: 3px;
@@ -37,7 +37,7 @@
     &__thumb {
         width: 20px;
         height: 20px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-switch, 999px);
         background: var(--fd-color-surface);
         box-shadow: 0 4px 10px color-mix(in srgb, var(--fd-color-black) 20%, transparent);
         transition: transform 0.2s ease;

@@ -18,7 +18,7 @@
         align-items: center;
         gap: 10px;
         padding: 10px 12px;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-card, 14px);
         background: var(--fd-color-surface, var(--fd-color-white));
         box-shadow: 0 10px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
     }
@@ -56,7 +56,7 @@
         display: grid;
         place-items: center;
         border: none;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-button, 12px);
         background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
         color: var(--fd-color-primary-600);
         cursor: pointer;
@@ -106,7 +106,7 @@
         gap: 10px;
         align-items: center;
         padding: 10px 12px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-menu-item, 12px);
         color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         text-decoration: none;
         font-weight: 600;
@@ -202,7 +202,7 @@
 
     &__premium {
         padding: 14px 12px;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-panel, 14px);
         background: linear-gradient(135deg, var(--fd-gradient-premium-start), var(--fd-gradient-premium-end));
         color: var(--fd-color-slate-200);
         display: flex;
@@ -240,7 +240,7 @@
         gap: 10px;
         align-items: center;
         padding: 10px 12px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-card, 12px);
         background: var(--fd-color-surface, var(--fd-color-white));
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
         box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -275,7 +275,7 @@
     &__avatar {
         width: 36px;
         height: 36px;
-        border-radius: 10px;
+        border-radius: var(--fd-radius-button, 10px);
         display: grid;
         place-items: center;
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
@@ -289,7 +289,7 @@
             img {
                 width: 100%;
                 height: 100%;
-                border-radius: 10px;
+                border-radius: var(--fd-radius-button, 10px);
                 object-fit: cover;
                 display: block;
             }
@@ -311,7 +311,7 @@
 
     &__user-menu {
         padding: 6px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-panel, 12px);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
@@ -351,7 +351,7 @@
         align-items: center;
         gap: 10px;
         padding: 10px 12px;
-        border-radius: 10px;
+        border-radius: var(--fd-radius-menu-item, 10px);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         background: var(--fd-color-surface, var(--fd-color-white));
         color: var(--fd-color-text-strong, var(--fd-color-slate-900));
@@ -391,7 +391,7 @@
         align-items: center;
         gap: 10px;
         padding: 10px 12px;
-        border-radius: 10px;
+        border-radius: var(--fd-radius-menu-item, 10px);
         border: 1px solid color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
         background: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
         color: var(--fd-color-red-700);
@@ -429,7 +429,7 @@
         display: grid;
         gap: 5px;
         padding: 8px 10px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     }
@@ -546,7 +546,7 @@
         right: 12px;
         bottom: 126px;
         background: var(--fd-color-surface, var(--fd-color-white));
-        border-radius: 16px;
+        border-radius: var(--fd-radius-dialog, 16px);
         padding: 10px;
         box-shadow: 0 16px 40px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
@@ -561,7 +561,7 @@
             align-items: center;
             gap: 10px;
             padding: 10px 12px;
-            border-radius: 12px;
+            border-radius: var(--fd-radius-menu-item, 12px);
             background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
             color: var(--fd-color-text-strong, var(--fd-color-slate-900));
             text-decoration: none;

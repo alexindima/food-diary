@@ -3,7 +3,7 @@
 }
 
 .fd-ui-textarea {
-    --fd-textarea-radius: 14px;
+    --fd-textarea-radius: var(--fd-radius-input, 14px);
     --fd-textarea-border: var(--fd-color-border);
     --fd-textarea-label-bg: var(--fd-color-surface-raised);
     display: flex;
@@ -32,7 +32,7 @@
         font-size 0.15s ease;
     background: var(--fd-textarea-label-bg);
     padding: 0 4px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-field-label, 999px);
     pointer-events: none;
 }
 
