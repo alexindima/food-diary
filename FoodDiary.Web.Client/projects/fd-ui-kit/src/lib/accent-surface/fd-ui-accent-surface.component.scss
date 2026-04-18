@@ -3,9 +3,11 @@
     --fd-accent-thickness: 6px;
     --fd-accent-thickness-active: 10px;
     --fd-accent-overlay-opacity: 0;
+    --fd-accent-surface-radius: var(--fd-radius-card);
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    border-radius: var(--fd-accent-surface-radius);
     transition:
         box-shadow 0.25s ease,
         border-color 0.25s ease;
@@ -22,6 +24,7 @@
     inset: 0;
     background: var(--fd-accent-color);
     opacity: var(--fd-accent-overlay-opacity);
+    border-radius: inherit;
     transition: opacity 0.25s ease;
     z-index: 0;
 }
@@ -47,13 +50,13 @@
 :host(.fd-ui-accent-surface--side-top)::after {
     top: 0;
     height: var(--fd-accent-thickness);
-    border-radius: 999px 999px 0 0;
+    border-radius: var(--fd-accent-surface-radius) var(--fd-accent-surface-radius) 0 0;
 }
 
 :host(.fd-ui-accent-surface--side-bottom)::after {
     bottom: 0;
     height: var(--fd-accent-thickness);
-    border-radius: 0 0 999px 999px;
+    border-radius: 0 0 var(--fd-accent-surface-radius) var(--fd-accent-surface-radius);
 }
 
 :host(.fd-ui-accent-surface--side-left)::after,
@@ -65,13 +68,13 @@
 :host(.fd-ui-accent-surface--side-left)::after {
     left: 0;
     width: var(--fd-accent-thickness);
-    border-radius: 999px 0 0 999px;
+    border-radius: var(--fd-accent-surface-radius) 0 0 var(--fd-accent-surface-radius);
 }
 
 :host(.fd-ui-accent-surface--side-right)::after {
     right: 0;
     width: var(--fd-accent-thickness);
-    border-radius: 0 999px 999px 0;
+    border-radius: 0 var(--fd-accent-surface-radius) var(--fd-accent-surface-radius) 0;
 }
 
 :host(.fd-ui-accent-surface--active).fd-ui-accent-surface--side-top::after,

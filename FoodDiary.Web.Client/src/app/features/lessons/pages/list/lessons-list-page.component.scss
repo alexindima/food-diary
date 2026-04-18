@@ -82,10 +82,15 @@
 }
 
 .lesson-card {
-    border-radius: 22px;
+    border-radius: var(--fd-radius-card);
     padding: 20px;
-    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
-    box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-500) 6%),
+        color-mix(in srgb, var(--fd-color-surface) 97%, transparent)
+    );
+    border: 1px solid var(--fd-color-border);
+    box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -94,7 +99,7 @@
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
+        box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-black) 18%, transparent);
     }
 
     &--read {
@@ -110,9 +115,9 @@
     &__category {
         display: inline-flex;
         padding: 4px 10px;
-        border-radius: 10px;
-        background: color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent);
-        color: var(--fd-color-purple-500);
+        border-radius: var(--fd-radius-badge);
+        background: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-color-surface));
+        color: var(--fd-color-purple-300);
         font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;

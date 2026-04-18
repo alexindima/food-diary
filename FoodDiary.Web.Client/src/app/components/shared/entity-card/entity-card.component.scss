@@ -280,7 +280,7 @@ fd-media-card.entity-card {
 }
 
 .entity-card__action-button {
-    --fd-button-border-radius: 14px;
+    --fd-button-border-radius: var(--fd-radius-button);
     --fd-button-padding-y: 0;
     --fd-button-padding-x: 0;
     width: 44px;
@@ -294,7 +294,7 @@ fd-media-card.entity-card {
     ::ng-deep .fd-ui-button {
         width: 44px;
         height: 40px;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-button);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),
@@ -448,7 +448,7 @@ fd-media-card.entity-card {
         width: 34px;
         min-width: 34px;
         height: 34px;
-        --fd-button-border-radius: 12px;
+        --fd-button-border-radius: var(--fd-radius-button);
         --fd-button-height: 34px;
         flex: 0 0 34px;
     }
@@ -461,7 +461,7 @@ fd-media-card.entity-card {
         min-height: 34px;
         padding: 0;
         margin: 0;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-button);
         box-shadow: none;
         transform: none;
     }

@@ -52,10 +52,6 @@
 
     &__search-input {
         width: 100%;
-
-        ::ng-deep .fd-ui-input {
-            --fd-input-radius: 18px;
-        }
     }
 
     &__icon-button {

@@ -8,7 +8,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-nutrient-bar, var(--fd-radius-chip, 999px));
     background: var(--fd-color-surface);
     color: var(--fd-color-text);
     width: fit-content;
@@ -75,7 +75,7 @@
     .nutrient-badges {
         gap: 0;
         padding: 6px 8px;
-        border-radius: 16px;
+        border-radius: var(--fd-radius-nutrient-bar-compact, var(--fd-radius-nutrient-bar, 16px));
         background: var(--fd-color-surface);
         display: inline-grid;
         grid-auto-flow: column;

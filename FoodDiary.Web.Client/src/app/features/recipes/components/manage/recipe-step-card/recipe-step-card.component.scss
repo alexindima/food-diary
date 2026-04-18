@@ -42,7 +42,7 @@
     display: inline-block;
     width: 18px;
     height: 18px;
-    border-radius: 6px;
+    border-radius: var(--fd-radius-badge);
     background-image: radial-gradient(var(--fd-color-slate-400) 1.6px, transparent 1.6px);
     background-size: 6px 6px;
     background-position: center;
@@ -140,7 +140,7 @@
 
 .recipe-step-card__add-ingredient {
     align-self: flex-start;
-    --fd-button-border-radius: 14px;
+    --fd-button-border-radius: var(--fd-radius-button);
 
     ::ng-deep .fd-ui-button,
     ::ng-deep button {

@@ -348,6 +348,8 @@ $fd-theme-design-tokens: (
             dialog: 24px,
             badge: fd-token(radius, pill),
             chip: fd-token(radius, pill),
+            nutrient-bar: fd-token(radius, pill),
+            nutrient-bar-compact: fd-token(radius, xl),
             toggle: fd-token(radius, pill),
             switch: fd-token(radius, pill),
             field-label: fd-token(radius, pill),
@@ -361,6 +363,8 @@ $fd-theme-design-tokens: (
             dialog: fd-token(radius, md),
             badge: fd-token(radius, sm),
             chip: fd-token(radius, sm),
+            nutrient-bar: fd-token(radius, sm),
+            nutrient-bar-compact: fd-token(radius, sm),
             toggle: fd-token(radius, md),
             switch: fd-token(radius, pill),
             field-label: fd-token(radius, sm),
@@ -523,6 +527,8 @@ $fd-theme-design-tokens: (
         --fd-radius-dialog: #{fd-ui-style-radius-token($style, dialog)};
         --fd-radius-badge: #{fd-ui-style-radius-token($style, badge)};
         --fd-radius-chip: #{fd-ui-style-radius-token($style, chip)};
+        --fd-radius-nutrient-bar: #{fd-ui-style-radius-token($style, nutrient-bar)};
+        --fd-radius-nutrient-bar-compact: #{fd-ui-style-radius-token($style, nutrient-bar-compact)};
         --fd-radius-toggle: #{fd-ui-style-radius-token($style, toggle)};
         --fd-radius-switch: #{fd-ui-style-radius-token($style, switch)};
         --fd-radius-field-label: #{fd-ui-style-radius-token($style, field-label)};

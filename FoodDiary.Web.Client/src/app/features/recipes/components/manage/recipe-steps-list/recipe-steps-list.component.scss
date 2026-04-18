@@ -35,7 +35,7 @@
 
     &__add-step {
         width: 100%;
-        --fd-radius-md: 22px;
+        --fd-radius-md: var(--fd-radius-button);
 
         ::ng-deep .fd-ui-button,
         ::ng-deep button {

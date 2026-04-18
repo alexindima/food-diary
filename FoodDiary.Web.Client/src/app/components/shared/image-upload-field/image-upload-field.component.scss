@@ -3,13 +3,13 @@
     flex-direction: column;
     gap: 8px;
     padding: 0;
-    border-radius: 16px;
+    border-radius: var(--fd-radius-card);
     background: transparent;
 
     &__dropzone {
         position: relative;
         border: 2px dashed var(--fd-color-primary-200);
-        border-radius: 24px;
+        border-radius: var(--fd-radius-card);
         min-height: 190px;
         background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
         color: var(--fd-color-slate-900);
@@ -82,7 +82,7 @@
         height: 100%;
         object-fit: cover;
         display: block;
-        border-radius: 10px;
+        border-radius: var(--fd-radius-card);
     }
 
     &__overlay {
@@ -118,7 +118,7 @@
         top: 10px;
         right: 10px;
         display: inline-flex;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-button);
         overflow: hidden;
         background: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
         box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
@@ -190,7 +190,7 @@
     &__cropper {
         width: min(720px, 100%);
         background: var(--fd-color-white);
-        border-radius: 18px;
+        border-radius: var(--fd-radius-dialog);
         box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 22%, transparent);
         display: flex;
         flex-direction: column;
@@ -222,7 +222,7 @@
         max-height: min(70vh, 520px);
         min-height: 320px;
         overflow: hidden;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-panel);
         border: 1px solid var(--fd-color-slate-200);
         background: color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
     }

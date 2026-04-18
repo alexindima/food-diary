@@ -409,7 +409,7 @@
 
     &__stat {
         padding: 14px;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-card);
         border: 1px solid var(--fd-color-border);
         background:
             linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
@@ -417,7 +417,7 @@
 
         &--compact {
             padding: 12px 14px;
-            border-radius: 12px;
+            border-radius: var(--fd-radius-card);
             box-shadow: none;
         }
     }
@@ -476,7 +476,7 @@
         gap: 12px;
         padding: 14px;
         border: 1px solid var(--fd-color-border);
-        border-radius: 16px;
+        border-radius: var(--fd-radius-panel);
         background:
             linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
     }
@@ -617,7 +617,6 @@
 
     &__history-item {
         padding: 12px;
-        border-radius: 12px;
         border: 1px solid var(--fd-color-border);
         background:
             linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));

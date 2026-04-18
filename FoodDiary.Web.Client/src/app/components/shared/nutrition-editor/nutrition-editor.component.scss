@@ -35,7 +35,7 @@
     &__errors {
         margin-top: 0;
         padding: 8px 12px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-card);
         border: 1px solid var(--fd-color-nutrition-error-border);
         background: var(--fd-color-nutrition-error-bg);
         color: var(--fd-color-nutrition-error-text);
@@ -52,7 +52,7 @@
     }
 
     &__warning {
-        border-radius: 14px;
+        border-radius: var(--fd-radius-card);
         border: 1px solid var(--fd-color-nutrition-warning-border);
         background: var(--fd-color-nutrition-warning-bg);
         color: var(--fd-color-nutrition-warning-text);

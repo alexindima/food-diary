@@ -1,10 +1,10 @@
 :host {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-sky-500) 8%, var(--fd-color-white));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-sky-500) 22%, transparent);
-    --fd-inline-alert-accent: var(--fd-color-primary-600);
-    --fd-inline-alert-title: var(--fd-color-slate-900);
-    --fd-inline-alert-text: var(--fd-color-slate-600);
-    --fd-inline-alert-radius: 18px;
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-sky-500) 7%, var(--fd-color-surface));
+    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-sky-500) 24%, var(--fd-color-border));
+    --fd-inline-alert-accent: var(--fd-color-primary-500);
+    --fd-inline-alert-title: var(--fd-color-text-strong);
+    --fd-inline-alert-text: var(--fd-color-text-muted);
+    --fd-inline-alert-radius: var(--fd-radius-panel);
     --fd-inline-alert-padding: 16px 18px;
     --fd-inline-alert-icon-size: 40px;
     --fd-inline-alert-grid-columns: auto minmax(0, 1fr) auto;
@@ -22,7 +22,7 @@
 
 :host-context(.fd-ui-inline-alert--notice),
 :host(.fd-ui-inline-alert--notice) {
-    --fd-inline-alert-radius: 16px;
+    --fd-inline-alert-radius: var(--fd-radius-card);
     --fd-inline-alert-padding: 14px 16px;
     --fd-inline-alert-icon-size: 32px;
 }
@@ -32,15 +32,15 @@
     height: var(--fd-inline-alert-icon-size);
     display: grid;
     place-items: center;
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--fd-inline-alert-accent) 12%, var(--fd-color-white));
+    border-radius: var(--fd-radius-button);
+    background: color-mix(in srgb, var(--fd-inline-alert-accent) 14%, var(--fd-color-surface-raised));
     color: var(--fd-inline-alert-accent);
     flex: 0 0 auto;
 }
 
 :host-context(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__icon,
 :host(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__icon {
-    border-radius: 10px;
+    border-radius: var(--fd-radius-button);
 }
 
 .fd-ui-inline-alert__content {
@@ -101,31 +101,31 @@
     height: 36px;
     display: grid;
     place-items: center;
-    color: var(--fd-color-slate-500);
-    border-radius: 10px;
+    color: var(--fd-color-text-muted);
+    border-radius: var(--fd-radius-button);
 }
 
 .fd-ui-inline-alert__dismiss:hover {
-    background: color-mix(in srgb, var(--fd-color-slate-400) 12%, transparent);
-    color: var(--fd-color-slate-700);
+    background: color-mix(in srgb, var(--fd-color-text-muted) 12%, transparent);
+    color: var(--fd-color-text);
 }
 
 :host(.fd-ui-inline-alert--warning) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-orange-500) 8%, var(--fd-color-white));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-orange-500) 20%, transparent);
-    --fd-inline-alert-accent: var(--fd-color-orange-700);
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-orange-500) 8%, var(--fd-color-surface));
+    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-orange-500) 24%, var(--fd-color-border));
+    --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-orange-400) 72%, var(--fd-color-text));
 }
 
 :host(.fd-ui-inline-alert--success) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-green-500) 8%, var(--fd-color-white));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-green-500) 20%, transparent);
-    --fd-inline-alert-accent: var(--fd-color-emerald-700);
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-green-500) 8%, var(--fd-color-surface));
+    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-green-500) 24%, var(--fd-color-border));
+    --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-green-400) 74%, var(--fd-color-text));
 }
 
 :host(.fd-ui-inline-alert--danger) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-color-white));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
-    --fd-inline-alert-accent: var(--fd-color-red-600);
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-color-surface));
+    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-danger) 24%, var(--fd-color-border));
+    --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text));
 }
 
 @media (max-width: 767px) {

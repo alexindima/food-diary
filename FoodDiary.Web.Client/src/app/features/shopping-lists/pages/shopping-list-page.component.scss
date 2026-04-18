@@ -111,7 +111,7 @@
             color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
         );
         border: 1px solid var(--fd-color-border);
-        border-radius: 16px;
+        border-radius: var(--fd-radius-panel);
         padding: variables.$gap-m;
         box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-shadow) 28%, transparent);
 
@@ -133,7 +133,7 @@
         gap: variables.$gap-s;
         align-items: center;
         padding: variables.$gap-s variables.$gap-m;
-        border-radius: 14px;
+        border-radius: var(--fd-radius-card);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-50) 6%),
@@ -203,7 +203,7 @@
 
     &__empty-state {
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
-        border-radius: 20px;
+        border-radius: var(--fd-radius-card);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent),
