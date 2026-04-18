@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddThemeToUsers : Migration
-    {
+    public partial class AddThemeToUsers : Migration {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<string>(

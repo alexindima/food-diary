@@ -27,4 +27,5 @@ Rules for `FoodDiary.Infrastructure/`.
   2. Convert ALL `)\n{` and `=>\n{` patterns to `) {` / `=> {` — especially `constraints: table =>\n{`
   3. Strip UTF-8 BOM if present
   4. Ensure LF line endings (not CRLF)
+- Before commit, run a whitespace formatter/check on migration files. Preferred command: `dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj`. This specifically avoids CI failures like `WHITESPACE: Fix whitespace formatting` in generated migrations.
 - See root CLAUDE.md for a one-liner fix command.
