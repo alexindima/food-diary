@@ -68,6 +68,19 @@ describe('NotificationService', () => {
         expect(service.unreadCount()).toBe(4);
     });
 
+    it('should coalesce concurrent unread count requests', () => {
+        service.fetchUnreadCount();
+        service.fetchUnreadCount();
+        service.fetchUnreadCount();
+
+        const requests = httpMock.match(`${baseUrl}/unread-count`);
+        expect(requests).toHaveLength(1);
+
+        requests[0].flush({ count: 7 });
+
+        expect(service.unreadCount()).toBe(7);
+    });
+
     it('should reset unread count when unauthenticated', () => {
         authService.isAuthenticated.mockReturnValue(false);
 

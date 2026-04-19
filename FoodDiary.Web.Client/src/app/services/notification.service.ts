@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, tap } from 'rxjs';
+import { finalize, Observable, shareReplay, tap } from 'rxjs';
 
 export interface NotificationItem {
     id: string;
@@ -82,6 +82,7 @@ export class NotificationService {
     public readonly notificationsLoading = signal(false);
     public readonly notificationsLoaded = signal(false);
     public readonly notificationsChangedVersion = signal(0);
+    private unreadCountRequest$: Observable<{ count: number }> | null = null;
 
     public constructor() {
         effect(() => {
@@ -104,13 +105,19 @@ export class NotificationService {
             return;
         }
 
-        this.http
-            .get<{ count: number }>(`${this.baseUrl}/unread-count`)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => this.unreadCount.set(response.count),
-                error: () => this.unreadCount.set(0),
-            });
+        if (!this.unreadCountRequest$) {
+            this.unreadCountRequest$ = this.http.get<{ count: number }>(`${this.baseUrl}/unread-count`).pipe(
+                finalize(() => {
+                    this.unreadCountRequest$ = null;
+                }),
+                shareReplay(1),
+            );
+        }
+
+        this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: response => this.unreadCount.set(response.count),
+            error: () => this.unreadCount.set(0),
+        });
     }
 
     public getNotifications(): Observable<NotificationItem[]> {
