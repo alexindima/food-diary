@@ -7,7 +7,6 @@ import {
     effect,
     FactoryProvider,
     inject,
-    OnInit,
     signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -84,7 +83,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     providers: [VALIDATION_ERRORS_PROVIDER, ProfileManageFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserManageComponent implements OnInit {
+export class UserManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
@@ -259,9 +258,6 @@ export class UserManageComponent implements OnInit {
 
             this.loadDietologistRelationship();
         });
-    }
-
-    public ngOnInit(): void {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.facade.clearGlobalError();
             this.queueUserAutosave();

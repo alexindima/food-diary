@@ -48,7 +48,7 @@
                             >
                                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
                             </fd-ui-button>
-                            @if (canShowDeleteButton) {
+                            @if (canShowDeleteButton()) {
                                 <fd-ui-button
                                     type="button"
                                     class="product-manage__delete-button product-manage__delete-button--icon"

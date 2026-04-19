@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -33,7 +33,7 @@ import { RecipeManageComponent } from '../components/manage/recipe-manage.compon
         FdUiInputComponent,
     ],
 })
-export class RecipeSelectDialogComponent implements OnInit {
+export class RecipeSelectDialogComponent {
     private readonly recipeService = inject(RecipeService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
@@ -50,14 +50,13 @@ export class RecipeSelectDialogComponent implements OnInit {
         onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
     });
 
-    public constructor() {}
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
     protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
-    public ngOnInit(): void {
+    public constructor() {
         this.loadRecipes(1).subscribe();
 
         this.searchForm.controls.search.valueChanges

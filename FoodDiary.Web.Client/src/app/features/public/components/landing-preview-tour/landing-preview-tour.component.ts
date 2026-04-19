@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
@@ -38,7 +38,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
     styleUrls: ['./landing-preview-tour.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LandingPreviewTourComponent implements OnInit {
+export class LandingPreviewTourComponent {
     private readonly authService = inject(AuthService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly quickConsumptionService = inject(QuickMealService);
@@ -163,7 +163,7 @@ export class LandingPreviewTourComponent implements OnInit {
         }
     });
 
-    public ngOnInit(): void {
+    public constructor() {
         this.refreshPreviewContent();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.refreshPreviewContent());
     }

@@ -178,9 +178,6 @@ export class MealDetailComponent {
                 color: CHART_COLORS.alcohol,
             },
         ];
-    }
-
-    public ngOnInit(): void {
         this.favoriteMealService.isFavorite(this.consumption.id).subscribe(isFav => this.isFavorite.set(isFav));
     }
 

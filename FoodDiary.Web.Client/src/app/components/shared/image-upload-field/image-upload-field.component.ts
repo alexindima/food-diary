@@ -4,8 +4,8 @@ import {
     Component,
     computed,
     ElementRef,
-    OnInit,
     ViewEncapsulation,
+    effect,
     forwardRef,
     inject,
     input,
@@ -41,7 +41,7 @@ import { FrontendLoggerService } from '../../../services/frontend-logger.service
         },
     ],
 })
-export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
+export class ImageUploadFieldComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly translateService = inject(TranslateService);
@@ -71,7 +71,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     public disabled = false;
     public isCropping = false;
 
-    public ngOnInit(): void {
+    private readonly initialSelectionEffect = effect(() => {
         const initial = this.initialSelection();
         if (initial?.url || initial?.assetId) {
             this.selection = {
@@ -81,7 +81,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
             this.imageChanged.emit(this.selection);
             this.cdr.markForCheck();
         }
-    }
+    });
     public cropPreviewUrl: string | null = null;
     private cropper: Cropper | null = null;
     private originalFile: File | null = null;

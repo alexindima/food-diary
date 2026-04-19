@@ -36,11 +36,15 @@ describe('UnauthorizedComponent', () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(UnauthorizedComponent);
-        component = fixture.componentInstance;
     });
 
+    function createComponent(): void {
+        fixture = TestBed.createComponent(UnauthorizedComponent);
+        component = fixture.componentInstance;
+    }
+
     it('should create', () => {
+        createComponent();
         fixture.detectChanges();
 
         expect(component).toBeTruthy();
@@ -51,6 +55,7 @@ describe('UnauthorizedComponent', () => {
     it('should try to recover from sso return url on init', async () => {
         authService.tryApplySsoFromReturnUrl.mockResolvedValue('/users?page=2');
 
+        createComponent();
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -64,6 +69,7 @@ describe('UnauthorizedComponent', () => {
             returnUrl: '/users?page=2',
         });
 
+        createComponent();
         fixture.detectChanges();
 
         expect(authService.tryApplySsoFromReturnUrl).not.toHaveBeenCalled();

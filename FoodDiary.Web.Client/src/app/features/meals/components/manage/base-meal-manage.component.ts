@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, computed, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, computed, inject, input, signal } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -86,7 +86,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         MealNutritionSidebarComponent,
     ],
 })
-export class BaseMealManageComponent implements OnInit {
+export class BaseMealManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -201,9 +201,7 @@ export class BaseMealManageComponent implements OnInit {
             }
             this.updateSummary();
         });
-    }
 
-    public ngOnInit(): void {
         this.loadAiUsage();
         const presetMealType = this.resolvePresetMealType();
         if (presetMealType) {

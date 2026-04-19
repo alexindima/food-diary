@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DietologistService } from '../../api/dietologist.service';
 import { ClientSummary } from '../../models/dietologist.data';
@@ -180,7 +180,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
         }
     `,
 })
-export class ClientDashboardComponent implements OnInit {
+export class ClientDashboardComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly dietologistService = inject(DietologistService);
@@ -193,7 +193,7 @@ export class ClientDashboardComponent implements OnInit {
         return fullName || client.email;
     }
 
-    public ngOnInit(): void {
+    public constructor() {
         const clientId = this.route.snapshot.params['clientId'];
         this.dietologistService.getMyClients().subscribe({
             next: clients => {

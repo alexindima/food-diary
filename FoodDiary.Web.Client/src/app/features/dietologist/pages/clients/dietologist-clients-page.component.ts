@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DietologistService } from '../../api/dietologist.service';
 import { ClientSummary } from '../../models/dietologist.data';
@@ -156,14 +156,14 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
         }
     `,
 })
-export class DietologistClientsPageComponent implements OnInit {
+export class DietologistClientsPageComponent {
     private readonly dietologistService = inject(DietologistService);
     private readonly router = inject(Router);
 
     public readonly clients = signal<ClientSummary[]>([]);
     public readonly loading = signal(true);
 
-    public ngOnInit(): void {
+    public constructor() {
         this.dietologistService.getMyClients().subscribe({
             next: clients => {
                 this.clients.set(clients);

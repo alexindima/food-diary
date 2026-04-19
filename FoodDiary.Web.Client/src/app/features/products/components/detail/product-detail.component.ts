@@ -184,9 +184,6 @@ export class ProductDetailComponent {
                 color: CHART_COLORS.alcohol,
             },
         ];
-    }
-
-    public ngOnInit(): void {
         this.favoriteProductService.isFavorite(this.product.id).subscribe(isFav => this.isFavorite.set(isFav));
     }
 

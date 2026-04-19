@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { HeroComponent } from '../../components/hero/hero.component';
@@ -21,11 +21,11 @@ import { DietologistPromoComponent } from '../../components/dietologist-promo/di
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly route = inject(ActivatedRoute);
 
-    public ngOnInit(): void {
+    public constructor() {
         const path = this.route.snapshot.routeConfig?.path ?? '';
         if (path.startsWith('auth')) {
             const modeParam = this.route.snapshot.params['mode'];

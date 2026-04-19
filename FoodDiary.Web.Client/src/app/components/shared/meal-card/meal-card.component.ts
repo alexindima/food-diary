@@ -1,5 +1,5 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, LOCALE_ID, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, LOCALE_ID, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, of, switchMap } from 'rxjs';
@@ -94,11 +94,11 @@ export class MealCardComponent {
         const normalizedMealType = mealType ? mealType.toUpperCase() : 'OTHER';
         return this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${normalizedMealType}`);
     });
-
-    public ngOnInit(): void {
-        this.isFavorite.set(this.meal().isFavorite ?? false);
-        this.favoriteMealId = this.meal().favoriteMealId ?? null;
-    }
+    private readonly favoriteStateEffect = effect(() => {
+        const meal = this.meal();
+        this.isFavorite.set(meal.isFavorite ?? false);
+        this.favoriteMealId = meal.favoriteMealId ?? null;
+    });
 
     public handleOpen(): void {
         this.open.emit();

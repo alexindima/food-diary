@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
@@ -36,7 +36,7 @@ export type ItemSelectDialogData = {
         FdUiDialogFooterDirective,
     ],
 })
-export class ItemSelectDialogComponent implements OnInit {
+export class ItemSelectDialogComponent {
     private readonly dialogData = inject<ItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly dialogRef = inject(FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>, { optional: true });
@@ -55,13 +55,7 @@ export class ItemSelectDialogComponent implements OnInit {
             labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB',
         },
     ];
-    public activeTab: 'Product' | 'Recipe' = 'Product';
-
-    public ngOnInit(): void {
-        if (!this.embedded() && this.dialogData?.initialTab === 'Recipe') {
-            this.activeTab = 'Recipe';
-        }
-    }
+    public activeTab: 'Product' | 'Recipe' = this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product';
 
     public onProductSelected(product: Product): void {
         this.completeWith({ type: 'Product', product });

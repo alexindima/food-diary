@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, effect, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, FactoryProvider, effect, inject, input, signal } from '@angular/core';
 import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -62,7 +62,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ProductNutritionEditorComponent,
     ],
 })
-export class BaseProductManageComponent implements OnInit {
+export class BaseProductManageComponent {
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
@@ -148,9 +148,6 @@ export class BaseProductManageComponent implements OnInit {
                 this.formInitialized = true;
             }
         });
-    }
-
-    public ngOnInit(): void {
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
             this.updateCalorieWarning();
@@ -171,10 +168,10 @@ export class BaseProductManageComponent implements OnInit {
         }
     }
 
-    public get canShowDeleteButton(): boolean {
+    public readonly canShowDeleteButton = computed(() => {
         const currentProduct = this.product();
         return !!currentProduct && currentProduct.isOwnedByCurrentUser;
-    }
+    });
 
     public openBarcodeScanner(): void {
         this.fdDialogService

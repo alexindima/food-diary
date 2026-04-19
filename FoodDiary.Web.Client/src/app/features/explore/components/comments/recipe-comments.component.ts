@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { RecipeComment } from '../../models/comment.data';
         FdUiLoaderComponent,
     ],
 })
-export class RecipeCommentsComponent implements OnInit {
+export class RecipeCommentsComponent {
     private readonly commentService = inject(CommentService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -45,9 +45,15 @@ export class RecipeCommentsComponent implements OnInit {
     public readonly isSubmitting = signal(false);
     public readonly hasMore = computed(() => this.comments().length < this.totalItems());
 
-    public ngOnInit(): void {
-        this.loadComments();
-    }
+    private readonly recipeChangeEffect = effect(() => {
+        this.recipeId();
+        this.currentPage.set(1);
+        this.comments.set([]);
+        this.totalItems.set(0);
+        this.editingCommentId.set(null);
+        this.commentControl.reset();
+        this.loadComments(1);
+    });
 
     public onSubmit(): void {
         if (this.commentControl.invalid || this.isSubmitting()) {
@@ -71,7 +77,7 @@ export class RecipeCommentsComponent implements OnInit {
                 this.commentControl.reset();
                 this.editingCommentId.set(null);
                 this.currentPage.set(1);
-                this.loadComments();
+                this.loadComments(1);
             });
     }
 
@@ -106,14 +112,15 @@ export class RecipeCommentsComponent implements OnInit {
     }
 
     public onLoadMore(): void {
-        this.currentPage.update(p => p + 1);
-        this.loadComments(true);
+        const nextPage = this.currentPage() + 1;
+        this.currentPage.set(nextPage);
+        this.loadComments(nextPage, true);
     }
 
-    private loadComments(append = false): void {
+    private loadComments(page: number, append = false): void {
         this.isLoading.set(true);
         this.commentService
-            .getComments(this.recipeId(), this.currentPage(), this.pageSize)
+            .getComments(this.recipeId(), page, this.pageSize)
             .pipe(
                 finalize(() => this.isLoading.set(false)),
                 takeUntilDestroyed(this.destroyRef),

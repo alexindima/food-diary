@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { environment } from '../../../../environments/environment';
@@ -11,30 +11,27 @@ import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
     templateUrl: './unauthorized.component.html',
     styleUrl: './unauthorized.component.scss',
 })
-export class UnauthorizedComponent implements OnInit {
+export class UnauthorizedComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly authService = inject(AdminAuthService);
 
-    public get reason(): string | null {
-        return this.route.snapshot.queryParamMap.get('reason');
-    }
+    public readonly reason: string | null;
+    public readonly returnUrl: string;
 
-    public get returnUrl(): string {
-        return this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
-    }
+    public constructor() {
+        this.reason = this.route.snapshot.queryParamMap.get('reason');
+        this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
 
-    public ngOnInit(): void {
         if (this.reason !== 'unauthenticated') {
             return;
         }
 
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-        if (!returnUrl) {
+        if (!this.returnUrl) {
             return;
         }
 
-        void this.tryRecoverFromSso(returnUrl);
+        void this.tryRecoverFromSso(this.returnUrl);
     }
 
     public goToLogin(): void {

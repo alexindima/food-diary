@@ -13,8 +13,7 @@ export class MealPlanFacade {
     public readonly dietTypeFilter = signal<DietType | null>(null);
     private readonly plansResource = resource({
         params: () => this.dietTypeFilter(),
-        loader: async ({ params }): Promise<MealPlanSummary[]> =>
-            firstValueFrom(this.service.getAll(params ?? undefined)),
+        loader: async ({ params }): Promise<MealPlanSummary[]> => firstValueFrom(this.service.getAll(params ?? undefined)),
     });
     private readonly selectedPlanResource = resource({
         params: () => this.selectedPlanId(),

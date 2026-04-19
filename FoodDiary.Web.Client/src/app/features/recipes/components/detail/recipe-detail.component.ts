@@ -74,6 +74,11 @@ export class RecipeDetailComponent {
     public activeTab: 'summary' | 'nutrients' = 'summary';
     public readonly totalTime: number | null;
     public readonly ingredientCount: number;
+    public readonly visibilityKey: string;
+    public readonly isDeleteDisabled: boolean;
+    public readonly isEditDisabled: boolean;
+    public readonly canModify: boolean;
+    public readonly warningMessage: string | null;
 
     public isDuplicateInProgress = false;
 
@@ -85,12 +90,22 @@ export class RecipeDetailComponent {
         this.proteins = this.resolveNutrientValue(data.totalProteins, data.manualProteins);
         this.fats = this.resolveNutrientValue(data.totalFats, data.manualFats);
         this.carbs = this.resolveNutrientValue(data.totalCarbs, data.manualCarbs);
-        this.fiber = this.fiberValueComputed;
-        this.alcohol = this.alcoholValueComputed;
+        this.fiber = this.resolveFiberValue();
+        this.alcohol = this.resolveAlcoholValue();
         this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
+        this.visibilityKey = `RECIPE_VISIBILITY.${this.recipe.visibility}`;
+        this.isDeleteDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
+        this.isEditDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
+        this.canModify = !this.isEditDisabled;
+        this.warningMessage =
+            !this.isDeleteDisabled && !this.isEditDisabled
+                ? null
+                : this.recipe.isOwnedByCurrentUser
+                  ? 'RECIPE_DETAIL.WARNING_IN_USE'
+                  : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
         const labels = [
             this.translateService.instant('GENERAL.NUTRIENTS.PROTEIN'),
             this.translateService.instant('GENERAL.NUTRIENTS.FAT'),
@@ -176,37 +191,10 @@ export class RecipeDetailComponent {
                 color: CHART_COLORS.alcohol,
             },
         ];
-    }
-
-    public ngOnInit(): void {
         this.favoriteRecipeService.isFavorite(this.recipe.id).subscribe(isFav => this.isFavorite.set(isFav));
     }
 
-    public get visibilityKey(): string {
-        return `RECIPE_VISIBILITY.${this.recipe.visibility}`;
-    }
-
-    public get isDeleteDisabled(): boolean {
-        return !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
-    }
-
-    public get isEditDisabled(): boolean {
-        return !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
-    }
-
-    public get canModify(): boolean {
-        return !this.isEditDisabled;
-    }
-
-    public get warningMessage(): string | null {
-        if (!this.isDeleteDisabled && !this.isEditDisabled) {
-            return null;
-        }
-
-        return this.recipe.isOwnedByCurrentUser ? 'RECIPE_DETAIL.WARNING_IN_USE' : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
-    }
-
-    public get fiberValueComputed(): number {
+    private resolveFiberValue(): number {
         if (this.recipe.totalFiber !== null && this.recipe.totalFiber !== undefined) {
             return this.recipe.totalFiber;
         }
@@ -219,7 +207,7 @@ export class RecipeDetailComponent {
         return computed ?? 0;
     }
 
-    public get alcoholValueComputed(): number {
+    private resolveAlcoholValue(): number {
         if (this.recipe.totalAlcohol !== null && this.recipe.totalAlcohol !== undefined) {
             return this.recipe.totalAlcohol;
         }

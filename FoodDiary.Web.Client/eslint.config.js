@@ -140,8 +140,16 @@ export default [
                     message: 'Use ChangeDetectionStrategy.OnPush instead of Default.',
                 },
                 {
+                    selector: 'MethodDefinition[key.name="ngOnInit"]',
+                    message: 'Use constructor initialization, effect(), or computed() instead of ngOnInit.',
+                },
+                {
                     selector: 'MethodDefinition[key.name="ngOnDestroy"]',
                     message: 'Use DestroyRef.onDestroy() instead of ngOnDestroy. See: https://angular.dev/api/core/DestroyRef',
+                },
+                {
+                    selector: 'TSClassImplements Identifier[name="OnInit"]',
+                    message: 'Use constructor initialization, effect(), or computed() instead of OnInit.',
                 },
                 {
                     selector: 'MethodDefinition[key.name="ngOnChanges"]',
@@ -156,6 +164,11 @@ export default [
                 'error',
                 {
                     paths: [
+                        {
+                            name: '@angular/core',
+                            importNames: ['OnInit'],
+                            message: 'Use constructor initialization, effect(), or computed() instead of OnInit.',
+                        },
                         {
                             name: '@angular/core',
                             importNames: ['HostListener'],
