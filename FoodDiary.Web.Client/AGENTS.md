@@ -24,6 +24,9 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Prefer signals and `computed()`, use `set`/`update`, avoid `mutate`.
 - Prefer `input()` / `output()` helpers instead of decorators.
 - Use `inject()` instead of constructor injection where practical.
+- Avoid legacy Angular lifecycle hooks in app code.
+- Prefer `constructor`, `effect()`, `computed()`, `takeUntilDestroyed()`, signal `viewChild()/contentChild()`, and `afterNextRender()` for initialization and post-render work.
+- Do not introduce `OnInit`, `OnChanges`, `OnDestroy`, `AfterViewInit`, `AfterViewChecked`, `AfterContentInit`, `AfterContentChecked`, or `DoCheck` in new code.
 - Use native template control flow: `@if`, `@for`, `@switch`.
 - Prefer class/style bindings over `ngClass`/`ngStyle`.
 

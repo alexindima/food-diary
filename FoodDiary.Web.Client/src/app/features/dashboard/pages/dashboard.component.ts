@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, inject, viewChild } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -70,7 +70,7 @@ import {
     styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
@@ -240,6 +240,7 @@ export class DashboardComponent implements AfterViewInit {
 
     public constructor() {
         this.facade.initialize();
+        afterNextRender(() => this.observeDashboardWidth());
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.layout.hasLayoutChanges(),
             save: () => this.layout.save(),
@@ -247,10 +248,6 @@ export class DashboardComponent implements AfterViewInit {
         };
         this.unsavedChangesService.register(handler);
         this.destroyRef.onDestroy(() => this.unsavedChangesService.clear(handler));
-    }
-
-    public ngAfterViewInit(): void {
-        this.observeDashboardWidth();
     }
 
     public openDatePicker(): void {

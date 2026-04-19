@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, NgZone, computed, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgZone, afterNextRender, computed, effect, inject, viewChild } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,7 +33,7 @@ interface FastingCheckInChartPoint {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [provideCharts(withDefaultRegisterables())],
 })
-export class FastingCheckInChartDialogComponent implements AfterViewInit {
+export class FastingCheckInChartDialogComponent {
     private readonly chartDirective = viewChild(BaseChartDirective);
 
     public readonly data = inject<FastingCheckInChartDialogData>(FD_UI_DIALOG_DATA);
@@ -41,6 +41,7 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
     private readonly translateService = inject(TranslateService);
     private readonly localizationService = inject(LocalizationService);
     private readonly ngZone = inject(NgZone);
+    private hasScheduledInitialChartResize = false;
 
     public readonly points = computed<FastingCheckInChartPoint[]>(() =>
         [...this.data.checkIns]
@@ -189,12 +190,22 @@ export class FastingCheckInChartDialogComponent implements AfterViewInit {
         },
     };
 
-    public ngAfterViewInit(): void {
-        this.ngZone.runOutsideAngular(() => {
-            window.setTimeout(() => {
-                this.chartDirective()?.chart?.resize();
-                void this.chartDirective()?.update();
-            }, 180);
+    public constructor() {
+        effect(() => {
+            const chartDirective = this.chartDirective();
+            if (!chartDirective || this.hasScheduledInitialChartResize) {
+                return;
+            }
+
+            this.hasScheduledInitialChartResize = true;
+            afterNextRender(() => {
+                this.ngZone.runOutsideAngular(() => {
+                    window.setTimeout(() => {
+                        chartDirective.chart?.resize();
+                        void chartDirective.update();
+                    }, 180);
+                });
+            });
         });
     }
 

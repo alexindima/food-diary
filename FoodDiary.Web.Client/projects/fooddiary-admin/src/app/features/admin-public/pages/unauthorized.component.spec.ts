@@ -35,7 +35,6 @@ describe('UnauthorizedComponent', () => {
                 { provide: ActivatedRoute, useValue: { snapshot: routeSnapshot } },
             ],
         }).compileComponents();
-
     });
 
     function createComponent(): void {

@@ -4,7 +4,6 @@
     DestroyRef,
     FactoryProvider,
     input,
-    AfterViewInit,
     ElementRef,
     viewChild,
     inject,
@@ -55,7 +54,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent],
 })
-export class AuthComponent implements AfterViewInit {
+export class AuthComponent {
     public readonly useRouting = input(true);
     public readonly initialMode = input<'login' | 'register'>('login');
     private readonly googleLoginButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
@@ -139,10 +138,7 @@ export class AuthComponent implements AfterViewInit {
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
             this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
         });
-    }
-
-    public async ngAfterViewInit(): Promise<void> {
-        await this.initializeGoogle();
+        void this.initializeGoogle();
     }
 
     public handleTabChange(value: string): void {

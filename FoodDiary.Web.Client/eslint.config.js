@@ -144,12 +144,52 @@ export default [
                     message: 'Use constructor initialization, effect(), or computed() instead of ngOnInit.',
                 },
                 {
+                    selector: 'MethodDefinition[key.name="ngAfterViewInit"]',
+                    message: 'Use viewChild() with effect() and afterNextRender() instead of ngAfterViewInit.',
+                },
+                {
+                    selector: 'MethodDefinition[key.name="ngAfterViewChecked"]',
+                    message: 'Avoid ngAfterViewChecked. Use signal queries, effect(), or afterNextRender() for targeted post-render work.',
+                },
+                {
+                    selector: 'MethodDefinition[key.name="ngAfterContentInit"]',
+                    message: 'Avoid ngAfterContentInit. Use contentChild()/contentChildren() with effect() instead.',
+                },
+                {
+                    selector: 'MethodDefinition[key.name="ngAfterContentChecked"]',
+                    message: 'Avoid ngAfterContentChecked. Use signal queries and computed() instead of repeated content checks.',
+                },
+                {
+                    selector: 'MethodDefinition[key.name="ngDoCheck"]',
+                    message: 'Avoid ngDoCheck. Use signals, computed(), and explicit reactive state instead.',
+                },
+                {
                     selector: 'MethodDefinition[key.name="ngOnDestroy"]',
                     message: 'Use DestroyRef.onDestroy() instead of ngOnDestroy. See: https://angular.dev/api/core/DestroyRef',
                 },
                 {
                     selector: 'TSClassImplements Identifier[name="OnInit"]',
                     message: 'Use constructor initialization, effect(), or computed() instead of OnInit.',
+                },
+                {
+                    selector: 'TSClassImplements Identifier[name="AfterViewInit"]',
+                    message: 'Use viewChild() with effect() and afterNextRender() instead of AfterViewInit.',
+                },
+                {
+                    selector: 'TSClassImplements Identifier[name="AfterViewChecked"]',
+                    message: 'Avoid AfterViewChecked. Use signal queries, effect(), or afterNextRender() for targeted post-render work.',
+                },
+                {
+                    selector: 'TSClassImplements Identifier[name="AfterContentInit"]',
+                    message: 'Avoid AfterContentInit. Use contentChild()/contentChildren() with effect() instead.',
+                },
+                {
+                    selector: 'TSClassImplements Identifier[name="AfterContentChecked"]',
+                    message: 'Avoid AfterContentChecked. Use signal queries and computed() instead of repeated content checks.',
+                },
+                {
+                    selector: 'TSClassImplements Identifier[name="DoCheck"]',
+                    message: 'Avoid DoCheck. Use signals, computed(), and explicit reactive state instead.',
                 },
                 {
                     selector: 'MethodDefinition[key.name="ngOnChanges"]',
@@ -168,6 +208,31 @@ export default [
                             name: '@angular/core',
                             importNames: ['OnInit'],
                             message: 'Use constructor initialization, effect(), or computed() instead of OnInit.',
+                        },
+                        {
+                            name: '@angular/core',
+                            importNames: ['AfterViewInit'],
+                            message: 'Use viewChild() with effect() and afterNextRender() instead of AfterViewInit.',
+                        },
+                        {
+                            name: '@angular/core',
+                            importNames: ['AfterViewChecked'],
+                            message: 'Avoid AfterViewChecked. Use signal queries, effect(), or afterNextRender() instead.',
+                        },
+                        {
+                            name: '@angular/core',
+                            importNames: ['AfterContentInit'],
+                            message: 'Avoid AfterContentInit. Use contentChild()/contentChildren() with effect() instead.',
+                        },
+                        {
+                            name: '@angular/core',
+                            importNames: ['AfterContentChecked'],
+                            message: 'Avoid AfterContentChecked. Use signal queries and computed() instead.',
+                        },
+                        {
+                            name: '@angular/core',
+                            importNames: ['DoCheck'],
+                            message: 'Avoid DoCheck. Use signals, computed(), and explicit reactive state instead.',
                         },
                         {
                             name: '@angular/core',
