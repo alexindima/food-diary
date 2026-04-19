@@ -99,6 +99,28 @@ export class DashboardSummaryCardComponent {
         }
         return 'ok';
     });
+    public readonly noticeTitleKey = computed(() => {
+        switch (this.noticeVariant()) {
+            case 'none':
+                return 'DASHBOARD_SUMMARY.GOALS_TITLE';
+            case 'macros':
+                return 'DASHBOARD_SUMMARY.MACROS_TITLE';
+            default:
+                return 'DASHBOARD_SUMMARY.CALORIES_TITLE';
+        }
+    });
+    public readonly noticeMessageKey = computed(() => {
+        switch (this.noticeVariant()) {
+            case 'none':
+                return 'DASHBOARD_SUMMARY.GOALS_BODY';
+            case 'macros':
+                return 'DASHBOARD_SUMMARY.MACROS_BODY';
+            default:
+                return 'DASHBOARD_SUMMARY.CALORIES_BODY';
+        }
+    });
+    public readonly dailyGradientId = this.gradientIdDaily;
+    public readonly weeklyGradientId = this.gradientIdWeekly;
 
     public constructor() {
         effect(onCleanup => {
@@ -284,14 +306,6 @@ export class DashboardSummaryCardComponent {
         const [r, g, b] = this.parseColor(color);
         const mix = (c: number): number => Math.round(c * (1 - ratio));
         return `#${this.toHex(mix(r))}${this.toHex(mix(g))}${this.toHex(mix(b))}`;
-    }
-
-    public get dailyGradientId(): string {
-        return this.gradientIdDaily;
-    }
-
-    public get weeklyGradientId(): string {
-        return this.gradientIdWeekly;
     }
 
     private buildDefaultNutrientBars(): NutrientBar[] {

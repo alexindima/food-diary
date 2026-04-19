@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, OnInit, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -77,6 +77,30 @@ export class ProductListBaseComponent implements OnInit {
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly hasSearchValue = computed(() => !!this.searchForm.controls.search.value?.trim());
+    public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts.length > 0);
+    public readonly allProductsSectionItems = computed(() => {
+        const products = this.productData.items();
+        if (products.length === 0) {
+            return [];
+        }
+
+        if (!this.showRecentSection()) {
+            return products;
+        }
+
+        const recentIds = new Set(this.recentProducts.map(product => product.id));
+        return products.filter(product => !recentIds.has(product.id));
+    });
+    public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
+    public readonly hasActiveFilters = computed(() => this.searchForm.controls.onlyMine.value || this.selectedProductTypes().length > 0);
+    public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
+    public readonly isNoResultsState = computed(() => !this.hasVisibleProducts() && !this.isEmptyState());
+    public readonly allProductsSectionLabelKey = computed(() =>
+        this.hasSearchValue() ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS',
+    );
+    public readonly isMobileSearchVisible = computed(() => this.isMobileSearchOpen() || this.hasSearchValue());
+    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     private readonly isMobileSearchOpen = signal(false);
     private readonly selectedProductTypes = signal<ProductType[]>([]);
     public readonly offProducts = signal<OpenFoodFactsProduct[]>([]);
@@ -358,58 +382,8 @@ export class ProductListBaseComponent implements OnInit {
         return buildProductTypeTranslationKey(product.productType ?? product.category ?? null);
     }
 
-    public get showRecentSection(): boolean {
-        return !this.hasSearchValue(this.searchForm.controls.search.value) && this.recentProducts.length > 0;
-    }
-
-    public get allProductsSectionItems(): Product[] {
-        const products = this.productData.items();
-        if (products.length === 0) {
-            return [];
-        }
-
-        if (!this.showRecentSection) {
-            return products;
-        }
-
-        const recentIds = new Set(this.recentProducts.map(product => product.id));
-        return products.filter(product => !recentIds.has(product.id));
-    }
-
-    public get hasVisibleProducts(): boolean {
-        return this.showRecentSection || this.allProductsSectionItems.length > 0;
-    }
-
-    public get hasActiveFilters(): boolean {
-        return this.searchForm.controls.onlyMine.value || this.selectedProductTypes().length > 0;
-    }
-
-    public get isEmptyState(): boolean {
-        return !this.hasVisibleProducts && !this.hasSearchValue(this.searchForm.controls.search.value) && !this.hasActiveFilters;
-    }
-
-    public get isNoResultsState(): boolean {
-        return !this.hasVisibleProducts && !this.isEmptyState;
-    }
-
-    public get allProductsSectionLabelKey(): string {
-        return this.hasSearchValue(this.searchForm.controls.search.value) ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS';
-    }
-
-    public get isMobileSearchVisible(): boolean {
-        return this.isMobileSearchOpen() || this.hasSearchValue(this.searchForm.controls.search.value);
-    }
-
     protected reloadCurrentPage(): void {
         this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
-    }
-
-    public get hasMoreFavorites(): boolean {
-        return this.favoriteTotalCount() > this.favorites().length;
-    }
-
-    private hasSearchValue(value: string | null): boolean {
-        return !!value?.trim();
     }
 
     private normalizeProductTypes(productTypes: ProductType[]): ProductType[] {

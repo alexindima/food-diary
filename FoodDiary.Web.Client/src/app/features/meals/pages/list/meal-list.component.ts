@@ -74,6 +74,14 @@ export class MealListComponent implements OnInit {
     public readonly isFavoritesOpen = signal(false);
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly hasDateFilter = computed(() => {
+        const dateRange = this.searchForm.controls.dateRange.value;
+        return !!dateRange?.start || !!dateRange?.end;
+    });
+    public readonly isMobileDateFilterVisible = computed(() => this.isMobileDateFilterOpen() || this.hasDateFilter());
+    public readonly isEmptyState = computed(() => this.consumptionData.items().length === 0 && !this.hasDateFilter());
+    public readonly isNoResultsState = computed(() => this.consumptionData.items().length === 0 && this.hasDateFilter());
+    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -267,27 +275,6 @@ export class MealListComponent implements OnInit {
 
     public toggleMobileDateFilter(): void {
         this.isMobileDateFilterOpen.update(value => !value);
-    }
-
-    public get hasDateFilter(): boolean {
-        const dateRange = this.searchForm.controls.dateRange.value;
-        return !!dateRange?.start || !!dateRange?.end;
-    }
-
-    public get isMobileDateFilterVisible(): boolean {
-        return this.isMobileDateFilterOpen() || this.hasDateFilter;
-    }
-
-    public get isEmptyState(): boolean {
-        return this.consumptionData.items().length === 0 && !this.hasDateFilter;
-    }
-
-    public get isNoResultsState(): boolean {
-        return this.consumptionData.items().length === 0 && this.hasDateFilter;
-    }
-
-    public get hasMoreFavorites(): boolean {
-        return this.favoriteTotalCount() > this.favorites().length;
     }
 
     protected scrollToTop(): void {

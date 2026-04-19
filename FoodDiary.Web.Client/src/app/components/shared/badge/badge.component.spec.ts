@@ -30,7 +30,7 @@ describe('BadgeComponent', () => {
 
     it('should apply default variant class (neutral)', () => {
         fixture.detectChanges();
-        expect(component.variantClass).toBe('fd-badge--neutral');
+        expect(component['variantClass']()).toBe('fd-badge--neutral');
     });
 
     describe('variant classes', () => {
@@ -40,7 +40,7 @@ describe('BadgeComponent', () => {
             it(`should return fd-badge--${variant} for variant "${variant}"`, () => {
                 fixture.componentRef.setInput('variant', variant);
                 fixture.detectChanges();
-                expect(component.variantClass).toBe(`fd-badge--${variant}`);
+                expect(component['variantClass']()).toBe(`fd-badge--${variant}`);
             });
 
             it(`should apply fd-badge--${variant} as CSS class`, () => {

@@ -34,7 +34,7 @@
                         [formControl]="listSelectControl"
                         [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
                         [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
-                        [options]="listOptions"
+                        [options]="listOptions()"
                     />
                     <fd-ui-input
                         class="shopping-list__name-input"
@@ -58,7 +58,7 @@
                             variant="danger"
                             fill="outline"
                             icon="delete"
-                            [disabled]="!canDeleteList"
+                            [disabled]="!canDeleteList()"
                             (click)="deleteCurrentList()"
                         >
                             {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
@@ -70,7 +70,7 @@
                             variant="secondary"
                             fill="outline"
                             icon="delete_sweep"
-                            [disabled]="!canClearList"
+                            [disabled]="!canClearList()"
                             (click)="clearCurrentList()"
                         >
                             {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
@@ -81,14 +81,18 @@
         </ng-container>
 
         @if (isMobileView()) {
-            <div fdPageHeaderExtra class="shopping-list__mobile-manage" [class.shopping-list__mobile-manage--open]="isMobileManageVisible">
+            <div
+                fdPageHeaderExtra
+                class="shopping-list__mobile-manage"
+                [class.shopping-list__mobile-manage--open]="isMobileManageVisible()"
+            >
                 <div class="shopping-list__header-actions shopping-list__header-actions--mobile">
                     <fd-ui-select
                         class="shopping-list__list-select"
                         [formControl]="listSelectControl"
                         [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
                         [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
-                        [options]="listOptions"
+                        [options]="listOptions()"
                     />
                     <fd-ui-input
                         class="shopping-list__name-input"
@@ -103,7 +107,7 @@
                                 variant="danger"
                                 fill="outline"
                                 icon="delete"
-                                [disabled]="!canDeleteList"
+                                [disabled]="!canDeleteList()"
                                 (click)="deleteCurrentList()"
                             >
                                 {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
@@ -115,7 +119,7 @@
                                 variant="secondary"
                                 fill="outline"
                                 icon="delete_sweep"
-                                [disabled]="!canClearList"
+                                [disabled]="!canClearList()"
                                 (click)="clearCurrentList()"
                             >
                                 {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}

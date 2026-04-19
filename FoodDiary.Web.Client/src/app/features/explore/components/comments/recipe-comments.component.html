@@ -55,7 +55,7 @@
                 </div>
             }
 
-            @if (hasMore) {
+            @if (hasMore()) {
                 <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" (click)="onLoadMore()">
                     {{ 'COMMENTS.LOAD_MORE' | translate }}
                 </fd-ui-button>

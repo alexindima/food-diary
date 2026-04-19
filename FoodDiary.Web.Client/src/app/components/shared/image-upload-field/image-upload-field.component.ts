@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     ElementRef,
     HostListener,
     OnInit,
@@ -85,9 +86,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     private onChange: (value: ImageSelection | null) => void = () => {};
     private onTouched: () => void = () => {};
 
-    protected get appearanceClass(): string {
-        return `image-upload-field--appearance-${this.appearance()}`;
-    }
+    protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
 
     public writeValue(value: ImageSelection | null): void {
         this.selection = value ?? { url: null, assetId: null };

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
@@ -69,6 +69,16 @@ export class ProductDetailComponent {
     public pieChartOptions: ChartOptions<'pie'>;
     public barChartOptions: ChartOptions<'bar'>;
     public readonly chartSize = 200;
+    public readonly isDeleteDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
+    public readonly isEditDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
+    public readonly canModify = computed(() => !this.isEditDisabled());
+    public readonly warningMessage = computed(() => {
+        if (!this.isDeleteDisabled() && !this.isEditDisabled()) {
+            return null;
+        }
+
+        return this.product.isOwnedByCurrentUser ? 'PRODUCT_DETAIL.WARNING_MESSAGE' : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
+    });
     public readonly macroBlocks: {
         labelKey: string;
         value: number;
@@ -76,26 +86,6 @@ export class ProductDetailComponent {
         color: string;
     }[];
     public isDuplicateInProgress = false;
-
-    public get isDeleteDisabled(): boolean {
-        return !this.product.isOwnedByCurrentUser || this.product.usageCount > 0;
-    }
-
-    public get isEditDisabled(): boolean {
-        return !this.product.isOwnedByCurrentUser || this.product.usageCount > 0;
-    }
-
-    public get canModify(): boolean {
-        return !this.isEditDisabled;
-    }
-
-    public get warningMessage(): string | null {
-        if (!this.isDeleteDisabled && !this.isEditDisabled) {
-            return null;
-        }
-
-        return this.product.isOwnedByCurrentUser ? 'PRODUCT_DETAIL.WARNING_MESSAGE' : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
-    }
 
     public constructor() {
         const data = inject<Product>(FD_UI_DIALOG_DATA);
@@ -201,7 +191,7 @@ export class ProductDetailComponent {
     }
 
     public onEdit(): void {
-        if (this.isEditDisabled) {
+        if (this.isEditDisabled()) {
             return;
         }
         const editResult = new ProductDetailActionResult(this.product.id, 'Edit');
@@ -209,7 +199,7 @@ export class ProductDetailComponent {
     }
 
     public onDelete(): void {
-        if (this.isDeleteDisabled) {
+        if (this.isDeleteDisabled()) {
             return;
         }
         const data: ConfirmDeleteDialogData = {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -43,6 +43,7 @@ export class RecipeCommentsComponent implements OnInit {
     public readonly commentControl = new FormControl('', [Validators.required, Validators.maxLength(2000)]);
     public readonly editingCommentId = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
+    public readonly hasMore = computed(() => this.comments().length < this.totalItems());
 
     public ngOnInit(): void {
         this.loadComments();
@@ -107,10 +108,6 @@ export class RecipeCommentsComponent implements OnInit {
     public onLoadMore(): void {
         this.currentPage.update(p => p + 1);
         this.loadComments(true);
-    }
-
-    public get hasMore(): boolean {
-        return this.comments().length < this.totalItems();
     }
 
     private loadComments(append = false): void {

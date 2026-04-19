@@ -102,8 +102,8 @@
     </div>
 
     <div fdUiDialogFooter class="product-detail__footer">
-        @if (warningMessage) {
-            <span class="product-detail__warning">{{ warningMessage | translate }}</span>
+        @if (warningMessage(); as warningMessageKey) {
+            <span class="product-detail__warning">{{ warningMessageKey | translate }}</span>
         }
         <div class="product-detail__actions">
             <button
@@ -116,7 +116,7 @@
             >
                 <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
             </button>
-            @if (canModify) {
+            @if (canModify()) {
                 <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
                 </fd-ui-button>

@@ -7,51 +7,51 @@
 }
 
 <ng-template #summaryContent>
-    <div class="summary-wrapper" [ngStyle]="summaryWrapperStyles">
+    <div class="summary-wrapper" [ngStyle]="summaryWrapperStyles()">
         <div class="summary">
             @if (fiberValue() !== null) {
-                <p class="fiber-highlight" [ngStyle]="nutrientStyles">
+                <p class="fiber-highlight" [ngStyle]="nutrientStyles()">
                     {{ 'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate }}:
                     <span> {{ fiberValue() | number: '1.0-2' }} {{ fiberUnitKey() | translate }} </span>
                 </p>
             }
             @if (alcoholValue() !== null) {
-                <p class="alcohol-highlight" [ngStyle]="nutrientStyles">
+                <p class="alcohol-highlight" [ngStyle]="nutrientStyles()">
                     {{ 'NUTRIENTS.ALCOHOL' | translate }}:
                     <span> {{ alcoholValue() | number: '1.0-2' }} {{ alcoholUnitKey() | translate }} </span>
                 </p>
             }
             <ul class="nutrient-list">
-                <li class="nutrient" [ngStyle]="nutrientStyles">
-                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.proteins" [ngStyle]="nutrientColorStyles"></span>
+                <li class="nutrient" [ngStyle]="nutrientStyles()">
+                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.proteins" [ngStyle]="nutrientColorStyles()"></span>
                     {{ 'NUTRIENTS.PROTEINS' | translate }}:
                     {{ nutrientChartData().proteins | number: '1.0-2' }}
                     {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                 </li>
-                <li class="nutrient" [ngStyle]="nutrientStyles">
-                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.fats" [ngStyle]="nutrientColorStyles"></span>
+                <li class="nutrient" [ngStyle]="nutrientStyles()">
+                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.fats" [ngStyle]="nutrientColorStyles()"></span>
                     {{ 'NUTRIENTS.FATS' | translate }}:
                     {{ nutrientChartData().fats | number: '1.0-2' }}
                     {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                 </li>
-                <li class="nutrient" [ngStyle]="nutrientStyles">
-                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.carbs" [ngStyle]="nutrientColorStyles"></span>
+                <li class="nutrient" [ngStyle]="nutrientStyles()">
+                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.carbs" [ngStyle]="nutrientColorStyles()"></span>
                     {{ 'NUTRIENTS.CARBS' | translate }}:
                     {{ nutrientChartData().carbs | number: '1.0-2' }}
                     {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                 </li>
             </ul>
         </div>
-        @if (hasNutrientData) {
-            <div class="charts-wrapper" [ngStyle]="chartsWrapperStyles" [class.column-layout]="isColumnLayout">
-                @if (!mergedConfig.content.hidePieChart) {
-                    <div class="chart" [ngStyle]="chartStyles">
+        @if (hasNutrientData()) {
+            <div class="charts-wrapper" [ngStyle]="chartsWrapperStyles()" [class.column-layout]="isColumnLayout()">
+                @if (!mergedConfig().content.hidePieChart) {
+                    <div class="chart" [ngStyle]="chartStyles()">
                         <canvas
                             baseChart
-                            [style.width.px]="chartsBlockSize"
-                            [style.height.px]="chartsBlockSize"
-                            [ngStyle]="chartCanvasStyles"
-                            [data]="nutrientsPieChartData"
+                            [style.width.px]="chartsBlockSize()"
+                            [style.height.px]="chartsBlockSize()"
+                            [ngStyle]="chartCanvasStyles()"
+                            [data]="nutrientsPieChartData()"
                             [options]="pieChartOptions"
                             [type]="'pie'"
                             [legend]="false"
@@ -59,13 +59,13 @@
                     </div>
                 }
                 @if (showBarChart()) {
-                    <div class="chart" [ngStyle]="chartStyles">
+                    <div class="chart" [ngStyle]="chartStyles()">
                         <canvas
                             baseChart
-                            [style.width.px]="chartsBlockSize"
-                            [style.height.px]="chartsBlockSize"
-                            [ngStyle]="chartCanvasStyles"
-                            [data]="nutrientsBarChartData"
+                            [style.width.px]="chartsBlockSize()"
+                            [style.height.px]="chartsBlockSize()"
+                            [ngStyle]="chartCanvasStyles()"
+                            [data]="nutrientsBarChartData()"
                             [options]="barChartOptions"
                             [type]="'bar'"
                             [legend]="false"

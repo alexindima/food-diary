@@ -34,12 +34,12 @@ describe('ProductSaveSuccessDialogComponent', () => {
 
     it('should return correct title for create', () => {
         createComponent({ isEdit: false });
-        expect(component.titleKey).toBe('PRODUCT_DETAIL.CREATE_SUCCESS');
+        expect(component['titleKey']()).toBe('PRODUCT_DETAIL.CREATE_SUCCESS');
     });
 
     it('should return correct title for edit', () => {
         createComponent({ isEdit: true });
-        expect(component.titleKey).toBe('PRODUCT_DETAIL.EDIT_SUCCESS');
+        expect(component['titleKey']()).toBe('PRODUCT_DETAIL.EDIT_SUCCESS');
     });
 
     it('should close with action', () => {

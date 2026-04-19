@@ -15,7 +15,7 @@
                         icon="date_range"
                         [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                         (click)="toggleMobileDateFilter()"
-                        [class.consumption-list__filter-button--active]="hasDateFilter"
+                        [class.consumption-list__filter-button--active]="hasDateFilter()"
                     />
                     <fd-ui-button
                         class="consumption-list__icon-button"
@@ -68,7 +68,7 @@
             <div
                 fdPageHeaderExtra
                 class="consumption-list__mobile-filter"
-                [class.consumption-list__mobile-filter--open]="isMobileDateFilterVisible"
+                [class.consumption-list__mobile-filter--open]="isMobileDateFilterVisible()"
             >
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form consumption-list__date-range-form--mobile">
                     <fd-ui-date-range-input
@@ -99,7 +99,7 @@
             [title]="'CONSUMPTION_LIST.FAVORITES_TITLE' | translate"
             [count]="favoriteTotalCount()"
             [isOpen]="isFavoritesOpen()"
-            [showLoadMore]="hasMoreFavorites"
+            [showLoadMore]="hasMoreFavorites()"
             [isLoadingMore]="isFavoritesLoadingMore()"
             [loadMoreLabel]="'CONSUMPTION_LIST.FAVORITES_LOAD_MORE' | translate"
             (toggle)="toggleFavorites()"
@@ -148,7 +148,7 @@
 
     <fd-page-body>
         @if (errorKey()) {
-            <fd-error-state (retry)="hasDateFilter ? loadConsumptions(1) : loadInitialOverview()" />
+            <fd-error-state (retry)="hasDateFilter() ? loadConsumptions(1) : loadInitialOverview()" />
         } @else if (consumptionData.isLoading()) {
             <div class="consumption-list__grid">
                 <fd-skeleton-card />
@@ -156,7 +156,7 @@
                 <fd-skeleton-card />
             </div>
         } @else {
-            @if (isEmptyState) {
+            @if (isEmptyState()) {
                 <div class="consumption-list__empty-state">
                     <mat-icon class="consumption-list__no-results-icon">restaurant_menu</mat-icon>
                     <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
@@ -165,7 +165,7 @@
                         {{ 'CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON' | translate }}
                     </fd-ui-button>
                 </div>
-            } @else if (isNoResultsState) {
+            } @else if (isNoResultsState()) {
                 <div class="consumption-list__no-results">
                     <mat-icon class="consumption-list__no-results-icon">search_off</mat-icon>
                     <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.NO_RESULTS_TITLE' | translate }}</div>

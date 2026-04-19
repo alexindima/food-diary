@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, computed, inject, input, signal } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import { CustomGroupComponent } from '../custom-group/custom-group.component';
     styleUrl: './nutrients-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NutrientsSummaryComponent implements OnInit {
+export class NutrientsSummaryComponent {
     public readonly CHART_COLORS = CHART_COLORS;
 
     private readonly translateService = inject(TranslateService);
@@ -30,77 +30,92 @@ export class NutrientsSummaryComponent implements OnInit {
     public showBarChart = input<boolean>(false);
 
     public readonly config = input<NutrientsSummaryConfig>({});
-    public mergedConfig!: NutrientsSummaryConfigInternal;
-
-    public isColumnLayout = false;
-    public areChartsBelowInfo = false;
-
-    @HostListener('window:resize', ['$event'])
-    public onResize(event: UIEvent): void {
-        const width = (event.target as Window).innerWidth;
-        this.updateLayout(width);
-    }
-
-    public ngOnInit(): void {
-        this.mergedConfig = this.mergeConfig(this.config());
-        this.updateLayout(window.innerWidth);
-    }
-
-    private updateLayout(screenWidth: number): void {
-        this.isColumnLayout = screenWidth <= this.mergedConfig.styles.charts.breakpoints.columnLayout;
-        this.areChartsBelowInfo = screenWidth <= this.mergedConfig.styles.common.infoBreakpoints.columnLayout;
-    }
-
-    public get summaryWrapperStyles(): object {
-        const gapValue = this.isColumnLayout ? this.mergedConfig.styles.common.infoBreakpoints.gap : this.mergedConfig.styles.common.gap;
+    public readonly mergedConfig = computed(() => this.mergeConfig(this.config()));
+    private readonly viewportWidth = signal(window.innerWidth);
+    public readonly isColumnLayout = computed(() => this.viewportWidth() <= this.mergedConfig().styles.charts.breakpoints.columnLayout);
+    public readonly areChartsBelowInfo = computed(
+        () => this.viewportWidth() <= this.mergedConfig().styles.common.infoBreakpoints.columnLayout,
+    );
+    public readonly summaryWrapperStyles = computed(() => {
+        const gapValue = this.isColumnLayout()
+            ? this.mergedConfig().styles.common.infoBreakpoints.gap
+            : this.mergedConfig().styles.common.gap;
 
         return { gap: `${gapValue}px` };
-    }
-
-    public get nutrientStyles(): object {
-        const { fontSize, lineHeight } = this.mergedConfig.styles.info.lineStyles.nutrients;
+    });
+    public readonly nutrientStyles = computed(() => {
+        const { fontSize, lineHeight } = this.mergedConfig().styles.info.lineStyles.nutrients;
         return {
             fontSize: `${fontSize}px`,
             lineHeight: `${lineHeight}px`,
         };
-    }
-
-    public get nutrientColorStyles(): object {
-        const fontSize = this.mergedConfig.styles.info.lineStyles.nutrients.fontSize;
+    });
+    public readonly nutrientColorStyles = computed(() => {
+        const fontSize = this.mergedConfig().styles.info.lineStyles.nutrients.fontSize;
         return {
             height: `${fontSize}px`,
             width: `${fontSize * 2}px`,
         };
-    }
-
-    public get chartsWrapperStyles(): object {
-        const gapValue = this.isColumnLayout ? this.mergedConfig.styles.charts.breakpoints.gap : this.mergedConfig.styles.charts.gap;
+    });
+    public readonly chartsWrapperStyles = computed(() => {
+        const gapValue = this.isColumnLayout() ? this.mergedConfig().styles.charts.breakpoints.gap : this.mergedConfig().styles.charts.gap;
 
         return {
             gap: `${gapValue}px`,
         };
-    }
+    });
+    public readonly chartsBlockSize = computed(() => {
+        if (this.areChartsBelowInfo()) {
+            return this.mergedConfig().styles.common.infoBreakpoints.chartBlockSize;
+        }
 
-    public get chartsBlockSize(): number {
-        return this.areChartsBelowInfo
-            ? this.mergedConfig.styles.common.infoBreakpoints.chartBlockSize
-            : this.isColumnLayout
-              ? this.mergedConfig.styles.charts.breakpoints.chartBlockSize
-              : this.mergedConfig.styles.charts.chartBlockSize;
-    }
+        return this.isColumnLayout()
+            ? this.mergedConfig().styles.charts.breakpoints.chartBlockSize
+            : this.mergedConfig().styles.charts.chartBlockSize;
+    });
+    public readonly chartStyles = computed(() => ({
+        width: `${this.chartsBlockSize()}px`,
+        height: `${this.chartsBlockSize()}px`,
+    }));
+    public readonly chartCanvasStyles = computed(() => ({
+        maxWidth: `${this.chartsBlockSize()}px`,
+        maxHeight: `${this.chartsBlockSize()}px`,
+    }));
+    public readonly hasNutrientData = computed(() => {
+        const data = this.nutrientChartData();
+        return (data.proteins ?? 0) + (data.fats ?? 0) + (data.carbs ?? 0) > 0;
+    });
+    public readonly nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
+        labels: [
+            this.translateService.instant('NUTRIENTS.PROTEINS'),
+            this.translateService.instant('NUTRIENTS.FATS'),
+            this.translateService.instant('NUTRIENTS.CARBS'),
+        ],
+        datasets: [
+            {
+                data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
+                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
+            },
+        ],
+    }));
+    public readonly nutrientsBarChartData = computed<ChartData<'bar', number[], string>>(() => ({
+        labels: [
+            this.translateService.instant('NUTRIENTS.PROTEINS'),
+            this.translateService.instant('NUTRIENTS.FATS'),
+            this.translateService.instant('NUTRIENTS.CARBS'),
+        ],
+        datasets: [
+            {
+                data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
+                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
+            },
+        ],
+    }));
 
-    public get chartStyles(): object {
-        return {
-            width: `${this.chartsBlockSize}px`,
-            height: `${this.chartsBlockSize}px`,
-        };
-    }
-
-    public get chartCanvasStyles(): object {
-        return {
-            maxWidth: `${this.chartsBlockSize}px`,
-            maxHeight: `${this.chartsBlockSize}px`,
-        };
+    @HostListener('window:resize', ['$event'])
+    public onResize(event: UIEvent): void {
+        const width = (event.target as Window).innerWidth;
+        this.viewportWidth.set(width);
     }
 
     private mergeConfig(userConfig: Partial<NutrientsSummaryConfig>): NutrientsSummaryConfigInternal {
@@ -141,43 +156,6 @@ export class NutrientsSummaryComponent implements OnInit {
                 ...DEFAULT_CONFIG.content,
                 ...userConfig.content,
             },
-        };
-    }
-
-    public get hasNutrientData(): boolean {
-        const data = this.nutrientChartData();
-        return (data.proteins ?? 0) + (data.fats ?? 0) + (data.carbs ?? 0) > 0;
-    }
-
-    public get nutrientsPieChartData(): ChartData<'pie', number[], string> {
-        return {
-            labels: [
-                this.translateService.instant('NUTRIENTS.PROTEINS'),
-                this.translateService.instant('NUTRIENTS.FATS'),
-                this.translateService.instant('NUTRIENTS.CARBS'),
-            ],
-            datasets: [
-                {
-                    data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
-                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
-                },
-            ],
-        };
-    }
-
-    public get nutrientsBarChartData(): ChartData<'bar', number[], string> {
-        return {
-            labels: [
-                this.translateService.instant('NUTRIENTS.PROTEINS'),
-                this.translateService.instant('NUTRIENTS.FATS'),
-                this.translateService.instant('NUTRIENTS.CARBS'),
-            ],
-            datasets: [
-                {
-                    data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
-                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
-                },
-            ],
         };
     }
 

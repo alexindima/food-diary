@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -71,6 +71,24 @@ export class RecipeListComponent implements OnInit {
     public readonly isFavoritesLoadingMore = this.recipeListFacade.isFavoritesLoadingMore;
     public readonly errorKey = this.recipeListFacade.errorKey;
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly showRecentSection = computed(() => this.recipeListFacade.showRecentSection());
+    public readonly recentRecipeItems = computed(() => this.recentRecipes());
+    public readonly allRecipesSectionItems = computed(() => this.recipeListFacade.allRecipesSectionItems());
+    public readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
+    public readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value));
+    public readonly isEmptyState = computed(
+        () =>
+            !this.hasVisibleRecipes() &&
+            !this.recipeListFacade.hasSearch(this.searchForm.controls.search.value) &&
+            !this.hasActiveFilters(),
+    );
+    public readonly isNoResultsState = computed(() => !this.hasVisibleRecipes() && !this.isEmptyState());
+    public readonly allRecipesSectionLabelKey = computed(() => this.recipeListFacade.allRecipesSectionLabelKey());
+    public readonly isMobileSearchVisible = computed(
+        () => this.isMobileSearchOpen() || this.recipeListFacade.hasSearch(this.searchForm.controls.search.value),
+    );
+    public readonly pageIndex = computed(() => this.currentPageIndex());
+    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     private readonly isMobileSearchOpen = signal(false);
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public readonly isDeleting = this.recipeListFacade.isDeleting;
@@ -279,50 +297,6 @@ export class RecipeListComponent implements OnInit {
                 );
             },
         });
-    }
-
-    public get showRecentSection(): boolean {
-        return this.recipeListFacade.showRecentSection();
-    }
-
-    public get recentRecipeItems(): Recipe[] {
-        return this.recentRecipes();
-    }
-
-    public get allRecipesSectionItems(): Recipe[] {
-        return this.recipeListFacade.allRecipesSectionItems();
-    }
-
-    public get hasVisibleRecipes(): boolean {
-        return this.recipeListFacade.hasVisibleRecipes();
-    }
-
-    public get hasActiveFilters(): boolean {
-        return this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value);
-    }
-
-    public get isEmptyState(): boolean {
-        return !this.hasVisibleRecipes && !this.recipeListFacade.hasSearch(this.searchForm.controls.search.value) && !this.hasActiveFilters;
-    }
-
-    public get isNoResultsState(): boolean {
-        return !this.hasVisibleRecipes && !this.isEmptyState;
-    }
-
-    public get allRecipesSectionLabelKey(): string {
-        return this.recipeListFacade.allRecipesSectionLabelKey();
-    }
-
-    public get isMobileSearchVisible(): boolean {
-        return this.isMobileSearchOpen() || this.recipeListFacade.hasSearch(this.searchForm.controls.search.value);
-    }
-
-    public get pageIndex(): number {
-        return this.currentPageIndex();
-    }
-
-    public get hasMoreFavorites(): boolean {
-        return this.favoriteTotalCount() > this.favorites().length;
     }
 
     public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {

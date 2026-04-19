@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -57,6 +57,13 @@ export class ShoppingListPageComponent implements OnInit {
     public readonly isSaving = this.facade.isSaving;
     public readonly lists = this.facade.lists;
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
+    public readonly canDeleteList = computed(() => this.lists().length > 1 && !!this.list() && !this.isSaving() && !this.isLoading());
+    public readonly canClearList = computed(
+        () => this.lists().length === 1 && this.items().length > 0 && !!this.list() && !this.isSaving() && !this.isLoading(),
+    );
+    public readonly listOptions = computed(() => this.facade.listOptions());
+    public readonly isEmptyState = computed(() => this.items().length === 0);
     public readonly listSelectControl = new FormControl<string | null>(null);
     public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
     public readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
@@ -169,29 +176,9 @@ export class ShoppingListPageComponent implements OnInit {
         this.isMobileManageOpen.update(value => !value);
     }
 
-    public get isMobileManageVisible(): boolean {
-        return this.isMobileManageOpen();
-    }
-
-    public get canDeleteList(): boolean {
-        return this.lists().length > 1 && !!this.list() && !this.isSaving() && !this.isLoading();
-    }
-
-    public get canClearList(): boolean {
-        return this.lists().length === 1 && this.items().length > 0 && !!this.list() && !this.isSaving() && !this.isLoading();
-    }
-
-    public get listOptions(): FdUiSelectOption<string>[] {
-        return this.facade.listOptions();
-    }
-
-    public get isEmptyState(): boolean {
-        return this.items().length === 0;
-    }
-
     public deleteCurrentList(): void {
         const current = this.list();
-        if (!current || !this.canDeleteList) {
+        if (!current || !this.canDeleteList()) {
             return;
         }
 
@@ -220,7 +207,7 @@ export class ShoppingListPageComponent implements OnInit {
 
     public clearCurrentList(): void {
         const current = this.list();
-        if (!current || !this.canClearList) {
+        if (!current || !this.canClearList()) {
             return;
         }
 

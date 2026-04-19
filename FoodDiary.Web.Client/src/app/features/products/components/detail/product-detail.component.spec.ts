@@ -114,9 +114,9 @@ describe('ProductDetailComponent', () => {
     });
 
     it('should detect if user can modify (owned, no usage)', () => {
-        expect(component.canModify).toBe(true);
-        expect(component.isEditDisabled).toBe(false);
-        expect(component.isDeleteDisabled).toBe(false);
+        expect(component.canModify()).toBe(true);
+        expect(component.isEditDisabled()).toBe(false);
+        expect(component.isDeleteDisabled()).toBe(false);
     });
 
     it('should disable edit and delete when not owned by current user', async () => {
@@ -141,9 +141,9 @@ describe('ProductDetailComponent', () => {
         const notOwnedComponent = notOwnedFixture.componentInstance;
         notOwnedFixture.detectChanges();
 
-        expect(notOwnedComponent.canModify).toBe(false);
-        expect(notOwnedComponent.isEditDisabled).toBe(true);
-        expect(notOwnedComponent.isDeleteDisabled).toBe(true);
+        expect(notOwnedComponent.canModify()).toBe(false);
+        expect(notOwnedComponent.isEditDisabled()).toBe(true);
+        expect(notOwnedComponent.isDeleteDisabled()).toBe(true);
     });
 
     it('should disable edit and delete when product has usage', async () => {
@@ -168,7 +168,7 @@ describe('ProductDetailComponent', () => {
         const usedComponent = usedFixture.componentInstance;
         usedFixture.detectChanges();
 
-        expect(usedComponent.canModify).toBe(false);
+        expect(usedComponent.canModify()).toBe(false);
     });
 
     it('should not emit edit when edit is disabled', async () => {
@@ -261,10 +261,10 @@ describe('ProductDetailComponent', () => {
         const notOwnedComponent = notOwnedFixture.componentInstance;
         notOwnedFixture.detectChanges();
 
-        expect(notOwnedComponent.warningMessage).toBe('PRODUCT_DETAIL.WARNING_NOT_OWNER');
+        expect(notOwnedComponent.warningMessage()).toBe('PRODUCT_DETAIL.WARNING_NOT_OWNER');
     });
 
     it('should have no warning message when product can be modified', () => {
-        expect(component.warningMessage).toBeNull();
+        expect(component.warningMessage()).toBeNull();
     });
 });

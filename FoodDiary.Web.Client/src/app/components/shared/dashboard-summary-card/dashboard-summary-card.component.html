@@ -2,20 +2,8 @@
     @if (showNotice()) {
         <fd-notice-banner
             type="info"
-            [title]="
-                noticeVariant() === 'none'
-                    ? ('DASHBOARD_SUMMARY.GOALS_TITLE' | translate)
-                    : noticeVariant() === 'macros'
-                      ? ('DASHBOARD_SUMMARY.MACROS_TITLE' | translate)
-                      : ('DASHBOARD_SUMMARY.CALORIES_TITLE' | translate)
-            "
-            [message]="
-                noticeVariant() === 'none'
-                    ? ('DASHBOARD_SUMMARY.GOALS_BODY' | translate)
-                    : noticeVariant() === 'macros'
-                      ? ('DASHBOARD_SUMMARY.MACROS_BODY' | translate)
-                      : ('DASHBOARD_SUMMARY.CALORIES_BODY' | translate)
-            "
+            [title]="noticeTitleKey() | translate"
+            [message]="noticeMessageKey() | translate"
             [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
             (action)="onGoalAction()"
         />
