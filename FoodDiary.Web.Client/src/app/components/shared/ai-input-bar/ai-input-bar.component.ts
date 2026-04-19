@@ -20,6 +20,16 @@ import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.compon
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
 import { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 import { buildMealManageDtoFromAiResult, mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
+import { WritableSignal } from '@angular/core';
+
+interface AiInputBarChannelState {
+    analyzing: WritableSignal<boolean>;
+    results: WritableSignal<FoodVisionItem[]>;
+    nutritionLoading: WritableSignal<boolean>;
+    nutrition: WritableSignal<FoodNutritionResponse | null>;
+    errorKey: WritableSignal<string | null>;
+    nutritionErrorKey: WritableSignal<string | null>;
+}
 
 @Component({
     selector: 'fd-ai-input-bar',
@@ -320,123 +330,43 @@ export class AiInputBarComponent {
     }
 
     private runTextAnalysis(text: string): void {
-        this.textIsAnalyzing.set(true);
-        this.textResults.set([]);
-        this.textNutrition.set(null);
-        this.textErrorKey.set(null);
-        this.textNutritionErrorKey.set(null);
-
-        this.aiFoodService
-            .parseFoodText({ text })
-            .pipe(
-                catchError(err => {
-                    if (err?.status === 403) {
-                        this.textErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_PREMIUM');
-                    } else if (err?.status === 429) {
-                        this.textErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_QUOTA');
-                    } else {
-                        this.textErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_GENERIC');
-                    }
-                    return of(null);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(response => {
-                this.textIsAnalyzing.set(false);
-                if (!response) {
-                    return;
-                }
-
-                const items = response.items ?? [];
-                this.textResults.set(items);
-                if (items.length) {
-                    this.runTextNutrition(items);
-                }
-            });
+        this.runAnalysisRequest(
+            this.textState(),
+            this.aiFoodService.parseFoodText({ text }),
+            {
+                premium: 'AI_INPUT_BAR.TEXT_ERROR_PREMIUM',
+                quota: 'AI_INPUT_BAR.TEXT_ERROR_QUOTA',
+                generic: 'AI_INPUT_BAR.TEXT_ERROR_GENERIC',
+            },
+            items => this.runTextNutrition(items),
+        );
     }
 
     private runTextNutrition(items: FoodVisionItem[]): void {
-        this.textIsNutritionLoading.set(true);
-        this.textNutrition.set(null);
-        this.textNutritionErrorKey.set(null);
-
-        this.aiFoodService
-            .calculateNutrition({ items })
-            .pipe(
-                catchError(err => {
-                    if (err?.status === 429) {
-                        this.textNutritionErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_QUOTA');
-                    } else {
-                        this.textNutritionErrorKey.set('AI_INPUT_BAR.TEXT_NUTRITION_ERROR');
-                    }
-                    return of(null);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(response => {
-                this.textIsNutritionLoading.set(false);
-                if (!response) {
-                    return;
-                }
-                this.textNutrition.set(response);
-            });
+        this.runNutritionRequest(this.textState(), items, {
+            quota: 'AI_INPUT_BAR.TEXT_ERROR_QUOTA',
+            generic: 'AI_INPUT_BAR.TEXT_NUTRITION_ERROR',
+        });
     }
 
     private runPhotoAnalysis(assetId: string): void {
-        this.photoIsAnalyzing.set(true);
-        this.aiFoodService
-            .analyzeFoodImage({ imageAssetId: assetId })
-            .pipe(
-                catchError(err => {
-                    if (err?.status === 403) {
-                        this.photoErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err?.status === 429) {
-                        this.photoErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
-                    } else {
-                        this.photoErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
-                    }
-                    return of(null);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(response => {
-                this.photoIsAnalyzing.set(false);
-                if (!response) {
-                    return;
-                }
-                const items = response.items ?? [];
-                this.photoResults.set(items);
-                if (items.length) {
-                    this.runPhotoNutrition(items);
-                }
-            });
+        this.runAnalysisRequest(
+            this.photoState(),
+            this.aiFoodService.analyzeFoodImage({ imageAssetId: assetId }),
+            {
+                premium: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM',
+                quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
+                generic: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC',
+            },
+            items => this.runPhotoNutrition(items),
+        );
     }
 
     private runPhotoNutrition(items: FoodVisionItem[]): void {
-        this.photoIsNutritionLoading.set(true);
-        this.photoNutrition.set(null);
-        this.photoNutritionErrorKey.set(null);
-
-        this.aiFoodService
-            .calculateNutrition({ items })
-            .pipe(
-                catchError(err => {
-                    if (err?.status === 429) {
-                        this.photoNutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
-                    } else {
-                        this.photoNutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
-                    }
-                    return of(null);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(response => {
-                this.photoIsNutritionLoading.set(false);
-                if (!response) {
-                    return;
-                }
-                this.photoNutrition.set(response);
-            });
+        this.runNutritionRequest(this.photoState(), items, {
+            quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
+            generic: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
+        });
     }
 
     private ensurePremium(): boolean {
@@ -494,5 +424,99 @@ export class AiInputBarComponent {
             this.speechRecognition = null;
         }
         this.isListening.set(false);
+    }
+
+    private textState(): AiInputBarChannelState {
+        return {
+            analyzing: this.textIsAnalyzing,
+            results: this.textResults,
+            nutritionLoading: this.textIsNutritionLoading,
+            nutrition: this.textNutrition,
+            errorKey: this.textErrorKey,
+            nutritionErrorKey: this.textNutritionErrorKey,
+        };
+    }
+
+    private photoState(): AiInputBarChannelState {
+        return {
+            analyzing: this.photoIsAnalyzing,
+            results: this.photoResults,
+            nutritionLoading: this.photoIsNutritionLoading,
+            nutrition: this.photoNutrition,
+            errorKey: this.photoErrorKey,
+            nutritionErrorKey: this.photoNutritionErrorKey,
+        };
+    }
+
+    private runAnalysisRequest(
+        state: AiInputBarChannelState,
+        request$: ReturnType<AiFoodService['parseFoodText']> | ReturnType<AiFoodService['analyzeFoodImage']>,
+        errorKeys: { premium: string; quota: string; generic: string },
+        onItems: (items: FoodVisionItem[]) => void,
+    ): void {
+        state.analyzing.set(true);
+        state.results.set([]);
+        state.nutrition.set(null);
+        state.errorKey.set(null);
+        state.nutritionErrorKey.set(null);
+
+        request$
+            .pipe(
+                catchError(err => {
+                    if (err?.status === 403) {
+                        state.errorKey.set(errorKeys.premium);
+                    } else if (err?.status === 429) {
+                        state.errorKey.set(errorKeys.quota);
+                    } else {
+                        state.errorKey.set(errorKeys.generic);
+                    }
+                    return of(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(response => {
+                state.analyzing.set(false);
+                if (!response) {
+                    return;
+                }
+
+                const items = response.items ?? [];
+                state.results.set(items);
+                if (items.length) {
+                    onItems(items);
+                }
+            });
+    }
+
+    private runNutritionRequest(
+        state: AiInputBarChannelState,
+        items: FoodVisionItem[],
+        errorKeys: { quota: string; generic: string },
+    ): void {
+        state.nutritionLoading.set(true);
+        state.nutrition.set(null);
+        state.nutritionErrorKey.set(null);
+
+        this.aiFoodService
+            .calculateNutrition({ items })
+            .pipe(
+                catchError(err => {
+                    if (err?.status === 429) {
+                        state.nutritionErrorKey.set(errorKeys.quota);
+                    } else {
+                        state.nutritionErrorKey.set(errorKeys.generic);
+                    }
+                    return of(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(response => {
+                state.nutritionLoading.set(false);
+                if (!response) {
+                    return;
+                }
+
+                state.nutrition.set(response);
+            });
     }
 }

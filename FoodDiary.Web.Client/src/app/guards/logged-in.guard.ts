@@ -6,6 +6,7 @@ import { NavigationService } from '../services/navigation.service';
 export const loggedInGuard: CanActivateFn = async (_route, _state) => {
     const authService = inject(AuthService);
     const navigationService = inject(NavigationService);
+    await authService.ensureSessionReady();
 
     if (!authService.isAuthenticated()) {
         return true;

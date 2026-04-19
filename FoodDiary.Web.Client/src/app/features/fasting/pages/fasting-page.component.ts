@@ -32,6 +32,14 @@ import {
 } from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
+import {
+    FASTING_ENERGY_EMOJI_SCALE,
+    FASTING_HARD_STOP_THRESHOLD_HOURS,
+    FASTING_HUNGER_EMOJI_SCALE,
+    FASTING_MOOD_EMOJI_SCALE,
+    FASTING_SESSION_CHECK_INS_PAGE_SIZE,
+    FASTING_WARNING_THRESHOLD_HOURS,
+} from '../lib/fasting-page.constants';
 import { FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
 import {
     CYCLIC_PRESETS,
@@ -45,11 +53,6 @@ import {
     FastingSessionStatus,
     FastingStats,
 } from '../models/fasting.data';
-
-interface FastingEmojiScaleOption {
-    value: number;
-    emoji: string;
-}
 
 @Component({
     selector: 'fd-fasting-page',
@@ -75,31 +78,6 @@ interface FastingEmojiScaleOption {
     providers: [FastingFacade],
 })
 export class FastingPageComponent implements OnInit {
-    private static readonly WarningThresholdHours = 72;
-    private static readonly HardStopThresholdHours = 168;
-    private static readonly SessionCheckInsPageSize = 5;
-    private static readonly HungerEmojiScale: FastingEmojiScaleOption[] = [
-        { value: 1, emoji: '😫' },
-        { value: 2, emoji: '😟' },
-        { value: 3, emoji: '😐' },
-        { value: 4, emoji: '🙂' },
-        { value: 5, emoji: '😌' },
-    ];
-    private static readonly EnergyEmojiScale: FastingEmojiScaleOption[] = [
-        { value: 1, emoji: '😴' },
-        { value: 2, emoji: '😮‍💨' },
-        { value: 3, emoji: '🙂' },
-        { value: 4, emoji: '⚡' },
-        { value: 5, emoji: '🚀' },
-    ];
-    private static readonly MoodEmojiScale: FastingEmojiScaleOption[] = [
-        { value: 1, emoji: '😣' },
-        { value: 2, emoji: '😕' },
-        { value: 3, emoji: '😐' },
-        { value: 4, emoji: '🙂' },
-        { value: 5, emoji: '😄' },
-    ];
-
     private readonly facade = inject(FastingFacade);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
@@ -171,9 +149,9 @@ export class FastingPageComponent implements OnInit {
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     public readonly cyclicPresets = CYCLIC_PRESETS;
-    public readonly hungerEmojiScale = FastingPageComponent.HungerEmojiScale;
-    public readonly energyEmojiScale = FastingPageComponent.EnergyEmojiScale;
-    public readonly moodEmojiScale = FastingPageComponent.MoodEmojiScale;
+    public readonly hungerEmojiScale = FASTING_HUNGER_EMOJI_SCALE;
+    public readonly energyEmojiScale = FASTING_ENERGY_EMOJI_SCALE;
+    public readonly moodEmojiScale = FASTING_MOOD_EMOJI_SCALE;
     public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
     public readonly alerts = computed(() => this.facade.insightsData().alerts);
     public readonly insights = computed(() => this.facade.insightsData().insights);
@@ -589,21 +567,20 @@ export class FastingPageComponent implements OnInit {
 
     public getVisibleSessionCheckIns(session: FastingSession): FastingCheckIn[] {
         const allCheckIns = this.getSessionCheckIns(session);
-        const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FastingPageComponent.SessionCheckInsPageSize;
+        const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE;
         return allCheckIns.slice(0, visibleCount);
     }
 
     public canLoadMoreSessionCheckIns(session: FastingSession): boolean {
         const allCheckIns = this.getSessionCheckIns(session);
-        const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FastingPageComponent.SessionCheckInsPageSize;
+        const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE;
         return allCheckIns.length > visibleCount;
     }
 
     public loadMoreSessionCheckIns(sessionId: string): void {
         this.sessionCheckInVisibleCount.update(current => ({
             ...current,
-            [sessionId]:
-                (current[sessionId] ?? FastingPageComponent.SessionCheckInsPageSize) + FastingPageComponent.SessionCheckInsPageSize,
+            [sessionId]: (current[sessionId] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE) + FASTING_SESSION_CHECK_INS_PAGE_SIZE,
         }));
     }
 
@@ -806,12 +783,12 @@ export class FastingPageComponent implements OnInit {
     }
 
     private requestExtendByHours(additionalHours: number): void {
-        const normalizedHours = Math.max(1, Math.min(FastingPageComponent.HardStopThresholdHours, additionalHours));
+        const normalizedHours = Math.max(1, Math.min(FASTING_HARD_STOP_THRESHOLD_HOURS, additionalHours));
         const currentSession = this.currentSession();
         const currentDuration = currentSession?.plannedDurationHours ?? 0;
         const targetDuration = currentDuration + normalizedHours;
 
-        if (targetDuration > FastingPageComponent.HardStopThresholdHours) {
+        if (targetDuration > FASTING_HARD_STOP_THRESHOLD_HOURS) {
             this.openSafetyDialog({
                 title: this.translateService.instant('FASTING.LIFE_RISK_TITLE'),
                 message: this.translateService.instant('FASTING.LIFE_RISK_MESSAGE'),
@@ -821,7 +798,7 @@ export class FastingPageComponent implements OnInit {
             return;
         }
 
-        if (targetDuration > FastingPageComponent.WarningThresholdHours) {
+        if (targetDuration > FASTING_WARNING_THRESHOLD_HOURS) {
             this.openSafetyDialog({
                 title: this.translateService.instant('FASTING.EXTEND_WARNING_TITLE'),
                 message: this.translateService.instant('FASTING.EXTEND_WARNING_MESSAGE'),

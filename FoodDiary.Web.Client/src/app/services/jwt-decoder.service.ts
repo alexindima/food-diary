@@ -61,4 +61,27 @@ export class JwtDecoderService {
 
         return [];
     }
+
+    public extractExpirationTimeMs(token: string | null): number | null {
+        if (!token) {
+            return null;
+        }
+
+        const payload = this.decodePayload(token);
+        const exp = payload?.['exp'];
+        if (typeof exp !== 'number') {
+            return null;
+        }
+
+        return exp * 1000;
+    }
+
+    public isExpired(token: string | null, leewaySeconds = 0): boolean {
+        const expirationTimeMs = this.extractExpirationTimeMs(token);
+        if (expirationTimeMs === null) {
+            return false;
+        }
+
+        return expirationTimeMs <= Date.now() + leewaySeconds * 1000;
+    }
 }

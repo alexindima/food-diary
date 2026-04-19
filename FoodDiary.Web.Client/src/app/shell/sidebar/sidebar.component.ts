@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
@@ -8,7 +8,6 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { MatIconModule } from '@angular/material/icon';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { UserService } from '../../shared/api/user.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
@@ -32,7 +31,6 @@ export class SidebarComponent {
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly userService = inject(UserService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
@@ -77,30 +75,23 @@ export class SidebarComponent {
         return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * 100, 100));
     });
 
-    private readonly userSync = effect(onCleanup => {
+    private readonly userSync = effect(() => {
         if (!this.isAuthenticated()) {
             this.userService.clearUser();
             return;
         }
 
-        const subscription = this.userService.getInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-
-        onCleanup(() => subscription.unsubscribe());
+        this.syncCurrentUser();
     });
 
-    private readonly progressSync = effect(onCleanup => {
+    private readonly progressSync = effect(() => {
         if (!this.isAuthenticated()) {
             this.dailyConsumedKcal.set(0);
             this.dailyGoalKcal.set(0);
             return;
         }
 
-        const subscription = this.dashboardService.getSnapshot(new Date(), 1, 1).subscribe(snapshot => {
-            this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
-            this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
-        });
-
-        onCleanup(() => subscription.unsubscribe());
+        this.syncDailyProgress();
     });
 
     private readonly notificationSync = effect(() => {
@@ -111,6 +102,17 @@ export class SidebarComponent {
     });
 
     public constructor() {}
+
+    private syncCurrentUser(): void {
+        this.userService.getInfo().subscribe();
+    }
+
+    private syncDailyProgress(): void {
+        this.dashboardService.getSnapshot(new Date(), 1, 1).subscribe(snapshot => {
+            this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
+            this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
+        });
+    }
 
     protected toggleFoodTracking(): void {
         const next = !this.isFoodTrackingOpen();

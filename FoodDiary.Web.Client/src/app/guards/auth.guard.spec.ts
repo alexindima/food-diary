@@ -11,6 +11,7 @@ describe('authGuard', () => {
         getToken: ReturnType<typeof vi.fn>;
         isAuthenticated: ReturnType<typeof signal>;
         isEmailConfirmed: ReturnType<typeof signal>;
+        ensureSessionReady: ReturnType<typeof vi.fn>;
     };
     let navigationServiceMock: {
         navigateToAuth: ReturnType<typeof vi.fn>;
@@ -27,7 +28,9 @@ describe('authGuard', () => {
             getToken: vi.fn(),
             isAuthenticated,
             isEmailConfirmed,
+            ensureSessionReady: vi.fn(),
         };
+        authServiceMock.ensureSessionReady.mockResolvedValue(undefined);
 
         navigationServiceMock = {
             navigateToAuth: vi.fn(),
@@ -56,6 +59,7 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
         expect(result).toBe(true);
+        expect(authServiceMock.ensureSessionReady).toHaveBeenCalled();
         expect(navigationServiceMock.navigateToAuth).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToEmailVerificationPending).not.toHaveBeenCalled();
     });

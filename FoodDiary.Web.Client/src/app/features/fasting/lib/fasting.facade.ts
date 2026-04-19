@@ -1,11 +1,12 @@
-import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, WritableSignal, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FastingService } from '../api/fasting.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
+import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import {
     FASTING_PROTOCOLS,
     FastingInsights,
@@ -282,35 +283,23 @@ export class FastingFacade {
 
     public extendByHours(hours: number): void {
         const additionalHours = Math.max(1, Math.min(168, hours));
-        this.isExtending.set(true);
-        this.fastingService
-            .extend({ additionalHours })
-            .pipe(
-                finalize(() => this.isExtending.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(session => {
-                this.applyCurrentSessionUpdate(session);
-            });
+        runTrackedRequest(this.destroyRef, this.isExtending, this.fastingService.extend({ additionalHours }), {
+            next: session => this.applyCurrentSessionUpdate(session),
+        });
     }
 
     public reduceTargetByHours(hours: number): void {
         const reducedHours = Math.max(1, Math.min(168, hours));
-        this.isReducing.set(true);
-        this.fastingService
-            .reduceTarget({ reducedHours })
-            .pipe(
-                finalize(() => this.isReducing.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(session => {
+        runTrackedRequest(this.destroyRef, this.isReducing, this.fastingService.reduceTarget({ reducedHours }), {
+            next: session => {
                 if (session.endedAtUtc) {
                     this.resetDraftState();
                     this.applyCompletedSessionUpdate(session);
                 } else {
                     this.applyCurrentSessionUpdate(session);
                 }
-            });
+            },
+        });
     }
 
     public saveCheckIn(): void {
@@ -493,14 +482,8 @@ export class FastingFacade {
         });
     }
 
-    private trackRequest<T>(state: { set(value: boolean): void }, request$: Observable<T>, next: (value: T) => void): void {
-        state.set(true);
-        request$
-            .pipe(
-                finalize(() => state.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(next);
+    private trackRequest<T>(state: WritableSignal<boolean>, request$: Observable<T>, next: (value: T) => void): void {
+        runTrackedRequest(this.destroyRef, state, request$, { next });
     }
 
     private formatDuration(ms: number): string {

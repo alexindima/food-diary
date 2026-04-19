@@ -69,7 +69,7 @@ export const appConfig: ApplicationConfig = {
             const userService = inject(UserService);
 
             return localizationService.initializeLocalization().then(async () => {
-                authService.initializeAuth();
+                await authService.restoreSession();
 
                 if (!authService.isAuthenticated()) {
                     return;

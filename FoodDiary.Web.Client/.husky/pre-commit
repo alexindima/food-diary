@@ -47,7 +47,7 @@ fi
 
 if [ "$HAS_FRONTEND" -gt 0 ]; then
   echo "=== Running frontend tests ==="
-  npm run test || exit 1
+  npm run test:ci || exit 1
 else
   echo "=== Skipping frontend tests (no frontend files changed) ==="
 fi

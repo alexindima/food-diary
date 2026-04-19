@@ -362,6 +362,68 @@ describe('AuthService', () => {
         });
     });
 
+    describe('session restore', () => {
+        it('should restore the session from refresh token when access token is missing', async () => {
+            localStorage.setItem('refreshToken', 'existing-refresh-token');
+            const restoredToken = createFakeJwt({ sub: 'user-restore-1', exp: Math.floor(Date.now() / 1000) + 3600 });
+
+            const restorePromise = service.restoreSession();
+
+            const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
+            req.flush({
+                accessToken: restoredToken,
+                refreshToken: 'rotated-refresh-token',
+                user: { id: 'user-restore-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            });
+
+            await restorePromise;
+
+            expect(service.isAuthenticated()).toBe(true);
+            expect(service.getToken()).toBe(restoredToken);
+            expect(service.isAuthReady()).toBe(true);
+        });
+
+        it('should restore the session when initializeAuth saw an expired token', async () => {
+            const expiredToken = createFakeJwt({ sub: 'user-expired', exp: Math.floor(Date.now() / 1000) - 60 });
+            const restoredToken = createFakeJwt({ sub: 'user-expired', exp: Math.floor(Date.now() / 1000) + 3600 });
+
+            localStorage.setItem('authToken', expiredToken);
+            localStorage.setItem('refreshToken', 'existing-refresh-token');
+
+            service.initializeAuth();
+            expect(service.isAuthenticated()).toBe(false);
+            expect(service.isAuthReady()).toBe(false);
+
+            const restorePromise = service.restoreSession();
+
+            const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
+            req.flush({
+                accessToken: restoredToken,
+                refreshToken: 'rotated-refresh-token',
+                user: { id: 'user-expired', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            });
+
+            await restorePromise;
+
+            expect(service.isAuthenticated()).toBe(true);
+            expect(service.getToken()).toBe(restoredToken);
+            expect(service.isAuthReady()).toBe(true);
+        });
+
+        it('should clear stale identity data when refresh token is missing', async () => {
+            localStorage.setItem('userId', 'stale-user');
+            localStorage.setItem('emailConfirmed', 'false');
+
+            await service.restoreSession();
+
+            expect(service.getUserId()).toBeNull();
+            expect(service.isEmailConfirmed()).toBe(true);
+            expect(localStorage.getItem('userId')).toBeNull();
+            expect(localStorage.getItem('emailConfirmed')).toBeNull();
+            expect(service.isAuthReady()).toBe(true);
+        });
+    });
+
     describe('logout', () => {
         beforeEach(() => {
             localStorage.setItem('authToken', 'token');

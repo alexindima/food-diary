@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, finalize, map, Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, Observable, of, shareReplay, tap } from 'rxjs';
 import {
     AuthResponse,
     ConfirmPasswordResetRequest,
@@ -40,17 +40,34 @@ export class AuthService extends ApiService {
     private userSignal = signal<string | null>(this.tokenStorage.loadUserId());
     private emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
     private refreshInFlight$: Observable<string | null> | null = null;
+    private sessionRestorePromise: Promise<void> | null = null;
+    private authReadySignal = signal(false);
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
     public readonly isPremium = computed(() => this.hasRole('Premium'));
     public readonly isDietologist = computed(() => this.hasRole('Dietologist'));
+    public readonly isAuthReady = this.authReadySignal.asReadonly();
 
     public initializeAuth(): void {
-        const token = this.tokenStorage.getToken();
+        let token = this.tokenStorage.getToken();
         if (!token) {
+            this.authTokenSignal.set(null);
+            this.userSignal.set(null);
+            this.emailConfirmedSignal.set(null);
             this.tokenStorage.clearUserId();
+            this.tokenStorage.clearEmailConfirmed();
+            return;
+        }
+
+        if (this.jwtDecoder.isExpired(token, 30)) {
+            this.authTokenSignal.set(null);
+            this.tokenStorage.clearToken();
+            token = null;
+        }
+
+        if (!token) {
             return;
         }
 
@@ -68,6 +85,27 @@ export class AuthService extends ApiService {
         }
 
         this.linkTelegramIfAvailable();
+    }
+
+    public async restoreSession(): Promise<void> {
+        if (this.authReadySignal()) {
+            return;
+        }
+
+        if (this.sessionRestorePromise) {
+            return this.sessionRestorePromise;
+        }
+
+        this.sessionRestorePromise = this.restoreSessionInternal().finally(() => {
+            this.authReadySignal.set(true);
+            this.sessionRestorePromise = null;
+        });
+
+        return this.sessionRestorePromise;
+    }
+
+    public async ensureSessionReady(): Promise<void> {
+        await this.restoreSession();
     }
 
     public login(data: LoginRequest): Observable<AuthResponse> {
@@ -167,9 +205,7 @@ export class AuthService extends ApiService {
             map(response => {
                 const accessToken = response?.accessToken ?? null;
                 if (accessToken) {
-                    this.tokenStorage.setToken(accessToken);
-                    this.tokenStorage.setRefreshToken(response.refreshToken);
-                    this.authTokenSignal.set(accessToken);
+                    this.applyAuthenticatedSession(response);
                 }
                 return accessToken;
             }),
@@ -215,6 +251,11 @@ export class AuthService extends ApiService {
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
         this.quickConsumptionService.exitPreview();
+        this.applyAuthenticatedSession(authResponse, rememberMe);
+        this.linkTelegramIfAvailable();
+    }
+
+    private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
         this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
         this.tokenStorage.setRefreshToken(authResponse.refreshToken);
         this.authTokenSignal.set(authResponse.accessToken);
@@ -241,8 +282,23 @@ export class AuthService extends ApiService {
             this.tokenStorage.clearUserId();
             this.userSignal.set(null);
         }
+    }
 
-        this.linkTelegramIfAvailable();
+    private async restoreSessionInternal(): Promise<void> {
+        this.initializeAuth();
+        if (this.isAuthenticated()) {
+            return;
+        }
+
+        if (!this.tokenStorage.getRefreshToken()) {
+            this.userSignal.set(null);
+            this.emailConfirmedSignal.set(null);
+            this.tokenStorage.clearUserId();
+            this.tokenStorage.clearEmailConfirmed();
+            return;
+        }
+
+        await firstValueFrom(this.refreshToken());
     }
 
     private linkTelegramIfAvailable(): void {

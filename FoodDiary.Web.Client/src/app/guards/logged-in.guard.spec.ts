@@ -7,7 +7,11 @@ import { NavigationService } from '../services/navigation.service';
 import { signal } from '@angular/core';
 
 describe('loggedInGuard', () => {
-    let authServiceMock: { getToken: ReturnType<typeof vi.fn>; isAuthenticated: ReturnType<typeof signal> };
+    let authServiceMock: {
+        getToken: ReturnType<typeof vi.fn>;
+        isAuthenticated: ReturnType<typeof signal>;
+        ensureSessionReady: ReturnType<typeof vi.fn>;
+    };
     let navigationServiceMock: { navigateToHome: ReturnType<typeof vi.fn> };
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
@@ -18,7 +22,9 @@ describe('loggedInGuard', () => {
         authServiceMock = {
             getToken: vi.fn(),
             isAuthenticated,
+            ensureSessionReady: vi.fn(),
         };
+        authServiceMock.ensureSessionReady.mockResolvedValue(undefined);
 
         navigationServiceMock = { navigateToHome: vi.fn() };
         navigationServiceMock.navigateToHome.mockReturnValue(Promise.resolve());
@@ -42,6 +48,7 @@ describe('loggedInGuard', () => {
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
 
         expect(result).toBe(true);
+        expect(authServiceMock.ensureSessionReady).toHaveBeenCalled();
         expect(navigationServiceMock.navigateToHome).not.toHaveBeenCalled();
     });
 

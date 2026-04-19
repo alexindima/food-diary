@@ -4,12 +4,6 @@
     display: block;
 }
 
-fd-media-card.entity-card {
-    --fd-media-card-media-width: clamp(64px, 10vw, 120px);
-    --fd-media-card-media-width-mobile: 64px;
-    --fd-media-card-right-padding-mobile: 16px;
-}
-
 .entity-card__thumb {
     width: 100%;
     height: 100%;
@@ -83,7 +77,9 @@ fd-media-card.entity-card {
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
-    transition: color 0.15s ease, transform 0.15s ease;
+    transition:
+        color 0.15s ease,
+        transform 0.15s ease;
 
     mat-icon {
         font-size: 18px;
@@ -399,6 +395,3 @@ fd-media-card.entity-card {
         flex: 0 0 34px;
     }
 }
-
-
-

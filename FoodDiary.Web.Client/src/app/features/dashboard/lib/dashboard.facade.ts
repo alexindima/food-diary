@@ -24,6 +24,7 @@ import {
     placeholderIcon,
     placeholderLabel,
 } from './dashboard-nutrition.utils';
+import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 
 @Injectable()
 export class DashboardFacade {
@@ -153,15 +154,10 @@ export class DashboardFacade {
     }
 
     public addHydration(amount: number): void {
-        this.isHydrationUpdating.set(true);
         const targetDate = getHydrationDateUtc(this.selectedDate());
-        this.hydrationService
-            .addEntry(amount, targetDate)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => this.loadDashboardSnapshot(false, true),
-                error: () => this.isHydrationUpdating.set(false),
-            });
+        runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.addEntry(amount, targetDate), {
+            next: () => this.loadDashboardSnapshot(false, true),
+        });
     }
 
     public applyTdeeGoal(target: number): void {
@@ -187,81 +183,46 @@ export class DashboardFacade {
             this.isLoading.set(true);
         }
 
-        this.dashboardService
-            .getSnapshot(targetDate, 1, 10, locale, this.trendDays)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: snapshot => {
-                    this.snapshot.set(snapshot);
-                    this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
-                    this.syncFastingTimer(snapshot);
-                    this.isLoading.set(false);
-                    if (clearHydrationUpdate) {
-                        this.isHydrationUpdating.set(false);
-                    }
-                },
-                error: () => {
-                    this.snapshot.set(null);
-                    this.layout.initializeLayout(null);
-                    this.stopFastingTimer();
-                    this.isLoading.set(false);
-                    if (clearHydrationUpdate) {
-                        this.isHydrationUpdating.set(false);
-                    }
-                },
-            });
+        runTrackedRequest(this.destroyRef, this.isLoading, this.dashboardService.getSnapshot(targetDate, 1, 10, locale, this.trendDays), {
+            next: snapshot => {
+                this.snapshot.set(snapshot);
+                this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
+                this.syncFastingTimer(snapshot);
+                if (clearHydrationUpdate) {
+                    this.isHydrationUpdating.set(false);
+                }
+            },
+            error: () => {
+                this.snapshot.set(null);
+                this.layout.initializeLayout(null);
+                this.stopFastingTimer();
+                if (clearHydrationUpdate) {
+                    this.isHydrationUpdating.set(false);
+                }
+            },
+        });
     }
 
     private loadCycle(): void {
-        this.isCycleLoading.set(true);
-        this.cyclesService
-            .getCurrent()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: cycle => {
-                    this.cycle.set(cycle);
-                    this.isCycleLoading.set(false);
-                },
-                error: () => {
-                    this.cycle.set(null);
-                    this.isCycleLoading.set(false);
-                },
-            });
+        runTrackedRequest(this.destroyRef, this.isCycleLoading, this.cyclesService.getCurrent(), {
+            next: cycle => this.cycle.set(cycle),
+            error: () => this.cycle.set(null),
+        });
     }
 
     private loadTdeeInsight(): void {
-        this.isTdeeLoading.set(true);
-        this.tdeeService
-            .getInsight()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: insight => {
-                    this.tdeeInsight.set(insight);
-                    this.isTdeeLoading.set(false);
-                },
-                error: () => {
-                    this.tdeeInsight.set(null);
-                    this.isTdeeLoading.set(false);
-                },
-            });
+        runTrackedRequest(this.destroyRef, this.isTdeeLoading, this.tdeeService.getInsight(), {
+            next: insight => this.tdeeInsight.set(insight),
+            error: () => this.tdeeInsight.set(null),
+        });
     }
 
     private loadMicronutrients(): void {
-        this.isMicronutrientsLoading.set(true);
         const targetDate = getDashboardDateUtc(this.selectedDate()).toISOString();
-        this.usdaService
-            .getDailyMicronutrients(targetDate)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: summary => {
-                    this.micronutrients.set(summary);
-                    this.isMicronutrientsLoading.set(false);
-                },
-                error: () => {
-                    this.micronutrients.set(null);
-                    this.isMicronutrientsLoading.set(false);
-                },
-            });
+        runTrackedRequest(this.destroyRef, this.isMicronutrientsLoading, this.usdaService.getDailyMicronutrients(targetDate), {
+            next: summary => this.micronutrients.set(summary),
+            error: () => this.micronutrients.set(null),
+        });
     }
 
     private getCurrentLocale(): string {

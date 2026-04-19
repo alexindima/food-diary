@@ -39,8 +39,14 @@ import { DashboardFacade } from '../lib/dashboard.facade';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
-import { FASTING_PROTOCOLS, FastingOccurrenceKind, FastingSession } from '../../fasting/models/fasting.data';
 import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
+import {
+    formatDashboardFastingDuration,
+    getDashboardCyclicPhaseProgressLabel,
+    getDashboardFastingCycleLabel,
+    getDashboardFastingOccurrenceLabel,
+    getDashboardFastingProtocolBaseLabel,
+} from '../lib/dashboard-fasting.utils';
 
 @Component({
     selector: 'fd-dashboard',
@@ -81,6 +87,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly facade = inject(DashboardFacade);
     private readonly translateService = inject(TranslateService);
+    private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
@@ -156,9 +163,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             remainingLabelKey: 'FASTING.REMAINING',
             isOvertime: this.facade.fastingIsOvertime(),
             showStageProgress: true,
-            stateLabel: this.getOccurrenceKindLabel(session?.occurrenceKind),
-            detailLabel: session ? this.getFastingProtocolBaseLabel(session) : null,
-            metaLabel: session?.planType === 'Cyclic' ? this.getCyclicPhaseProgressLabel(session) : null,
+            stateLabel: getDashboardFastingOccurrenceLabel(this.translate, session?.occurrenceKind),
+            detailLabel: session ? getDashboardFastingProtocolBaseLabel(this.translate, session) : null,
+            metaLabel: session?.planType === 'Cyclic' ? getDashboardCyclicPhaseProgressLabel(this.translate, session) : null,
             ringColor: this.fastingBaseStage()?.color ?? null,
             stage: this.fastingBaseStage(),
         };
@@ -180,14 +187,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             const stage = resolveFastingStage(cycleElapsedMs, fastHours);
             return {
                 progressPercent: Math.min((cycleElapsedMs / fastWindowMs) * 100, 100),
-                elapsedFormatted: this.formatDuration(cycleElapsedMs),
-                remainingFormatted: this.formatDuration(Math.max(0, fastWindowMs - cycleElapsedMs)),
+                elapsedFormatted: formatDashboardFastingDuration(cycleElapsedMs),
+                remainingFormatted: formatDashboardFastingDuration(Math.max(0, fastWindowMs - cycleElapsedMs)),
                 remainingLabelKey: 'FASTING.UNTIL_EATING_WINDOW',
                 isOvertime: false,
                 showStageProgress: true,
                 stateLabel: this.translateService.instant('FASTING.FASTING_WINDOW'),
-                detailLabel: this.getFastingProtocolBaseLabel(session),
-                metaLabel: this.getFastingCycleLabel(cycleDay),
+                detailLabel: getDashboardFastingProtocolBaseLabel(this.translate, session),
+                metaLabel: getDashboardFastingCycleLabel(this.translate, cycleDay),
                 ringColor: stage.color,
                 stage,
             };
@@ -196,14 +203,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const eatingElapsedMs = cycleElapsedMs - fastWindowMs;
         return {
             progressPercent: Math.min((eatingElapsedMs / eatingWindowMs) * 100, 100),
-            elapsedFormatted: this.formatDuration(eatingElapsedMs),
-            remainingFormatted: this.formatDuration(Math.max(0, eatingWindowMs - eatingElapsedMs)),
+            elapsedFormatted: formatDashboardFastingDuration(eatingElapsedMs),
+            remainingFormatted: formatDashboardFastingDuration(Math.max(0, eatingWindowMs - eatingElapsedMs)),
             remainingLabelKey: 'FASTING.NEXT_FAST',
             isOvertime: false,
             showStageProgress: false,
             stateLabel: this.translateService.instant('FASTING.EATING_WINDOW'),
-            detailLabel: this.getFastingProtocolBaseLabel(session),
-            metaLabel: this.getFastingCycleLabel(cycleDay),
+            detailLabel: getDashboardFastingProtocolBaseLabel(this.translate, session),
+            metaLabel: getDashboardFastingCycleLabel(this.translate, cycleDay),
             ringColor: 'var(--fd-color-green-500)',
             stage: {
                 index: cycleDay,
@@ -223,7 +230,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             return null;
         }
 
-        return this.formatDuration(stage.nextInMs);
+        return formatDashboardFastingDuration(stage.nextInMs);
     });
     public readonly shouldRenderFastingWidget = computed(() => {
         if (this.layout.isEditingLayout()) {
@@ -366,117 +373,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     public getFastingCardDetailLabel(): string | null {
         return this.fastingDetailLabel();
-    }
-
-    private getOccurrenceKindLabel(kind?: FastingOccurrenceKind | null): string | null {
-        switch (kind) {
-            case 'FastDay':
-                return this.translateService.instant('FASTING.FAST_DAY');
-            case 'EatDay':
-                return this.translateService.instant('FASTING.EAT_DAY');
-            case 'FastingWindow':
-                return this.translateService.instant('FASTING.FASTING_WINDOW');
-            case 'EatingWindow':
-                return this.translateService.instant('FASTING.EATING_WINDOW');
-            default:
-                return null;
-        }
-    }
-
-    private getFastingProtocolDisplay(session: FastingSession, cycleDay: number | null): string {
-        if (session.planType === 'Cyclic') {
-            const cycleLabel =
-                session.cyclicFastDays && session.cyclicEatDays ? `${session.cyclicFastDays}:${session.cyclicEatDays}` : '1:1';
-            const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? 8;
-            const eatFastHours = session.cyclicEatDayFastHours ?? 16;
-            return `${cycleLabel} (${eatFastHours}:${eatWindowHours})`;
-        }
-
-        const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
-        const hoursLabel = this.translateService.instant('FASTING.HOURS');
-
-        if (!option) {
-            return this.formatHoursWithExtension(session.initialPlannedDurationHours, session.addedDurationHours, hoursLabel);
-        }
-
-        if (option.value === 'CustomIntermittent') {
-            const ratioLabel = this.getIntermittentRatioLabel(session.initialPlannedDurationHours);
-            return cycleDay ? `${ratioLabel} · ${this.translateService.instant('FASTING.DAY_LABEL', { day: cycleDay })}` : ratioLabel;
-        }
-
-        const baseLabel =
-            option.value === 'Custom'
-                ? `${session.initialPlannedDurationHours} ${hoursLabel}`
-                : this.translateService.instant(option.labelKey);
-
-        const resolvedLabel = session.addedDurationHours > 0 ? `${baseLabel} (+${session.addedDurationHours} ${hoursLabel})` : baseLabel;
-        if (session.planType === 'Intermittent' && cycleDay) {
-            return `${resolvedLabel} · ${this.translateService.instant('FASTING.DAY_LABEL', { day: cycleDay })}`;
-        }
-
-        return resolvedLabel;
-    }
-
-    private formatHoursWithExtension(baseHours: number, addedHours: number, hoursLabel: string): string {
-        return addedHours > 0 ? `${baseHours} ${hoursLabel} (+${addedHours} ${hoursLabel})` : `${baseHours} ${hoursLabel}`;
-    }
-
-    private getIntermittentRatioLabel(fastHours: number): string {
-        const normalizedFastHours = Math.max(1, Math.min(23, fastHours));
-        const eatingWindowHours = Math.max(1, 24 - normalizedFastHours);
-        return `${normalizedFastHours}:${eatingWindowHours}`;
-    }
-
-    private getFastingProtocolBaseLabel(session: FastingSession): string {
-        if (session.planType === 'Cyclic') {
-            const cycleLabel =
-                session.cyclicFastDays && session.cyclicEatDays ? `${session.cyclicFastDays}:${session.cyclicEatDays}` : '1:1';
-            const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? 8;
-            const eatFastHours = session.cyclicEatDayFastHours ?? 16;
-            return `${cycleLabel} (${eatFastHours}:${eatWindowHours})`;
-        }
-
-        const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
-        const hoursLabel = this.translateService.instant('FASTING.HOURS');
-
-        if (!option) {
-            return this.formatHoursWithExtension(session.initialPlannedDurationHours, session.addedDurationHours, hoursLabel);
-        }
-
-        if (option.value === 'CustomIntermittent') {
-            return this.getIntermittentRatioLabel(session.initialPlannedDurationHours);
-        }
-
-        const baseLabel =
-            option.value === 'Custom'
-                ? `${session.initialPlannedDurationHours} ${hoursLabel}`
-                : this.translateService.instant(option.labelKey);
-
-        return session.addedDurationHours > 0 ? `${baseLabel} (+${session.addedDurationHours} ${hoursLabel})` : baseLabel;
-    }
-
-    private getFastingCycleLabel(cycleDay: number | null): string | null {
-        return cycleDay ? this.translateService.instant('FASTING.DAY_LABEL', { day: cycleDay }) : null;
-    }
-
-    private getCyclicPhaseProgressLabel(session: FastingSession): string | null {
-        const dayNumber = session.cyclicPhaseDayNumber;
-        const dayTotal = session.cyclicPhaseDayTotal;
-        if (!dayNumber || !dayTotal) {
-            return this.getOccurrenceKindLabel(session.occurrenceKind);
-        }
-
-        const key = session.occurrenceKind === 'EatDay' ? 'FASTING.CYCLIC_EAT_PHASE_PROGRESS' : 'FASTING.CYCLIC_FAST_PHASE_PROGRESS';
-
-        return this.translateService.instant(key, { current: dayNumber, total: dayTotal });
-    }
-
-    private formatDuration(ms: number): string {
-        const totalSeconds = Math.floor(ms / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
     private observeDashboardWidth(): void {
