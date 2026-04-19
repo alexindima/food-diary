@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 
 export interface FdUiSegmentedToggleOption {
     label: string;
     value: string;
 }
+
+export type FdUiSegmentedToggleAppearance = 'default' | 'soft';
 
 @Component({
     selector: 'fd-ui-segmented-toggle',
@@ -18,6 +20,20 @@ export class FdUiSegmentedToggleComponent {
     public readonly options = input<FdUiSegmentedToggleOption[]>([]);
     public readonly selectedValue = model.required<string>();
     public readonly ariaLabel = input<string | null>(null);
+    public readonly appearance = input<FdUiSegmentedToggleAppearance>('default');
+    public readonly fullWidth = input(false);
+    public readonly shrinkItems = input(false);
+
+    protected readonly containerClass = computed(() => {
+        const classes = ['fd-ui-segmented-toggle', `fd-ui-segmented-toggle--appearance-${this.appearance()}`];
+        if (this.fullWidth()) {
+            classes.push('fd-ui-segmented-toggle--full-width');
+        }
+        if (this.shrinkItems()) {
+            classes.push('fd-ui-segmented-toggle--shrink-items');
+        }
+        return classes.join(' ');
+    });
 
     protected select(value: string): void {
         if (value === this.selectedValue()) {

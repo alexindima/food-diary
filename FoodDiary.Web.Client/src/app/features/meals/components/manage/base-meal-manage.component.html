@@ -10,7 +10,13 @@
     <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
         <div class="consumption-manage__grid">
             <div class="consumption-manage__column consumption-manage__column--primary">
-                <fd-ui-card class="consumption-manage__card" [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate">
+                <fd-ui-card
+                    class="consumption-manage__card"
+                    tone="editor"
+                    density="relaxed"
+                    headerAlign="center"
+                    [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate"
+                >
                     <div class="consumption-manage__hero">
                         <div class="consumption-manage__image">
                             <fd-image-upload-field
@@ -63,7 +69,13 @@
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card class="consumption-manage__card" [title]="'CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE' | translate">
+                <fd-ui-card
+                    class="consumption-manage__card"
+                    tone="editor"
+                    density="relaxed"
+                    headerAlign="center"
+                    [title]="'CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE' | translate"
+                >
                     <p class="consumption-manage__satiety-note">
                         {{ 'CONSUMPTION_MANAGE.SATIETY_SECTION_HINT' | translate }}
                     </p>

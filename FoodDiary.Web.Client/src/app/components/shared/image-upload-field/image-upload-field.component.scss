@@ -1,25 +1,4 @@
 .image-upload-field {
-    --fd-image-upload-dropzone-height: auto;
-    --fd-image-upload-dropzone-min-height: 190px;
-    --fd-image-upload-dropzone-radius: var(--fd-radius-card);
-    --fd-image-upload-placeholder-padding: 28px 24px;
-    --fd-image-upload-placeholder-gap: 6px;
-    --fd-image-upload-icon-size: 36px;
-    --fd-image-upload-main-text-size: 1.05rem;
-    --fd-image-upload-sub-text-plain-display: block;
-    --fd-image-upload-sub-text-plain-size: 0.85rem;
-    --fd-image-upload-sub-text-display: block;
-    --fd-image-upload-sub-text-size: 13px;
-    --fd-image-upload-sub-text-color: var(--fd-color-slate-600);
-    --fd-image-upload-hint-display: block;
-    --fd-image-upload-hint-size: 12px;
-    --fd-image-upload-hint-color: var(--fd-color-slate-500);
-    --fd-image-upload-preview-fit: cover;
-    --fd-image-upload-preview-position: static;
-    --fd-image-upload-preview-inset: auto;
-    --fd-image-upload-preview-radius: var(--fd-image-upload-dropzone-radius);
-    --fd-image-upload-preview-background: transparent;
-    --fd-image-upload-control-display: inline-flex;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -29,18 +8,18 @@
 
     &__dropzone {
         position: relative;
-        border: 2px dashed var(--fd-color-primary-200);
-        border-radius: var(--fd-image-upload-dropzone-radius);
-        min-height: var(--fd-image-upload-dropzone-min-height);
-        height: var(--fd-image-upload-dropzone-height);
-        background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
-        color: var(--fd-color-slate-900);
         display: grid;
         place-items: center;
+        min-height: 190px;
+        height: auto;
         overflow: hidden;
         cursor: pointer;
-        transition: all 160ms ease;
         padding: 0;
+        border: 2px dashed var(--fd-color-primary-200);
+        border-radius: var(--fd-radius-card);
+        background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
+        color: var(--fd-color-slate-900);
+        transition: all 160ms ease;
 
         &--dragging {
             border-color: var(--fd-color-primary-600);
@@ -59,67 +38,66 @@
     }
 
     &__placeholder {
-        text-align: center;
-        padding: var(--fd-image-upload-placeholder-padding);
         display: grid;
-        gap: var(--fd-image-upload-placeholder-gap);
+        width: 100%;
+        gap: 6px;
+        padding: 28px 24px;
         color: var(--fd-color-slate-900);
         text-align: center;
-        width: 100%;
     }
 
     &__icon {
+        display: block;
         width: auto;
         height: auto;
-        display: block;
-        color: var(--fd-color-primary-500);
-        font-size: var(--fd-image-upload-icon-size);
-        line-height: 1;
         margin: 0 auto;
+        color: var(--fd-color-primary-500);
+        font-size: 36px;
+        line-height: 1;
     }
 
     &__main-text {
         color: var(--fd-color-primary-600);
         font-weight: 600;
-        font-size: var(--fd-image-upload-main-text-size);
+        font-size: 1.05rem;
     }
 
     &__sub-text--plain {
+        display: block;
         color: var(--fd-color-slate-400);
-        display: var(--fd-image-upload-sub-text-plain-display);
-        font-size: var(--fd-image-upload-sub-text-plain-size);
+        font-size: 0.85rem;
     }
 
     &__sub-text {
-        display: var(--fd-image-upload-sub-text-display);
-        color: var(--fd-image-upload-sub-text-color);
-        font-size: var(--fd-image-upload-sub-text-size);
+        display: block;
+        color: var(--fd-color-slate-600);
+        font-size: 13px;
     }
 
     &__hint {
-        display: var(--fd-image-upload-hint-display);
-        color: var(--fd-image-upload-hint-color);
-        font-size: var(--fd-image-upload-hint-size);
+        display: block;
+        color: var(--fd-color-slate-500);
+        font-size: 12px;
     }
 
     &__preview {
+        position: static;
+        inset: auto;
+        display: block;
         width: 100%;
         height: 100%;
-        position: var(--fd-image-upload-preview-position);
-        inset: var(--fd-image-upload-preview-inset);
-        object-fit: var(--fd-image-upload-preview-fit);
-        display: block;
-        border-radius: var(--fd-image-upload-preview-radius);
-        background: var(--fd-image-upload-preview-background);
+        object-fit: cover;
+        border-radius: var(--fd-radius-card);
+        background: transparent;
     }
 
     &__overlay {
         position: absolute;
         inset: 0;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 50%, transparent);
-        color: var(--fd-color-white);
         display: grid;
         place-items: center;
+        background: color-mix(in srgb, var(--fd-color-slate-900) 50%, transparent);
+        color: var(--fd-color-white);
         font-weight: 600;
         letter-spacing: 0.02em;
     }
@@ -145,9 +123,9 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        display: var(--fd-image-upload-control-display);
-        border-radius: var(--fd-radius-button);
+        display: inline-flex;
         overflow: hidden;
+        border-radius: var(--fd-radius-button);
         background: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
         box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
     }
@@ -182,9 +160,9 @@
 
     &__hint--inline {
         position: absolute;
+        right: 10px;
         bottom: 8px;
         left: 10px;
-        right: 10px;
         text-align: left;
     }
 
@@ -208,22 +186,22 @@
     &__cropper-backdrop {
         position: fixed;
         inset: 0;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 55%, transparent);
+        z-index: 1000;
         display: grid;
         place-items: center;
-        z-index: 1000;
         padding: 16px;
+        background: color-mix(in srgb, var(--fd-color-slate-900) 55%, transparent);
     }
 
     &__cropper {
-        width: min(720px, 100%);
-        background: var(--fd-color-white);
-        border-radius: var(--fd-radius-dialog);
-        box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 22%, transparent);
         display: flex;
         flex-direction: column;
+        width: min(720px, 100%);
         gap: 16px;
         padding: 18px;
+        border-radius: var(--fd-radius-dialog);
+        background: var(--fd-color-white);
+        box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 22%, transparent);
     }
 
     &__cropper-header {
@@ -233,8 +211,8 @@
     }
 
     &__cropper-title {
-        font-weight: 700;
         font-size: 1.05rem;
+        font-weight: 700;
         color: var(--fd-color-slate-900);
     }
 
@@ -247,11 +225,11 @@
         position: relative;
         width: 100%;
         height: clamp(320px, 60vh, 520px);
-        max-height: min(70vh, 520px);
         min-height: 320px;
+        max-height: min(70vh, 520px);
         overflow: hidden;
-        border-radius: var(--fd-radius-panel);
         border: 1px solid var(--fd-color-slate-200);
+        border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
     }
 
@@ -282,29 +260,66 @@
     &--appearance-compact {
         width: 100%;
         height: 100%;
-        --fd-image-upload-dropzone-height: 100%;
-        --fd-image-upload-dropzone-min-height: 0;
-        --fd-image-upload-placeholder-padding: 20px 12px;
-        --fd-image-upload-placeholder-gap: 8px;
-        --fd-image-upload-icon-size: 28px;
-        --fd-image-upload-main-text-size: 0.95rem;
-        --fd-image-upload-sub-text-plain-size: 0.8rem;
-        --fd-image-upload-sub-text-size: 0.72rem;
-        --fd-image-upload-sub-text-color: var(--fd-color-text-muted);
-        --fd-image-upload-hint-size: 0.68rem;
-        --fd-image-upload-hint-color: color-mix(in srgb, var(--fd-color-text-muted) 80%, transparent);
+
+        .image-upload-field__dropzone {
+            min-height: 0;
+            height: 100%;
+        }
+
+        .image-upload-field__placeholder {
+            gap: 8px;
+            padding: 20px 12px;
+        }
+
+        .image-upload-field__icon {
+            font-size: 28px;
+        }
+
+        .image-upload-field__main-text {
+            font-size: 0.95rem;
+        }
+
+        .image-upload-field__sub-text--plain {
+            font-size: 0.8rem;
+        }
+
+        .image-upload-field__sub-text {
+            color: var(--fd-color-text-muted);
+            font-size: 0.72rem;
+        }
+
+        .image-upload-field__hint {
+            color: color-mix(in srgb, var(--fd-color-text-muted) 80%, transparent);
+            font-size: 0.68rem;
+        }
     }
 
     &--appearance-preview {
-        --fd-image-upload-dropzone-height: 240px;
-        --fd-image-upload-dropzone-min-height: 240px;
-        --fd-image-upload-dropzone-radius: 24px;
-        --fd-image-upload-preview-position: absolute;
-        --fd-image-upload-preview-inset: 0;
-        --fd-image-upload-preview-fit: contain;
-        --fd-image-upload-preview-radius: 24px;
-        --fd-image-upload-preview-background: var(--fd-color-slate-50);
-        --fd-image-upload-control-display: none;
+
+        .image-upload-field__dropzone {
+            min-height: clamp(210px, 32vh, 240px);
+            height: clamp(210px, 32vh, 240px);
+            border-radius: 24px;
+        }
+
+        .image-upload-field__preview {
+            position: absolute;
+            inset: 0;
+            object-fit: contain;
+            border-radius: 24px;
+            background: var(--fd-color-slate-50);
+        }
+
+        .image-upload-field__control {
+            display: none;
+        }
+    }
+
+    &--appearance-step {
+
+        .image-upload-field__dropzone {
+            min-height: 180px;
+        }
     }
 
     &--appearance-hidden {
@@ -315,6 +330,3 @@
         }
     }
 }
-
-
-

@@ -18,14 +18,6 @@
         max-width: 100% !important;
     }
 
-    fd-ui-input {
-        --fd-input-height: 48px;
-    }
-
-    fd-ui-select {
-        --fd-select-height: 48px;
-    }
-
     &__header {
         margin-bottom: 0;
     }
@@ -67,40 +59,12 @@
         gap: variables.$gap-xl;
     }
 
-    &__column--primary {
-        --fd-ui-card-content-gap: 28px;
-    }
-
     &__card {
-        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-ui-card-title-color: var(--fd-color-slate-900);
-        --fd-ui-card-meta-color: var(--fd-color-slate-400);
-        --fd-ui-card-header-margin-bottom: #{variables.$gap-s};
-        --fd-ui-card-header-align-items: center;
-        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-radius-lg: 22px;
-        --fd-color-surface: var(--fd-color-white);
-        display: flex;
-        flex-direction: column;
-        gap: variables.$gap-m;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
-        border-radius: var(--fd-radius-lg);
         overflow: hidden;
     }
 
-    &__card--basic {
-        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
-        --fd-ui-card-padding-bottom: #{variables.$gap-l};
-    }
-
     &__card--nutrition {
-        --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-green-500) 18%, transparent);
-        --fd-ui-card-padding-bottom: #{variables.$gap-l};
         container-type: inline-size;
-    }
-
-    &__card--tracking {
-        --fd-ui-card-padding-bottom: #{variables.$gap-l};
     }
 
     &__actions-panel {
@@ -225,15 +189,6 @@
 
     &__nutrition-toggle {
         width: 100%;
-        --fd-segmented-toggle-width: 100%;
-        --fd-segmented-toggle-justify-content: space-between;
-        --fd-segmented-toggle-background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
-        --fd-segmented-toggle-border: 1px solid var(--fd-slate-border-24);
-        --fd-segmented-toggle-shadow: none;
-        --fd-segmented-toggle-item-flex: 1;
-        --fd-segmented-toggle-item-min-width: 0;
-        --fd-segmented-toggle-item-text-transform: none;
-        --fd-segmented-toggle-item-letter-spacing: normal;
     }
 
     &__ai {
@@ -311,7 +266,6 @@
             height: auto;
             aspect-ratio: 1 / 1;
             justify-self: center;
-            --fd-image-upload-dropzone-height: 100%;
         }
 
         &__action-button {

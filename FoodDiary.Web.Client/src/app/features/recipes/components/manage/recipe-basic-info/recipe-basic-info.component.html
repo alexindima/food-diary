@@ -2,6 +2,10 @@
     <fd-ui-card
         class="recipe-basic-info__card recipe-basic-info__card--basic"
         appearance="entry"
+        tone="editor-gradient"
+        density="relaxed"
+        headerAlign="center"
+        accent="primary"
         [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
     >
         <div class="recipe-basic-info__hero">
@@ -52,6 +56,7 @@
         <div class="recipe-basic-info__basic-grid">
             <fd-ui-input
                 formControlName="prepTime"
+                size="lg"
                 type="number"
                 [step]="1"
                 [label]="'RECIPE_MANAGE.PREP_TIME' | translate"
@@ -60,6 +65,7 @@
 
             <fd-ui-input
                 formControlName="servings"
+                size="lg"
                 type="number"
                 [step]="1"
                 [label]="'RECIPE_MANAGE.SERVINGS' | translate"
@@ -82,12 +88,16 @@
     <fd-ui-card
         class="recipe-basic-info__card recipe-basic-info__card--basic recipe-basic-info__card--tracking"
         appearance="entry"
+        tone="editor-gradient"
+        density="relaxed"
+        headerAlign="center"
         [title]="'RECIPE_MANAGE.TRACKING_PREFERENCES' | translate"
     >
         <div class="recipe-basic-info__basic-grid">
             <div class="recipe-basic-info__field recipe-basic-info__field--full">
                 <fd-ui-select
                     formControlName="visibility"
+                    size="lg"
                     [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
                     [required]="true"
                     [options]="visibilitySelectOptions()"

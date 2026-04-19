@@ -423,21 +423,11 @@
     gap: 12px;
 }
 
-.photo-ai-dialog__upload > fd-image-upload-field {
-    --fd-image-upload-dropzone-height: 240px;
-    --fd-image-upload-dropzone-min-height: 240px;
-}
-
 @media #{variables.$media-phablet} {
 
     .photo-ai-dialog__table-head,
     .photo-ai-dialog__table-row {
         grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
-    }
-
-    .photo-ai-dialog__upload > fd-image-upload-field {
-        --fd-image-upload-dropzone-height: 210px;
-        --fd-image-upload-dropzone-min-height: 210px;
     }
 
     .photo-ai-dialog__nutrition-grid {

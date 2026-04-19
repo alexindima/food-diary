@@ -1,9 +1,4 @@
-<fd-ui-dialog
-    class="detail-dialog-shell"
-    [title]="'CONSUMPTION_DETAIL.TITLE' | translate"
-    [subtitle]="formattedDate || undefined"
-    size="lg"
->
+<fd-ui-dialog [title]="'CONSUMPTION_DETAIL.TITLE' | translate" [subtitle]="formattedDate || undefined" size="lg">
     <fd-ui-tabs class="consumption-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
     <div class="consumption-detail">

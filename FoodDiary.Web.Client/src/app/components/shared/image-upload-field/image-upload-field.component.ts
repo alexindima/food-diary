@@ -54,7 +54,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     public readonly cropAspectRatio = input<number | null>(1);
     public readonly deleteOnClear = input<boolean>(false);
     public readonly initialSelection = input<ImageSelection | null>(null);
-    public readonly appearance = input<'default' | 'compact' | 'preview' | 'hidden'>('default');
+    public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
 
     public readonly imageChanged = output<ImageSelection | null>();
 

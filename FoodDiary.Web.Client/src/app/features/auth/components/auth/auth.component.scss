@@ -160,21 +160,6 @@
     }
 }
 
-/* Input and checkbox tweaks inside auth dialog */
-
-:host fd-ui-input {
-    --fd-input-radius: 12px;
-    --fd-input-surface: var(--fd-color-white);
-    --fd-input-label-bg: var(--fd-color-white);
-    --fd-input-border: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
-    --fd-input-hover-border: color-mix(in srgb, var(--fd-color-slate-400) 55%, var(--fd-color-white));
-    --fd-input-focus-border: var(--fd-color-primary-600);
-    --fd-input-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent);
-    --fd-input-control-padding-left: 16px;
-    --fd-input-control-padding-right: 16px;
-    --fd-input-control-font-size: 16px;
-}
-
 :host fd-ui-checkbox {
     --fd-checkbox-control-size: 18px;
     --fd-checkbox-control-radius: 6px;

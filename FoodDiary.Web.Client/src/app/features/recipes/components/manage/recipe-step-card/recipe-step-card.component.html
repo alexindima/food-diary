@@ -1,5 +1,5 @@
 <ng-container [formGroup]="stepFormGroup()">
-    <fd-ui-card class="recipe-step-card">
+    <fd-ui-card class="recipe-step-card" tone="editor-gradient" density="relaxed">
         <div class="recipe-step-card__header">
             <div class="recipe-step-card__header-left">
                 <span
@@ -11,6 +11,7 @@
                 @if (isStepTitleEditing) {
                     <fd-ui-input
                         class="recipe-step-card__title-input"
+                        appearance="inline-edit"
                         formControlName="title"
                         [placeholder]="titleDisplay"
                         (blur)="onStepTitleBlur()"
@@ -63,6 +64,7 @@
                 <div class="recipe-step-card__image">
                     <fd-image-upload-field
                         class="recipe-step-card__image-upload"
+                        appearance="step"
                         formControlName="imageUrl"
                         [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
                         [recommendedSize]="'512 x 512'"
@@ -95,6 +97,7 @@
                         <fd-ui-input
                             class="recipe-ingredient__name"
                             formControlName="foodName"
+                            size="lg"
                             [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                             [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
                             [readonly]="true"
@@ -107,6 +110,7 @@
                         <div class="recipe-ingredient__amount">
                             <fd-ui-input
                                 formControlName="amount"
+                                size="lg"
                                 type="number"
                                 [step]="0.01"
                                 [label]="getIngredientAmountLabel(ingredientIndex)"

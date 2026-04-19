@@ -5,10 +5,6 @@
 }
 
 .recipe-step-card {
-    --fd-ui-card-border-color: var(--fd-color-border);
-    --fd-ui-card-background:
-        linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent), var(--fd-color-surface));
-    --fd-ui-card-padding-bottom: #{variables.$gap-l};
     overflow: hidden;
 }
 
@@ -63,9 +59,6 @@
 
 .recipe-step-card__title-input {
     min-width: 200px;
-    --fd-input-control-font-size: 0.95rem;
-    --fd-input-control-padding-left: 10px;
-    --fd-input-control-padding-right: 10px;
 }
 
 .recipe-step-card__edit {
@@ -112,10 +105,6 @@
 
 .recipe-step-card__image {
     width: 100%;
-}
-
-.recipe-step-card__image-upload {
-    --fd-image-upload-dropzone-min-height: 180px;
 }
 
 .recipe-step-card__description {

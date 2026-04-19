@@ -1,4 +1,9 @@
-<mat-tab-group class="fd-ui-tabs" [selectedIndex]="selectedIndex" (selectedIndexChange)="handleIndexChange($event)">
+<mat-tab-group
+    class="fd-ui-tabs"
+    [class]="appearanceClass"
+    [selectedIndex]="selectedIndex"
+    (selectedIndexChange)="handleIndexChange($event)"
+>
     @for (tab of tabs(); track tab) {
         <mat-tab>
             <ng-template mat-tab-label>

@@ -7,31 +7,7 @@
 .recipe-basic-info {
 
     &__card {
-        --fd-ui-card-border-color: var(--fd-color-border);
-        --fd-ui-card-title-color: var(--fd-color-text-strong);
-        --fd-ui-card-meta-color: var(--fd-color-text-muted);
-        --fd-ui-card-background:
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent), var(--fd-color-surface));
-        --fd-ui-card-header-margin-bottom: #{variables.$gap-s};
-        --fd-ui-card-header-align-items: center;
-        --fd-ui-card-content-gap: 28px;
-        --fd-ui-card-padding-bottom: #{variables.$gap-l};
-        --fd-shadow-sm: 0 20px 45px color-mix(in srgb, var(--fd-color-black) 22%, transparent);
-        --fd-color-surface: var(--fd-color-surface-raised);
-        display: flex;
-        flex-direction: column;
-        gap: variables.$gap-m;
-        border: 1px solid var(--fd-color-border);
-        border-radius: var(--fd-radius-card);
         overflow: hidden;
-
-        &--basic {
-            --fd-ui-card-border-color: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
-        }
-
-        &--tracking {
-            --fd-ui-card-padding-bottom: #{variables.$gap-l};
-        }
     }
 
     &__basic-grid {

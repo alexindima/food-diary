@@ -28,13 +28,6 @@
     }
 
     &__card {
-        --fd-ui-card-padding-top: 20px;
-        --fd-ui-card-padding-x: 22px;
-        --fd-ui-card-padding-bottom: 24px;
-        --fd-ui-card-background:
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
-        --fd-shadow-sm: 0 18px 34px color-mix(in srgb, var(--fd-color-black) 24%, transparent);
-        --fd-ui-card-border-color: var(--fd-color-border);
         display: flex;
         flex-direction: column;
         gap: 18px;
@@ -541,12 +534,6 @@
     }
 
     @media #{variables.$media-mobile} {
-
-        &__card {
-            --fd-ui-card-padding-top: 16px;
-            --fd-ui-card-padding-x: 16px;
-            --fd-ui-card-padding-bottom: 16px;
-        }
 
         &__gender-options {
             gap: 8px;

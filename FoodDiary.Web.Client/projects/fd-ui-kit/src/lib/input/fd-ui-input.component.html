@@ -1,4 +1,7 @@
-﻿<div class="fd-ui-input" [ngClass]="[sizeClass, error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel ? 'fd-ui-input--floating' : '']">
+<div
+    class="fd-ui-input"
+    [ngClass]="[sizeClass, appearanceClass, error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel ? 'fd-ui-input--floating' : '']"
+>
     <div
         class="fd-ui-input__control-wrap"
         [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"

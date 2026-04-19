@@ -22,6 +22,7 @@
                 <form [formGroup]="passwordResetForm" (ngSubmit)="onPasswordResetSubmit()" class="auth__form">
                     <div class="auth__field">
                         <fd-ui-input
+                            appearance="auth"
                             formControlName="email"
                             type="email"
                             [label]="'AUTH.RESET.EMAIL' | translate"
@@ -67,6 +68,7 @@
                 <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
                     <div class="auth__field">
                         <fd-ui-input
+                            appearance="auth"
                             formControlName="email"
                             type="email"
                             [label]="'AUTH.LOGIN.EMAIL' | translate"
@@ -78,6 +80,7 @@
 
                     <div class="auth__field">
                         <fd-ui-input
+                            appearance="auth"
                             formControlName="password"
                             type="password"
                             [label]="'AUTH.LOGIN.PASSWORD' | translate"
@@ -136,6 +139,7 @@
             <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
                 <div class="auth__field">
                     <fd-ui-input
+                        appearance="auth"
                         formControlName="email"
                         type="email"
                         [label]="'AUTH.REGISTER.EMAIL' | translate"
@@ -146,6 +150,7 @@
                 </div>
                 <div class="auth__field">
                     <fd-ui-input
+                        appearance="auth"
                         formControlName="password"
                         type="password"
                         [label]="'AUTH.REGISTER.PASSWORD' | translate"
@@ -156,6 +161,7 @@
                 </div>
                 <div class="auth__field">
                     <fd-ui-input
+                        appearance="auth"
                         formControlName="confirmPassword"
                         type="password"
                         [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"

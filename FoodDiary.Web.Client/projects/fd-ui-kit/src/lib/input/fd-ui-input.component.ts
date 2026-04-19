@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
+export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
 
 @Component({
     selector: 'fd-ui-input',
@@ -38,6 +39,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     public readonly step = input<string | number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
+    public readonly appearance = input<FdUiInputAppearance>('default');
 
     public readonly suffixButtonClicked = output<void>();
 
@@ -50,6 +52,10 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     protected get sizeClass(): string {
         return `fd-ui-input--size-${this.size()}`;
+    }
+
+    protected get appearanceClass(): string {
+        return `fd-ui-input--appearance-${this.appearance()}`;
     }
 
     protected get isDateInput(): boolean {

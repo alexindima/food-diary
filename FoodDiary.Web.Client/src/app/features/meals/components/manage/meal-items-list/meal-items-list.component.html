@@ -1,4 +1,10 @@
-<fd-ui-card class="consumption-manage__card consumption-manage__card--items" [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate">
+<fd-ui-card
+    class="consumption-manage__card consumption-manage__card--items"
+    tone="editor"
+    density="compact"
+    headerAlign="center"
+    [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
+>
     <div class="consumption-items">
         @for (item of formArray().controls; track $index; let i = $index; let first = $first) {
             <div class="consumption-item-card" [formGroup]="item">
@@ -7,6 +13,7 @@
                         <div class="consumption-item__field consumption-item__field--source">
                             <fd-ui-input
                                 class="consumption-item__selector-input"
+                                size="lg"
                                 [ngModel]="getItemSourceName(i)"
                                 [ngModelOptions]="{ standalone: true }"
                                 [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
@@ -20,6 +27,7 @@
                         <div class="consumption-item__field consumption-item__field--amount">
                             <fd-ui-input
                                 formControlName="amount"
+                                size="lg"
                                 type="number"
                                 [step]="0.01"
                                 [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"

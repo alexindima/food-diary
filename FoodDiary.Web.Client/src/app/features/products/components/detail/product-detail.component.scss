@@ -1,28 +1,5 @@
 @use 'variables';
 
-:host {
-    --fd-dialog-header-border: none;
-    --fd-dialog-header-margin-bottom: 0;
-    --fd-dialog-header-padding-bottom: 0.25rem;
-    --fd-dialog-footer-padding-top: 1rem;
-    --fd-dialog-footer-margin-top: 1rem;
-    --fd-dialog-body-padding-block: 0.25rem;
-}
-
-.detail-dialog-shell {
-    --fd-dialog-radius: 16px;
-    --fd-dialog-shadow: 0 18px 45px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
-    --fd-dialog-border: 1px solid color-mix(in srgb, var(--fd-color-white) 40%, transparent);
-    --fd-dialog-background:
-        radial-gradient(
-            circle at top,
-            color-mix(in srgb, var(--fd-color-primary-100) 28%, var(--fd-color-white)) 0%,
-            color-mix(in srgb, var(--fd-color-slate-100) 92%, var(--fd-color-white)) 40%,
-            color-mix(in srgb, var(--fd-color-slate-100) 72%, var(--fd-color-white)) 100%
-        );
-    --fd-dialog-max-height: 90vh;
-}
-
 .product-detail {
     display: flex;
     flex-direction: column;

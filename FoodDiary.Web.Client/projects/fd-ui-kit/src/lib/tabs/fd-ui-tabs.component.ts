@@ -8,6 +8,8 @@ export interface FdUiTab {
     labelKey?: string;
 }
 
+export type FdUiTabsAppearance = 'default' | 'wrap-compact';
+
 @Component({
     selector: 'fd-ui-tabs',
     standalone: true,
@@ -21,6 +23,11 @@ export class FdUiTabsComponent {
     public readonly tabs = input<FdUiTab[]>([]);
     public readonly selectedValue = model.required<string>();
     public readonly selectedValueChange = output<string>();
+    public readonly appearance = input<FdUiTabsAppearance>('default');
+
+    protected get appearanceClass(): string {
+        return `fd-ui-tabs--appearance-${this.appearance()}`;
+    }
 
     protected get selectedIndex(): number {
         const index = this.tabs().findIndex(tab => tab.value === this.selectedValue());

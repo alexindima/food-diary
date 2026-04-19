@@ -1,6 +1,7 @@
 <fd-ui-card class="stats-nutrition-card" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
     <fd-ui-tabs
         class="stats-nutrition-card__tabs"
+        appearance="wrap-compact"
         [tabs]="tabs()"
         [selectedValue]="selectedTab()"
         (selectedValueChange)="onTabChange($event)"

@@ -1,6 +1,10 @@
 <fd-ui-card
     class="product-manage__card product-manage__card--nutrition"
     appearance="entry"
+    tone="editor-white"
+    density="relaxed"
+    headerAlign="center"
+    accent="success"
     [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
 >
     <div class="product-manage__nutrition">
@@ -35,6 +39,8 @@
             <fd-ui-segmented-toggle
                 nutrition-before
                 class="product-manage__nutrition-toggle"
+                appearance="soft"
+                [fullWidth]="true"
                 [options]="nutritionModeOptions()"
                 [selectedValue]="nutritionMode()"
                 (selectedValueChange)="nutritionModeChange.emit($event)"
