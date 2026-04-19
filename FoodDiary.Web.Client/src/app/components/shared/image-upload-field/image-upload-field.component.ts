@@ -19,6 +19,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import type Cropper from 'cropperjs';
+import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 
 @Component({
     selector: 'fd-image-upload-field',
@@ -40,6 +41,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly translateService = inject(TranslateService);
+    private readonly logger = inject(FrontendLoggerService);
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
@@ -156,7 +158,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
 
         if (this.deleteOnClear() && assetId) {
             this.imageUploadService.deleteAsset(assetId).subscribe({
-                error: err => console.warn('Failed to delete orphan image asset', err),
+                error: err => this.logger.warn('Failed to delete orphan image asset', err),
             });
         }
     }

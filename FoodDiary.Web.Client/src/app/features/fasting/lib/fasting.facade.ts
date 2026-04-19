@@ -1,10 +1,11 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { FastingService } from '../api/fasting.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
+import { FastingPromptStateStore } from './fasting-prompt-state.store';
 import {
     FASTING_PROTOCOLS,
     FastingInsights,
@@ -24,12 +25,12 @@ interface FastingPromptState {
 
 @Injectable()
 export class FastingFacade {
-    private static readonly PromptStorageKey = 'fd_fasting_prompt_state';
     private static readonly PromptSnoozeHours = 4;
     private static readonly HistoryPageSize = 10;
 
     private readonly fastingService = inject(FastingService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
+    private readonly promptStateStore = inject(FastingPromptStateStore);
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);
     private timerInterval: ReturnType<typeof setInterval> | null = null;
@@ -66,7 +67,7 @@ export class FastingFacade {
     public readonly selectedSymptoms = signal<string[]>([]);
     public readonly checkInNotes = signal('');
     public readonly now = signal(new Date());
-    public readonly promptState = signal<Record<string, FastingPromptState>>(this.readPromptState());
+    public readonly promptState = signal<Record<string, FastingPromptState>>(this.promptStateStore.read());
 
     public readonly isActive = computed(() => {
         const session = this.currentSession();
@@ -124,14 +125,7 @@ export class FastingFacade {
     });
 
     public initialize(): void {
-        this.isLoading.set(true);
-        this.fastingService
-            .getOverview()
-            .pipe(
-                finalize(() => this.isLoading.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(overview => this.applyOverview(overview));
+        this.trackRequest(this.isLoading, this.fastingService.getOverview(), overview => this.applyOverview(overview));
     }
 
     public loadMoreHistory(): void {
@@ -140,75 +134,58 @@ export class FastingFacade {
         }
 
         const range = this.getHistoryRange();
-        this.isLoadingMoreHistory.set(true);
-        this.fastingService
-            .getHistory({
+        this.trackRequest(
+            this.isLoadingMoreHistory,
+            this.fastingService.getHistory({
                 from: range.from,
                 to: range.to,
                 page: this.historyPage() + 1,
                 limit: FastingFacade.HistoryPageSize,
-            })
-            .pipe(
-                finalize(() => this.isLoadingMoreHistory.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(history => {
+            }),
+            history => {
                 this.history.update(current => [...current, ...history.data]);
                 this.historyPage.set(history.page);
                 this.historyTotalPages.set(history.totalPages);
-            });
+            },
+        );
     }
 
     public startFasting(): void {
-        this.isStarting.set(true);
         const payload = this.buildStartPayload();
-        this.fastingService
-            .start(payload)
-            .pipe(
-                finalize(() => this.isStarting.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(session => {
-                this.frontendObservability.recordFastingLifecycleEvent('session.started', {
-                    sessionId: session.id,
-                    protocol: session.protocol,
-                    planType: session.planType,
-                    plannedDurationHours: session.plannedDurationHours,
-                    occurrenceKind: session.occurrenceKind,
-                    ...this.getReminderTelemetryDetails(),
-                });
-                this.refreshOverview();
+        this.trackRequest(this.isStarting, this.fastingService.start(payload), session => {
+            this.frontendObservability.recordFastingLifecycleEvent('session.started', {
+                sessionId: session.id,
+                protocol: session.protocol,
+                planType: session.planType,
+                plannedDurationHours: session.plannedDurationHours,
+                occurrenceKind: session.occurrenceKind,
+                ...this.getReminderTelemetryDetails(),
             });
+            this.refreshOverview();
+        });
     }
 
     public endFasting(): void {
-        this.isEnding.set(true);
-        this.fastingService
-            .end()
-            .pipe(
-                finalize(() => this.isEnding.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(session => {
-                if (session.endedAtUtc) {
-                    this.stopTimer();
-                    this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
-                        sessionId: session.id,
-                        protocol: session.protocol,
-                        planType: session.planType,
-                        status: session.status,
-                        plannedDurationHours: session.plannedDurationHours,
-                        actualDurationHours: this.getSessionDurationHours(session),
-                        hadCheckIn: !!session.checkInAtUtc,
-                        ...this.getReminderTelemetryDetails(),
-                    });
-                    this.clearPromptStateForSession(session.id);
-                    this.resetDraftState();
-                    this.refreshOverview();
-                } else {
-                    this.refreshOverview();
-                }
-            });
+        this.trackRequest(this.isEnding, this.fastingService.end(), session => {
+            if (session.endedAtUtc) {
+                this.stopTimer();
+                this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
+                    sessionId: session.id,
+                    protocol: session.protocol,
+                    planType: session.planType,
+                    status: session.status,
+                    plannedDurationHours: session.plannedDurationHours,
+                    actualDurationHours: this.getSessionDurationHours(session),
+                    hadCheckIn: !!session.checkInAtUtc,
+                    ...this.getReminderTelemetryDetails(),
+                });
+                this.clearPromptStateForSession(session.id);
+                this.resetDraftState();
+                this.refreshOverview();
+            } else {
+                this.refreshOverview();
+            }
+        });
     }
 
     public selectProtocol(protocol: FastingProtocol): void {
@@ -342,20 +319,16 @@ export class FastingFacade {
             return;
         }
 
-        this.isSavingCheckIn.set(true);
-        this.fastingService
-            .updateCheckIn({
+        this.trackRequest(
+            this.isSavingCheckIn,
+            this.fastingService.updateCheckIn({
                 hungerLevel: this.hungerLevel(),
                 energyLevel: this.energyLevel(),
                 moodLevel: this.moodLevel(),
                 symptoms: this.selectedSymptoms(),
                 checkInNotes: this.checkInNotes().trim() || null,
-            })
-            .pipe(
-                finalize(() => this.isSavingCheckIn.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(updated => {
+            }),
+            updated => {
                 this.checkInSavedVersion.update(version => version + 1);
                 this.frontendObservability.recordFastingLifecycleEvent('check-in.saved', {
                     sessionId: updated.id,
@@ -370,7 +343,8 @@ export class FastingFacade {
                 });
                 this.clearPromptStateForSession(updated.id);
                 this.refreshOverview();
-            });
+            },
+        );
     }
 
     public isPromptVisible(session: FastingSession | null, prompt: FastingMessage | null): boolean {
@@ -414,29 +388,15 @@ export class FastingFacade {
     }
 
     public skipCyclicDay(): void {
-        this.isUpdatingCycle.set(true);
-        this.fastingService
-            .skipCyclicDay()
-            .pipe(
-                finalize(() => this.isUpdatingCycle.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => {
-                this.refreshOverview();
-            });
+        this.trackRequest(this.isUpdatingCycle, this.fastingService.skipCyclicDay(), () => {
+            this.refreshOverview();
+        });
     }
 
     public postponeCyclicDay(): void {
-        this.isUpdatingCycle.set(true);
-        this.fastingService
-            .postponeCyclicDay()
-            .pipe(
-                finalize(() => this.isUpdatingCycle.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => {
-                this.refreshOverview();
-            });
+        this.trackRequest(this.isUpdatingCycle, this.fastingService.postponeCyclicDay(), () => {
+            this.refreshOverview();
+        });
     }
 
     private startTimer(): void {
@@ -520,7 +480,7 @@ export class FastingFacade {
     private updatePromptState(key: string, value: FastingPromptState): void {
         this.promptState.update(current => {
             const next = { ...current, [key]: { ...current[key], ...value } };
-            this.writePromptState(next);
+            this.promptStateStore.write(next);
             return next;
         });
     }
@@ -528,31 +488,19 @@ export class FastingFacade {
     private clearPromptStateForSession(sessionId: string): void {
         this.promptState.update(current => {
             const next = Object.fromEntries(Object.entries(current).filter(([key]) => !key.startsWith(`${sessionId}:`)));
-            this.writePromptState(next);
+            this.promptStateStore.write(next);
             return next;
         });
     }
 
-    private readPromptState(): Record<string, FastingPromptState> {
-        try {
-            const stored = localStorage.getItem(FastingFacade.PromptStorageKey);
-            if (!stored) {
-                return {};
-            }
-
-            const parsed = JSON.parse(stored);
-            return typeof parsed === 'object' && parsed !== null ? parsed : {};
-        } catch {
-            return {};
-        }
-    }
-
-    private writePromptState(state: Record<string, FastingPromptState>): void {
-        try {
-            localStorage.setItem(FastingFacade.PromptStorageKey, JSON.stringify(state));
-        } catch {
-            // Ignore storage errors; prompts should still work in-memory.
-        }
+    private trackRequest<T>(state: { set(value: boolean): void }, request$: Observable<T>, next: (value: T) => void): void {
+        state.set(true);
+        request$
+            .pipe(
+                finalize(() => state.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(next);
     }
 
     private formatDuration(ms: number): string {

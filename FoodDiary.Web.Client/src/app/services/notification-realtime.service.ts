@@ -3,6 +3,7 @@ import type { HubConnection } from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { NotificationService } from './notification.service';
+import { FrontendLoggerService } from './frontend-logger.service';
 
 function toNotificationHubUrl(authBaseUrl: string): string {
     return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/notifications`;
@@ -21,6 +22,7 @@ export class NotificationRealtimeService {
     public constructor(
         private readonly authService: AuthService,
         private readonly notificationService: NotificationService,
+        private readonly logger: FrontendLoggerService,
     ) {
         effect(() => {
             if (this.authService.isAuthenticated()) {
@@ -74,9 +76,7 @@ export class NotificationRealtimeService {
 
         this.connection.onclose(() => {
             this.connectedSignal.set(false);
-            if (environment.buildVersion === 'dev') {
-                console.warn('Notification SignalR connection closed');
-            }
+            this.logger.warn('Notification SignalR connection closed', undefined, { devOnly: true });
         });
 
         try {
@@ -86,9 +86,7 @@ export class NotificationRealtimeService {
             this.notificationService.ensureNotificationsLoaded();
         } catch (error) {
             this.connectedSignal.set(false);
-            if (environment.buildVersion === 'dev') {
-                console.error('Notification SignalR connection failed', error);
-            }
+            this.logger.error('Notification SignalR connection failed', error, { devOnly: true });
             this.connection = null;
         } finally {
             this.connecting.set(false);

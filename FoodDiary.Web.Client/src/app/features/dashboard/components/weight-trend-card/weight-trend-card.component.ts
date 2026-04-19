@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
+import { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
 import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 export interface WeightTrendPoint {
@@ -140,9 +140,9 @@ export class WeightTrendCardComponent {
         const maxVal = numeric.length ? Math.max(...numeric) : 1;
         const padding = Math.max(0.5, (maxVal - minVal) * 0.08);
         const suggestedMin = Math.max(0, minVal - padding);
-        const baseOptions = this.baseChartOptions as ChartConfiguration<'line'>['options'];
-        const baseScales = ((baseOptions as any)?.scales ?? {}) as Record<string, unknown>;
-        const baseY = (baseScales as any)?.y as Record<string, unknown> | undefined;
+        const baseOptions = this.baseChartOptions;
+        const baseScales = baseOptions?.scales;
+        const baseY = baseScales?.['y'] as ScaleOptionsByType<'linear'> | undefined;
 
         return {
             ...baseOptions,

@@ -186,7 +186,7 @@ export class NutrientsSummaryComponent implements OnInit {
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: (context: TooltipItem<any>): string => this.getFormattedTooltip(context),
+                    label: (context: TooltipItem<'pie' | 'bar'>): string => this.getFormattedTooltip(context),
                 },
             },
         },

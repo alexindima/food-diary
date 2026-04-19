@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './features/public/pages/landing/main.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
@@ -8,7 +7,7 @@ import { authRoutes } from './features/auth/auth.routes';
 export const routes: Routes = [
     {
         path: '',
-        component: MainComponent,
+        loadComponent: () => import('./features/public/pages/landing/main.component').then(m => m.MainComponent),
         canDeactivate: [unsavedChangesGuard],
         data: { seo: { titleKey: null, descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
     },

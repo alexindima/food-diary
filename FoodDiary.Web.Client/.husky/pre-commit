@@ -16,7 +16,7 @@ cd FoodDiary.Web.Client
 if [ "$HAS_TS" -gt 0 ] || [ "$HAS_HTML" -gt 0 ]; then
   echo "=== Running Prettier ==="
   if [ -n "$STAGED_FRONTEND_FORMATTABLE_FILES" ]; then
-    printf '%s\n' "$STAGED_FRONTEND_FORMATTABLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs npx prettier --check || exit 1
+    printf '%s\n' "$STAGED_FRONTEND_FORMATTABLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx prettier --check || exit 1
   else
     echo "=== Skipping Prettier (no frontend .ts/.html files changed) ==="
   fi

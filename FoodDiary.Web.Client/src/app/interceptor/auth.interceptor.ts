@@ -8,7 +8,7 @@ import { SKIP_AUTH } from '../constants/http-context.tokens';
 export class AuthInterceptor implements HttpInterceptor {
     private readonly authService = inject(AuthService);
 
-    public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const skipAuth = req.context.get(SKIP_AUTH);
         if (skipAuth) {
             return next.handle(req);

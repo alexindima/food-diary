@@ -21,6 +21,7 @@ import { TokenStorageService } from './token-storage.service';
 import { JwtDecoderService } from './jwt-decoder.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
 import { ThemeService } from './theme.service';
+import { FrontendLoggerService } from './frontend-logger.service';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +33,7 @@ export class AuthService extends ApiService {
     private readonly themeService = inject(ThemeService);
     private readonly tokenStorage = inject(TokenStorageService);
     private readonly jwtDecoder = inject(JwtDecoderService);
+    private readonly logger = inject(FrontendLoggerService);
     protected readonly baseUrl = environment.apiUrls.auth;
 
     private authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
@@ -235,7 +237,7 @@ export class AuthService extends ApiService {
             this.tokenStorage.setUserId(userId);
             this.userSignal.set(userId);
         } else {
-            console.warn('Auth response did not include user ID');
+            this.logger.warn('Auth response did not include user ID');
             this.tokenStorage.clearUserId();
             this.userSignal.set(null);
         }
@@ -253,7 +255,7 @@ export class AuthService extends ApiService {
         this.post<unknown>('telegram/link', request)
             .pipe(
                 catchError(error => {
-                    console.warn('Telegram link failed', error);
+                    this.logger.warn('Telegram link failed', error);
                     return of(null);
                 }),
             )

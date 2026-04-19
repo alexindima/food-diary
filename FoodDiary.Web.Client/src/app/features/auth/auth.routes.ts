@@ -1,17 +1,16 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from '../public/pages/landing/main.component';
 import { loggedInGuard } from '../../guards/logged-in.guard';
 
 export const authRoutes: Routes = [
     {
         path: 'auth',
-        component: MainComponent,
+        loadComponent: () => import('../public/pages/landing/main.component').then(m => m.MainComponent),
         data: { openAuth: true, seo: { titleKey: 'SEO.AUTH_LOGIN', descriptionKey: 'SEO.AUTH_DESCRIPTION' } },
         canActivate: [loggedInGuard],
     },
     {
         path: 'auth/:mode',
-        component: MainComponent,
+        loadComponent: () => import('../public/pages/landing/main.component').then(m => m.MainComponent),
         data: { openAuth: true, seo: { titleKey: 'SEO.AUTH_LOGIN', descriptionKey: 'SEO.AUTH_DESCRIPTION' } },
         canActivate: [loggedInGuard],
     },

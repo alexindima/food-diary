@@ -10,6 +10,7 @@ import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-se
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
+import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
@@ -60,6 +61,7 @@ export class ProductAiRecognitionDialogComponent {
     });
     private readonly aiFoodService = inject(AiFoodService);
     private readonly imageUploadService = inject(ImageUploadService);
+    private readonly logger = inject(FrontendLoggerService);
     private readonly translateService = inject(TranslateService);
 
     public readonly isLoading = signal(false);
@@ -334,7 +336,7 @@ export class ProductAiRecognitionDialogComponent {
         }
 
         this.imageUploadService.deleteAsset(assetId).subscribe({
-            error: err => console.warn('Failed to delete AI product image asset', err),
+            error: err => this.logger.warn('Failed to delete AI product image asset', err),
         });
     }
 }

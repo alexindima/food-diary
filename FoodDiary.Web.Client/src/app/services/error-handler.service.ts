@@ -1,15 +1,17 @@
 import { Injectable, ErrorHandler, inject } from '@angular/core';
 import { FrontendObservabilityService } from './frontend-observability.service';
+import { FrontendLoggerService } from './frontend-logger.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
     private readonly frontendObservabilityService = inject(FrontendObservabilityService);
+    private readonly logger = inject(FrontendLoggerService);
 
     public handleError(error: unknown): void {
         try {
             this.frontendObservabilityService.recordClientError(this.buildErrorPayload(error));
         } catch (err) {
-            console.error('Failed to send log to backend:', err);
+            this.logger.error('Failed to send log to backend:', err);
         }
     }
 

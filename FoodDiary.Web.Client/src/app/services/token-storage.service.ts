@@ -1,41 +1,41 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { BrowserStorageService } from './browser-storage.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TokenStorageService {
-    private readonly localStorageRef = typeof localStorage === 'undefined' ? null : localStorage;
-    private readonly sessionStorageRef = typeof sessionStorage === 'undefined' ? null : sessionStorage;
+    private readonly storage = inject(BrowserStorageService);
 
     public getToken(): string | null {
-        return this.localStorageRef?.getItem('authToken') || this.sessionStorageRef?.getItem('authToken') || null;
+        return this.storage.getItem('local', 'authToken') || this.storage.getItem('session', 'authToken') || null;
     }
 
     public setToken(token: string, rememberMe?: boolean): void {
         if (rememberMe !== undefined) {
             if (rememberMe) {
-                this.localStorageRef?.setItem('authToken', token);
-                this.sessionStorageRef?.removeItem('authToken');
+                this.storage.setItem('local', 'authToken', token);
+                this.storage.removeItem('session', 'authToken');
             } else {
-                this.sessionStorageRef?.setItem('authToken', token);
-                this.localStorageRef?.removeItem('authToken');
+                this.storage.setItem('session', 'authToken', token);
+                this.storage.removeItem('local', 'authToken');
             }
         } else {
-            if (this.localStorageRef?.getItem('authToken') !== null) {
-                this.localStorageRef?.setItem('authToken', token);
+            if (this.storage.getItem('local', 'authToken') !== null) {
+                this.storage.setItem('local', 'authToken', token);
             } else {
-                this.sessionStorageRef?.setItem('authToken', token);
+                this.storage.setItem('session', 'authToken', token);
             }
         }
     }
 
     public clearToken(): void {
-        this.localStorageRef?.removeItem('authToken');
-        this.sessionStorageRef?.removeItem('authToken');
+        this.storage.removeItem('local', 'authToken');
+        this.storage.removeItem('session', 'authToken');
     }
 
     public getRefreshToken(): string | null {
-        const token = this.localStorageRef?.getItem('refreshToken') ?? null;
+        const token = this.storage.getItem('local', 'refreshToken');
         if (!token || token === 'undefined' || token === 'null') {
             this.clearRefreshToken();
             return null;
@@ -48,15 +48,15 @@ export class TokenStorageService {
             this.clearRefreshToken();
             return;
         }
-        this.localStorageRef?.setItem('refreshToken', token);
+        this.storage.setItem('local', 'refreshToken', token);
     }
 
     public clearRefreshToken(): void {
-        this.localStorageRef?.removeItem('refreshToken');
+        this.storage.removeItem('local', 'refreshToken');
     }
 
     public loadUserId(): string | null {
-        const storedId = this.localStorageRef?.getItem('userId') ?? null;
+        const storedId = this.storage.getItem('local', 'userId');
         if (!storedId || storedId === 'undefined') {
             return null;
         }
@@ -65,19 +65,19 @@ export class TokenStorageService {
 
     public setUserId(userId: string | null): void {
         if (userId) {
-            this.localStorageRef?.setItem('userId', userId);
+            this.storage.setItem('local', 'userId', userId);
         } else {
-            this.localStorageRef?.removeItem('userId');
+            this.storage.removeItem('local', 'userId');
         }
     }
 
     public clearUserId(): void {
-        this.localStorageRef?.removeItem('userId');
-        this.sessionStorageRef?.removeItem('userId');
+        this.storage.removeItem('local', 'userId');
+        this.storage.removeItem('session', 'userId');
     }
 
     public loadEmailConfirmed(): boolean | null {
-        const stored = this.localStorageRef?.getItem('emailConfirmed') ?? null;
+        const stored = this.storage.getItem('local', 'emailConfirmed');
         if (stored === 'true') {
             return true;
         }
@@ -88,11 +88,11 @@ export class TokenStorageService {
     }
 
     public setEmailConfirmed(value: boolean): void {
-        this.localStorageRef?.setItem('emailConfirmed', value ? 'true' : 'false');
+        this.storage.setItem('local', 'emailConfirmed', value ? 'true' : 'false');
     }
 
     public clearEmailConfirmed(): void {
-        this.localStorageRef?.removeItem('emailConfirmed');
+        this.storage.removeItem('local', 'emailConfirmed');
     }
 
     public clearAll(): void {

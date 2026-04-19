@@ -1,8 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MeasurementUnit } from '../features/products/models/product.data';
+import { BrowserStorageService } from './browser-storage.service';
 
 @Injectable()
 export class LocalizationService {
@@ -10,11 +12,12 @@ export class LocalizationService {
 
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly storage = inject(BrowserStorageService);
     private readonly storageKey = 'fd_language';
-    private readonly localStorageRef = typeof localStorage === 'undefined' ? null : localStorage;
 
     public constructor() {
-        this.translateService.onLangChange.subscribe(event => {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             const normalized = this.normalizeLanguage(event.lang);
             this.persistLanguage(normalized);
             this.setDocumentLang(normalized);
@@ -55,7 +58,7 @@ export class LocalizationService {
     }
 
     public clearStoredLanguage(): void {
-        this.localStorageRef?.removeItem(this.storageKey);
+        this.storage.removeItem('local', this.storageKey);
     }
 
     public getServingUnitName(unit: MeasurementUnit): string {
@@ -80,11 +83,11 @@ export class LocalizationService {
     }
 
     private persistLanguage(lang: string): void {
-        this.localStorageRef?.setItem(this.storageKey, lang);
+        this.storage.setItem('local', this.storageKey, lang);
     }
 
     private getStoredLanguage(): string | null {
-        const value = this.localStorageRef?.getItem(this.storageKey) ?? null;
+        const value = this.storage.getItem('local', this.storageKey);
         if (!value || value === 'undefined' || value === 'null') {
             return null;
         }

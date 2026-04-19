@@ -19,6 +19,7 @@ import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
 import { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
+import { buildMealManageDtoFromAiResult, mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
 
 @Component({
     selector: 'fd-ai-input-bar',
@@ -176,26 +177,7 @@ export class AiInputBarComponent {
             comment: details.comment ?? null,
             preMealSatietyLevel: details.preMealSatietyLevel ?? null,
             postMealSatietyLevel: details.postMealSatietyLevel ?? null,
-            items:
-                nutrition.items?.map(item => {
-                    const match = results.find(
-                        r =>
-                            r.nameEn?.trim().toLowerCase() === (item.name ?? '').trim().toLowerCase() ||
-                            r.nameLocal?.trim().toLowerCase() === (item.name ?? '').trim().toLowerCase(),
-                    );
-                    return {
-                        nameEn: match?.nameEn ?? item.name,
-                        nameLocal: match?.nameLocal ?? null,
-                        amount: item.amount,
-                        unit: item.unit,
-                        calories: item.calories,
-                        proteins: item.protein,
-                        fats: item.fat,
-                        carbs: item.carbs,
-                        fiber: item.fiber,
-                        alcohol: item.alcohol,
-                    };
-                }) ?? [],
+            items: mapNutritionItemsToAiInputBarItems(nutrition, results),
         });
     }
 
@@ -237,26 +219,6 @@ export class AiInputBarComponent {
 
         const selection = this.photoSelection();
         const results = this.photoResults();
-        const items =
-            nutrition.items?.map(item => {
-                const match = results.find(
-                    r =>
-                        r.nameEn?.trim().toLowerCase() === (item.name ?? '').trim().toLowerCase() ||
-                        r.nameLocal?.trim().toLowerCase() === (item.name ?? '').trim().toLowerCase(),
-                );
-                return {
-                    nameEn: match?.nameEn ?? item.name,
-                    nameLocal: match?.nameLocal ?? null,
-                    amount: item.amount,
-                    unit: item.unit,
-                    calories: item.calories,
-                    proteins: item.protein,
-                    fats: item.fat,
-                    carbs: item.carbs,
-                    fiber: item.fiber,
-                    alcohol: item.alcohol,
-                };
-            }) ?? [];
 
         this.submitMeal({
             source: 'Photo',
@@ -269,7 +231,7 @@ export class AiInputBarComponent {
             comment: details.comment ?? null,
             preMealSatietyLevel: details.preMealSatietyLevel ?? null,
             postMealSatietyLevel: details.postMealSatietyLevel ?? null,
-            items,
+            items: mapNutritionItemsToAiInputBarItems(nutrition, results),
         });
     }
 
@@ -340,30 +302,7 @@ export class AiInputBarComponent {
         const mealDate = result.date && result.time ? new Date(`${result.date}T${result.time}`) : new Date();
         this.isSubmittingMeal.set(true);
         this.mealService
-            .create({
-                date: mealDate,
-                comment: result.comment ?? undefined,
-                isNutritionAutoCalculated: false,
-                manualCalories: result.items.reduce((sum, item) => sum + item.calories, 0),
-                manualProteins: result.items.reduce((sum, item) => sum + item.proteins, 0),
-                manualFats: result.items.reduce((sum, item) => sum + item.fats, 0),
-                manualCarbs: result.items.reduce((sum, item) => sum + item.carbs, 0),
-                manualFiber: result.items.reduce((sum, item) => sum + item.fiber, 0),
-                manualAlcohol: result.items.reduce((sum, item) => sum + item.alcohol, 0),
-                preMealSatietyLevel: result.preMealSatietyLevel ?? undefined,
-                postMealSatietyLevel: result.postMealSatietyLevel ?? undefined,
-                items: [],
-                aiSessions: [
-                    {
-                        source: result.source,
-                        imageAssetId: result.imageAssetId,
-                        imageUrl: result.imageUrl,
-                        recognizedAtUtc: result.recognizedAtUtc,
-                        notes: result.notes,
-                        items: result.items,
-                    },
-                ],
-            })
+            .create(buildMealManageDtoFromAiResult(result, mealDate))
             .pipe(
                 finalize(() => this.isSubmittingMeal.set(false)),
                 takeUntilDestroyed(this.destroyRef),
