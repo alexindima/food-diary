@@ -25,7 +25,9 @@
             class="ai-input-bar__action-btn"
             [disabled]="isDisabled()"
             (click)="onPhotoClick()"
-            [title]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+            [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+            [fdUiHintFocusShowDelay]="0"
+            fdUiHintPosition="bottom"
         >
             <mat-icon>photo_camera</mat-icon>
         </button>
@@ -36,7 +38,9 @@
                 [class.ai-input-bar__action-btn--mic-active]="isListening()"
                 [disabled]="isDisabled()"
                 (click)="toggleMic()"
-                [title]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+                [fdUiHint]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+                [fdUiHintFocusShowDelay]="0"
+                fdUiHintPosition="bottom"
             >
                 <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
             </button>

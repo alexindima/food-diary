@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml } from '@angular/platform-browser';
 
@@ -11,6 +11,9 @@ import { SafeHtml } from '@angular/platform-browser';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiHintOverlayComponent {
+    public readonly tooltipId = input<string | null>(null);
     public readonly contentText = input<string | null>(null);
     public readonly contentHtml = input<SafeHtml | null>(null);
+    public readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
+    public readonly contentContext = input<Record<string, unknown> | null>(null);
 }

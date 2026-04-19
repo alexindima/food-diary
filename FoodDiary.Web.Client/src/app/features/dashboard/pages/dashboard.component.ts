@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, inject, viewChild } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
@@ -44,6 +45,7 @@ import {
     standalone: true,
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiDatepickerModule,
         FdUiInputFieldModule,

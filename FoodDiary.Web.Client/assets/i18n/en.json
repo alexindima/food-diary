@@ -180,7 +180,8 @@
         "EYEBROW": "See today",
         "TITLE": "Today's meals preview",
         "VIEW_ALL": "Open all meals",
-        "PLACEHOLDER": "Add a meal to see it here"
+        "PLACEHOLDER": "Add a meal to see it here",
+        "ADD_MANUAL_HINT": "Add manually"
     },
     "FEATURES": {
         "EYEBROW": "Why Food Diary",
@@ -1692,6 +1693,7 @@
             "ADD_CONSUMPTION_DESCRIPTION": "Log a meal in a few taps.",
             "ADD_CONSUMPTION_BUTTON": "Add consumption",
             "OPEN_NOTIFICATION_SETTINGS": "Notifications",
+            "OPEN_DATE_PICKER": "Choose date",
             "ENABLE_PUSH_BUTTON": "Enable push",
             "DISABLE_PUSH_BUTTON": "Disable push",
             "PUSH_ENABLED": "Push notifications enabled for this device.",

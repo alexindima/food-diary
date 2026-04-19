@@ -43,6 +43,9 @@
                                         icon="auto_awesome"
                                         iconSize="sm"
                                         [ariaLabel]="'DASHBOARD.ADD_WITH_AI_BUTTON' | translate"
+                                        [fdUiHint]="'DASHBOARD.ADD_WITH_AI_BUTTON' | translate"
+                                        [fdUiHintFocusShowDelay]="0"
+                                        fdUiHintPosition="bottom"
                                         (click)="toggleAi(entry.slot)"
                                     />
                                 }
@@ -53,7 +56,10 @@
                                     size="sm"
                                     icon="edit"
                                     iconSize="sm"
-                                    [ariaLabel]="'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate"
+                                    [ariaLabel]="'MEALS_PREVIEW.ADD_MANUAL_HINT' | translate"
+                                    [fdUiHint]="'MEALS_PREVIEW.ADD_MANUAL_HINT' | translate"
+                                    [fdUiHintFocusShowDelay]="0"
+                                    fdUiHintPosition="bottom"
                                     (click)="add.emit(entry.slot)"
                                 />
                             </div>

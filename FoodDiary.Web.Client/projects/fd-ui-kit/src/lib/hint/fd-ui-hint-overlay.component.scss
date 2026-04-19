@@ -4,20 +4,42 @@
 }
 
 .fd-ui-hint {
-    max-width: 280px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: var(--fd-color-white);
-    color: var(--fd-color-text, var(--fd-color-gray-900-static));
-    box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    --fd-hint-background: var(--fd-color-surface-raised, var(--fd-color-surface, #ffffff));
+    --fd-hint-text: var(--fd-color-text, var(--fd-color-gray-900-static));
+    --fd-hint-border: var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
+    --fd-hint-shadow: var(--fd-shadow-sm, 0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent));
+    --fd-hint-radius: var(--fd-radius-panel, 12px);
+    --fd-hint-padding-y: 9px;
+    --fd-hint-padding-x: 12px;
+    --fd-hint-max-width: 280px;
+    max-width: var(--fd-hint-max-width);
+    padding: var(--fd-hint-padding-y) var(--fd-hint-padding-x);
+    border-radius: var(--fd-hint-radius);
+    background: var(--fd-hint-background);
+    color: var(--fd-hint-text);
+    box-shadow: var(--fd-hint-shadow);
+    border: 1px solid var(--fd-hint-border);
     font-size: 0.85rem;
     line-height: 1.4;
+    backdrop-filter: blur(10px);
+    animation: fd-ui-hint-in 120ms ease-out;
 }
 
 .fd-ui-hint__content {
     word-break: break-word;
 }
 
+@keyframes fd-ui-hint-in {
+
+    0% {
+        opacity: 0;
+        transform: translateY(2px) scale(0.985);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 
 

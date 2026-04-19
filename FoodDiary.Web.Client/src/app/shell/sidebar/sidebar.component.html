@@ -11,7 +11,8 @@
             type="button"
             class="sidebar__brand-notifications"
             [attr.aria-label]="'NOTIFICATIONS.TITLE' | translate"
-            [attr.title]="'NOTIFICATIONS.TITLE' | translate"
+            [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
+            [fdUiHintFocusShowDelay]="0"
             (click)="openNotifications()"
         >
             <mat-icon>notifications</mat-icon>

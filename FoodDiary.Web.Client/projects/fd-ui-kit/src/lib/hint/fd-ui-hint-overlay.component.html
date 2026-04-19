@@ -1,8 +1,13 @@
-<div class="fd-ui-hint" role="tooltip">
+<div class="fd-ui-hint" [attr.id]="tooltipId()" role="tooltip">
     @if (contentText()) {
         <div class="fd-ui-hint__content">{{ contentText() }}</div>
     }
     @if (contentHtml()) {
         <div class="fd-ui-hint__content" [innerHTML]="contentHtml()"></div>
+    }
+    @if (contentTemplate(); as template) {
+        <div class="fd-ui-hint__content">
+            <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="contentContext() ?? {}" />
+        </div>
     }
 </div>

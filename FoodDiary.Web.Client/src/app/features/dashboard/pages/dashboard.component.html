@@ -32,6 +32,8 @@
                     fill="outline"
                     icon="calendar_today"
                     [ariaLabel]="selectedDate() | localizedDate: 'd MMMM y'"
+                    [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+                    [fdUiHintFocusShowDelay]="0"
                     (click)="openDatePicker()"
                 />
             </div>
@@ -43,6 +45,8 @@
                 fill="outline"
                 icon="tune"
                 [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+                [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+                [fdUiHintFocusShowDelay]="0"
                 [class.dashboard__settings-action--active]="layout.isEditingLayout()"
                 [attr.aria-pressed]="layout.isEditingLayout()"
                 (click)="layout.openSettings()"

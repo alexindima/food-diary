@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MealCardComponent, MealCardItem } from '../meal-card/meal-card.component';
@@ -16,7 +17,7 @@ export interface MealPreviewEntry {
 @Component({
     selector: 'fd-meals-preview',
     standalone: true,
-    imports: [CommonModule, TranslateModule, FdUiButtonComponent, MatIconModule, MealCardComponent, AiInputBarComponent],
+    imports: [CommonModule, TranslateModule, FdUiHintDirective, FdUiButtonComponent, MatIconModule, MealCardComponent, AiInputBarComponent],
     templateUrl: './meals-preview.component.html',
     styleUrls: ['./meals-preview.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

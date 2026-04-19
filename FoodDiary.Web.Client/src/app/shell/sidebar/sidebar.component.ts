@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
@@ -22,7 +23,7 @@ import { NotificationsDialogComponent } from '../../components/shared/notificati
 
 @Component({
     selector: 'fd-sidebar',
-    imports: [TranslateModule, RouterModule, FdUiIconModule, MatIconModule, SlicePipe, UpperCasePipe],
+    imports: [TranslateModule, RouterModule, FdUiHintDirective, FdUiIconModule, MatIconModule, SlicePipe, UpperCasePipe],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })

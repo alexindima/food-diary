@@ -1,12 +1,13 @@
-import { DestroyRef, Directive, ElementRef, ViewContainerRef, input, inject } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, TemplateRef, booleanAttribute, input, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
-import { TemplateRef } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay.component';
 
 type HintContent = string | TemplateRef<unknown> | null;
 type HintPosition = 'top' | 'bottom' | 'left' | 'right';
+
+let nextHintId = 0;
 
 @Directive({
     selector: '[fdUiHint]',
@@ -17,6 +18,7 @@ type HintPosition = 'top' | 'bottom' | 'left' | 'right';
         '(focusin)': 'onFocusIn()',
         '(focusout)': 'onFocusOut()',
         '(click)': 'onClick()',
+        '(keydown.escape)': 'onEscape()',
     },
 })
 export class FdUiHintDirective {
@@ -24,14 +26,17 @@ export class FdUiHintDirective {
     public readonly fdUiHintHtml = input(false);
     public readonly fdUiHintContext = input<Record<string, unknown> | null>(null);
     public readonly fdUiHintShowDelay = input(500);
+    public readonly fdUiHintFocusShowDelay = input<number | null>(null);
     public readonly fdUiHintHideDelay = input(0);
-    public readonly fdUiHintPosition = input<HintPosition>('top');
+    public readonly fdUiHintPosition = input<HintPosition>('bottom');
+    public readonly fdUiHintDisabled = input(false, { transform: booleanAttribute });
 
     private readonly overlay = inject(Overlay);
     private readonly elementRef = inject(ElementRef<HTMLElement>);
-    private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tooltipId = `fd-ui-hint-${nextHintId++}`;
+    private readonly initialAriaDescribedBy = this.elementRef.nativeElement.getAttribute('aria-describedby');
     private overlayRef: OverlayRef | null = null;
     private showTimeoutId: number | null = null;
     private hideTimeoutId: number | null = null;
@@ -39,12 +44,13 @@ export class FdUiHintDirective {
     public constructor() {
         this.destroyRef.onDestroy(() => {
             this.clearTimers();
+            this.syncAriaDescribedBy(false);
             this.destroyOverlay();
         });
     }
 
     public onMouseEnter(): void {
-        this.queueShow();
+        this.queueShow(this.fdUiHintShowDelay());
     }
 
     public onMouseLeave(): void {
@@ -52,7 +58,7 @@ export class FdUiHintDirective {
     }
 
     public onFocusIn(): void {
-        this.queueShow();
+        this.queueShow(this.fdUiHintFocusShowDelay() ?? this.fdUiHintShowDelay());
     }
 
     public onFocusOut(): void {
@@ -63,25 +69,34 @@ export class FdUiHintDirective {
         this.hide();
     }
 
-    private queueShow(): void {
-        if (!this.fdUiHint()) {
+    public onEscape(): void {
+        this.hide();
+    }
+
+    private queueShow(delay: number): void {
+        if (!this.hasContent() || this.fdUiHintDisabled()) {
             return;
         }
+
         this.clearHideTimer();
+
         if (this.showTimeoutId !== null) {
             return;
         }
+
         this.showTimeoutId = window.setTimeout(() => {
             this.showTimeoutId = null;
             this.show();
-        }, this.fdUiHintShowDelay());
+        }, delay);
     }
 
     private queueHide(): void {
         this.clearShowTimer();
+
         if (this.hideTimeoutId !== null) {
             return;
         }
+
         this.hideTimeoutId = window.setTimeout(() => {
             this.hideTimeoutId = null;
             this.hide();
@@ -90,7 +105,7 @@ export class FdUiHintDirective {
 
     private show(): void {
         const content = this.fdUiHint();
-        if (!content) {
+        if (!content || this.fdUiHintDisabled()) {
             return;
         }
 
@@ -102,28 +117,35 @@ export class FdUiHintDirective {
             return;
         }
 
-        if (content instanceof TemplateRef) {
-            const context = this.fdUiHintContext() ?? {};
-            this.overlayRef.attach(new TemplatePortal(content, this.viewContainerRef, context));
-            return;
-        }
-
-        const portal = new ComponentPortal(FdUiHintOverlayComponent, this.viewContainerRef);
+        const portal = new ComponentPortal(FdUiHintOverlayComponent);
         const ref = this.overlayRef.attach(portal);
-        if (this.fdUiHintHtml()) {
-            ref.setInput('contentHtml', this.toSafeHtml(content));
+        ref.setInput('tooltipId', this.tooltipId);
+        ref.setInput('contentContext', this.fdUiHintContext());
+
+        if (content instanceof TemplateRef) {
+            ref.setInput('contentTemplate', content);
             ref.setInput('contentText', null);
+            ref.setInput('contentHtml', null);
+        } else if (this.fdUiHintHtml()) {
+            ref.setInput('contentTemplate', null);
+            ref.setInput('contentText', null);
+            ref.setInput('contentHtml', this.toSafeHtml(content));
         } else {
+            ref.setInput('contentTemplate', null);
             ref.setInput('contentText', content);
             ref.setInput('contentHtml', null);
         }
+
+        this.syncAriaDescribedBy(true);
     }
 
     private hide(): void {
         if (!this.overlayRef?.hasAttached()) {
             return;
         }
+
         this.overlayRef.detach();
+        this.syncAriaDescribedBy(false);
     }
 
     private createOverlay(): OverlayRef {
@@ -142,7 +164,7 @@ export class FdUiHintDirective {
     }
 
     private getPositions(): ConnectedPosition[] {
-        const offset = 8;
+        const offset = 6;
         const top: ConnectedPosition[] = [
             {
                 originX: 'center',
@@ -218,6 +240,39 @@ export class FdUiHintDirective {
             default:
                 return top;
         }
+    }
+
+    private hasContent(): boolean {
+        const content = this.fdUiHint();
+        if (content instanceof TemplateRef) {
+            return true;
+        }
+
+        return typeof content === 'string' ? content.trim().length > 0 : Boolean(content);
+    }
+
+    private syncAriaDescribedBy(isVisible: boolean): void {
+        const host = this.elementRef.nativeElement;
+        const tokens = new Set(
+            (this.initialAriaDescribedBy ?? '')
+                .split(/\s+/)
+                .map((token: string) => token.trim())
+                .filter(Boolean),
+        );
+
+        if (isVisible) {
+            tokens.add(this.tooltipId);
+        } else {
+            tokens.delete(this.tooltipId);
+        }
+
+        const value = Array.from(tokens).join(' ');
+        if (value) {
+            host.setAttribute('aria-describedby', value);
+            return;
+        }
+
+        host.removeAttribute('aria-describedby');
     }
 
     private toSafeHtml(content: string): SafeHtml {

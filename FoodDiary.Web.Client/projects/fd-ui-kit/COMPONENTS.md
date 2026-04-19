@@ -3,6 +3,8 @@
 This document describes the shared UI components from `FoodDiary.Web.Client/projects/fd-ui-kit` and how to use them.
 It is intended as a quick reference for feature work.
 
+For tooltip and accessible-name rules, see `ACCESSIBILITY_AND_TOOLTIPS.md`.
+
 ## Usage
 
 Prefer importing from the barrel:
@@ -288,6 +290,27 @@ Compact boolean switch for settings and permission rows.
 - `showStateLabel?: boolean`
 
 ### Navigation / UX
+
+#### `fdUiHint`
+Tooltip directive for short helper text attached to an existing element.
+
+Use for:
+
+- icon-only buttons;
+- compact toolbar actions;
+- short labels for ambiguous controls.
+
+Do not use for long or interactive content. Prefer a popover or inline help for those cases.
+
+**Inputs**
+- `fdUiHint: string | TemplateRef | null`
+- `fdUiHintHtml?: boolean`
+- `fdUiHintContext?: Record<string, unknown> | null`
+- `fdUiHintShowDelay?: number` (default `500`)
+- `fdUiHintFocusShowDelay?: number | null` (falls back to `fdUiHintShowDelay`)
+- `fdUiHintHideDelay?: number` (default `0`)
+- `fdUiHintPosition?: 'top' | 'bottom' | 'left' | 'right'` (default `bottom`)
+- `fdUiHintDisabled?: boolean`
 
 #### `fd-ui-tabs`
 Tabs component.
