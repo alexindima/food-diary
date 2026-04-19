@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChartConfiguration } from 'chart.js';
@@ -42,7 +42,7 @@ import { WeightEntry } from '../models/weight-entry.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [WeightHistoryFacade],
 })
-export class WeightHistoryPageComponent implements OnInit {
+export class WeightHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
 
@@ -100,7 +100,7 @@ export class WeightHistoryPageComponent implements OnInit {
         { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.OBESE', from: 30, to: this.bmiScaleMax, class: 'weight-history-page__bmi-segment--obese' },
     ];
 
-    public ngOnInit(): void {
+    public constructor() {
         this.facade.initialize();
     }
 

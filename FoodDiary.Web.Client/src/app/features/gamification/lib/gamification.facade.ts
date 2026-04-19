@@ -1,16 +1,17 @@
-import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { computed, inject, Injectable, resource } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { GamificationService } from '../api/gamification.service';
 import { Badge, GamificationData } from '../models/gamification.data';
 
 @Injectable()
 export class GamificationFacade {
     private readonly gamificationService = inject(GamificationService);
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly dataResource = resource({
+        loader: async (): Promise<GamificationData> => firstValueFrom(this.gamificationService.getData()),
+    });
 
-    public readonly isLoading = signal(false);
-    public readonly data = signal<GamificationData | null>(null);
+    public readonly isLoading = computed(() => this.dataResource.isLoading());
+    public readonly data = computed(() => (this.dataResource.hasValue() ? this.dataResource.value() : null));
 
     public readonly currentStreak = computed(() => this.data()?.currentStreak ?? 0);
     public readonly longestStreak = computed(() => this.data()?.longestStreak ?? 0);
@@ -22,14 +23,7 @@ export class GamificationFacade {
     public readonly lockedBadges = computed(() => this.badges().filter(b => !b.isEarned));
 
     public initialize(): void {
-        this.isLoading.set(true);
-        this.gamificationService
-            .getData()
-            .pipe(
-                finalize(() => this.isLoading.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(data => this.data.set(data));
+        this.dataResource.reload();
     }
 
     public getBadgeIcon(badge: Badge): string {

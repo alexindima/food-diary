@@ -1,5 +1,6 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, computed, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import { MealPlanService } from '../api/meal-plan.service';
 import { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
@@ -7,45 +8,38 @@ import { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 export class MealPlanFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(MealPlanService);
+    private readonly selectedPlanId = signal<string | null>(null);
 
-    public readonly plans = signal<MealPlanSummary[]>([]);
-    public readonly isLoading = signal(false);
-    public readonly selectedPlan = signal<MealPlan | null>(null);
-    public readonly isDetailLoading = signal(false);
     public readonly dietTypeFilter = signal<DietType | null>(null);
+    private readonly plansResource = resource({
+        params: () => this.dietTypeFilter(),
+        loader: async ({ params }): Promise<MealPlanSummary[]> =>
+            firstValueFrom(this.service.getAll(params ?? undefined)),
+    });
+    private readonly selectedPlanResource = resource({
+        params: () => this.selectedPlanId(),
+        loader: async ({ params }): Promise<MealPlan | null> => {
+            if (!params) {
+                return null;
+            }
+
+            return firstValueFrom(this.service.getById(params));
+        },
+    });
+
+    public readonly plans = computed(() => (this.plansResource.hasValue() ? this.plansResource.value() : []));
+    public readonly isLoading = computed(() => this.plansResource.isLoading());
+    public readonly selectedPlan = computed(() =>
+        this.selectedPlanResource.hasValue() ? (this.selectedPlanResource.value() ?? null) : null,
+    );
+    public readonly isDetailLoading = computed(() => this.selectedPlanResource.isLoading());
 
     public loadPlans(dietType?: DietType | null): void {
-        this.isLoading.set(true);
-        this.service
-            .getAll(dietType ?? undefined)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: plans => {
-                    this.plans.set(plans);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.plans.set([]);
-                    this.isLoading.set(false);
-                },
-            });
+        this.dietTypeFilter.set(dietType ?? null);
     }
 
     public loadPlan(id: string): void {
-        this.isDetailLoading.set(true);
-        this.service
-            .getById(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: plan => {
-                    this.selectedPlan.set(plan);
-                    this.isDetailLoading.set(false);
-                },
-                error: () => {
-                    this.selectedPlan.set(null);
-                    this.isDetailLoading.set(false);
-                },
-            });
+        this.selectedPlanId.set(id);
     }
 
     public adopt(id: string, onSuccess: () => void): void {

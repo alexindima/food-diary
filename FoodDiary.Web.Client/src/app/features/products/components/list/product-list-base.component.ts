@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -24,7 +24,7 @@ import { ProductService } from '../../api/product.service';
 import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { FavoriteProduct, Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
-import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
+import { QuickMealService } from '../../../meals/lib/quick-meal.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
@@ -54,7 +54,7 @@ import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } fro
         ProductCardComponent,
     ],
 })
-export class ProductListBaseComponent implements OnInit {
+export class ProductListBaseComponent {
     protected readonly productService = inject(ProductService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly pageSize = 10;
@@ -111,17 +111,7 @@ export class ProductListBaseComponent implements OnInit {
             search: new FormControl<string | null>(null),
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
-    }
 
-    public resolveImage(product: Product): string | undefined {
-        return resolveProductImageUrl(product.imageUrl ?? undefined, product.productType ?? ProductType.Unknown);
-    }
-
-    protected isPrivateVisibility(visibility: Product['visibility']): boolean {
-        return visibility?.toString().toUpperCase() === 'PRIVATE';
-    }
-
-    public ngOnInit(): void {
         this.breakpointObserver
             .observe('(max-width: 768px)')
             .pipe(
@@ -142,6 +132,7 @@ export class ProductListBaseComponent implements OnInit {
             .pipe(
                 debounceTime(300),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
 
@@ -149,8 +140,17 @@ export class ProductListBaseComponent implements OnInit {
             .pipe(
                 distinctUntilChanged(),
                 switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
+    }
+
+    public resolveImage(product: Product): string | undefined {
+        return resolveProductImageUrl(product.imageUrl ?? undefined, product.productType ?? ProductType.Unknown);
+    }
+
+    protected isPrivateVisibility(visibility: Product['visibility']): boolean {
+        return visibility?.toString().toUpperCase() === 'PRIVATE';
     }
 
     public retryLoad(): void {

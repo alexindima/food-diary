@@ -1,5 +1,6 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, computed, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { LessonService } from '../api/lesson.service';
 import { LessonDetail, LessonSummary } from '../models/lesson.data';
@@ -9,46 +10,55 @@ export class LessonFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(LessonService);
     private readonly translateService = inject(TranslateService);
+    private readonly selectedLessonId = signal<string | null>(null);
+    private readonly markedReadIds = signal<Set<string>>(new Set());
 
-    public readonly lessons = signal<LessonSummary[]>([]);
-    public readonly isLoading = signal(false);
-    public readonly selectedLesson = signal<LessonDetail | null>(null);
-    public readonly isDetailLoading = signal(false);
     public readonly categoryFilter = signal<string | null>(null);
+    private readonly lessonsResource = resource({
+        params: () => ({
+            locale: this.getCurrentLocale(),
+            category: this.categoryFilter(),
+        }),
+        loader: async ({ params }): Promise<LessonSummary[]> =>
+            firstValueFrom(this.service.getAll(params.locale, params.category ?? undefined)),
+    });
+    private readonly selectedLessonResource = resource({
+        params: () => this.selectedLessonId(),
+        loader: async ({ params }): Promise<LessonDetail | null> => {
+            if (!params) {
+                return null;
+            }
+
+            return firstValueFrom(this.service.getById(params));
+        },
+    });
+
+    public readonly lessons = computed(() => {
+        const lessons = this.lessonsResource.hasValue() ? this.lessonsResource.value() : [];
+        const markedReadIds = this.markedReadIds();
+        if (markedReadIds.size === 0) {
+            return lessons;
+        }
+
+        return lessons.map(lesson => (markedReadIds.has(lesson.id) ? { ...lesson, isRead: true } : lesson));
+    });
+    public readonly isLoading = computed(() => this.lessonsResource.isLoading());
+    public readonly selectedLesson = computed(() => {
+        const lesson = this.selectedLessonResource.hasValue() ? (this.selectedLessonResource.value() ?? null) : null;
+        if (!lesson) {
+            return null;
+        }
+
+        return this.markedReadIds().has(lesson.id) ? { ...lesson, isRead: true } : lesson;
+    });
+    public readonly isDetailLoading = computed(() => this.selectedLessonResource.isLoading());
 
     public loadLessons(category?: string | null): void {
-        this.isLoading.set(true);
-        const locale = this.getCurrentLocale();
-        this.service
-            .getAll(locale, category ?? undefined)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: lessons => {
-                    this.lessons.set(lessons);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.lessons.set([]);
-                    this.isLoading.set(false);
-                },
-            });
+        this.categoryFilter.set(category ?? null);
     }
 
     public loadLesson(id: string): void {
-        this.isDetailLoading.set(true);
-        this.service
-            .getById(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: lesson => {
-                    this.selectedLesson.set(lesson);
-                    this.isDetailLoading.set(false);
-                },
-                error: () => {
-                    this.selectedLesson.set(null);
-                    this.isDetailLoading.set(false);
-                },
-            });
+        this.selectedLessonId.set(id);
     }
 
     public markRead(id: string): void {
@@ -56,11 +66,7 @@ export class LessonFacade {
             .markRead(id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                const current = this.selectedLesson();
-                if (current && current.id === id) {
-                    this.selectedLesson.set({ ...current, isRead: true });
-                }
-                this.lessons.update(list => list.map(l => (l.id === id ? { ...l, isRead: true } : l)));
+                this.markedReadIds.update(current => new Set(current).add(id));
             });
     }
 

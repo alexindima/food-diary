@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -39,7 +39,7 @@ import { Recipe } from '../../../recipes/models/recipe.data';
         FdPageContainerDirective,
     ],
 })
-export class ExplorePageComponent implements OnInit {
+export class ExplorePageComponent {
     private readonly exploreService = inject(ExploreService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -52,7 +52,7 @@ export class ExplorePageComponent implements OnInit {
 
     public readonly resolveImageUrl = resolveRecipeImageUrl;
 
-    public ngOnInit(): void {
+    public constructor() {
         this.loadRecipes();
 
         this.searchControl.valueChanges

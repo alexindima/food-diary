@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -55,7 +55,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
         LocalizedDatePipe,
     ],
 })
-export class MealListComponent implements OnInit {
+export class MealListComponent {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly navigationService = inject(NavigationService);
@@ -89,9 +89,7 @@ export class MealListComponent implements OnInit {
         this.searchForm = new FormGroup<SearchFormGroup>({
             dateRange: new FormControl<FdUiDateRangeValue | null>(null),
         });
-    }
 
-    public ngOnInit(): void {
         this.breakpointObserver
             .observe('(max-width: 768px)')
             .pipe(

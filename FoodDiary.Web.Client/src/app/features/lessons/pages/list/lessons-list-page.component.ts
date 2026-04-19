@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -29,10 +29,14 @@ import { LESSON_CATEGORIES } from '../../models/lesson.data';
     styleUrl: './lessons-list-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonsListPageComponent implements OnInit {
+export class LessonsListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(LessonFacade);
     public readonly categories = LESSON_CATEGORIES;
+
+    public constructor() {
+        this.facade.loadLessons();
+    }
 
     public readonly progress = computed(() => {
         const all = this.facade.lessons();
@@ -43,12 +47,7 @@ export class LessonsListPageComponent implements OnInit {
         return { read, total: all.length, percent: Math.round((read / all.length) * 100) };
     });
 
-    public ngOnInit(): void {
-        this.facade.loadLessons();
-    }
-
     public filterByCategory(category: string | null): void {
-        this.facade.categoryFilter.set(category);
         this.facade.loadLessons(category);
     }
 

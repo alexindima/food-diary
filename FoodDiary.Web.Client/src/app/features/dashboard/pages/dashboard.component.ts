@@ -4,7 +4,6 @@ import {
     Component,
     DestroyRef,
     ElementRef,
-    OnInit,
     computed,
     inject,
     viewChild,
@@ -80,7 +79,7 @@ import {
     styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements AfterViewInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
@@ -247,7 +246,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const visibleBlocks = this.layout.visibleBlocks();
         return visibleBlocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
-    public ngOnInit(): void {
+
+    public constructor() {
         this.facade.initialize();
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.layout.hasLayoutChanges(),

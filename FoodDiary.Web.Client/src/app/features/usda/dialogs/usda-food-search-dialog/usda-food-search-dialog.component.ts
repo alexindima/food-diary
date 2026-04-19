@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -120,7 +120,6 @@ export class UsdaFoodSearchDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<UsdaFoodSearchDialogComponent, UsdaFood | null>);
     private readonly usdaService = inject(UsdaService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly searchSubject = new Subject<string>();
 
     public readonly searchQuery = signal('');
     public readonly results = signal<UsdaFood[]>([]);
@@ -128,7 +127,7 @@ export class UsdaFoodSearchDialogComponent {
     public readonly selectedFood = signal<UsdaFood | null>(null);
 
     public constructor() {
-        this.searchSubject
+        toObservable(this.searchQuery)
             .pipe(
                 debounceTime(300),
                 distinctUntilChanged(),
@@ -136,7 +135,7 @@ export class UsdaFoodSearchDialogComponent {
                     if (query.length < 2) {
                         this.results.set([]);
                         this.isLoading.set(false);
-                        return [];
+                        return of<UsdaFood[]>([]);
                     }
                     this.isLoading.set(true);
                     return this.usdaService.searchFoods(query);
@@ -152,7 +151,6 @@ export class UsdaFoodSearchDialogComponent {
     public onSearchChange(value: string): void {
         this.searchQuery.set(value);
         this.selectedFood.set(null);
-        this.searchSubject.next(value);
     }
 
     public selectFood(food: UsdaFood): void {

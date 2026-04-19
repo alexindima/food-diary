@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -50,7 +50,7 @@ import { RecipeListFacade } from '../../lib/recipe-list.facade';
     ],
     providers: [RecipeListFacade],
 })
-export class RecipeListComponent implements OnInit {
+export class RecipeListComponent {
     private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly breakpointObserver = inject(BreakpointObserver);
@@ -99,13 +99,7 @@ export class RecipeListComponent implements OnInit {
             search: new FormControl<string | null>(null),
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
-    }
 
-    public resolveImage(recipe: Recipe): string | undefined {
-        return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
-    }
-
-    public ngOnInit(): void {
         this.breakpointObserver
             .observe('(max-width: 768px)')
             .pipe(
@@ -128,6 +122,7 @@ export class RecipeListComponent implements OnInit {
             .pipe(
                 debounceTime(300),
                 switchMap(value => this.recipeListFacade.loadRecipes(1, this.pageSize, value, this.searchForm.controls.onlyMine.value)),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
 
@@ -142,8 +137,13 @@ export class RecipeListComponent implements OnInit {
                         this.searchForm.controls.onlyMine.value,
                     ),
                 ),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
+    }
+
+    public resolveImage(recipe: Recipe): string | undefined {
+        return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
     public retryLoad(): void {

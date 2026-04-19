@@ -1,11 +1,11 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, debounceTime } from 'rxjs';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
 import { MeasurementUnit } from '../../products/models/product.data';
+import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 
 export type ShoppingListDraftItem = {
     name: string;
@@ -20,7 +20,11 @@ export class ShoppingListFacade {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly saveQueue = new Subject<void>();
+    private readonly saveQueue = createAutosaveQueue<void>({
+        debounceMs: 500,
+        isBusy: () => this.isSaving() || this.isLoading(),
+        persist: () => this.persistList(),
+    });
 
     private readonly lastLoadedListId = signal<string | null>(null);
     private suppressAutosave = false;
@@ -40,9 +44,7 @@ export class ShoppingListFacade {
         })),
     );
 
-    public constructor() {
-        this.saveQueue.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.persistList());
-    }
+    public constructor() {}
 
     public initialize(): void {
         this.loadLists();
@@ -301,7 +303,7 @@ export class ShoppingListFacade {
             return;
         }
 
-        this.saveQueue.next();
+        this.saveQueue.schedule(undefined);
     }
 
     private persistList(): void {
@@ -331,7 +333,7 @@ export class ShoppingListFacade {
                     this.updateListSummary(list);
                     if (this.pendingSave) {
                         this.pendingSave = false;
-                        this.scheduleSave();
+                        this.saveQueue.scheduleIfPending();
                     }
                 },
                 error: () => {

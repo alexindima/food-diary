@@ -16,7 +16,7 @@ export function runTrackedRequest<T>(
         )
         .subscribe({
             next: observer.next,
-            error: observer.error ?? (() : void => undefined),
+            error: observer.error ?? ((): void => undefined),
             complete: observer.complete,
         });
 }

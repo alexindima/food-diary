@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -44,7 +44,7 @@ import { ShoppingListFacade } from '../lib/shopping-list.facade';
     ],
     providers: [ShoppingListFacade],
 })
-export class ShoppingListPageComponent implements OnInit {
+export class ShoppingListPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
@@ -106,9 +106,7 @@ export class ShoppingListPageComponent implements OnInit {
                 this.listNameControl.setValue(name, { emitEvent: false });
             }
         });
-    }
 
-    public ngOnInit(): void {
         this.breakpointObserver
             .observe('(max-width: 768px)')
             .pipe(

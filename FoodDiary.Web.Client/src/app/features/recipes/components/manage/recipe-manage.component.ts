@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -53,7 +53,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [RecipeManageFacade],
 })
-export class RecipeManageComponent implements OnInit {
+export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly expandedSteps = new Set<number>();
@@ -178,8 +178,6 @@ export class RecipeManageComponent implements OnInit {
             });
         });
     }
-
-    public ngOnInit(): void {}
 
     public get steps(): FormArray<FormGroup<FormGroupControls<StepFormValues>>> {
         return this.recipeForm.controls.steps;

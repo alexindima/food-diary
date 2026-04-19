@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -43,9 +43,13 @@ import { StatisticsFacade } from '../lib/statistics.facade';
     styleUrls: ['./statistics.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent {
     private readonly translateService = inject(TranslateService);
     protected readonly facade = inject(StatisticsFacade);
+
+    public constructor() {
+        this.facade.initialize();
+    }
 
     public readonly rangeTabs: FdUiTab[] = [
         { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },
@@ -95,10 +99,6 @@ export class StatisticsComponent implements OnInit {
     public readonly barChartOptions = barChartOptions;
     public readonly bodyChartOptions = bodyChartOptions;
     public readonly summarySparklineOptions = summarySparklineOptions;
-
-    public ngOnInit(): void {
-        this.facade.initialize();
-    }
 
     public changeRange(value: unknown): void {
         if (isStatisticsRange(value)) {

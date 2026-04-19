@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -36,7 +36,7 @@ import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [CycleTrackingFacade],
 })
-export class CycleTrackingPageComponent implements OnInit {
+export class CycleTrackingPageComponent {
     private readonly facade = inject(CycleTrackingFacade);
 
     public readonly isLoading = this.facade.isLoading;
@@ -60,7 +60,7 @@ export class CycleTrackingPageComponent implements OnInit {
     public readonly days = this.facade.days;
     public readonly currentCycleTitle = this.facade.currentCycleTitle;
 
-    public ngOnInit(): void {
+    public constructor() {
         this.facade.initialize();
     }
 

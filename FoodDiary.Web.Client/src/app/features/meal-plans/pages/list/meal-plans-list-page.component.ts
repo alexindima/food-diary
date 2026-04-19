@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -29,17 +29,16 @@ import { DIET_TYPES, DietType } from '../../models/meal-plan.data';
     styleUrl: './meal-plans-list-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MealPlansListPageComponent implements OnInit {
+export class MealPlansListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(MealPlanFacade);
     public readonly dietTypes = DIET_TYPES;
 
-    public ngOnInit(): void {
+    public constructor() {
         this.facade.loadPlans();
     }
 
     public filterByDiet(type: DietType | null): void {
-        this.facade.dietTypeFilter.set(type);
         this.facade.loadPlans(type);
     }
 

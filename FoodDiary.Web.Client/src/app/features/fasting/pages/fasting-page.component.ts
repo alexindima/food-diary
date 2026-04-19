@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -77,7 +77,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [FastingFacade],
 })
-export class FastingPageComponent implements OnInit {
+export class FastingPageComponent {
     private readonly facade = inject(FastingFacade);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
@@ -179,6 +179,8 @@ export class FastingPageComponent implements OnInit {
     });
 
     public constructor() {
+        this.facade.initialize();
+
         effect(() => {
             const version = this.facade.checkInSavedVersion();
             if (version <= 0) {
@@ -188,10 +190,6 @@ export class FastingPageComponent implements OnInit {
             this.isCheckInExpanded.set(false);
             this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
         });
-    }
-
-    public ngOnInit(): void {
-        this.facade.initialize();
     }
 
     public selectMode(mode: FastingMode): void {

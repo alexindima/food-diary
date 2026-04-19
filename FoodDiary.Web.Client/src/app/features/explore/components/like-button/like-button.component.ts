@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -12,7 +12,7 @@ import { LikeService } from '../../api/like.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslatePipe, FdUiButtonComponent, FdUiIconModule],
 })
-export class LikeButtonComponent implements OnInit {
+export class LikeButtonComponent {
     private readonly likeService = inject(LikeService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -22,14 +22,16 @@ export class LikeButtonComponent implements OnInit {
     public readonly totalLikes = signal(0);
     public readonly isToggling = signal(false);
 
-    public ngOnInit(): void {
-        this.likeService
-            .getStatus(this.recipeId())
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(status => {
-                this.isLiked.set(status.isLiked);
-                this.totalLikes.set(status.totalLikes);
-            });
+    public constructor() {
+        effect(() => {
+            this.likeService
+                .getStatus(this.recipeId())
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(status => {
+                    this.isLiked.set(status.isLiked);
+                    this.totalLikes.set(status.totalLikes);
+                });
+        });
     }
 
     public onToggle(): void {

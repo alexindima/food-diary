@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -26,12 +26,12 @@ import { LessonFacade } from '../../lib/lesson.facade';
     styleUrl: './lesson-detail-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonDetailPageComponent implements OnInit {
+export class LessonDetailPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     public readonly facade = inject(LessonFacade);
 
-    public ngOnInit(): void {
+    public constructor() {
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.facade.loadLesson(id);

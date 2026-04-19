@@ -1,4 +1,4 @@
-import { Directive, DestroyRef, ElementRef, OnInit, Renderer2, inject, input } from '@angular/core';
+import { Directive, DestroyRef, ElementRef, Renderer2, inject, input } from '@angular/core';
 
 @Directive({
     selector: '[fdCardHover]',
@@ -10,7 +10,7 @@ import { Directive, DestroyRef, ElementRef, OnInit, Renderer2, inject, input } f
         '(focusout)': 'onFocusOut()',
     },
 })
-export class FdCardHoverDirective implements OnInit {
+export class FdCardHoverDirective {
     public readonly fdCardHoverShadow = input<string | null>(null);
     public readonly fdCardHoverTransform = input<string | null>(null);
 
@@ -23,7 +23,7 @@ export class FdCardHoverDirective implements OnInit {
     private readonly renderer = inject(Renderer2);
     private readonly destroyRef = inject(DestroyRef);
 
-    public ngOnInit(): void {
+    public constructor() {
         const element = this.elementRef.nativeElement;
         const { style } = element;
         this.originalTransform = style.transform || null;

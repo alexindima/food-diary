@@ -1,16 +1,17 @@
-import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { computed, inject, Injectable, resource } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import { WeeklyCheckInData } from '../models/weekly-check-in.data';
 
 @Injectable()
 export class WeeklyCheckInFacade {
     private readonly service = inject(WeeklyCheckInService);
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly dataResource = resource({
+        loader: async (): Promise<WeeklyCheckInData> => firstValueFrom(this.service.getData()),
+    });
 
-    public readonly isLoading = signal(false);
-    public readonly data = signal<WeeklyCheckInData | null>(null);
+    public readonly isLoading = computed(() => this.dataResource.isLoading());
+    public readonly data = computed(() => (this.dataResource.hasValue() ? this.dataResource.value() : null));
 
     public readonly thisWeek = computed(() => this.data()?.thisWeek);
     public readonly lastWeek = computed(() => this.data()?.lastWeek);
@@ -18,14 +19,7 @@ export class WeeklyCheckInFacade {
     public readonly suggestions = computed(() => this.data()?.suggestions ?? []);
 
     public initialize(): void {
-        this.isLoading.set(true);
-        this.service
-            .getData()
-            .pipe(
-                finalize(() => this.isLoading.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(data => this.data.set(data));
+        this.dataResource.reload();
     }
 
     public getTrendIcon(value: number): string {

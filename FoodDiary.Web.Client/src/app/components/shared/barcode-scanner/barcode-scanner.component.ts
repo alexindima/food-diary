@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -13,7 +13,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
     styleUrl: './barcode-scanner.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BarcodeScannerComponent implements OnInit {
+export class BarcodeScannerComponent {
     private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
     private readonly destroyRef = inject(DestroyRef);
     private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
@@ -26,7 +26,7 @@ export class BarcodeScannerComponent implements OnInit {
     private animationFrameId = 0;
     private detector: BarcodeDetector | null = null;
 
-    public ngOnInit(): void {
+    public constructor() {
         if (!('BarcodeDetector' in window)) {
             this.isUnsupported.set(true);
             return;

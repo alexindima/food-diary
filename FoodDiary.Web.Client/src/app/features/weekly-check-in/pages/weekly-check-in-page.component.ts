@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
@@ -27,7 +27,7 @@ import { WeeklyCheckInFacade } from '../lib/weekly-check-in.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [WeeklyCheckInFacade],
 })
-export class WeeklyCheckInPageComponent implements OnInit {
+export class WeeklyCheckInPageComponent {
     private readonly facade = inject(WeeklyCheckInFacade);
 
     public readonly isLoading = this.facade.isLoading;
@@ -40,7 +40,7 @@ export class WeeklyCheckInPageComponent implements OnInit {
 
     protected readonly Math = Math;
 
-    public ngOnInit(): void {
+    public constructor() {
         this.facade.initialize();
     }
 }

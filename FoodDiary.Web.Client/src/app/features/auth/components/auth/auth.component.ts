@@ -7,7 +7,6 @@
     AfterViewInit,
     ElementRef,
     viewChild,
-    OnInit,
     inject,
     signal,
     effect,
@@ -56,7 +55,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent],
 })
-export class AuthComponent implements OnInit, AfterViewInit {
+export class AuthComponent implements AfterViewInit {
     public readonly useRouting = input(true);
     public readonly initialMode = input<'login' | 'register'>('login');
     private readonly googleLoginButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
@@ -135,12 +134,11 @@ export class AuthComponent implements OnInit, AfterViewInit {
         });
 
         effect(() => this.renderGoogleButton());
-    }
-
-    public ngOnInit(): void {
-        const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
-        this.authMode = this.useRouting() ? routeMode : this.initialMode();
-        this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
+        effect(() => {
+            const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
+            this.authMode = this.useRouting() ? routeMode : this.initialMode();
+            this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
+        });
     }
 
     public async ngAfterViewInit(): Promise<void> {

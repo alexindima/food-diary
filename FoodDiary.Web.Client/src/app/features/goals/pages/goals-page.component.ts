@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -43,7 +43,7 @@ type TimeframeOption = {
     styleUrls: ['./goals-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsPageComponent implements OnInit {
+export class GoalsPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly facade = inject(GoalsFacade);
@@ -69,7 +69,7 @@ export class GoalsPageComponent implements OnInit {
     protected macroPresetOptions: FdUiSelectOption<MacroPresetKey>[] = [];
     private activeRingElement: HTMLElement | null = null;
 
-    public ngOnInit(): void {
+    public constructor() {
         this.buildMacroPresetOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMacroPresetOptions();

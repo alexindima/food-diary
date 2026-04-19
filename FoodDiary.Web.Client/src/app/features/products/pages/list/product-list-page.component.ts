@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
@@ -41,7 +41,7 @@ import { Product } from '../../models/product.data';
         ProductCardComponent,
     ],
 })
-export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {
+export class ProductListPageComponent extends ProductListBaseComponent {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private isDeleteInProgress = false;

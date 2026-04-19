@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
@@ -27,7 +27,7 @@ import { GamificationFacade } from '../lib/gamification.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [GamificationFacade],
 })
-export class GamificationPageComponent implements OnInit {
+export class GamificationPageComponent {
     private readonly facade = inject(GamificationFacade);
 
     protected readonly Math = Math;
@@ -42,7 +42,7 @@ export class GamificationPageComponent implements OnInit {
     public readonly lockedBadges = this.facade.lockedBadges;
     public readonly getBadgeIcon = this.facade.getBadgeIcon.bind(this.facade);
 
-    public ngOnInit(): void {
+    public constructor() {
         this.facade.initialize();
     }
 }

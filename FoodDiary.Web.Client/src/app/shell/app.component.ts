@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Injector, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { Component, DestroyRef, Injector, ViewEncapsulation, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map, mergeMap } from 'rxjs';
@@ -18,7 +18,7 @@ import { FdUiToastHostComponent } from 'fd-ui-kit';
     styleUrl: './app.component.scss',
     encapsulation: ViewEncapsulation.None,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
     public isAuthenticated = this.authService.isAuthenticated;
 
-    public ngOnInit(): void {
+    public constructor() {
         if (typeof window !== 'undefined') {
             this.injector.get(NotificationRealtimeService);
             this.injector.get(PushNotificationService);

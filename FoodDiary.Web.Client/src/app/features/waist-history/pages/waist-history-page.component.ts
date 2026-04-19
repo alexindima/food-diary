@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChartConfiguration } from 'chart.js';
@@ -42,7 +42,7 @@ import { WaistEntry } from '../models/waist-entry.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [WaistHistoryFacade],
 })
-export class WaistHistoryPageComponent implements OnInit {
+export class WaistHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WaistHistoryFacade);
 
@@ -103,7 +103,7 @@ export class WaistHistoryPageComponent implements OnInit {
         { labelKey: 'WAIST_HISTORY.WHT_SEGMENTS.HIGH', from: 0.6, to: this.whtScaleMax, class: 'waist-history-page__wht-segment--high' },
     ];
 
-    public ngOnInit(): void {
+    public constructor() {
         this.facade.initialize();
     }
 
