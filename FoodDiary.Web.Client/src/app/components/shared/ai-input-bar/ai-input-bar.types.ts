@@ -24,6 +24,7 @@ export type AiInputBarResultItem = {
 
 export type AiInputBarResult = {
     source: AiRecognitionSource;
+    mealType?: string | null;
     imageAssetId?: string | null;
     imageUrl?: string | null;
     recognizedAtUtc: string;

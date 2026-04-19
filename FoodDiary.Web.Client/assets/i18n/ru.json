@@ -1291,6 +1291,7 @@
         "MEALS_EMPTY": "За выбранную дату пока нет записей.",
         "MEALS_EMPTY_FOR_DATE": "Нет приёмов пищи за эту дату.",
         "MEALS_VIEW_ALL": "Открыть все приёмы",
+        "ADD_WITH_AI_BUTTON": "Добавить с AI",
         "MEAL_FALLBACK": "Приём пищи",
         "QUICK_ACTIONS_TITLE": "Быстрые действия",
         "LOADING": "Загружаем данные...",

@@ -59,7 +59,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 target: s.statistics.carbGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: 'var(--fd-color-teal-400)',
+                colorStart: 'var(--fd-color-teal-500)',
                 colorEnd: 'var(--fd-color-sky-500)',
             },
             {
@@ -70,7 +70,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 target: s.statistics.fatGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: 'var(--fd-color-amber-400)',
+                colorStart: 'var(--fd-color-amber-500)',
                 colorEnd: 'var(--fd-color-orange-500)',
             },
             {
@@ -81,7 +81,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 target: s.statistics.fiberGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: 'var(--fd-color-rose-400)',
+                colorStart: 'var(--fd-color-rose-500)',
                 colorEnd: 'var(--fd-color-rose-500)',
             },
         ];

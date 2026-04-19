@@ -6,6 +6,7 @@
     border: 1px solid var(--fd-color-border);
     border-radius: var(--fd-radius-input, 14px);
     background: var(--fd-color-surface-raised);
+    min-width: 0;
 
     &__hidden-upload {
         position: fixed;
@@ -20,20 +21,25 @@
     }
 
     &__icon {
-        color: var(--fd-color-purple-500);
+        color: var(--fd-color-ai-strong, var(--fd-color-purple-500));
         flex-shrink: 0;
     }
 
     &__input {
         flex: 1;
+        width: 0;
+        min-width: 0;
         border: none;
         outline: none;
         font-size: 0.95rem;
         color: var(--fd-color-text);
         background: transparent;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &::placeholder {
             color: var(--fd-color-text-muted);
+            text-overflow: ellipsis;
         }
 
         &:disabled {
@@ -47,10 +53,10 @@
         justify-content: center;
         width: 36px;
         height: 36px;
-        border: 1px solid var(--fd-color-border);
+        border: 1px solid color-mix(in srgb, var(--fd-color-ai-strong, var(--fd-color-purple-500)) 24%, var(--fd-color-border));
         border-radius: var(--fd-radius-button, 10px);
-        background: var(--fd-color-surface);
-        color: var(--fd-color-text-muted);
+        background: color-mix(in srgb, var(--fd-color-ai, var(--fd-color-purple-500)) 10%, var(--fd-color-surface));
+        color: var(--fd-color-ai-strong, var(--fd-color-purple-500));
         cursor: pointer;
         flex-shrink: 0;
         transition:
@@ -59,8 +65,9 @@
             border-color 0.15s;
 
         &:hover:not(:disabled) {
-            color: var(--fd-color-purple-500);
-            border-color: var(--fd-color-purple-500);
+            background: color-mix(in srgb, var(--fd-color-ai, var(--fd-color-purple-500)) 18%, var(--fd-color-surface));
+            color: var(--fd-color-ai-strong, var(--fd-color-purple-700));
+            border-color: color-mix(in srgb, var(--fd-color-ai-strong, var(--fd-color-purple-500)) 40%, var(--fd-color-border));
         }
 
         &--mic-active {
@@ -95,8 +102,8 @@
         height: 36px;
         border: none;
         border-radius: var(--fd-radius-button, 10px);
-        background: var(--fd-color-purple-500);
-        color: var(--fd-color-white);
+        background: var(--fd-color-ai-strong, var(--fd-color-purple-500));
+        color: var(--fd-color-on-ai, var(--fd-color-white));
         cursor: pointer;
         flex-shrink: 0;
         transition:
@@ -104,7 +111,7 @@
             opacity 0.15s;
 
         &:hover:not(:disabled) {
-            background: var(--fd-color-purple-700);
+            background: var(--fd-gradient-ai-end, var(--fd-color-purple-700));
         }
 
         &:disabled {
@@ -120,9 +127,9 @@
     }
 
     &__result {
-        border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, transparent);
+        border: 1px solid color-mix(in srgb, var(--fd-color-ai-strong, var(--fd-color-purple-500)) 28%, transparent);
         border-radius: var(--fd-radius-card, 14px);
-        background: color-mix(in srgb, var(--fd-color-purple-500) 8%, var(--fd-color-surface-raised));
+        background: color-mix(in srgb, var(--fd-color-ai, var(--fd-color-purple-500)) 8%, var(--fd-color-surface-raised));
         padding: 14px;
     }
 
@@ -132,7 +139,7 @@
         align-items: center;
         font-weight: 600;
         font-size: 0.9rem;
-        color: var(--fd-color-purple-500);
+        color: var(--fd-color-ai-strong, var(--fd-color-purple-500));
         margin-bottom: 10px;
     }
 

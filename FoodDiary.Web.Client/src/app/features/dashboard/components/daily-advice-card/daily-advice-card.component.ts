@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DailyAdvice } from '../../models/daily-advice.data';
-import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 @Component({
     selector: 'fd-daily-advice-card',
     standalone: true,
-    imports: [CommonModule, FdUiIconModule, TranslatePipe, FdCardHoverDirective],
+    imports: [CommonModule, FdUiIconModule, TranslatePipe],
     templateUrl: './daily-advice-card.component.html',
     styleUrl: './daily-advice-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -19,34 +19,37 @@
         (keydown.enter)="submitText()"
         [disabled]="isDisabled()"
     />
-    <button
-        type="button"
-        class="ai-input-bar__action-btn"
-        [disabled]="isDisabled()"
-        (click)="onPhotoClick()"
-        [title]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-    >
-        <mat-icon>photo_camera</mat-icon>
-    </button>
-    @if (isSpeechSupported) {
+    @if (!voiceText()) {
         <button
             type="button"
             class="ai-input-bar__action-btn"
-            [class.ai-input-bar__action-btn--mic-active]="isListening()"
             [disabled]="isDisabled()"
-            (click)="toggleMic()"
-            [title]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+            (click)="onPhotoClick()"
+            [title]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
         >
-            <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
+            <mat-icon>photo_camera</mat-icon>
+        </button>
+        @if (isSpeechSupported) {
+            <button
+                type="button"
+                class="ai-input-bar__action-btn"
+                [class.ai-input-bar__action-btn--mic-active]="isListening()"
+                [disabled]="isDisabled()"
+                (click)="toggleMic()"
+                [title]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+            >
+                <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
+            </button>
+        }
+    } @else {
+        <button type="button" class="ai-input-bar__submit" [disabled]="isDisabled()" (click)="submitText()">
+            @if (textIsAnalyzing() || textIsNutritionLoading()) {
+                <mat-icon>hourglass_empty</mat-icon>
+            } @else {
+                <mat-icon>send</mat-icon>
+            }
         </button>
     }
-    <button type="button" class="ai-input-bar__submit" [disabled]="!voiceText() || isDisabled()" (click)="submitText()">
-        @if (textIsAnalyzing() || textIsNutritionLoading()) {
-            <mat-icon>hourglass_empty</mat-icon>
-        } @else {
-            <mat-icon>send</mat-icon>
-        }
-    </button>
 </div>
 
 @if (hasTextResult()) {

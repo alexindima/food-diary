@@ -6,11 +6,7 @@
 }
 
 .dashboard-summary-card {
-    --crc-surface: linear-gradient(
-        180deg,
-        var(--fd-color-surface-raised) 0%,
-        color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-surface-raised)) 100%
-    );
+    --crc-surface: var(--fd-color-surface);
     border-radius: var(--fd-radius-card, 22px);
     padding: 18px 18px 20px;
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
@@ -97,8 +93,8 @@
     }
 
     &__track {
-        stroke: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-surface-raised));
-        opacity: 0.9;
+        stroke: color-mix(in srgb, var(--fd-color-border-strong) 68%, var(--fd-color-surface-raised));
+        opacity: 1;
         stroke-linecap: round;
         transition:
             stroke 0.2s ease,
@@ -174,7 +170,7 @@
         gap: 4px;
         font-weight: 800;
         line-height: 1;
-        color: var(--fd-color-text);
+        color: var(--fd-color-text-strong);
         transition:
             transform 0.25s ease,
             opacity 0.25s ease;
@@ -194,6 +190,7 @@
     &__primary-line {
         font-size: clamp(0.95rem, 2.4vw, 1rem);
         font-weight: 600;
+        color: var(--fd-color-text);
         transition:
             transform 0.25s ease,
             opacity 0.25s ease;
@@ -202,6 +199,7 @@
             font-size: clamp(1.4rem, 3vw, 1.9rem);
             font-weight: 800;
             letter-spacing: -0.01em;
+            color: var(--fd-color-text-strong);
         }
     }
 
@@ -272,7 +270,7 @@
         width: 100%;
         height: 20px;
         border-radius: 999px;
-        background: var(--fd-color-slate-200);
+        background: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-color-surface-raised));
         overflow: hidden;
         position: relative;
     }
@@ -283,7 +281,10 @@
         width: 0;
         height: 100%;
         border-radius: 999px;
-        transition: width 0.4s ease;
+        opacity: 0.96;
+        transition:
+            width 0.4s ease,
+            opacity 0.2s ease;
     }
 }
 

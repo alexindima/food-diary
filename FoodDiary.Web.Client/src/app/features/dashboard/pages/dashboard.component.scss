@@ -44,11 +44,6 @@ $color-text-secondary: var(--fd-color-text-muted);
         &:focus-visible {
             box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
         }
-
-        &:hover {
-            --fasting-timer-card-box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
-            --fasting-timer-card-transform: translateY(-2px);
-        }
     }
 
     &__fasting-overlay {
@@ -157,10 +152,16 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
     }
 
+    &__title-text--compact {
+        display: none;
+    }
+
     &__block {
         position: relative;
         z-index: 2;
         min-width: 0;
+        --fd-card-hover-transform: translateY(-2px);
+        --fd-card-hover-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
     }
 
     &__block--hidden {
@@ -385,6 +386,23 @@ $color-text-secondary: var(--fd-color-text-muted);
     }
 
     @media #{variables.$media-desktop} {
+
+        &__title-text--full {
+            display: none;
+        }
+
+        &__title-text--compact {
+            display: inline;
+        }
+
+        &__push-action {
+            min-width: 44px;
+            padding-inline: 0;
+            --fd-button-label-display: none;
+            --fd-button-width: 44px;
+            --fd-button-min-width: 44px;
+            --fd-button-padding-x: 0;
+        }
 
         &__grid {
             grid-template-columns: 1fr;

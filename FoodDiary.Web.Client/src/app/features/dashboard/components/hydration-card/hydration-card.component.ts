@@ -3,12 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
-import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 @Component({
     selector: 'fd-hydration-card',
     standalone: true,
-    imports: [CommonModule, FdUiButtonComponent, TranslatePipe, NoticeBannerComponent, FdCardHoverDirective],
+    imports: [CommonModule, FdUiButtonComponent, TranslatePipe, NoticeBannerComponent],
     templateUrl: './hydration-card.component.html',
     styleUrl: './hydration-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

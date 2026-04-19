@@ -32,6 +32,7 @@ export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDat
 
     return {
         date: resolvedMealDate,
+        mealType: result.mealType ?? undefined,
         comment: result.comment ?? undefined,
         isNutritionAutoCalculated: false,
         manualCalories: sumItems(result.items, item => item.calories),

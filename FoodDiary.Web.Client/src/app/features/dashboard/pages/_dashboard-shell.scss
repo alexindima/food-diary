@@ -7,7 +7,7 @@
         position: relative;
         display: flex;
         flex-wrap: wrap;
-        align-items: flex-end;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 12px 16px;
         width: 100%;
@@ -30,7 +30,8 @@
 
     &__header-actions {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        align-self: flex-start;
         gap: variables.$gap-s;
         flex-wrap: wrap;
         justify-content: flex-end;

@@ -2,14 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { CommonModule } from '@angular/common';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TdeeInsight } from '../../models/tdee-insight.data';
 
 @Component({
     selector: 'fd-tdee-insight-card',
     standalone: true,
-    imports: [CommonModule, FdUiIconModule, TranslatePipe, FdCardHoverDirective, FdUiButtonComponent],
+    imports: [CommonModule, FdUiIconModule, TranslatePipe, FdUiButtonComponent],
     templateUrl: './tdee-insight-card.component.html',
     styleUrl: './tdee-insight-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

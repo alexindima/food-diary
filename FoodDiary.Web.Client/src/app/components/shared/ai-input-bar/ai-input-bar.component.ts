@@ -51,6 +51,7 @@ export class AiInputBarComponent {
 
     public readonly isProcessing = input<boolean>(false);
     public readonly mode = input<AiInputBarMode>('emit');
+    public readonly mealType = input<string | null>(null);
     public readonly mealRecognized = output<AiInputBarResult>();
     public readonly mealCreated = output<Meal>();
 
@@ -180,6 +181,7 @@ export class AiInputBarComponent {
         const results = this.textResults();
         this.submitMeal({
             source: this.lastTextSource,
+            mealType: this.mealType(),
             recognizedAtUtc: new Date().toISOString(),
             notes: this.textSubmittedQuery(),
             date: details.date,
@@ -232,6 +234,7 @@ export class AiInputBarComponent {
 
         this.submitMeal({
             source: 'Photo',
+            mealType: this.mealType(),
             imageAssetId: selection?.assetId ?? null,
             imageUrl: selection?.url ?? null,
             recognizedAtUtc: new Date().toISOString(),

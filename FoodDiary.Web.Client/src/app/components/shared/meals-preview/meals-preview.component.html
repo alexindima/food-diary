@@ -20,19 +20,50 @@
                 @if (entry.meal) {
                     <fd-meal-card class="meals-preview__meal-card" [meal]="entry.meal" (open)="open.emit(entry.meal!)" />
                 } @else if (showAddButtons()) {
-                    <button class="meals-preview__placeholder" type="button" (click)="add.emit(entry.slot)">
-                        <div class="meals-preview__placeholder-left">
-                            <div class="meals-preview__placeholder-icon">
-                                <mat-icon>{{ entry.icon || 'restaurant_menu' }}</mat-icon>
-                            </div>
-                            <div class="meals-preview__placeholder-text">
-                                {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
+                    <div class="meals-preview__placeholder-stack">
+                        <div class="meals-preview__placeholder">
+                            <button class="meals-preview__placeholder-main" type="button" (click)="add.emit(entry.slot)">
+                                <div class="meals-preview__placeholder-left">
+                                    <div class="meals-preview__placeholder-icon">
+                                        <mat-icon>{{ entry.icon || 'restaurant_menu' }}</mat-icon>
+                                    </div>
+                                    <div class="meals-preview__placeholder-text">
+                                        {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
+                                    </div>
+                                </div>
+                            </button>
+                            <div class="meals-preview__placeholder-actions">
+                                @if (showAiButtons()) {
+                                    <fd-ui-button
+                                        class="meals-preview__placeholder-action-button meals-preview__placeholder-action-button--ai"
+                                        appearance="ai-action"
+                                        variant="primary"
+                                        fill="solid"
+                                        size="sm"
+                                        icon="auto_awesome"
+                                        iconSize="sm"
+                                        [ariaLabel]="'DASHBOARD.ADD_WITH_AI_BUTTON' | translate"
+                                        (click)="toggleAi(entry.slot)"
+                                    />
+                                }
+                                <fd-ui-button
+                                    class="meals-preview__placeholder-action-button"
+                                    variant="primary"
+                                    fill="solid"
+                                    size="sm"
+                                    icon="edit"
+                                    iconSize="sm"
+                                    [ariaLabel]="'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate"
+                                    (click)="add.emit(entry.slot)"
+                                />
                             </div>
                         </div>
-                        <div class="meals-preview__placeholder-action">
-                            <mat-icon>add</mat-icon>
-                        </div>
-                    </button>
+                        @if (showAiButtons() && expandedAiSlot() === (entry.slot ?? null)) {
+                            <div class="meals-preview__ai-panel">
+                                <fd-ai-input-bar mode="create" [mealType]="entry.slot ?? null" (mealCreated)="handleAiMealCreated()" />
+                            </div>
+                        }
+                    </div>
                 }
             }
         }

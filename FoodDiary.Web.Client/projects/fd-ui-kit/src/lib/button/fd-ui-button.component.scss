@@ -244,6 +244,35 @@
     font-weight: 800;
 }
 
+.fd-ui-button--appearance-ai-action.fd-ui-button--primary.fd-ui-button--solid {
+    --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-ai-start), var(--fd-gradient-ai-end));
+    --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-ai-hover-start), var(--fd-gradient-ai-hover-end));
+    --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-ai-start), var(--fd-gradient-ai-end));
+    --fd-button-text-default: var(--fd-color-on-ai, var(--fd-color-white));
+    --fd-button-text-hover: var(--fd-color-on-ai, var(--fd-color-white));
+    --fd-button-text-active: var(--fd-color-on-ai, var(--fd-color-white));
+    --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-ai-strong) 24%, transparent);
+    --fd-button-shadow-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-ai-strong) 28%, transparent);
+    --fd-button-shadow-active: none;
+    background: var(--fd-button-background-default);
+    color: var(--fd-button-text-default);
+
+    &:hover:not(:disabled) {
+        background: var(--fd-button-background-hover);
+    }
+
+    &:active:not(:disabled) {
+        background: var(--fd-button-background-active);
+    }
+}
+
+.fd-ui-button--primary.fd-ui-button--solid:has(.fd-ui-button__label:empty) {
+    --fd-button-text-default: var(--fd-color-on-brand-muted, var(--fd-color-on-brand, var(--fd-color-white)));
+    --fd-button-text-hover: var(--fd-color-on-brand-muted, var(--fd-color-on-brand, var(--fd-color-white)));
+    --fd-button-text-active: var(--fd-color-on-brand-muted, var(--fd-color-on-brand, var(--fd-color-white)));
+    color: var(--fd-button-text-default);
+}
+
 .fd-ui-button--appearance-chip {
     --fd-button-border-radius: var(--fd-radius-chip, var(--fd-radius-button));
     --fd-button-padding-x: 12px;

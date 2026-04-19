@@ -30,6 +30,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
 import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
 import {
     formatDashboardFastingDuration,
     getDashboardCyclicPhaseProgressLabel,
@@ -64,6 +65,7 @@ import {
         FdUiLoaderComponent,
         FastingTimerCardComponent,
         AiInputBarComponent,
+        DashboardCardShellComponent,
     ],
     providers: [DashboardLayoutService, DashboardFacade, provideCharts(withDefaultRegisterables())],
     templateUrl: './dashboard.component.html',

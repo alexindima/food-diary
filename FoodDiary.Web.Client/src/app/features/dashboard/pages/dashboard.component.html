@@ -6,12 +6,15 @@
         <div class="dashboard__title-block">
             <h1 class="dashboard__title">
                 @if (isTodaySelected()) {
-                    {{ (layout.layoutKey() === 'mobile' ? 'DASHBOARD.TITLE_SHORT' : 'DASHBOARD.TITLE') | translate }}
+                    <span class="dashboard__title-text dashboard__title-text--full">{{ 'DASHBOARD.TITLE' | translate }}</span>
+                    <span class="dashboard__title-text dashboard__title-text--compact">{{ 'DASHBOARD.TITLE_SHORT' | translate }}</span>
                 } @else {
-                    {{
-                        (layout.layoutKey() === 'mobile' ? 'DASHBOARD.TITLE_FOR_DATE_SHORT' : 'DASHBOARD.TITLE_FOR_DATE')
-                            | translate: { date: (selectedDate() | localizedDate: 'd MMMM y') }
-                    }}
+                    <span class="dashboard__title-text dashboard__title-text--full">
+                        {{ 'DASHBOARD.TITLE_FOR_DATE' | translate: { date: (selectedDate() | localizedDate: 'd MMMM y') } }}
+                    </span>
+                    <span class="dashboard__title-text dashboard__title-text--compact">
+                        {{ 'DASHBOARD.TITLE_FOR_DATE_SHORT' | translate: { date: (selectedDate() | localizedDate: 'd MMMM y') } }}
+                    </span>
                 }
             </h1>
             <p class="dashboard__subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
@@ -28,10 +31,9 @@
                     variant="secondary"
                     fill="outline"
                     icon="calendar_today"
+                    [ariaLabel]="selectedDate() | localizedDate: 'd MMMM y'"
                     (click)="openDatePicker()"
-                >
-                    {{ selectedDate() | localizedDate: 'd MMMM y' }}
-                </fd-ui-button>
+                />
             </div>
 
             <fd-ui-button
@@ -106,30 +108,32 @@
                                 (keydown.enter)="handleFastingCardClick()"
                                 (keydown.space)="$event.preventDefault(); handleFastingCardClick()"
                             >
-                                <fd-fasting-timer-card
-                                    class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
-                                    [layout]="'summary'"
-                                    [isActive]="fastingIsActive()"
-                                    [isOvertime]="fastingIsOvertime()"
-                                    [currentSessionCompleted]="!!fastingCurrentSession()?.endedAtUtc"
-                                    [progressPercent]="fastingProgressPercent()"
-                                    [elapsedFormatted]="fastingElapsedFormatted()"
-                                    [remainingFormatted]="fastingRemainingFormatted()"
-                                    [remainingLabelKey]="fastingRemainingLabelKey()"
-                                    [labelKey]="getFastingCardLabelKey()"
-                                    [stateLabel]="getFastingCardStateLabel()"
-                                    [detailLabel]="getFastingCardDetailLabel()"
-                                    [metaLabel]="fastingMetaLabel()"
-                                    [ringColor]="fastingRingColor()"
-                                    [glowColor]="fastingStage()?.glowColor ?? null"
-                                    [showGlow]="false"
-                                    [stageTitleKey]="fastingStage()?.titleKey ?? null"
-                                    [stageDescriptionKey]="fastingStage()?.descriptionKey ?? null"
-                                    [stageIndex]="fastingStageIndex()"
-                                    [totalStages]="fastingTotalStages()"
-                                    [nextStageTitleKey]="fastingStage()?.nextTitleKey ?? null"
-                                    [nextStageFormatted]="fastingNextStageFormatted()"
-                                />
+                                <fd-dashboard-card-shell>
+                                    <fd-fasting-timer-card
+                                        class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
+                                        [layout]="'summary'"
+                                        [isActive]="fastingIsActive()"
+                                        [isOvertime]="fastingIsOvertime()"
+                                        [currentSessionCompleted]="!!fastingCurrentSession()?.endedAtUtc"
+                                        [progressPercent]="fastingProgressPercent()"
+                                        [elapsedFormatted]="fastingElapsedFormatted()"
+                                        [remainingFormatted]="fastingRemainingFormatted()"
+                                        [remainingLabelKey]="fastingRemainingLabelKey()"
+                                        [labelKey]="getFastingCardLabelKey()"
+                                        [stateLabel]="getFastingCardStateLabel()"
+                                        [detailLabel]="getFastingCardDetailLabel()"
+                                        [metaLabel]="fastingMetaLabel()"
+                                        [ringColor]="fastingRingColor()"
+                                        [glowColor]="fastingStage()?.glowColor ?? null"
+                                        [showGlow]="false"
+                                        [stageTitleKey]="fastingStage()?.titleKey ?? null"
+                                        [stageDescriptionKey]="fastingStage()?.descriptionKey ?? null"
+                                        [stageIndex]="fastingStageIndex()"
+                                        [totalStages]="fastingTotalStages()"
+                                        [nextStageTitleKey]="fastingStage()?.nextTitleKey ?? null"
+                                        [nextStageFormatted]="fastingNextStageFormatted()"
+                                    />
+                                </fd-dashboard-card-shell>
                                 @if (layout.isEditingLayout()) {
                                     <div class="dashboard__fasting-overlay">
                                         <div class="dashboard__fasting-overlay-title">
@@ -159,16 +163,18 @@
                                         {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
                                     </div>
                                 }
-                                <fd-dashboard-summary-card
-                                    class="dashboard__card dashboard__card--ring"
-                                    [dailyGoal]="consumptionRingData().dailyGoal"
-                                    [dailyConsumed]="consumptionRingData().dailyConsumed"
-                                    [weeklyConsumed]="consumptionRingData().weeklyConsumed"
-                                    [weeklyGoal]="consumptionRingData().weeklyGoal"
-                                    [nutrientBars]="consumptionRingData().nutrientBars"
-                                    [caloriesBurned]="caloriesBurned()"
-                                    (goalAction)="openGoals()"
-                                />
+                                <fd-dashboard-card-shell>
+                                    <fd-dashboard-summary-card
+                                        class="dashboard__card dashboard__card--ring"
+                                        [dailyGoal]="consumptionRingData().dailyGoal"
+                                        [dailyConsumed]="consumptionRingData().dailyConsumed"
+                                        [weeklyConsumed]="consumptionRingData().weeklyConsumed"
+                                        [weeklyGoal]="consumptionRingData().weeklyGoal"
+                                        [nutrientBars]="consumptionRingData().nutrientBars"
+                                        [caloriesBurned]="caloriesBurned()"
+                                        (goalAction)="openGoals()"
+                                    />
+                                </fd-dashboard-card-shell>
                             </div>
                         }
 
@@ -194,9 +200,11 @@
                                     [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
                                     [emptyKey]="isTodaySelected() ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE'"
                                     [showAddButtons]="isTodaySelected()"
+                                    [showAiButtons]="isTodaySelected()"
                                     [showEmptyState]="!isTodaySelected()"
                                     (viewAll)="manageConsumptions()"
                                     (add)="addConsumption($event)"
+                                    (aiMealCreated)="onMealCreated()"
                                     (open)="openConsumption($event)"
                                 />
                             </div>
@@ -215,15 +223,17 @@
                                 (keydown.enter)="layout.toggleBlock('hydration')"
                             >
                                 @defer (on viewport) {
-                                    <fd-hydration-card
-                                        class="dashboard__card dashboard__card--hydration"
-                                        [total]="hydration()?.totalMl ?? 0"
-                                        [goal]="hydration()?.goalMl ?? null"
-                                        [isLoading]="isHydrationLoading()"
-                                        [canAdd]="isTodaySelected()"
-                                        (addClick)="addHydration($event)"
-                                        (goalAction)="openGoals()"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-hydration-card
+                                            class="dashboard__card dashboard__card--hydration"
+                                            [total]="hydration()?.totalMl ?? 0"
+                                            [goal]="hydration()?.goalMl ?? null"
+                                            [isLoading]="isHydrationLoading()"
+                                            [canAdd]="isTodaySelected()"
+                                            (addClick)="addHydration($event)"
+                                            (goalAction)="openGoals()"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {
@@ -242,11 +252,13 @@
                                 (keydown.enter)="layout.toggleBlock('micronutrients')"
                             >
                                 @defer (on viewport) {
-                                    <fd-micronutrient-card
-                                        class="dashboard__card dashboard__card--micronutrients"
-                                        [summary]="micronutrients()"
-                                        [isLoading]="isMicronutrientsLoading()"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-micronutrient-card
+                                            class="dashboard__card dashboard__card--micronutrients"
+                                            [summary]="micronutrients()"
+                                            [isLoading]="isMicronutrientsLoading()"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {
@@ -265,14 +277,16 @@
                                 (keydown.enter)="layout.toggleBlock('cycle')"
                             >
                                 @defer (on viewport) {
-                                    <fd-cycle-summary-card
-                                        class="dashboard__card dashboard__card--cycle"
-                                        [startDate]="cycle()?.startDate ?? null"
-                                        [predictions]="cycle()?.predictions ?? null"
-                                        [referenceDate]="selectedDate()"
-                                        [isLoading]="isCycleLoading()"
-                                        (setupAction)="openCycleTracking()"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-cycle-summary-card
+                                            class="dashboard__card dashboard__card--cycle"
+                                            [startDate]="cycle()?.startDate ?? null"
+                                            [predictions]="cycle()?.predictions ?? null"
+                                            [referenceDate]="selectedDate()"
+                                            [isLoading]="isCycleLoading()"
+                                            (setupAction)="openCycleTracking()"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {
@@ -291,14 +305,16 @@
                                 (keydown.enter)="layout.toggleBlock('weight')"
                             >
                                 @defer (on viewport) {
-                                    <fd-weight-trend-card
-                                        class="dashboard__card dashboard__card--weight-trend"
-                                        [currentWeight]="weightTrend.weightTrendCurrent()"
-                                        [change]="weightTrend.weightTrendChange()"
-                                        [points]="weightTrend.weightTrendSeries()"
-                                        [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                                        [isLoading]="isWeightTrendLoading()"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-weight-trend-card
+                                            class="dashboard__card dashboard__card--weight-trend"
+                                            [currentWeight]="weightTrend.weightTrendCurrent()"
+                                            [change]="weightTrend.weightTrendChange()"
+                                            [points]="weightTrend.weightTrendSeries()"
+                                            [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                                            [isLoading]="isWeightTrendLoading()"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {
@@ -317,19 +333,21 @@
                                 (keydown.enter)="layout.toggleBlock('waist')"
                             >
                                 @defer (on viewport) {
-                                    <fd-weight-trend-card
-                                        class="dashboard__card dashboard__card--waist-trend"
-                                        [title]="'WAIST_CARD.TITLE'"
-                                        [currentWeight]="waistTrend.waistTrendCurrent()"
-                                        [change]="waistTrend.waistTrendChange()"
-                                        [points]="waistTrend.waistTrendSeries()"
-                                        [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                                        [unitKey]="'WAIST_CARD.CM'"
-                                        [iconLabel]="'WS'"
-                                        [accentColor]="'var(--fd-color-sky-500)'"
-                                        [iconGradient]="'linear-gradient(135deg, var(--fd-color-green-500), var(--fd-color-emerald-500))'"
-                                        [isLoading]="isWaistTrendLoading()"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-weight-trend-card
+                                            class="dashboard__card dashboard__card--waist-trend"
+                                            [title]="'WAIST_CARD.TITLE'"
+                                            [currentWeight]="waistTrend.waistTrendCurrent()"
+                                            [change]="waistTrend.waistTrendChange()"
+                                            [points]="waistTrend.waistTrendSeries()"
+                                            [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                                            [unitKey]="'WAIST_CARD.CM'"
+                                            [iconLabel]="'WS'"
+                                            [accentColor]="'var(--fd-color-sky-500)'"
+                                            [iconGradient]="'linear-gradient(135deg, var(--fd-color-green-500), var(--fd-color-emerald-500))'"
+                                            [isLoading]="isWaistTrendLoading()"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {
@@ -348,12 +366,14 @@
                                 (keydown.enter)="layout.toggleBlock('tdee')"
                             >
                                 @defer (on viewport) {
-                                    <fd-tdee-insight-card
-                                        class="dashboard__card dashboard__card--tdee"
-                                        [insight]="tdeeInsight()"
-                                        [isLoading]="isTdeeLoading()"
-                                        (applyGoal)="applyTdeeGoal($event)"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-tdee-insight-card
+                                            class="dashboard__card dashboard__card--tdee"
+                                            [insight]="tdeeInsight()"
+                                            [isLoading]="isTdeeLoading()"
+                                            (applyGoal)="applyTdeeGoal($event)"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {
@@ -372,11 +392,13 @@
                                 (keydown.enter)="layout.toggleBlock('advice')"
                             >
                                 @defer (on viewport) {
-                                    <fd-daily-advice-card
-                                        class="dashboard__card dashboard__card--advice"
-                                        [advice]="dailyAdvice()"
-                                        [isLoading]="isAdviceLoading()"
-                                    />
+                                    <fd-dashboard-card-shell>
+                                        <fd-daily-advice-card
+                                            class="dashboard__card dashboard__card--advice"
+                                            [advice]="dailyAdvice()"
+                                            [isLoading]="isAdviceLoading()"
+                                        />
+                                    </fd-dashboard-card-shell>
                                 } @placeholder {
                                     <fd-ui-loader />
                                 } @loading (minimum 300ms) {

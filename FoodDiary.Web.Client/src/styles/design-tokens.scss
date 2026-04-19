@@ -107,6 +107,8 @@ $fd-theme-design-tokens: (
             success: #10b981,
             info: #0ea5e9,
             warn: #ef4444,
+            ai: #8b5cf6,
+            ai-strong: #7c3aed,
             surface: #ffffff,
             surface-muted: #f8fafc,
             surface-raised: #ffffff,
@@ -117,6 +119,8 @@ $fd-theme-design-tokens: (
             border-strong: rgba(148, 163, 184, 0.28),
             shadow: rgba(15, 23, 42, 0.08),
             on-brand: #ffffff,
+            on-brand-muted: #e8f0ff,
+            on-ai: #f6f3ff,
             primary-rgb: 37 99 235,
             danger-rgb: 239 68 68,
             primary-50: var(--fd-color-primary-50, #eef2ff),
@@ -141,6 +145,10 @@ $fd-theme-design-tokens: (
             premium-end: #1e293b,
             hero-start: #2563eb,
             hero-end: #0ea5e9,
+            ai-start: #a855f7,
+            ai-end: #7c3aed,
+            ai-hover-start: #b46bff,
+            ai-hover-end: #8b5cf6,
         ),
         layout-page: (
             background: #f5f7fb,
@@ -173,6 +181,8 @@ $fd-theme-design-tokens: (
             success: #16a34a,
             info: #0f766e,
             warn: #ef4444,
+            ai: #8b5cf6,
+            ai-strong: #7c3aed,
             surface: #ffffff,
             surface-muted: #f6fbf7,
             surface-raised: #ffffff,
@@ -183,6 +193,8 @@ $fd-theme-design-tokens: (
             border-strong: rgba(134, 239, 172, 0.34),
             shadow: rgba(6, 78, 59, 0.08),
             on-brand: #ffffff,
+            on-brand-muted: #143126,
+            on-ai: #f6f3ff,
             primary-rgb: 5 150 105,
             danger-rgb: 239 68 68,
             primary-50: #ecfdf5,
@@ -207,6 +219,10 @@ $fd-theme-design-tokens: (
             premium-end: #065f46,
             hero-start: #10b981,
             hero-end: #0f766e,
+            ai-start: #a855f7,
+            ai-end: #7c3aed,
+            ai-hover-start: #b46bff,
+            ai-hover-end: #8b5cf6,
         ),
         layout-page: (
             background: #f3faf6,
@@ -239,6 +255,8 @@ $fd-theme-design-tokens: (
             success: #34d399,
             info: #38bdf8,
             warn: #f87171,
+            ai: #c084fc,
+            ai-strong: #a855f7,
             surface: #23252b,
             surface-muted: #191c21,
             surface-raised: #2b2f36,
@@ -249,6 +267,8 @@ $fd-theme-design-tokens: (
             border-strong: rgba(203, 213, 225, 0.26),
             shadow: rgba(0, 0, 0, 0.42),
             on-brand: #08130d,
+            on-brand-muted: #1f2a33,
+            on-ai: #f5edff,
             primary-rgb: 110 231 183,
             danger-rgb: 248 113 113,
             primary-50: #06251c,
@@ -273,6 +293,10 @@ $fd-theme-design-tokens: (
             premium-end: #1f2937,
             hero-start: #1d614a,
             hero-end: #134837,
+            ai-start: #c084fc,
+            ai-end: #a855f7,
+            ai-hover-start: #d19bff,
+            ai-hover-end: #b46bff,
         ),
         layout-page: (
             background: #14171c,
@@ -395,6 +419,8 @@ $fd-theme-design-tokens: (
         --fd-color-info: #{fd-theme-token($theme, colors, info)};
         --fd-color-warn: #{fd-theme-token($theme, colors, warn)};
         --fd-color-danger: #{fd-theme-token($theme, colors, warn)};
+        --fd-color-ai: #{fd-theme-token($theme, colors, ai)};
+        --fd-color-ai-strong: #{fd-theme-token($theme, colors, ai-strong)};
         --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
         --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
         --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
@@ -406,6 +432,8 @@ $fd-theme-design-tokens: (
         --fd-color-border-strong: #{fd-theme-token($theme, colors, border-strong)};
         --fd-color-shadow: #{fd-theme-token($theme, colors, shadow)};
         --fd-color-on-brand: #{fd-theme-token($theme, colors, on-brand)};
+        --fd-color-on-brand-muted: #{fd-theme-token($theme, colors, on-brand-muted)};
+        --fd-color-on-ai: #{fd-theme-token($theme, colors, on-ai)};
         --fd-color-primary-rgb: #{fd-theme-token($theme, colors, primary-rgb)};
         --fd-color-danger-rgb: #{fd-theme-token($theme, colors, danger-rgb)};
 
@@ -430,6 +458,10 @@ $fd-theme-design-tokens: (
         --fd-gradient-premium-end: #{fd-theme-token($theme, gradients, premium-end)};
         --fd-gradient-hero-start: #{fd-theme-token($theme, gradients, hero-start)};
         --fd-gradient-hero-end: #{fd-theme-token($theme, gradients, hero-end)};
+        --fd-gradient-ai-start: #{fd-theme-token($theme, gradients, ai-start)};
+        --fd-gradient-ai-end: #{fd-theme-token($theme, gradients, ai-end)};
+        --fd-gradient-ai-hover-start: #{fd-theme-token($theme, gradients, ai-hover-start)};
+        --fd-gradient-ai-hover-end: #{fd-theme-token($theme, gradients, ai-hover-end)};
 
         --fd-radius-xs: #{fd-token(radius, xs)};
         --fd-radius-sm: #{fd-token(radius, sm)};
