@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeValue } from 'fd-ui-kit';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { ExportService } from '../../api/export.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -40,6 +41,7 @@ import { MealListFiltersDialogComponent, MealListFiltersDialogResult } from './m
         DecimalPipe,
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiPaginationComponent,
         SkeletonCardComponent,

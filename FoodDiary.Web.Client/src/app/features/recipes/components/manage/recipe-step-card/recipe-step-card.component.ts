@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FormGroupControls } from '../../../../../shared/lib/common.data';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -16,6 +17,7 @@ import { CdkDragHandle } from '@angular/cdk/drag-drop';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,

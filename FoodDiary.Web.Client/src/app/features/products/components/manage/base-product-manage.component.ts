@@ -10,6 +10,7 @@ import { BarcodeScannerComponent } from '../../../../components/shared/barcode-s
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -54,6 +55,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         FdPageContainerDirective,

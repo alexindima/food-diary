@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../products/models/product.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
 import { NutrientData } from '../../../../shared/models/charts.data';
@@ -39,6 +40,7 @@ import {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiSegmentedToggleComponent,

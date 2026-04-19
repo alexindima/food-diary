@@ -26,7 +26,7 @@ export class FdUiHintDirective {
     public readonly fdUiHintHtml = input(false);
     public readonly fdUiHintContext = input<Record<string, unknown> | null>(null);
     public readonly fdUiHintShowDelay = input(500);
-    public readonly fdUiHintFocusShowDelay = input<number | null>(null);
+    public readonly fdUiHintFocusShowDelay = input(0);
     public readonly fdUiHintHideDelay = input(0);
     public readonly fdUiHintPosition = input<HintPosition>('bottom');
     public readonly fdUiHintDisabled = input(false, { transform: booleanAttribute });
@@ -58,7 +58,7 @@ export class FdUiHintDirective {
     }
 
     public onFocusIn(): void {
-        this.queueShow(this.fdUiHintFocusShowDelay() ?? this.fdUiHintShowDelay());
+        this.queueShow(this.fdUiHintFocusShowDelay());
     }
 
     public onFocusOut(): void {

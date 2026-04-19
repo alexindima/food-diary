@@ -190,6 +190,7 @@
                             <fd-ui-switch
                                 [checked]="pushNotificationsEnabled()"
                                 [disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
+                                [fdUiHint]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
                                 [ariaLabel]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
                                 (checkedChange)="togglePushNotifications()"
                             />
@@ -209,6 +210,7 @@
                                     <fd-ui-switch
                                         [checked]="fastingPushNotificationsEnabled()"
                                         [disabled]="isUpdatingNotifications()"
+                                        [fdUiHint]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
                                         [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
                                         (checkedChange)="toggleFastingPushNotifications()"
                                     />
@@ -289,6 +291,7 @@
                                     <fd-ui-switch
                                         [checked]="socialPushNotificationsEnabled()"
                                         [disabled]="isUpdatingNotifications()"
+                                        [fdUiHint]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
                                         [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
                                         (checkedChange)="toggleSocialPushNotifications()"
                                     />
@@ -515,6 +518,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareProfile.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate"
                                             (checkedChange)="onDietologistProfileToggle($event)"
                                         />
@@ -529,6 +533,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareMeals.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate"
                                             (checkedChange)="updateDietologistPermission('shareMeals', $event)"
                                         />
@@ -543,6 +548,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareStatistics.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate"
                                             (checkedChange)="updateDietologistPermission('shareStatistics', $event)"
                                         />
@@ -557,6 +563,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareWeight.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate"
                                             (checkedChange)="updateDietologistPermission('shareWeight', $event)"
                                         />
@@ -571,6 +578,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareWaist.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate"
                                             (checkedChange)="updateDietologistPermission('shareWaist', $event)"
                                         />
@@ -585,6 +593,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareGoals.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate"
                                             (checkedChange)="updateDietologistPermission('shareGoals', $event)"
                                         />
@@ -599,6 +608,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareHydration.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate"
                                             (checkedChange)="updateDietologistPermission('shareHydration', $event)"
                                         />
@@ -613,6 +623,7 @@
                                         <fd-ui-switch
                                             [checked]="dietologistForm.controls.shareFasting.value"
                                             [disabled]="isSavingDietologist()"
+                                            [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate"
                                             (checkedChange)="updateDietologistPermission('shareFasting', $event)"
                                         />

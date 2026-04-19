@@ -8,6 +8,7 @@
             <button
                 class="quick-consumption__clear"
                 type="button"
+                [fdUiHint]="'QUICK_CONSUMPTION.CLEAR' | translate"
                 [attr.aria-label]="'QUICK_CONSUMPTION.CLEAR' | translate"
                 (click)="clear()"
             >
@@ -40,6 +41,7 @@
                         <button
                             class="quick-consumption__remove"
                             type="button"
+                            [fdUiHint]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
                             [attr.aria-label]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
                             (click)="remove(item.key)"
                         >

@@ -1,4 +1,4 @@
-<fd-ui-dialog [title]="product.name" size="lg">
+﻿<fd-ui-dialog [title]="product.name" size="lg">
     <fd-ui-tabs class="product-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
     <div class="product-detail">
@@ -111,8 +111,9 @@
                 class="product-detail__favorite-btn"
                 [class.product-detail__favorite-btn--active]="isFavorite()"
                 [disabled]="isFavoriteLoading()"
+                [fdUiHint]="(isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE') | translate"
+                [attr.aria-label]="(isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE') | translate"
                 (click)="toggleFavorite()"
-                [title]="(isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE') | translate"
             >
                 <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
             </button>

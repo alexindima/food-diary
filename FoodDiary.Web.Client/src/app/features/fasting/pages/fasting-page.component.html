@@ -520,8 +520,8 @@
                                                 type="button"
                                                 class="fasting__protocol-btn fasting__protocol-btn--emoji"
                                                 [class.fasting__protocol-btn--active]="hungerLevel() === option.value"
+                                                [fdUiHint]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value + '/5'"
                                                 [attr.aria-label]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value"
-                                                [title]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value + '/5'"
                                                 (click)="setHungerLevel(option.value)"
                                             >
                                                 <span class="fasting__emoji">{{ option.emoji }}</span>
@@ -538,8 +538,8 @@
                                                 type="button"
                                                 class="fasting__protocol-btn fasting__protocol-btn--emoji"
                                                 [class.fasting__protocol-btn--active]="energyLevel() === option.value"
+                                                [fdUiHint]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value + '/5'"
                                                 [attr.aria-label]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value"
-                                                [title]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value + '/5'"
                                                 (click)="setEnergyLevel(option.value)"
                                             >
                                                 <span class="fasting__emoji">{{ option.emoji }}</span>
@@ -556,8 +556,8 @@
                                                 type="button"
                                                 class="fasting__protocol-btn fasting__protocol-btn--emoji"
                                                 [class.fasting__protocol-btn--active]="moodLevel() === option.value"
+                                                [fdUiHint]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value + '/5'"
                                                 [attr.aria-label]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value"
-                                                [title]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value + '/5'"
                                                 (click)="setMoodLevel(option.value)"
                                             >
                                                 <span class="fasting__emoji">{{ option.emoji }}</span>

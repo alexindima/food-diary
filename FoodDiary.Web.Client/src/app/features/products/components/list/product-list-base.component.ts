@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, i
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -41,6 +42,7 @@ import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } fro
         CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiPaginationComponent,

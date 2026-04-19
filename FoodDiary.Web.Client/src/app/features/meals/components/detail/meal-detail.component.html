@@ -1,4 +1,4 @@
-<fd-ui-dialog [title]="'CONSUMPTION_DETAIL.TITLE' | translate" [subtitle]="formattedDate || undefined" size="lg">
+﻿<fd-ui-dialog [title]="'CONSUMPTION_DETAIL.TITLE' | translate" [subtitle]="formattedDate || undefined" size="lg">
     <fd-ui-tabs class="consumption-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
     <div class="consumption-detail">
@@ -54,7 +54,10 @@
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
-                            <strong class="consumption-detail__quality-value" [title]="'QUALITY.' + qualityGrade.toUpperCase() | translate">
+                            <strong
+                                class="consumption-detail__quality-value"
+                                [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
+                            >
                                 {{ qualityScore }}
                             </strong>
                         </div>
@@ -127,8 +130,9 @@
                 class="consumption-detail__favorite-btn"
                 [class.consumption-detail__favorite-btn--active]="isFavorite()"
                 [disabled]="isFavoriteLoading()"
+                [fdUiHint]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
+                [attr.aria-label]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
                 (click)="toggleFavorite()"
-                [title]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
             >
                 <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
             </button>

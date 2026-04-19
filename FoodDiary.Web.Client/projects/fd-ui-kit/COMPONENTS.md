@@ -307,7 +307,7 @@ Do not use for long or interactive content. Prefer a popover or inline help for 
 - `fdUiHintHtml?: boolean`
 - `fdUiHintContext?: Record<string, unknown> | null`
 - `fdUiHintShowDelay?: number` (default `500`)
-- `fdUiHintFocusShowDelay?: number | null` (falls back to `fdUiHintShowDelay`)
+- `fdUiHintFocusShowDelay?: number` default `0`
 - `fdUiHintHideDelay?: number` (default `0`)
 - `fdUiHintPosition?: 'top' | 'bottom' | 'left' | 'right'` (default `bottom`)
 - `fdUiHintDisabled?: boolean`

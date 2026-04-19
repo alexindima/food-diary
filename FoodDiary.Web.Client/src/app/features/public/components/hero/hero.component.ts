@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -8,7 +9,7 @@ import { LocalizationService } from '../../../../services/localization.service';
 
 @Component({
     selector: 'fd-hero',
-    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
+    imports: [FdUiHintDirective, FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.scss',
 })

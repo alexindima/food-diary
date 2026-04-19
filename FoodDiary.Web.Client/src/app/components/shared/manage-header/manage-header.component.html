@@ -1,4 +1,4 @@
-<header class="fd-manage-header">
+﻿<header class="fd-manage-header">
     <div class="fd-manage-header__top-row">
         <fd-ui-button
             type="button"
@@ -7,6 +7,7 @@
             variant="secondary"
             fill="outline"
             icon="arrow_back"
+            [fdUiHint]="backAriaLabel()"
             [ariaLabel]="backAriaLabel()"
             (click)="onBackClick()"
         />

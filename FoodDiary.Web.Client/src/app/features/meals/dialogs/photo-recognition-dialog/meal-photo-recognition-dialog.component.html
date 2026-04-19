@@ -48,6 +48,7 @@
                                 type="button"
                                 class="photo-ai-dialog__action-button"
                                 [disabled]="isLoading() || !selection()?.assetId || isEditing()"
+                                [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
                                 [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
                                 (click)="onReanalyze()"
                             >
@@ -105,6 +106,7 @@
                                     <button
                                         type="button"
                                         class="photo-ai-dialog__edit-remove"
+                                        [fdUiHint]="'COMMON.DELETE' | translate"
                                         [attr.aria-label]="'COMMON.DELETE' | translate"
                                         (click)="removeEditItem(i)"
                                     >

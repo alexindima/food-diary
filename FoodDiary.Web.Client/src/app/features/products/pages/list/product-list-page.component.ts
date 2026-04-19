@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { finalize } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -28,6 +29,7 @@ import { Product } from '../../models/product.data';
         DecimalPipe,
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiPaginationComponent,

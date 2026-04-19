@@ -1,4 +1,4 @@
-<div class="product-list" fdPageContainer>
+﻿<div class="product-list" fdPageContainer>
     <fd-page-header
         class="product-list__header"
         [title]="'PRODUCT_LIST.TITLE' | translate"
@@ -14,6 +14,7 @@
                         variant="secondary"
                         fill="outline"
                         icon="filter_alt"
+                        [fdUiHint]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
                         [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
                         (click)="openFilters()"
                         [class.product-list__filter-button--active]="hasActiveFilters()"
@@ -24,6 +25,7 @@
                         variant="secondary"
                         fill="outline"
                         icon="search"
+                        [fdUiHint]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
                         [ariaLabel]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
                         (click)="toggleMobileSearch()"
                     />
@@ -33,6 +35,7 @@
                         variant="primary"
                         fill="solid"
                         icon="add"
+                        [fdUiHint]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
                         [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
                         (click)="onAddProductClick()"
                     />
@@ -45,6 +48,7 @@
                         variant="secondary"
                         fill="outline"
                         icon="filter_alt"
+                        [fdUiHint]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
                         [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
                         (click)="openFilters()"
                         [class.product-list__filter-button--active]="hasActiveFilters()"
@@ -131,7 +135,7 @@
                                     <div class="product-list__favorite-meta">
                                         @if (favorite.brand) {
                                             <span>{{ favorite.brand }}</span>
-                                            <span>·</span>
+                                            <span>Â·</span>
                                         }
                                         <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
                                     </div>
@@ -141,7 +145,8 @@
                                         type="button"
                                         class="product-list__favorite-btn"
                                         (click)="openFavoriteProduct(favorite)"
-                                        [title]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
+                                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
+                                        [attr.aria-label]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
                                     >
                                         <mat-icon>open_in_new</mat-icon>
                                     </button>
@@ -149,7 +154,8 @@
                                         type="button"
                                         class="product-list__favorite-btn"
                                         (click)="addFavoriteProductToMeal(favorite)"
-                                        [title]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                        [attr.aria-label]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
                                     >
                                         <mat-icon>add</mat-icon>
                                     </button>
@@ -157,7 +163,8 @@
                                         type="button"
                                         class="product-list__favorite-btn product-list__favorite-btn--remove"
                                         (click)="removeFavorite(favorite)"
-                                        [title]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
+                                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
+                                        [attr.aria-label]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
                                     >
                                         <mat-icon>close</mat-icon>
                                     </button>

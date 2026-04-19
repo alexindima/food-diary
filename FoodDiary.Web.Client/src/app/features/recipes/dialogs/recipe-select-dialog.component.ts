@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, inp
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { Recipe, RecipeFilters } from '../models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -26,6 +27,7 @@ import { RecipeManageComponent } from '../components/manage/recipe-manage.compon
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,

@@ -1,4 +1,4 @@
-<fd-ui-card class="daily-progress-card" [title]="'DAILY_PROGRESS_CARD.TITLE' | translate">
+﻿<fd-ui-card class="daily-progress-card" [title]="'DAILY_PROGRESS_CARD.TITLE' | translate">
     <fd-ui-button
         fdUiCardActions
         variant="secondary"
@@ -6,7 +6,8 @@
         size="xs"
         icon="settings"
         iconSize="sm"
-        ariaLabel="Settings"
+        [fdUiHint]="'DAILY_PROGRESS_CARD.OPEN_SETTINGS' | translate"
+        [ariaLabel]="'DAILY_PROGRESS_CARD.OPEN_SETTINGS' | translate"
         (click)="settingsClick.emit()"
     />
 

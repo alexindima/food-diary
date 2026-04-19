@@ -1,5 +1,6 @@
 ﻿import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { ProductListBaseComponent } from '../components/list/product-list-base.component';
 import { Product } from '../models/product.data';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -20,6 +21,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,

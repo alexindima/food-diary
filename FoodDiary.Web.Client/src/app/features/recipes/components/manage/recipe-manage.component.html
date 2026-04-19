@@ -59,6 +59,7 @@
                                     [options]="nutritionModeOptions"
                                     [selectedValue]="nutritionMode"
                                     (selectedValueChange)="onNutritionModeChange($event)"
+                                    [fdUiHint]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
                                     [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
                                 />
                                 <fd-ui-segmented-toggle
@@ -69,6 +70,7 @@
                                     [options]="nutritionScaleModeOptions"
                                     [selectedValue]="nutritionScaleMode"
                                     (selectedValueChange)="onNutritionScaleModeChange($event)"
+                                    [fdUiHint]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
                                     [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
                                 />
                             </fd-nutrition-editor>

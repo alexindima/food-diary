@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, injec
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { Observable } from 'rxjs';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -61,6 +62,7 @@ import {
         DecimalPipe,
         FormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         LocalizedDatePipe,
         PageHeaderComponent,
         PageBodyComponent,

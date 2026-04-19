@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, input, output } from '@angu
 import { FormArray, FormGroup, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -18,6 +19,7 @@ import { ConsumptionItemFormData } from '../base-meal-manage.types';
         ReactiveFormsModule,
         FormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,

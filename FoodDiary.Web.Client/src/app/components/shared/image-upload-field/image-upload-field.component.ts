@@ -13,6 +13,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { finalize, map, switchMap } from 'rxjs/operators';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,7 +29,7 @@ import { FrontendLoggerService } from '../../../services/frontend-logger.service
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
     },
-    imports: [FdUiButtonComponent, TranslatePipe],
+    imports: [FdUiButtonComponent, TranslatePipe, FdUiHintDirective],
     templateUrl: './image-upload-field.component.html',
     styleUrls: ['./image-upload-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

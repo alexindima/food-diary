@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
@@ -11,7 +12,7 @@ import { NutritionTotals } from '../base-meal-manage.types';
     templateUrl: './meal-ai-sessions.component.html',
     styleUrls: ['../base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiCardComponent, FdUiButtonComponent, FdUiIconModule],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiCardComponent, FdUiButtonComponent, FdUiIconModule],
 })
 export class MealAiSessionsComponent {
     private readonly translateService = inject(TranslateService);

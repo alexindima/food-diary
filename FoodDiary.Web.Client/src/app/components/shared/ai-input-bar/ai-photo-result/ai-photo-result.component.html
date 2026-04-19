@@ -1,7 +1,13 @@
 <div class="ai-photo-result">
     <div class="ai-photo-result__header">
         <span>{{ titleKey() | translate }}</span>
-        <button type="button" class="ai-photo-result__dismiss" (click)="dismissed.emit()">
+        <button
+            type="button"
+            class="ai-photo-result__dismiss"
+            [fdUiHint]="'COMMON.CANCEL' | translate"
+            [attr.aria-label]="'COMMON.CANCEL' | translate"
+            (click)="dismissed.emit()"
+        >
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -45,6 +51,8 @@
                 <button
                     type="button"
                     class="ai-photo-result__action-btn"
+                    [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+                    [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
                     [disabled]="isAnalyzing() || isEditing()"
                     (click)="reanalyzeRequested.emit()"
                 >
@@ -99,7 +107,13 @@
                                 <option [value]="unit">{{ getUnitLabel(unit) }}</option>
                             }
                         </select>
-                        <button type="button" class="ai-photo-result__edit-remove" (click)="removeEditItem(i)">
+                        <button
+                            type="button"
+                            class="ai-photo-result__edit-remove"
+                            [fdUiHint]="'COMMON.DELETE' | translate"
+                            [attr.aria-label]="'COMMON.DELETE' | translate"
+                            (click)="removeEditItem(i)"
+                        >
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>

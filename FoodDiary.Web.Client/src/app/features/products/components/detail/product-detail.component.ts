@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
@@ -29,6 +30,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, input, output } from '@angular/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-manage-header',
-    imports: [FdUiButtonComponent],
+    imports: [FdUiButtonComponent, FdUiHintDirective],
     templateUrl: './manage-header.component.html',
     styleUrls: ['./manage-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

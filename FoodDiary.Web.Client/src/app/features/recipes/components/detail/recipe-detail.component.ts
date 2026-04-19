@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { Recipe } from '../../models/recipe.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RecipeService } from '../../api/recipe.service';
@@ -27,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,

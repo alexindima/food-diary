@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
@@ -12,7 +13,7 @@ import { QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 @Component({
     selector: 'fd-quick-consumption-drawer',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiButtonComponent, FdUiIconModule, NgOptimizedImage],
+    imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconModule, NgOptimizedImage],
     templateUrl: './quick-consumption-drawer.component.html',
     styleUrls: ['./quick-consumption-drawer.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

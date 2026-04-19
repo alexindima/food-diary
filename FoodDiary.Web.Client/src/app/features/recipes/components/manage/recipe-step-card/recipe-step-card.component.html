@@ -1,4 +1,4 @@
-<ng-container [formGroup]="stepFormGroup()">
+﻿<ng-container [formGroup]="stepFormGroup()">
     <fd-ui-card class="recipe-step-card" tone="editor-gradient" density="relaxed">
         <div class="recipe-step-card__header">
             <div class="recipe-step-card__header-left">
@@ -27,6 +27,7 @@
                     fill="text"
                     icon="edit"
                     class="recipe-step-card__edit"
+                    [fdUiHint]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
                     [attr.aria-label]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
                     (click)="toggleStepTitleEdit()"
                 >
@@ -38,6 +39,7 @@
                     variant="secondary"
                     fill="text"
                     [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
+                    [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     [attr.aria-label]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"
                 >
@@ -121,6 +123,8 @@
                                 variant="danger"
                                 fill="text"
                                 icon="delete"
+                                [fdUiHint]="'COMMON.DELETE' | translate"
+                                [ariaLabel]="'COMMON.DELETE' | translate"
                                 [disabled]="firstIngredient"
                                 (click)="onRemoveIngredient(ingredientIndex)"
                             />

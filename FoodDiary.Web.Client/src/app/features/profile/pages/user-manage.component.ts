@@ -12,6 +12,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 
@@ -66,6 +67,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         FormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiSelectComponent,

@@ -4,6 +4,7 @@ import { Product } from '../models/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
@@ -19,6 +20,7 @@ import { ProductNutritionEditorComponent } from '../components/manage/product-nu
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         FdPageContainerDirective,

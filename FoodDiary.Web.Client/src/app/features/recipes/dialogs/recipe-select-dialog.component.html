@@ -26,6 +26,7 @@
             variant="secondary"
             fill="outline"
             [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+            [fdUiHint]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
             [ariaLabel]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
             (click)="searchForm.controls.onlyMine.setValue(!searchForm.controls.onlyMine.value)"
             [class.recipe-select__filter-button--active]="searchForm.controls.onlyMine.value"
@@ -57,7 +58,14 @@
                             </div>
                         </div>
                         <span class="recipe-select__action">
-                            <fd-ui-button icon="add" variant="primary" fill="solid" size="sm" ariaLabel="{{ 'COMMON.ADD' | translate }}" />
+                            <fd-ui-button
+                                icon="add"
+                                variant="primary"
+                                fill="solid"
+                                size="sm"
+                                [fdUiHint]="'COMMON.ADD' | translate"
+                                ariaLabel="{{ 'COMMON.ADD' | translate }}"
+                            />
                         </span>
                     </button>
                 }

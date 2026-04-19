@@ -25,6 +25,7 @@
             variant="secondary"
             fill="outline"
             [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+            [fdUiHint]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             (click)="toggleOnlyMine()"
             [class.product-select__filter-button--active]="searchForm.controls.onlyMine.value"
@@ -56,7 +57,14 @@
                             </div>
                         </div>
                         <span class="product-select__action">
-                            <fd-ui-button icon="add" variant="primary" fill="solid" size="sm" ariaLabel="{{ 'COMMON.ADD' | translate }}" />
+                            <fd-ui-button
+                                icon="add"
+                                variant="primary"
+                                fill="solid"
+                                size="sm"
+                                [fdUiHint]="'COMMON.ADD' | translate"
+                                ariaLabel="{{ 'COMMON.ADD' | translate }}"
+                            />
                         </span>
                     </button>
                 }

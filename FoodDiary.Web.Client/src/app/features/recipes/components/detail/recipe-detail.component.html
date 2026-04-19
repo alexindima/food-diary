@@ -1,4 +1,4 @@
-<fd-ui-dialog [title]="recipe.name" size="lg">
+﻿<fd-ui-dialog [title]="recipe.name" size="lg">
     <fd-ui-tabs class="recipe-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
     <div class="recipe-detail">
@@ -68,7 +68,7 @@
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
-                            <strong class="recipe-detail__quality-value" [title]="'QUALITY.' + qualityGrade.toUpperCase() | translate">
+                            <strong class="recipe-detail__quality-value" [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate">
                                 {{ qualityScore }}
                             </strong>
                         </div>
@@ -143,8 +143,9 @@
                 class="recipe-detail__favorite-btn"
                 [class.recipe-detail__favorite-btn--active]="isFavorite()"
                 [disabled]="isFavoriteLoading()"
+                [fdUiHint]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
+                [attr.aria-label]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
                 (click)="toggleFavorite()"
-                [title]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
             >
                 <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
             </button>

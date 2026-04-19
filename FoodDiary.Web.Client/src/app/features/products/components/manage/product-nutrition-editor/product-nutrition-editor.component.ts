@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
@@ -23,6 +24,7 @@ import { ProductFormData, NutritionMode } from '../base-product-manage.component
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiSegmentedToggleComponent,

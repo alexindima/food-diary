@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { distinctUntilChanged, map } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
@@ -32,6 +33,7 @@ import { ShoppingListFacade } from '../lib/shopping-list.facade';
         ReactiveFormsModule,
         FormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         MatIconModule,
         FdUiButtonComponent,
         FdUiInputComponent,

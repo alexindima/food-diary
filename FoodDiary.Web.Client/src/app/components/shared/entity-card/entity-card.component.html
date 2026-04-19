@@ -1,4 +1,4 @@
-<fd-media-card
+﻿<fd-media-card
     class="entity-card"
     appearance="raised"
     density="compact"
@@ -12,6 +12,8 @@
         fdMediaCardMedia
         class="entity-card__thumb"
         [class.entity-card__thumb--previewable]="hasPreviewImage()"
+        [fdUiHint]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
+        [fdUiHintDisabled]="!hasPreviewImage()"
         [attr.role]="hasPreviewImage() ? 'button' : null"
         [attr.tabindex]="hasPreviewImage() ? '0' : null"
         [attr.aria-label]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
@@ -34,6 +36,8 @@
                         type="button"
                         class="entity-card__favorite-button"
                         [class.entity-card__favorite-button--active]="isFavorite()"
+                        [fdUiHint]="favoriteAriaLabel()"
+                        [fdUiHintDisabled]="!favoriteAriaLabel()"
                         [attr.aria-label]="favoriteAriaLabel()"
                         [disabled]="favoriteLoading()"
                         (click)="handleFavoriteToggle($event)"
@@ -84,7 +88,7 @@
                             [style.width.%]="cardQuality.score"
                         ></span>
                     </div>
-                    <span class="entity-card__quality-value" [title]="'QUALITY.' + cardQuality.grade.toUpperCase() | translate">
+                    <span class="entity-card__quality-value" [fdUiHint]="'QUALITY.' + cardQuality.grade.toUpperCase() | translate">
                         {{ cardQuality.score }}
                     </span>
                 </div>

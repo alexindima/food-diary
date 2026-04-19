@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
@@ -25,7 +26,15 @@ export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
 @Component({
     selector: 'fd-entity-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiButtonComponent, FdUiIconModule, NutrientBadgesComponent, MediaCardComponent],
+    imports: [
+        CommonModule,
+        TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
+        FdUiIconModule,
+        NutrientBadgesComponent,
+        MediaCardComponent,
+    ],
     templateUrl: './entity-card.component.html',
     styleUrl: './entity-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

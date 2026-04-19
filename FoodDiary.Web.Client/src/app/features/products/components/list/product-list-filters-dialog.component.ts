@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -22,7 +23,14 @@ export interface ProductListFiltersDialogResult {
     templateUrl: './product-list-filters-dialog.component.html',
     styleUrls: ['./product-list-filters-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiSegmentedToggleComponent],
+    imports: [
+        TranslatePipe,
+        FdUiHintDirective,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiButtonComponent,
+        FdUiSegmentedToggleComponent,
+    ],
 })
 export class ProductListFiltersDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductListFiltersDialogComponent, ProductListFiltersDialogResult | null>);

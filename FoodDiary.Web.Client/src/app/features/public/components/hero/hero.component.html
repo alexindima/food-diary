@@ -5,6 +5,7 @@
             [options]="languageOptions"
             [(selectedValue)]="language"
             (selectedValueChange)="updateLanguage()"
+            [fdUiHint]="'LANDING_HERO.LANGUAGE_LABEL' | translate"
             [ariaLabel]="'LANDING_HERO.LANGUAGE_LABEL' | translate"
             [shrinkItems]="true"
         />

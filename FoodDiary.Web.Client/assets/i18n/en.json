@@ -74,6 +74,7 @@
         "NO_GOAL_LABEL": "Goal not set",
         "NO_GOAL_TITLE": "No goal set",
         "NO_GOAL_HINT": "Set a daily calorie target (and macros) in your profile to see progress here.",
+        "OPEN_SETTINGS": "Open progress settings",
         "SET_GOAL_CTA": "Set goal",
         "PLACEHOLDER": "Your progress will appear here once a goal is set.",
         "MOTIVATION": {

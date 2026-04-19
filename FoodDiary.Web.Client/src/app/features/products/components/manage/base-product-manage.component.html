@@ -55,6 +55,7 @@
                                     variant="danger"
                                     fill="outline"
                                     icon="delete"
+                                    [fdUiHint]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
                                     [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
                                     [disabled]="isDeleting()"
                                     (click)="onDeleteProduct()"

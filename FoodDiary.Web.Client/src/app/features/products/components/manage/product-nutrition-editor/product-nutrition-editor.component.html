@@ -44,6 +44,7 @@
                 [options]="nutritionModeOptions()"
                 [selectedValue]="nutritionMode()"
                 (selectedValueChange)="nutritionModeChange.emit($event)"
+                [fdUiHint]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
                 [ariaLabel]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
             />
         </fd-nutrition-editor>

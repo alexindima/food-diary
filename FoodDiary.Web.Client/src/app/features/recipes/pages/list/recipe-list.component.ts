@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -36,6 +37,7 @@ import { RecipeListFacade } from '../../lib/recipe-list.facade';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiPaginationComponent,

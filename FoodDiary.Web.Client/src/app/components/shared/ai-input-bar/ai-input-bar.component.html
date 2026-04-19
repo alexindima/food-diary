@@ -1,4 +1,4 @@
-<div class="ai-input-bar" [class.ai-input-bar--attached]="hasAttachedResult()">
+﻿<div class="ai-input-bar" [class.ai-input-bar--attached]="hasAttachedResult()">
     <fd-image-upload-field
         class="ai-input-bar__hidden-upload"
         appearance="hidden"
@@ -26,7 +26,6 @@
             [disabled]="isDisabled()"
             (click)="onPhotoClick()"
             [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-            [fdUiHintFocusShowDelay]="0"
             fdUiHintPosition="bottom"
         >
             <mat-icon>photo_camera</mat-icon>
@@ -39,7 +38,6 @@
                 [disabled]="isDisabled()"
                 (click)="toggleMic()"
                 [fdUiHint]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
-                [fdUiHintFocusShowDelay]="0"
                 fdUiHintPosition="bottom"
             >
                 <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>

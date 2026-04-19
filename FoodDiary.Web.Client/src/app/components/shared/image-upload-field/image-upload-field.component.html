@@ -1,4 +1,4 @@
-<div class="image-upload-field" [class.image-upload-field--disabled]="disabled" [class]="appearanceClass()">
+﻿<div class="image-upload-field" [class.image-upload-field--disabled]="disabled" [class]="appearanceClass()">
     <div
         class="image-upload-field__dropzone"
         role="button"
@@ -27,7 +27,8 @@
                 <button
                     type="button"
                     class="image-upload-field__control-btn"
-                    [title]="'IMAGE_UPLOAD_FIELD.REPLACE' | translate"
+                    [fdUiHint]="'IMAGE_UPLOAD_FIELD.REPLACE' | translate"
+                    [attr.aria-label]="'IMAGE_UPLOAD_FIELD.REPLACE' | translate"
                     (click)="$event.stopPropagation(); fileInput.click()"
                 >
                     &#10227;
@@ -35,7 +36,8 @@
                 <button
                     type="button"
                     class="image-upload-field__control-btn image-upload-field__control-btn--danger"
-                    [title]="'IMAGE_UPLOAD_FIELD.REMOVE' | translate"
+                    [fdUiHint]="'IMAGE_UPLOAD_FIELD.REMOVE' | translate"
+                    [attr.aria-label]="'IMAGE_UPLOAD_FIELD.REMOVE' | translate"
                     (click)="onDeleteClick($event)"
                 >
                     &#128465;

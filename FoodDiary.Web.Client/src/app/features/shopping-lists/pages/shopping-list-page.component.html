@@ -1,4 +1,4 @@
-<div class="shopping-list" fdPageContainer>
+﻿<div class="shopping-list" fdPageContainer>
     <fd-page-header
         class="shopping-list__header"
         [title]="'SHOPPING_LIST.TITLE' | translate"
@@ -13,6 +13,7 @@
                         variant="secondary"
                         fill="outline"
                         icon="tune"
+                        [fdUiHint]="'SHOPPING_LIST.LISTS_LABEL' | translate"
                         [ariaLabel]="'SHOPPING_LIST.LISTS_LABEL' | translate"
                         (click)="toggleMobileManage()"
                     />
@@ -22,6 +23,7 @@
                         variant="primary"
                         fill="solid"
                         icon="add"
+                        [fdUiHint]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
                         [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
                         [disabled]="isLoading()"
                         (click)="createNewList()"
@@ -183,6 +185,7 @@
                                 <button
                                     type="button"
                                     class="shopping-list__item-remove"
+                                    [fdUiHint]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
                                     [attr.aria-label]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
                                     (click)="removeItem(item.id)"
                                 >

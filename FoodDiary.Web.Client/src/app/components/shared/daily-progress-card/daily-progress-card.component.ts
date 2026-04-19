@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -9,7 +10,15 @@ import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.dire
 @Component({
     selector: 'fd-daily-progress-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiCardComponent, DynamicProgressBarComponent, FdUiButtonComponent, FdUiCardActionsDirective],
+    imports: [
+        CommonModule,
+        TranslatePipe,
+        FdUiHintDirective,
+        FdUiCardComponent,
+        DynamicProgressBarComponent,
+        FdUiButtonComponent,
+        FdUiCardActionsDirective,
+    ],
     templateUrl: './daily-progress-card.component.html',
     styleUrl: './daily-progress-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

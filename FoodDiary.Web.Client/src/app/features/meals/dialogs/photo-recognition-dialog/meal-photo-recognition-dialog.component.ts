@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -28,6 +29,7 @@ type PhotoAiDialogData = {
     imports: [
         CommonModule,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,

@@ -1,4 +1,4 @@
-<fd-ui-card
+﻿<fd-ui-card
     class="consumption-manage__card consumption-manage__card--items"
     tone="editor"
     density="compact"
@@ -42,6 +42,7 @@
                             variant="danger"
                             fill="text"
                             icon="close"
+                            [fdUiHint]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
                             [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
                             class="consumption-item__remove consumption-item__remove--inline"
                             [disabled]="first"
