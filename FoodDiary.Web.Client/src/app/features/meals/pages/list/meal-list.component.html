@@ -3,6 +3,7 @@
         class="consumption-list__header"
         [title]="'CONSUMPTION_LIST.TITLE' | translate"
         [subtitle]="'CONSUMPTION_LIST.SUBTITLE' | translate"
+        [compactActions]="true"
     >
         <ng-container fdPageHeaderActions>
             @if (isMobileView()) {
@@ -12,9 +13,9 @@
                         appearance="toolbar"
                         variant="secondary"
                         fill="outline"
-                        icon="date_range"
+                        icon="filter_alt"
                         [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                        (click)="toggleMobileDateFilter()"
+                        (click)="openFilters()"
                         [class.consumption-list__filter-button--active]="hasDateFilter()"
                     />
                     <fd-ui-button
@@ -26,62 +27,49 @@
                         [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
                         (click)="exportCsv()"
                     />
+                    <fd-ui-button
+                        class="consumption-list__icon-button"
+                        appearance="toolbar"
+                        variant="secondary"
+                        fill="outline"
+                        icon="picture_as_pdf"
+                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
+                        (click)="exportPdf()"
+                    />
                 </div>
             } @else {
-                <div class="consumption-list__controls">
-                    <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                        <fd-ui-date-range-input
-                            formControlName="dateRange"
-                            class="consumption-list__date-input"
-                            [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
-                            [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
-                            [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"
-                            [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
-                        />
-                    </form>
-
-                    <div class="consumption-list__actions">
-                        <fd-ui-button
-                            class="consumption-list__icon-button"
-                            appearance="toolbar"
-                            variant="secondary"
-                            fill="outline"
-                            icon="download"
-                            [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
-                            (click)="exportCsv()"
-                        />
-                        <fd-ui-button
-                            class="consumption-list__icon-button"
-                            appearance="toolbar"
-                            variant="secondary"
-                            fill="outline"
-                            icon="picture_as_pdf"
-                            [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
-                            (click)="exportPdf()"
-                        />
-                    </div>
+                <div class="consumption-list__header-actions">
+                    <fd-ui-button
+                        class="consumption-list__icon-button consumption-list__filter-button"
+                        appearance="toolbar"
+                        variant="secondary"
+                        fill="outline"
+                        icon="filter_alt"
+                        [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
+                        (click)="openFilters()"
+                        [class.consumption-list__filter-button--active]="hasDateFilter()"
+                    />
+                    <fd-ui-button
+                        class="consumption-list__icon-button"
+                        appearance="toolbar"
+                        variant="secondary"
+                        fill="outline"
+                        icon="download"
+                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
+                        (click)="exportCsv()"
+                    />
+                    <fd-ui-button
+                        class="consumption-list__icon-button"
+                        appearance="toolbar"
+                        variant="secondary"
+                        fill="outline"
+                        icon="picture_as_pdf"
+                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
+                        (click)="exportPdf()"
+                    />
                 </div>
             }
         </ng-container>
-
-        @if (isMobileView()) {
-            <div
-                fdPageHeaderExtra
-                class="consumption-list__mobile-filter"
-                [class.consumption-list__mobile-filter--open]="isMobileDateFilterVisible()"
-            >
-                <form [formGroup]="searchForm" class="consumption-list__date-range-form consumption-list__date-range-form--mobile">
-                    <fd-ui-date-range-input
-                        formControlName="dateRange"
-                        class="consumption-list__date-input"
-                        [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
-                        [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
-                        [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"
-                        [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
-                    />
-                </form>
-            </div>
-        }
     </fd-page-header>
 
     <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />

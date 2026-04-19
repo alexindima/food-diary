@@ -12,14 +12,9 @@
 
     &__header .fd-page-header__actions {
         gap: variables.$gap-s;
-        width: 100%;
-    }
-
-    &__controls {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: variables.$gap-s;
-        width: 100%;
+        width: auto;
+        margin-left: auto;
+        justify-content: flex-end;
     }
 
     &__mobile-toolbar {
@@ -29,32 +24,11 @@
         flex-wrap: nowrap;
     }
 
-    &__mobile-filter {
-        display: none;
-        background: var(--fd-color-slate-50);
-
-        &--open {
-            display: block;
-        }
-    }
-
-    &__date-range-form {
-        flex: 1 1 auto;
-        min-width: 0;
-        padding: 0;
-        background: transparent;
-        box-shadow: none;
-    }
-
-    &__date-input {
-        width: 100%;
-        min-width: 0;
-    }
-
-    &__actions {
+    &__header-actions {
         display: flex;
-        justify-content: flex-end;
         align-items: center;
+        justify-content: flex-end;
+        gap: variables.$gap-s;
     }
 
     &__manual-add {
@@ -204,14 +178,8 @@
             display: flex;
         }
 
-        &__controls {
+        &__header-actions {
             display: none;
-        }
-
-        &__date-range-form--mobile {
-            min-width: 100%;
-            padding: 10px 12px 12px;
-            width: 100%;
         }
 
         &__groups {
@@ -252,6 +220,13 @@
         &__pagination {
             padding-left: 16px;
             padding-right: 16px;
+        }
+    }
+
+    @media #{variables.$media-desktop-sm} {
+
+        &__header-actions {
+            gap: variables.$gap-xs;
         }
     }
 

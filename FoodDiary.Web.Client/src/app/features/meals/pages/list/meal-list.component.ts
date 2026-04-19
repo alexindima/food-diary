@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, i
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit';
+import { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { ExportService } from '../../api/export.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -29,6 +29,7 @@ import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { MealListFiltersDialogComponent, MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-meal-list',
@@ -40,7 +41,6 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
         ReactiveFormsModule,
         TranslatePipe,
         FdUiButtonComponent,
-        FdUiDateRangeInputComponent,
         FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
@@ -78,11 +78,9 @@ export class MealListComponent {
         const dateRange = this.searchForm.controls.dateRange.value;
         return !!dateRange?.start || !!dateRange?.end;
     });
-    public readonly isMobileDateFilterVisible = computed(() => this.isMobileDateFilterOpen() || this.hasDateFilter());
     public readonly isEmptyState = computed(() => this.consumptionData.items().length === 0 && !this.hasDateFilter());
     public readonly isNoResultsState = computed(() => this.consumptionData.items().length === 0 && this.hasDateFilter());
     public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
-    private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
@@ -97,12 +95,7 @@ export class MealListComponent {
                 distinctUntilChanged(),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(isMobile => {
-                this.isMobileView.set(isMobile);
-                if (!isMobile) {
-                    this.isMobileDateFilterOpen.set(false);
-                }
-            });
+            .subscribe(isMobile => this.isMobileView.set(isMobile));
 
         this.loadInitialOverview().subscribe();
 
@@ -271,8 +264,37 @@ export class MealListComponent {
         this.exportService.exportDiary(dateFrom, dateTo, format);
     }
 
-    public toggleMobileDateFilter(): void {
-        this.isMobileDateFilterOpen.update(value => !value);
+    public openFilters(): void {
+        const currentDateRange = this.searchForm.controls.dateRange.value;
+
+        this.fdDialogService
+            .open<MealListFiltersDialogComponent, { dateRange: FdUiDateRangeValue | null }, MealListFiltersDialogResult | null>(
+                MealListFiltersDialogComponent,
+                {
+                    size: 'sm',
+                    data: {
+                        dateRange: currentDateRange,
+                    },
+                },
+            )
+            .afterClosed()
+            .subscribe(result => {
+                if (!result) {
+                    return;
+                }
+
+                const nextDateRange = result.dateRange ?? null;
+                const currentStart = currentDateRange?.start?.getTime() ?? null;
+                const currentEnd = currentDateRange?.end?.getTime() ?? null;
+                const nextStart = nextDateRange?.start?.getTime() ?? null;
+                const nextEnd = nextDateRange?.end?.getTime() ?? null;
+
+                if (currentStart === nextStart && currentEnd === nextEnd) {
+                    return;
+                }
+
+                this.searchForm.controls.dateRange.setValue(nextDateRange);
+            });
     }
 
     protected scrollToTop(): void {

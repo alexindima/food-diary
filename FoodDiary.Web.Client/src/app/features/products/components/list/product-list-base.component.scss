@@ -13,18 +13,9 @@
 
     &__header .fd-page-header__actions {
         gap: variables.$gap-s;
-        width: 100%;
-    }
-
-    &__controls {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: variables.$gap-s;
-        width: 100%;
-
-        @media #{variables.$media-tablet} {
-            grid-template-columns: 1fr;
-        }
+        width: auto;
+        margin-left: auto;
+        justify-content: flex-end;
     }
 
     &__mobile-toolbar {
@@ -32,6 +23,13 @@
         align-items: center;
         gap: 6px;
         flex-wrap: nowrap;
+    }
+
+    &__header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: variables.$gap-s;
     }
 
     &__search-form {
@@ -51,6 +49,15 @@
         }
     }
 
+    &__desktop-search {
+        width: 100%;
+    }
+
+    &__search-form--desktop {
+        min-width: 0;
+        width: 100%;
+    }
+
     &__search-input {
         width: 100%;
     }
@@ -58,13 +65,6 @@
     &__filter-button {
         flex: 0 0 auto;
         min-width: auto;
-    }
-
-    &__filters {
-        display: flex;
-        gap: variables.$gap-s;
-        align-items: center;
-        justify-content: flex-end;
     }
 
     @media #{variables.$media-xs} {
@@ -348,7 +348,7 @@
             display: flex;
         }
 
-        &__controls {
+        &__header-actions {
             display: none;
         }
 
@@ -395,33 +395,16 @@
 
     @media #{variables.$media-desktop-sm} {
 
-        &__controls {
-            grid-template-columns: 1fr;
-        }
-
-        &__controls .product-list__filters {
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: nowrap;
+        &__header-actions {
             gap: variables.$gap-xs;
         }
 
-        &__controls .product-list__filter-button,
-        &__controls .product-list__pill {
-            flex: 1 1 auto;
-            min-width: 0;
-            font-size: 0.92rem;
-        }
-
-        &__controls .product-list__add-button {
+        &__filter-button {
             flex: 0 0 auto;
-            min-width: 44px;
         }
-    }
 
-    @media #{variables.$media-xs} {
 
-        &__controls .product-list__pill {
+        &__add-button {
             flex: 0 0 auto;
             min-width: 44px;
         }

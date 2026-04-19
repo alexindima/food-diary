@@ -1,0 +1,14 @@
+.meal-list-filters-dialog {
+
+    &__date-range {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+}

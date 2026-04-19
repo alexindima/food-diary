@@ -3,6 +3,7 @@
         class="product-list__header"
         [title]="'PRODUCT_LIST.TITLE' | translate"
         [subtitle]="'PRODUCT_LIST.SUBTITLE' | translate"
+        [compactActions]="true"
     >
         <ng-container fdPageHeaderActions>
             @if (isMobileView()) {
@@ -37,47 +38,48 @@
                     />
                 </div>
             } @else {
-                <div class="product-list__controls">
-                    <form class="product-list__search-form" [formGroup]="searchForm">
-                        <fd-ui-input
-                            class="product-list__search-input"
-                            formControlName="search"
-                            size="md"
-                            [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                            [prefixIcon]="'search'"
-                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                            [suffixButtonIcon]="'qr_code_scanner'"
-                            [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                            (suffixButtonClicked)="openBarcodeScanner()"
-                        />
-                    </form>
-
-                    <div class="product-list__filters">
-                        <fd-ui-button
-                            class="product-list__icon-button product-list__filter-button"
-                            appearance="toolbar"
-                            variant="secondary"
-                            fill="outline"
-                            icon="filter_alt"
-                            [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
-                            (click)="openFilters()"
-                            [class.product-list__filter-button--active]="hasActiveFilters()"
-                        />
-                        <fd-ui-button
-                            class="product-list__add-button"
-                            appearance="brand-action"
-                            variant="primary"
-                            fill="solid"
-                            icon="add"
-                            [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
-                            (click)="onAddProductClick()"
-                        >
-                            {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
-                        </fd-ui-button>
-                    </div>
+                <div class="product-list__header-actions">
+                    <fd-ui-button
+                        class="product-list__icon-button product-list__filter-button"
+                        appearance="toolbar"
+                        variant="secondary"
+                        fill="outline"
+                        icon="filter_alt"
+                        [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
+                        (click)="openFilters()"
+                        [class.product-list__filter-button--active]="hasActiveFilters()"
+                    />
+                    <fd-ui-button
+                        class="product-list__add-button"
+                        appearance="brand-action"
+                        variant="primary"
+                        fill="solid"
+                        icon="add"
+                        [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
+                        (click)="onAddProductClick()"
+                    >
+                        {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+                    </fd-ui-button>
                 </div>
             }
         </ng-container>
+        @if (!isMobileView()) {
+            <div fdPageHeaderExtra class="product-list__desktop-search">
+                <form class="product-list__search-form product-list__search-form--desktop" [formGroup]="searchForm">
+                    <fd-ui-input
+                        class="product-list__search-input"
+                        formControlName="search"
+                        size="md"
+                        [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                        [prefixIcon]="'search'"
+                        [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                        [suffixButtonIcon]="'qr_code_scanner'"
+                        [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                        (suffixButtonClicked)="openBarcodeScanner()"
+                    />
+                </form>
+            </div>
+        }
         @if (isMobileView()) {
             <div fdPageHeaderExtra class="product-list__mobile-search" [class.product-list__mobile-search--open]="isMobileSearchVisible()">
                 <form class="product-list__search-form product-list__search-form--mobile" [formGroup]="searchForm">

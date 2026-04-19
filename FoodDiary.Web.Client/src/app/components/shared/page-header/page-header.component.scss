@@ -47,6 +47,20 @@
     }
 }
 
+:host(.fd-page-header--compact-actions) {
+
+    .fd-page-header {
+        align-items: flex-start;
+    }
+
+    .fd-page-header__actions {
+        width: auto;
+        margin-left: auto;
+        justify-content: flex-end;
+        align-self: flex-start;
+    }
+}
+
 @media #{variables.$media-tablet} {
 
     .fd-page-header {
