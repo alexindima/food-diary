@@ -2345,6 +2345,8 @@
         "VERIFY_EMAIL": "Верификация email",
         "RESET_PASSWORD": "Сброс пароля",
         "RESET_PASSWORD_DESCRIPTION": "Сбросьте пароль от аккаунта Food Diary.",
+        "DASHBOARD": "Дашборд",
+        "DASHBOARD_DESCRIPTION": "Смотрите ежедневную сводку по питанию, тренды и ключевые инсайты по здоровью.",
         "PRODUCTS": "Продукты",
         "PRODUCTS_DESCRIPTION": "Просматривайте и управляйте базой продуктов питания.",
         "MEALS": "Приёмы пищи",

@@ -3,15 +3,23 @@ import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
 import { authRoutes } from './features/auth/auth.routes';
+import { loggedInGuard } from './guards/logged-in.guard';
 
 export const routes: Routes = [
     {
         path: '',
         loadComponent: () => import('./features/public/pages/landing/main.component').then(m => m.MainComponent),
+        canActivate: [loggedInGuard],
         canDeactivate: [unsavedChangesGuard],
         data: { seo: { titleKey: null, descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
     },
     ...authRoutes,
+    {
+        path: 'dashboard',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/dashboard/pages/dashboard.component').then(m => m.DashboardComponent),
+        data: { preload: true, seo: { titleKey: 'SEO.DASHBOARD', descriptionKey: 'SEO.DASHBOARD_DESCRIPTION', noIndex: true } },
+    },
     {
         path: 'products',
         canActivate: [authGuard],

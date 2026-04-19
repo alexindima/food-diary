@@ -9,6 +9,10 @@ export class NavigationService {
     private readonly router = inject(Router);
 
     public async navigateToHome(): Promise<void> {
+        await this.router.navigate(['/dashboard']);
+    }
+
+    public async navigateToLanding(): Promise<void> {
         await this.router.navigate(['/']);
     }
 
@@ -22,7 +26,7 @@ export class NavigationService {
     }
 
     public async navigateToReturnUrl(returnUrl: string | null): Promise<void> {
-        await this.router.navigateByUrl(returnUrl || '/');
+        await this.router.navigateByUrl(returnUrl || '/dashboard');
     }
 
     public async navigateToProductList(): Promise<void> {

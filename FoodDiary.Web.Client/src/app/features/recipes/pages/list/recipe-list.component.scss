@@ -79,11 +79,7 @@
     }
 
     &__add-button {
-        --fd-button-border-radius: 18px;
-        border: none;
-        background: transparent;
-        color: var(--fd-color-white);
-        box-shadow: none;
+        --fd-button-padding-y: 8px;
     }
 
     @media #{variables.$media-xs} {

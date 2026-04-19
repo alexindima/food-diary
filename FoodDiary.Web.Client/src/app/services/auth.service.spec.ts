@@ -32,9 +32,11 @@ describe('AuthService', () => {
         navigationServiceSpy = {
             navigateToAuth: vi.fn(),
             navigateToHome: vi.fn(),
+            navigateToLanding: vi.fn(),
         } as any;
         navigationServiceSpy.navigateToAuth.mockReturnValue(Promise.resolve());
         navigationServiceSpy.navigateToHome.mockReturnValue(Promise.resolve());
+        navigationServiceSpy.navigateToLanding.mockReturnValue(Promise.resolve());
 
         localizationServiceSpy = {
             applyLanguagePreference: vi.fn(),
@@ -382,12 +384,13 @@ describe('AuthService', () => {
 
             expect(navigationServiceSpy.navigateToAuth).toHaveBeenCalledWith('login');
             expect(navigationServiceSpy.navigateToHome).not.toHaveBeenCalled();
+            expect(navigationServiceSpy.navigateToLanding).not.toHaveBeenCalled();
         });
 
-        it('should navigate to home when redirectToAuth is false', async () => {
+        it('should navigate to landing when redirectToAuth is false', async () => {
             await service.onLogout(false);
 
-            expect(navigationServiceSpy.navigateToHome).toHaveBeenCalled();
+            expect(navigationServiceSpy.navigateToLanding).toHaveBeenCalled();
             expect(navigationServiceSpy.navigateToAuth).not.toHaveBeenCalled();
         });
 

@@ -1,18 +1,10 @@
-@if (isAuthenticated()) {
-    @defer (when isAuthenticated()) {
-        <fd-dashboard />
-    } @placeholder {
-        <div class="landing-dashboard-placeholder" aria-hidden="true"></div>
-    }
-} @else {
-    <fd-hero />
-    @defer (on viewport) {
-        <fd-landing-preview-tour />
-    } @placeholder {
-        <div style="min-height: 400px"></div>
-    }
-    <fd-features />
-    <fd-dietologist-promo />
-    <fd-landing-steps />
-    <fd-landing-cta />
+<fd-hero />
+@defer (on viewport) {
+    <fd-landing-preview-tour />
+} @placeholder {
+    <div style="min-height: 400px"></div>
 }
+<fd-features />
+<fd-dietologist-promo />
+<fd-landing-steps />
+<fd-landing-cta />

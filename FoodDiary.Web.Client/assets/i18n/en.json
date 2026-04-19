@@ -2345,6 +2345,8 @@
         "VERIFY_EMAIL": "Email Verification",
         "RESET_PASSWORD": "Reset Password",
         "RESET_PASSWORD_DESCRIPTION": "Reset your Food Diary account password.",
+        "DASHBOARD": "Dashboard",
+        "DASHBOARD_DESCRIPTION": "View your daily nutrition summary, trends, and key health insights.",
         "PRODUCTS": "Products",
         "PRODUCTS_DESCRIPTION": "Browse and manage your food products database.",
         "MEALS": "Meals",

@@ -141,6 +141,7 @@
     --fd-button-height: 38px;
     --fd-button-min-width: 38px;
     --fd-button-padding-x: 0;
+    --fd-button-border-radius: var(--fd-radius-button);
     --fd-button-border-default: var(--fd-color-border);
     --fd-button-border-hover: var(--fd-color-border);
     --fd-button-border-active: var(--fd-color-border);
@@ -149,7 +150,6 @@
     --fd-button-background-active: var(--fd-color-surface-raised);
     --fd-button-shadow-default: none;
     --fd-button-shadow-active: none;
-    border-radius: 12px;
 }
 
 .fd-ui-button--appearance-toolbar.fd-ui-button--primary.fd-ui-button--solid {
@@ -238,17 +238,14 @@
     border-radius: 12px;
 }
 
-.fd-ui-button--appearance-brand-action,
-.fd-ui-button--appearance-chip {
-    --fd-button-border-radius: 18px;
-}
-
 .fd-ui-button--appearance-brand-action {
+    --fd-button-border-radius: var(--fd-radius-button);
     --fd-button-padding-x: 16px;
     font-weight: 800;
 }
 
 .fd-ui-button--appearance-chip {
+    --fd-button-border-radius: var(--fd-radius-chip, var(--fd-radius-button));
     --fd-button-padding-x: 12px;
     --fd-button-background-default: var(--fd-color-white);
     --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);

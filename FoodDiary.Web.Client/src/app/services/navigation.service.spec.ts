@@ -22,7 +22,17 @@ describe('NavigationService', () => {
 
     it('should navigate to home', async () => {
         await service.navigateToHome();
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
+    });
+
+    it('should navigate to landing', async () => {
+        await service.navigateToLanding();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/']);
+    });
+
+    it('should navigate to dashboard when returnUrl is empty', async () => {
+        await service.navigateToReturnUrl(null);
+        expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/dashboard');
     });
 
     it('should navigate to auth with mode and returnUrl', async () => {

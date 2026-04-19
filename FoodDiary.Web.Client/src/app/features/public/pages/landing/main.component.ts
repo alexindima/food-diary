@@ -1,10 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthService } from '../../../../services/auth.service';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { FeaturesComponent } from '../../components/features/features.component';
-import { DashboardComponent } from '../../../dashboard/pages/dashboard.component';
 import { LandingPreviewTourComponent } from '../../components/landing-preview-tour/landing-preview-tour.component';
 import { LandingStepsComponent } from '../../components/landing-steps/landing-steps.component';
 import { LandingCtaComponent } from '../../components/landing-cta/landing-cta.component';
@@ -15,7 +13,6 @@ import { DietologistPromoComponent } from '../../components/dietologist-promo/di
     imports: [
         HeroComponent,
         FeaturesComponent,
-        DashboardComponent,
         LandingPreviewTourComponent,
         LandingStepsComponent,
         LandingCtaComponent,
@@ -25,11 +22,8 @@ import { DietologistPromoComponent } from '../../components/dietologist-promo/di
     styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-    private readonly authService = inject(AuthService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly route = inject(ActivatedRoute);
-
-    public isAuthenticated = this.authService.isAuthenticated;
 
     public ngOnInit(): void {
         const path = this.route.snapshot.routeConfig?.path ?? '';

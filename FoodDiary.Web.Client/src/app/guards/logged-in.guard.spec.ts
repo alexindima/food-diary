@@ -45,7 +45,7 @@ describe('loggedInGuard', () => {
         expect(navigationServiceMock.navigateToHome).not.toHaveBeenCalled();
     });
 
-    it('should redirect to home when authenticated', async () => {
+    it('should redirect to dashboard when authenticated', async () => {
         authServiceMock.isAuthenticated.set(true);
 
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));

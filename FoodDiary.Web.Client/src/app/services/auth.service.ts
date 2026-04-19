@@ -197,7 +197,7 @@ export class AuthService extends ApiService {
             await this.navigationService.navigateToAuth('login');
             return;
         }
-        await this.navigationService.navigateToHome();
+        await this.navigationService.navigateToLanding();
     }
 
     public getToken(): string | null {
