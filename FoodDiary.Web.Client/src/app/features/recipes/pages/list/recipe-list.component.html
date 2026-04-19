@@ -142,33 +142,33 @@
                                     </div>
                                 </button>
                                 <div class="recipe-list__favorite-actions">
-                                    <button
-                                        type="button"
+                                    <fd-ui-button
                                         class="recipe-list__favorite-btn"
+                                        variant="secondary"
+                                        fill="text"
+                                        icon="open_in_new"
                                         (click)="openFavoriteRecipe(favorite)"
                                         [fdUiHint]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
-                                        [attr.aria-label]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
-                                    >
-                                        <mat-icon>open_in_new</mat-icon>
-                                    </button>
-                                    <button
-                                        type="button"
+                                        [ariaLabel]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
+                                    />
+                                    <fd-ui-button
                                         class="recipe-list__favorite-btn"
+                                        variant="secondary"
+                                        fill="text"
+                                        icon="add"
                                         (click)="addFavoriteRecipeToMeal(favorite)"
                                         [fdUiHint]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                        [attr.aria-label]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                    >
-                                        <mat-icon>add</mat-icon>
-                                    </button>
-                                    <button
-                                        type="button"
+                                        [ariaLabel]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                    />
+                                    <fd-ui-button
                                         class="recipe-list__favorite-btn recipe-list__favorite-btn--remove"
+                                        variant="danger"
+                                        fill="text"
+                                        icon="close"
                                         (click)="removeFavorite(favorite)"
                                         [fdUiHint]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
-                                        [attr.aria-label]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
-                                    >
-                                        <mat-icon>close</mat-icon>
-                                    </button>
+                                        [ariaLabel]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
+                                    />
                                 </div>
                             </div>
                         }

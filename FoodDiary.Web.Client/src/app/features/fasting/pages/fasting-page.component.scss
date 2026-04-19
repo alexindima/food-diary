@@ -40,6 +40,11 @@
         width: 100%;
     }
 
+    &__segmented-toggle {
+        width: 100%;
+        max-width: 100%;
+    }
+
     &__protocol-group {
         display: flex;
         flex-direction: column;
@@ -150,6 +155,15 @@
                 color: inherit;
             }
         }
+    }
+
+    &__protocol-action {
+        --fd-button-border-radius: 999px;
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
     }
 
     &__emoji {
@@ -726,25 +740,33 @@
     }
 
     &__history-toggle {
-        padding: 0;
-        border: 0;
-        background: transparent;
-        color: var(--fd-color-purple-700);
-        font: inherit;
-        font-size: 0.9rem;
-        font-weight: 700;
-        cursor: pointer;
-
-        &:hover {
-            color: var(--fd-color-purple-700);
-        }
+        --fd-button-width: auto;
+        --fd-button-min-width: auto;
+        --fd-button-height: auto;
+        --fd-button-height-explicit: auto;
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: 0;
+        --fd-button-font-size: 0.9rem;
+        --fd-button-font-weight: 700;
+        --fd-button-secondary-background-default: transparent;
+        --fd-button-secondary-background-hover: transparent;
+        --fd-button-secondary-background-active: transparent;
+        --fd-button-secondary-border-default: transparent;
+        --fd-button-secondary-border-hover: transparent;
+        --fd-button-secondary-border-active: transparent;
+        --fd-button-secondary-text-default: var(--fd-color-purple-700);
+        --fd-button-secondary-text-hover: var(--fd-color-purple-700);
+        --fd-button-secondary-text-active: var(--fd-color-purple-700);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
 
         &--muted {
-            color: var(--fd-color-slate-600);
-
-            &:hover {
-                color: var(--fd-color-slate-700);
-            }
+            --fd-button-secondary-text-default: var(--fd-color-slate-600);
+            --fd-button-secondary-text-hover: var(--fd-color-slate-700);
+            --fd-button-secondary-text-active: var(--fd-color-slate-700);
         }
     }
 

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 import { finalize, firstValueFrom } from 'rxjs';
 import { catchError, of } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -37,7 +37,7 @@ interface AiInputBarChannelState {
     templateUrl: './ai-input-bar.component.html',
     styleUrls: ['./ai-input-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, MatIconModule, FdUiHintDirective, AiPhotoResultComponent, ImageUploadFieldComponent],
+    imports: [TranslatePipe, MatIconModule, FdUiButtonComponent, FdUiHintDirective, AiPhotoResultComponent, ImageUploadFieldComponent],
 })
 export class AiInputBarComponent {
     private readonly aiFoodService = inject(AiFoodService);

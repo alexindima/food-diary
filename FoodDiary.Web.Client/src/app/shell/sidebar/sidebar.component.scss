@@ -49,31 +49,33 @@
     }
 
     &__brand-notifications {
-        position: relative;
-        width: 40px;
-        height: 40px;
+        --fd-button-host-width: 40px;
+        --fd-button-host-min-width: 40px;
+        --fd-button-width: 40px;
+        --fd-button-min-width: 40px;
+        --fd-button-height: 40px;
+        --fd-button-height-explicit: 40px;
+        --fd-button-padding-x: 0;
+        --fd-button-text-padding-x: 0;
+        --fd-button-secondary-text-background-default: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+        --fd-button-secondary-text-background-hover: color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent);
+        --fd-button-secondary-text-background-active: color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent);
+        --fd-button-secondary-text-background-disabled: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+        --fd-button-secondary-text-border-default: transparent;
+        --fd-button-secondary-text-border-hover: transparent;
+        --fd-button-secondary-text-border-active: transparent;
+        --fd-button-secondary-text-border-disabled: transparent;
+        --fd-button-secondary-text-text-default: var(--fd-color-primary-600);
+        --fd-button-secondary-text-text-hover: var(--fd-color-primary-600);
+        --fd-button-secondary-text-text-active: var(--fd-color-primary-600);
+        --fd-button-secondary-text-text-disabled: color-mix(in srgb, var(--fd-color-primary-600) 70%, transparent);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: 0 10px 20px color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: translateY(-1px);
+        --fd-button-transform-active: translateY(0);
         flex-shrink: 0;
-        display: grid;
-        place-items: center;
-        border: none;
-        border-radius: var(--fd-radius-button, 12px);
-        background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
-        color: var(--fd-color-primary-600);
-        cursor: pointer;
-        transition:
-            background 0.2s ease,
-            transform 0.15s ease,
-            box-shadow 0.2s ease;
-
-        mat-icon {
-            font-size: 20px;
-        }
-
-        &:hover {
-            background: color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
-        }
+        position: relative;
     }
 
     &__brand-notifications-dot {
@@ -386,29 +388,31 @@
     }
 
     &__logout {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border-radius: var(--fd-radius-menu-item, 10px);
-        border: 1px solid color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
-        background: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
-        color: var(--fd-color-red-700);
-        font-weight: 700;
-        cursor: pointer;
-        transition:
-            background 0.15s ease,
-            transform 0.15s ease;
-
-        mat-icon {
-            font-size: 18px;
-        }
-
-        &:hover {
-            background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
-            transform: translateY(-1px);
-        }
+        --fd-button-host-width: 100%;
+        --fd-button-host-min-width: 0;
+        --fd-button-width: 100%;
+        --fd-button-min-width: 0;
+        --fd-button-height: auto;
+        --fd-button-height-explicit: auto;
+        --fd-button-padding-x: 12px;
+        --fd-button-justify-content: flex-start;
+        --fd-button-danger-outline-background-default: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
+        --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
+        --fd-button-danger-outline-background-active: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
+        --fd-button-danger-outline-background-disabled: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
+        --fd-button-danger-outline-border-default: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
+        --fd-button-danger-outline-border-hover: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
+        --fd-button-danger-outline-border-active: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
+        --fd-button-danger-outline-border-disabled: color-mix(in srgb, var(--fd-color-danger) 18%, transparent);
+        --fd-button-danger-outline-text-default: var(--fd-color-red-700);
+        --fd-button-danger-outline-text-hover: var(--fd-color-red-700);
+        --fd-button-danger-outline-text-active: var(--fd-color-red-700);
+        --fd-button-danger-outline-text-disabled: color-mix(in srgb, var(--fd-color-red-700) 70%, transparent);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: translateY(-1px);
+        --fd-button-transform-active: translateY(0);
     }
 }
 
@@ -584,10 +588,19 @@
         }
 
         .sidebar-mobile__sheet-action {
-            justify-content: flex-start;
-            border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
-            background: var(--fd-color-surface, var(--fd-color-white));
-            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+            --fd-button-host-width: 100%;
+            --fd-button-host-min-width: 0;
+            --fd-button-width: 100%;
+            --fd-button-min-width: 0;
+            --fd-button-height: auto;
+            --fd-button-height-explicit: auto;
+            --fd-button-padding-x: 12px;
+            --fd-button-justify-content: flex-start;
+            --fd-button-shadow-default: none;
+            --fd-button-shadow-hover: none;
+            --fd-button-shadow-active: none;
+            --fd-button-transform-hover: none;
+            --fd-button-transform-active: none;
         }
 
         .sidebar-mobile__sheet-badge {
@@ -607,9 +620,19 @@
         }
 
         .sidebar-mobile__sheet-logout {
-            border: 1px solid color-mix(in srgb, var(--fd-color-danger) 18%, transparent);
-            background: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
-            color: var(--fd-color-red-700);
+            --fd-button-host-width: 100%;
+            --fd-button-host-min-width: 0;
+            --fd-button-width: 100%;
+            --fd-button-min-width: 0;
+            --fd-button-height: auto;
+            --fd-button-height-explicit: auto;
+            --fd-button-padding-x: 12px;
+            --fd-button-justify-content: flex-start;
+            --fd-button-shadow-default: none;
+            --fd-button-shadow-hover: none;
+            --fd-button-shadow-active: none;
+            --fd-button-transform-hover: none;
+            --fd-button-transform-active: none;
         }
     }
 }

@@ -42,14 +42,26 @@
                     <p class="comment-text">{{ comment.text }}</p>
                     @if (comment.isOwnedByCurrentUser) {
                         <div class="comment-actions">
-                            <button class="comment-action" (click)="onEdit(comment)">
-                                <mat-icon>edit</mat-icon>
+                            <fd-ui-button
+                                class="comment-action"
+                                variant="secondary"
+                                fill="text"
+                                size="sm"
+                                icon="edit"
+                                (click)="onEdit(comment)"
+                            >
                                 {{ 'COMMENTS.EDIT' | translate }}
-                            </button>
-                            <button class="comment-action comment-action--delete" (click)="onDelete(comment)">
-                                <mat-icon>delete</mat-icon>
+                            </fd-ui-button>
+                            <fd-ui-button
+                                class="comment-action comment-action--delete"
+                                variant="danger"
+                                fill="text"
+                                size="sm"
+                                icon="delete"
+                                (click)="onDelete(comment)"
+                            >
                                 {{ 'COMMENTS.DELETE' | translate }}
-                            </button>
+                            </fd-ui-button>
                         </div>
                     }
                 </div>

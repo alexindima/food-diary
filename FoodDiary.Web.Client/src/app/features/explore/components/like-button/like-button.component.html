@@ -1,4 +1,12 @@
-<button class="like-button" [class.like-button--liked]="isLiked()" [disabled]="isToggling()" (click)="onToggle()">
-    <mat-icon>{{ isLiked() ? 'favorite' : 'favorite_border' }}</mat-icon>
-    <span class="like-count">{{ totalLikes() }}</span>
-</button>
+<fd-ui-button
+    class="like-button"
+    variant="secondary"
+    fill="outline"
+    [class.like-button--liked]="isLiked()"
+    [icon]="isLiked() ? 'favorite' : 'favorite_border'"
+    iconSize="md"
+    [disabled]="isToggling()"
+    (click)="onToggle()"
+>
+    {{ totalLikes() }}
+</fd-ui-button>

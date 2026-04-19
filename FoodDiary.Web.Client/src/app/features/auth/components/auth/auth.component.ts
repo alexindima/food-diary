@@ -26,6 +26,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { environment } from '../../../../../environments/environment';
@@ -52,7 +53,15 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     styleUrls: ['./auth.component.scss'],
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent],
+    imports: [
+        TranslateModule,
+        ReactiveFormsModule,
+        FdUiInputComponent,
+        FdUiButtonComponent,
+        FdUiCheckboxComponent,
+        FdUiFormErrorComponent,
+        FdUiTabsComponent,
+    ],
 })
 export class AuthComponent {
     public readonly useRouting = input(true);
@@ -88,6 +97,10 @@ export class AuthComponent {
     public passwordResetCooldownSeconds = signal<number>(0);
     private passwordResetCooldownTimerId: number | null = null;
     public authBenefits: string[] = ['AUTH.INFO.HIGHLIGHTS.SYNC', 'AUTH.INFO.HIGHLIGHTS.INSIGHTS', 'AUTH.INFO.HIGHLIGHTS.LIBRARY'];
+    public readonly authTabs: FdUiTab[] = [
+        { value: 'login', labelKey: 'AUTH.LOGIN.TITLE' },
+        { value: 'register', labelKey: 'AUTH.REGISTER.TITLE' },
+    ];
 
     private returnUrl: string | null = null;
 

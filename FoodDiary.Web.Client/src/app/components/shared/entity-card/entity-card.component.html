@@ -32,18 +32,20 @@
         <div class="entity-card__title-block">
             <div class="entity-card__name-row">
                 @if (showFavorite()) {
-                    <button
-                        type="button"
+                    <fd-ui-button
                         class="entity-card__favorite-button"
+                        appearance="plain-icon"
+                        variant="secondary"
+                        fill="text"
+                        [icon]="isFavorite() ? 'star' : 'star_border'"
+                        iconSize="sm"
                         [class.entity-card__favorite-button--active]="isFavorite()"
                         [fdUiHint]="favoriteAriaLabel()"
                         [fdUiHintDisabled]="!favoriteAriaLabel()"
-                        [attr.aria-label]="favoriteAriaLabel()"
+                        [ariaLabel]="favoriteAriaLabel() ?? undefined"
                         [disabled]="favoriteLoading()"
                         (click)="handleFavoriteToggle($event)"
-                    >
-                        <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-                    </button>
+                    />
                 }
                 @if (ownershipIcon(); as icon) {
                     <mat-icon class="entity-card__visibility-icon">

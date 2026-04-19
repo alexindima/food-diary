@@ -278,6 +278,51 @@ export interface FdUiRadioOption<T = unknown> {
 #### `fd-ui-segmented-toggle`
 Segmented toggle control.
 
+#### `fd-ui-chip-select`
+Compact multi-select chip group for filters, tags, and symptom pickers.
+
+**Inputs**
+- `options?: FdUiChipSelectOption[]`
+- `selectedValues?: string[]`
+- `ariaLabel?: string | null`
+- `size?: 'sm' | 'md'`
+
+**Types**
+```ts
+export interface FdUiChipSelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  ariaLabel?: string | null;
+  hint?: string | null;
+}
+```
+
+#### `fd-ui-emoji-picker`
+Compact emoji-based single-choice picker.
+
+**Inputs**
+- `options?: FdUiEmojiPickerOption[]`
+- `selectedValue?: string | number | null`
+- `ariaLabel?: string | null`
+- `size?: 'sm' | 'md'`
+- `fullWidth?: boolean`
+- `showLabels?: boolean`
+- `showDescriptions?: boolean`
+
+**Types**
+```ts
+export interface FdUiEmojiPickerOption<T = string | number> {
+  value: T;
+  emoji: string;
+  label?: string;
+  description?: string;
+  ariaLabel?: string;
+  hint?: string;
+  disabled?: boolean;
+}
+```
+
 #### `fd-ui-switch`
 Compact boolean switch for settings and permission rows.
 

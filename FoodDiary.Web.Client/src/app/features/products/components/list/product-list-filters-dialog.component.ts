@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiChipSelectComponent, FdUiChipSelectOption, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -29,6 +29,7 @@ export interface ProductListFiltersDialogResult {
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
+        FdUiChipSelectComponent,
         FdUiSegmentedToggleComponent,
     ],
 })
@@ -43,10 +44,21 @@ export class ProductListFiltersDialogComponent {
     ];
 
     public visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
-    public selectedTypes = new Set<ProductType>(this.data.productTypes ?? []);
+    public readonly selectedTypeValues = signal<ProductType[]>([...(this.data.productTypes ?? [])]);
 
     public readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
         type => type !== ProductType.Unknown,
+    );
+    public readonly productTypeOptions = computed(() =>
+        this.productTypes.map<FdUiChipSelectOption>(type => {
+            const label = this.translate.instant('PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.' + type.toUpperCase());
+            return {
+                value: type,
+                label,
+                ariaLabel: label,
+                hint: label,
+            };
+        }),
     );
 
     public onVisibilityChange(value: string): void {
@@ -54,22 +66,22 @@ export class ProductListFiltersDialogComponent {
     }
 
     public isTypeSelected(type: ProductType): boolean {
-        return this.selectedTypes.has(type);
+        return this.selectedTypeValues().includes(type);
     }
 
     public toggleType(type: ProductType): void {
-        if (this.selectedTypes.has(type)) {
-            this.selectedTypes.delete(type);
+        if (this.isTypeSelected(type)) {
+            this.selectedTypeValues.update(values => values.filter(item => item !== type));
             return;
         }
 
-        this.selectedTypes.add(type);
+        this.selectedTypeValues.update(values => [...values, type]);
     }
 
     public onApply(): void {
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
-            productTypes: this.productTypes.filter(type => this.selectedTypes.has(type)),
+            productTypes: this.selectedTypeValues(),
         });
     }
 

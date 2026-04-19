@@ -158,21 +158,28 @@
     }
 
     &__manual-add-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        border: none;
-        padding: 0;
-        background: transparent;
-        color: var(--fd-color-primary-600);
+        --fd-button-height: auto;
+        --fd-button-height-explicit: auto;
+        --fd-button-min-width: 0;
+        --fd-button-padding-x: 0;
+        --fd-button-text-padding-x: 0;
+        --fd-button-background-default: transparent;
+        --fd-button-background-hover: transparent;
+        --fd-button-background-active: transparent;
+        --fd-button-border-default: transparent;
+        --fd-button-border-hover: transparent;
+        --fd-button-border-active: transparent;
+        --fd-button-text-default: var(--fd-color-primary-600);
+        --fd-button-text-hover: var(--fd-color-primary-700);
+        --fd-button-text-active: var(--fd-color-primary-700);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: 18px;
         font-size: 1rem;
         font-weight: 700;
-        cursor: pointer;
-        transition: color 0.15s ease;
-
-        &:hover {
-            color: var(--fd-color-primary-700);
-        }
     }
 
     &__manual-add-icon {

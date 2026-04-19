@@ -19,8 +19,8 @@
         </div>
     </div>
     @if (showAction()) {
-        <button class="fd-notice__action" type="button" (click)="onAction()">
+        <fd-ui-button class="fd-notice__action" type="button" variant="secondary" fill="text" size="sm" (click)="onAction()">
             {{ actionLabel() }}
-        </button>
+        </fd-ui-button>
     }
 </div>

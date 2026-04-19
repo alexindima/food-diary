@@ -1,12 +1,13 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 /**
  * A custom group component that can behave as an accordion or a simple container.
  */
 @Component({
     selector: 'fd-custom-group',
-    imports: [NgStyle],
+    imports: [NgStyle, FdUiButtonComponent],
     templateUrl: './custom-group.component.html',
     styleUrl: './custom-group.component.scss',
 })

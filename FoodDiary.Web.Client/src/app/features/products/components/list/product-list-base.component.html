@@ -141,33 +141,33 @@
                                     </div>
                                 </button>
                                 <div class="product-list__favorite-actions">
-                                    <button
-                                        type="button"
+                                    <fd-ui-button
                                         class="product-list__favorite-btn"
+                                        variant="secondary"
+                                        fill="text"
+                                        icon="open_in_new"
                                         (click)="openFavoriteProduct(favorite)"
                                         [fdUiHint]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                                        [attr.aria-label]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                                    >
-                                        <mat-icon>open_in_new</mat-icon>
-                                    </button>
-                                    <button
-                                        type="button"
+                                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
+                                    />
+                                    <fd-ui-button
                                         class="product-list__favorite-btn"
+                                        variant="secondary"
+                                        fill="text"
+                                        icon="add"
                                         (click)="addFavoriteProductToMeal(favorite)"
                                         [fdUiHint]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                        [attr.aria-label]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                    >
-                                        <mat-icon>add</mat-icon>
-                                    </button>
-                                    <button
-                                        type="button"
+                                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                    />
+                                    <fd-ui-button
                                         class="product-list__favorite-btn product-list__favorite-btn--remove"
+                                        variant="danger"
+                                        fill="text"
+                                        icon="close"
                                         (click)="removeFavorite(favorite)"
                                         [fdUiHint]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                                        [attr.aria-label]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                                    >
-                                        <mat-icon>close</mat-icon>
-                                    </button>
+                                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
+                                    />
                                 </div>
                             </div>
                         }

@@ -2,8 +2,15 @@ import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, injec
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { Observable } from 'rxjs';
+import {
+    FdUiChipSelectComponent,
+    FdUiChipSelectOption,
+    FdUiEmojiPickerComponent,
+    FdUiEmojiPickerOption,
+    FdUiSegmentedToggleComponent,
+    FdUiSegmentedToggleOption,
+} from 'fd-ui-kit';
+import { EMPTY, Observable } from 'rxjs';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
@@ -34,6 +41,7 @@ import {
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
 import {
+    FastingEmojiScaleOption,
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HARD_STOP_THRESHOLD_HOURS,
     FASTING_HUNGER_EMOJI_SCALE,
@@ -62,7 +70,9 @@ import {
         DecimalPipe,
         FormsModule,
         TranslatePipe,
-        FdUiHintDirective,
+        FdUiChipSelectComponent,
+        FdUiEmojiPickerComponent,
+        FdUiSegmentedToggleComponent,
         LocalizedDatePipe,
         PageHeaderComponent,
         PageBodyComponent,
@@ -86,6 +96,7 @@ export class FastingPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly localizationService = inject(LocalizationService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
 
     public readonly isLoading = this.facade.isLoading;
     public readonly isStarting = this.facade.isStarting;
@@ -154,7 +165,54 @@ export class FastingPageComponent {
     public readonly hungerEmojiScale = FASTING_HUNGER_EMOJI_SCALE;
     public readonly energyEmojiScale = FASTING_ENERGY_EMOJI_SCALE;
     public readonly moodEmojiScale = FASTING_MOOD_EMOJI_SCALE;
+    public readonly modeOptions = computed(() =>
+        this.buildSegmentedToggleOptions([
+            { labelKey: 'FASTING.MODE_INTERMITTENT', value: 'intermittent' },
+            { labelKey: 'FASTING.MODE_EXTENDED', value: 'extended' },
+            { labelKey: 'FASTING.MODE_CYCLIC', value: 'cyclic' },
+        ]),
+    );
+    public readonly intermittentProtocolOptions = computed(() => this.buildProtocolOptions(this.intermittentProtocols));
+    public readonly extendedProtocolOptions = computed(() => this.buildProtocolOptions(this.extendedProtocols));
+    public readonly cyclicEatDayProtocolOptions = computed(() => this.buildProtocolOptions(this.cyclicEatDayProtocols));
+    public readonly cyclicPresetOptions = computed(() => {
+        this.currentLanguage();
+
+        return [
+            ...this.cyclicPresets.map<FdUiSegmentedToggleOption>(preset => ({
+                label: preset.label,
+                value: this.getCyclicPresetSelectionValue(preset.fastDays, preset.eatDays),
+            })),
+            {
+                label: this.translateService.instant('FASTING.CUSTOM_CYCLE'),
+                value: 'custom',
+            },
+        ];
+    });
+    public readonly selectedCyclicPresetValue = computed(() => {
+        if (this.isCustomCyclicPresetSelected()) {
+            return 'custom';
+        }
+
+        return this.getCyclicPresetSelectionValue(this.cyclicFastDays(), this.cyclicEatDays());
+    });
+    public readonly hungerEmojiOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.HUNGER', this.hungerEmojiScale));
+    public readonly energyEmojiOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.ENERGY', this.energyEmojiScale));
+    public readonly moodEmojiOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.MOOD', this.moodEmojiScale));
     public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
+    public readonly symptomChipOptions = computed(() => {
+        this.currentLanguage();
+
+        return this.symptomOptions.map<FdUiChipSelectOption>(symptom => {
+            const label = this.translateService.instant(symptom.labelKey);
+            return {
+                value: symptom.value,
+                label,
+                ariaLabel: label,
+                hint: label,
+            };
+        });
+    });
     public readonly alerts = computed(() => this.facade.insightsData().alerts);
     public readonly insights = computed(() => this.facade.insightsData().insights);
     public readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
@@ -183,6 +241,10 @@ export class FastingPageComponent {
     public constructor() {
         this.facade.initialize();
 
+        (this.translateService.onLangChange ?? EMPTY).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.currentLanguage.set(this.localizationService.getCurrentLanguage());
+        });
+
         effect(() => {
             const version = this.facade.checkInSavedVersion();
             if (version <= 0) {
@@ -198,8 +260,16 @@ export class FastingPageComponent {
         this.facade.selectMode(mode);
     }
 
+    public onModeChange(mode: string): void {
+        this.selectMode(mode as FastingMode);
+    }
+
     public selectProtocol(protocol: FastingProtocol): void {
         this.facade.selectProtocol(protocol);
+    }
+
+    public onProtocolChange(protocol: string): void {
+        this.selectProtocol(protocol as FastingProtocol);
     }
 
     public onCustomHoursChange(value: string | number): void {
@@ -218,6 +288,23 @@ export class FastingPageComponent {
 
     public selectCyclicPreset(fastDays: number, eatDays: number): void {
         this.facade.setCyclicPreset(fastDays, eatDays);
+    }
+
+    public onCyclicPresetChange(value: string): void {
+        if (value === 'custom') {
+            this.selectCustomCyclicPreset();
+            return;
+        }
+
+        const [fastDaysRaw, eatDaysRaw] = value.split(':');
+        const fastDays = Number.parseInt(fastDaysRaw ?? '', 10);
+        const eatDays = Number.parseInt(eatDaysRaw ?? '', 10);
+
+        if (Number.isNaN(fastDays) || Number.isNaN(eatDays)) {
+            return;
+        }
+
+        this.selectCyclicPreset(fastDays, eatDays);
     }
 
     public selectCustomCyclicPreset(): void {
@@ -240,6 +327,10 @@ export class FastingPageComponent {
 
     public selectCyclicEatDayProtocol(protocol: FastingProtocol): void {
         this.facade.selectCyclicEatDayProtocol(protocol);
+    }
+
+    public onCyclicEatDayProtocolChange(protocol: string): void {
+        this.selectCyclicEatDayProtocol(protocol as FastingProtocol);
     }
 
     public onCyclicEatDayFastHoursChange(value: string | number): void {
@@ -284,18 +375,6 @@ export class FastingPageComponent {
         if (!isNaN(hours)) {
             this.facade.setReduceHours(hours);
         }
-    }
-
-    public setHungerLevel(level: number): void {
-        this.facade.setHungerLevel(level);
-    }
-
-    public setEnergyLevel(level: number): void {
-        this.facade.setEnergyLevel(level);
-    }
-
-    public setMoodLevel(level: number): void {
-        this.facade.setMoodLevel(level);
     }
 
     public toggleSymptom(symptom: string): void {
@@ -715,6 +794,43 @@ export class FastingPageComponent {
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): FdUiEmojiPickerOption<number>[] {
+        this.currentLanguage();
+
+        const label = this.translateService.instant(labelKey);
+        return scale.map(option => {
+            const text = `${label} ${option.value}/5`;
+            return {
+                value: option.value,
+                emoji: option.emoji,
+                ariaLabel: text,
+                hint: text,
+            };
+        });
+    }
+
+    private buildProtocolOptions(protocols: readonly { labelKey: string; value: FastingProtocol }[]): FdUiSegmentedToggleOption[] {
+        this.currentLanguage();
+
+        return protocols.map(protocol => ({
+            label: this.translateService.instant(protocol.labelKey),
+            value: protocol.value,
+        }));
+    }
+
+    private buildSegmentedToggleOptions(items: readonly { labelKey: string; value: string }[]): FdUiSegmentedToggleOption[] {
+        this.currentLanguage();
+
+        return items.map(item => ({
+            label: this.translateService.instant(item.labelKey),
+            value: item.value,
+        }));
+    }
+
+    private getCyclicPresetSelectionValue(fastDays: number, eatDays: number): string {
+        return `${fastDays}:${eatDays}`;
     }
 
     private getEndConfirmDialogData(): FastingEndConfirmDialogData {

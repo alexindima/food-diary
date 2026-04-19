@@ -106,17 +106,17 @@
             <span class="product-detail__warning">{{ warningMessageKey | translate }}</span>
         }
         <div class="product-detail__actions">
-            <button
-                type="button"
+            <fd-ui-button
                 class="product-detail__favorite-btn"
+                variant="secondary"
+                fill="solid"
+                [icon]="isFavorite() ? 'star' : 'star_border'"
                 [class.product-detail__favorite-btn--active]="isFavorite()"
                 [disabled]="isFavoriteLoading()"
                 [fdUiHint]="(isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE') | translate"
-                [attr.aria-label]="(isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE') | translate"
+                [ariaLabel]="(isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE') | translate"
                 (click)="toggleFavorite()"
-            >
-                <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-            </button>
+            />
             @if (canModify()) {
                 <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}

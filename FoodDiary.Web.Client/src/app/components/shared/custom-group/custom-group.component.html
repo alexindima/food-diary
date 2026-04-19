@@ -9,7 +9,9 @@
             </button>
         }
         @if (showCloseButton()) {
-            <button type="button" class="custom-group__button" (click)="onCloseButtonClick()">X</button>
+            <fd-ui-button class="custom-group__button" type="button" variant="danger" fill="solid" size="xs" (click)="onCloseButtonClick()">
+                X
+            </fd-ui-button>
         }
         @if (!forceCollapse()) {
             @if (isOpen() || !isAccordion()) {

@@ -1,38 +1,33 @@
 .like-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: 1px solid var(--fd-border-color, var(--fd-color-slate-200));
-    border-radius: 20px;
-    padding: 6px 14px;
-    cursor: pointer;
+    --fd-button-host-width: auto;
+    --fd-button-host-min-width: 0;
+    --fd-button-border-radius: 20px;
+    --fd-button-height: 34px;
+    --fd-button-height-explicit: 34px;
+    --fd-button-padding-x: 14px;
+    --fd-button-border-default: var(--fd-border-color, var(--fd-color-slate-200));
+    --fd-button-border-hover: var(--fd-error, var(--fd-color-red-700));
+    --fd-button-border-active: var(--fd-error, var(--fd-color-red-700));
+    --fd-button-text-default: var(--fd-text-secondary);
+    --fd-button-text-hover: var(--fd-error, var(--fd-color-red-700));
+    --fd-button-text-active: var(--fd-error, var(--fd-color-red-700));
+    --fd-button-shadow-default: none;
+    --fd-button-shadow-hover: none;
+    --fd-button-shadow-active: none;
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
     font-size: 0.875rem;
-    color: var(--fd-text-secondary);
-    transition: all 0.2s ease;
-
-    mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-    }
-
-    &:hover:not(:disabled) {
-        border-color: var(--fd-error, var(--fd-color-red-700));
-        color: var(--fd-error, var(--fd-color-red-700));
-    }
 
     &--liked {
-        color: var(--fd-error, var(--fd-color-red-700));
-        border-color: var(--fd-error, var(--fd-color-red-700));
-
-        mat-icon {
-            color: var(--fd-error, var(--fd-color-red-700));
-        }
+        --fd-button-border-default: var(--fd-error, var(--fd-color-red-700));
+        --fd-button-border-hover: var(--fd-error, var(--fd-color-red-700));
+        --fd-button-border-active: var(--fd-error, var(--fd-color-red-700));
+        --fd-button-text-default: var(--fd-error, var(--fd-color-red-700));
+        --fd-button-text-hover: var(--fd-error, var(--fd-color-red-700));
+        --fd-button-text-active: var(--fd-error, var(--fd-color-red-700));
     }
 
     &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
+        --fd-button-disabled-opacity: 0.6;
     }
 }

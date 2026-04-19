@@ -49,24 +49,24 @@
                             </div>
                         </div>
                         <div class="consumption-manage__ai-summary-actions">
-                            <button
-                                type="button"
+                            <fd-ui-button
                                 class="consumption-manage__ai-summary-action"
+                                variant="secondary"
+                                fill="text"
+                                icon="edit"
                                 [fdUiHint]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
-                                [attr.aria-label]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
+                                [ariaLabel]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
                                 (click)="onEditSession(idx)"
-                            >
-                                <mat-icon fontIcon="edit"></mat-icon>
-                            </button>
-                            <button
-                                type="button"
+                            />
+                            <fd-ui-button
                                 class="consumption-manage__ai-summary-action consumption-manage__ai-summary-action--danger"
+                                variant="danger"
+                                fill="text"
+                                icon="delete"
                                 [fdUiHint]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
-                                [attr.aria-label]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
+                                [ariaLabel]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
                                 (click)="onDeleteSession(idx)"
-                            >
-                                <mat-icon fontIcon="delete"></mat-icon>
-                            </button>
+                            />
                         </div>
                     </div>
                     <div class="consumption-manage__ai-summary-body">
@@ -86,7 +86,15 @@
                                 </div>
                             }
                             @if (getHiddenAiItemsCount(session.items, aiPreviewMaxItems) > 0) {
-                                <button type="button" class="consumption-manage__ai-summary-more" (click)="toggleAiSessionExpanded(idx)">
+                                <fd-ui-button
+                                    type="button"
+                                    class="consumption-manage__ai-summary-more"
+                                    variant="secondary"
+                                    fill="text"
+                                    size="sm"
+                                    [attr.aria-expanded]="isAiSessionExpanded(idx)"
+                                    (click)="toggleAiSessionExpanded(idx)"
+                                >
                                     @if (isAiSessionExpanded(idx)) {
                                         {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HIDE' | translate }}
                                     } @else {
@@ -98,7 +106,7 @@
                                                       }
                                         }}
                                     }
-                                </button>
+                                </fd-ui-button>
                             }
                         </div>
                     </div>

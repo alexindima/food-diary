@@ -135,33 +135,35 @@
     }
 
     &__favorite-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border: 1px solid var(--fd-color-slate-200);
-        border-radius: 10px;
-        background: var(--fd-color-white);
-        cursor: pointer;
-        color: var(--fd-color-slate-400);
-        transition:
-            color 0.15s,
-            border-color 0.15s;
-
-        &:hover {
-            color: var(--fd-color-amber-500);
-            border-color: var(--fd-color-amber-500);
-        }
+        --fd-button-width: 40px;
+        --fd-button-min-width: 40px;
+        --fd-button-height: 40px;
+        --fd-button-height-explicit: 40px;
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: 10px;
+        --fd-button-background: var(--fd-color-white);
+        --fd-button-background-hover: var(--fd-color-white);
+        --fd-button-background-active: var(--fd-color-white);
+        --fd-button-border-color: var(--fd-color-slate-200);
+        --fd-button-border-color-hover: var(--fd-color-amber-500);
+        --fd-button-border-color-active: var(--fd-color-amber-500);
+        --fd-button-text: var(--fd-color-slate-400);
+        --fd-button-text-hover: var(--fd-color-amber-500);
+        --fd-button-text-active: var(--fd-color-amber-500);
+        --fd-button-shadow-rest: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: 22px;
 
         &--active {
-            color: var(--fd-color-amber-500);
-            border-color: var(--fd-color-amber-500);
-        }
-
-        &:disabled {
-            opacity: 0.5;
-            cursor: default;
+            --fd-button-border-color: var(--fd-color-amber-500);
+            --fd-button-border-color-hover: var(--fd-color-amber-500);
+            --fd-button-border-color-active: var(--fd-color-amber-500);
+            --fd-button-text: var(--fd-color-amber-500);
+            --fd-button-text-hover: var(--fd-color-amber-500);
+            --fd-button-text-active: var(--fd-color-amber-500);
         }
     }
 

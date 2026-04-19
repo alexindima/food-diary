@@ -43,23 +43,27 @@
 }
 
 .quick-consumption__clear {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    background: var(--fd-color-white);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    color: var(--fd-color-text);
-
-    mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        line-height: 1;
-        display: block;
-    }
+    --fd-button-width: 32px;
+    --fd-button-min-width: 32px;
+    --fd-button-height: 32px;
+    --fd-button-height-explicit: 32px;
+    --fd-button-padding-x: 0;
+    --fd-button-border-radius: 999px;
+    --fd-button-background-default: var(--fd-color-white);
+    --fd-button-background-hover: color-mix(in srgb, var(--fd-color-slate-50) 70%, var(--fd-color-white));
+    --fd-button-background-active: color-mix(in srgb, var(--fd-color-slate-100) 80%, var(--fd-color-white));
+    --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    --fd-button-border-hover: color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    --fd-button-border-active: color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+    --fd-button-text-default: var(--fd-color-text);
+    --fd-button-text-hover: var(--fd-color-text);
+    --fd-button-text-active: var(--fd-color-text);
+    --fd-button-shadow-default: none;
+    --fd-button-shadow-hover: none;
+    --fd-button-shadow-active: none;
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+    --fd-button-icon-size: 18px;
 }
 
 .quick-consumption__list {
@@ -118,16 +122,27 @@
 }
 
 .quick-consumption__remove {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: var(--fd-color-white);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    color: var(--fd-color-danger);
+    --fd-button-width: 34px;
+    --fd-button-min-width: 34px;
+    --fd-button-height: 34px;
+    --fd-button-height-explicit: 34px;
+    --fd-button-padding-x: 0;
+    --fd-button-border-radius: 999px;
+    --fd-button-background-default: var(--fd-color-white);
+    --fd-button-background-hover: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-color-white));
+    --fd-button-background-active: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-color-white));
+    --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    --fd-button-border-hover: color-mix(in srgb, var(--fd-color-danger) 18%, transparent);
+    --fd-button-border-active: color-mix(in srgb, var(--fd-color-danger) 24%, transparent);
+    --fd-button-text-default: var(--fd-color-danger);
+    --fd-button-text-hover: var(--fd-color-danger);
+    --fd-button-text-active: var(--fd-color-danger);
+    --fd-button-shadow-default: none;
+    --fd-button-shadow-hover: none;
+    --fd-button-shadow-active: none;
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+    --fd-button-icon-size: 18px;
 }
 
 .quick-consumption__actions {

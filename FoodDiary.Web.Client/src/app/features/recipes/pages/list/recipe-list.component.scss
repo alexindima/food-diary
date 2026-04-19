@@ -226,34 +226,32 @@
     }
 
     &__favorite-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border: none;
-        border-radius: 8px;
-        background: transparent;
-        color: var(--fd-color-text-muted);
-        cursor: pointer;
-        transition:
-            background 0.15s,
-            color 0.15s;
+        --fd-button-width: 32px;
+        --fd-button-min-width: 32px;
+        --fd-button-height: 32px;
+        --fd-button-height-explicit: 32px;
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: 8px;
+        --fd-button-background-default: transparent;
+        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        --fd-button-background-active: color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
+        --fd-button-border-default: transparent;
+        --fd-button-border-hover: transparent;
+        --fd-button-border-active: transparent;
+        --fd-button-text-default: var(--fd-color-text-muted);
+        --fd-button-text-hover: var(--fd-color-primary-500);
+        --fd-button-text-active: var(--fd-color-primary-500);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: 20px;
+    }
 
-        &:hover {
-            background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
-            color: var(--fd-color-primary-500);
-        }
-
-        &--remove:hover {
-            color: var(--fd-color-danger);
-        }
-
-        mat-icon {
-            font-size: 20px;
-            width: 20px;
-            height: 20px;
-        }
+    &__favorite-btn--remove {
+        --fd-button-text-hover: var(--fd-color-danger);
+        --fd-button-text-active: var(--fd-color-danger);
     }
 
     @media #{variables.$media-tablet} {

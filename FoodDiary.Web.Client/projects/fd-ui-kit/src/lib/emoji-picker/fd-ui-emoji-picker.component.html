@@ -1,0 +1,34 @@
+<div [class]="containerClass()" role="radiogroup" [attr.aria-label]="ariaLabel() || null">
+    @for (option of options(); track option.value; let index = $index) {
+        <button
+            #optionButton
+            type="button"
+            class="fd-ui-emoji-picker__option"
+            [class.is-selected]="isSelected(option.value)"
+            [class.has-label]="showLabels() && !!option.label"
+            [class.has-description]="showDescriptions() && !!option.description"
+            [disabled]="option.disabled ?? false"
+            role="radio"
+            [attr.aria-checked]="isSelected(option.value)"
+            [attr.aria-label]="getOptionAriaLabel(option)"
+            [attr.tabindex]="getTabIndex(option.value)"
+            [fdUiHint]="option.hint ?? null"
+            [fdUiHintDisabled]="!option.hint"
+            (click)="select(option)"
+            (keydown)="handleKeydown(index, $event)"
+        >
+            <span class="fd-ui-emoji-picker__emoji" aria-hidden="true">{{ option.emoji }}</span>
+
+            @if ((showLabels() && option.label) || (showDescriptions() && option.description)) {
+                <span class="fd-ui-emoji-picker__text">
+                    @if (showLabels() && option.label) {
+                        <span class="fd-ui-emoji-picker__label">{{ option.label }}</span>
+                    }
+                    @if (showDescriptions() && option.description) {
+                        <span class="fd-ui-emoji-picker__description">{{ option.description }}</span>
+                    }
+                </span>
+            }
+        </button>
+    }
+</div>

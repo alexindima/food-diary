@@ -43,13 +43,19 @@
     position: absolute;
     top: -11px;
     right: 15px;
-    background: var(--fd-color-orange-500);
-    border-radius: variables.$border-radius-s;
-    padding: 0 variables.$gap-xs;
-    font-weight: bold;
-    font-size: 10px;
-    line-height: 20px;
-    cursor: pointer;
+    --fd-button-width: auto;
+    --fd-button-min-width: 20px;
+    --fd-button-height: 20px;
+    --fd-button-height-explicit: 20px;
+    --fd-button-padding-x: #{variables.$gap-xs};
+    --fd-button-border-radius: #{variables.$border-radius-s};
+    --fd-button-font-size: 10px;
+    --fd-button-font-weight: 700;
+    --fd-button-shadow-default: none;
+    --fd-button-shadow-hover: none;
+    --fd-button-shadow-active: none;
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
 }
 
 .custom-group__hint {

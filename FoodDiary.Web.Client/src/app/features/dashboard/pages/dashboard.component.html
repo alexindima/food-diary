@@ -73,10 +73,16 @@
                         <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
                         <div class="dashboard__manual-add">
                             <span class="dashboard__manual-add-label">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
-                            <button type="button" class="dashboard__manual-add-button" (click)="addConsumption()">
-                                <span class="material-icons dashboard__manual-add-icon" aria-hidden="true">add</span>
-                                <span>{{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}</span>
-                            </button>
+                            <fd-ui-button
+                                type="button"
+                                class="dashboard__manual-add-button"
+                                variant="secondary"
+                                fill="text"
+                                icon="add"
+                                (click)="addConsumption()"
+                            >
+                                {{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}
+                            </fd-ui-button>
                         </div>
                     </section>
                 }

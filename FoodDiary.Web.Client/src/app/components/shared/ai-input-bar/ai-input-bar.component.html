@@ -20,37 +20,44 @@
         [disabled]="isDisabled()"
     />
     @if (!voiceText()) {
-        <button
-            type="button"
+        <fd-ui-button
             class="ai-input-bar__action-btn"
+            variant="secondary"
+            fill="solid"
+            icon="photo_camera"
+            iconSize="lg"
             [disabled]="isDisabled()"
             (click)="onPhotoClick()"
             [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+            [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
             fdUiHintPosition="bottom"
-        >
-            <mat-icon>photo_camera</mat-icon>
-        </button>
+        />
         @if (isSpeechSupported) {
-            <button
-                type="button"
+            <fd-ui-button
                 class="ai-input-bar__action-btn"
+                variant="secondary"
+                fill="solid"
+                [icon]="isListening() ? 'mic' : 'mic_none'"
+                iconSize="lg"
                 [class.ai-input-bar__action-btn--mic-active]="isListening()"
                 [disabled]="isDisabled()"
                 (click)="toggleMic()"
                 [fdUiHint]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+                [ariaLabel]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
                 fdUiHintPosition="bottom"
-            >
-                <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
-            </button>
+            />
         }
     } @else {
-        <button type="button" class="ai-input-bar__submit" [disabled]="isDisabled()" (click)="submitText()">
-            @if (textIsAnalyzing() || textIsNutritionLoading()) {
-                <mat-icon>hourglass_empty</mat-icon>
-            } @else {
-                <mat-icon>send</mat-icon>
-            }
-        </button>
+        <fd-ui-button
+            class="ai-input-bar__submit"
+            variant="primary"
+            fill="solid"
+            [icon]="textIsAnalyzing() || textIsNutritionLoading() ? 'hourglass_empty' : 'send'"
+            iconSize="lg"
+            [disabled]="isDisabled()"
+            [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
+            (click)="submitText()"
+        />
     }
 </div>
 

@@ -125,17 +125,17 @@
 
     <div fdUiDialogFooter class="consumption-detail__footer">
         <div class="consumption-detail__actions">
-            <button
-                type="button"
+            <fd-ui-button
                 class="consumption-detail__favorite-btn"
+                variant="secondary"
+                fill="solid"
+                [icon]="isFavorite() ? 'star' : 'star_border'"
                 [class.consumption-detail__favorite-btn--active]="isFavorite()"
                 [disabled]="isFavoriteLoading()"
                 [fdUiHint]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
-                [attr.aria-label]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
+                [ariaLabel]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
                 (click)="toggleFavorite()"
-            >
-                <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-            </button>
+            />
             <fd-ui-button size="md" variant="secondary" icon="replay" (click)="onRepeat()">
                 {{ 'CONSUMPTION_DETAIL.REPEAT_BUTTON' | translate }}
             </fd-ui-button>

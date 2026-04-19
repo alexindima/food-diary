@@ -1,10 +1,12 @@
-﻿import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 export type NoticeVariant = 'info' | 'warning' | 'error';
 
 @Component({
     selector: 'fd-notice-banner',
     standalone: true,
+    imports: [FdUiButtonComponent],
     templateUrl: './notice-banner.component.html',
     styleUrl: './notice-banner.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

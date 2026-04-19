@@ -138,17 +138,17 @@
             <span class="recipe-detail__warning">{{ warningMessage | translate }}</span>
         }
         <div class="recipe-detail__actions">
-            <button
-                type="button"
+            <fd-ui-button
                 class="recipe-detail__favorite-btn"
+                variant="secondary"
+                fill="solid"
+                [icon]="isFavorite() ? 'star' : 'star_border'"
                 [class.recipe-detail__favorite-btn--active]="isFavorite()"
                 [disabled]="isFavoriteLoading()"
                 [fdUiHint]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
-                [attr.aria-label]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
+                [ariaLabel]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
                 (click)="toggleFavorite()"
-            >
-                <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
-            </button>
+            />
             @if (canModify) {
                 <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}

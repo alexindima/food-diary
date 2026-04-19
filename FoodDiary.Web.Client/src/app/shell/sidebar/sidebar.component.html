@@ -7,18 +7,19 @@
             <span class="sidebar__brand-title">Food Diary</span>
             <span class="sidebar__brand-plan">{{ brandStatusKey() | translate }}</span>
         </div>
-        <button
-            type="button"
+        <fd-ui-button
             class="sidebar__brand-notifications"
+            variant="secondary"
+            fill="text"
+            icon="notifications"
             [attr.aria-label]="'NOTIFICATIONS.TITLE' | translate"
             [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
             (click)="openNotifications()"
         >
-            <mat-icon>notifications</mat-icon>
             @if (unreadNotificationCount() > 0) {
                 <span class="sidebar__brand-notifications-dot" aria-hidden="true"></span>
             }
-        </button>
+        </fd-ui-button>
     </div>
 
     <nav class="sidebar__nav">
@@ -150,10 +151,9 @@
                         <mat-icon>settings</mat-icon>
                         <span>{{ 'HEADER.PROFILE' | translate }}</span>
                     </a>
-                    <button type="button" class="sidebar__logout" (click)="logout()">
-                        <mat-icon>logout</mat-icon>
-                        <span>{{ 'HEADER.LOGOUT' | translate }}</span>
-                    </button>
+                    <fd-ui-button class="sidebar__logout" type="button" variant="danger" fill="outline" icon="logout" (click)="logout()">
+                        {{ 'HEADER.LOGOUT' | translate }}
+                    </fd-ui-button>
                 </div>
             }
         </div>
@@ -309,26 +309,44 @@
 
 @if (isMobileUserOpen()) {
     <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
-        <button type="button" class="sidebar-mobile__sheet-action" (click)="openNotificationsFromMobileMenu()">
-            <mat-icon>notifications</mat-icon>
-            <span>{{ 'NOTIFICATIONS.TITLE' | translate }}</span>
+        <fd-ui-button
+            class="sidebar-mobile__sheet-action"
+            type="button"
+            variant="secondary"
+            fill="outline"
+            icon="notifications"
+            (click)="openNotificationsFromMobileMenu()"
+        >
+            {{ 'NOTIFICATIONS.TITLE' | translate }}
             @if (unreadNotificationCount() > 0) {
                 <span class="sidebar-mobile__sheet-badge">{{ unreadNotificationCount() }}</span>
             }
-        </button>
+        </fd-ui-button>
         <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>settings</mat-icon>
             <span>{{ 'HEADER.PROFILE' | translate }}</span>
         </a>
         @if (isAdmin()) {
-            <button type="button" class="sidebar-mobile__sheet-action" (click)="openAdminPanel(); closeMobileMenus()">
-                <mat-icon>admin_panel_settings</mat-icon>
-                <span>{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
-            </button>
+            <fd-ui-button
+                class="sidebar-mobile__sheet-action"
+                type="button"
+                variant="danger"
+                fill="outline"
+                icon="admin_panel_settings"
+                (click)="openAdminPanel(); closeMobileMenus()"
+            >
+                {{ 'SIDEBAR.ADMIN_PANEL' | translate }}
+            </fd-ui-button>
         }
-        <button type="button" class="sidebar-mobile__sheet-logout" (click)="logout(); closeMobileMenus()">
-            <mat-icon>logout</mat-icon>
-            <span>{{ 'HEADER.LOGOUT' | translate }}</span>
-        </button>
+        <fd-ui-button
+            class="sidebar-mobile__sheet-logout"
+            type="button"
+            variant="danger"
+            fill="outline"
+            icon="logout"
+            (click)="logout(); closeMobileMenus()"
+        >
+            {{ 'HEADER.LOGOUT' | translate }}
+        </fd-ui-button>
     </div>
 }

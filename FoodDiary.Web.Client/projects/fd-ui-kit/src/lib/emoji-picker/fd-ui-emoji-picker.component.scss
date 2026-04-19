@@ -1,0 +1,128 @@
+:host {
+    display: block;
+}
+
+.fd-ui-emoji-picker {
+    --fd-emoji-picker-gap: 8px;
+    --fd-emoji-picker-option-width: 56px;
+    --fd-emoji-picker-option-height: 56px;
+    --fd-emoji-picker-option-padding: 8px;
+    --fd-emoji-picker-option-radius: 18px;
+    --fd-emoji-picker-option-bg-default: color-mix(in srgb, var(--fd-color-surface-raised) 96%, transparent);
+    --fd-emoji-picker-option-bg-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-surface-raised));
+    --fd-emoji-picker-option-bg-selected: color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-surface-raised));
+    --fd-emoji-picker-option-border-default: color-mix(in srgb, var(--fd-color-border-strong) 38%, transparent);
+    --fd-emoji-picker-option-border-hover: color-mix(in srgb, var(--fd-color-primary-400) 46%, transparent);
+    --fd-emoji-picker-option-border-selected: color-mix(in srgb, var(--fd-color-primary-500) 68%, transparent);
+    --fd-emoji-picker-option-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    --fd-emoji-picker-option-shadow-hover: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
+    --fd-emoji-picker-option-shadow-selected:
+        0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--fd-color-primary-400) 34%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-emoji-picker-gap);
+}
+
+.fd-ui-emoji-picker--full-width .fd-ui-emoji-picker__option {
+    flex: 1 1 0;
+}
+
+.fd-ui-emoji-picker--size-sm {
+    --fd-emoji-picker-option-width: 48px;
+    --fd-emoji-picker-option-height: 48px;
+    --fd-emoji-picker-option-padding: 6px;
+    --fd-emoji-picker-gap: 6px;
+}
+
+.fd-ui-emoji-picker--with-labels .fd-ui-emoji-picker__option,
+.fd-ui-emoji-picker--with-descriptions .fd-ui-emoji-picker__option {
+    width: auto;
+    min-width: 90px;
+    min-height: 72px;
+    padding-inline: 12px;
+}
+
+.fd-ui-emoji-picker__option {
+    width: var(--fd-emoji-picker-option-width);
+    min-width: var(--fd-emoji-picker-option-width);
+    height: var(--fd-emoji-picker-option-height);
+    min-height: var(--fd-emoji-picker-option-height);
+    padding: var(--fd-emoji-picker-option-padding);
+    border: 1px solid var(--fd-emoji-picker-option-border-default);
+    border-radius: var(--fd-emoji-picker-option-radius);
+    background: var(--fd-emoji-picker-option-bg-default);
+    box-shadow: var(--fd-emoji-picker-option-shadow-default);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+
+    &:hover:not(:disabled) {
+        background: var(--fd-emoji-picker-option-bg-hover);
+        border-color: var(--fd-emoji-picker-option-border-hover);
+        box-shadow: var(--fd-emoji-picker-option-shadow-hover);
+        transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid color-mix(in srgb, var(--fd-color-primary-400) 78%, transparent);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+    &.is-selected {
+        background: var(--fd-emoji-picker-option-bg-selected);
+        border-color: var(--fd-emoji-picker-option-border-selected);
+        box-shadow: var(--fd-emoji-picker-option-shadow-selected);
+    }
+
+    &.has-label,
+    &.has-description {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+.fd-ui-emoji-picker__emoji {
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+.fd-ui-emoji-picker--size-sm .fd-ui-emoji-picker__emoji {
+    font-size: 1.4rem;
+}
+
+.fd-ui-emoji-picker__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.fd-ui-emoji-picker__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--fd-color-text);
+    line-height: 1.1;
+}
+
+.fd-ui-emoji-picker__description {
+    font-size: 0.72rem;
+    color: var(--fd-color-text-muted);
+    line-height: 1.2;
+}

@@ -182,15 +182,15 @@
                                         <div class="shopping-list__item-meta">{{ formatItemMeta(item) }}</div>
                                     }
                                 </div>
-                                <button
-                                    type="button"
+                                <fd-ui-button
                                     class="shopping-list__item-remove"
+                                    variant="secondary"
+                                    fill="solid"
+                                    icon="close"
                                     [fdUiHint]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
-                                    [attr.aria-label]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
+                                    [ariaLabel]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
                                     (click)="removeItem(item.id)"
-                                >
-                                    <mat-icon>close</mat-icon>
-                                </button>
+                                />
                             </div>
                         }
                     </div>

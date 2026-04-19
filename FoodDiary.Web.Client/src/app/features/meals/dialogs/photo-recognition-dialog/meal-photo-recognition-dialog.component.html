@@ -44,16 +44,16 @@
                     <div class="photo-ai-dialog__results-title">
                         <span class="photo-ai-dialog__title-left">
                             <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
-                            <button
-                                type="button"
+                            <fd-ui-button
                                 class="photo-ai-dialog__action-button"
+                                variant="secondary"
+                                fill="text"
+                                icon="refresh"
                                 [disabled]="isLoading() || !selection()?.assetId || isEditing()"
                                 [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
-                                [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+                                [ariaLabel]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
                                 (click)="onReanalyze()"
-                            >
-                                <mat-icon class="photo-ai-dialog__action-icon" fontIcon="refresh"></mat-icon>
-                            </button>
+                            />
                         </span>
                         <span class="photo-ai-dialog__title-actions">
                             <fd-ui-button
@@ -103,21 +103,29 @@
                                             <option [value]="unit">{{ getUnitLabel(unit) }}</option>
                                         }
                                     </select>
-                                    <button
-                                        type="button"
+                                    <fd-ui-button
                                         class="photo-ai-dialog__edit-remove"
+                                        variant="danger"
+                                        fill="text"
+                                        icon="delete"
                                         [fdUiHint]="'COMMON.DELETE' | translate"
-                                        [attr.aria-label]="'COMMON.DELETE' | translate"
+                                        [ariaLabel]="'COMMON.DELETE' | translate"
                                         (click)="removeEditItem(i)"
-                                    >
-                                        <mat-icon fontIcon="delete"></mat-icon>
-                                    </button>
+                                    />
                                 </div>
                             }
                         </div>
-                        <button type="button" class="photo-ai-dialog__edit-add" (click)="addEditItem()">
-                            + {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
-                        </button>
+                        <fd-ui-button
+                            type="button"
+                            class="photo-ai-dialog__edit-add"
+                            appearance="dashed"
+                            variant="secondary"
+                            fill="outline"
+                            icon="add"
+                            (click)="addEditItem()"
+                        >
+                            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
+                        </fd-ui-button>
                     } @else {
                         <div class="photo-ai-dialog__table">
                             <div class="photo-ai-dialog__table-head">

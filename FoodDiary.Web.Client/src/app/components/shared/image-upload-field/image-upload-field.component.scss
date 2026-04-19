@@ -131,31 +131,39 @@
     }
 
     &__control-btn {
-        appearance: none;
-        border: none;
-        background: transparent;
-        color: var(--fd-color-slate-200);
-        padding: 8px 10px;
-        cursor: pointer;
-        font-size: 16px;
-        line-height: 1;
-        transition:
-            background 120ms ease,
-            color 120ms ease;
+        --fd-button-width: 38px;
+        --fd-button-min-width: 38px;
+        --fd-button-height: 36px;
+        --fd-button-height-explicit: 36px;
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: 0;
+        --fd-button-background-default: transparent;
+        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+        --fd-button-background-active: color-mix(in srgb, var(--fd-color-white) 12%, transparent);
+        --fd-button-border-default: transparent;
+        --fd-button-border-hover: transparent;
+        --fd-button-border-active: transparent;
+        --fd-button-text-default: var(--fd-color-slate-200);
+        --fd-button-text-hover: var(--fd-color-white);
+        --fd-button-text-active: var(--fd-color-white);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: 16px;
+    }
 
-        &:hover {
-            background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-            color: var(--fd-color-white);
-        }
+    &__control > &__control-btn:not(:last-child) {
+        border-right: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent);
+    }
 
-        &--danger:hover {
-            color: color-mix(in srgb, var(--fd-color-danger) 70%, var(--fd-color-white));
-            background: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
-        }
-
-        &:not(:last-child) {
-            border-right: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent);
-        }
+    &__control-btn--danger {
+        --fd-button-text-default: var(--fd-color-slate-200);
+        --fd-button-text-hover: color-mix(in srgb, var(--fd-color-danger) 70%, var(--fd-color-white));
+        --fd-button-text-active: color-mix(in srgb, var(--fd-color-danger) 70%, var(--fd-color-white));
+        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
+        --fd-button-background-active: color-mix(in srgb, var(--fd-color-danger) 14%, transparent);
     }
 
     &__hint--inline {

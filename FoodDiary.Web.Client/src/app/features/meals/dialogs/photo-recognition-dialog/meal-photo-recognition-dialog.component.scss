@@ -187,35 +187,36 @@
 }
 
 .photo-ai-dialog__edit-remove {
-    appearance: none;
-    border: none;
-    background: transparent;
-    color: var(--fd-color-slate-400);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.photo-ai-dialog__edit-remove:hover {
-    color: var(--fd-color-danger);
+    --fd-button-width: 24px;
+    --fd-button-min-width: 24px;
+    --fd-button-height: 24px;
+    --fd-button-height-explicit: 24px;
+    --fd-button-padding-x: 0;
+    --fd-button-background-default: transparent;
+    --fd-button-background-hover: transparent;
+    --fd-button-background-active: transparent;
+    --fd-button-border-default: transparent;
+    --fd-button-border-hover: transparent;
+    --fd-button-border-active: transparent;
+    --fd-button-text-default: var(--fd-color-slate-400);
+    --fd-button-text-hover: var(--fd-color-danger);
+    --fd-button-text-active: var(--fd-color-danger);
+    --fd-button-shadow-default: none;
+    --fd-button-shadow-hover: none;
+    --fd-button-shadow-active: none;
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+    --fd-button-icon-size: 18px;
 }
 
 .photo-ai-dialog__edit-add {
     margin-top: 8px;
-    width: 100%;
-    height: 42px;
-    border-radius: 999px;
-    border: 1px dashed color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
-    background: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white));
-    font-weight: 600;
-    color: var(--fd-color-slate-500);
-    cursor: pointer;
-}
-
-.photo-ai-dialog__edit-add:hover {
-    color: var(--fd-color-slate-700);
-    border-color: var(--fd-color-slate-400);
+    --fd-button-height: 42px;
+    --fd-button-height-explicit: 42px;
+    --fd-button-border-radius: 999px;
+    --fd-button-text-default: var(--fd-color-slate-500);
+    --fd-button-text-hover: var(--fd-color-slate-700);
+    --fd-button-text-active: var(--fd-color-slate-700);
 }
 
 .photo-ai-dialog__title-actions {
@@ -231,31 +232,26 @@
 }
 
 .photo-ai-dialog__action-button {
-    appearance: none;
-    border: none;
-    background: transparent;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: inherit;
-}
-
-.photo-ai-dialog__action-button:disabled {
-    cursor: default;
-    opacity: 0.5;
-}
-
-.photo-ai-dialog__action-button:not(:disabled):hover .photo-ai-dialog__action-icon {
-    color: var(--fd-color-slate-500);
-}
-
-.photo-ai-dialog__action-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    color: var(--fd-color-slate-400);
+    --fd-button-width: 24px;
+    --fd-button-min-width: 24px;
+    --fd-button-height: 24px;
+    --fd-button-height-explicit: 24px;
+    --fd-button-padding-x: 0;
+    --fd-button-background-default: transparent;
+    --fd-button-background-hover: transparent;
+    --fd-button-background-active: transparent;
+    --fd-button-border-default: transparent;
+    --fd-button-border-hover: transparent;
+    --fd-button-border-active: transparent;
+    --fd-button-text-default: var(--fd-color-slate-400);
+    --fd-button-text-hover: var(--fd-color-slate-500);
+    --fd-button-text-active: var(--fd-color-slate-500);
+    --fd-button-shadow-default: none;
+    --fd-button-shadow-hover: none;
+    --fd-button-shadow-active: none;
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+    --fd-button-icon-size: 18px;
 }
 
 .photo-ai-dialog__table {

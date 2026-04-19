@@ -81,10 +81,16 @@
     <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
     <div class="consumption-list__manual-add">
         <span class="consumption-list__manual-add-label">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
-        <button type="button" class="consumption-list__manual-add-button" (click)="goToMealAdd()">
-            <mat-icon>add</mat-icon>
-            <span>{{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}</span>
-        </button>
+        <fd-ui-button
+            type="button"
+            class="consumption-list__manual-add-button"
+            variant="secondary"
+            fill="text"
+            icon="add"
+            (click)="goToMealAdd()"
+        >
+            {{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}
+        </fd-ui-button>
     </div>
 
     @if (favorites().length > 0) {
@@ -117,24 +123,24 @@
                             </div>
                         </div>
                         <div class="consumption-list__favorite-actions">
-                            <button
-                                type="button"
+                            <fd-ui-button
                                 class="consumption-list__favorite-btn"
+                                variant="secondary"
+                                fill="text"
+                                icon="replay"
                                 (click)="repeatFavorite(fav)"
                                 [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
-                                [attr.aria-label]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
-                            >
-                                <mat-icon>replay</mat-icon>
-                            </button>
-                            <button
-                                type="button"
+                                [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
+                            />
+                            <fd-ui-button
                                 class="consumption-list__favorite-btn consumption-list__favorite-btn--remove"
+                                variant="danger"
+                                fill="text"
+                                icon="close"
                                 (click)="removeFavorite(fav)"
                                 [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
-                                [attr.aria-label]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
-                            >
-                                <mat-icon>close</mat-icon>
-                            </button>
+                                [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
+                            />
                         </div>
                     </div>
                 }

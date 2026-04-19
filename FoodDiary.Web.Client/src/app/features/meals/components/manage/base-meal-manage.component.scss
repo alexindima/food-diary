@@ -459,34 +459,32 @@
     }
 
     &__ai-summary-action {
-        appearance: none;
-        border: none;
-        background: transparent;
-        color: var(--fd-color-text-muted);
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        transition: color 0.2s ease;
-    }
-
-    &__ai-summary-action mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-    }
-
-    &__ai-summary-action:hover {
-        color: var(--fd-color-text);
+        --fd-button-width: 24px;
+        --fd-button-min-width: 24px;
+        --fd-button-height: 24px;
+        --fd-button-height-explicit: 24px;
+        --fd-button-padding-x: 0;
+        --fd-button-background-default: transparent;
+        --fd-button-background-hover: transparent;
+        --fd-button-background-active: transparent;
+        --fd-button-border-default: transparent;
+        --fd-button-border-hover: transparent;
+        --fd-button-border-active: transparent;
+        --fd-button-text-default: var(--fd-color-text-muted);
+        --fd-button-text-hover: var(--fd-color-text);
+        --fd-button-text-active: var(--fd-color-text);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: 18px;
     }
 
     &__ai-summary-action--danger {
-        color: var(--fd-color-danger);
-    }
-
-    &__ai-summary-action--danger:hover {
-        color: var(--fd-color-red-700);
+        --fd-button-text-default: var(--fd-color-danger);
+        --fd-button-text-hover: var(--fd-color-red-700);
+        --fd-button-text-active: var(--fd-color-red-700);
     }
 
     &__ai-summary-body {
@@ -544,18 +542,30 @@
 
     &__ai-summary-more {
         margin-top: 2px;
+        justify-self: start;
+        align-self: flex-start;
+        --fd-button-height: auto;
+        --fd-button-height-explicit: auto;
+        --fd-button-min-width: 0;
+        --fd-button-padding-x: 0;
+        --fd-button-text-padding-x: 0;
+        --fd-button-background-default: transparent;
+        --fd-button-background-hover: transparent;
+        --fd-button-background-active: transparent;
+        --fd-button-border-default: transparent;
+        --fd-button-border-hover: transparent;
+        --fd-button-border-active: transparent;
+        --fd-button-text-default: var(--fd-color-text-muted);
+        --fd-button-text-hover: var(--fd-color-text);
+        --fd-button-text-active: var(--fd-color-text);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-justify-content: flex-start;
         font-size: 0.9rem;
-        color: var(--fd-color-text-muted);
         font-weight: 600;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        text-align: left;
-    }
-
-    &__ai-summary-more:hover {
-        color: var(--fd-color-text);
     }
 }
 

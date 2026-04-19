@@ -37,6 +37,8 @@ export * from './menu/fd-ui-menu-divider.component';
 export * from './loader/fd-ui-loader.component';
 export * from './pagination/fd-ui-pagination.component';
 export * from './segmented-toggle/fd-ui-segmented-toggle.component';
+export * from './chip-select/fd-ui-chip-select.component';
+export * from './emoji-picker/fd-ui-emoji-picker.component';
 export * from './switch/fd-ui-switch.component';
 export * from './form-error/fd-ui-form-error.component';
 export * from './material';

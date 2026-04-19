@@ -5,15 +5,15 @@
                 <div class="quick-consumption__title">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
                 <div class="quick-consumption__subtitle">{{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}</div>
             </div>
-            <button
+            <fd-ui-button
                 class="quick-consumption__clear"
-                type="button"
+                variant="secondary"
+                fill="outline"
+                icon="close"
                 [fdUiHint]="'QUICK_CONSUMPTION.CLEAR' | translate"
-                [attr.aria-label]="'QUICK_CONSUMPTION.CLEAR' | translate"
+                [ariaLabel]="'QUICK_CONSUMPTION.CLEAR' | translate"
                 (click)="clear()"
-            >
-                <mat-icon fontIcon="close"></mat-icon>
-            </button>
+            />
         </div>
 
         @if (hasItems()) {
@@ -38,15 +38,15 @@
                                 }
                             </div>
                         </div>
-                        <button
+                        <fd-ui-button
                             class="quick-consumption__remove"
-                            type="button"
+                            variant="secondary"
+                            fill="outline"
+                            icon="delete"
                             [fdUiHint]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
-                            [attr.aria-label]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
+                            [ariaLabel]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
                             (click)="remove(item.key)"
-                        >
-                            <mat-icon fontIcon="delete"></mat-icon>
-                        </button>
+                        />
                     </div>
                 }
             </div>

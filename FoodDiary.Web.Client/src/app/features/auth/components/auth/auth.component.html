@@ -1,12 +1,5 @@
 ﻿<div class="auth">
-    <div class="auth__tabs">
-        <button type="button" class="auth__tab" [class.auth__tab--active]="authMode === 'login'" (click)="handleTabChange('login')">
-            {{ 'AUTH.LOGIN.TITLE' | translate }}
-        </button>
-        <button type="button" class="auth__tab" [class.auth__tab--active]="authMode === 'register'" (click)="handleTabChange('register')">
-            {{ 'AUTH.REGISTER.TITLE' | translate }}
-        </button>
-    </div>
+    <fd-ui-tabs class="auth__tabs" [tabs]="authTabs" [selectedValue]="authMode" (selectedValueChange)="handleTabChange($event)" />
 
     <p class="auth__subtitle">
         @if (authMode === 'login') {
@@ -92,9 +85,9 @@
 
                     <fd-ui-checkbox formControlName="rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
 
-                    <button type="button" class="auth__link" (click)="onPasswordResetOpen()">
+                    <fd-ui-button class="auth__link" type="button" variant="secondary" fill="text" (click)="onPasswordResetOpen()">
                         {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
-                    </button>
+                    </fd-ui-button>
 
                     <div class="auth__actions">
                         <fd-ui-button

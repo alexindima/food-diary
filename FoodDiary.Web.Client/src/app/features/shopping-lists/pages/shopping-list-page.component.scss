@@ -138,22 +138,27 @@
     }
 
     &__item-remove {
-        border: none;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
-        border-radius: 999px;
-        width: 32px;
-        height: 32px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--fd-color-text-muted);
-        cursor: pointer;
-        transition: background 0.2s ease;
-
-        &:hover {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--fd-color-red-600);
-        }
+        --fd-button-width: 32px;
+        --fd-button-min-width: 32px;
+        --fd-button-height: 32px;
+        --fd-button-height-explicit: 32px;
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: 999px;
+        --fd-button-background: color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        --fd-button-background-hover: rgba(239, 68, 68, 0.15);
+        --fd-button-background-active: rgba(239, 68, 68, 0.2);
+        --fd-button-border-color: transparent;
+        --fd-button-border-color-hover: transparent;
+        --fd-button-border-color-active: transparent;
+        --fd-button-text: var(--fd-color-text-muted);
+        --fd-button-text-hover: var(--fd-color-red-600);
+        --fd-button-text-active: var(--fd-color-red-600);
+        --fd-button-shadow-rest: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: 18px;
     }
 
     &__empty,

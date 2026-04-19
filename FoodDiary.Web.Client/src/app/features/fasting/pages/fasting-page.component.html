@@ -33,47 +33,26 @@
                     <div fastingControls class="fasting__controls">
                         @if (!isActive()) {
                             <div class="fasting__mode-switch">
-                                <button
-                                    type="button"
-                                    class="fasting__protocol-btn"
-                                    [class.fasting__protocol-btn--active]="selectedMode() === 'intermittent'"
-                                    (click)="selectMode('intermittent')"
-                                >
-                                    {{ 'FASTING.MODE_INTERMITTENT' | translate }}
-                                </button>
-                                <button
-                                    type="button"
-                                    class="fasting__protocol-btn"
-                                    [class.fasting__protocol-btn--active]="selectedMode() === 'extended'"
-                                    (click)="selectMode('extended')"
-                                >
-                                    {{ 'FASTING.MODE_EXTENDED' | translate }}
-                                </button>
-                                <button
-                                    type="button"
-                                    class="fasting__protocol-btn"
-                                    [class.fasting__protocol-btn--active]="selectedMode() === 'cyclic'"
-                                    (click)="selectMode('cyclic')"
-                                >
-                                    {{ 'FASTING.MODE_CYCLIC' | translate }}
-                                </button>
+                                <fd-ui-segmented-toggle
+                                    class="fasting__segmented-toggle"
+                                    [options]="modeOptions()"
+                                    [selectedValue]="selectedMode()"
+                                    ariaLabel="Fasting mode"
+                                    (selectedValueChange)="onModeChange($event)"
+                                />
                             </div>
 
                             @if (selectedMode() === 'intermittent') {
                                 <div class="fasting__protocol-group">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.INTERMITTENT_GROUP' | translate }}</div>
-                                    <div class="fasting__protocols">
-                                        @for (p of intermittentProtocols; track p.value) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn"
-                                                [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
-                                                (click)="selectProtocol(p.value)"
-                                            >
-                                                {{ p.labelKey | translate }}
-                                            </button>
-                                        }
-                                    </div>
+                                    <fd-ui-segmented-toggle
+                                        class="fasting__segmented-toggle"
+                                        [options]="intermittentProtocolOptions()"
+                                        [selectedValue]="selectedProtocol()"
+                                        ariaLabel="Intermittent protocol"
+                                        [shrinkItems]="true"
+                                        (selectedValueChange)="onProtocolChange($event)"
+                                    />
 
                                     @if (selectedProtocol() === 'CustomIntermittent') {
                                         <div class="fasting__custom-intermittent">
@@ -96,18 +75,14 @@
                             @if (selectedMode() === 'extended') {
                                 <div class="fasting__protocol-group">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.EXTENDED_GROUP' | translate }}</div>
-                                    <div class="fasting__protocols">
-                                        @for (p of extendedProtocols; track p.value) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn"
-                                                [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
-                                                (click)="selectProtocol(p.value)"
-                                            >
-                                                {{ p.labelKey | translate }}
-                                            </button>
-                                        }
-                                    </div>
+                                    <fd-ui-segmented-toggle
+                                        class="fasting__segmented-toggle"
+                                        [options]="extendedProtocolOptions()"
+                                        [selectedValue]="selectedProtocol()"
+                                        ariaLabel="Extended protocol"
+                                        [shrinkItems]="true"
+                                        (selectedValueChange)="onProtocolChange($event)"
+                                    />
 
                                     @if (selectedProtocol() === 'Custom') {
                                         <div class="fasting__custom-input">
@@ -125,28 +100,14 @@
                             @if (selectedMode() === 'cyclic') {
                                 <div class="fasting__protocol-group">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.CYCLIC_GROUP' | translate }}</div>
-                                    <div class="fasting__protocols">
-                                        @for (preset of cyclicPresets; track preset.label) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn"
-                                                [class.fasting__protocol-btn--active]="
-                                                    isSelectedCyclicPreset(preset.fastDays, preset.eatDays)
-                                                "
-                                                (click)="selectCyclicPreset(preset.fastDays, preset.eatDays)"
-                                            >
-                                                {{ preset.label }}
-                                            </button>
-                                        }
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="isCustomCyclicPresetSelected()"
-                                            (click)="selectCustomCyclicPreset()"
-                                        >
-                                            {{ 'FASTING.CUSTOM_CYCLE' | translate }}
-                                        </button>
-                                    </div>
+                                    <fd-ui-segmented-toggle
+                                        class="fasting__segmented-toggle"
+                                        [options]="cyclicPresetOptions()"
+                                        [selectedValue]="selectedCyclicPresetValue()"
+                                        ariaLabel="Cyclic fasting pattern"
+                                        [shrinkItems]="true"
+                                        (selectedValueChange)="onCyclicPresetChange($event)"
+                                    />
 
                                     @if (isCustomCyclicPresetSelected()) {
                                         <div class="fasting__custom-intermittent fasting__custom-intermittent--split">
@@ -175,18 +136,14 @@
 
                                 <div class="fasting__protocol-group">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}</div>
-                                    <div class="fasting__protocols">
-                                        @for (p of cyclicEatDayProtocols; track p.value) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn"
-                                                [class.fasting__protocol-btn--active]="cyclicEatDayProtocol() === p.value"
-                                                (click)="selectCyclicEatDayProtocol(p.value)"
-                                            >
-                                                {{ p.labelKey | translate }}
-                                            </button>
-                                        }
-                                    </div>
+                                    <fd-ui-segmented-toggle
+                                        class="fasting__segmented-toggle"
+                                        [options]="cyclicEatDayProtocolOptions()"
+                                        [selectedValue]="cyclicEatDayProtocol()"
+                                        ariaLabel="Eat day window"
+                                        [shrinkItems]="true"
+                                        (selectedValueChange)="onCyclicEatDayProtocolChange($event)"
+                                    />
 
                                     @if (cyclicEatDayProtocol() === 'CustomIntermittent') {
                                         <div class="fasting__custom-intermittent">
@@ -215,31 +172,39 @@
                                     </div>
 
                                     <div class="fasting__extend-toolbar">
-                                        <button
+                                        <fd-ui-button
                                             type="button"
-                                            class="fasting__protocol-btn"
+                                            class="fasting__protocol-action"
+                                            variant="secondary"
+                                            fill="outline"
+                                            size="sm"
                                             (click)="extendByDay()"
                                             [disabled]="isExtending() || isReducing() || isEnding()"
                                         >
                                             {{ 'FASTING.ADD_DAY' | translate }}
-                                        </button>
-                                        <button
+                                        </fd-ui-button>
+                                        <fd-ui-button
                                             type="button"
-                                            class="fasting__protocol-btn"
+                                            class="fasting__protocol-action"
+                                            variant="secondary"
+                                            fill="outline"
+                                            size="sm"
                                             (click)="extendBy36Hours()"
                                             [disabled]="isExtending() || isReducing() || isEnding()"
                                         >
                                             {{ 'FASTING.ADD_36_HOURS' | translate }}
-                                        </button>
-                                        <button
+                                        </fd-ui-button>
+                                        <fd-ui-button
                                             type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="isCustomExtendExpanded()"
+                                            class="fasting__protocol-action"
+                                            [variant]="isCustomExtendExpanded() ? 'primary' : 'secondary'"
+                                            [fill]="isCustomExtendExpanded() ? 'solid' : 'outline'"
+                                            size="sm"
                                             (click)="showCustomExtend()"
                                             [disabled]="isExtending() || isReducing() || isEnding()"
                                         >
                                             {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
-                                        </button>
+                                        </fd-ui-button>
                                     </div>
 
                                     @if (isCustomExtendExpanded()) {
@@ -270,31 +235,39 @@
                                     </div>
 
                                     <div class="fasting__extend-toolbar">
-                                        <button
+                                        <fd-ui-button
                                             type="button"
-                                            class="fasting__protocol-btn fasting__protocol-btn--warning"
+                                            class="fasting__protocol-action"
+                                            variant="danger"
+                                            fill="outline"
+                                            size="sm"
                                             (click)="reduceBy4Hours()"
                                             [disabled]="isReducing() || isExtending() || isEnding()"
                                         >
                                             {{ 'FASTING.REDUCE_4_HOURS' | translate }}
-                                        </button>
-                                        <button
+                                        </fd-ui-button>
+                                        <fd-ui-button
                                             type="button"
-                                            class="fasting__protocol-btn fasting__protocol-btn--warning"
+                                            class="fasting__protocol-action"
+                                            variant="danger"
+                                            fill="outline"
+                                            size="sm"
                                             (click)="reduceBy8Hours()"
                                             [disabled]="isReducing() || isExtending() || isEnding()"
                                         >
                                             {{ 'FASTING.REDUCE_8_HOURS' | translate }}
-                                        </button>
-                                        <button
+                                        </fd-ui-button>
+                                        <fd-ui-button
                                             type="button"
-                                            class="fasting__protocol-btn fasting__protocol-btn--warning"
-                                            [class.fasting__protocol-btn--active]="isCustomReduceExpanded()"
+                                            class="fasting__protocol-action"
+                                            [variant]="isCustomReduceExpanded() ? 'danger' : 'secondary'"
+                                            [fill]="isCustomReduceExpanded() ? 'solid' : 'outline'"
+                                            size="sm"
                                             (click)="showCustomReduce()"
                                             [disabled]="isReducing() || isExtending() || isEnding()"
                                         >
                                             {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
-                                        </button>
+                                        </fd-ui-button>
                                     </div>
 
                                     @if (isCustomReduceExpanded()) {
@@ -514,73 +487,44 @@
                             <div class="fasting__checkin-grid">
                                 <div class="fasting__checkin-field">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
-                                    <div class="fasting__protocols fasting__protocols--emoji">
-                                        @for (option of hungerEmojiScale; track option.value) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn fasting__protocol-btn--emoji"
-                                                [class.fasting__protocol-btn--active]="hungerLevel() === option.value"
-                                                [fdUiHint]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value + '/5'"
-                                                [attr.aria-label]="('FASTING.CHECK_IN.HUNGER' | translate) + ' ' + option.value"
-                                                (click)="setHungerLevel(option.value)"
-                                            >
-                                                <span class="fasting__emoji">{{ option.emoji }}</span>
-                                            </button>
-                                        }
-                                    </div>
+                                    <fd-ui-emoji-picker
+                                        [options]="hungerEmojiOptions()"
+                                        [(selectedValue)]="hungerLevel"
+                                        [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
+                                        size="sm"
+                                    />
                                 </div>
 
                                 <div class="fasting__checkin-field">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
-                                    <div class="fasting__protocols fasting__protocols--emoji">
-                                        @for (option of energyEmojiScale; track option.value) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn fasting__protocol-btn--emoji"
-                                                [class.fasting__protocol-btn--active]="energyLevel() === option.value"
-                                                [fdUiHint]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value + '/5'"
-                                                [attr.aria-label]="('FASTING.CHECK_IN.ENERGY' | translate) + ' ' + option.value"
-                                                (click)="setEnergyLevel(option.value)"
-                                            >
-                                                <span class="fasting__emoji">{{ option.emoji }}</span>
-                                            </button>
-                                        }
-                                    </div>
+                                    <fd-ui-emoji-picker
+                                        [options]="energyEmojiOptions()"
+                                        [(selectedValue)]="energyLevel"
+                                        [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
+                                        size="sm"
+                                    />
                                 </div>
 
                                 <div class="fasting__checkin-field">
                                     <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
-                                    <div class="fasting__protocols fasting__protocols--emoji">
-                                        @for (option of moodEmojiScale; track option.value) {
-                                            <button
-                                                type="button"
-                                                class="fasting__protocol-btn fasting__protocol-btn--emoji"
-                                                [class.fasting__protocol-btn--active]="moodLevel() === option.value"
-                                                [fdUiHint]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value + '/5'"
-                                                [attr.aria-label]="('FASTING.CHECK_IN.MOOD' | translate) + ' ' + option.value"
-                                                (click)="setMoodLevel(option.value)"
-                                            >
-                                                <span class="fasting__emoji">{{ option.emoji }}</span>
-                                            </button>
-                                        }
-                                    </div>
+                                    <fd-ui-emoji-picker
+                                        [options]="moodEmojiOptions()"
+                                        [(selectedValue)]="moodLevel"
+                                        [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
+                                        size="sm"
+                                    />
                                 </div>
                             </div>
 
                             <div class="fasting__checkin-field">
                                 <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}</div>
-                                <div class="fasting__protocols">
-                                    @for (symptom of symptomOptions; track symptom.value) {
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="selectedSymptoms().includes(symptom.value)"
-                                            (click)="toggleSymptom(symptom.value)"
-                                        >
-                                            {{ symptom.labelKey | translate }}
-                                        </button>
-                                    }
-                                </div>
+                                <fd-ui-chip-select
+                                    class="fasting__symptom-chips"
+                                    [options]="symptomChipOptions()"
+                                    [(selectedValues)]="selectedSymptoms"
+                                    [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
+                                    size="sm"
+                                />
                             </div>
 
                             <label class="fasting__checkin-notes">
@@ -674,17 +618,21 @@
                                             </span>
                                             <div class="fasting__history-toggle-buttons">
                                                 @if (canViewSessionCheckInChart(session)) {
-                                                    <button
+                                                    <fd-ui-button
                                                         type="button"
                                                         class="fasting__history-toggle fasting__history-toggle--muted"
+                                                        variant="secondary"
+                                                        fill="text"
                                                         (click)="openSessionCheckInChart(session)"
                                                     >
                                                         {{ 'FASTING.SHOW_CHECK_IN_CHART' | translate }}
-                                                    </button>
+                                                    </fd-ui-button>
                                                 }
-                                                <button
+                                                <fd-ui-button
                                                     type="button"
                                                     class="fasting__history-toggle"
+                                                    variant="secondary"
+                                                    fill="text"
                                                     [attr.aria-expanded]="isHistorySessionExpanded(session.id)"
                                                     (click)="toggleHistorySession(session.id)"
                                                 >
@@ -692,7 +640,7 @@
                                                         getHistoryCheckInToggleKey(session)
                                                             | translate: { count: getSessionCheckInCount(session) }
                                                     }}
-                                                </button>
+                                                </fd-ui-button>
                                             </div>
                                         </div>
 

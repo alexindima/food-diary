@@ -1,15 +1,15 @@
 <div class="ai-photo-result">
     <div class="ai-photo-result__header">
         <span>{{ titleKey() | translate }}</span>
-        <button
-            type="button"
+        <fd-ui-button
             class="ai-photo-result__dismiss"
+            variant="secondary"
+            fill="text"
+            icon="close"
             [fdUiHint]="'COMMON.CANCEL' | translate"
-            [attr.aria-label]="'COMMON.CANCEL' | translate"
+            [ariaLabel]="'COMMON.CANCEL' | translate"
             (click)="dismissed.emit()"
-        >
-            <mat-icon>close</mat-icon>
-        </button>
+        />
     </div>
 
     @if (imageUrl() || sourceText()) {
@@ -48,16 +48,16 @@
     @if (!isAnalyzing() && results().length) {
         <div class="ai-photo-result__items-header">
             <span class="ai-photo-result__items-title">
-                <button
-                    type="button"
+                <fd-ui-button
                     class="ai-photo-result__action-btn"
+                    variant="secondary"
+                    fill="text"
+                    icon="refresh"
                     [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
-                    [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+                    [ariaLabel]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
                     [disabled]="isAnalyzing() || isEditing()"
                     (click)="reanalyzeRequested.emit()"
-                >
-                    <mat-icon>refresh</mat-icon>
-                </button>
+                />
             </span>
             <fd-ui-button
                 [variant]="isEditing() ? 'primary' : 'secondary'"
@@ -107,21 +107,21 @@
                                 <option [value]="unit">{{ getUnitLabel(unit) }}</option>
                             }
                         </select>
-                        <button
-                            type="button"
+                        <fd-ui-button
                             class="ai-photo-result__edit-remove"
+                            variant="danger"
+                            fill="text"
+                            icon="delete"
                             [fdUiHint]="'COMMON.DELETE' | translate"
-                            [attr.aria-label]="'COMMON.DELETE' | translate"
+                            [ariaLabel]="'COMMON.DELETE' | translate"
                             (click)="removeEditItem(i)"
-                        >
-                            <mat-icon>delete</mat-icon>
-                        </button>
+                        />
                     </div>
                 }
             </div>
-            <button type="button" class="ai-photo-result__edit-add" (click)="addEditItem()">
+            <fd-ui-button class="ai-photo-result__edit-add" variant="secondary" appearance="dashed" fullWidth (click)="addEditItem()">
                 + {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
-            </button>
+            </fd-ui-button>
         } @else {
             <div class="ai-photo-result__table">
                 @for (item of results(); track item.nameEn) {
@@ -173,10 +173,10 @@
         @if (!isEditing()) {
             <div class="ai-photo-result__actions">
                 @if (showDetails()) {
-                    <button type="button" class="ai-photo-result__details-toggle" (click)="toggleDetails()">
+                    <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="toggleDetails()">
                         <span>{{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}</span>
                         <mat-icon>{{ isDetailsExpanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
-                    </button>
+                    </fd-ui-button>
                 } @else {
                     <span></span>
                 }

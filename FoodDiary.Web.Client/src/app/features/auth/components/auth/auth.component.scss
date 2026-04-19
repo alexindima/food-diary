@@ -8,45 +8,10 @@
     max-width: 440px;
 
     &__tabs {
-        display: flex;
-        justify-content: center;
-        gap: variables.$gap-l;
-        position: relative;
+        --fd-tabs-height: 34px;
+        --fd-tabs-item-padding-inline: 0;
+        --fd-tabs-color: var(--fd-color-slate-800);
         margin-bottom: variables.$gap-xs;
-    }
-
-    &__tab {
-        position: relative;
-        padding: variables.$gap-xs 0;
-        background: transparent;
-        border: none;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--fd-color-slate-500);
-        cursor: pointer;
-        transition: color 0.2s ease;
-
-        &::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -6px;
-            height: 2px;
-            width: 100%;
-            background: var(--fd-color-primary-600);
-            border-radius: 999px;
-            transform: scaleX(0);
-            transform-origin: center;
-            transition: transform 0.25s ease;
-        }
-
-        &--active {
-            color: var(--fd-color-slate-800);
-
-            &::after {
-                transform: scaleX(1);
-            }
-        }
     }
 
     &__subtitle {
@@ -83,15 +48,34 @@
     &__link {
         align-self: flex-start;
         margin-top: -4px;
-        background: none;
-        border: none;
-        padding: 0;
-        color: var(--fd-color-primary-600);
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
+        --fd-button-width: auto;
+        --fd-button-min-width: auto;
+        --fd-button-height: auto;
+        --fd-button-height-explicit: auto;
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: 0;
+        --fd-button-font-size: 0.95rem;
+        --fd-button-font-weight: 600;
+        --fd-button-secondary-background-default: transparent;
+        --fd-button-secondary-background-hover: transparent;
+        --fd-button-secondary-background-active: transparent;
+        --fd-button-secondary-border-default: transparent;
+        --fd-button-secondary-border-hover: transparent;
+        --fd-button-secondary-border-active: transparent;
+        --fd-button-secondary-text-default: var(--fd-color-primary-600);
+        --fd-button-secondary-text-hover: var(--fd-color-primary-600);
+        --fd-button-secondary-text-active: var(--fd-color-primary-600);
+        --fd-button-shadow-default: none;
+        --fd-button-shadow-hover: none;
+        --fd-button-shadow-active: none;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
 
-        &:hover {
+        :deep(.fd-ui-button) {
+            text-decoration: none;
+        }
+
+        :deep(.fd-ui-button:hover .fd-ui-button__label) {
             text-decoration: underline;
         }
     }
