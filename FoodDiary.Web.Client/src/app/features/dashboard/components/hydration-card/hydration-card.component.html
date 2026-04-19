@@ -1,7 +1,4 @@
-<div
-    class="hydration-card"
-    [class.hydration-card--loading]="isLoading()"
->
+<div class="hydration-card" [class.hydration-card--loading]="isLoading()">
     <div class="hydration-card__header">
         <div class="hydration-card__title">{{ title() | translate }}</div>
         @if (canAdd()) {
