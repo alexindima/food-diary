@@ -143,11 +143,6 @@
     color: var(--fd-color-slate-800);
 }
 
-.photo-ai-dialog__edit-done {
-    --fd-button-height: 36px;
-    --fd-button-padding-x: 16px;
-}
-
 .photo-ai-dialog__edit-list {
     display: flex;
     flex-direction: column;
@@ -232,8 +227,6 @@
 }
 
 .photo-ai-dialog__edit-toggle {
-    --fd-button-height: 30px;
-    --fd-button-padding-x: 14px;
     font-weight: 600;
 }
 

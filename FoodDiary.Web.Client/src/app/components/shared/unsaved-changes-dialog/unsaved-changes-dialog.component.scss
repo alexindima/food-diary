@@ -19,32 +19,5 @@
     width: 100%;
 }
 
-.unsaved-changes-dialog__action {
-    --fd-button-height: 44px;
-    --fd-button-padding-x: 12px;
-    --fd-button-border-radius: 12px;
-    --fd-button-background-default: var(--fd-color-white);
-    --fd-button-background-hover: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
-    --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    --fd-button-border-hover: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    --fd-button-text-default: var(--fd-color-slate-600);
-    --fd-button-text-hover: var(--fd-color-slate-900);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-transform-hover: none;
-    --fd-button-transform-active: none;
-}
-
-.unsaved-changes-dialog__action--primary {
-    --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-    --fd-button-background-hover: linear-gradient(135deg, #5ab5ff, #2d6df0);
-    --fd-button-border-default: transparent;
-    --fd-button-border-hover: transparent;
-    --fd-button-text-default: var(--fd-color-white);
-    --fd-button-text-hover: var(--fd-color-white);
-    --fd-button-shadow-default: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-    --fd-button-shadow-hover: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-}
-
 
 

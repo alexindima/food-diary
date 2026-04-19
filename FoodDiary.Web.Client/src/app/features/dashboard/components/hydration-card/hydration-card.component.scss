@@ -31,23 +31,7 @@
     }
 
     &__add {
-        --fd-button-border-radius: 999px;
-        --fd-button-padding-x: 20px;
-        --fd-button-background-default: color-mix(in srgb, var(--fd-color-white) 26%, transparent);
-        --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-        --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-        --fd-button-text-default: color-mix(in srgb, var(--fd-color-white) 96%, var(--fd-color-sky-500));
-        --fd-button-text-hover: color-mix(in srgb, var(--fd-color-white) 96%, var(--fd-color-sky-500));
-        --fd-button-text-active: color-mix(in srgb, var(--fd-color-white) 96%, var(--fd-color-sky-500));
-        --fd-button-border-width: 0;
-        --fd-button-height: 42px;
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: 0 16px 32px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-        --fd-button-shadow-active: none;
-        backdrop-filter: blur(14px);
-        box-shadow: 0 13px 26px color-mix(in srgb, var(--fd-color-primary-800) 20%, transparent);
         font-size: 1rem;
-        font-weight: 700;
     }
 
     &__content {
@@ -128,8 +112,6 @@
         }
 
         &__add {
-            --fd-button-padding-x: 14px;
-            --fd-button-font-size: 0.95rem;
             flex-shrink: 0;
         }
 

@@ -105,45 +105,6 @@
 
     &__cta {
         font-weight: 700;
-        --fd-button-transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-
-    &__cta--primary {
-        --fd-button-background-default: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
-        --fd-button-background-hover: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
-        --fd-button-background-active: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
-        --fd-button-text-default: var(--fd-color-white);
-        --fd-button-text-hover: var(--fd-color-white);
-        --fd-button-text-active: var(--fd-color-white);
-        --fd-button-border-width: 0;
-        --fd-button-shadow-default: 0 16px 38px color-mix(in srgb, var(--fd-color-primary-600) 26%, transparent);
-        --fd-button-shadow-hover: 0 18px 42px color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
-        --fd-button-shadow-active: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
-        --fd-button-transform-hover: translateY(-1px);
-        --fd-button-transform-active: translateY(0);
-    }
-
-    &__cta--secondary {
-        --fd-button-background-default: color-mix(in srgb, var(--fd-color-white) 74%, transparent);
-        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
-        --fd-button-background-active: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
-        --fd-button-text-default: var(--fd-color-slate-900);
-        --fd-button-text-hover: var(--fd-color-slate-900);
-        --fd-button-text-active: var(--fd-color-slate-900);
-        --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-400) 45%, transparent);
-        --fd-button-border-hover: color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
-        --fd-button-border-active: color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
-        --fd-button-shadow-default:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 70%, transparent),
-            0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-button-shadow-hover:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 70%, transparent),
-            0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-button-shadow-active:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 70%, transparent),
-            0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --fd-button-transform-hover: translateY(-1px);
-        --fd-button-transform-active: translateY(0);
     }
 
     &__reassurance {

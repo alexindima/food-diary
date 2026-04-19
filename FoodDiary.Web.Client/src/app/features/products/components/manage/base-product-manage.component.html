@@ -61,13 +61,19 @@
                                 />
                             }
                             @if (product()) {
-                                <fd-ui-button type="submit" class="product-manage__action-button" icon="save" [fullWidth]="true">
+                                <fd-ui-button
+                                    type="submit"
+                                    class="product-manage__action-button"
+                                    appearance="brand-action"
+                                    icon="save"
+                                    [fullWidth]="true"
+                                >
                                     {{ 'PRODUCT_MANAGE.SAVE_BUTTON' | translate }}
                                 </fd-ui-button>
                             } @else {
                                 <fd-ui-button
                                     type="submit"
-                                    class="product-manage__action-button product-manage__action-button--add"
+                                    class="product-manage__action-button"
                                     appearance="brand-action"
                                     icon="add"
                                     [fullWidth]="true"

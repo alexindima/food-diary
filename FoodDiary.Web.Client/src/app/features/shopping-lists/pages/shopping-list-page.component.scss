@@ -44,20 +44,6 @@
         flex-wrap: wrap;
     }
 
-    &__icon-button {
-        --fd-button-background-default: var(--fd-color-white);
-        --fd-button-background-hover: var(--fd-color-white);
-        --fd-button-background-active: var(--fd-color-white);
-
-        &--primary {
-            --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-            --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-            --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-            --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
-            --fd-button-shadow-hover: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
-        }
-    }
-
     &__list-select,
     &__name-input {
         width: 100%;
@@ -66,8 +52,6 @@
     &__new-button,
     &__delete-button,
     &__clear-button {
-        --fd-button-padding-x: 14px;
-        --fd-button-padding-y: 8px;
         font-weight: 700;
     }
 

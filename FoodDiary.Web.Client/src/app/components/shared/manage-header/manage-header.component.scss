@@ -39,12 +39,6 @@
     gap: 8px;
 }
 
-.fd-manage-header__back {
-    --fd-button-text-default: var(--fd-color-text);
-    --fd-button-text-hover: var(--fd-color-text);
-    --fd-button-text-active: var(--fd-color-text);
-}
-
 :host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {
     display: none;
 }

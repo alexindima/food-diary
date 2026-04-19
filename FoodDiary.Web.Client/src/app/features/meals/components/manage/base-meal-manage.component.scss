@@ -1,10 +1,6 @@
 @use 'variables' as variables;
 
 .consumption-manage {
-    --g1: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-    --g2: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-    --s1: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-    --s2: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
     --b3: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
     --fd-layout-page-background: var(--fd-layout-page-background-base, var(--fd-color-background));
     margin: 0 auto;
@@ -244,16 +240,6 @@
     &__action-button {
         min-width: 0;
         width: 100%;
-    }
-
-    &__action-button--add {
-        --fd-button-border-radius: var(--fd-radius-button);
-        --fd-button-background-default: var(--g1);
-        --fd-button-background-hover: var(--g2);
-        --fd-button-background-active: var(--g1);
-        --fd-button-shadow-default: var(--s1);
-        --fd-button-shadow-hover: var(--s2);
-        --fd-button-shadow-active: none;
     }
 
     &__footer-error {

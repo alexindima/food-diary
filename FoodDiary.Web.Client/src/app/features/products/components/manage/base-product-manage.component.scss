@@ -3,10 +3,6 @@
 .product-manage {
     --fd-page-background-mid: #f1f5f9;
     --fd-page-background-end: #eef2f7;
-    --fd-brand-gradient: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-    --fd-brand-gradient-hover: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-    --fd-brand-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-    --fd-brand-shadow-hover: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
     --fd-slate-border-24: color-mix(in srgb, var(--fd-color-slate-400) 24%, transparent);
     --fd-layout-page-background: linear-gradient(180deg, var(--fd-color-slate-50) 0%, var(--fd-page-background-mid) 45%, var(--fd-page-background-end) 100%);
     margin: 0 auto;
@@ -35,13 +31,8 @@
     }
 
     &__delete-button {
-        --fd-button-disabled-opacity: 0.6;
 
         &--icon {
-            --fd-button-padding-x: 0;
-            --fd-button-height: 40px;
-            --fd-button-width: 100%;
-            --fd-button-min-width: 40px;
             width: 40px;
             min-width: 40px;
             display: inline-flex;
@@ -288,16 +279,6 @@
 
     &__cancel-button {
         flex: 0 0 auto;
-    }
-
-    &__action-button--add {
-        --fd-button-border-radius: 18px;
-        --fd-button-background-default: var(--fd-brand-gradient);
-        --fd-button-background-hover: var(--fd-brand-gradient-hover);
-        --fd-button-background-active: var(--fd-brand-gradient);
-        --fd-button-shadow-default: var(--fd-brand-shadow);
-        --fd-button-shadow-hover: var(--fd-brand-shadow-hover);
-        --fd-button-shadow-active: none;
     }
 
     &__footer-error {

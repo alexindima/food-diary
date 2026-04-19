@@ -70,89 +70,16 @@ $color-text-secondary: var(--fd-color-text-muted);
         margin-left: 0;
     }
 
-    &__test-notification-action {
-        --fd-button-padding-x: 14px;
-        --fd-button-padding-y: 10px;
-        --fd-button-border-radius: 14px;
-    }
-
-    &__push-action {
-        --fd-button-padding-x: 14px;
-        --fd-button-padding-y: 10px;
-        --fd-button-border-radius: 14px;
-    }
-
-    @media #{variables.$media-sm} {
-
-        &__test-notification-action {
-            --fd-button-padding-x: 12px;
-            --fd-button-padding-y: 8px;
-            font-size: 0.9rem;
-            line-height: 1.1;
-            white-space: nowrap;
-        }
-
-        &__push-action {
-            --fd-button-padding-x: 12px;
-            --fd-button-padding-y: 8px;
-            font-size: 0.9rem;
-            line-height: 1.1;
-            white-space: nowrap;
-        }
-
-    }
-
-    @media #{variables.$media-xs} {
-
-        &__test-notification-action {
-            --fd-button-padding-x: 10px;
-            --fd-button-padding-y: 8px;
-            --fd-button-label-display: none;
-            font-size: 0;
-            line-height: 0;
-        }
-
-        &__push-action {
-            --fd-button-padding-x: 10px;
-            --fd-button-padding-y: 8px;
-            --fd-button-label-display: none;
-            font-size: 0;
-            line-height: 0;
-        }
-    }
-
-    &__settings-action--active {
-        --fd-button-background-default: var(--fd-color-surface-raised);
-        --fd-button-background-hover: var(--fd-color-surface-raised);
-        --fd-button-background-active: var(--fd-color-surface-raised);
-        --fd-button-border-default: color-mix(in srgb, var(--fd-color-primary-600) 40%, transparent);
-        --fd-button-border-hover: color-mix(in srgb, var(--fd-color-primary-600) 40%, transparent);
-        --fd-button-border-active: color-mix(in srgb, var(--fd-color-primary-600) 40%, transparent);
-        --fd-button-text-default: var(--fd-color-primary-600);
-        --fd-button-text-hover: var(--fd-color-primary-600);
-        --fd-button-text-active: var(--fd-color-primary-600);
-        --fd-button-shadow-default: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
-        --fd-button-shadow-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
-        --fd-button-shadow-active: none;
-    }
-
     &__settings-action {
         position: relative;
         z-index: 5;
-        --fd-button-position: relative;
-        --fd-button-z-index: 5;
     }
 
     &--editing {
 
         .dashboard__date-button,
-        .dashboard__push-action,
-        .dashboard__test-notification-action {
+        .dashboard__push-action {
             pointer-events: none;
-            --fd-button-pointer-events: none;
-            --fd-button-shadow-default: none;
-            --fd-button-shadow-hover: none;
-            --fd-button-shadow-active: none;
         }
     }
 
@@ -717,25 +644,6 @@ $color-text-secondary: var(--fd-color-text-muted);
             gap: 6px;
             justify-content: flex-end;
             min-width: 0;
-        }
-
-        &__date-button,
-        &__settings-action,
-        &__push-action,
-        &__test-notification-action {
-            --fd-button-border-radius: 12px;
-            --fd-button-padding-x: 0;
-            --fd-button-padding-y: 0;
-            --fd-button-width: 38px;
-            --fd-button-height-explicit: 38px;
-            --fd-button-height: 38px;
-            --fd-button-min-width: 38px;
-        }
-
-        &__date-button,
-        &__push-action,
-        &__test-notification-action {
-            --fd-button-label-display: none;
         }
 
         &__body {

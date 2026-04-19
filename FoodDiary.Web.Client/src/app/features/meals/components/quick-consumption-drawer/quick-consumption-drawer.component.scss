@@ -136,20 +136,6 @@
     gap: 8px;
 }
 
-.quick-consumption__save {
-    --fd-button-border-radius: 14px;
-    --fd-button-padding-x: 10px;
-    background: transparent;
-    color: inherit;
-    box-shadow: none;
-    --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-    --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-    --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
-    --fd-button-shadow-default: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
-    --fd-button-shadow-hover: 0 12px 30px color-mix(in srgb, var(--fd-color-primary-600) 32%, transparent);
-    --fd-button-shadow-active: none;
-}
-
 .quick-consumption__empty {
     margin: 0;
     padding: 12px;

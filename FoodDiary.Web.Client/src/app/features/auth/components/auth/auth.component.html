@@ -34,6 +34,8 @@
                     <div class="auth__actions">
                         <fd-ui-button
                             type="submit"
+                            appearance="brand-action"
+                            size="lg"
                             variant="primary"
                             [disabled]="passwordResetForm.invalid || isPasswordResetting() || passwordResetCooldownSeconds() > 0"
                             [fullWidth]="true"
@@ -49,7 +51,14 @@
                                 {{ 'AUTH.RESET.RESEND_COOLDOWN' | translate: { seconds: passwordResetCooldownSeconds() } }}
                             </p>
                         }
-                        <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onPasswordResetClose()">
+                        <fd-ui-button
+                            type="button"
+                            size="lg"
+                            variant="secondary"
+                            fill="outline"
+                            [fullWidth]="true"
+                            (click)="onPasswordResetClose()"
+                        >
                             {{ 'AUTH.RESET.BACK' | translate }}
                         </fd-ui-button>
                     </div>
@@ -85,13 +94,21 @@
                     </button>
 
                     <div class="auth__actions">
-                        <fd-ui-button type="submit" variant="primary" [disabled]="loginForm.invalid || isSubmitting()" [fullWidth]="true">
+                        <fd-ui-button
+                            type="submit"
+                            appearance="brand-action"
+                            size="lg"
+                            variant="primary"
+                            [disabled]="loginForm.invalid || isSubmitting()"
+                            [fullWidth]="true"
+                        >
                             {{ (isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN') | translate }}
                         </fd-ui-button>
                         <fd-ui-form-error [error]="globalError()" />
                         @if (showRestoreAction()) {
                             <fd-ui-button
                                 type="button"
+                                size="lg"
                                 variant="secondary"
                                 fill="outline"
                                 [disabled]="loginForm.invalid || isRestoring() || isSubmitting()"
@@ -157,7 +174,14 @@
                 </div>
 
                 <div class="auth__actions">
-                    <fd-ui-button type="submit" variant="primary" [disabled]="registerForm.invalid" [fullWidth]="true">
+                    <fd-ui-button
+                        type="submit"
+                        appearance="brand-action"
+                        size="lg"
+                        variant="primary"
+                        [disabled]="registerForm.invalid"
+                        [fullWidth]="true"
+                    >
                         {{ 'AUTH.REGISTER.REGISTER' | translate }}
                     </fd-ui-button>
                     <fd-ui-form-error [error]="globalError()" />

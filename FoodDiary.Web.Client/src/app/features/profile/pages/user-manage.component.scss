@@ -176,12 +176,6 @@
         grid-column: 1 / -1;
     }
 
-    &__link-button-control {
-        --fd-button-host-width: 100%;
-        --fd-button-width: 100%;
-        --fd-button-height-explicit: 100%;
-    }
-
     &__account-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -312,18 +306,6 @@
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-    }
-
-    &__preset-button--active {
-        --fd-button-border-default: color-mix(in srgb, var(--fd-color-primary-600) 38%, transparent);
-        --fd-button-border-hover: color-mix(in srgb, var(--fd-color-primary-600) 38%, transparent);
-        --fd-button-border-active: color-mix(in srgb, var(--fd-color-primary-600) 38%, transparent);
-        --fd-button-background-default: color-mix(in srgb, var(--fd-color-primary-500) 20%, var(--fd-color-surface-raised));
-        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-primary-500) 20%, var(--fd-color-surface-raised));
-        --fd-button-background-active: color-mix(in srgb, var(--fd-color-primary-500) 20%, var(--fd-color-surface-raised));
-        --fd-button-text-default: var(--fd-color-primary-300);
-        --fd-button-text-hover: var(--fd-color-primary-300);
-        --fd-button-text-active: var(--fd-color-primary-300);
     }
 
     &__notifications-devices {
@@ -458,18 +440,6 @@
         align-items: flex-start;
         justify-content: flex-end;
         flex-shrink: 0;
-    }
-
-    &__dietologist-summary-button {
-        --fd-button-background-default: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
-        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
-        --fd-button-background-active: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
-        --fd-button-border-default: var(--fd-color-border);
-        --fd-button-border-hover: var(--fd-color-border);
-        --fd-button-border-active: var(--fd-color-border);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
     }
 
     &__notifications-reminder-save {
@@ -622,13 +592,6 @@
             width: 100%;
         }
 
-        &__dietologist-summary-button,
-        &__notifications-action-button,
-        &__link-button-control,
-        &__notifications-reminder-save {
-            --fd-button-host-width: 100%;
-            --fd-button-width: 100%;
-        }
     }
 }
 

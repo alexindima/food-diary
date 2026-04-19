@@ -130,10 +130,6 @@
 
 .recipe-step-card__add-ingredient {
     align-self: flex-start;
-    --fd-button-border-radius: var(--fd-radius-button);
-    --fd-button-border-default: color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent);
-    --fd-button-background-default: color-mix(in srgb, var(--fd-color-surface-raised) 88%, transparent);
-    --fd-button-text-default: var(--fd-color-primary-400);
 }
 
 .recipe-ingredient {

@@ -37,18 +37,6 @@
         --fd-input-radius: 18px;
     }
 
-    &__filter-button {
-
-        &--active {
-            --fd-button-border-default: var(--fd-color-sky-500);
-            --fd-button-border-hover: var(--fd-color-sky-500);
-            --fd-button-border-active: var(--fd-color-sky-500);
-            --fd-button-background-default: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-background-hover: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-background-active: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-        }
-    }
-
     &__list {
         display: flex;
         flex-direction: column;

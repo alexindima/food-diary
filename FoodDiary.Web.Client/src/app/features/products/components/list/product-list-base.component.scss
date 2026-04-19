@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 .product-list {
-    --b1: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
     --b2: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     margin: 0 auto;
     box-sizing: border-box;
@@ -59,18 +58,6 @@
     &__filter-button {
         flex: 0 0 auto;
         min-width: auto;
-
-        &--active {
-            --fd-button-border-default: var(--fd-color-sky-500);
-            --fd-button-border-hover: var(--fd-color-sky-500);
-            --fd-button-border-active: var(--fd-color-sky-500);
-            --fd-button-background-default: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-background-hover: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-background-active: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-text-default: var(--fd-color-sky-700);
-            --fd-button-text-hover: var(--fd-color-sky-700);
-            --fd-button-text-active: var(--fd-color-sky-700);
-        }
     }
 
     &__filters {
@@ -80,45 +67,11 @@
         justify-content: flex-end;
     }
 
-    &__add-button {
-        --fd-button-padding-y: 8px;
-    }
-
     @media #{variables.$media-xs} {
 
         &__add-button {
-            --fd-button-padding-x: 10px;
-            --fd-button-label-display: none;
             font-size: 0;
             line-height: 0;
-        }
-    }
-
-    &__pill {
-        --fd-button-border-radius: 18px;
-        --fd-button-padding-x: 14px;
-        --fd-button-padding-y: 8px;
-        --fd-button-border-default: var(--b1);
-        --fd-button-border-hover: var(--b1);
-        --fd-button-border-active: var(--b1);
-        --fd-button-background-default: var(--fd-color-white);
-        --fd-button-background-hover: var(--fd-color-white);
-        --fd-button-background-active: var(--fd-color-white);
-        --fd-button-text-default: var(--fd-color-text);
-        --fd-button-text-hover: var(--fd-color-text);
-        --fd-button-text-active: var(--fd-color-text);
-        font-weight: 700;
-        border: none;
-        background: transparent;
-        color: var(--fd-color-text);
-
-        &--active {
-            --fd-button-border-default: var(--fd-color-sky-500);
-            --fd-button-border-hover: var(--fd-color-sky-500);
-            --fd-button-border-active: var(--fd-color-sky-500);
-            --fd-button-background-default: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-background-hover: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
-            --fd-button-background-active: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
         }
     }
 
@@ -457,18 +410,12 @@
         &__controls .product-list__pill {
             flex: 1 1 auto;
             min-width: 0;
-            --fd-button-width: 100%;
-            --fd-button-padding-x: 12px;
-            --fd-button-white-space: nowrap;
             font-size: 0.92rem;
         }
 
         &__controls .product-list__add-button {
             flex: 0 0 auto;
             min-width: 44px;
-            --fd-button-width: 44px;
-            --fd-button-padding-x: 0;
-            --fd-button-label-display: none;
         }
     }
 
@@ -477,9 +424,6 @@
         &__controls .product-list__pill {
             flex: 0 0 auto;
             min-width: 44px;
-            --fd-button-width: 44px;
-            --fd-button-padding-x: 0;
-            --fd-button-label-display: none;
         }
     }
 }
@@ -675,16 +619,6 @@
 
     &__action {
         width: 100%;
-        --fd-button-border-radius: 18px;
-        --fd-button-padding-y: 12px;
-        --fd-button-padding-x: 16px;
-        --fd-button-text-default: var(--fd-color-white);
-        --fd-button-text-hover: var(--fd-color-white);
-        --fd-button-text-active: var(--fd-color-white);
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--fd-color-primary-700), var(--fd-color-sky-500));
-        color: var(--fd-color-white);
-        box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-sky-500) 28%, transparent);
     }
 
     @media #{variables.$media-mobile} {

@@ -41,13 +41,19 @@
                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
             </fd-ui-button>
             @if (consumption()) {
-                <fd-ui-button type="submit" class="consumption-manage__action-button" icon="save" [fullWidth]="true">
+                <fd-ui-button
+                    type="submit"
+                    class="consumption-manage__action-button"
+                    appearance="brand-action"
+                    icon="save"
+                    [fullWidth]="true"
+                >
                     {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
                 </fd-ui-button>
             } @else {
                 <fd-ui-button
                     type="submit"
-                    class="consumption-manage__action-button consumption-manage__action-button--add"
+                    class="consumption-manage__action-button"
                     appearance="brand-action"
                     icon="add"
                     [fullWidth]="true"
