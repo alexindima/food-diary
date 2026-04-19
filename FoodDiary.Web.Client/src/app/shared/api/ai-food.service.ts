@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
@@ -15,8 +15,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class AiFoodService {
     private readonly baseUrl = environment.apiUrls.ai;
-
-    public constructor(private readonly http: HttpClient) {}
+    private readonly http = inject(HttpClient);
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return this.http

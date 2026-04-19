@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, HostListener, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseChartDirective } from 'ng2-charts';
 import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
+import { distinctUntilChanged, fromEvent, map } from 'rxjs';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { NutrientData } from '../../../shared/models/charts.data';
 import { RecursivePartial } from '../../../shared/lib/common.data';
@@ -18,6 +20,7 @@ import { CustomGroupComponent } from '../custom-group/custom-group.component';
 export class NutrientsSummaryComponent {
     public readonly CHART_COLORS = CHART_COLORS;
 
+    private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
 
     public calories = input.required<number>();
@@ -112,10 +115,14 @@ export class NutrientsSummaryComponent {
         ],
     }));
 
-    @HostListener('window:resize', ['$event'])
-    public onResize(event: UIEvent): void {
-        const width = (event.target as Window).innerWidth;
-        this.viewportWidth.set(width);
+    public constructor() {
+        fromEvent(window, 'resize')
+            .pipe(
+                map(() => window.innerWidth),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(width => this.viewportWidth.set(width));
     }
 
     private mergeConfig(userConfig: Partial<NutrientsSummaryConfig>): NutrientsSummaryConfigInternal {

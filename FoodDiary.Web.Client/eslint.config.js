@@ -95,6 +95,19 @@ export default [
             'no-restricted-syntax': [
                 'error',
                 {
+                    selector: 'Decorator[expression.callee.name="HostListener"]',
+                    message: 'Use the host metadata property or fromEvent() instead of @HostListener(). See: https://angular.dev/api/core/HostListener',
+                },
+                {
+                    selector: 'Decorator[expression.callee.name="HostBinding"]',
+                    message: 'Use the host metadata property instead of @HostBinding(). See: https://angular.dev/api/core/HostBinding',
+                },
+                {
+                    selector:
+                        'ClassDeclaration[decorators.length>0] > ClassBody > MethodDefinition[kind=\"constructor\"] > FunctionExpression > TSParameterProperty',
+                    message: 'Use inject() instead of constructor parameter DI in Angular-decorated classes.',
+                },
+                {
                     selector: 'Decorator[expression.callee.name="Input"]',
                     message: 'Use signal-based input() instead of @Input(). See: https://angular.dev/guide/signals/inputs',
                 },
@@ -137,6 +150,23 @@ export default [
                 {
                     selector: 'Decorator[expression.callee.name="ContentChildren"]',
                     message: 'Use contentChildren() signal query instead of @ContentChildren(). See: https://angular.dev/guide/signals/queries',
+                },
+            ],
+            'no-restricted-imports': [
+                'error',
+                {
+                    paths: [
+                        {
+                            name: '@angular/core',
+                            importNames: ['HostListener'],
+                            message: 'Use the host metadata property or fromEvent() instead of HostListener.',
+                        },
+                        {
+                            name: '@angular/core',
+                            importNames: ['HostBinding'],
+                            message: 'Use the host metadata property instead of HostBinding.',
+                        },
+                    ],
                 },
             ],
         },

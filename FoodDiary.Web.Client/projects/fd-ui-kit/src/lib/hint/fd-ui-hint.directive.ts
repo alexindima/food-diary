@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, ElementRef, HostListener, ViewContainerRef, input, inject } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, ViewContainerRef, input, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
@@ -11,6 +11,13 @@ type HintPosition = 'top' | 'bottom' | 'left' | 'right';
 @Directive({
     selector: '[fdUiHint]',
     standalone: true,
+    host: {
+        '(mouseenter)': 'onMouseEnter()',
+        '(mouseleave)': 'onMouseLeave()',
+        '(focusin)': 'onFocusIn()',
+        '(focusout)': 'onFocusOut()',
+        '(click)': 'onClick()',
+    },
 })
 export class FdUiHintDirective {
     public readonly fdUiHint = input<HintContent>(null);
@@ -36,27 +43,22 @@ export class FdUiHintDirective {
         });
     }
 
-    @HostListener('mouseenter')
     public onMouseEnter(): void {
         this.queueShow();
     }
 
-    @HostListener('mouseleave')
     public onMouseLeave(): void {
         this.queueHide();
     }
 
-    @HostListener('focusin')
     public onFocusIn(): void {
         this.queueShow();
     }
 
-    @HostListener('focusout')
     public onFocusOut(): void {
         this.queueHide();
     }
 
-    @HostListener('click')
     public onClick(): void {
         this.hide();
     }

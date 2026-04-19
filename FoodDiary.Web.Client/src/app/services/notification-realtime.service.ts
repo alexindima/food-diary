@@ -1,4 +1,4 @@
-import { effect, Injectable, signal, untracked } from '@angular/core';
+import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
@@ -13,17 +13,16 @@ function toNotificationHubUrl(authBaseUrl: string): string {
     providedIn: 'root',
 })
 export class NotificationRealtimeService {
+    private readonly authService = inject(AuthService);
+    private readonly notificationService = inject(NotificationService);
+    private readonly logger = inject(FrontendLoggerService);
     private connection: HubConnection | null = null;
     private readonly connecting = signal(false);
     private readonly connectedSignal = signal(false);
 
     public readonly connected = this.connectedSignal.asReadonly();
 
-    public constructor(
-        private readonly authService: AuthService,
-        private readonly notificationService: NotificationService,
-        private readonly logger: FrontendLoggerService,
-    ) {
+    public constructor() {
         effect(() => {
             if (this.authService.isAuthenticated()) {
                 untracked(() => {

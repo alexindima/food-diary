@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
@@ -8,9 +8,8 @@ import { environment } from '../../../../environments/environment';
 })
 export class AdminAuthService {
     private readonly authUrl = environment.apiUrls.auth;
+    private readonly http = inject(HttpClient);
     private readonly tokenSignal = signal<string | null>(this.getToken());
-
-    public constructor(private readonly http: HttpClient) {}
 
     public getToken(): string | null {
         return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');

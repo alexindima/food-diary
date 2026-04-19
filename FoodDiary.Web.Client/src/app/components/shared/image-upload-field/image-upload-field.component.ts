@@ -4,7 +4,6 @@ import {
     Component,
     computed,
     ElementRef,
-    HostListener,
     OnInit,
     ViewEncapsulation,
     forwardRef,
@@ -25,6 +24,10 @@ import { FrontendLoggerService } from '../../../services/frontend-logger.service
 @Component({
     selector: 'fd-image-upload-field',
     standalone: true,
+    host: {
+        '(dragover)': 'onDragOver($event)',
+        '(dragleave)': 'onDragLeave($event)',
+    },
     imports: [FdUiButtonComponent, TranslatePipe],
     templateUrl: './image-upload-field.component.html',
     styleUrls: ['./image-upload-field.component.scss'],
@@ -128,7 +131,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
         }
     }
 
-    @HostListener('dragover', ['$event'])
     public onDragOver(event: DragEvent): void {
         event.preventDefault();
         if (this.disabled || this.isUploading) {
@@ -137,7 +139,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
         this.isDragging = true;
     }
 
-    @HostListener('dragleave', ['$event'])
     public onDragLeave(event: DragEvent): void {
         event.preventDefault();
         this.isDragging = false;

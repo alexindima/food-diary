@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap } from 'rxjs';
 import { AppConfig } from '../types/app.data';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { rethrowApiError } from '../shared/lib/api-error.utils';
 
 @Injectable({
@@ -9,8 +9,7 @@ import { rethrowApiError } from '../shared/lib/api-error.utils';
 })
 export class AppConfigService {
     private config: AppConfig | null = null;
-
-    public constructor(private http: HttpClient) {}
+    private readonly http = inject(HttpClient);
 
     public loadConfig(): Observable<AppConfig> {
         return this.http.get<AppConfig>('/assets/config/app-config.json').pipe(
