@@ -9,7 +9,7 @@
     --fd-button-padding-x: 0.75rem;
     --fd-button-text-padding-x: 0.375rem;
     appearance: none;
-    background-color: var(--fd-button-background-default);
+    background: var(--fd-button-background-default);
     border: var(--fd-button-border-width, 1px) var(--fd-button-border-style, solid) var(--fd-button-border-default);
     border-radius: var(--fd-button-border-radius, var(--fd-radius-button, var(--fd-radius-md, 8px)));
     color: var(--fd-button-text-default);
@@ -45,7 +45,7 @@
         );
 
     &:hover:not(:disabled) {
-        background-color: var(--fd-button-background-hover, var(--fd-button-background-default));
+        background: var(--fd-button-background-hover, var(--fd-button-background-default));
         border-color: var(--fd-button-border-hover, var(--fd-button-border-default));
         color: var(--fd-button-text-hover, var(--fd-button-text-default));
         box-shadow: var(--fd-button-shadow-hover, 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent));
@@ -53,7 +53,7 @@
     }
 
     &:active:not(:disabled) {
-        background-color: var(--fd-button-background-active, var(--fd-button-background-hover));
+        background: var(--fd-button-background-active, var(--fd-button-background-hover));
         border-color: var(--fd-button-border-active, var(--fd-button-border-hover));
         color: var(--fd-button-text-active, var(--fd-button-text-hover, var(--fd-button-text-default)));
         box-shadow: var(--fd-button-shadow-active, none);
@@ -61,7 +61,7 @@
     }
 
     &:disabled {
-        background-color: var(--fd-button-background-disabled, var(--fd-button-background-default));
+        background: var(--fd-button-background-disabled, var(--fd-button-background-default));
         border-color: var(--fd-button-border-disabled, var(--fd-button-border-default));
         color: var(--fd-button-text-disabled, var(--fd-button-text-default));
         box-shadow: var(--fd-button-shadow-disabled, none);
@@ -109,30 +109,21 @@
     }
 }
 
-/* Primary solid */
-
 .fd-ui-button--primary.fd-ui-button--solid {
-    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
+    --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    --fd-button-background-disabled: var(--fd-color-gray-300, #cbd5e1);
     border: none;
-    color: var(--fd-color-on-brand, var(--fd-color-white));
+    --fd-button-text-default: var(--fd-color-on-brand, var(--fd-color-white));
+    --fd-button-text-hover: var(--fd-color-on-brand, var(--fd-color-white));
+    --fd-button-text-active: var(--fd-color-on-brand, var(--fd-color-white));
+    --fd-button-text-disabled: var(--fd-color-surface-muted, var(--fd-color-slate-50));
     --fd-button-border-width: 0;
     --fd-button-shadow-default: 0 10px 26px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
     --fd-button-shadow-hover: 0 12px 30px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.32);
     --fd-button-shadow-active: none;
     --fd-button-shadow-disabled: none;
-
-    &:hover:not(:disabled) {
-        background: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-    }
-
-    &:active:not(:disabled) {
-        background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-    }
-
-    &:disabled {
-        background: var(--fd-color-gray-300, #cbd5e1);
-        color: var(--fd-color-surface-muted, var(--fd-color-slate-50));
-    }
 }
 
 .fd-ui-button--appearance-toolbar {
@@ -254,16 +245,6 @@
     --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-ai-strong) 24%, transparent);
     --fd-button-shadow-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-ai-strong) 28%, transparent);
     --fd-button-shadow-active: none;
-    background: var(--fd-button-background-default);
-    color: var(--fd-button-text-default);
-
-    &:hover:not(:disabled) {
-        background: var(--fd-button-background-hover);
-    }
-
-    &:active:not(:disabled) {
-        background: var(--fd-button-background-active);
-    }
 }
 
 .fd-ui-button--primary.fd-ui-button--solid:has(.fd-ui-button__label:empty) {
@@ -281,8 +262,6 @@
     --fd-button-shadow-default: none;
 }
 
-/* Primary outline */
-
 .fd-ui-button--primary.fd-ui-button--outline,
 .fd-ui-button--outline:not(.fd-ui-button--secondary):not(.fd-ui-button--danger):not(.fd-ui-button--info) {
     --fd-button-background-default: var(--fd-button-outline-background-default);
@@ -296,8 +275,6 @@
     --fd-button-text-default: var(--fd-button-outline-text-default);
     --fd-button-text-disabled: var(--fd-button-outline-text-disabled);
 }
-
-/* Primary text / ghost */
 
 .fd-ui-button--primary.fd-ui-button--text,
 .fd-ui-button--ghost {
@@ -313,8 +290,6 @@
     --fd-button-text-disabled: var(--fd-button-ghost-text-disabled);
 }
 
-/* Secondary buttons (solid + outline) */
-
 .fd-ui-button--secondary:not(.fd-ui-button--text) {
     --fd-button-background-default: var(--fd-button-secondary-background-default);
     --fd-button-background-hover: var(--fd-button-secondary-background-hover);
@@ -327,8 +302,6 @@
     --fd-button-text-default: var(--fd-button-secondary-text-default);
     --fd-button-text-disabled: var(--fd-button-secondary-text-disabled);
 }
-
-/* Secondary text */
 
 .fd-ui-button--secondary.fd-ui-button--text {
     --fd-button-background-default: var(--fd-button-secondary-text-background-default);
@@ -343,8 +316,6 @@
     --fd-button-text-disabled: var(--fd-button-secondary-text-text-disabled);
 }
 
-/* Info solid */
-
 .fd-ui-button--info:not(.fd-ui-button--text) {
     --fd-button-background-default: var(--fd-button-info-background-default);
     --fd-button-background-hover: var(--fd-button-info-background-hover);
@@ -357,8 +328,6 @@
     --fd-button-text-default: var(--fd-button-info-text-default);
     --fd-button-text-disabled: var(--fd-button-info-text-disabled);
 }
-
-/* Info text */
 
 .fd-ui-button--info.fd-ui-button--text {
     --fd-button-background-default: var(--fd-button-info-text-background-default);
@@ -373,8 +342,6 @@
     --fd-button-text-disabled: var(--fd-button-info-text-text-disabled);
 }
 
-/* Danger solid */
-
 .fd-ui-button--danger.fd-ui-button--solid {
     --fd-button-background-default: var(--fd-button-danger-background-default);
     --fd-button-background-hover: var(--fd-button-danger-background-hover);
@@ -387,8 +354,6 @@
     --fd-button-text-default: var(--fd-button-danger-text-default);
     --fd-button-text-disabled: var(--fd-button-danger-text-disabled);
 }
-
-/* Danger outline */
 
 .fd-ui-button--danger.fd-ui-button--outline {
     --fd-button-background-default: var(--fd-button-danger-outline-background-default);
@@ -403,8 +368,6 @@
     --fd-button-text-disabled: var(--fd-button-danger-outline-text-disabled);
 }
 
-/* Danger text */
-
 .fd-ui-button--danger.fd-ui-button--text {
     --fd-button-background-default: var(--fd-button-danger-ghost-background-default);
     --fd-button-background-hover: var(--fd-button-danger-ghost-background-hover);
@@ -417,8 +380,6 @@
     --fd-button-text-default: var(--fd-button-danger-ghost-text-default);
     --fd-button-text-disabled: var(--fd-button-danger-ghost-text-disabled);
 }
-
-/* Size modifiers */
 
 .fd-ui-button--size-sm {
     --fd-button-height: 32px;
@@ -463,6 +424,3 @@
 .fd-ui-button--icon-xl {
     --fd-button-icon-size: 1.6rem;
 }
-
-
-
