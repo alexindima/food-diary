@@ -1,8 +1,8 @@
 ﻿import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -16,7 +16,7 @@ export interface FdUiSelectOption<T = unknown> {
 @Component({
     selector: 'fd-ui-select',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatMenuModule],
+    imports: [CommonModule, FdUiIconComponent, MatMenuModule],
     templateUrl: './fd-ui-select.component.html',
     styleUrls: ['./fd-ui-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

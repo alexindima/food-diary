@@ -81,7 +81,7 @@
                 @for (item of editItems(); track item.id; let i = $index) {
                     <div class="ai-photo-result__edit-row" cdkDrag>
                         <div class="ai-photo-result__edit-handle" cdkDragHandle>
-                            <mat-icon>drag_indicator</mat-icon>
+                            <fd-ui-icon name="drag_indicator"></fd-ui-icon>
                         </div>
                         <input
                             class="ai-photo-result__edit-input ai-photo-result__edit-input--name"
@@ -175,7 +175,7 @@
                 @if (showDetails()) {
                     <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="toggleDetails()">
                         <span>{{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}</span>
-                        <mat-icon>{{ isDetailsExpanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
+                        <fd-ui-icon [name]="isDetailsExpanded() ? 'expand_less' : 'expand_more'"></fd-ui-icon>
                     </fd-ui-button>
                 } @else {
                     <span></span>
@@ -243,7 +243,7 @@
                                     <span class="ai-photo-result__satiety-title">{{ beforeMeta.label }}</span>
                                     <span class="ai-photo-result__satiety-description">{{ beforeMeta.description }}</span>
                                 </div>
-                                <mat-icon>tune</mat-icon>
+                                <fd-ui-icon name="tune"></fd-ui-icon>
                             </button>
                         </div>
 
@@ -263,7 +263,7 @@
                                     <span class="ai-photo-result__satiety-title">{{ afterMeta.label }}</span>
                                     <span class="ai-photo-result__satiety-description">{{ afterMeta.description }}</span>
                                 </div>
-                                <mat-icon>tune</mat-icon>
+                                <fd-ui-icon name="tune"></fd-ui-icon>
                             </button>
                         </div>
                     </div>

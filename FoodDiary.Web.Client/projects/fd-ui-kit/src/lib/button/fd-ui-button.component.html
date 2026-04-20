@@ -1,6 +1,6 @@
 <button [attr.type]="type()" [disabled]="disabled()" [ngClass]="classes()" [attr.aria-label]="ariaLabel() || null">
     @if (icon()) {
-        <mat-icon class="fd-ui-button__icon" aria-hidden="true">{{ icon() }}</mat-icon>
+        <fd-ui-icon class="fd-ui-button__icon" [name]="icon()!"></fd-ui-icon>
     }
     <span class="fd-ui-button__label">
         <ng-content />

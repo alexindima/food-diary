@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
@@ -31,7 +31,7 @@ import { Recipe } from '../../../recipes/models/recipe.data';
         FdUiButtonComponent,
         FdUiInputComponent,
         FdUiPaginationComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,

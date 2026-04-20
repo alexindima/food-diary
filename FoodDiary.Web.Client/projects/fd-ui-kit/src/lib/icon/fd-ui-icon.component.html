@@ -1,0 +1,5 @@
+@if (fontSet(); as fontSetValue) {
+    <mat-icon class="fd-ui-icon__glyph" [fontSet]="fontSetValue">{{ name() }}</mat-icon>
+} @else {
+    <mat-icon class="fd-ui-icon__glyph">{{ name() }}</mat-icon>
+}

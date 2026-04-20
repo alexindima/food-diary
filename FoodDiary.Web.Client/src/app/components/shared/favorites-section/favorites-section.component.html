@@ -1,10 +1,10 @@
 <div class="fd-favorites-section">
     <button type="button" class="fd-favorites-section__header" (click)="onToggle()">
         <span class="fd-favorites-section__title-group">
-            <mat-icon class="fd-favorites-section__star">star</mat-icon>
+            <fd-ui-icon class="fd-favorites-section__star" name="star"></fd-ui-icon>
             <span>{{ title() }} ({{ count() }})</span>
         </span>
-        <mat-icon class="fd-favorites-section__chevron" [class.is-open]="isOpen()">expand_more</mat-icon>
+        <fd-ui-icon class="fd-favorites-section__chevron" name="expand_more" [class.is-open]="isOpen()"></fd-ui-icon>
     </button>
 
     @if (isOpen()) {

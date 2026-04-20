@@ -38,7 +38,7 @@
             <fd-ui-loader />
         } @else if (facade.lessons().length === 0) {
             <div class="lessons-list__empty">
-                <mat-icon fontIcon="school"></mat-icon>
+                <fd-ui-icon name="school" size="xl" />
                 <span>{{ 'LESSONS.EMPTY' | translate }}</span>
             </div>
         } @else {
@@ -56,7 +56,7 @@
                         <div class="lesson-card__top">
                             <span class="lesson-card__category">{{ 'LESSONS.CATEGORY.' + lesson.category | translate }}</span>
                             @if (lesson.isRead) {
-                                <mat-icon class="lesson-card__check" fontIcon="check_circle"></mat-icon>
+                                <fd-ui-icon class="lesson-card__check" name="check_circle" />
                             }
                         </div>
                         <h3 class="lesson-card__title">{{ lesson.title }}</h3>

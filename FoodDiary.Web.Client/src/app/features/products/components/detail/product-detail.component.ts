@@ -3,7 +3,6 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
-import { MatIconModule } from '@angular/material/icon';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -37,7 +36,6 @@ import {
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
         BaseChartDirective,
-        MatIconModule,
     ],
 })
 export class ProductDetailComponent {

@@ -3,12 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { distinctUntilChanged, map } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -34,8 +34,8 @@ import { ShoppingListFacade } from '../lib/shopping-list.facade';
         FormsModule,
         TranslatePipe,
         FdUiHintDirective,
-        MatIconModule,
         FdUiButtonComponent,
+        FdUiIconComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
         FdUiCheckboxComponent,

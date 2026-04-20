@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-nutrient-badges',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiIconModule],
+    imports: [CommonModule, TranslatePipe, FdUiIconComponent],
     templateUrl: './nutrient-badges.component.html',
     styleUrls: ['./nutrient-badges.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

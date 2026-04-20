@@ -20,7 +20,7 @@
         }
         @if (prefixIcon()) {
             <span class="fd-ui-input__prefix" aria-hidden="true">
-                <mat-icon>{{ prefixIcon() }}</mat-icon>
+                <fd-ui-icon [name]="prefixIcon()!"></fd-ui-icon>
             </span>
         }
         <input
@@ -50,7 +50,7 @@
                 [disabled]="disabled"
                 (click)="triggerSuffixButton()"
             >
-                <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
+                <fd-ui-icon [name]="suffixButtonIcon()!"></fd-ui-icon>
             </button>
         }
     </div>

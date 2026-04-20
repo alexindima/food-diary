@@ -184,6 +184,16 @@ Specialized numeric input for nutrition cards.
 
 ### Buttons
 
+#### `fd-ui-icon`
+Shared icon wrapper over Material icons.
+
+**Inputs**
+- `name: string`
+- `size?: 'sm' | 'md' | 'lg' | 'xl' | number`
+- `decorative?: boolean` (default `true`)
+- `ariaLabel?: string | null`
+- `fontSet?: string | null`
+
 #### `fd-ui-button`
 Primary button component.
 

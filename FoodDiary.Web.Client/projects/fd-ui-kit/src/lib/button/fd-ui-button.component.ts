@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-ui-button',
     standalone: true,
-    imports: [CommonModule, MatIconModule],
+    imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-button.component.html',
     styleUrls: ['./fd-ui-button.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

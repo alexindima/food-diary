@@ -116,7 +116,7 @@
             background 0.2s ease,
             color 0.2s ease;
 
-        mat-icon {
+        fd-ui-icon {
             font-size: 20px;
             color: var(--fd-color-primary-600);
         }
@@ -131,7 +131,7 @@
             color: var(--fd-color-on-brand, var(--fd-color-white));
             box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
 
-            mat-icon {
+            fd-ui-icon {
                 color: var(--fd-color-on-brand, var(--fd-color-white));
             }
         }
@@ -139,7 +139,7 @@
         &--admin {
             color: var(--fd-color-red-700);
 
-            mat-icon {
+            fd-ui-icon {
                 color: var(--fd-color-red-600);
             }
 
@@ -170,7 +170,7 @@
         cursor: pointer;
         letter-spacing: 0.01em;
 
-        mat-icon {
+        fd-ui-icon {
             transition: transform 0.2s ease;
 
             &.is-open {
@@ -193,7 +193,7 @@
         padding: 8px 10px;
         font-weight: 600;
 
-        mat-icon {
+        fd-ui-icon {
             font-size: 18px;
         }
     }
@@ -364,7 +364,7 @@
             transform 0.15s ease,
             box-shadow 0.15s ease;
 
-        mat-icon {
+        fd-ui-icon {
             font-size: 18px;
             color: var(--fd-color-primary-600);
         }
@@ -381,7 +381,7 @@
             border-color: transparent;
             box-shadow: none;
 
-            mat-icon {
+            fd-ui-icon {
                 color: var(--fd-color-on-brand, var(--fd-color-white));
             }
         }
@@ -499,7 +499,7 @@
             color 0.2s ease,
             transform 0.2s ease;
 
-        mat-icon {
+        fd-ui-icon {
             font-size: 22px;
             color: var(--fd-color-primary-600);
         }

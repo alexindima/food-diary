@@ -28,7 +28,7 @@
                     [attr.id]="'features-tab-' + category.key"
                     (click)="selectCategory(category.key)"
                 >
-                    <mat-icon aria-hidden="true">{{ category.icon }}</mat-icon>
+                    <fd-ui-icon [name]="category.icon" size="md" />
                     <span>{{ 'FEATURES.CATEGORIES.' + category.key + '.LABEL' | translate }}</span>
                 </button>
             }

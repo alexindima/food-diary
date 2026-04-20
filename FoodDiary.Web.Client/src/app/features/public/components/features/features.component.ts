@@ -1,10 +1,10 @@
 import { Component, computed, signal } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-features',
-    imports: [TranslateModule, MatIconModule],
+    imports: [TranslateModule, FdUiIconComponent],
     templateUrl: './features.component.html',
     styleUrl: './features.component.scss',
 })

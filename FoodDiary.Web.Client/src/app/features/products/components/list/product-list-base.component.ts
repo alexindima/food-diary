@@ -12,7 +12,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
@@ -48,7 +48,7 @@ import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } fro
         FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         FavoritesSectionComponent,
         PageHeaderComponent,
         PageBodyComponent,

@@ -1,5 +1,5 @@
 <div class="fd-ui-inline-alert__icon" aria-hidden="true">
-    <mat-icon>{{ iconName() }}</mat-icon>
+    <fd-ui-icon [name]="iconName()"></fd-ui-icon>
 </div>
 
 <div class="fd-ui-inline-alert__content">
@@ -30,6 +30,6 @@
 
 @if (dismissible()) {
     <button type="button" class="fd-ui-inline-alert__dismiss" (click)="dismiss.emit()">
-        <mat-icon>close</mat-icon>
+        <fd-ui-icon name="close"></fd-ui-icon>
     </button>
 }

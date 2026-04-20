@@ -7,7 +7,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
@@ -44,7 +44,7 @@ import { RecipeListFacade } from '../../lib/recipe-list.facade';
         SkeletonCardComponent,
         ErrorStateComponent,
         FavoritesSectionComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

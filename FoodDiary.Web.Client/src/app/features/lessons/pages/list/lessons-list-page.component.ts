@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -18,7 +18,7 @@ import { LESSON_CATEGORIES } from '../../models/lesson.data';
         CommonModule,
         TranslatePipe,
         FdUiButtonComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         FdUiLoaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

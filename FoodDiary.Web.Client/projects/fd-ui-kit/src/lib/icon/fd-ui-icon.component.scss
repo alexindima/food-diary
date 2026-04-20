@@ -1,0 +1,17 @@
+:host {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: inherit;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.fd-ui-icon__glyph {
+    width: 1em;
+    height: 1em;
+    font-size: var(--fd-icon-size, 1em);
+    line-height: 1;
+    color: inherit;
+}

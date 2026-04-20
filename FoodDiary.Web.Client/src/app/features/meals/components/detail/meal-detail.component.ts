@@ -18,7 +18,6 @@ import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'fd-meal-detail',
@@ -36,7 +35,6 @@ import { MatIconModule } from '@angular/material/icon';
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
         BaseChartDirective,
-        MatIconModule,
     ],
 })
 export class MealDetailComponent {

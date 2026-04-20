@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { Recipe, RecipeFilters } from '../models/recipe.data';
@@ -17,6 +16,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -31,7 +31,7 @@ import { RecipeManageComponent } from '../components/manage/recipe-manage.compon
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         FdUiInputComponent,
     ],
 })

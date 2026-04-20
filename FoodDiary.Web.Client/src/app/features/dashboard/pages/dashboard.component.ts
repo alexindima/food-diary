@@ -8,7 +8,6 @@ import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from '
 import { FdUiInputFieldModule } from 'fd-ui-kit/material';
 import { FdUiFormFieldModule } from 'fd-ui-kit/material';
 import { FdUiNativeDateModule } from 'fd-ui-kit/material';
-import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
@@ -51,7 +50,6 @@ import {
         FdUiInputFieldModule,
         FdUiFormFieldModule,
         FdUiNativeDateModule,
-        FdUiIconModule,
         PageBodyComponent,
         FdPageContainerDirective,
         LocalizedDatePipe,

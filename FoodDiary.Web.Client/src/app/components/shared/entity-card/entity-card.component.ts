@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 import { MediaCardComponent } from '../media-card/media-card.component';
 import { QualityGrade } from '../../../features/products/models/product.data';
@@ -31,7 +31,7 @@ export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         NutrientBadgesComponent,
         MediaCardComponent,
     ],

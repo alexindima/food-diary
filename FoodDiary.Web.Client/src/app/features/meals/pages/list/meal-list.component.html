@@ -160,7 +160,7 @@
         } @else {
             @if (isEmptyState()) {
                 <div class="consumption-list__empty-state">
-                    <mat-icon class="consumption-list__no-results-icon">restaurant_menu</mat-icon>
+                    <fd-ui-icon class="consumption-list__no-results-icon" name="restaurant_menu" size="xl" />
                     <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
                     <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.EMPTY_COPY' | translate }}</div>
                     <fd-ui-button icon="add" variant="primary" fill="solid" (click)="goToMealAdd()">
@@ -169,7 +169,7 @@
                 </div>
             } @else if (isNoResultsState()) {
                 <div class="consumption-list__no-results">
-                    <mat-icon class="consumption-list__no-results-icon">search_off</mat-icon>
+                    <fd-ui-icon class="consumption-list__no-results-icon" name="search_off" size="xl" />
                     <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.NO_RESULTS_TITLE' | translate }}</div>
                     <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>

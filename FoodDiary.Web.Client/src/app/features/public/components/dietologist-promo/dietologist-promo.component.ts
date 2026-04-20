@@ -1,12 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-dietologist-promo',
-    imports: [TranslateModule, FdUiButtonComponent, MatIconModule],
+    imports: [TranslateModule, FdUiButtonComponent, FdUiIconComponent],
     templateUrl: './dietologist-promo.component.html',
     styleUrl: './dietologist-promo.component.scss',
 })

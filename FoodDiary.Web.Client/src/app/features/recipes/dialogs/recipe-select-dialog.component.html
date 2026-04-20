@@ -44,7 +44,7 @@
                             @if (resolveImage(recipe)) {
                                 <img [src]="resolveImage(recipe)" [alt]="recipe.name" />
                             } @else {
-                                <mat-icon>restaurant</mat-icon>
+                                <fd-ui-icon name="restaurant" />
                             }
                         </div>
                         <div class="recipe-select__info">
@@ -72,7 +72,7 @@
             </div>
         } @else {
             <div class="recipe-select__no-results">
-                <mat-icon class="recipe-select__no-results-icon">search_off</mat-icon>
+                <fd-ui-icon class="recipe-select__no-results-icon" name="search_off" size="lg" />
                 {{ 'RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND' | translate }}
             </div>
         }

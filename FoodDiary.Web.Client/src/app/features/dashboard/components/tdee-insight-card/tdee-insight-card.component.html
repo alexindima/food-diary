@@ -1,14 +1,14 @@
 <div class="tdee-card" [class.tdee-card--loading]="isLoading()">
     <div class="tdee-card__header">
         <div class="tdee-card__icon">
-            <mat-icon fontIcon="local_fire_department"></mat-icon>
+            <fd-ui-icon name="local_fire_department"></fd-ui-icon>
         </div>
         <div class="tdee-card__title">{{ 'TDEE_CARD.TITLE' | translate }}</div>
     </div>
     <div class="tdee-card__body">
         @if (isLoading()) {
             <div class="tdee-card__loading">
-                <mat-icon fontIcon="hourglass_empty"></mat-icon>
+                <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
                 <span>{{ 'TDEE_CARD.LOADING' | translate }}</span>
             </div>
         } @else if (effectiveTdee()) {
@@ -20,7 +20,7 @@
 
                 @if (confidenceLabel()) {
                     <div class="tdee-card__confidence tdee-card__confidence--{{ confidenceClass() }}">
-                        <mat-icon fontIcon="verified"></mat-icon>
+                        <fd-ui-icon name="verified"></fd-ui-icon>
                         <span>{{ confidenceLabel()! | translate }}</span>
                     </div>
                 }
@@ -50,7 +50,7 @@
 
                 @if (hintKey()) {
                     <div class="tdee-card__hint">
-                        <mat-icon fontIcon="tips_and_updates"></mat-icon>
+                        <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
                         <span>{{ hintKey()! | translate }}</span>
                     </div>
                 }

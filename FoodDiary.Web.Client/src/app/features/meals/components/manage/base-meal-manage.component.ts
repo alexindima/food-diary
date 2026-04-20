@@ -12,11 +12,11 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NutrientData } from '../../../../shared/models/charts.data';
+import { FdUiIconComponent } from 'fd-ui-kit';
 import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -73,11 +73,11 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         FdUiCardComponent,
+        FdUiIconComponent,
         FdUiDateInputComponent,
         FdUiTimeInputComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
-        FdUiIconModule,
         ManageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,

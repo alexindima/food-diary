@@ -2,12 +2,12 @@
     <div class="notifications-dialog__body">
         @if (isLoading()) {
             <div class="notifications-dialog__state">
-                <mat-icon>hourglass_top</mat-icon>
+                <fd-ui-icon name="hourglass_top"></fd-ui-icon>
                 <p>{{ 'COMMON.LOADING' | translate }}</p>
             </div>
         } @else if (notifications().length === 0) {
             <div class="notifications-dialog__state notifications-dialog__state--empty">
-                <mat-icon>notifications_none</mat-icon>
+                <fd-ui-icon name="notifications_none"></fd-ui-icon>
                 <p class="notifications-dialog__state-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
                 <p class="notifications-dialog__state-text">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
             </div>
@@ -26,7 +26,7 @@
                             class="notifications-dialog__item-icon"
                             [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
                         >
-                            <mat-icon>{{ getNotificationIcon(notification) }}</mat-icon>
+                            <fd-ui-icon [name]="getNotificationIcon(notification)"></fd-ui-icon>
                         </span>
                         <div class="notifications-dialog__item-content">
                             <div class="notifications-dialog__item-head">

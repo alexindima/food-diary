@@ -30,7 +30,7 @@
             <fd-ui-loader />
         } @else if (facade.plans().length === 0) {
             <div class="meal-plans-list__empty">
-                <mat-icon fontIcon="restaurant_menu"></mat-icon>
+                <fd-ui-icon name="restaurant_menu" size="xl" />
                 <span>{{ 'MEAL_PLANS.EMPTY' | translate }}</span>
             </div>
         } @else {
@@ -58,7 +58,7 @@
                         </div>
                         @if (plan.isCurated) {
                             <div class="meal-plan-card__curated">
-                                <mat-icon fontIcon="verified"></mat-icon>
+                                <fd-ui-icon name="verified" size="sm" />
                                 {{ 'MEAL_PLANS.CURATED' | translate }}
                             </div>
                         }

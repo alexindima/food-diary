@@ -1,7 +1,7 @@
 import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -15,7 +15,7 @@ import { GamificationFacade } from '../lib/gamification.facade';
     imports: [
         UpperCasePipe,
         TranslatePipe,
-        MatIconModule,
+        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import {
@@ -38,7 +36,7 @@ type EditChangeSummary = {
 @Component({
     selector: 'fd-ai-photo-result',
     standalone: true,
-    imports: [TranslatePipe, MatIconModule, FdUiHintDirective, FdUiButtonComponent, DragDropModule],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, DragDropModule],
     templateUrl: './ai-photo-result.component.html',
     styleUrls: ['./ai-photo-result.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -13,7 +13,7 @@
     text-align: center;
     color: var(--fd-color-slate-500);
 
-    mat-icon {
+    fd-ui-icon {
         font-size: 2rem;
         width: 2rem;
         height: 2rem;
@@ -141,7 +141,7 @@
     background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
     color: var(--fd-color-primary-600);
 
-    mat-icon {
+    fd-ui-icon {
         font-size: 1.2rem;
         width: 1.2rem;
         height: 1.2rem;

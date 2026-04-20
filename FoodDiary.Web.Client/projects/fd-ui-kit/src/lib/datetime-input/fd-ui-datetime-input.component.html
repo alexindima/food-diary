@@ -24,7 +24,7 @@
                     [disabled]="disabled"
                 />
                 <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled" (click)="openDatePicker(picker)">
-                    <mat-icon>calendar_today</mat-icon>
+                    <fd-ui-icon name="calendar_today"></fd-ui-icon>
                 </button>
             </div>
             <div class="fd-ui-datetime-input__divider" aria-hidden="true"></div>
@@ -42,7 +42,7 @@
                     (blur)="onTimeBlur()"
                 />
                 <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled" (click)="focusTimeInput(timeInput)">
-                    <mat-icon>schedule</mat-icon>
+                    <fd-ui-icon name="schedule"></fd-ui-icon>
                 </button>
             </div>
         </div>

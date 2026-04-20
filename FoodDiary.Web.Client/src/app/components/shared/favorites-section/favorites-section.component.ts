@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-favorites-section',
@@ -8,7 +7,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
     templateUrl: './favorites-section.component.html',
     styleUrl: './favorites-section.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIconModule, FdUiButtonComponent],
+    imports: [FdUiIconComponent, FdUiButtonComponent],
 })
 export class FavoritesSectionComponent {
     public readonly title = input.required<string>();

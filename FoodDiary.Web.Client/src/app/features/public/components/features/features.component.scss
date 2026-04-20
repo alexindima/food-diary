@@ -104,12 +104,6 @@
             box-shadow 0.2s ease,
             background 0.2s ease;
 
-        mat-icon {
-            font-size: 20px;
-            width: 20px;
-            height: 20px;
-        }
-
         &:hover {
             transform: translateY(-1px);
             border-color: color-mix(in srgb, var(--fd-color-primary-600) 45%, transparent);

@@ -36,7 +36,7 @@
                     <h3 class="dietologist-promo__card-title">{{ 'LANDING_DIETOLOGIST.CARD.TITLE' | translate }}</h3>
                 </div>
                 <div class="dietologist-promo__status">
-                    <mat-icon aria-hidden="true">verified_user</mat-icon>
+                    <fd-ui-icon name="verified_user"></fd-ui-icon>
                     <span>{{ 'LANDING_DIETOLOGIST.CARD.STATUS' | translate }}</span>
                 </div>
             </div>
@@ -47,14 +47,14 @@
             <div class="dietologist-promo__permission-list">
                 @for (permissionKey of permissionKeys; track permissionKey) {
                     <div class="dietologist-promo__permission-chip">
-                        <mat-icon aria-hidden="true">check_circle</mat-icon>
+                        <fd-ui-icon name="check_circle"></fd-ui-icon>
                         <span>{{ 'LANDING_DIETOLOGIST.PERMISSIONS.' + permissionKey | translate }}</span>
                     </div>
                 }
             </div>
 
             <div class="dietologist-promo__note">
-                <mat-icon aria-hidden="true">tune</mat-icon>
+                <fd-ui-icon name="tune"></fd-ui-icon>
                 <span>{{ 'LANDING_DIETOLOGIST.NOTE' | translate }}</span>
             </div>
         </div>

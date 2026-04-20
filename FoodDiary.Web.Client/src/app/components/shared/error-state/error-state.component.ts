@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-error-state',
     standalone: true,
-    imports: [TranslatePipe, MatIconModule, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiIconComponent, FdUiButtonComponent],
     templateUrl: './error-state.component.html',
     styleUrl: './error-state.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

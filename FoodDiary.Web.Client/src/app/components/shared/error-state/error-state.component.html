@@ -1,5 +1,5 @@
 <div class="fd-error-state">
-    <mat-icon class="fd-error-state__icon" aria-hidden="true">{{ icon() }}</mat-icon>
+    <fd-ui-icon class="fd-error-state__icon" [name]="icon()"></fd-ui-icon>
     <div class="fd-error-state__title">{{ titleKey() | translate }}</div>
     <div class="fd-error-state__message">{{ messageKey() | translate }}</div>
     @if (showRetry()) {

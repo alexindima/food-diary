@@ -1,7 +1,7 @@
 ﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -10,7 +10,7 @@ export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
 @Component({
     selector: 'fd-ui-input',
     standalone: true,
-    imports: [CommonModule, MatIconModule],
+    imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-input.component.html',
     styleUrls: ['./fd-ui-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

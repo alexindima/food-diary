@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef,
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -13,7 +13,7 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-date-input',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatIconModule],
+    imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, FdUiIconComponent],
     templateUrl: './fd-ui-date-input.component.html',
     styleUrls: ['./fd-ui-date-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

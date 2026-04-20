@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
 import { LikeService } from '../../api/like.service';
 
 @Component({
@@ -10,7 +9,7 @@ import { LikeService } from '../../api/like.service';
     templateUrl: './like-button.component.html',
     styleUrls: ['./like-button.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconModule],
+    imports: [TranslatePipe, FdUiButtonComponent],
 })
 export class LikeButtonComponent {
     private readonly likeService = inject(LikeService);

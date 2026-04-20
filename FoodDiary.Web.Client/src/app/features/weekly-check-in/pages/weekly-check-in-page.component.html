@@ -14,7 +14,7 @@
                         [tinted]="true"
                     >
                         <div class="check-in__trend-row">
-                            <mat-icon [style.color]="getTrendColor(t.calorieChange)">{{ getTrendIcon(t.calorieChange) }}</mat-icon>
+                            <fd-ui-icon [style.color]="getTrendColor(t.calorieChange)" [name]="getTrendIcon(t.calorieChange)"></fd-ui-icon>
                             <div class="check-in__trend-info">
                                 <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.CALORIES' | translate }}</span>
                                 <strong class="check-in__trend-value"
@@ -31,7 +31,7 @@
                         [tinted]="true"
                     >
                         <div class="check-in__trend-row">
-                            <mat-icon [style.color]="getTrendColor(t.proteinChange)">{{ getTrendIcon(t.proteinChange) }}</mat-icon>
+                            <fd-ui-icon [style.color]="getTrendColor(t.proteinChange)" [name]="getTrendIcon(t.proteinChange)"></fd-ui-icon>
                             <div class="check-in__trend-info">
                                 <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.PROTEIN' | translate }}</span>
                                 <strong class="check-in__trend-value"
@@ -49,7 +49,10 @@
                             [tinted]="true"
                         >
                             <div class="check-in__trend-row">
-                                <mat-icon [style.color]="getTrendColor(t.weightChange, true)">{{ getTrendIcon(t.weightChange) }}</mat-icon>
+                                <fd-ui-icon
+                                    [style.color]="getTrendColor(t.weightChange, true)"
+                                    [name]="getTrendIcon(t.weightChange)"
+                                ></fd-ui-icon>
                                 <div class="check-in__trend-info">
                                     <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.WEIGHT' | translate }}</span>
                                     <strong class="check-in__trend-value"
@@ -67,7 +70,10 @@
                         [tinted]="true"
                     >
                         <div class="check-in__trend-row">
-                            <mat-icon [style.color]="getTrendColor(t.hydrationChange)">{{ getTrendIcon(t.hydrationChange) }}</mat-icon>
+                            <fd-ui-icon
+                                [style.color]="getTrendColor(t.hydrationChange)"
+                                [name]="getTrendIcon(t.hydrationChange)"
+                            ></fd-ui-icon>
                             <div class="check-in__trend-info">
                                 <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.HYDRATION' | translate }}</span>
                                 <strong class="check-in__trend-value"
@@ -119,7 +125,7 @@
                         <div class="check-in__suggestions">
                             @for (s of suggestions(); track s) {
                                 <div class="check-in__suggestion">
-                                    <mat-icon class="check-in__suggestion-icon">lightbulb</mat-icon>
+                                    <fd-ui-icon class="check-in__suggestion-icon" name="lightbulb"></fd-ui-icon>
                                     <span>{{ 'WEEKLY_CHECK_IN.' + s | translate }}</span>
                                 </div>
                             }

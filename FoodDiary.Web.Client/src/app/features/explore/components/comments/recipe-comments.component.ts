@@ -6,7 +6,6 @@ import { finalize } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -18,15 +17,7 @@ import { RecipeComment } from '../../models/comment.data';
     templateUrl: './recipe-comments.component.html',
     styleUrls: ['./recipe-comments.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ReactiveFormsModule,
-        TranslatePipe,
-        DatePipe,
-        FdUiButtonComponent,
-        FdUiTextareaComponent,
-        FdUiIconModule,
-        FdUiLoaderComponent,
-    ],
+    imports: [ReactiveFormsModule, TranslatePipe, DatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiLoaderComponent],
 })
 export class RecipeCommentsComponent {
     private readonly commentService = inject(CommentService);

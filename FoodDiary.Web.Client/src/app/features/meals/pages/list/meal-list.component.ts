@@ -9,8 +9,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { ExportService } from '../../api/export.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiIconModule } from 'fd-ui-kit/material';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -46,8 +45,7 @@ import { MealListFiltersDialogComponent, MealListFiltersDialogResult } from './m
         FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
-        FdUiIconModule,
-        MatIconModule,
+        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

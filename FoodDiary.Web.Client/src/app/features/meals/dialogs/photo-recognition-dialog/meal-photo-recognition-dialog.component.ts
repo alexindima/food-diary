@@ -11,8 +11,9 @@ import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import { MealAiSessionManageDto } from '../../models/meal.data';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef, FdUiIconModule } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { catchError, of } from 'rxjs';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 type PhotoAiDialogData = {
     initialSelection?: ImageSelection | null;
@@ -33,7 +34,7 @@ type PhotoAiDialogData = {
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
-        FdUiIconModule,
+        FdUiIconComponent,
         DragDropModule,
         ImageUploadFieldComponent,
     ],

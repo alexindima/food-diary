@@ -24,7 +24,7 @@
         @if (imageUrl(); as imageSrc) {
             <img [src]="imageSrc" [alt]="imageAlt()" />
         } @else {
-            <mat-icon [fontIcon]="imageIcon()"></mat-icon>
+            <fd-ui-icon [name]="imageIcon()" size="lg" />
         }
     </div>
 
@@ -48,9 +48,7 @@
                     />
                 }
                 @if (ownershipIcon(); as icon) {
-                    <mat-icon class="entity-card__visibility-icon">
-                        {{ icon }}
-                    </mat-icon>
+                    <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
                 }
                 <div class="entity-card__name">{{ title() }}</div>
                 @if (titleMuted(); as mutedTitle) {

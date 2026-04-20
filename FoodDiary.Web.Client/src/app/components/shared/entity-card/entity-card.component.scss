@@ -19,14 +19,6 @@
         display: block;
     }
 
-    mat-icon {
-        color: var(--fd-color-sky-500);
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
-        line-height: 1;
-    }
-
     &--previewable {
         cursor: zoom-in;
     }

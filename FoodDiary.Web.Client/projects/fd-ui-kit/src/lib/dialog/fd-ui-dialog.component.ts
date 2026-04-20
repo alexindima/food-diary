@@ -9,8 +9,8 @@ import {
     input,
     contentChild,
 } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 
 let nextDialogId = 0;
@@ -27,7 +27,7 @@ export interface FdUiDialogData {
 @Component({
     selector: 'fd-ui-dialog',
     standalone: true,
-    imports: [CommonModule, MatIconModule],
+    imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-dialog.component.html',
     styleUrls: ['./fd-ui-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

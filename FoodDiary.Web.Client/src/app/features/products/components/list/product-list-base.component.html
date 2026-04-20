@@ -223,7 +223,7 @@
                 </div>
             } @else if (isEmptyState()) {
                 <div class="product-list__empty-state">
-                    <mat-icon class="product-list__no-results-icon">inventory_2</mat-icon>
+                    <fd-ui-icon class="product-list__no-results-icon" name="inventory_2" size="xl" />
                     <div class="product-list__empty-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
                     <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
                     <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
@@ -232,7 +232,7 @@
                 </div>
             } @else {
                 <div class="product-list__no-results">
-                    <mat-icon class="product-list__no-results-icon">search_off</mat-icon>
+                    <fd-ui-icon class="product-list__no-results-icon" name="search_off" size="xl" />
                     <div class="product-list__empty-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
                     <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>
@@ -259,7 +259,7 @@
                                     <img class="product-list__off-image" [src]="offProduct.imageUrl" [alt]="offProduct.name" />
                                 } @else {
                                     <div class="product-list__off-image-placeholder">
-                                        <mat-icon>inventory_2</mat-icon>
+                                        <fd-ui-icon name="inventory_2" size="md" />
                                     </div>
                                 }
                                 <div class="product-list__off-info">
@@ -273,7 +273,7 @@
                                         </div>
                                     }
                                 </div>
-                                <mat-icon class="product-list__off-arrow">arrow_forward</mat-icon>
+                                <fd-ui-icon class="product-list__off-arrow" name="arrow_forward" size="md" />
                             </div>
                         }
                     </div>

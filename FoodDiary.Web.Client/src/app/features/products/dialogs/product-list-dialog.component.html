@@ -43,7 +43,7 @@
                             @if (resolveImage(product)) {
                                 <img [src]="resolveImage(product)" [alt]="product.name" />
                             } @else {
-                                <mat-icon>restaurant</mat-icon>
+                                <fd-ui-icon name="restaurant" />
                             }
                         </div>
                         <div class="product-select__info">
@@ -71,7 +71,7 @@
             </div>
         } @else {
             <div class="product-select__no-results">
-                <mat-icon class="product-select__no-results-icon">search_off</mat-icon>
+                <fd-ui-icon class="product-select__no-results-icon" name="search_off" size="lg" />
                 {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
             </div>
         }

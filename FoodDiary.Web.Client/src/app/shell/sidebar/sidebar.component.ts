@@ -2,12 +2,9 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
-import { FdUiIconModule } from 'fd-ui-kit/material';
-import { MatIconModule } from '@angular/material/icon';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { UserService } from '../../shared/api/user.service';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
@@ -24,16 +21,7 @@ import { NotificationsDialogComponent } from '../../components/shared/notificati
 
 @Component({
     selector: 'fd-sidebar',
-    imports: [
-        TranslateModule,
-        RouterModule,
-        FdUiHintDirective,
-        FdUiButtonComponent,
-        FdUiIconModule,
-        MatIconModule,
-        SlicePipe,
-        UpperCasePipe,
-    ],
+    imports: [TranslateModule, RouterModule, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, SlicePipe, UpperCasePipe],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })

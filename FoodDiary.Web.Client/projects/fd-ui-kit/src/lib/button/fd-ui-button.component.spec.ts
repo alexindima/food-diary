@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { MatIconModule } from '@angular/material/icon';
 import { FdUiButtonComponent } from './fd-ui-button.component';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 describe('FdUiButtonComponent', () => {
     let component: FdUiButtonComponent;
@@ -10,7 +10,7 @@ describe('FdUiButtonComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [FdUiButtonComponent, MatIconModule],
+            imports: [FdUiButtonComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiButtonComponent);
@@ -113,8 +113,8 @@ describe('FdUiButtonComponent', () => {
         fixture.componentRef.setInput('icon', 'add');
         fixture.detectChanges();
 
-        const icon = fixture.debugElement.query(By.css('mat-icon'));
+        const icon = fixture.debugElement.query(By.directive(FdUiIconComponent));
         expect(icon).toBeTruthy();
-        expect(icon.nativeElement.textContent.trim()).toBe('add');
+        expect((icon.componentInstance as FdUiIconComponent).name()).toBe('add');
     });
 });
