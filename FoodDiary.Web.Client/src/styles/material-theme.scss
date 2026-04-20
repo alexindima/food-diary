@@ -65,15 +65,11 @@ $fd-dark-theme: mat.define-theme(
 
 @mixin fd-material-component-theme($theme) {
     @include mat.core-theme($theme);
-    @include mat.input-theme($theme);
-    @include mat.datepicker-theme($theme);
     @include mat.dialog-theme($theme);
 }
 
 @mixin fd-material-component-colors($theme) {
     @include mat.core-color($theme);
-    @include mat.input-color($theme);
-    @include mat.datepicker-color($theme);
     @include mat.dialog-color($theme);
 }
 
@@ -93,12 +89,4 @@ html[data-theme='dark'] {
     @include fd-material-component-colors($fd-dark-theme);
     @include mat.system-level-colors($fd-dark-theme);
     @include mat.color-variants-backwards-compatibility($fd-dark-theme);
-}
-
-:root,
-html[data-theme='ocean'],
-html[data-theme='leaf'],
-html[data-theme='dark'] {
-    --mdc-outlined-text-field-container-height: 40px;
-    --mat-form-field-container-height: 40px;
 }

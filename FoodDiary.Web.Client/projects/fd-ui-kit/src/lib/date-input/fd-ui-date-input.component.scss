@@ -136,6 +136,10 @@
     display: block;
 }
 
+.fd-ui-date-input__panel {
+    display: inline-flex;
+}
+
 .fd-ui-date-input--has-error .fd-ui-date-input__control-wrap {
     border-color: var(--fd-color-danger);
 }

@@ -115,8 +115,18 @@ export interface FdUiSelectOption<T = unknown> {
 }
 ```
 
+#### `fd-ui-calendar`
+Inline calendar primitive for custom date pickers and date popovers.
+
+**Inputs**
+- `value?: Date | null`
+- `displayMonth?: Date | null`
+- `min?: Date | null`
+- `max?: Date | null`
+- `weekStartsOn?: 0 | 1`
+
 #### `fd-ui-date-input`
-Material datepicker input (value as `YYYY-MM-DD`).
+Date input (value as `YYYY-MM-DD`).
 
 **Inputs**
 - `label?: string`
@@ -159,6 +169,17 @@ Date range wrapper with two date inputs.
 ```ts
 export type FdUiDateRangeValue = { start: Date | null; end: Date | null };
 ```
+
+#### `fd-ui-date-picker-button`
+Compact date trigger with overlay calendar.
+
+**Inputs**
+- `value?: Date | null`
+- `min?: Date | null`
+- `max?: Date | null`
+- `ariaLabel?: string`
+- `hint?: string | null`
+- `icon?: string`
 
 #### `fd-ui-nutrient-input`
 Specialized numeric input for nutrition cards.

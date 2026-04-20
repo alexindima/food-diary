@@ -1,10 +1,8 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 
@@ -13,7 +11,7 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-datetime-input',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, FdUiIconComponent],
+    imports: [CommonModule, ReactiveFormsModule, FdUiDateInputComponent, FdUiIconComponent],
     templateUrl: './fd-ui-datetime-input.component.html',
     styleUrls: ['./fd-ui-datetime-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +32,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
 
-    protected readonly dateControl = new FormControl<Date | null>(null);
+    protected readonly dateControl = new FormControl<string | null>(null);
     protected timeValue = '';
     protected disabled = false;
     protected isFocused = false;
@@ -47,7 +45,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     private lastValidTime = '00:00';
 
     public constructor() {
-        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(date => this.emitValue(date));
+        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.emitValue());
     }
 
     protected get sizeClass(): string {
@@ -73,9 +71,11 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        this.dateControl.setValue(parsed, { emitEvent: false });
+        const isoDate = this.formatDate(parsed);
         const hours = this.padNumber(parsed.getHours());
         const minutes = this.padNumber(parsed.getMinutes());
+
+        this.dateControl.setValue(isoDate, { emitEvent: false });
         this.timeValue = `${hours}:${minutes}`;
         this.lastValidTime = this.timeValue;
     }
@@ -107,38 +107,34 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             this.timeValue = value;
             return;
         }
+
         this.timeValue = `${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`;
         this.lastValidTime = this.timeValue;
-        this.emitValue(this.dateControl.value);
+        this.emitValue();
     }
 
     protected onTimeBlur(): void {
         if (!this.timeValue) {
             this.lastValidTime = '00:00';
             this.timeValue = this.lastValidTime;
-            this.emitValue(this.dateControl.value);
+            this.emitValue();
         } else {
             const parsed = this.parseTime(this.timeValue);
             if (parsed) {
                 this.timeValue = `${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`;
                 this.lastValidTime = this.timeValue;
-                this.emitValue(this.dateControl.value);
+                this.emitValue();
             }
         }
-        this.onTouched();
-    }
 
-    protected openDatePicker(picker: MatDatepicker<Date>): void {
-        if (this.disabled) {
-            return;
-        }
-        picker.open();
+        this.onTouched();
     }
 
     protected focusTimeInput(input: HTMLInputElement): void {
         if (this.disabled) {
             return;
         }
+
         input.focus();
         input.showPicker?.();
     }
@@ -152,23 +148,20 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         if (active && this.host.nativeElement.contains(active)) {
             return;
         }
+
         this.isFocused = false;
         this.onTouched();
     }
 
-    private emitValue(date: Date | null): void {
+    private emitValue(): void {
+        const date = this.dateControl.value;
         if (!date) {
             this.onChange(null);
             return;
         }
 
         const time = this.parseTime(this.timeValue) ?? this.parseTime(this.lastValidTime) ?? { hours: 0, minutes: 0 };
-        const value = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.hours, time.minutes);
-        const formatted =
-            [value.getFullYear(), this.padNumber(value.getMonth() + 1), this.padNumber(value.getDate())].join('-') +
-            'T' +
-            `${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`;
-        this.onChange(formatted);
+        this.onChange(`${date}T${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`);
     }
 
     private parseTime(value: string): { hours: number; minutes: number } | null {
@@ -176,14 +169,17 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         if (!match) {
             return null;
         }
+
         const hours = Number(match[1]);
         const minutes = Number(match[2]);
         if (Number.isNaN(hours) || Number.isNaN(minutes)) {
             return null;
         }
+
         if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
             return null;
         }
+
         return { hours, minutes };
     }
 
@@ -193,12 +189,17 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             const date = new Date(value);
             return Number.isNaN(date.getTime()) ? null : date;
         }
+
         const year = Number(match[1]);
         const month = Number(match[2]);
         const day = Number(match[3]);
         const hours = Number(match[4]);
         const minutes = Number(match[5]);
         return new Date(year, month - 1, day, hours, minutes);
+    }
+
+    private formatDate(value: Date): string {
+        return [value.getFullYear(), this.padNumber(value.getMonth() + 1), this.padNumber(value.getDate())].join('-');
     }
 
     private padNumber(value: number): string {

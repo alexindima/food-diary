@@ -1,35 +1,52 @@
-import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepicker, MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
+import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
 
 @Component({
     selector: 'fd-ui-date-picker-button',
     standalone: true,
-    imports: [MatDatepickerModule, MatNativeDateModule, MatInputModule, FdUiHintDirective, FdUiButtonComponent],
+    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiHintDirective, FdUiButtonComponent, FdUiCalendarComponent],
     templateUrl: './fd-ui-date-picker-button.component.html',
     styleUrl: './fd-ui-date-picker-button.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiDatePickerButtonComponent {
     public readonly value = input<Date | null>(null);
+    public readonly min = input<Date | null>(null);
+    public readonly max = input<Date | null>(null);
     public readonly ariaLabel = input<string>('');
     public readonly hint = input<string | null>(null);
     public readonly icon = input('calendar_today');
 
     public readonly valueChange = output<Date>();
-
-    private readonly picker = viewChild.required(MatDatepicker<Date>);
+    protected readonly isOpen = signal(false);
+    protected readonly displayMonth = signal(this.value() ?? new Date());
 
     public open(): void {
-        this.picker().open();
+        this.displayMonth.set(this.value() ?? new Date());
+        this.isOpen.set(true);
     }
 
-    public onDateChange(event: MatDatepickerInputEvent<Date>): void {
-        if (event.value) {
-            this.valueChange.emit(event.value);
+    protected close(): void {
+        this.isOpen.set(false);
+    }
+
+    protected onCalendarSelect(value: Date): void {
+        this.valueChange.emit(value);
+        this.close();
+    }
+
+    protected onDisplayMonthChange(value: Date): void {
+        this.displayMonth.set(value);
+    }
+
+    protected onOverlayKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            this.close();
         }
     }
 }

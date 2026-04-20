@@ -1,0 +1,55 @@
+<div class="fd-ui-calendar">
+    <div class="fd-ui-calendar__header">
+        <fd-ui-button
+            appearance="plain-icon"
+            variant="secondary"
+            fill="text"
+            icon="chevron_left"
+            ariaLabel="Previous month"
+            (click)="showPreviousMonth()"
+        />
+
+        <div class="fd-ui-calendar__title">{{ monthLabel() }}</div>
+
+        <fd-ui-button
+            appearance="plain-icon"
+            variant="secondary"
+            fill="text"
+            icon="chevron_right"
+            ariaLabel="Next month"
+            (click)="showNextMonth()"
+        />
+    </div>
+
+    <div class="fd-ui-calendar__weekdays" aria-hidden="true">
+        @for (weekday of weekdayLabels(); track weekday) {
+            <span class="fd-ui-calendar__weekday">{{ weekday }}</span>
+        }
+    </div>
+
+    <div class="fd-ui-calendar__grid" role="grid">
+        @for (week of weeks(); track $index) {
+            <div class="fd-ui-calendar__week" role="row">
+                @for (cell of week; track cell.iso) {
+                    <button
+                        type="button"
+                        class="fd-ui-calendar__day"
+                        [class.fd-ui-calendar__day--outside]="!cell.isCurrentMonth"
+                        [class.fd-ui-calendar__day--today]="cell.isToday"
+                        [class.fd-ui-calendar__day--selected]="cell.isSelected"
+                        [class.fd-ui-calendar__day--active]="cell.isActive"
+                        [disabled]="cell.isDisabled"
+                        [attr.data-date]="cell.iso"
+                        [attr.tabindex]="cell.isActive ? 0 : -1"
+                        [attr.aria-selected]="cell.isSelected"
+                        role="gridcell"
+                        (click)="selectDate(cell.date)"
+                        (keydown)="onCellKeydown($event, cell.date)"
+                    >
+                        {{ cell.label }}
+                    </button>
+                }
+            </div>
+        }
+    </div>
+</div>

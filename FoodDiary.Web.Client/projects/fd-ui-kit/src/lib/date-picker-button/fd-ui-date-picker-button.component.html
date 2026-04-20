@@ -1,7 +1,6 @@
-<input class="fd-ui-date-picker-button__input" [matDatepicker]="picker" [value]="value()" (dateChange)="onDateChange($event)" />
-<mat-datepicker #picker />
-
 <fd-ui-button
+    cdkOverlayOrigin
+    #origin="cdkOverlayOrigin"
     class="fd-ui-date-picker-button__trigger"
     appearance="toolbar"
     variant="secondary"
@@ -11,3 +10,30 @@
     [fdUiHint]="hint()"
     (click)="open()"
 />
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="isOpen()"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+    [cdkConnectedOverlayPositions]="[
+        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
+        { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 8 },
+        { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
+    ]"
+    (backdropClick)="close()"
+    (detach)="close()"
+    (overlayKeydown)="onOverlayKeydown($event)"
+>
+    <div class="fd-ui-date-picker-button__panel" tabindex="-1">
+        <fd-ui-calendar
+            [value]="value()"
+            [displayMonth]="displayMonth()"
+            [min]="min()"
+            [max]="max()"
+            (valueChange)="onCalendarSelect($event)"
+            (displayMonthChange)="onDisplayMonthChange($event)"
+        />
+    </div>
+</ng-template>

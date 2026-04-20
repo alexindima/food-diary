@@ -1,6 +1,6 @@
-﻿<div
+<div
     class="fd-ui-date-input"
-    [ngClass]="[sizeClass, error() ? 'fd-ui-date-input--has-error' : '', shouldFloatLabel ? 'fd-ui-date-input--floating' : '']"
+    [ngClass]="[sizeClass(), error() ? 'fd-ui-date-input--has-error' : '', shouldFloatLabel() ? 'fd-ui-date-input--floating' : '']"
 >
     <div class="fd-ui-date-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
         @if (label()) {
@@ -13,19 +13,50 @@
         }
         <div class="fd-ui-date-input__segment">
             <input
-                #dateInput
-                matInput
+                cdkOverlayOrigin
+                #origin="cdkOverlayOrigin"
                 class="fd-ui-date-input__control"
                 [id]="id()"
-                [matDatepicker]="picker"
-                [formControl]="dateControl"
-                [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+                [value]="displayValue()"
+                [disabled]="disabled()"
+                [readOnly]="true"
+                [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? null) : null"
                 [attr.aria-describedby]="error() ? id() + '-error' : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-expanded]="isOpen()"
+                [attr.aria-haspopup]="'dialog'"
+                (click)="openDatePicker()"
+                (keydown)="onInputKeydown($event)"
             />
-            <button type="button" class="fd-ui-date-input__suffix" [disabled]="disabled" (click)="openDatePicker(picker)">
+            <button type="button" class="fd-ui-date-input__suffix" [disabled]="disabled()" (click)="openDatePicker()">
                 <fd-ui-icon name="calendar_today"></fd-ui-icon>
             </button>
+
+            <ng-template
+                cdkConnectedOverlay
+                [cdkConnectedOverlayOrigin]="origin"
+                [cdkConnectedOverlayOpen]="isOpen()"
+                [cdkConnectedOverlayHasBackdrop]="true"
+                [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+                [cdkConnectedOverlayPositions]="[
+                    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
+                    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
+                ]"
+                (backdropClick)="closeDatePicker()"
+                (detach)="closeDatePicker()"
+                (overlayKeydown)="onOverlayKeydown($event)"
+            >
+                <div class="fd-ui-date-input__panel" tabindex="-1">
+                    <fd-ui-calendar
+                        [value]="value()"
+                        [displayMonth]="displayMonth()"
+                        [min]="minDate"
+                        [max]="maxDate"
+                        (valueChange)="onDateSelect($event)"
+                        (displayMonthChange)="onDisplayMonthChange($event)"
+                    />
+                </div>
+            </ng-template>
         </div>
     </div>
 
@@ -33,4 +64,3 @@
         <div class="fd-ui-date-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
     }
 </div>
-<mat-datepicker #picker (closed)="dateControl.markAsTouched()" />

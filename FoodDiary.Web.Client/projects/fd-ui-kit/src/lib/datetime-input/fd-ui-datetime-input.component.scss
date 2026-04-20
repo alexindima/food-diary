@@ -101,6 +101,35 @@
     padding: 0 40px 0 14px;
 }
 
+.fd-ui-datetime-input__segment--date {
+    padding: 0;
+}
+
+.fd-ui-datetime-input__segment--date fd-ui-date-input {
+    width: 100%;
+}
+
+.fd-ui-datetime-input__segment--date .fd-ui-date-input {
+    gap: 0;
+}
+
+.fd-ui-datetime-input__segment--date .fd-ui-date-input__control-wrap {
+    height: var(--fd-datetime-height);
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.fd-ui-datetime-input__segment--date .fd-ui-date-input__control-wrap:focus-within {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.fd-ui-datetime-input__segment--date .fd-ui-date-input__segment {
+    padding: 0 40px 0 14px;
+}
+
 .fd-ui-datetime-input__segment:first-child {
     padding-right: 40px;
 }

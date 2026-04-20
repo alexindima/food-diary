@@ -1,0 +1,106 @@
+:host {
+    display: block;
+}
+
+.fd-ui-calendar {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 18rem;
+    padding: 0.75rem;
+    border: 1px solid var(--fd-color-border-strong, rgba(255, 255, 255, 0.1));
+    border-radius: 1rem;
+    background: var(--fd-color-surface-2, #23262f);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.fd-ui-calendar__header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fd-ui-calendar__title {
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--fd-color-text-primary, #fff);
+    text-transform: capitalize;
+}
+
+.fd-ui-calendar__weekdays,
+.fd-ui-calendar__week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.25rem;
+}
+
+.fd-ui-calendar__weekday {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--fd-color-text-muted, rgba(255, 255, 255, 0.68));
+    text-transform: uppercase;
+}
+
+.fd-ui-calendar__grid {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.fd-ui-calendar__day {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    background: transparent;
+    color: var(--fd-color-text-primary, #fff);
+    font: inherit;
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease;
+
+    &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: var(--fd-color-brand-500, #4f8cff);
+        box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.22);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.35;
+    }
+}
+
+.fd-ui-calendar__day--outside {
+    color: var(--fd-color-text-dim, rgba(255, 255, 255, 0.38));
+}
+
+.fd-ui-calendar__day--today {
+    border-color: rgba(79, 140, 255, 0.28);
+}
+
+.fd-ui-calendar__day--selected {
+    background: linear-gradient(135deg, var(--fd-color-brand-500, #4f8cff), var(--fd-color-brand-400, #69a1ff));
+    border-color: transparent;
+    color: #fff;
+}
+
+.fd-ui-calendar__day--active:not(.fd-ui-calendar__day--selected) {
+    background: rgba(79, 140, 255, 0.1);
+    border-color: rgba(79, 140, 255, 0.18);
+}

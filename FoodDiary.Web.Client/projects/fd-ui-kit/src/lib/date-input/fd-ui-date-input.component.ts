@@ -1,10 +1,19 @@
-﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    LOCALE_ID,
+    computed,
+    forwardRef,
+    inject,
+    input,
+    signal,
+    ViewEncapsulation,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 
@@ -13,7 +22,7 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-date-input',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, FdUiIconComponent],
+    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiCalendarComponent, FdUiIconComponent],
     templateUrl: './fd-ui-date-input.component.html',
     styleUrls: ['./fd-ui-date-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,52 +36,47 @@ let uniqueId = 0;
     ],
 })
 export class FdUiDateInputComponent implements ControlValueAccessor {
+    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly locale = inject(LOCALE_ID);
+
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
+    public readonly min = input<string | Date | null>(null);
+    public readonly max = input<string | Date | null>(null);
 
-    protected readonly dateControl = new FormControl<Date | null>(null);
-    protected disabled = false;
-    protected isFocused = false;
+    protected readonly value = signal<Date | null>(null);
+    protected readonly isOpen = signal(false);
+    protected readonly displayMonth = signal(new Date());
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
 
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly host = inject(ElementRef<HTMLElement>);
+    protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || !!this.value());
+    protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && !this.value());
+    protected readonly displayValue = computed(() => {
+        const value = this.value();
+        if (!value) {
+            return '';
+        }
+
+        return new Intl.DateTimeFormat(this.locale, {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        }).format(value);
+    });
 
     private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor() {
-        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(date => this.emitValue(date));
-    }
-
-    protected get sizeClass(): string {
-        return `fd-ui-date-input--size-${this.size()}`;
-    }
-
-    protected get shouldFloatLabel(): boolean {
-        return this.isFocused || !!this.dateControl.value;
-    }
-
-    protected get shouldShowPlaceholder(): boolean {
-        return this.isFocused && !this.dateControl.value;
-    }
-
     public writeValue(value: string | Date | null): void {
-        if (!value) {
-            this.dateControl.setValue(null, { emitEvent: false });
-            return;
-        }
-
-        const parsed = typeof value === 'string' ? this.parseDateString(value) : value;
-        if (!parsed) {
-            this.dateControl.setValue(null, { emitEvent: false });
-            return;
-        }
-
-        this.dateControl.setValue(parsed, { emitEvent: false });
+        const parsed = this.parseDateValue(value);
+        this.value.set(parsed);
+        this.displayMonth.set(parsed ?? new Date());
     }
 
     public registerOnChange(fn: (value: string | null) => void): void {
@@ -84,23 +88,46 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.disabled.set(isDisabled);
         if (isDisabled) {
-            this.dateControl.disable({ emitEvent: false });
-        } else {
-            this.dateControl.enable({ emitEvent: false });
+            this.closeDatePicker();
         }
     }
 
-    protected openDatePicker(picker: MatDatepicker<Date>): void {
-        if (this.disabled) {
+    protected openDatePicker(): void {
+        if (this.disabled()) {
             return;
         }
-        picker.open();
+
+        this.displayMonth.set(this.value() ?? new Date());
+        this.isOpen.set(true);
+        this.isFocused.set(true);
+    }
+
+    protected closeDatePicker(): void {
+        if (!this.isOpen()) {
+            return;
+        }
+
+        this.isOpen.set(false);
+        this.isFocused.set(false);
+        this.onTouched();
+    }
+
+    protected onDateSelect(value: Date): void {
+        const normalized = this.stripTime(value);
+        this.value.set(normalized);
+        this.displayMonth.set(normalized);
+        this.onChange(this.formatIsoDate(normalized));
+        this.closeDatePicker();
+    }
+
+    protected onDisplayMonthChange(value: Date): void {
+        this.displayMonth.set(value);
     }
 
     protected onFocusIn(): void {
-        this.isFocused = true;
+        this.isFocused.set(true);
     }
 
     protected onFocusOut(): void {
@@ -108,33 +135,76 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         if (active && this.host.nativeElement.contains(active)) {
             return;
         }
-        this.isFocused = false;
-        this.onTouched();
-    }
 
-    private emitValue(date: Date | null): void {
-        if (!date) {
-            this.onChange(null);
+        if (this.isOpen()) {
             return;
         }
 
-        const formatted = [date.getFullYear(), this.padNumber(date.getMonth() + 1), this.padNumber(date.getDate())].join('-');
-        this.onChange(formatted);
+        this.isFocused.set(false);
+        this.onTouched();
     }
 
-    private parseDateString(value: string): Date | null {
-        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-        if (!match) {
-            const date = new Date(value);
-            return Number.isNaN(date.getTime()) ? null : date;
+    protected onInputKeydown(event: KeyboardEvent): void {
+        switch (event.key) {
+            case 'ArrowDown':
+            case 'Enter':
+            case ' ':
+                event.preventDefault();
+                this.openDatePicker();
+                break;
+            case 'Escape':
+                if (this.isOpen()) {
+                    event.preventDefault();
+                    this.closeDatePicker();
+                }
+                break;
         }
-        const year = Number(match[1]);
-        const month = Number(match[2]);
-        const day = Number(match[3]);
-        return new Date(year, month - 1, day);
     }
 
-    private padNumber(value: number): string {
-        return value.toString().padStart(2, '0');
+    protected onOverlayKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            this.closeDatePicker();
+        }
+    }
+
+    protected get minDate(): Date | null {
+        return this.parseDateValue(this.min());
+    }
+
+    protected get maxDate(): Date | null {
+        return this.parseDateValue(this.max());
+    }
+
+    private parseDateValue(value: string | Date | null | undefined): Date | null {
+        if (!value) {
+            return null;
+        }
+
+        if (value instanceof Date) {
+            return Number.isNaN(value.getTime()) ? null : this.stripTime(value);
+        }
+
+        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+            const year = Number(match[1]);
+            const month = Number(match[2]);
+            const day = Number(match[3]);
+            return new Date(year, month - 1, day);
+        }
+
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : this.stripTime(parsed);
+    }
+
+    private stripTime(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    private formatIsoDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 }

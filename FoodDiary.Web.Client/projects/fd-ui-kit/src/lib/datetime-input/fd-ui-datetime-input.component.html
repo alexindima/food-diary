@@ -1,4 +1,4 @@
-﻿<div
+<div
     class="fd-ui-datetime-input"
     [ngClass]="[sizeClass, error() ? 'fd-ui-datetime-input--has-error' : '', shouldFloatLabel ? 'fd-ui-datetime-input--floating' : '']"
 >
@@ -12,22 +12,17 @@
             </label>
         }
         <div class="fd-ui-datetime-input__fields">
-            <div class="fd-ui-datetime-input__segment">
-                <input
-                    #dateInput
-                    matInput
-                    class="fd-ui-datetime-input__control"
-                    [id]="id()"
-                    [matDatepicker]="picker"
+            <div class="fd-ui-datetime-input__segment fd-ui-datetime-input__segment--date">
+                <fd-ui-date-input
+                    [id]="id() + '-date'"
                     [formControl]="dateControl"
-                    [attr.placeholder]="shouldFloatLabel ? null : (placeholder() ?? null)"
-                    [disabled]="disabled"
+                    [placeholder]="shouldFloatLabel ? '' : (placeholder() ?? '')"
+                    [size]="size()"
                 />
-                <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled" (click)="openDatePicker(picker)">
-                    <fd-ui-icon name="calendar_today"></fd-ui-icon>
-                </button>
             </div>
+
             <div class="fd-ui-datetime-input__divider" aria-hidden="true"></div>
+
             <div class="fd-ui-datetime-input__segment">
                 <input
                     #timeInput
@@ -52,4 +47,3 @@
         <div class="fd-ui-datetime-input__error">{{ error() }}</div>
     }
 </div>
-<mat-datepicker #picker (closed)="dateControl.markAsTouched()" />

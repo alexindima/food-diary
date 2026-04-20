@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDateInputComponent } from './fd-ui-date-input.component';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { provideNativeDateAdapter } from '@angular/material/core';
 
 describe('FdUiDateInputComponent', () => {
     let component: FdUiDateInputComponent;
@@ -11,7 +9,6 @@ describe('FdUiDateInputComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiDateInputComponent],
-            providers: [provideNoopAnimations(), provideNativeDateAdapter()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiDateInputComponent);
@@ -59,30 +56,30 @@ describe('FdUiDateInputComponent', () => {
     it('should write value via CVA with string', () => {
         component.writeValue('2025-03-15');
 
-        const dateControl = component['dateControl'];
-        expect(dateControl.value).toBeTruthy();
-        expect(dateControl.value!.getFullYear()).toBe(2025);
-        expect(dateControl.value!.getMonth()).toBe(2); // March = 2 (zero-indexed)
-        expect(dateControl.value!.getDate()).toBe(15);
+        const dateValue = component['value']();
+        expect(dateValue).toBeTruthy();
+        expect(dateValue!.getFullYear()).toBe(2025);
+        expect(dateValue!.getMonth()).toBe(2);
+        expect(dateValue!.getDate()).toBe(15);
     });
 
     it('should write null value via CVA', () => {
         component.writeValue('2025-01-01');
-        expect(component['dateControl'].value).toBeTruthy();
+        expect(component['value']()).toBeTruthy();
 
         component.writeValue(null);
-        expect(component['dateControl'].value).toBeNull();
+        expect(component['value']()).toBeNull();
     });
 
     it('should write Date object via CVA', () => {
         const date = new Date(2025, 5, 20);
         component.writeValue(date);
 
-        const dateControl = component['dateControl'];
-        expect(dateControl.value).toBeTruthy();
-        expect(dateControl.value!.getFullYear()).toBe(2025);
-        expect(dateControl.value!.getMonth()).toBe(5);
-        expect(dateControl.value!.getDate()).toBe(20);
+        const dateValue = component['value']();
+        expect(dateValue).toBeTruthy();
+        expect(dateValue!.getFullYear()).toBe(2025);
+        expect(dateValue!.getMonth()).toBe(5);
+        expect(dateValue!.getDate()).toBe(20);
     });
 
     it('should display error', () => {
@@ -119,11 +116,10 @@ describe('FdUiDateInputComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBe(true);
-        expect(component['dateControl'].disabled).toBe(true);
+        expect(component['disabled']()).toBe(true);
 
-        const inputEl = fixture.nativeElement.querySelector('.fd-ui-date-input__control') as HTMLInputElement;
-        expect(inputEl.disabled).toBe(true);
+        const suffixButton = fixture.nativeElement.querySelector('.fd-ui-date-input__suffix') as HTMLButtonElement;
+        expect(suffixButton.disabled).toBe(true);
     });
 
     it('should re-enable after being disabled', () => {
@@ -131,28 +127,23 @@ describe('FdUiDateInputComponent', () => {
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBe(false);
-        expect(component['dateControl'].enabled).toBe(true);
+        expect(component['disabled']()).toBe(false);
     });
 
-    it('should call onChange with formatted date string when dateControl value changes', () => {
+    it('should call onChange with formatted date string when date is selected', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        component['dateControl'].setValue(new Date(2025, 2, 15));
+        component['onDateSelect'](new Date(2025, 2, 15));
 
         expect(onChangeSpy).toHaveBeenCalledWith('2025-03-15');
     });
 
-    it('should call onChange with null when dateControl is cleared', () => {
-        const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+    it('should display selected date value in the control', () => {
+        component.writeValue('2025-03-15');
+        fixture.detectChanges();
 
-        component['dateControl'].setValue(new Date(2025, 0, 1));
-        onChangeSpy.mockClear();
-
-        component['dateControl'].setValue(null);
-
-        expect(onChangeSpy).toHaveBeenCalledWith(null);
+        const inputEl = fixture.nativeElement.querySelector('.fd-ui-date-input__control') as HTMLInputElement;
+        expect(inputEl.value).toBeTruthy();
     });
 });
