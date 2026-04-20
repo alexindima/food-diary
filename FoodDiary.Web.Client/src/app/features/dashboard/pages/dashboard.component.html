@@ -64,7 +64,11 @@
             } @else {
                 @if (isTodaySelected() && !layout.isEditingLayout()) {
                     <section class="dashboard__quick-add" aria-label="Quick meal add">
-                        <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
+                        @defer (on idle) {
+                            <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
+                        } @placeholder {
+                            <div class="dashboard__quick-add-placeholder" aria-hidden="true"></div>
+                        }
                         <div class="dashboard__manual-add">
                             <span class="dashboard__manual-add-label">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
                             <fd-ui-button

@@ -11,7 +11,6 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { ProductDetailComponent, ProductDetailActionResult } from '../../components/detail/product-detail.component';
 import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
@@ -19,6 +18,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { Product } from '../../models/product.data';
+import type { ProductDetailActionResult } from '../../components/detail/product-detail.component';
 
 @Component({
     selector: 'fd-product-list-page',
@@ -49,8 +49,9 @@ export class ProductListPageComponent extends ProductListBaseComponent {
     private isDeleteInProgress = false;
 
     protected override async onProductClick(product: Product): Promise<void> {
+        const { ProductDetailComponent } = await import('../../components/detail/product-detail.component');
         this.fdDialogService
-            .open<ProductDetailComponent, Product, ProductDetailActionResult>(ProductDetailComponent, {
+            .open(ProductDetailComponent, {
                 size: 'lg',
                 data: product,
                 panelClass: 'fd-ui-dialog-panel--detail',
@@ -58,26 +59,27 @@ export class ProductListPageComponent extends ProductListBaseComponent {
             })
             .afterClosed()
             .subscribe(data => {
+                const result = data as ProductDetailActionResult | undefined;
                 this.loadFavorites();
                 this.reloadCurrentPage();
 
-                if (!data) {
+                if (!result) {
                     return;
                 }
 
-                if (data.action === 'Edit' || data.action === 'Duplicate') {
-                    void this.navigationService.navigateToProductEdit(data.id);
+                if (result.action === 'Edit' || result.action === 'Duplicate') {
+                    void this.navigationService.navigateToProductEdit(result.id);
                     return;
                 }
 
-                if (data.action === 'Delete') {
+                if (result.action === 'Delete') {
                     if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
                         return;
                     }
                     this.isDeleteInProgress = true;
                     this.productData.setLoading(true);
                     this.productService
-                        .deleteById(data.id)
+                        .deleteById(result.id)
                         .pipe(finalize(() => (this.isDeleteInProgress = false)))
                         .subscribe({
                             next: () => {

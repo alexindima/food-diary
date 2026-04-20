@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
@@ -28,6 +29,7 @@ import {
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [provideCharts(withDefaultRegisterables())],
     imports: [
         TranslatePipe,
         FdUiHintDirective,

@@ -15,7 +15,7 @@ import {
     ConsumptionManageSuccessDialogData,
     MealManageSuccessDialogComponent,
 } from '../dialogs/manage-success-dialog/meal-manage-success-dialog.component';
-import { MealPhotoRecognitionDialogComponent } from '../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
+import type { MealPhotoRecognitionDialogComponent } from '../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
 import {
     ItemSelectDialogComponent,
     ItemSelectDialogData,
@@ -91,6 +91,9 @@ export class MealManageFacade {
     }
 
     public async openAiPhotoSessionDialog(): Promise<ConsumptionAiSessionManageDto | null> {
+        const { MealPhotoRecognitionDialogComponent } =
+            await import('../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component');
+
         return (
             (await firstValueFrom(
                 this.fdDialogService
@@ -106,6 +109,8 @@ export class MealManageFacade {
     }
 
     public async openEditAiPhotoSessionDialog(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {
+        const { MealPhotoRecognitionDialogComponent } =
+            await import('../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component');
         const selection: ImageSelection | null = session.imageUrl
             ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
             : null;

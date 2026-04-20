@@ -31,6 +31,10 @@
         gap: variables.$gap-s;
     }
 
+    &__ai-placeholder {
+        min-height: 76px;
+    }
+
     &__manual-add {
         display: flex;
         flex-direction: row;

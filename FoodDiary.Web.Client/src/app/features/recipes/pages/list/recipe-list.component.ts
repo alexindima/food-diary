@@ -18,7 +18,6 @@ import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
-import { RecipeDetailActionResult, RecipeDetailComponent } from '../../components/detail/recipe-detail.component';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import {
@@ -28,6 +27,7 @@ import {
 import { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import { ViewportService } from '../../../../services/viewport.service';
+import type { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -151,8 +151,13 @@ export class RecipeListComponent {
     }
 
     public onRecipeClick(recipe: Recipe): void {
+        void this.openRecipeDetail(recipe);
+    }
+
+    private async openRecipeDetail(recipe: Recipe): Promise<void> {
+        const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail.component');
         this.fdDialogService
-            .open<RecipeDetailComponent, Recipe, RecipeDetailActionResult>(RecipeDetailComponent, {
+            .open(RecipeDetailComponent, {
                 size: 'lg',
                 data: recipe,
                 panelClass: 'fd-ui-dialog-panel--detail',
@@ -160,14 +165,15 @@ export class RecipeListComponent {
             })
             .afterClosed()
             .subscribe(result => {
+                const actionResult = result as RecipeDetailActionResult | undefined;
                 this.loadFavorites();
                 this.reloadCurrentPage();
 
-                if (!result) {
+                if (!actionResult) {
                     return;
                 }
                 void this.recipeListFacade.handleDetailAction(
-                    result,
+                    actionResult,
                     recipe,
                     this.searchForm.controls.search.value,
                     this.searchForm.controls.onlyMine.value,

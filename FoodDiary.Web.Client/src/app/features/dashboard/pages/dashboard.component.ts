@@ -9,7 +9,6 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { CalorieGoalDialogComponent } from '../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import { DashboardSummaryCardComponent } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
 import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
@@ -265,7 +264,8 @@ export class DashboardComponent {
         await this.navigationService.navigateToGoals();
     }
 
-    public openCalorieGoalDialog(): void {
+    public async openCalorieGoalDialog(): Promise<void> {
+        const { CalorieGoalDialogComponent } = await import('../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component');
         this.dialogService
             .open(CalorieGoalDialogComponent, {
                 size: 'sm',

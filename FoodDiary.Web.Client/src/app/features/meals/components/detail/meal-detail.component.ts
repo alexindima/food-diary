@@ -19,6 +19,7 @@ import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @Component({
     selector: 'fd-meal-detail',
@@ -26,7 +27,7 @@ import { FavoriteMealService } from '../../api/favorite-meal.service';
     templateUrl: './meal-detail.component.html',
     styleUrls: ['./meal-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [DatePipe],
+    providers: [DatePipe, provideCharts(withDefaultRegisterables())],
     imports: [
         TranslatePipe,
         FdUiHintDirective,

@@ -283,6 +283,10 @@ $color-text-secondary: var(--fd-color-text-muted);
         font-size: 0.95rem;
     }
 
+    &__quick-add-placeholder {
+        min-height: 76px;
+    }
+
     &__meal-list {
         display: flex;
         flex-direction: column;

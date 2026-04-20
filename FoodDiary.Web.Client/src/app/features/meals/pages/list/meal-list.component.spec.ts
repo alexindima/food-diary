@@ -198,10 +198,10 @@ describe('MealListComponent', () => {
         expect(march16Group!.items.length).toBe(1);
     });
 
-    it('should open meal details dialog', () => {
+    it('should open meal details dialog', async () => {
         const meal = createMockMeal();
 
-        component.openMealDetails(meal);
+        await component.openMealDetails(meal);
 
         expect(mockFdDialogService.open).toHaveBeenCalled();
     });

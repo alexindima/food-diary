@@ -17,7 +17,6 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
-import { NotificationsDialogComponent } from '../../components/shared/notifications-dialog/notifications-dialog.component';
 import { SidebarActionLinksComponent } from './sidebar-action-links.component';
 import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
 import { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
@@ -288,8 +287,10 @@ export class SidebarComponent {
         this.isUserMenuOpen.set(!this.isUserMenuOpen());
     }
 
-    protected openNotifications(): void {
-        this.dialogService.open<NotificationsDialogComponent, null, void>(NotificationsDialogComponent, {
+    protected async openNotifications(): Promise<void> {
+        const { NotificationsDialogComponent } =
+            await import('../../components/shared/notifications-dialog/notifications-dialog.component');
+        this.dialogService.open(NotificationsDialogComponent, {
             size: 'md',
         });
     }

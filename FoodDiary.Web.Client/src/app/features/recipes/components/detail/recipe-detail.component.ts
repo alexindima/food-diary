@@ -10,6 +10,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
@@ -26,6 +27,7 @@ import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
     templateUrl: './recipe-detail.component.html',
     styleUrls: ['./recipe-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [provideCharts(withDefaultRegisterables())],
     imports: [
         TranslatePipe,
         FdUiHintDirective,

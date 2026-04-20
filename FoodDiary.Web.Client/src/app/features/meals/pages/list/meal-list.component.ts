@@ -16,7 +16,7 @@ import { Observable, catchError, debounceTime, finalize, map, of, switchMap } fr
 
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
+import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
 import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
@@ -198,6 +198,8 @@ export class MealListComponent {
     }
 
     public async openMealDetails(consumption: Meal): Promise<void> {
+        const { MealDetailComponent } = await import('../../components/detail/meal-detail.component');
+
         this.fdDialogService
             .open<MealDetailComponent, Meal, MealDetailActionResult>(MealDetailComponent, {
                 size: 'lg',
