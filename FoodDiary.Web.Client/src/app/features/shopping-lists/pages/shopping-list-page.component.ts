@@ -1,10 +1,8 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { distinctUntilChanged, map } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -20,6 +18,7 @@ import {
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FormGroupControls } from '../../../shared/lib/common.data';
+import { ViewportService } from '../../../services/viewport.service';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListItem } from '../models/shopping-list.data';
 import { ShoppingListFacade } from '../lib/shopping-list.facade';
@@ -50,7 +49,7 @@ export class ShoppingListPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly viewportService = inject(ViewportService);
     private readonly facade = inject(ShoppingListFacade);
 
     public readonly list = this.facade.list;
@@ -58,7 +57,7 @@ export class ShoppingListPageComponent {
     public readonly isLoading = this.facade.isLoading;
     public readonly isSaving = this.facade.isSaving;
     public readonly lists = this.facade.lists;
-    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly isMobileView = this.viewportService.isMobile;
     public readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
     public readonly canDeleteList = computed(() => this.lists().length > 1 && !!this.list() && !this.isSaving() && !this.isLoading());
     public readonly canClearList = computed(
@@ -109,19 +108,11 @@ export class ShoppingListPageComponent {
             }
         });
 
-        this.breakpointObserver
-            .observe('(max-width: 768px)')
-            .pipe(
-                map(result => result.matches),
-                distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isMobile => {
-                this.isMobileView.set(isMobile);
-                if (!isMobile) {
-                    this.isMobileManageOpen.set(false);
-                }
-            });
+        effect(() => {
+            if (!this.isMobileView()) {
+                this.isMobileManageOpen.set(false);
+            }
+        });
 
         this.facade.initialize();
     }

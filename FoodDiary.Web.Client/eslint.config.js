@@ -425,6 +425,7 @@ export default [
         ignores: [
             'src/app/app.routes.ts',
             'src/app/features/**/*.routes.ts',
+            'src/app/services/viewport.service.ts',
             'src/app/**/*.spec.ts',
         ],
         rules: {
@@ -445,6 +446,10 @@ export default [
                         {
                             group: ['@angular/cdk/dialog', '@angular/cdk/overlay', '@angular/cdk/portal'],
                             message: 'Use fd-ui-kit dialog/menu/date primitives instead of low-level CDK overlay APIs in app code.',
+                        },
+                        {
+                            group: ['@angular/cdk/layout'],
+                            message: 'Use ViewportService instead of injecting BreakpointObserver directly in feature/app code.',
                         },
                         {
                             group: ['projects/fd-ui-kit/src/lib/**', 'fd-ui-kit/src/lib/**'],

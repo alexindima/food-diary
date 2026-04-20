@@ -29,6 +29,7 @@ Angular 21 SPA for nutrition tracking with a shared UI library and admin app.
 - **Native control flow** — `@if`, `@for`, `@switch` (never `*ngIf`, `*ngFor`)
 - **Import from fd-ui-kit** — `fd-ui-kit` or `fd-ui-kit/...` for shared UI components; never import `@angular/material` or deep-link into `projects/fd-ui-kit/src/lib/**`
 - **CDK boundary** — app/admin code may use `@angular/cdk/layout` and `@angular/cdk/drag-drop` directly, but overlay/dialog/portal primitives must stay behind `fd-ui-kit`
+- **Viewport boundary** — app feature code should use `ViewportService` for the shared mobile breakpoint instead of injecting `BreakpointObserver` directly
 
 ### State Management
 No NgRx. State via Angular Signals in services and components. `AuthService` holds auth state as signals. Feature services extend `ApiService` base class.

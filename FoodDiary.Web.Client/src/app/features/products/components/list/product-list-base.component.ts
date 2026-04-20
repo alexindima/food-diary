@@ -1,7 +1,6 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -25,6 +24,7 @@ import { ProductService } from '../../api/product.service';
 import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { FavoriteProduct, Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
+import { ViewportService } from '../../../../services/viewport.service';
 import { QuickMealService } from '../../../meals/lib/quick-meal.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
@@ -63,7 +63,7 @@ export class ProductListBaseComponent {
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly quickConsumptionService = inject(QuickMealService);
     protected readonly favoriteProductService = inject(FavoriteProductService);
-    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
 
@@ -78,7 +78,7 @@ export class ProductListBaseComponent {
     public readonly isFavoritesOpen = signal(false);
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
-    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasSearchValue = computed(() => !!this.searchForm.controls.search.value?.trim());
     public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts.length > 0);
     public readonly allProductsSectionItems = computed(() => {
@@ -114,19 +114,11 @@ export class ProductListBaseComponent {
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
 
-        this.breakpointObserver
-            .observe('(max-width: 768px)')
-            .pipe(
-                map(result => result.matches),
-                distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isMobile => {
-                this.isMobileView.set(isMobile);
-                if (!isMobile) {
-                    this.isMobileSearchOpen.set(false);
-                }
-            });
+        effect(() => {
+            if (!this.isMobileView()) {
+                this.isMobileSearchOpen.set(false);
+            }
+        });
 
         this.loadInitialOverview().subscribe();
 

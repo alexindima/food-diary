@@ -1,4 +1,3 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -13,7 +12,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, debounceTime, finalize, map, of, switchMap } from 'rxjs';
 
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
@@ -27,6 +26,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
+import { ViewportService } from '../../../../services/viewport.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { MealListFiltersDialogComponent, MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
@@ -62,7 +62,7 @@ export class MealListComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly exportService = inject(ExportService);
-    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly viewportService = inject(ViewportService);
 
     public searchForm: FormGroup<SearchFormGroup>;
     public consumptionData: PagedData<Meal> = new PagedData<Meal>();
@@ -73,7 +73,7 @@ export class MealListComponent {
     public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
     public readonly isFavoritesLoadingMore = signal(false);
-    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasDateFilter = computed(() => {
         const dateRange = this.searchForm.controls.dateRange.value;
         return !!dateRange?.start || !!dateRange?.end;
@@ -87,15 +87,6 @@ export class MealListComponent {
         this.searchForm = new FormGroup<SearchFormGroup>({
             dateRange: new FormControl<FdUiDateRangeValue | null>(null),
         });
-
-        this.breakpointObserver
-            .observe('(max-width: 768px)')
-            .pipe(
-                map(result => result.matches),
-                distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isMobile => this.isMobileView.set(isMobile));
 
         this.loadInitialOverview().subscribe();
 

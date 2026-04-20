@@ -1,6 +1,5 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -12,7 +11,7 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { debounceTime, distinctUntilChanged, finalize, map, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
@@ -28,6 +27,7 @@ import {
 } from '../../components/list/recipe-list-filters-dialog.component';
 import { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
+import { ViewportService } from '../../../../services/viewport.service';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -55,7 +55,7 @@ import { RecipeListFacade } from '../../lib/recipe-list.facade';
 export class RecipeListComponent {
     private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeListFacade = inject(RecipeListFacade);
     private readonly favoriteRecipeService = inject(FavoriteRecipeService);
@@ -72,7 +72,7 @@ export class RecipeListComponent {
     public readonly isFavoritesOpen = signal(false);
     public readonly isFavoritesLoadingMore = this.recipeListFacade.isFavoritesLoadingMore;
     public readonly errorKey = this.recipeListFacade.errorKey;
-    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    public readonly isMobileView = this.viewportService.isMobile;
     public readonly showRecentSection = computed(() => this.recipeListFacade.showRecentSection());
     public readonly recentRecipeItems = computed(() => this.recentRecipes());
     public readonly allRecipesSectionItems = computed(() => this.recipeListFacade.allRecipesSectionItems());
@@ -102,19 +102,11 @@ export class RecipeListComponent {
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
 
-        this.breakpointObserver
-            .observe('(max-width: 768px)')
-            .pipe(
-                map(result => result.matches),
-                distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isMobile => {
-                this.isMobileView.set(isMobile);
-                if (!isMobile) {
-                    this.isMobileSearchOpen.set(false);
-                }
-            });
+        effect(() => {
+            if (!this.isMobileView()) {
+                this.isMobileSearchOpen.set(false);
+            }
+        });
 
         this.recipeListFacade
             .loadInitialOverview(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
