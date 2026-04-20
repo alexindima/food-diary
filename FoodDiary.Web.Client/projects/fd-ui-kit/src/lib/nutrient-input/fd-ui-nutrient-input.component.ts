@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, ViewEncapsulation, inject, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-ui-nutrient-input',
     standalone: true,
-    imports: [NgClass, MatIconModule],
+    imports: [NgClass, FdUiIconComponent],
     templateUrl: './fd-ui-nutrient-input.component.html',
     styleUrls: ['./fd-ui-nutrient-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

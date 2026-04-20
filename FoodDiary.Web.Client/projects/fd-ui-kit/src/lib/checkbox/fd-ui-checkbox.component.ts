@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, forwardRef, input, model, ViewEncapsulation } from '@angular/core';
-import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, forwardRef, input, model } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+let nextId = 0;
 
 @Component({
     selector: 'fd-ui-checkbox',
     standalone: true,
-    imports: [MatCheckboxModule],
     templateUrl: './fd-ui-checkbox.component.html',
     styleUrls: ['./fd-ui-checkbox.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +19,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     ],
 })
 export class FdUiCheckboxComponent implements ControlValueAccessor {
+    public readonly id = input(`fd-ui-checkbox-${nextId++}`);
     public readonly label = input('');
     public readonly hint = input<string>();
     public readonly disabled = model(false);
@@ -44,9 +45,10 @@ export class FdUiCheckboxComponent implements ControlValueAccessor {
         this.disabled.set(isDisabled);
     }
 
-    protected handleChange(event: MatCheckboxChange): void {
-        this.checked = event.checked;
-        this.onChange(event.checked);
+    protected handleChange(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.checked = input.checked;
+        this.onChange(input.checked);
     }
 
     protected handleBlur(): void {

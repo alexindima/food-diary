@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input, model, output } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, input, model, output, viewChildren } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 export interface FdUiTab {
@@ -13,17 +12,21 @@ export type FdUiTabsAppearance = 'default' | 'wrap-compact';
 @Component({
     selector: 'fd-ui-tabs',
     standalone: true,
-    imports: [MatTabsModule, TranslateModule],
+    imports: [TranslateModule],
     templateUrl: './fd-ui-tabs.component.html',
     styleUrls: ['./fd-ui-tabs.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
 export class FdUiTabsComponent {
+    private static nextId = 0;
+
     public readonly tabs = input<FdUiTab[]>([]);
     public readonly selectedValue = model.required<string>();
     public readonly selectedValueChange = output<string>();
     public readonly appearance = input<FdUiTabsAppearance>('default');
+    protected readonly tabButtons = viewChildren<ElementRef<HTMLButtonElement>>('tabButton');
+    protected readonly tabsId = `fd-ui-tabs-${FdUiTabsComponent.nextId++}`;
 
     protected get appearanceClass(): string {
         return `fd-ui-tabs--appearance-${this.appearance()}`;
@@ -34,12 +37,57 @@ export class FdUiTabsComponent {
         return index >= 0 ? index : 0;
     }
 
-    protected handleIndexChange(index: number): void {
+    protected selectIndex(index: number): void {
         const tab = this.tabs()[index];
         if (!tab) {
             return;
         }
         this.selectedValue.set(tab.value);
         this.selectedValueChange.emit(tab.value);
+    }
+
+    protected onKeydown(index: number, event: KeyboardEvent): void {
+        const tabs = this.tabs();
+        if (!tabs.length) {
+            return;
+        }
+
+        let nextIndex: number | null = null;
+
+        switch (event.key) {
+            case 'ArrowRight':
+            case 'ArrowDown':
+                nextIndex = (index + 1) % tabs.length;
+                break;
+            case 'ArrowLeft':
+            case 'ArrowUp':
+                nextIndex = (index - 1 + tabs.length) % tabs.length;
+                break;
+            case 'Home':
+                nextIndex = 0;
+                break;
+            case 'End':
+                nextIndex = tabs.length - 1;
+                break;
+            case 'Enter':
+            case ' ':
+                event.preventDefault();
+                this.selectIndex(index);
+                return;
+            default:
+                return;
+        }
+
+        event.preventDefault();
+        this.focusTab(nextIndex);
+        this.selectIndex(nextIndex);
+    }
+
+    protected tabId(index: number): string {
+        return `${this.tabsId}-tab-${index}`;
+    }
+
+    private focusTab(index: number): void {
+        this.tabButtons()[index]?.nativeElement.focus();
     }
 }

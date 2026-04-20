@@ -8,15 +8,28 @@
         </p>
     }
 
-    <mat-radio-group
+    <div
         class="fd-ui-radio-group__control"
-        [formControl]="control"
+        role="radiogroup"
         [attr.aria-describedby]="error() ? id() + '-error' : null"
         [attr.aria-invalid]="error() ? 'true' : null"
-        (blur)="handleBlur()"
     >
-        @for (option of options(); track trackByValue($index, option)) {
-            <mat-radio-button class="fd-ui-radio" [value]="option.value">
+        @for (option of options(); track trackByValue($index, option); let index = $index) {
+            <label class="fd-ui-radio" [class.fd-ui-radio--disabled]="disabled()">
+                <input
+                    class="fd-ui-radio__input"
+                    type="radio"
+                    [name]="id()"
+                    [value]="index"
+                    [checked]="isEqual(internalValue, option.value)"
+                    [disabled]="disabled()"
+                    (change)="selectOption(option)"
+                    (blur)="handleBlur()"
+                    (keydown)="handleKeydown(index, $event)"
+                />
+                <span class="fd-ui-radio__control" aria-hidden="true">
+                    <span class="fd-ui-radio__dot"></span>
+                </span>
                 <span class="fd-ui-radio__text">
                     {{ option.label }}
                     @if (option.description) {
@@ -25,9 +38,9 @@
                         </small>
                     }
                 </span>
-            </mat-radio-button>
+            </label>
         }
-    </mat-radio-group>
+    </div>
 
     @if (hint() && !error()) {
         <p class="fd-ui-radio-group__hint">{{ hint() }}</p>

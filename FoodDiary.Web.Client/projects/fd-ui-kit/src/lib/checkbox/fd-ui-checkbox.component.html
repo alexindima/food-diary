@@ -1,7 +1,19 @@
 <div class="fd-ui-checkbox">
-    <mat-checkbox [checked]="checked" [disabled]="disabled()" (change)="handleChange($event)" (blur)="handleBlur()">
-        {{ label() }}
-    </mat-checkbox>
+    <label class="fd-ui-checkbox__label" [class.fd-ui-checkbox__label--disabled]="disabled()">
+        <input
+            class="fd-ui-checkbox__input"
+            type="checkbox"
+            [id]="id()"
+            [checked]="checked"
+            [disabled]="disabled()"
+            (change)="handleChange($event)"
+            (blur)="handleBlur()"
+        />
+        <span class="fd-ui-checkbox__control" aria-hidden="true">
+            <span class="fd-ui-checkbox__checkmark"></span>
+        </span>
+        <span class="fd-ui-checkbox__label-text">{{ label() }}</span>
+    </label>
     @if (hint()) {
         <div class="fd-ui-checkbox__hint">{{ hint() }}</div>
     }

@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { MatPaginator } from '@angular/material/paginator';
 import { By } from '@angular/platform-browser';
 import { FdUiPaginationComponent } from './fd-ui-pagination.component';
 
@@ -12,7 +10,6 @@ describe('FdUiPaginationComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiPaginationComponent],
-            providers: [provideNoopAnimations()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiPaginationComponent);
@@ -24,29 +21,36 @@ describe('FdUiPaginationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should set length on paginator', () => {
+    it('should render page buttons from length and pageSize', () => {
         fixture.componentRef.setInput('length', 50);
+        fixture.componentRef.setInput('pageSize', 10);
         fixture.detectChanges();
 
-        const paginator = fixture.debugElement.query(By.directive(MatPaginator));
-        expect(paginator.componentInstance.length).toBe(50);
+        const pageButtons = fixture.debugElement.queryAll(By.css('.fd-ui-pagination__button'));
+        expect(pageButtons.length).toBe(7);
     });
 
-    it('should set pageSize on paginator', () => {
-        fixture.componentRef.setInput('pageSize', 25);
-        fixture.detectChanges();
-
-        const paginator = fixture.debugElement.query(By.directive(MatPaginator));
-        expect(paginator.componentInstance.pageSize).toBe(25);
-    });
-
-    it('should set pageIndex on paginator', () => {
+    it('should set active page from pageIndex', () => {
         fixture.componentRef.setInput('length', 100);
         fixture.componentRef.setInput('pageSize', 10);
         fixture.componentRef.setInput('pageIndex', 3);
         fixture.detectChanges();
 
-        const paginator = fixture.debugElement.query(By.directive(MatPaginator));
-        expect(paginator.componentInstance.pageIndex).toBe(3);
+        const activeButton = fixture.debugElement.query(By.css('.fd-ui-pagination__button--active'));
+        expect(activeButton.nativeElement.textContent.trim()).toBe('4');
+    });
+
+    it('should emit pageIndexChange when page clicked', () => {
+        const emitted: number[] = [];
+        component.pageIndexChange.subscribe(value => emitted.push(value));
+
+        fixture.componentRef.setInput('length', 100);
+        fixture.componentRef.setInput('pageSize', 10);
+        fixture.detectChanges();
+
+        const pageButtons = fixture.debugElement.queryAll(By.css('.fd-ui-pagination__button'));
+        pageButtons[2].nativeElement.click();
+
+        expect(emitted).toEqual([1]);
     });
 });

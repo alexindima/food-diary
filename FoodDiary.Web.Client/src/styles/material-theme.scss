@@ -63,20 +63,34 @@ $fd-dark-theme: mat.define-theme(
     )
 );
 
+@mixin fd-material-component-theme($theme) {
+    @include mat.core-theme($theme);
+    @include mat.input-theme($theme);
+    @include mat.datepicker-theme($theme);
+    @include mat.dialog-theme($theme);
+}
+
+@mixin fd-material-component-colors($theme) {
+    @include mat.core-color($theme);
+    @include mat.input-color($theme);
+    @include mat.datepicker-color($theme);
+    @include mat.dialog-color($theme);
+}
+
 :root,
 html[data-theme='ocean'] {
-    @include mat.all-component-themes($fd-ocean-theme);
+    @include fd-material-component-theme($fd-ocean-theme);
     @include mat.typography-hierarchy($fd-ocean-theme);
     @include mat.system-level-colors($fd-ocean-theme);
 }
 
 html[data-theme='leaf'] {
-    @include mat.all-component-colors($fd-leaf-theme);
+    @include fd-material-component-colors($fd-leaf-theme);
     @include mat.system-level-colors($fd-leaf-theme);
 }
 
 html[data-theme='dark'] {
-    @include mat.all-component-colors($fd-dark-theme);
+    @include fd-material-component-colors($fd-dark-theme);
     @include mat.system-level-colors($fd-dark-theme);
     @include mat.color-variants-backwards-compatibility($fd-dark-theme);
 }

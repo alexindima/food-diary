@@ -1,3 +1,5 @@
-<mat-menu class="fd-ui-menu">
-    <ng-content />
-</mat-menu>
+<ng-template>
+    <div class="fd-ui-menu" role="menu" tabindex="-1" (keydown)="onKeydown($event)">
+        <ng-content />
+    </div>
+</ng-template>

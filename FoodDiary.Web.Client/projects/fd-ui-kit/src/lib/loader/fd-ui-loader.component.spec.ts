@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { FdUiLoaderComponent } from './fd-ui-loader.component';
 
 describe('FdUiLoaderComponent', () => {
@@ -11,7 +10,6 @@ describe('FdUiLoaderComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiLoaderComponent],
-            providers: [provideNoopAnimations()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiLoaderComponent);
@@ -24,7 +22,7 @@ describe('FdUiLoaderComponent', () => {
     });
 
     it('should render spinner element', () => {
-        const spinner = fixture.debugElement.query(By.css('mat-progress-spinner'));
+        const spinner = fixture.debugElement.query(By.css('.fd-ui-loader__spinner'));
         expect(spinner).toBeTruthy();
 
         const wrapper = fixture.debugElement.query(By.css('.fd-ui-loader'));

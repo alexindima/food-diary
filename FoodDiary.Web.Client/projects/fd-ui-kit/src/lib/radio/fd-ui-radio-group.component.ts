@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
+import { ChangeDetectionStrategy, Component, forwardRef, input, model } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface FdUiRadioOption<T = unknown> {
     label: string;
@@ -8,10 +7,11 @@ export interface FdUiRadioOption<T = unknown> {
     description?: string;
 }
 
+let nextId = 0;
+
 @Component({
     selector: 'fd-ui-radio-group',
     standalone: true,
-    imports: [ReactiveFormsModule, MatRadioModule],
     templateUrl: './fd-ui-radio-group.component.html',
     styleUrls: ['./fd-ui-radio-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,9 +24,9 @@ export interface FdUiRadioOption<T = unknown> {
     ],
 })
 export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccessor {
-    private readonly cdr = inject(ChangeDetectorRef);
+    protected readonly isEqual = Object.is;
 
-    public readonly id = input('fd-radio-' + Math.random().toString(36).slice(2, 8));
+    public readonly id = input(`fd-radio-${nextId++}`);
     public readonly label = input<string>();
     public readonly hint = input<string>();
     public readonly error = input<string | null>();
@@ -34,24 +34,14 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     public readonly orientation = input<'vertical' | 'horizontal'>('vertical');
     public readonly options = input<FdUiRadioOption<T>[]>([]);
 
-    protected disabled = false;
+    protected disabled = model(false);
     protected internalValue: T | null = null;
-    protected readonly control = new FormControl<T | null>(null);
 
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor() {
-        this.control.valueChanges.subscribe(value => {
-            this.internalValue = value;
-            this.onChange(this.internalValue);
-        });
-    }
-
     public writeValue(value: T | null): void {
         this.internalValue = value;
-        this.control.setValue(value, { emitEvent: false });
-        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: T | null) => void): void {
@@ -63,17 +53,51 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        if (isDisabled) {
-            this.control.disable({ emitEvent: false });
-        } else {
-            this.control.enable({ emitEvent: false });
+        this.disabled.set(isDisabled);
+    }
+
+    protected selectOption(option: FdUiRadioOption<T>): void {
+        if (this.disabled()) {
+            return;
         }
-        this.cdr.markForCheck();
+
+        this.internalValue = option.value;
+        this.onChange(option.value);
     }
 
     protected handleBlur(): void {
         this.onTouched();
+    }
+
+    protected handleKeydown(index: number, event: KeyboardEvent): void {
+        const options = this.options();
+        if (!options.length) {
+            return;
+        }
+
+        let nextIndex: number | null = null;
+
+        switch (event.key) {
+            case 'ArrowRight':
+            case 'ArrowDown':
+                nextIndex = (index + 1) % options.length;
+                break;
+            case 'ArrowLeft':
+            case 'ArrowUp':
+                nextIndex = (index - 1 + options.length) % options.length;
+                break;
+            case 'Home':
+                nextIndex = 0;
+                break;
+            case 'End':
+                nextIndex = options.length - 1;
+                break;
+            default:
+                return;
+        }
+
+        event.preventDefault();
+        this.selectOption(options[nextIndex]);
     }
 
     protected trackByValue(_: number, option: FdUiRadioOption<T>): unknown {

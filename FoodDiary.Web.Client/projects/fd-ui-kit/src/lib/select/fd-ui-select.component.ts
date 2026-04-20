@@ -1,7 +1,7 @@
-﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, forwardRef, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, forwardRef, input, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatMenuModule } from '@angular/material/menu';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 
@@ -16,7 +16,7 @@ export interface FdUiSelectOption<T = unknown> {
 @Component({
     selector: 'fd-ui-select',
     standalone: true,
-    imports: [CommonModule, FdUiIconComponent, MatMenuModule],
+    imports: [CommonModule, FdUiIconComponent, CdkOverlayOrigin, CdkConnectedOverlay],
     templateUrl: './fd-ui-select.component.html',
     styleUrls: ['./fd-ui-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +31,8 @@ export interface FdUiSelectOption<T = unknown> {
 })
 export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected readonly isEqual = Object.is;
+    protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
+
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -44,6 +46,8 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected disabled = false;
     protected isFocused = false;
     protected isOpen = false;
+    protected activeIndex = -1;
+    protected overlayMinWidth = 0;
 
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -58,6 +62,18 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
 
     protected get shouldFloatLabel(): boolean {
         return this.isFocused || this.selectedIndex >= 0;
+    }
+
+    protected get selectedLabel(): string {
+        if (this.selectedIndex < 0) {
+            return this.isFocused ? (this.placeholder() ?? '') : '';
+        }
+
+        return this.options()[this.selectedIndex]?.label ?? '';
+    }
+
+    protected get hasValue(): boolean {
+        return this.selectedIndex >= 0;
     }
 
     public writeValue(value: T | null): void {
@@ -84,6 +100,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         this.internalValue = option.value;
         this.onChange(this.internalValue);
         this.onTouched();
+        this.closeMenu();
     }
 
     protected onFocus(): void {
@@ -91,45 +108,92 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     }
 
     protected onBlur(): void {
-        this.isFocused = false;
-        this.isOpen = false;
-        this.onTouched();
+        if (!this.isOpen) {
+            this.isFocused = false;
+            this.onTouched();
+        }
     }
 
-    protected onMenuOpened(): void {
+    protected openMenu(event?: Event): void {
+        event?.preventDefault();
+
+        if (this.disabled || this.isOpen) {
+            return;
+        }
+
+        this.overlayMinWidth = this.controlRef()?.nativeElement.getBoundingClientRect().width ?? 0;
         this.isOpen = true;
-        this.onFocus();
+        this.isFocused = true;
+        this.activeIndex = Math.max(this.selectedIndex, 0);
     }
 
-    protected onMenuClosed(): void {
+    protected closeMenu(): void {
         this.isOpen = false;
-        this.onBlur();
+        this.isFocused = false;
     }
 
-    protected get selectedLabel(): string {
-        if (this.selectedIndex < 0) {
-            return this.isFocused ? (this.placeholder() ?? '') : '';
-        }
-
-        return this.options()[this.selectedIndex]?.label ?? '';
-    }
-
-    protected get hasValue(): boolean {
-        return this.selectedIndex >= 0;
-    }
-
-    protected openMenu(event: MouseEvent, control: HTMLButtonElement): void {
-        if (this.disabled) {
+    protected toggleMenu(event?: Event): void {
+        if (this.isOpen) {
+            event?.preventDefault();
+            this.closeMenu();
             return;
         }
 
-        const target = event.target as HTMLElement | null;
-        if (target?.closest('.fd-ui-select__control')) {
-            control.focus();
+        this.openMenu(event);
+    }
+
+    protected onControlKeydown(event: KeyboardEvent): void {
+        switch (event.key) {
+            case 'ArrowDown':
+            case 'ArrowUp':
+            case 'Enter':
+            case ' ':
+                this.openMenu(event);
+                break;
+            case 'Escape':
+                if (this.isOpen) {
+                    event.preventDefault();
+                    this.closeMenu();
+                }
+                break;
+        }
+    }
+
+    protected onListboxKeydown(event: KeyboardEvent): void {
+        const options = this.options();
+        if (!options.length) {
             return;
         }
 
-        control.click();
-        control.focus();
+        switch (event.key) {
+            case 'ArrowDown':
+                event.preventDefault();
+                this.activeIndex = (this.activeIndex + 1 + options.length) % options.length;
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                this.activeIndex = (this.activeIndex - 1 + options.length) % options.length;
+                break;
+            case 'Home':
+                event.preventDefault();
+                this.activeIndex = 0;
+                break;
+            case 'End':
+                event.preventDefault();
+                this.activeIndex = options.length - 1;
+                break;
+            case 'Enter':
+            case ' ':
+                event.preventDefault();
+                if (this.activeIndex >= 0) {
+                    this.onOptionSelect(options[this.activeIndex]);
+                }
+                break;
+            case 'Escape':
+                event.preventDefault();
+                this.closeMenu();
+                this.controlRef()?.nativeElement.focus();
+                break;
+        }
     }
 }

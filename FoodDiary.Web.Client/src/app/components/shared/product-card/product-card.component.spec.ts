@@ -122,7 +122,7 @@ describe('ProductCardComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const icon = el.querySelector('.entity-card__thumb mat-icon');
+        const icon = el.querySelector('.entity-card__thumb fd-ui-icon');
         expect(icon).toBeTruthy();
     });
 });

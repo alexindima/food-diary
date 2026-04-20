@@ -14,7 +14,7 @@
     @if (label()) {
         <div class="fd-ui-nutrient-input__label" [class.fd-ui-nutrient-input__label--uppercase]="labelUppercase()">
             @if (icon()) {
-                <mat-icon class="fd-ui-nutrient-input__icon">{{ icon() }}</mat-icon>
+                <fd-ui-icon class="fd-ui-nutrient-input__icon" [name]="icon()!" />
             }
             <span class="fd-ui-nutrient-input__label-text">
                 {{ label() }}

@@ -1,14 +1,20 @@
-<mat-tab-group
-    class="fd-ui-tabs"
-    [class]="appearanceClass"
-    [selectedIndex]="selectedIndex"
-    (selectedIndexChange)="handleIndexChange($event)"
->
-    @for (tab of tabs(); track tab) {
-        <mat-tab>
-            <ng-template mat-tab-label>
+<div class="fd-ui-tabs" [class]="appearanceClass" role="tablist">
+    @for (tab of tabs(); track tab.value; let index = $index) {
+        <button
+            #tabButton
+            type="button"
+            class="fd-ui-tabs__tab"
+            role="tab"
+            [id]="tabId(index)"
+            [class.fd-ui-tabs__tab--active]="index === selectedIndex"
+            [attr.aria-selected]="index === selectedIndex"
+            [attr.tabindex]="index === selectedIndex ? 0 : -1"
+            (click)="selectIndex(index)"
+            (keydown)="onKeydown(index, $event)"
+        >
+            <span class="fd-ui-tabs__label">
                 {{ tab.label ?? (tab.labelKey ? (tab.labelKey | translate) : '') }}
-            </ng-template>
-        </mat-tab>
+            </span>
+        </button>
     }
-</mat-tab-group>
+</div>

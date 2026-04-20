@@ -1,5 +1,51 @@
 .fd-ui-menu {
     min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    border-radius: var(--fd-radius-menu, 14px);
+    background: var(--fd-color-surface-raised);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
+}
+
+.fd-ui-menu-panel {
+    z-index: 1000;
+}
+
+.fd-ui-menu__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 38px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: var(--fd-radius-menu-item, 10px);
+    background: transparent;
+    color: var(--fd-color-text);
+    font: inherit;
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.fd-ui-menu__item:hover {
+    background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+}
+
+.fd-ui-menu__item:focus-visible {
+    outline: 2px solid var(--fd-color-primary-400);
+    outline-offset: -2px;
+}
+
+.fd-ui-menu__item--disabled,
+.fd-ui-menu__item:disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
 }
 
 .fd-ui-menu__divider {

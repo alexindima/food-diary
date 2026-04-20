@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 
 export type FdUiIconSize = 'sm' | 'md' | 'lg' | 'xl';
 
 @Component({
     selector: 'fd-ui-icon',
     standalone: true,
-    imports: [MatIconModule],
     templateUrl: './fd-ui-icon.component.html',
     styleUrl: './fd-ui-icon.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +22,7 @@ export class FdUiIconComponent {
     public readonly decorative = input(true);
     public readonly ariaLabel = input<string | null>(null);
     public readonly fontSet = input<string>();
+    protected readonly glyphClass = computed(() => this.fontSet()?.trim() || 'material-icons');
 
     protected readonly resolvedSize = computed(() => {
         const size = this.size();

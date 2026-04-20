@@ -1,4 +1,43 @@
 .fd-ui-pagination {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.fd-ui-pagination__button {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 30%, transparent);
+    border-radius: var(--fd-radius-button, 12px);
+    background: var(--fd-color-surface-raised);
+    color: var(--fd-color-text);
+    font: inherit;
+    cursor: pointer;
+    transition:
+        border-color 140ms ease,
+        background-color 140ms ease,
+        color 140ms ease;
+}
+
+.fd-ui-pagination__button:hover:not(:disabled) {
+    border-color: var(--fd-color-primary-500);
+}
+
+.fd-ui-pagination__button:focus-visible {
+    outline: 2px solid var(--fd-color-primary-400);
+    outline-offset: 1px;
+}
+
+.fd-ui-pagination__button--active {
+    background: var(--fd-color-primary-600);
+    color: var(--fd-color-white);
+    border-color: var(--fd-color-primary-600);
+}
+
+.fd-ui-pagination__button:disabled {
+    opacity: 0.45;
+    cursor: default;
 }

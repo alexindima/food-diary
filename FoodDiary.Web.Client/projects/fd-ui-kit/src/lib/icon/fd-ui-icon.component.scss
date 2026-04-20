@@ -9,9 +9,25 @@
 }
 
 .fd-ui-icon__glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 1em;
     height: 1em;
     font-size: var(--fd-icon-size, 1em);
     line-height: 1;
     color: inherit;
+    overflow: visible;
+    vertical-align: middle;
+    font-weight: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'liga';
 }

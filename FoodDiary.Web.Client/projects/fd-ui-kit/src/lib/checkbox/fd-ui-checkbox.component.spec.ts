@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FdUiCheckboxComponent } from './fd-ui-checkbox.component';
 
 describe('FdUiCheckboxComponent', () => {
@@ -11,7 +9,6 @@ describe('FdUiCheckboxComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiCheckboxComponent],
-            providers: [provideNoopAnimations()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiCheckboxComponent);
@@ -27,7 +24,7 @@ describe('FdUiCheckboxComponent', () => {
         fixture.componentRef.setInput('label', 'Accept terms');
         fixture.detectChanges();
 
-        const checkboxEl = fixture.nativeElement.querySelector('mat-checkbox');
+        const checkboxEl = fixture.nativeElement.querySelector('.fd-ui-checkbox__label');
         expect(checkboxEl.textContent.trim()).toContain('Accept terms');
     });
 
@@ -55,13 +52,13 @@ describe('FdUiCheckboxComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const changeEvent: MatCheckboxChange = { checked: true, source: undefined as never };
+        const changeEvent = { target: { checked: true } } as unknown as Event;
         component['handleChange'](changeEvent);
 
         expect(component['checked']).toBe(true);
         expect(onChangeSpy).toHaveBeenCalledWith(true);
 
-        const uncheckEvent: MatCheckboxChange = { checked: false, source: undefined as never };
+        const uncheckEvent = { target: { checked: false } } as unknown as Event;
         component['handleChange'](uncheckEvent);
 
         expect(component['checked']).toBe(false);

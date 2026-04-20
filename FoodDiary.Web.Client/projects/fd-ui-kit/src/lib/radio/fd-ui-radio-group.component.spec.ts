@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { FdUiRadioGroupComponent, FdUiRadioOption } from './fd-ui-radio-group.component';
 
 describe('FdUiRadioGroupComponent', () => {
@@ -17,7 +16,6 @@ describe('FdUiRadioGroupComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiRadioGroupComponent],
-            providers: [provideNoopAnimations()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiRadioGroupComponent<string>);
@@ -42,7 +40,7 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        const radioButtons = fixture.debugElement.queryAll(By.css('mat-radio-button'));
+        const radioButtons = fixture.debugElement.queryAll(By.css('.fd-ui-radio'));
         expect(radioButtons.length).toBe(3);
         expect(radioButtons[0].nativeElement.textContent).toContain('Option A');
         expect(radioButtons[1].nativeElement.textContent).toContain('Option B');
@@ -57,7 +55,6 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.detectChanges();
 
         expect(component['internalValue']).toBe('b');
-        expect(component['control'].value).toBe('b');
     });
 
     it('should call onChange on selection', () => {
@@ -67,7 +64,7 @@ describe('FdUiRadioGroupComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        component['control'].setValue('a');
+        component['selectOption'](testOptions[0]);
         fixture.detectChanges();
 
         expect(onChangeSpy).toHaveBeenCalledWith('a');
@@ -80,8 +77,8 @@ describe('FdUiRadioGroupComponent', () => {
         const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
-        const radioGroup = fixture.debugElement.query(By.css('mat-radio-group'));
-        radioGroup.triggerEventHandler('blur', {});
+        const radioInput = fixture.debugElement.query(By.css('.fd-ui-radio__input'));
+        radioInput.triggerEventHandler('blur', {});
         fixture.detectChanges();
 
         expect(onTouchedSpy).toHaveBeenCalled();
@@ -94,14 +91,12 @@ describe('FdUiRadioGroupComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBe(true);
-        expect(component['control'].disabled).toBe(true);
+        expect(component['disabled']()).toBe(true);
 
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBe(false);
-        expect(component['control'].enabled).toBe(true);
+        expect(component['disabled']()).toBe(false);
     });
 
     it('should display error message', () => {
