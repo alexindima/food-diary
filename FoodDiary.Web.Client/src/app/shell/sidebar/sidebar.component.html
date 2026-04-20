@@ -178,10 +178,11 @@
     <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMobileMenus()"></div>
 
     <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="activeMobileSheetLabelKey() | translate">
-        <fd-sidebar-route-links [items]="activeMobileSheetRouteItems()" linkClass="sidebar-mobile__sheet-link" (itemSelected)="closeMobileMenus()" />
-        <fd-sidebar-action-links
-            [items]="activeMobileSheetActionItems()"
-            (actionSelected)="onMobileAction($event)"
+        <fd-sidebar-route-links
+            [items]="activeMobileSheetRouteItems()"
+            linkClass="sidebar-mobile__sheet-link"
+            (itemSelected)="closeMobileMenus()"
         />
+        <fd-sidebar-action-links [items]="activeMobileSheetActionItems()" (actionSelected)="onMobileAction($event)" />
     </div>
 }
