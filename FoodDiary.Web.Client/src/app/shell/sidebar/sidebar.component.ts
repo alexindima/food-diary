@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
@@ -82,6 +82,7 @@ export class SidebarComponent {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly dashboardService = inject(DashboardService);
     private readonly notificationService = inject(NotificationService);
+    private readonly router = inject(Router);
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
@@ -134,6 +135,7 @@ export class SidebarComponent {
     protected readonly isMobileReportsOpen = computed(() => this.mobileSheet() === 'reports');
     protected readonly isMobileUserOpen = computed(() => this.mobileSheet() === 'user');
     protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
+    protected readonly pendingRoute = signal<string | null>(null);
     protected readonly activeMobileSheetLabelKey = computed(() => {
         switch (this.mobileSheet()) {
             case 'food':
@@ -243,7 +245,13 @@ export class SidebarComponent {
         }
     });
 
-    public constructor() {}
+    public constructor() {
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+                this.pendingRoute.set(null);
+            }
+        });
+    }
 
     protected onPrimaryAction(action: SidebarActionItem['action']): void {
         switch (action) {
@@ -264,12 +272,24 @@ export class SidebarComponent {
         this.onPrimaryAction(action);
     }
 
+    protected onRouteSelected(item: SidebarRouteItem): void {
+        if (!this.isRouteActive(item.route, item.exact ?? false)) {
+            this.pendingRoute.set(item.route);
+        }
+    }
+
+    protected onDirectRouteClick(route: string, exact = false): void {
+        if (!this.isRouteActive(route, exact)) {
+            this.pendingRoute.set(route);
+        }
+    }
+
     private syncCurrentUser(): void {
-        this.userService.getInfo().subscribe();
+        this.userService.getInfoSilently().subscribe();
     }
 
     private syncDailyProgress(): void {
-        this.dashboardService.getSnapshot(new Date(), 1, 1).subscribe(snapshot => {
+        this.dashboardService.getSnapshotSilently(new Date(), 1, 1).subscribe(snapshot => {
             this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
             this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
         });
@@ -378,5 +398,14 @@ export class SidebarComponent {
 
     private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>): void {
         this.mobileSheet.update(current => (current === sheet ? null : sheet));
+    }
+
+    private isRouteActive(route: string, exact: boolean): boolean {
+        const currentPath = this.router.url.split('?')[0].split('#')[0] || '/';
+        if (exact) {
+            return currentPath === route;
+        }
+
+        return currentPath === route || currentPath.startsWith(`${route}/`);
     }
 }

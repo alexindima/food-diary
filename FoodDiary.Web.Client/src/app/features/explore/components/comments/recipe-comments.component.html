@@ -9,7 +9,13 @@
                     {{ 'COMMON.CANCEL' | translate }}
                 </fd-ui-button>
             }
-            <fd-ui-button variant="primary" size="sm" [disabled]="commentControl.invalid || isSubmitting()" (click)="onSubmit()">
+            <fd-ui-button
+                variant="primary"
+                size="sm"
+                [disabled]="commentControl.invalid || isSubmitting()"
+                [loading]="isSubmitting()"
+                (click)="onSubmit()"
+            >
                 {{ (editingCommentId() ? 'COMMON.SAVE' : 'COMMENTS.POST') | translate }}
             </fd-ui-button>
         </div>
@@ -68,7 +74,7 @@
             }
 
             @if (hasMore()) {
-                <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" (click)="onLoadMore()">
+                <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" [loading]="isLoading()" (click)="onLoadMore()">
                     {{ 'COMMENTS.LOAD_MORE' | translate }}
                 </fd-ui-button>
             }

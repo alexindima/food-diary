@@ -396,7 +396,7 @@ export class AiInputBarComponent {
             return true;
         }
 
-        const freshUser = await firstValueFrom(this.userService.getInfo());
+        const freshUser = await firstValueFrom(this.userService.getInfoSilently());
         if (freshUser?.aiConsentAcceptedAt) {
             return true;
         }

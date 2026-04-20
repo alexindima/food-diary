@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { DashboardService } from './dashboard.service';
 import { environment } from '../../../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
 
 describe('DashboardService', () => {
     let service: DashboardService;
@@ -77,5 +78,15 @@ describe('DashboardService', () => {
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/`);
         req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
+    });
+
+    it('should mark silent snapshot requests to skip global loading', () => {
+        const date = new Date('2026-03-15T00:00:00.000Z');
+
+        service.getSnapshotSilently(date).subscribe();
+
+        const req = httpMock.expectOne(r => r.url === `${baseUrl}/`);
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        req.flush({});
     });
 });

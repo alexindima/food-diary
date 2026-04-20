@@ -5,6 +5,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens';
 
 describe('NotificationService', () => {
     let service: NotificationService;
@@ -41,6 +42,7 @@ describe('NotificationService', () => {
 
         const req = httpMock.expectOne(baseUrl);
         expect(req.request.method).toBe('GET');
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush([
             {
                 id: 'n1',
@@ -63,6 +65,7 @@ describe('NotificationService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/unread-count`);
         expect(req.request.method).toBe('GET');
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush({ count: 4 });
 
         expect(service.unreadCount()).toBe(4);

@@ -96,6 +96,7 @@
                                 icon="save"
                                 [fullWidth]="true"
                                 [disabled]="recipeForm.invalid || isSubmitting()"
+                                [loading]="isSubmitting()"
                             >
                                 {{ recipe() ? ('RECIPE_MANAGE.SAVE_BUTTON' | translate) : ('RECIPE_MANAGE.ADD_BUTTON' | translate) }}
                             </fd-ui-button>

@@ -12,7 +12,12 @@
         <fd-ui-button variant="outline" (click)="onCancel()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button variant="primary" [disabled]="reasonControl.invalid || isSubmitting()" (click)="onSubmit()">
+        <fd-ui-button
+            variant="primary"
+            [disabled]="reasonControl.invalid || isSubmitting()"
+            [loading]="isSubmitting()"
+            (click)="onSubmit()"
+        >
             {{ 'REPORT.SUBMIT' | translate }}
         </fd-ui-button>
     </div>

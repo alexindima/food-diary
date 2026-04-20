@@ -40,6 +40,7 @@ export * from './menu/fd-ui-menu-trigger.directive';
 export * from './menu/fd-ui-menu-item.component';
 export * from './menu/fd-ui-menu-divider.component';
 export * from './loader/fd-ui-loader.component';
+export * from './top-loader/fd-ui-top-loader.component';
 export * from './pagination/fd-ui-pagination.component';
 export * from './segmented-toggle/fd-ui-segmented-toggle.component';
 export * from './chip-select/fd-ui-chip-select.component';

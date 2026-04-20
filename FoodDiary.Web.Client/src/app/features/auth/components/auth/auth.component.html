@@ -32,6 +32,7 @@
                             size="lg"
                             variant="primary"
                             [disabled]="passwordResetForm.invalid || isPasswordResetting() || passwordResetCooldownSeconds() > 0"
+                            [loading]="isPasswordResetting()"
                             [fullWidth]="true"
                         >
                             {{ 'AUTH.RESET.SEND' | translate }}
@@ -96,6 +97,7 @@
                             size="lg"
                             variant="primary"
                             [disabled]="loginForm.invalid || isSubmitting()"
+                            [loading]="isSubmitting()"
                             [fullWidth]="true"
                         >
                             {{ (isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN') | translate }}
@@ -108,6 +110,7 @@
                                 variant="secondary"
                                 fill="outline"
                                 [disabled]="loginForm.invalid || isRestoring() || isSubmitting()"
+                                [loading]="isRestoring()"
                                 [fullWidth]="true"
                                 (click)="onRestoreSubmit()"
                             >

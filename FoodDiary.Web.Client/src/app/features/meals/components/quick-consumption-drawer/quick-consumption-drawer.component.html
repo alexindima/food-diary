@@ -65,13 +65,10 @@
                 icon="check"
                 [fullWidth]="true"
                 [disabled]="isSaving()"
+                [loading]="isSaving()"
                 (click)="save()"
             >
-                @if (isSaving()) {
-                    {{ 'QUICK_CONSUMPTION.SAVING' | translate }}
-                } @else {
-                    {{ 'QUICK_CONSUMPTION.SAVE' | translate }}
-                }
+                {{ 'QUICK_CONSUMPTION.SAVE' | translate }}
             </fd-ui-button>
         </div>
     </div>

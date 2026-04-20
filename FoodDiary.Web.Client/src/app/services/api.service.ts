@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpRequestParams } from '../shared/models/http-request.params';
@@ -10,9 +10,9 @@ export abstract class ApiService {
 
     protected abstract readonly baseUrl: string;
 
-    protected get<T>(endpoint: string, params?: HttpRequestParams, headers?: HttpHeaders): Observable<T> {
+    protected get<T>(endpoint: string, params?: HttpRequestParams, headers?: HttpHeaders, context?: HttpContext): Observable<T> {
         const httpParams = this.buildHttpParams(params);
-        return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers });
+        return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers, context });
     }
 
     protected post<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {

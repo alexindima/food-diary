@@ -1,8 +1,19 @@
-<button [attr.type]="type()" [disabled]="disabled()" [ngClass]="classes()" [attr.aria-label]="ariaLabel() || null">
-    @if (icon()) {
-        <fd-ui-icon class="fd-ui-button__icon" [name]="icon()!"></fd-ui-icon>
-    }
-    <span class="fd-ui-button__label">
-        <ng-content />
+<button
+    [attr.type]="type()"
+    [disabled]="disabled() || loading()"
+    [ngClass]="classes()"
+    [attr.aria-label]="ariaLabel() || null"
+    [attr.aria-busy]="loading() ? 'true' : null"
+>
+    <span class="fd-ui-button__content">
+        @if (icon()) {
+            <fd-ui-icon class="fd-ui-button__icon" [name]="icon()!"></fd-ui-icon>
+        }
+        <span class="fd-ui-button__label">
+            <ng-content />
+        </span>
     </span>
+    @if (loading()) {
+        <span class="fd-ui-button__spinner" aria-hidden="true"></span>
+    }
 </button>

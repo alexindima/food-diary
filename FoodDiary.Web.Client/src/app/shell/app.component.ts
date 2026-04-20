@@ -1,5 +1,5 @@
-import { Component, DestroyRef, Injector, ViewEncapsulation, inject } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { Component, DestroyRef, Injector, ViewEncapsulation, computed, inject } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map, mergeMap } from 'rxjs';
 
@@ -9,11 +9,13 @@ import { QuickConsumptionDrawerComponent } from '../features/meals/components/qu
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NotificationRealtimeService } from '../services/notification-realtime.service';
 import { PushNotificationService } from '../services/push-notification.service';
-import { FdUiToastHostComponent } from 'fd-ui-kit';
+import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
+import { GlobalLoadingService } from '../services/global-loading.service';
+import { RouteLoadingService } from '../services/route-loading.service';
 
 @Component({
     selector: 'fd-root',
-    imports: [RouterOutlet, SidebarComponent, QuickConsumptionDrawerComponent, FdUiToastHostComponent],
+    imports: [RouterOutlet, SidebarComponent, QuickConsumptionDrawerComponent, FdUiToastHostComponent, FdUiTopLoaderComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
     encapsulation: ViewEncapsulation.None,
@@ -25,8 +27,11 @@ export class AppComponent {
     private readonly seoService = inject(SeoService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
+    private readonly globalLoadingService = inject(GlobalLoadingService);
+    private readonly routeLoadingService = inject(RouteLoadingService);
 
     public isAuthenticated = this.authService.isAuthenticated;
+    public readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
 
     public constructor() {
         if (typeof window !== 'undefined') {
@@ -44,6 +49,20 @@ export class AppComponent {
             .subscribe(({ data, url }) => {
                 const seo: SeoData = data['seo'] ?? {};
                 this.seoService.update({ ...seo, path: url });
+            });
+
+        this.router.events
+            .pipe(
+                filter(event => event instanceof RouteConfigLoadStart || event instanceof RouteConfigLoadEnd),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(event => {
+                if (event instanceof RouteConfigLoadStart) {
+                    this.routeLoadingService.beginLoad();
+                    return;
+                }
+
+                this.routeLoadingService.endLoad();
             });
     }
 

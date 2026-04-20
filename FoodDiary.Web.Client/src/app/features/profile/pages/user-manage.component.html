@@ -271,6 +271,7 @@
                                                 fill="outline"
                                                 variant="secondary"
                                                 [disabled]="isUpdatingNotifications()"
+                                                [loading]="isUpdatingNotifications()"
                                                 (click)="saveFastingReminderHours()"
                                             >
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVE' | translate }}
@@ -305,6 +306,7 @@
                                     fill="outline"
                                     variant="secondary"
                                     icon="notifications_active"
+                                    [loading]="isSchedulingTestNotification()"
                                     [disabled]="
                                         isSchedulingTestNotification() ||
                                         !pushNotificationsSupported() ||
@@ -446,6 +448,7 @@
                                             variant="secondary"
                                             icon="link_off"
                                             [disabled]="isSavingDietologist()"
+                                            [loading]="isSavingDietologist()"
                                             (click)="revokeDietologistRelationship()"
                                         >
                                             {{ 'USER_MANAGE.DIETOLOGIST_DISCONNECT_ACTION' | translate }}
@@ -470,6 +473,7 @@
                                                     type="button"
                                                     icon="person_add"
                                                     [disabled]="dietologistForm.invalid || isSavingDietologist()"
+                                                    [loading]="isSavingDietologist()"
                                                     (click)="inviteDietologist()"
                                                 >
                                                     {{ 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION' | translate }}
@@ -482,6 +486,7 @@
                                                     variant="secondary"
                                                     icon="link_off"
                                                     [disabled]="isSavingDietologist()"
+                                                    [loading]="isSavingDietologist()"
                                                     (click)="revokeDietologistRelationship()"
                                                 >
                                                     {{ 'USER_MANAGE.DIETOLOGIST_CANCEL_INVITE' | translate }}
@@ -685,6 +690,7 @@
                             size="sm"
                             icon="delete"
                             [disabled]="isDeleting()"
+                            [loading]="isDeleting()"
                             (click)="onDeleteAccount()"
                         >
                             {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}

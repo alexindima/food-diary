@@ -13,10 +13,23 @@
         }
 
         <div class="email-verify-pending__actions">
-            <fd-ui-button type="button" variant="secondary" fill="outline" [disabled]="isChecking()" (click)="onRefreshStatus()">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="outline"
+                [disabled]="isChecking()"
+                [loading]="isChecking()"
+                (click)="onRefreshStatus()"
+            >
                 {{ 'AUTH.VERIFY_PENDING.REFRESH' | translate }}
             </fd-ui-button>
-            <fd-ui-button type="button" variant="primary" [disabled]="isSending() || resendCooldownSeconds() > 0" (click)="onResendEmail()">
+            <fd-ui-button
+                type="button"
+                variant="primary"
+                [disabled]="isSending() || resendCooldownSeconds() > 0"
+                [loading]="isSending()"
+                (click)="onResendEmail()"
+            >
                 {{ 'AUTH.VERIFY_PENDING.RESEND' | translate }}
             </fd-ui-button>
         </div>

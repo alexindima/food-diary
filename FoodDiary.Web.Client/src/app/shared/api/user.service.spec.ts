@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { UserService } from './user.service';
 import { environment } from '../../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 
 describe('UserService', () => {
     let service: UserService;
@@ -52,6 +53,17 @@ describe('UserService', () => {
         req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
 
         expect(service.user()).toBeNull();
+    });
+
+    it('should get user info silently when requested', () => {
+        service.getInfoSilently().subscribe(result => {
+            expect(result).toEqual(mockUser as any);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/info`);
+        expect(req.request.method).toBe('GET');
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        req.flush(mockUser);
     });
 
     it('should update user and update signal', () => {

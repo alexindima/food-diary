@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpContext } from '@angular/common/http';
 import { catchError, map, Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -14,6 +15,7 @@ import {
     UpdateUserDto,
     User,
 } from '../models/user.data';
+import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 
 export interface UserProfileOverview {
     user: User;
@@ -27,6 +29,7 @@ export interface UserProfileOverview {
 })
 export class UserService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.users;
+    private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
     private readonly userSignal = signal<User | null>(null);
     public readonly user = this.userSignal.asReadonly();
 
@@ -50,6 +53,16 @@ export class UserService extends ApiService {
 
     public getInfo(): Observable<User | null> {
         return this.get<User>('info').pipe(
+            tap(user => this.userSignal.set(user ?? null)),
+            catchError(error => {
+                this.userSignal.set(null);
+                return fallbackApiError('Get user info error', error, null);
+            }),
+        );
+    }
+
+    public getInfoSilently(): Observable<User | null> {
+        return this.get<User>('info', undefined, undefined, this.silentLoadingContext).pipe(
             tap(user => this.userSignal.set(user ?? null)),
             catchError(error => {
                 this.userSignal.set(null);

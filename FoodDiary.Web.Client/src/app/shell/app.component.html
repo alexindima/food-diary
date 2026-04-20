@@ -1,4 +1,5 @@
 <a class="fd-skip-nav" href="#main-content">Skip to main content</a>
+<fd-ui-top-loader [visible]="isTopLoaderVisible()" />
 <div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()">
     @if (isAuthenticated()) {
         @defer (when isAuthenticated()) {

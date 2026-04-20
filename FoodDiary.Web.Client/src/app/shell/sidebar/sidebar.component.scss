@@ -385,6 +385,12 @@
                 color: var(--fd-color-on-brand, var(--fd-color-white));
             }
         }
+
+        &.is-pending:not(.is-active) {
+            background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+            border-color: color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+            box-shadow: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
+        }
     }
 
     &__logout {
@@ -516,6 +522,12 @@
                 color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent)
             );
             color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+        }
+
+        &.is-pending:not(.is-active):not(.is-open) {
+            background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
+            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+            transform: scale(0.98);
         }
     }
 

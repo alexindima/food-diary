@@ -128,7 +128,7 @@
                     </div>
 
                     <div class="weight-history-page__form-actions">
-                        <fd-ui-button [disabled]="isSaving()" type="submit">
+                        <fd-ui-button [disabled]="isSaving()" [loading]="isSaving()" type="submit">
                             @if (isEditing()) {
                                 {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
                             } @else {
@@ -159,7 +159,12 @@
                         [formControl]="desiredWeightControl"
                     />
                     <div class="weight-history-page__goal-actions">
-                        <fd-ui-button type="button" (click)="saveDesiredWeight()" [disabled]="isDesiredWeightSaving()">
+                        <fd-ui-button
+                            type="button"
+                            (click)="saveDesiredWeight()"
+                            [disabled]="isDesiredWeightSaving()"
+                            [loading]="isDesiredWeightSaving()"
+                        >
                             {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
                         </fd-ui-button>
                     </div>

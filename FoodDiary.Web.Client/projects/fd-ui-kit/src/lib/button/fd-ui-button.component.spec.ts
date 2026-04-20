@@ -101,6 +101,19 @@ describe('FdUiButtonComponent', () => {
         expect(button.nativeElement.disabled).toBe(true);
     });
 
+    it('should disable button and show spinner when loading', () => {
+        fixture.componentRef.setInput('loading', true);
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.css('button'));
+        const spinner = fixture.debugElement.query(By.css('.fd-ui-button__spinner'));
+
+        expect(button.nativeElement.disabled).toBe(true);
+        expect(button.nativeElement.getAttribute('aria-busy')).toBe('true');
+        expect(spinner).toBeTruthy();
+        expect(component.classes()).toContain('fd-ui-button--loading');
+    });
+
     it('should set aria-label attribute', () => {
         fixture.componentRef.setInput('ariaLabel', 'Close dialog');
         fixture.detectChanges();

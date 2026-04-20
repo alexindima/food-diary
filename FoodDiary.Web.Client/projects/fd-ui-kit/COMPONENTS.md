@@ -227,6 +227,7 @@ Primary button component.
 - `icon?: string` (icon name)
 - `iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'`
 - `disabled?: boolean`
+- `loading?: boolean`
 - `fullWidth?: boolean`
 - `ariaLabel?: string`
 
@@ -436,6 +437,12 @@ Context menu components.
 
 #### `fd-ui-loader`
 Loading indicator.
+
+#### `fd-ui-top-loader`
+Global top-edge loading bar for long-running background requests.
+
+**Inputs**
+- `visible?: boolean`
 
 #### `fd-ui-toast-host`
 Global toast host. Mount once near the app root.

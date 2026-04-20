@@ -1,9 +1,10 @@
 import { DestroyRef, Injectable, effect, inject, signal, untracked } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, Observable, shareReplay, tap } from 'rxjs';
+import { SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens';
 
 export interface NotificationItem {
     id: string;
@@ -76,6 +77,7 @@ export class NotificationService {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly baseUrl = `${environment.apiUrls.auth.replace('/auth', '/notifications')}`;
+    private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
     public readonly unreadCount = signal(0);
     public readonly notifications = signal<NotificationItem[]>([]);
@@ -106,12 +108,16 @@ export class NotificationService {
         }
 
         if (!this.unreadCountRequest$) {
-            this.unreadCountRequest$ = this.http.get<{ count: number }>(`${this.baseUrl}/unread-count`).pipe(
-                finalize(() => {
-                    this.unreadCountRequest$ = null;
-                }),
-                shareReplay(1),
-            );
+            this.unreadCountRequest$ = this.http
+                .get<{ count: number }>(`${this.baseUrl}/unread-count`, {
+                    context: this.silentLoadingContext,
+                })
+                .pipe(
+                    finalize(() => {
+                        this.unreadCountRequest$ = null;
+                    }),
+                    shareReplay(1),
+                );
         }
 
         this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -121,7 +127,9 @@ export class NotificationService {
     }
 
     public getNotifications(): Observable<NotificationItem[]> {
-        return this.http.get<NotificationItem[]>(this.baseUrl);
+        return this.http.get<NotificationItem[]>(this.baseUrl, {
+            context: this.silentLoadingContext,
+        });
     }
 
     public ensureNotificationsLoaded(): void {
@@ -209,7 +217,9 @@ export class NotificationService {
 
         this.notificationsLoading.set(true);
         this.http
-            .get<NotificationItem[]>(this.baseUrl)
+            .get<NotificationItem[]>(this.baseUrl, {
+                context: this.silentLoadingContext,
+            })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: notifications => {

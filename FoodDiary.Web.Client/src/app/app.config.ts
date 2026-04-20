@@ -19,6 +19,7 @@ import { AuthService } from './services/auth.service';
 import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
 import { RetryInterceptor } from './interceptor/retry.interceptor';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { GlobalLoadingInterceptor } from './interceptor/global-loading.interceptor';
 import { FrontendObservabilityService } from './services/frontend-observability.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -44,6 +45,11 @@ export const appConfig: ApplicationConfig = {
                   GlobalErrorHandler,
               ]
             : []),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: GlobalLoadingInterceptor,
+            multi: true,
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: FrontendObservabilityInterceptor,
@@ -75,7 +81,7 @@ export const appConfig: ApplicationConfig = {
                     return;
                 }
 
-                const user = await firstValueFrom(userService.getInfo());
+                const user = await firstValueFrom(userService.getInfoSilently());
                 await localizationService.applyLanguagePreference(user?.language ?? null);
                 themeService.syncWithUserPreferences(user?.theme, user?.uiStyle);
             });

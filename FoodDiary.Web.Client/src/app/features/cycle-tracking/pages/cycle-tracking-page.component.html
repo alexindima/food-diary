@@ -29,7 +29,7 @@
                         />
                     </div>
                     <div class="cycle-tracking__actions">
-                        <fd-ui-button type="submit" [disabled]="isSavingCycle()">
+                        <fd-ui-button type="submit" [disabled]="isSavingCycle()" [loading]="isSavingCycle()">
                             {{ 'CYCLE_TRACKING.SAVE_CYCLE' | translate }}
                         </fd-ui-button>
                     </div>
@@ -156,7 +156,7 @@
                         />
 
                         <div class="cycle-tracking__actions">
-                            <fd-ui-button type="submit" [disabled]="isSavingDay()">
+                            <fd-ui-button type="submit" [disabled]="isSavingDay()" [loading]="isSavingDay()">
                                 {{ 'CYCLE_TRACKING.SAVE_DAY' | translate }}
                             </fd-ui-button>
                         </div>
