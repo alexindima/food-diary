@@ -462,6 +462,7 @@ Toast notifications service.
 ## Conventions
 
 - Prefer `fd-ui-*` components over Angular Material inputs directly.
+- App and admin code should import UI primitives from `fd-ui-kit` or `fd-ui-kit/...`, not from `projects/fd-ui-kit/src/lib/**`.
 - Keep labels short and in Title Case (or per i18n).
 - Use `error` to display validation messages (no inline HTML errors).
 - For new components, add them to `projects/fd-ui-kit/src/lib/index.ts` so they are available via the `fd-ui-kit` barrel.

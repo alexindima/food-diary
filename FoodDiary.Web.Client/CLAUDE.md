@@ -27,7 +27,8 @@ Angular 21 SPA for nutrition tracking with a shared UI library and admin app.
 - **Signals** — `signal()` for state, `computed()` for derived, `input()` / `output()` for component APIs, `viewChild()` for template refs
 - **`inject()` function** — never constructor injection
 - **Native control flow** — `@if`, `@for`, `@switch` (never `*ngIf`, `*ngFor`)
-- **Import from fd-ui-kit** — `fd-ui-kit/...` for shared UI components, never import `@angular/material` directly
+- **Import from fd-ui-kit** — `fd-ui-kit` or `fd-ui-kit/...` for shared UI components; never import `@angular/material` or deep-link into `projects/fd-ui-kit/src/lib/**`
+- **CDK boundary** — app/admin code may use `@angular/cdk/layout` and `@angular/cdk/drag-drop` directly, but overlay/dialog/portal primitives must stay behind `fd-ui-kit`
 
 ### State Management
 No NgRx. State via Angular Signals in services and components. `AuthService` holds auth state as signals. Feature services extend `ApiService` base class.
@@ -63,7 +64,7 @@ Shared components at `src/app/components/shared/`.
 
 ## fd-ui-kit Library
 
-Design-system layer re-exporting Angular Material under `FdUi*` prefix (`projects/fd-ui-kit/src/lib/material/index.ts`). Components: button, card, input, textarea, select, date inputs, checkbox, radio, dialog, toast, menu, tabs, pagination, loader, etc.
+Design-system layer for shared primitives and theme tokens. Components: button, card, input, textarea, select, calendar/date inputs, checkbox, radio, dialog, toast, menu, tabs, pagination, loader, etc. Angular CDK remains an internal implementation detail where needed.
 
 Has Storybook stories — `npm run storybook` on port 6006.
 

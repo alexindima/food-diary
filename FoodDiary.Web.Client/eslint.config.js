@@ -431,7 +431,25 @@ export default [
             'no-restricted-imports': [
                 'error',
                 {
+                    paths: [
+                        {
+                            name: '@angular/material',
+                            message: 'Import UI primitives from fd-ui-kit instead of Angular Material directly.',
+                        },
+                    ],
                     patterns: [
+                        {
+                            group: ['@angular/material/**'],
+                            message: 'Import UI primitives from fd-ui-kit instead of Angular Material directly.',
+                        },
+                        {
+                            group: ['@angular/cdk/dialog', '@angular/cdk/overlay', '@angular/cdk/portal'],
+                            message: 'Use fd-ui-kit dialog/menu/date primitives instead of low-level CDK overlay APIs in app code.',
+                        },
+                        {
+                            group: ['projects/fd-ui-kit/src/lib/**', 'fd-ui-kit/src/lib/**'],
+                            message: 'Import from the public fd-ui-kit barrel instead of deep-linking into UI-kit internals.',
+                        },
                         {
                             group: [
                                 '../guards/**',
@@ -504,7 +522,25 @@ export default [
             'no-restricted-imports': [
                 'error',
                 {
+                    paths: [
+                        {
+                            name: '@angular/material',
+                            message: 'Import UI primitives from fd-ui-kit instead of Angular Material directly.',
+                        },
+                    ],
                     patterns: [
+                        {
+                            group: ['@angular/material/**'],
+                            message: 'Import UI primitives from fd-ui-kit instead of Angular Material directly.',
+                        },
+                        {
+                            group: ['@angular/cdk/dialog', '@angular/cdk/overlay', '@angular/cdk/portal'],
+                            message: 'Use fd-ui-kit dialog/menu/date primitives instead of low-level CDK overlay APIs in admin feature code.',
+                        },
+                        {
+                            group: ['projects/fd-ui-kit/src/lib/**', 'fd-ui-kit/src/lib/**'],
+                            message: 'Import from the public fd-ui-kit barrel instead of deep-linking into UI-kit internals.',
+                        },
                         {
                             group: [
                                 '../pages/**',
