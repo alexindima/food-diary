@@ -142,12 +142,7 @@
     left: 0 !important;
 }
 
-.cdk-overlay-pane.fd-ui-dialog-panel--fullscreen .mat-mdc-dialog-container {
-    align-items: stretch;
-    justify-content: stretch;
-}
-
-.cdk-overlay-pane.fd-ui-dialog-panel--fullscreen .mat-mdc-dialog-surface {
+.cdk-overlay-pane.fd-ui-dialog-panel--fullscreen .cdk-dialog-container {
     width: 100vw;
     height: 100vh;
     max-width: 100vw;
@@ -164,7 +159,7 @@
     border-radius: 0;
 }
 
-.fd-ui-dialog-panel .mat-mdc-dialog-surface {
+.fd-ui-dialog-panel .cdk-dialog-container {
     padding: 0;
     background: transparent;
     box-shadow: none;
@@ -249,11 +244,8 @@
         margin: 0 !important;
     }
 
-    .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile .mat-mdc-dialog-container {
+    .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile .cdk-dialog-container {
         padding: 0 !important;
-    }
-
-    .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile .mat-mdc-dialog-surface {
         margin: 0 !important;
         border-radius: 16px 16px 0 0 !important;
     }

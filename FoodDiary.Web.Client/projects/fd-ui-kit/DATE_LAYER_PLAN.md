@@ -14,12 +14,12 @@ The current date layer is split across four components:
 - `fd-ui-date-range-input`
 - `fd-ui-date-picker-button`
 
-Current issues:
+Current issues before the migration:
 
-- `fd-ui-date-input` and `fd-ui-datetime-input` still depend on `MatDatepickerModule`, `MatNativeDateModule`, and `MatInputModule`.
-- `fd-ui-date-picker-button` is only a toolbar trigger around a hidden Material datepicker input.
-- `fd-ui-date-range-input` is a composition wrapper over two `fd-ui-date-input` instances, so it inherits the same Material dependency.
-- The API is fragmented: field, range, and toolbar-selection use different contracts even though they all represent the same date-selection layer.
+- `fd-ui-date-input` and `fd-ui-datetime-input` depended on Angular Material datepicker/input modules.
+- `fd-ui-date-picker-button` was only a toolbar trigger around a hidden Material datepicker input.
+- `fd-ui-date-range-input` was a composition wrapper over two `fd-ui-date-input` instances, so it inherited the same Material dependency.
+- The API was fragmented: field, range, and toolbar-selection used different contracts even though they all represented the same date-selection layer.
 
 Current usage in the app:
 
@@ -208,7 +208,7 @@ Reason:
 - App code should migrate to the new primitives without changing domain data shapes unless necessary.
 - Keep the current ISO string contracts where they already exist.
 - Avoid introducing `Date` objects into feature state unless the feature already uses them.
-- Remove datepicker exports from `projects/fd-ui-kit/src/lib/material/index.ts` after migration is complete.
+- Remove legacy datepicker exports after migration is complete.
 
 ## Decision
 

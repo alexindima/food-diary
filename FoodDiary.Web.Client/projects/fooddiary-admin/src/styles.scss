@@ -32,14 +32,7 @@ body {
     left: 0 !important;
 }
 
-.cdk-overlay-pane.fd-admin-email-template-dialog--fullscreen .mat-mdc-dialog-container {
-    align-items: stretch;
-    justify-content: stretch;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-}
-
-.cdk-overlay-pane.fd-admin-email-template-dialog--fullscreen .mat-mdc-dialog-surface {
+.cdk-overlay-pane.fd-admin-email-template-dialog--fullscreen .cdk-dialog-container {
     width: 100vw !important;
     height: 100vh !important;
     max-width: 100vw !important;

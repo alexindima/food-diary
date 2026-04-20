@@ -42,8 +42,8 @@ Universal single-line input.
 - `step?: string | number`
 - `size?: 'sm' | 'md' | 'lg'`
 - `fillColor?: string | null` (custom background)
-- `prefixIcon?: string` (material icon name)
-- `suffixButtonIcon?: string` (material icon name)
+- `prefixIcon?: string` (icon name)
+- `suffixButtonIcon?: string` (icon name)
 - `suffixButtonAriaLabel?: string`
 
 **CSS variables**
@@ -89,7 +89,7 @@ Multi-line input.
 - `fillColor?: string | null`
 
 #### `fd-ui-select`
-Dropdown select based on `MatMenu`.
+Dropdown select based on the design-system menu/overlay primitives.
 
 **Inputs**
 - `label?: string`
@@ -186,7 +186,7 @@ Specialized numeric input for nutrition cards.
 
 **Inputs**
 - `label: string`
-- `icon?: string` (material icon)
+- `icon?: string` (icon name)
 - `placeholder?: string` (default `0`)
 - `name?: string`
 - `type?: 'text' | 'number'` (default `number`)
@@ -206,7 +206,7 @@ Specialized numeric input for nutrition cards.
 ### Buttons
 
 #### `fd-ui-icon`
-Shared icon wrapper over Material icons.
+Shared ligature icon wrapper used by the design system.
 
 **Inputs**
 - `name: string`
@@ -224,7 +224,7 @@ Primary button component.
 - `fill?: 'solid' | 'outline' | 'text' | 'ghost'`
 - `appearance?: 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon' | 'brand-action' | 'chip'`
 - `size?: 'xs' | 'sm' | 'md' | 'lg'`
-- `icon?: string` (material icon)
+- `icon?: string` (icon name)
 - `iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'`
 - `disabled?: boolean`
 - `fullWidth?: boolean`

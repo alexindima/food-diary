@@ -9,7 +9,7 @@
     --fd-color-dialog-text-shadow: color-mix(in srgb, var(--fd-color-slate-900) 60%, transparent);
 }
 
-.fd-ui-image-preview-dialog .mat-mdc-dialog-surface {
+.fd-ui-image-preview-dialog .cdk-dialog-container {
     background: transparent;
 }
 

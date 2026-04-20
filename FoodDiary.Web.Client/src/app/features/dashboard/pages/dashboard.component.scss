@@ -347,7 +347,7 @@ $color-text-secondary: var(--fd-color-text-muted);
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
             box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-primary-600) 26%, transparent);
 
-            mat-icon {
+            fd-ui-icon {
                 color: var(--fd-color-white);
             }
         }

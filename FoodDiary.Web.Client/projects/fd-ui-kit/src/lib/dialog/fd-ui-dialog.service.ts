@@ -1,18 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Dialog, DialogConfig } from '@angular/cdk/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { StaticProvider } from '@angular/core';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 import { FdUiDialogSize } from './fd-ui-dialog.component';
 
-export interface FdUiDialogConfig<D = unknown> extends MatDialogConfig<D> {
+export interface FdUiDialogConfig<D = unknown> extends Omit<DialogConfig<D>, 'providers' | 'container'> {
     size?: FdUiDialogSize;
+    providers?: StaticProvider[];
 }
 
 @Injectable({
     providedIn: 'root',
 })
 export class FdUiDialogService {
-    private readonly matDialog = inject(MatDialog);
+    private readonly dialog = inject(Dialog);
+    private readonly overlay = inject(Overlay);
 
     public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
         const size = config.size ?? 'md';
@@ -22,16 +26,27 @@ export class FdUiDialogService {
         const mobileClasses = isEdgeMobile ? ['fd-ui-dialog-panel--edge-mobile'] : [];
         const panelClass = this.mergeClasses(config.panelClass, ['fd-ui-dialog-panel', `fd-ui-dialog-panel--${size}`, ...mobileClasses]);
         const backdropClass = this.mergeClasses(config.backdropClass, ['fd-ui-dialog-backdrop']);
+        const positionStrategy =
+            config.positionStrategy ?? (isEdgeMobile ? this.overlay.position().global().centerHorizontally().bottom('0') : undefined);
+        const baseProviders = config.providers ?? [];
 
-        return this.matDialog.open(component, {
+        const dialogConfig: DialogConfig<D, import('@angular/cdk/dialog').DialogRef<R, T>> = {
             ...config,
             width: config.width ?? (isEdgeMobile ? '100vw' : undefined),
             maxWidth: config.maxWidth ?? (isEdgeMobile ? '100vw' : undefined),
-            position: config.position ?? (isEdgeMobile ? { bottom: '0' } : undefined),
+            positionStrategy,
             panelClass,
             backdropClass,
             autoFocus: config.autoFocus ?? false,
-        });
+            providers: cdkDialogRef => {
+                const wrappedRef = new FdUiDialogRef<T, R>(cdkDialogRef);
+                return [{ provide: FdUiDialogRef, useValue: wrappedRef }, ...baseProviders] as StaticProvider[];
+            },
+        };
+
+        const dialogRef = this.dialog.open<R, D, T>(component, dialogConfig);
+
+        return new FdUiDialogRef<T, R>(dialogRef);
     }
 
     private mergeClasses(provided: string | string[] | undefined, base: string[]): string[] {
