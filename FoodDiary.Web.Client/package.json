@@ -74,7 +74,7 @@
         "@playwright/test": "^1.59.1",
         "@storybook/angular": "^10.3.5",
         "@types/express": "^5.0.1",
-        "@types/node": "^20.17.19",
+        "@types/node": "^25.6.0",
         "@typescript-eslint/eslint-plugin": "^8.58.1",
         "@typescript-eslint/parser": "^8.58.1",
         "angular-eslint": "^21.3.1",
