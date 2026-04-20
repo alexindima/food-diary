@@ -23,20 +23,11 @@
     </div>
 
     <nav class="sidebar__nav">
-        <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar__link">
-            <fd-ui-icon name="dashboard"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
-        </a>
-        @if (isDietologist()) {
-            <a routerLink="/dietologist" routerLinkActive="is-active" class="sidebar__link">
-                <fd-ui-icon name="medical_services"></fd-ui-icon>
-                <span>{{ 'SIDEBAR.MY_CLIENTS' | translate }}</span>
-            </a>
-        }
-        @if (isAdmin()) {
-            <button type="button" class="sidebar__link sidebar__link--admin" (click)="openAdminPanel()">
-                <fd-ui-icon name="admin_panel_settings"></fd-ui-icon>
-                <span>{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
+        <fd-sidebar-route-links [items]="primaryRouteItems()" linkClass="sidebar__link" />
+        @for (item of primaryActionItems(); track item.id) {
+            <button type="button" class="sidebar__link sidebar__link--admin" (click)="onPrimaryAction(item.action)">
+                <fd-ui-icon [name]="item.icon"></fd-ui-icon>
+                <span>{{ item.labelKey | translate }}</span>
             </button>
         }
     </nav>
@@ -48,30 +39,7 @@
         </button>
         @if (isFoodTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary">
-                <a routerLink="/meals" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.FOOD_DIARY' | translate }}</span>
-                </a>
-                <a routerLink="/products" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="inventory_2"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.PRODUCTS' | translate }}</span>
-                </a>
-                <a routerLink="/recipes" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="restaurant"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.RECIPES' | translate }}</span>
-                </a>
-                <a routerLink="/meal-plans" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.MEAL_PLANS' | translate }}</span>
-                </a>
-                <a routerLink="/shopping-lists" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="shopping_cart"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.SHOPPING_LIST' | translate }}</span>
-                </a>
-                <a routerLink="/fasting" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="timer"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.FASTING' | translate }}</span>
-                </a>
+                <fd-sidebar-route-links [items]="foodTrackingItems" linkClass="sidebar__link sidebar__link--secondary" />
             </nav>
         }
     </div>
@@ -83,18 +51,7 @@
         </button>
         @if (isBodyTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary">
-                <a routerLink="/weight-history" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="monitor_weight"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.WEIGHT' | translate }}</span>
-                </a>
-                <a routerLink="/waist-history" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="straighten"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.WAIST' | translate }}</span>
-                </a>
-                <a routerLink="/cycle-tracking" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <fd-ui-icon name="favorite"></fd-ui-icon>
-                    <span>{{ 'SIDEBAR.CYCLE' | translate }}</span>
-                </a>
+                <fd-sidebar-route-links [items]="bodyTrackingItems" linkClass="sidebar__link sidebar__link--secondary" />
             </nav>
         }
     </div>
@@ -102,26 +59,7 @@
     <div class="sidebar__spacer"></div>
 
     <nav class="sidebar__nav sidebar__nav--secondary sidebar__nav--bottom">
-        <a routerLink="/statistics" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-            <fd-ui-icon name="bar_chart"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.REPORTS' | translate }}</span>
-        </a>
-        <a routerLink="/goals" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-            <fd-ui-icon name="flag"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.GOALS' | translate }}</span>
-        </a>
-        <a routerLink="/gamification" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-            <fd-ui-icon name="emoji_events"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.ACHIEVEMENTS' | translate }}</span>
-        </a>
-        <a routerLink="/lessons" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-            <fd-ui-icon name="school"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.LESSONS' | translate }}</span>
-        </a>
-        <a routerLink="/weekly-check-in" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-            <fd-ui-icon name="assessment"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.WEEKLY_CHECK_IN' | translate }}</span>
-        </a>
+        <fd-sidebar-route-links [items]="desktopBottomItems" linkClass="sidebar__link sidebar__link--secondary" />
     </nav>
 
     @if (currentUser(); as user) {
@@ -238,115 +176,12 @@
 
 @if (isMobileSheetOpen()) {
     <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMobileMenus()"></div>
-}
 
-@if (isMobileFoodOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.FOOD_TRACKING' | translate">
-        <a routerLink="/meals" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.FOOD_DIARY' | translate }}</span>
-        </a>
-        <a routerLink="/products" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="inventory_2"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.PRODUCTS' | translate }}</span>
-        </a>
-        <a routerLink="/recipes" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="restaurant"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.RECIPES' | translate }}</span>
-        </a>
-        <a routerLink="/meal-plans" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.MEAL_PLANS' | translate }}</span>
-        </a>
-        <a routerLink="/shopping-lists" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="shopping_cart"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.SHOPPING_LIST' | translate }}</span>
-        </a>
-        <a routerLink="/fasting" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="timer"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.FASTING' | translate }}</span>
-        </a>
-    </div>
-}
-
-@if (isMobileBodyOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.BODY_TRACKING' | translate">
-        <a routerLink="/weight-history" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="monitor_weight"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.WEIGHT' | translate }}</span>
-        </a>
-        <a routerLink="/waist-history" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="straighten"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.WAIST' | translate }}</span>
-        </a>
-        <a routerLink="/cycle-tracking" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="favorite"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.CYCLE' | translate }}</span>
-        </a>
-    </div>
-}
-
-@if (isMobileReportsOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.REPORTS_AND_GOALS' | translate">
-        <a routerLink="/statistics" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="bar_chart"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.REPORTS' | translate }}</span>
-        </a>
-        <a routerLink="/goals" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="flag"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.GOALS' | translate }}</span>
-        </a>
-        <a routerLink="/gamification" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="emoji_events"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.ACHIEVEMENTS' | translate }}</span>
-        </a>
-        <a routerLink="/weekly-check-in" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="assessment"></fd-ui-icon>
-            <span>{{ 'SIDEBAR.WEEKLY_CHECK_IN' | translate }}</span>
-        </a>
-    </div>
-}
-
-@if (isMobileUserOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
-        <fd-ui-button
-            class="sidebar-mobile__sheet-action"
-            type="button"
-            variant="secondary"
-            fill="outline"
-            icon="notifications"
-            (click)="openNotificationsFromMobileMenu()"
-        >
-            {{ 'NOTIFICATIONS.TITLE' | translate }}
-            @if (unreadNotificationCount() > 0) {
-                <span class="sidebar-mobile__sheet-badge">{{ unreadNotificationCount() }}</span>
-            }
-        </fd-ui-button>
-        <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMobileMenus()">
-            <fd-ui-icon name="settings"></fd-ui-icon>
-            <span>{{ 'HEADER.PROFILE' | translate }}</span>
-        </a>
-        @if (isAdmin()) {
-            <fd-ui-button
-                class="sidebar-mobile__sheet-action"
-                type="button"
-                variant="danger"
-                fill="outline"
-                icon="admin_panel_settings"
-                (click)="openAdminPanel(); closeMobileMenus()"
-            >
-                {{ 'SIDEBAR.ADMIN_PANEL' | translate }}
-            </fd-ui-button>
-        }
-        <fd-ui-button
-            class="sidebar-mobile__sheet-logout"
-            type="button"
-            variant="danger"
-            fill="outline"
-            icon="logout"
-            (click)="logout(); closeMobileMenus()"
-        >
-            {{ 'HEADER.LOGOUT' | translate }}
-        </fd-ui-button>
+    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="activeMobileSheetLabelKey() | translate">
+        <fd-sidebar-route-links [items]="activeMobileSheetRouteItems()" linkClass="sidebar-mobile__sheet-link" (itemSelected)="closeMobileMenus()" />
+        <fd-sidebar-action-links
+            [items]="activeMobileSheetActionItems()"
+            (actionSelected)="onMobileAction($event)"
+        />
     </div>
 }

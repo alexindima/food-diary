@@ -559,7 +559,8 @@
         z-index: 1190;
 
         a,
-        button {
+        button,
+        &-link {
             width: 100%;
             display: flex;
             align-items: center;
@@ -601,22 +602,6 @@
             --fd-button-shadow-active: none;
             --fd-button-transform-hover: none;
             --fd-button-transform-active: none;
-        }
-
-        .sidebar-mobile__sheet-badge {
-            margin-left: auto;
-            min-width: 22px;
-            height: 22px;
-            padding: 0 7px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--fd-color-danger);
-            color: var(--fd-color-white);
-            font-size: 0.75rem;
-            font-weight: 800;
-            line-height: 1;
         }
 
         .sidebar-mobile__sheet-logout {

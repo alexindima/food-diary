@@ -18,10 +18,58 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { NotificationsDialogComponent } from '../../components/shared/notifications-dialog/notifications-dialog.component';
+import { SidebarActionLinksComponent } from './sidebar-action-links.component';
+import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
+import { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
+
+const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
+    { id: 'meals', icon: 'restaurant_menu', labelKey: 'SIDEBAR.FOOD_DIARY', route: '/meals' },
+    { id: 'products', icon: 'inventory_2', labelKey: 'SIDEBAR.PRODUCTS', route: '/products' },
+    { id: 'recipes', icon: 'restaurant', labelKey: 'SIDEBAR.RECIPES', route: '/recipes' },
+    { id: 'meal-plans', icon: 'restaurant_menu', labelKey: 'SIDEBAR.MEAL_PLANS', route: '/meal-plans' },
+    { id: 'shopping-lists', icon: 'shopping_cart', labelKey: 'SIDEBAR.SHOPPING_LIST', route: '/shopping-lists' },
+    { id: 'fasting', icon: 'timer', labelKey: 'SIDEBAR.FASTING', route: '/fasting' },
+];
+
+const BODY_TRACKING_ITEMS: SidebarRouteItem[] = [
+    { id: 'weight-history', icon: 'monitor_weight', labelKey: 'SIDEBAR.WEIGHT', route: '/weight-history' },
+    { id: 'waist-history', icon: 'straighten', labelKey: 'SIDEBAR.WAIST', route: '/waist-history' },
+    { id: 'cycle-tracking', icon: 'favorite', labelKey: 'SIDEBAR.CYCLE', route: '/cycle-tracking' },
+];
+
+const DESKTOP_BOTTOM_ITEMS: SidebarRouteItem[] = [
+    { id: 'statistics', icon: 'bar_chart', labelKey: 'SIDEBAR.REPORTS', route: '/statistics' },
+    { id: 'goals', icon: 'flag', labelKey: 'SIDEBAR.GOALS', route: '/goals' },
+    { id: 'gamification', icon: 'emoji_events', labelKey: 'SIDEBAR.ACHIEVEMENTS', route: '/gamification' },
+    { id: 'lessons', icon: 'school', labelKey: 'SIDEBAR.LESSONS', route: '/lessons' },
+    { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
+];
+
+const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
+    { id: 'statistics', icon: 'bar_chart', labelKey: 'SIDEBAR.REPORTS', route: '/statistics' },
+    { id: 'goals', icon: 'flag', labelKey: 'SIDEBAR.GOALS', route: '/goals' },
+    { id: 'gamification', icon: 'emoji_events', labelKey: 'SIDEBAR.ACHIEVEMENTS', route: '/gamification' },
+    { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
+];
+
+const MOBILE_USER_ROUTE_ITEMS: SidebarRouteItem[] = [{ id: 'profile', icon: 'settings', labelKey: 'HEADER.PROFILE', route: '/profile' }];
+
+type DesktopSectionId = 'food' | 'body' | null;
+type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
 
 @Component({
     selector: 'fd-sidebar',
-    imports: [TranslateModule, RouterModule, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, SlicePipe, UpperCasePipe],
+    imports: [
+        TranslateModule,
+        RouterModule,
+        FdUiHintDirective,
+        FdUiButtonComponent,
+        FdUiIconComponent,
+        SidebarActionLinksComponent,
+        SidebarRouteLinksComponent,
+        SlicePipe,
+        UpperCasePipe,
+    ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
@@ -41,6 +89,30 @@ export class SidebarComponent {
     public isDietologist = this.authService.isDietologist;
     public isAdmin = this.authService.isAdmin;
     public unreadNotificationCount = this.notificationService.unreadCount;
+    protected readonly primaryNavItems = computed<SidebarNavItem[]>(() => {
+        const items: SidebarNavItem[] = [{ id: 'dashboard', icon: 'dashboard', labelKey: 'SIDEBAR.DASHBOARD', route: '/', exact: true }];
+
+        if (this.isDietologist()) {
+            items.push({ id: 'dietologist', icon: 'medical_services', labelKey: 'SIDEBAR.MY_CLIENTS', route: '/dietologist' });
+        }
+
+        if (this.isAdmin()) {
+            items.push({ id: 'admin', icon: 'admin_panel_settings', labelKey: 'SIDEBAR.ADMIN_PANEL', action: 'openAdminPanel' });
+        }
+
+        return items;
+    });
+    protected readonly primaryRouteItems = computed<SidebarRouteItem[]>(() =>
+        this.primaryNavItems().filter((item): item is SidebarRouteItem => 'route' in item),
+    );
+    protected readonly primaryActionItems = computed<SidebarActionItem[]>(() =>
+        this.primaryNavItems().filter((item): item is SidebarActionItem => 'action' in item),
+    );
+    protected readonly foodTrackingItems = FOOD_TRACKING_ITEMS;
+    protected readonly bodyTrackingItems = BODY_TRACKING_ITEMS;
+    protected readonly desktopBottomItems = DESKTOP_BOTTOM_ITEMS;
+    protected readonly mobileReportItems = MOBILE_REPORT_ITEMS;
+    protected readonly mobileUserRouteItems = MOBILE_USER_ROUTE_ITEMS;
     protected readonly currentUser = this.userService.user;
     protected readonly brandStatusKey = computed(() => {
         if (this.isAdmin()) {
@@ -53,16 +125,88 @@ export class SidebarComponent {
 
         return 'SIDEBAR.STATUS_USER';
     });
-    protected isFoodTrackingOpen = signal(true);
-    protected isBodyTrackingOpen = signal(false);
+    protected readonly openDesktopSection = signal<DesktopSectionId>('food');
     protected isUserMenuOpen = signal(false);
-    protected isMobileFoodOpen = signal(false);
-    protected isMobileBodyOpen = signal(false);
-    protected isMobileReportsOpen = signal(false);
-    protected isMobileUserOpen = signal(false);
-    protected readonly isMobileSheetOpen = computed(
-        () => this.isMobileFoodOpen() || this.isMobileBodyOpen() || this.isMobileReportsOpen() || this.isMobileUserOpen(),
-    );
+    protected readonly mobileSheet = signal<MobileSheetId>(null);
+    protected readonly isFoodTrackingOpen = computed(() => this.openDesktopSection() === 'food');
+    protected readonly isBodyTrackingOpen = computed(() => this.openDesktopSection() === 'body');
+    protected readonly isMobileFoodOpen = computed(() => this.mobileSheet() === 'food');
+    protected readonly isMobileBodyOpen = computed(() => this.mobileSheet() === 'body');
+    protected readonly isMobileReportsOpen = computed(() => this.mobileSheet() === 'reports');
+    protected readonly isMobileUserOpen = computed(() => this.mobileSheet() === 'user');
+    protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
+    protected readonly activeMobileSheetLabelKey = computed(() => {
+        switch (this.mobileSheet()) {
+            case 'food':
+                return 'SIDEBAR.FOOD_TRACKING';
+            case 'body':
+                return 'SIDEBAR.BODY_TRACKING';
+            case 'reports':
+                return 'SIDEBAR.REPORTS_AND_GOALS';
+            case 'user':
+                return 'SIDEBAR.USER_MENU';
+            default:
+                return '';
+        }
+    });
+    protected readonly activeMobileSheetRouteItems = computed<SidebarRouteItem[]>(() => {
+        switch (this.mobileSheet()) {
+            case 'food':
+                return this.foodTrackingItems;
+            case 'body':
+                return this.bodyTrackingItems;
+            case 'reports':
+                return this.mobileReportItems;
+            case 'user':
+                return this.mobileUserRouteItems;
+            default:
+                return [];
+        }
+    });
+    protected readonly mobileUserActionItems = computed<SidebarActionItem[]>(() => {
+        const items: SidebarActionItem[] = [
+            {
+                id: 'mobile-notifications',
+                icon: 'notifications',
+                labelKey: 'NOTIFICATIONS.TITLE',
+                action: 'openNotifications',
+                variant: 'secondary',
+                fill: 'outline',
+                className: 'sidebar-mobile__sheet-action',
+                badge: this.unreadNotificationCount() || undefined,
+            },
+            {
+                id: 'mobile-logout',
+                icon: 'logout',
+                labelKey: 'HEADER.LOGOUT',
+                action: 'logout',
+                variant: 'danger',
+                fill: 'outline',
+                className: 'sidebar-mobile__sheet-logout',
+            },
+        ];
+
+        if (this.isAdmin()) {
+            items.splice(1, 0, {
+                id: 'mobile-admin',
+                icon: 'admin_panel_settings',
+                labelKey: 'SIDEBAR.ADMIN_PANEL',
+                action: 'openAdminPanel',
+                variant: 'danger',
+                fill: 'outline',
+                className: 'sidebar-mobile__sheet-action',
+            });
+        }
+
+        return items;
+    });
+    protected readonly activeMobileSheetActionItems = computed<SidebarActionItem[]>(() => {
+        if (this.mobileSheet() === 'user') {
+            return this.mobileUserActionItems();
+        }
+
+        return [];
+    });
     protected readonly dailyConsumedKcal = signal(0);
     protected readonly dailyGoalKcal = signal(0);
     protected readonly dailyProgressPercent = computed(() => {
@@ -102,6 +246,25 @@ export class SidebarComponent {
 
     public constructor() {}
 
+    protected onPrimaryAction(action: SidebarActionItem['action']): void {
+        switch (action) {
+            case 'openAdminPanel':
+                this.openAdminPanel();
+                break;
+            case 'openNotifications':
+                this.openNotifications();
+                break;
+            case 'logout':
+                void this.logout();
+                break;
+        }
+    }
+
+    protected onMobileAction(action: SidebarActionItem['action']): void {
+        this.closeMobileMenus();
+        this.onPrimaryAction(action);
+    }
+
     private syncCurrentUser(): void {
         this.userService.getInfo().subscribe();
     }
@@ -114,19 +277,11 @@ export class SidebarComponent {
     }
 
     protected toggleFoodTracking(): void {
-        const next = !this.isFoodTrackingOpen();
-        this.isFoodTrackingOpen.set(next);
-        if (next) {
-            this.isBodyTrackingOpen.set(false);
-        }
+        this.toggleDesktopSection('food');
     }
 
     protected toggleBodyTracking(): void {
-        const next = !this.isBodyTrackingOpen();
-        this.isBodyTrackingOpen.set(next);
-        if (next) {
-            this.isFoodTrackingOpen.set(false);
-        }
+        this.toggleDesktopSection('body');
     }
 
     protected toggleUserMenu(): void {
@@ -137,11 +292,6 @@ export class SidebarComponent {
         this.dialogService.open<NotificationsDialogComponent, null, void>(NotificationsDialogComponent, {
             size: 'md',
         });
-    }
-
-    protected openNotificationsFromMobileMenu(): void {
-        this.closeMobileMenus();
-        this.openNotifications();
     }
 
     protected openAdminPanel(): void {
@@ -164,34 +314,23 @@ export class SidebarComponent {
     }
 
     protected toggleMobileFood(): void {
-        const next = !this.isMobileFoodOpen();
-        this.closeMobileMenus();
-        this.isMobileFoodOpen.set(next);
+        this.toggleMobileSheet('food');
     }
 
     protected toggleMobileBody(): void {
-        const next = !this.isMobileBodyOpen();
-        this.closeMobileMenus();
-        this.isMobileBodyOpen.set(next);
+        this.toggleMobileSheet('body');
     }
 
     protected toggleMobileReports(): void {
-        const next = !this.isMobileReportsOpen();
-        this.closeMobileMenus();
-        this.isMobileReportsOpen.set(next);
+        this.toggleMobileSheet('reports');
     }
 
     protected toggleMobileUser(): void {
-        const next = !this.isMobileUserOpen();
-        this.closeMobileMenus();
-        this.isMobileUserOpen.set(next);
+        this.toggleMobileSheet('user');
     }
 
     protected closeMobileMenus(): void {
-        this.isMobileFoodOpen.set(false);
-        this.isMobileBodyOpen.set(false);
-        this.isMobileReportsOpen.set(false);
-        this.isMobileUserOpen.set(false);
+        this.mobileSheet.set(null);
     }
 
     protected async logout(): Promise<void> {
@@ -230,5 +369,13 @@ export class SidebarComponent {
         }
 
         return false;
+    }
+
+    private toggleDesktopSection(section: Exclude<DesktopSectionId, null>): void {
+        this.openDesktopSection.update(current => (current === section ? null : section));
+    }
+
+    private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>): void {
+        this.mobileSheet.update(current => (current === sheet ? null : sheet));
     }
 }
