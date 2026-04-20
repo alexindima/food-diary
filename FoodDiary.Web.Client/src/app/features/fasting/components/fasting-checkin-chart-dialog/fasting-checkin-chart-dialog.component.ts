@@ -5,7 +5,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell.component';
-import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { LocalizationService } from '../../../../services/localization.service';
 import { FastingCheckIn } from '../../models/fasting.data';
 

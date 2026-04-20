@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -62,9 +63,9 @@ export type AdminModerationActionDialogResult = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminModerationActionDialogComponent {
-    public readonly data = inject<AdminModerationActionDialogData>(MAT_DIALOG_DATA);
+    public readonly data = inject<AdminModerationActionDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef =
-        inject<MatDialogRef<AdminModerationActionDialogComponent, AdminModerationActionDialogResult>>(MatDialogRef);
+        inject<FdUiDialogRef<AdminModerationActionDialogComponent, AdminModerationActionDialogResult>>(FdUiDialogRef);
     private readonly moderationService = inject(AdminModerationService);
     private readonly destroyRef = inject(DestroyRef);
 

@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -10,7 +10,7 @@
     signal,
     effect,
 } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -79,7 +79,7 @@ export class AuthComponent {
     private readonly googleIdentityService = inject(GoogleIdentityService);
     private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly dialogRef = inject(MatDialogRef<AuthComponent>, { optional: true });
+    private readonly dialogRef = inject(FdUiDialogRef<AuthComponent>, { optional: true });
 
     public authMode: 'login' | 'register' = 'login';
 

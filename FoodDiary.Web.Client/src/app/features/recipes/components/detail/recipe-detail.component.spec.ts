@@ -9,7 +9,8 @@ import { of } from 'rxjs';
 import { RecipeDetailComponent } from './recipe-detail.component';
 import { Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeService } from '../../api/recipe.service';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 const mockRecipe: Recipe = {

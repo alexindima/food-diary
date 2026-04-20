@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { ProductListBaseComponent } from '../components/list/product-list-base.component';
@@ -9,7 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 @Component({

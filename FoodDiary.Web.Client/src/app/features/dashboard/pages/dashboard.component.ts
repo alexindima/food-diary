@@ -3,11 +3,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
-import { FdUiInputFieldModule } from 'fd-ui-kit/material';
-import { FdUiFormFieldModule } from 'fd-ui-kit/material';
-import { FdUiNativeDateModule } from 'fd-ui-kit/material';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
@@ -46,10 +43,7 @@ import {
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiDatepickerModule,
-        FdUiInputFieldModule,
-        FdUiFormFieldModule,
-        FdUiNativeDateModule,
+        FdUiDatePickerButtonComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         LocalizedDatePipe,
@@ -82,7 +76,6 @@ export class DashboardComponent {
     private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
     public readonly layout = inject(DashboardLayoutService);
 
-    private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
     private resizeObserver: ResizeObserver | null = null;
 
@@ -252,15 +245,8 @@ export class DashboardComponent {
         this.destroyRef.onDestroy(() => this.unsavedChangesService.clear(handler));
     }
 
-    public openDatePicker(): void {
-        this.headerDatePicker()?.open();
-    }
-
-    public handleDateChange(event: FdUiDatepickerInputEvent<Date>): void {
-        if (!event.value) {
-            return;
-        }
-        this.facade.setSelectedDate(event.value);
+    public handleDateChange(value: Date): void {
+        this.facade.setSelectedDate(value);
     }
 
     public async openWeightHistory(): Promise<void> {

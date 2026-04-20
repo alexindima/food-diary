@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { FdUiDialogComponent, FdUiDialogData } from './fd-ui-dialog.component';
 
@@ -15,8 +16,8 @@ describe('FdUiDialogComponent', () => {
         TestBed.configureTestingModule({
             imports: [FdUiDialogComponent],
             providers: [
-                { provide: MAT_DIALOG_DATA, useValue: data },
-                { provide: MatDialogRef, useValue: dialogRefSpy },
+                { provide: FD_UI_DIALOG_DATA, useValue: data },
+                { provide: FdUiDialogRef, useValue: dialogRefSpy },
                 provideNoopAnimations(),
             ],
         });

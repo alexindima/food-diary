@@ -1,10 +1,11 @@
-﻿export * from './design-tokens';
+export * from './design-tokens';
 export * from './types/field-size.type';
 
 export * from './input/fd-ui-input.component';
 export * from './textarea/fd-ui-textarea.component';
 export * from './select/fd-ui-select.component';
 export * from './date-input/fd-ui-date-input.component';
+export * from './date-picker-button/fd-ui-date-picker-button.component';
 export { FdUiDateRangeInputComponent } from './date-range-input/fd-ui-date-range-input.component';
 export type { FdUiDateRangeValue } from './date-range-input/fd-ui-date-range-input.component';
 export * from './datetime-input/fd-ui-datetime-input.component';
@@ -26,6 +27,8 @@ export * from './satiety-scale/fd-ui-satiety-scale.component';
 export * from './dialog/fd-ui-dialog.component';
 export * from './dialog/fd-ui-dialog-footer.directive';
 export * from './dialog/fd-ui-dialog.service';
+export * from './dialog/fd-ui-dialog-data';
+export * from './dialog/fd-ui-dialog-ref';
 export * from './dialog/fd-ui-confirm-dialog.component';
 export * from './dialog-shell/fd-ui-dialog-shell.component';
 export * from './image-preview-dialog/fd-ui-image-preview-dialog.component';

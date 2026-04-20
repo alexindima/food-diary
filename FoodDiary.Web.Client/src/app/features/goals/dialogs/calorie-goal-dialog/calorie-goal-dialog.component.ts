@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -21,8 +22,8 @@ export interface CalorieGoalDialogData {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalorieGoalDialogComponent {
-    private readonly dialogRef = inject(MatDialogRef<CalorieGoalDialogComponent>);
-    private readonly data = inject<CalorieGoalDialogData | null>(MAT_DIALOG_DATA, { optional: true }) ?? {};
+    private readonly dialogRef = inject(FdUiDialogRef<CalorieGoalDialogComponent>);
+    private readonly data = inject<CalorieGoalDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly goalsService = inject(GoalsService);
 
     public readonly form = new FormGroup({

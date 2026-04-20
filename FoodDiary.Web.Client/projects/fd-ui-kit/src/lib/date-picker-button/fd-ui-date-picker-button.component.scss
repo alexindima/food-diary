@@ -1,0 +1,15 @@
+:host {
+    display: inline-flex;
+}
+
+.fd-ui-date-picker-button__input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fd-ui-date-picker-button__trigger {
+    display: inline-flex;
+}

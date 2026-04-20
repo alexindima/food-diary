@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
@@ -29,8 +30,8 @@ type TemplateForm = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEmailTemplateEditDialogComponent {
-    public readonly data = inject<AdminEmailTemplate>(MAT_DIALOG_DATA);
-    private readonly dialogRef = inject<MatDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(MatDialogRef);
+    public readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
+    private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly service = inject(AdminEmailTemplatesService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);

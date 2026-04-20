@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ProductListFiltersDialogComponent, ProductListFiltersDialogData } from './product-list-filters-dialog.component';
@@ -22,8 +23,8 @@ describe('ProductListFiltersDialogComponent', () => {
             imports: [ProductListFiltersDialogComponent, TranslateModule.forRoot()],
             providers: [
                 provideNoopAnimations(),
-                { provide: MatDialogRef, useValue: dialogRefSpy as Partial<MatDialogRef<ProductListFiltersDialogComponent>> },
-                { provide: MAT_DIALOG_DATA, useValue: data },
+                { provide: FdUiDialogRef, useValue: dialogRefSpy as Partial<FdUiDialogRef<ProductListFiltersDialogComponent>> },
+                { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],
         });
 

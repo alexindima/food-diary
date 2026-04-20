@@ -4,7 +4,7 @@ import { signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { NotificationsDialogComponent } from './notifications-dialog.component';
 import { NotificationItem, NotificationService } from '../../../services/notification.service';
 

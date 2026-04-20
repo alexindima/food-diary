@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Meal } from '../../models/meal.data';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';

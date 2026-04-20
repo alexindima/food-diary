@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FdUiDialogRef } from './fd-ui-dialog-ref';
 import { FdUiDialogSize } from './fd-ui-dialog.component';
 
 export interface FdUiDialogConfig<D = unknown> extends MatDialogConfig<D> {
@@ -13,7 +14,7 @@ export interface FdUiDialogConfig<D = unknown> extends MatDialogConfig<D> {
 export class FdUiDialogService {
     private readonly matDialog = inject(MatDialog);
 
-    public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): MatDialogRef<T, R> {
+    public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
         const size = config.size ?? 'md';
         const providedPanelClasses = this.asArray(config.panelClass);
         const isFullscreen = providedPanelClasses.includes('fd-ui-dialog-panel--fullscreen');

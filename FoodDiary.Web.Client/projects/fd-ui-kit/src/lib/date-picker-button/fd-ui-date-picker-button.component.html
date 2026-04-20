@@ -1,0 +1,13 @@
+<input class="fd-ui-date-picker-button__input" [matDatepicker]="picker" [value]="value()" (dateChange)="onDateChange($event)" />
+<mat-datepicker #picker />
+
+<fd-ui-button
+    class="fd-ui-date-picker-button__trigger"
+    appearance="toolbar"
+    variant="secondary"
+    fill="outline"
+    [icon]="icon()"
+    [ariaLabel]="ariaLabel()"
+    [fdUiHint]="hint()"
+    (click)="open()"
+/>

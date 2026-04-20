@@ -2,7 +2,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 /**
- * Creates a mock MatDialogRef with common spy methods.
+ * Creates a mock dialog ref with common spy methods.
  */
 export function createDialogRefSpy(): { close: ReturnType<typeof vi.fn> } {
     return { close: vi.fn() };

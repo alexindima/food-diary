@@ -4,7 +4,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize, map, Observable } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { NavigationService } from '../../../services/navigation.service';
 import {
     ItemSelectDialogComponent,

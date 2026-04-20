@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { UserService } from '../../../../shared/api/user.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { ChangePasswordRequest } from '../../../../shared/models/user.data';

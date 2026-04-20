@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -23,8 +24,8 @@ type AdminUserForm = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminUserEditDialogComponent {
-    private readonly dialogRef = inject<MatDialogRef<AdminUserEditDialogComponent, boolean>>(MatDialogRef);
-    private readonly data = inject<AdminUser>(MAT_DIALOG_DATA);
+    private readonly dialogRef = inject<FdUiDialogRef<AdminUserEditDialogComponent, boolean>>(FdUiDialogRef);
+    private readonly data = inject<AdminUser>(FD_UI_DIALOG_DATA);
     private readonly usersService = inject(AdminUsersService);
     private readonly fb = inject(FormBuilder);
 

@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell.component';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { NotificationItem, NotificationService } from '../../../services/notification.service';
 
 @Component({

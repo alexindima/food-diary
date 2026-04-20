@@ -6,7 +6,8 @@ import { of } from 'rxjs';
 
 import { MealDetailComponent } from './meal-detail.component';
 import { Meal } from '../../models/meal.data';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 const mockMeal: Meal = {

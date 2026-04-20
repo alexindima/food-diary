@@ -22,18 +22,12 @@
 
         <div class="dashboard__header-actions">
             <div class="dashboard__date-group">
-                <mat-form-field class="dashboard__date-field" appearance="outline">
-                    <input matInput [matDatepicker]="headerDatePicker" [value]="selectedDate()" (dateChange)="handleDateChange($event)" />
-                </mat-form-field>
-                <mat-datepicker #headerDatePicker />
-                <fd-ui-button
+                <fd-ui-date-picker-button
                     class="dashboard__date-button"
-                    variant="secondary"
-                    fill="outline"
-                    icon="calendar_today"
-                    [ariaLabel]="selectedDate() | localizedDate: 'd MMMM y'"
-                    [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
-                    (click)="openDatePicker()"
+                    [value]="selectedDate()"
+                    [ariaLabel]="(selectedDate() | localizedDate: 'd MMMM y') ?? ''"
+                    [hint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+                    (valueChange)="handleDateChange($event)"
                 />
             </div>
 

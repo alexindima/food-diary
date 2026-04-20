@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -23,7 +23,7 @@ describe('ChangePasswordDialogComponent', () => {
             providers: [
                 provideNoopAnimations(),
                 { provide: UserService, useValue: userServiceSpy },
-                { provide: MatDialogRef, useValue: dialogRefSpy },
+                { provide: FdUiDialogRef, useValue: dialogRefSpy },
             ],
         });
 

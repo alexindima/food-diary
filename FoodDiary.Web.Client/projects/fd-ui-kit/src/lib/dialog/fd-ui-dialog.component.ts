@@ -9,7 +9,8 @@ import {
     input,
     contentChild,
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
+import { FdUiDialogRef } from './fd-ui-dialog-ref';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 
@@ -34,8 +35,8 @@ export interface FdUiDialogData {
     encapsulation: ViewEncapsulation.None,
 })
 export class FdUiDialogComponent {
-    private readonly dialogRef = inject(MatDialogRef<FdUiDialogComponent>, { optional: true });
-    private readonly injectedData = inject(MAT_DIALOG_DATA, { optional: true }) as FdUiDialogData | null;
+    private readonly dialogRef = inject(FdUiDialogRef<FdUiDialogComponent>, { optional: true });
+    private readonly injectedData = inject(FD_UI_DIALOG_DATA, { optional: true }) as FdUiDialogData | null;
 
     public readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
 

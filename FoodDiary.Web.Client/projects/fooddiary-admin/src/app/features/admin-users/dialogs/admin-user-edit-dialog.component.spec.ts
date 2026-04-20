@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { AdminUserEditDialogComponent } from './admin-user-edit-dialog.component';
 import { AdminUsersService } from '../api/admin-users.service';
@@ -30,8 +31,8 @@ describe('AdminUserEditDialogComponent', () => {
             imports: [AdminUserEditDialogComponent],
             providers: [
                 { provide: AdminUsersService, useValue: usersService },
-                { provide: MatDialogRef, useValue: dialogRef },
-                { provide: MAT_DIALOG_DATA, useValue: user },
+                { provide: FdUiDialogRef, useValue: dialogRef },
+                { provide: FD_UI_DIALOG_DATA, useValue: user },
             ],
         }).compileComponents();
 

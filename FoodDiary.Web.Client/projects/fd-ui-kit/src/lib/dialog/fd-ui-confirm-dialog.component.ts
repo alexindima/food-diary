@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
+import { FdUiDialogRef } from './fd-ui-dialog-ref';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogComponent } from './fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
@@ -35,8 +36,8 @@ export interface FdUiConfirmDialogData {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiConfirmDialogComponent {
-    public readonly data = inject(MAT_DIALOG_DATA) as FdUiConfirmDialogData;
-    private readonly dialogRef = inject(MatDialogRef<FdUiConfirmDialogComponent>);
+    public readonly data = inject(FD_UI_DIALOG_DATA) as FdUiConfirmDialogData;
+    private readonly dialogRef = inject(FdUiDialogRef<FdUiConfirmDialogComponent>);
 
     public onConfirm(): void {
         this.dialogRef.close(true);

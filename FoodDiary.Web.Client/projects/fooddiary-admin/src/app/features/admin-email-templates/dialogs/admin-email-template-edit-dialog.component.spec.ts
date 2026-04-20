@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog.component';
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
@@ -32,8 +33,8 @@ describe('AdminEmailTemplateEditDialogComponent', () => {
             imports: [AdminEmailTemplateEditDialogComponent],
             providers: [
                 { provide: AdminEmailTemplatesService, useValue: service },
-                { provide: MatDialogRef, useValue: dialogRef },
-                { provide: MAT_DIALOG_DATA, useValue: template },
+                { provide: FdUiDialogRef, useValue: dialogRef },
+                { provide: FD_UI_DIALOG_DATA, useValue: template },
             ],
         }).compileComponents();
 

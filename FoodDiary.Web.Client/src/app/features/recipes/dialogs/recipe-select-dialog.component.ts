@@ -8,7 +8,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observab
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { FormGroupControls } from '../../../shared/lib/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';

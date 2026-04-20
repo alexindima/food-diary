@@ -9,7 +9,8 @@ import { of } from 'rxjs';
 import { ProductDetailComponent } from './product-detail.component';
 import { Product, MeasurementUnit, ProductVisibility } from '../../models/product.data';
 import { ProductService } from '../../api/product.service';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 const mockProduct: Product = {
