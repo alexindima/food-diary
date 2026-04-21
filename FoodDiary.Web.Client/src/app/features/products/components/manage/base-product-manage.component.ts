@@ -79,6 +79,7 @@ export class BaseProductManageComponent {
     public macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
     private formInitialized = false;
     public readonly isDeleting = signal(false);
+    public readonly isSubmitting = signal(false);
     private readonly calorieMismatchThreshold = 0.2;
 
     protected skipConfirmDialog = false;
@@ -302,7 +303,7 @@ export class BaseProductManageComponent {
     public async onDeleteProduct(): Promise<void> {
         const currentProduct = this.product();
 
-        if (!currentProduct || !currentProduct.isOwnedByCurrentUser || this.isDeleting()) {
+        if (!currentProduct || !currentProduct.isOwnedByCurrentUser || this.isDeleting() || this.isSubmitting()) {
             return;
         }
 
@@ -337,6 +338,7 @@ export class BaseProductManageComponent {
         }
 
         if (this.productForm.valid) {
+            this.isSubmitting.set(true);
             const baseAmount = this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
             const defaultPortionAmount = this.getNumberValue(this.productForm.controls.defaultPortionAmount);
             const normalizeFactor = this.nutritionMode === 'portion' && defaultPortionAmount > 0 ? baseAmount / defaultPortionAmount : 1;
@@ -370,11 +372,15 @@ export class BaseProductManageComponent {
             };
             const product = this.product();
 
-            const result = await this.productManageFacade.submitProduct(product ?? null, productData, this.skipConfirmDialog);
-            if (result.error) {
-                this.handleSubmitError(result.error);
+            try {
+                const result = await this.productManageFacade.submitProduct(product ?? null, productData, this.skipConfirmDialog);
+                if (result.error) {
+                    this.handleSubmitError(result.error);
+                }
+                return result.product;
+            } finally {
+                this.isSubmitting.set(false);
             }
-            return result.product;
         }
 
         return null;

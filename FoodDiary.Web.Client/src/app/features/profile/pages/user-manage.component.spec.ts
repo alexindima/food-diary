@@ -298,6 +298,35 @@ describe('UserManageComponent dietologist section', () => {
         expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
         expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alex' }));
     });
+
+    it('reports pending and saving profile states for autosave feedback', async () => {
+        await createComponent(null);
+
+        expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_SAVED');
+
+        component.userForm.controls.firstName.markAsDirty();
+        component.userForm.controls.firstName.setValue('Alex');
+        expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_PENDING');
+
+        facade.isSavingProfile.set(true);
+        fixture.detectChanges();
+        expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_SAVING');
+    });
+
+    it('reports the current notifications background action status', async () => {
+        await createComponent(null);
+
+        expect(component.getNotificationsStatusKey()).toBeNull();
+
+        facade.isUpdatingNotifications.set(true);
+        fixture.detectChanges();
+        expect(component.getNotificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SAVING');
+
+        facade.isUpdatingNotifications.set(false);
+        component.isSchedulingTestNotification.set(true);
+        fixture.detectChanges();
+        expect(component.getNotificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING');
+    });
 });
 
 function createFacadeMock(relationship: any): {
@@ -305,6 +334,7 @@ function createFacadeMock(relationship: any): {
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
     isSavingProfile: ReturnType<typeof signal<boolean>>;
+    isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: ReturnType<typeof signal<never[]>>;
     dietologistRelationship: ReturnType<typeof signal<any>>;
@@ -328,6 +358,7 @@ function createFacadeMock(relationship: any): {
         globalError: signal<string | null>(null),
         isDeleting: signal(false),
         isSavingProfile: signal(false),
+        isRevokingAiConsent: signal(false),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         dietologistRelationship: signal<any>(relationship),

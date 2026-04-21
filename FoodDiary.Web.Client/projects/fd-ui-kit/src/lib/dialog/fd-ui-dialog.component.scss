@@ -82,6 +82,13 @@
         background: var(--fd-color-primary-50);
         color: var(--fd-color-primary-500);
     }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 2px color-mix(in srgb, var(--fd-color-dialog-surface) 88%, transparent),
+            0 0 0 4px color-mix(in srgb, var(--fd-color-primary-400) 52%, transparent);
+    }
 }
 
 .fd-ui-dialog__body {

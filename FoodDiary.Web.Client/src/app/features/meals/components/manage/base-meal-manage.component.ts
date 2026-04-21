@@ -375,6 +375,15 @@ export class BaseMealManageComponent {
         };
     }
 
+    public getSatietyButtonAriaLabel(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): string {
+        const labelKey =
+            controlName === 'preMealSatietyLevel' ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' : 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL';
+        const meta = this.getSatietyLevelMeta(this.consumptionForm.controls[controlName].value);
+        const sectionLabel = this.translateService.instant(labelKey);
+
+        return `${sectionLabel}. ${meta.label}. ${meta.description}`;
+    }
+
     public openSatietyDialog(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): void {
         const control = this.consumptionForm.controls[controlName];
         if (!control) {

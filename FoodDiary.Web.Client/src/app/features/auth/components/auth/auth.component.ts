@@ -229,7 +229,7 @@ export class AuthComponent {
     }
 
     public async onRegisterSubmit(): Promise<void> {
-        if (!this.registerForm.valid) {
+        if (!this.registerForm.valid || this.isSubmitting()) {
             return;
         }
 
@@ -238,12 +238,16 @@ export class AuthComponent {
             language: this.localizationService.getCurrentLanguage(),
         });
 
+        this.isSubmitting.set(true);
+
         this.authService.register(registerRequest).subscribe({
             next: () => {
+                this.isSubmitting.set(false);
                 this.navigationService.navigateToEmailVerificationPending();
                 this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
+                this.isSubmitting.set(false);
                 this.handleRegisterError(error.error?.error);
             },
         });
@@ -282,14 +286,19 @@ export class AuthComponent {
     }
 
     private onGoogleCredential(credential: string): void {
+        this.isSubmitting.set(true);
         const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
         const request: GoogleLoginRequest = { credential, rememberMe: !!rememberMe };
         this.authService.loginWithGoogle(request).subscribe({
             next: () => {
+                this.isSubmitting.set(false);
                 this.navigationService.navigateToReturnUrl(this.returnUrl);
                 this.closeDialogIfAny();
             },
-            error: () => this.setGlobalError('FORM_ERRORS.UNKNOWN'),
+            error: () => {
+                this.isSubmitting.set(false);
+                this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            },
         });
     }
 

@@ -4,9 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
+import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
+import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { StatisticsBodyComponent } from '../../../components/shared/statistics-body/statistics-body.component';
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
 import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary.component';
@@ -31,10 +34,13 @@ import { StatisticsFacade } from '../lib/statistics.facade';
         CommonModule,
         TranslatePipe,
         ReactiveFormsModule,
+        FdUiEmptyStateComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         PeriodFilterComponent,
+        ErrorStateComponent,
+        SkeletonCardComponent,
         StatisticsSummaryComponent,
         StatisticsNutritionComponent,
         StatisticsBodyComponent,
@@ -76,6 +82,8 @@ export class StatisticsComponent {
     public readonly currentRange = this.facade.currentRange;
     public readonly isLoading = this.facade.isLoading;
     public readonly isBodyLoading = this.facade.isBodyLoading;
+    public readonly hasLoadError = this.facade.hasLoadError;
+    public readonly hasBodyLoadError = this.facade.hasBodyLoadError;
     public readonly summaryMetrics = this.facade.summaryMetrics;
     public readonly summarySparklineData = this.facade.summarySparklineData;
     public readonly macroSparklineData = this.facade.macroSparklineData;
@@ -116,5 +124,9 @@ export class StatisticsComponent {
         if (isBodyTab(value)) {
             this.facade.changeBodyTab(value);
         }
+    }
+
+    public reload(): void {
+        this.facade.reload();
     }
 }

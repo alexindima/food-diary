@@ -87,7 +87,7 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "17kB",
+                                    "maximumWarning": "18kB",
                                     "maximumError": "19kB"
                                 }
                             ],
@@ -178,7 +178,12 @@
                         "configDir": ".storybook",
                         "browserTarget": "fd-ui-kit:build",
                         "port": 6006,
-                        "styles": ["src/styles/design-tokens.global.scss", "src/styles/material-theme.scss", "src/styles.scss"],
+                        "styles": [
+                            "node_modules/@material-design-icons/font/filled.css",
+                            "src/styles/design-tokens.global.scss",
+                            "src/styles/material-theme.scss",
+                            "src/styles.scss"
+                        ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
                         },
@@ -191,7 +196,12 @@
                         "configDir": ".storybook",
                         "browserTarget": "fd-ui-kit:build",
                         "outputDir": "dist-storybook",
-                        "styles": ["src/styles/design-tokens.global.scss", "src/styles/material-theme.scss", "src/styles.scss"],
+                        "styles": [
+                            "node_modules/@material-design-icons/font/filled.css",
+                            "src/styles/design-tokens.global.scss",
+                            "src/styles/material-theme.scss",
+                            "src/styles.scss"
+                        ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
                         },
@@ -259,7 +269,7 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "17kB",
+                                    "maximumWarning": "18kB",
                                     "maximumError": "19kB"
                                 }
                             ],

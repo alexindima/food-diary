@@ -7,7 +7,7 @@
         (back)="onCancel()"
     />
 
-    <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting() || isDeleting()">
         <div class="product-manage__grid">
             <div class="product-manage__column product-manage__column--primary">
                 <fd-product-basic-info
@@ -57,7 +57,8 @@
                                     icon="delete"
                                     [fdUiHint]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
                                     [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
-                                    [disabled]="isDeleting()"
+                                    [loading]="isDeleting()"
+                                    [disabled]="isSubmitting()"
                                     (click)="onDeleteProduct()"
                                 />
                             }
@@ -68,6 +69,8 @@
                                     appearance="brand-action"
                                     icon="save"
                                     [fullWidth]="true"
+                                    [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
+                                    [loading]="isSubmitting()"
                                 >
                                     {{ 'PRODUCT_MANAGE.SAVE_BUTTON' | translate }}
                                 </fd-ui-button>
@@ -78,6 +81,8 @@
                                     appearance="brand-action"
                                     icon="add"
                                     [fullWidth]="true"
+                                    [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
+                                    [loading]="isSubmitting()"
                                 >
                                     {{ 'PRODUCT_MANAGE.ADD_BUTTON' | translate }}
                                 </fd-ui-button>

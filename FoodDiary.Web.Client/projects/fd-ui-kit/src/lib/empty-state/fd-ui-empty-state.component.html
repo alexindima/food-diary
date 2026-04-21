@@ -1,0 +1,11 @@
+<div class="fd-ui-empty-state__icon-wrap">
+    <fd-ui-icon class="fd-ui-empty-state__icon" [name]="icon()"></fd-ui-icon>
+</div>
+
+<div class="fd-ui-empty-state__content">
+    @if (title()) {
+        <div class="fd-ui-empty-state__title">{{ title() }}</div>
+    }
+
+    <div class="fd-ui-empty-state__message">{{ message() }}</div>
+</div>

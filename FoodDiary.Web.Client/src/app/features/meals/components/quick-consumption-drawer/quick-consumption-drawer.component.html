@@ -1,9 +1,11 @@
 @if (shouldRender()) {
-    <div class="quick-consumption" [class.quick-consumption--inline]="isInline()">
+    <div class="quick-consumption" [class.quick-consumption--inline]="isInline()" role="region" [attr.aria-labelledby]="titleId">
         <div class="quick-consumption__header">
             <div>
-                <div class="quick-consumption__title">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
-                <div class="quick-consumption__subtitle">{{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}</div>
+                <div class="quick-consumption__title" [id]="titleId">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
+                <div class="quick-consumption__subtitle" aria-live="polite">
+                    {{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}
+                </div>
             </div>
             <fd-ui-button
                 class="quick-consumption__clear"
@@ -44,7 +46,7 @@
                             fill="outline"
                             icon="delete"
                             [fdUiHint]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
-                            [ariaLabel]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
+                            [ariaLabel]="removeItemAriaLabel(item)"
                             (click)="remove(item.key)"
                         />
                     </div>
@@ -55,7 +57,13 @@
         }
 
         <div class="quick-consumption__actions">
-            <fd-ui-button variant="secondary" fill="outline" icon="edit" (click)="openEditor()">
+            <fd-ui-button
+                variant="secondary"
+                fill="outline"
+                icon="edit"
+                [ariaLabel]="'QUICK_CONSUMPTION.EDIT_ARIA' | translate"
+                (click)="openEditor()"
+            >
                 {{ 'QUICK_CONSUMPTION.EDIT' | translate }}
             </fd-ui-button>
             <fd-ui-button
@@ -64,6 +72,7 @@
                 variant="primary"
                 icon="check"
                 [fullWidth]="true"
+                [ariaLabel]="'QUICK_CONSUMPTION.SAVE_ARIA' | translate"
                 [disabled]="isSaving()"
                 [loading]="isSaving()"
                 (click)="save()"

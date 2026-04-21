@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { FdUiSectionStateComponent } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { BaseChartDirective } from 'ng2-charts';
@@ -9,7 +10,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 @Component({
     selector: 'fd-statistics-nutrition',
     standalone: true,
-    imports: [CommonModule, TranslateModule, FdUiCardComponent, FdUiTabsComponent, BaseChartDirective],
+    imports: [CommonModule, TranslateModule, FdUiSectionStateComponent, FdUiCardComponent, FdUiTabsComponent, BaseChartDirective],
     templateUrl: './statistics-nutrition.component.html',
     styleUrls: ['./statistics-nutrition.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

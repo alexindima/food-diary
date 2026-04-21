@@ -70,6 +70,7 @@
         "@emnapi/core": "^1.9.2",
         "@emnapi/runtime": "^1.9.2",
         "@emnapi/wasi-threads": "^1.2.0",
+        "@material-design-icons/font": "^0.14.15",
         "@playwright/test": "^1.59.1",
         "@storybook/angular": "^10.3.5",
         "@types/express": "^5.0.1",

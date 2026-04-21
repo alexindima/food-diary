@@ -7,9 +7,12 @@
         (selectedValueChange)="onTabChange($event)"
     />
 
-    @if (!hasData()) {
-        <p class="stats-nutrition-card__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>
-    } @else {
+    <fd-ui-section-state
+        appearance="compact"
+        [state]="hasData() ? 'content' : 'empty'"
+        [emptyMessage]="'STATISTICS.NO_DATA' | translate"
+        emptyIcon="monitoring"
+    >
         @switch (selectedTab()) {
             @case ('calories') {
                 <div class="stats-nutrition-card__chart-area">
@@ -67,5 +70,5 @@
                 </div>
             }
         }
-    }
+    </fd-ui-section-state>
 </fd-ui-card>

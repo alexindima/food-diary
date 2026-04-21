@@ -32,6 +32,7 @@ export interface FdUiSelectOption<T = unknown> {
 export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected readonly isEqual = Object.is;
     protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
+    protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
 
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
     public readonly label = input<string>();
@@ -74,6 +75,14 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
 
     protected get hasValue(): boolean {
         return this.selectedIndex >= 0;
+    }
+
+    protected get activeOptionId(): string | null {
+        if (!this.isOpen || this.activeIndex < 0 || this.activeIndex >= this.options().length) {
+            return null;
+        }
+
+        return this.getOptionId(this.activeIndex);
     }
 
     public writeValue(value: T | null): void {
@@ -195,5 +204,15 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
                 this.controlRef()?.nativeElement.focus();
                 break;
         }
+    }
+
+    protected onMenuAttached(): void {
+        queueMicrotask(() => {
+            this.listboxRef()?.nativeElement.focus();
+        });
+    }
+
+    protected getOptionId(index: number): string {
+        return `${this.id()}-option-${index}`;
     }
 }

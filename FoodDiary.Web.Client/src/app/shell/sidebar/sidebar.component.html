@@ -84,7 +84,14 @@
 
     @if (currentUser(); as user) {
         <div class="sidebar__user-wrapper">
-            <button type="button" class="sidebar__user" (click)="toggleUserMenu()">
+            <button
+                #userMenuButton
+                type="button"
+                class="sidebar__user"
+                aria-haspopup="menu"
+                [attr.aria-expanded]="isUserMenuOpen()"
+                (click)="toggleUserMenu(userMenuButton)"
+            >
                 @if (user.profileImage) {
                     <div class="sidebar__avatar sidebar__avatar--image">
                         <img [src]="user.profileImage" alt="Avatar" />
@@ -104,18 +111,27 @@
             </button>
 
             @if (isUserMenuOpen()) {
-                <div class="sidebar__user-menu">
+                <div #userMenu class="sidebar__user-menu" role="menu" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
                     <a
                         routerLink="/profile"
                         routerLinkActive="is-active"
                         class="sidebar__user-menu-link"
+                        role="menuitem"
                         [class.is-pending]="pendingRoute() === '/profile'"
                         (click)="onDirectRouteClick('/profile')"
                     >
                         <fd-ui-icon name="settings"></fd-ui-icon>
                         <span>{{ 'HEADER.PROFILE' | translate }}</span>
                     </a>
-                    <fd-ui-button class="sidebar__logout" type="button" variant="danger" fill="outline" icon="logout" (click)="logout()">
+                    <fd-ui-button
+                        class="sidebar__logout"
+                        type="button"
+                        variant="danger"
+                        fill="outline"
+                        icon="logout"
+                        role="menuitem"
+                        (click)="logout()"
+                    >
                         {{ 'HEADER.LOGOUT' | translate }}
                     </fd-ui-button>
                 </div>
@@ -152,44 +168,48 @@
             <span class="sidebar-mobile__label">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </a>
         <button
+            #mobileFoodButton
             type="button"
             class="sidebar-mobile__item"
             [class.is-open]="isMobileFoodOpen()"
-            (click)="toggleMobileFood()"
-            aria-haspopup="true"
+            (click)="toggleMobileFood(mobileFoodButton)"
+            aria-haspopup="dialog"
             [attr.aria-expanded]="isMobileFoodOpen()"
         >
             <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
             <span class="sidebar-mobile__label">{{ 'SIDEBAR.FOOD' | translate }}</span>
         </button>
         <button
+            #mobileBodyButton
             type="button"
             class="sidebar-mobile__item"
             [class.is-open]="isMobileBodyOpen()"
-            (click)="toggleMobileBody()"
-            aria-haspopup="true"
+            (click)="toggleMobileBody(mobileBodyButton)"
+            aria-haspopup="dialog"
             [attr.aria-expanded]="isMobileBodyOpen()"
         >
             <fd-ui-icon name="monitor_weight"></fd-ui-icon>
             <span class="sidebar-mobile__label">{{ 'SIDEBAR.BODY' | translate }}</span>
         </button>
         <button
+            #mobileReportsButton
             type="button"
             class="sidebar-mobile__item"
             [class.is-open]="isMobileReportsOpen()"
-            (click)="toggleMobileReports()"
-            aria-haspopup="true"
+            (click)="toggleMobileReports(mobileReportsButton)"
+            aria-haspopup="dialog"
             [attr.aria-expanded]="isMobileReportsOpen()"
         >
             <fd-ui-icon name="bar_chart"></fd-ui-icon>
             <span class="sidebar-mobile__label">{{ 'SIDEBAR.REPORTS' | translate }}</span>
         </button>
         <button
+            #mobileUserButton
             type="button"
             class="sidebar-mobile__item"
             [class.is-open]="isMobileUserOpen()"
-            (click)="toggleMobileUser()"
-            aria-haspopup="true"
+            (click)="toggleMobileUser(mobileUserButton)"
+            aria-haspopup="dialog"
             [attr.aria-expanded]="isMobileUserOpen()"
         >
             <fd-ui-icon name="person"></fd-ui-icon>
@@ -204,7 +224,14 @@
 @if (isMobileSheetOpen()) {
     <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMobileMenus()"></div>
 
-    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="activeMobileSheetLabelKey() | translate">
+    <div
+        #mobileSheet
+        class="sidebar-mobile__sheet"
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        [attr.aria-label]="activeMobileSheetLabelKey() | translate"
+    >
         <fd-sidebar-route-links
             [items]="activeMobileSheetRouteItems()"
             [pendingRoute]="pendingRoute()"

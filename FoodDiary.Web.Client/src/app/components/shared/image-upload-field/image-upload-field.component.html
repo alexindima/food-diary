@@ -4,6 +4,9 @@
         role="button"
         tabindex="0"
         [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
+        [attr.aria-disabled]="disabled || isUploading"
+        [attr.aria-busy]="isUploading"
+        [attr.aria-describedby]="error ? errorId : null"
         [class.image-upload-field__dropzone--dragging]="isDragging"
         [class.image-upload-field__dropzone--uploading]="isUploading"
         [class.image-upload-field__dropzone--has-image]="!!selection.url"
@@ -22,7 +25,7 @@
         />
 
         @if (selection.url) {
-            <img class="image-upload-field__preview" [src]="selection.url" alt="Preview" />
+            <img class="image-upload-field__preview" [src]="selection.url" [alt]="previewAlt()" />
             <div class="image-upload-field__control">
                 <fd-ui-button
                     type="button"
@@ -62,40 +65,47 @@
         }
 
         @if (isUploading) {
-            <div class="image-upload-field__overlay">{{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}</div>
+            <div class="image-upload-field__overlay" role="status" aria-live="polite">{{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}</div>
         }
     </div>
     @if (error) {
-        <span class="image-upload-field__error">{{ error }}</span>
+        <span [id]="errorId" class="image-upload-field__error" role="alert">{{ error }}</span>
     }
 
     @defer (when isCropping && cropPreviewUrl) {
         @if (isCropping && cropPreviewUrl) {
-            <div class="image-upload-field__cropper-backdrop">
-                <div class="image-upload-field__cropper">
-                    <div class="image-upload-field__cropper-header">
-                        <div class="image-upload-field__cropper-title">{{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}</div>
-                        <div class="image-upload-field__cropper-subtitle">
-                            {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
-                        </div>
+            <div class="image-upload-field__cropper-backdrop" aria-hidden="true"></div>
+            <div
+                class="image-upload-field__cropper"
+                role="dialog"
+                aria-modal="true"
+                [attr.aria-labelledby]="cropTitleId"
+                [attr.aria-describedby]="cropSubtitleId"
+            >
+                <div class="image-upload-field__cropper-header">
+                    <div [id]="cropTitleId" class="image-upload-field__cropper-title">
+                        {{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}
                     </div>
-                    <div class="image-upload-field__cropper-body">
-                        <img
-                            #cropImage
-                            [src]="cropPreviewUrl"
-                            alt="Crop preview"
-                            (load)="onCropperImageLoaded(cropImage)"
-                            class="image-upload-field__cropper-image"
-                        />
+                    <div [id]="cropSubtitleId" class="image-upload-field__cropper-subtitle">
+                        {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
                     </div>
-                    <div class="image-upload-field__cropper-actions">
-                        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{
-                            'COMMON.CANCEL' | translate
-                        }}</fd-ui-button>
-                        <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
-                            {{ 'IMAGE_UPLOAD_FIELD.APPLY' | translate }}
-                        </fd-ui-button>
-                    </div>
+                </div>
+                <div class="image-upload-field__cropper-body">
+                    <img
+                        #cropImage
+                        [src]="cropPreviewUrl"
+                        [alt]="previewAlt()"
+                        (load)="onCropperImageLoaded(cropImage)"
+                        class="image-upload-field__cropper-image"
+                    />
+                </div>
+                <div class="image-upload-field__cropper-actions">
+                    <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{
+                        'COMMON.CANCEL' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
+                        {{ 'IMAGE_UPLOAD_FIELD.APPLY' | translate }}
+                    </fd-ui-button>
                 </div>
             </div>
         }

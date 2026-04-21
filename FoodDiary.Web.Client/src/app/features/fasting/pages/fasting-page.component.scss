@@ -23,6 +23,23 @@
         height: 100%;
     }
 
+    &__skeleton-grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    &__skeleton {
+        width: 100%;
+
+        &--hero {
+            min-height: 360px;
+        }
+
+        &--section {
+            min-height: 240px;
+        }
+    }
+
     &__controls {
         display: flex;
         flex-direction: column;

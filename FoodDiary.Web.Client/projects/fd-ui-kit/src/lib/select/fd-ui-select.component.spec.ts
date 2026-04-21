@@ -133,4 +133,28 @@ describe('FdUiSelectComponent', () => {
 
         expect(component['disabled']).toBe(true);
     });
+
+    it('should expose active option id when menu is open', () => {
+        fixture.componentRef.setInput('options', testOptions);
+        fixture.detectChanges();
+
+        component['openMenu']();
+        fixture.detectChanges();
+
+        expect(component['activeOptionId']).toBe(`${component.id()}-option-0`);
+    });
+
+    it('should focus listbox when overlay attaches', async () => {
+        const focus = vi.fn();
+        Object.defineProperty(component, 'listboxRef', {
+            value: vi.fn(() => ({
+                nativeElement: { focus },
+            })),
+        });
+
+        component['onMenuAttached']();
+        await Promise.resolve();
+
+        expect(focus).toHaveBeenCalled();
+    });
 });

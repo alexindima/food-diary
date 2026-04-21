@@ -188,18 +188,21 @@
         }
     }
 
-    &__loader {
-        text-align: center;
-        color: var(--fd-color-text-muted);
-        padding: 24px 0;
-        font-weight: 600;
+    &__skeleton-grid {
+        display: grid;
+        gap: 16px;
     }
 
-    &__empty {
-        margin: 0;
-        text-align: center;
-        color: var(--fd-color-text-muted);
-        padding: 24px 0;
+    &__skeleton {
+        width: 100%;
+
+        &--summary {
+            min-height: 240px;
+        }
+
+        &--chart {
+            min-height: 320px;
+        }
     }
 
     @media #{variables.$media-mobile} {

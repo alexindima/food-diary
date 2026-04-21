@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { FdUiSectionStateComponent } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { BaseChartDirective } from 'ng2-charts';
@@ -26,7 +27,7 @@ export interface SummaryMetrics {
 @Component({
     selector: 'fd-statistics-summary',
     standalone: true,
-    imports: [CommonModule, TranslateModule, FdUiCardComponent, FdUiAccentSurfaceComponent, BaseChartDirective],
+    imports: [CommonModule, TranslateModule, FdUiSectionStateComponent, FdUiCardComponent, FdUiAccentSurfaceComponent, BaseChartDirective],
     templateUrl: './statistics-summary.component.html',
     styleUrls: ['./statistics-summary.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

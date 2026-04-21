@@ -165,6 +165,7 @@ export class GoalsFacade {
     });
     public readonly isLoadingGoals = signal(true);
     public readonly isSavingGoals = signal(false);
+    public readonly hasLoadError = signal(false);
     public readonly selectedPreset = signal<MacroPresetKey>('custom');
     public readonly hasPendingAutosave = signal(false);
     public readonly hasAutosaveError = signal(false);
@@ -279,6 +280,10 @@ export class GoalsFacade {
         this.loadGoals();
     }
 
+    public reload(): void {
+        this.loadGoals();
+    }
+
     public updateCalories(rawValue: number): void {
         if (Number.isNaN(rawValue)) {
             return;
@@ -381,64 +386,72 @@ export class GoalsFacade {
 
     private loadGoals(): void {
         this.isLoadingGoals.set(true);
+        this.hasLoadError.set(false);
         this.goalsService
             .getGoals()
             .pipe(finalize(() => this.isLoadingGoals.set(false)))
-            .subscribe(goals => {
-                this.selectedPreset.set('custom');
+            .subscribe({
+                next: goals => {
+                    this.selectedPreset.set('custom');
 
-                if (goals?.dailyCalorieTarget !== undefined && goals.dailyCalorieTarget !== null) {
-                    this.calorieTarget.set(this.clampCalories(goals.dailyCalorieTarget));
-                }
-
-                const nextMacros = { ...this.macroValues() };
-                let hasUserMacros = false;
-
-                const applyMacro = (key: MacroKey, value: number | null | undefined): void => {
-                    if (value === null || value === undefined) {
-                        return;
+                    if (goals?.dailyCalorieTarget !== undefined && goals.dailyCalorieTarget !== null) {
+                        this.calorieTarget.set(this.clampCalories(goals.dailyCalorieTarget));
                     }
 
-                    const cfg = this.macroConfigs.find(item => item.key === key);
-                    if (!cfg) {
-                        return;
+                    const nextMacros = { ...this.macroValues() };
+                    let hasUserMacros = false;
+
+                    const applyMacro = (key: MacroKey, value: number | null | undefined): void => {
+                        if (value === null || value === undefined) {
+                            return;
+                        }
+
+                        const cfg = this.macroConfigs.find(item => item.key === key);
+                        if (!cfg) {
+                            return;
+                        }
+
+                        nextMacros[key] = this.clampValue(value, cfg.max);
+                        hasUserMacros = true;
+                    };
+
+                    applyMacro('protein', goals?.proteinTarget);
+                    applyMacro('fats', goals?.fatTarget);
+                    applyMacro('carbs', goals?.carbTarget);
+                    applyMacro('fiber', goals?.fiberTarget);
+
+                    if (hasUserMacros) {
+                        this.macroValues.set(nextMacros);
                     }
 
-                    nextMacros[key] = this.clampValue(value, cfg.max);
-                    hasUserMacros = true;
-                };
+                    this.waterValue.set(
+                        goals?.waterGoal !== undefined && goals.waterGoal !== null
+                            ? this.clampValue(goals.waterGoal, this.waterConfig.max)
+                            : 0,
+                    );
 
-                applyMacro('protein', goals?.proteinTarget);
-                applyMacro('fats', goals?.fatTarget);
-                applyMacro('carbs', goals?.carbTarget);
-                applyMacro('fiber', goals?.fiberTarget);
+                    this.bodyTargetValues.set({
+                        weight: goals?.desiredWeight ?? 0,
+                        waist: goals?.desiredWaist ?? 0,
+                    });
 
-                if (hasUserMacros) {
-                    this.macroValues.set(nextMacros);
-                }
+                    this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
+                    this.dayCalories.set({
+                        mondayCalories: goals?.mondayCalories ?? 0,
+                        tuesdayCalories: goals?.tuesdayCalories ?? 0,
+                        wednesdayCalories: goals?.wednesdayCalories ?? 0,
+                        thursdayCalories: goals?.thursdayCalories ?? 0,
+                        fridayCalories: goals?.fridayCalories ?? 0,
+                        saturdayCalories: goals?.saturdayCalories ?? 0,
+                        sundayCalories: goals?.sundayCalories ?? 0,
+                    });
 
-                this.waterValue.set(
-                    goals?.waterGoal !== undefined && goals.waterGoal !== null ? this.clampValue(goals.waterGoal, this.waterConfig.max) : 0,
-                );
-
-                this.bodyTargetValues.set({
-                    weight: goals?.desiredWeight ?? 0,
-                    waist: goals?.desiredWaist ?? 0,
-                });
-
-                this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
-                this.dayCalories.set({
-                    mondayCalories: goals?.mondayCalories ?? 0,
-                    tuesdayCalories: goals?.tuesdayCalories ?? 0,
-                    wednesdayCalories: goals?.wednesdayCalories ?? 0,
-                    thursdayCalories: goals?.thursdayCalories ?? 0,
-                    fridayCalories: goals?.fridayCalories ?? 0,
-                    saturdayCalories: goals?.saturdayCalories ?? 0,
-                    sundayCalories: goals?.sundayCalories ?? 0,
-                });
-
-                this.hasAutosaveError.set(false);
-                this.hasPendingAutosave.set(false);
+                    this.hasAutosaveError.set(false);
+                    this.hasPendingAutosave.set(false);
+                },
+                error: () => {
+                    this.hasLoadError.set(true);
+                },
             });
     }
 

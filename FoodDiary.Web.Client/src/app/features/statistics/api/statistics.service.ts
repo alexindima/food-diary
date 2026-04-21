@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -18,7 +18,7 @@ export class StatisticsService extends ApiService {
             dateTo: this.toIsoString(params.dateTo),
         };
 
-        return this.get<AggregatedStatistics[]>('', queryParams).pipe(catchError(() => of([])));
+        return this.get<AggregatedStatistics[]>('', queryParams);
     }
 
     private toIsoString(value: Date | string): string {

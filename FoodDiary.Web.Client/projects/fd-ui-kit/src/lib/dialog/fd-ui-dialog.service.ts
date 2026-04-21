@@ -37,7 +37,7 @@ export class FdUiDialogService {
             positionStrategy,
             panelClass,
             backdropClass,
-            autoFocus: config.autoFocus ?? false,
+            autoFocus: config.autoFocus ?? 'first-tabbable',
             providers: cdkDialogRef => {
                 const wrappedRef = new FdUiDialogRef<T, R>(cdkDialogRef);
                 return [{ provide: FdUiDialogRef, useValue: wrappedRef }, ...baseProviders] as StaticProvider[];

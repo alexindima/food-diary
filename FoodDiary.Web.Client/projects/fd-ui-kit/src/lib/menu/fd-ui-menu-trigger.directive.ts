@@ -68,6 +68,10 @@ export class FdUiMenuTriggerDirective {
                 event.preventDefault();
                 this.open();
                 break;
+            case 'ArrowUp':
+                event.preventDefault();
+                this.open('last');
+                break;
             case 'Escape':
                 if (this.overlayRef?.hasAttached()) {
                     event.preventDefault();
@@ -86,7 +90,7 @@ export class FdUiMenuTriggerDirective {
         this.open();
     }
 
-    public open(): void {
+    public open(focusTarget: 'first' | 'last' = 'first'): void {
         const menu = this.menu();
         if (!menu) {
             return;
@@ -106,22 +110,34 @@ export class FdUiMenuTriggerDirective {
                 if (event.key === 'Escape') {
                     event.preventDefault();
                     this.close();
+                    return;
+                }
+
+                if (event.key === 'Tab') {
+                    this.close(false);
                 }
             }),
         );
 
         overlayRef.updateSize({ minWidth: this.elementRef.nativeElement.getBoundingClientRect().width });
         overlayRef.attach(new TemplatePortal(menu.templateRef, this.viewContainerRef));
+        if (focusTarget === 'last') {
+            menu.focusLastItem();
+            return;
+        }
+
         menu.focusFirstItem();
     }
 
-    public close(): void {
+    public close(restoreFocus = true): void {
         if (!this.overlayRef?.hasAttached()) {
             return;
         }
 
         this.overlayRef.detach();
-        this.elementRef.nativeElement.focus();
+        if (restoreFocus) {
+            this.elementRef.nativeElement.focus();
+        }
     }
 
     private getOverlayRef(): OverlayRef {

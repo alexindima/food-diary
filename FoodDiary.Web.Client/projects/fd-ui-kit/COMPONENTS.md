@@ -432,6 +432,39 @@ Inline alert/banner for actionable warnings, info states, or success notices.
 - `secondaryAction`
 - `dismiss`
 
+#### `fd-ui-status-badge`
+Compact neutral status badge for short async-state labels such as saved, syncing, pending, or failed.
+
+**Inputs**
+- `tone?: 'muted' | 'success' | 'warning' | 'danger'`
+
+#### `fd-ui-empty-state`
+Reusable empty/no-data placeholder for pages, cards, and compact sections.
+
+**Inputs**
+- `title?: string | null`
+- `message: string`
+- `icon?: string`
+- `appearance?: 'default' | 'compact'`
+
+#### `fd-ui-section-state`
+Reusable section wrapper for `content`, `loading`, `empty`, and `error` states inside cards, settings blocks, and dashboard widgets.
+
+**Inputs**
+- `state?: 'content' | 'loading' | 'empty' | 'error'`
+- `appearance?: 'default' | 'compact'`
+- `loadingLabel?: string | null`
+- `emptyTitle?: string | null`
+- `emptyMessage?: string`
+- `emptyIcon?: string`
+- `errorTitle?: string`
+- `errorMessage?: string`
+- `errorIcon?: string`
+- `retryLabel?: string | null`
+
+**Outputs**
+- `retry`
+
 #### `fd-ui-menu`, `fd-ui-menu-item`, `fd-ui-menu-trigger`, `fd-ui-menu-divider`
 Context menu components.
 

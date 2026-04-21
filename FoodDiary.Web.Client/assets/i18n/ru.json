@@ -672,7 +672,10 @@
         "SAVE_ERROR": "Не удалось сохранить приём пищи",
         "PREVIEW_EMPTY": "Добавьте продукт или рецепт — они появятся здесь",
         "CLEAR": "Очистить черновик",
-        "REMOVE_ITEM": "Удалить позицию"
+        "REMOVE_ITEM": "Удалить позицию",
+        "REMOVE_ITEM_NAMED": "Удалить {name} из черновика",
+        "EDIT_ARIA": "Открыть редактор черновика",
+        "SAVE_ARIA": "Сохранить черновик приёма пищи"
     },
     "RECIPE_BADGE": {
         "MY": "Мой рецепт",
@@ -1024,6 +1027,8 @@
         "TEXT_PREVIEW_LABEL": "Исходный запрос",
         "ADD_DETAILS": "Добавить детали",
         "HIDE_DETAILS": "Скрыть детали",
+        "PHOTO_PREVIEW_ALT": "Превью анализа фото",
+        "REMOVE_AI_ITEM": "Удалить {name} из анализа",
         "DETAIL_DATE": "Дата",
         "DETAIL_TIME": "Время",
         "DETAIL_COMMENT": "Комментарий",
@@ -1578,6 +1583,7 @@
         "PROTOCOL_36_0": "36 ч",
         "PROTOCOL_72_0": "72 ч",
         "PROTOCOL_CUSTOM": "Своё",
+        "MODE_GROUP": "Режим голодания",
         "MODE_INTERMITTENT": "Интервальное",
         "MODE_EXTENDED": "Длительное",
         "MODE_CYCLIC": "Циклическое",
@@ -1900,10 +1906,20 @@
             "O": "Другой"
         },
         "ACCOUNT_SECTION": "Основное",
+        "ACCOUNT_DESC": "Личные данные и настройки профиля",
+        "PROFILE_STATUS_SAVED": "Изменения сохранены",
+        "PROFILE_STATUS_PENDING": "Есть несохранённые изменения",
+        "PROFILE_STATUS_INVALID": "Заполните обязательные поля, чтобы сохранить",
+        "PROFILE_STATUS_SAVING": "Сохраняем изменения...",
+        "PROFILE_STATUS_ERROR": "Не удалось сохранить изменения",
         "AVATAR": "Аватар",
         "AVATAR_DESC": "Загрузите квадратное изображение, минимум 512x512",
         "NOTIFICATIONS_SECTION": "Уведомления",
         "NOTIFICATIONS_DESC": "Выберите, может ли приложение отправлять push-напоминания и обновления.",
+        "NOTIFICATIONS_STATUS_SAVING": "Обновляем настройки уведомлений...",
+        "NOTIFICATIONS_STATUS_DEVICE_SYNCING": "Синхронизируем это устройство с push-уведомлениями...",
+        "NOTIFICATIONS_STATUS_DEVICE_REMOVING": "Отключаем устройство...",
+        "NOTIFICATIONS_STATUS_TEST_SENDING": "Планируем тестовый push...",
         "PUSH_NOTIFICATIONS_LABEL": "Push-уведомления",
         "PUSH_NOTIFICATIONS": "Push-уведомления",
         "NOTIFICATIONS_ACCOUNT_STATUS_ENABLED": "Включены для аккаунта",
@@ -2021,7 +2037,6 @@
         "DIETOLOGIST_INVITE_ERROR": "Не удалось отправить приглашение. Попробуйте ещё раз.",
         "DIETOLOGIST_PERMISSIONS_ERROR": "Не удалось обновить настройки доступа для диетолога.",
         "DIETOLOGIST_DISCONNECT_ERROR": "Не удалось отключить диетолога.",
-        "ACCOUNT_DESC": "Личные данные и настройки профиля",
         "PERSONAL_SECTION": "Личная информация",
         "BODY_SECTION": "Параметры тела",
         "HEIGHT": "Рост",
@@ -2571,3 +2586,4 @@
         "REASON_LABEL": "Причина"
     }
 }
+

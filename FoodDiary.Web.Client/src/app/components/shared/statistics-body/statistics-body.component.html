@@ -7,19 +7,21 @@
         (selectedValueChange)="onTabChange($event)"
     />
 
-    @if (isLoading()) {
-        <div class="stats-body-card__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
-    } @else {
+    <fd-ui-section-state
+        appearance="compact"
+        [state]="isLoading() ? 'loading' : hasLoadError() ? 'error' : hasBodyData() ? 'content' : 'empty'"
+        [loadingLabel]="'STATISTICS.LOADING' | translate"
+        [emptyMessage]="noDataKey() | translate"
+        emptyIcon="monitoring"
+        [errorTitle]="'ERRORS.LOAD_FAILED_TITLE' | translate"
+        [errorMessage]="loadErrorKey() | translate"
+        [retryLabel]="'ERRORS.RETRY' | translate"
+        (retry)="onRetry()"
+    >
         @if (bodyChartData(); as bodyData) {
-            @if (hasBodyData()) {
-                <div class="stats-body-card__chart-area">
-                    <canvas baseChart [type]="'line'" [data]="bodyData" [options]="bodyChartOptions() || {}" [legend]="false"></canvas>
-                </div>
-            } @else {
-                <p class="stats-body-card__empty">{{ noDataKey() | translate }}</p>
-            }
-        } @else {
-            <p class="stats-body-card__empty">{{ noDataKey() | translate }}</p>
+            <div class="stats-body-card__chart-area">
+                <canvas baseChart [type]="'line'" [data]="bodyData" [options]="bodyChartOptions() || {}" [legend]="false"></canvas>
+            </div>
         }
-    }
+    </fd-ui-section-state>
 </fd-ui-card>

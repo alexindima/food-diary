@@ -7,9 +7,9 @@
         (back)="onCancel()"
     />
 
-    <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
         @if (globalError()) {
-            <div class="recipe-manage__error">
+            <div class="recipe-manage__error" role="alert">
                 {{ globalError() }}
             </div>
         }

@@ -2,22 +2,34 @@
     <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" [subtitle]="'STATISTICS.SUBTITLE' | translate" />
 
     <fd-page-body>
-        <fd-period-filter
-            class="statistics__period"
-            [tabs]="rangeTabs"
-            [selectedValue]="selectedRange()"
-            [rangeControl]="customRangeControl"
-            [displayRange]="currentRange()"
-            [startLabel]="'STATISTICS.CUSTOM_RANGE_FROM_LABEL' | translate"
-            [endLabel]="'STATISTICS.CUSTOM_RANGE_TO_LABEL' | translate"
-            [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-            [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-            (rangeChange)="changeRange($event)"
-        />
-
-        @if (isLoading()) {
-            <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
+        @if (hasLoadError()) {
+            <fd-error-state (retry)="reload()" />
         } @else {
+            <fd-period-filter
+                class="statistics__period"
+                [tabs]="rangeTabs"
+                [selectedValue]="selectedRange()"
+                [rangeControl]="customRangeControl"
+                [displayRange]="currentRange()"
+                [startLabel]="'STATISTICS.CUSTOM_RANGE_FROM_LABEL' | translate"
+                [endLabel]="'STATISTICS.CUSTOM_RANGE_TO_LABEL' | translate"
+                [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                (rangeChange)="changeRange($event)"
+            />
+        }
+
+        @if (!hasLoadError() && isLoading()) {
+            <div class="statistics__skeleton-grid">
+                <fd-skeleton-card class="statistics__skeleton statistics__skeleton--summary" />
+                <fd-skeleton-card class="statistics__skeleton statistics__skeleton--chart" />
+                <fd-skeleton-card class="statistics__skeleton statistics__skeleton--chart" />
+            </div>
+        } @else if (!hasLoadError()) {
+            @if (!hasStatisticsData() && !hasBodyData() && !isBodyLoading() && !hasBodyLoadError()) {
+                <fd-ui-empty-state [message]="'STATISTICS.NO_DATA' | translate" icon="monitoring" />
+            }
+
             <fd-statistics-summary
                 [summary]="summaryMetrics()"
                 [summarySparklineData]="summarySparklineData()"
@@ -48,9 +60,11 @@
                 [tabs]="bodyTabs"
                 [selectedTab]="selectedBodyTab()"
                 [isLoading]="isBodyLoading()"
+                [hasLoadError]="hasBodyLoadError()"
                 [bodyChartData]="bodyChartData()"
                 [bodyChartOptions]="bodyChartOptions"
                 [hasBodyData]="hasBodyData()"
+                (retry)="reload()"
                 (selectedTabChange)="changeBodyTab($event)"
             />
         }

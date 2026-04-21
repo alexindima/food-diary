@@ -39,6 +39,7 @@ export class ProfileManageFacade {
     public readonly globalError = signal<string | null>(null);
     public readonly isDeleting = signal(false);
     public readonly isSavingProfile = signal(false);
+    public readonly isRevokingAiConsent = signal(false);
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
@@ -132,17 +133,25 @@ export class ProfileManageFacade {
     }
 
     public revokeAiConsent(): void {
-        this.userService.revokeAiConsent().subscribe({
-            next: () => {
-                const current = this.user();
-                if (current) {
-                    this.user.set({ ...current, aiConsentAcceptedAt: null });
-                }
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.REVOKE_AI_CONSENT_ERROR');
-            },
-        });
+        if (this.isRevokingAiConsent()) {
+            return;
+        }
+
+        this.isRevokingAiConsent.set(true);
+        this.userService
+            .revokeAiConsent()
+            .pipe(finalize(() => this.isRevokingAiConsent.set(false)))
+            .subscribe({
+                next: () => {
+                    const current = this.user();
+                    if (current) {
+                        this.user.set({ ...current, aiConsentAcceptedAt: null });
+                    }
+                },
+                error: () => {
+                    this.setGlobalError('USER_MANAGE.REVOKE_AI_CONSENT_ERROR');
+                },
+            });
     }
 
     public async updateNotificationPreferences(preferences: {

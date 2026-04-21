@@ -15,7 +15,7 @@
     @if (imageUrl() || sourceText()) {
         <div class="ai-photo-result__preview-wrap">
             @if (imageUrl()) {
-                <img class="ai-photo-result__preview" [src]="imageUrl()" alt="Photo preview" />
+                <img class="ai-photo-result__preview" [src]="imageUrl()" [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate" />
             } @else {
                 <div class="ai-photo-result__text-preview">
                     <div class="ai-photo-result__text-preview-label">{{ sourceTextLabelKey() | translate }}</div>
@@ -28,11 +28,11 @@
                 </div>
             }
             @if (isAnalyzing()) {
-                <div class="ai-photo-result__status">
+                <div class="ai-photo-result__status" role="status" aria-live="polite">
                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
                 </div>
             } @else if (isNutritionLoading()) {
-                <div class="ai-photo-result__status">
+                <div class="ai-photo-result__status" role="status" aria-live="polite">
                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION' | translate }}
                 </div>
             }
@@ -40,7 +40,7 @@
     }
 
     @if (errorKey()) {
-        <div class="ai-photo-result__error">
+        <div class="ai-photo-result__error" role="alert">
             {{ errorKey()! | translate }}
         </div>
     }
@@ -113,7 +113,7 @@
                             fill="text"
                             icon="delete"
                             [fdUiHint]="'COMMON.DELETE' | translate"
-                            [ariaLabel]="'COMMON.DELETE' | translate"
+                            [ariaLabel]="removeEditItemAriaLabel(item)"
                             (click)="removeEditItem(i)"
                         />
                     </div>
@@ -165,7 +165,7 @@
         }
 
         @if (!isNutritionLoading() && nutritionErrorKey()) {
-            <div class="ai-photo-result__error">
+            <div class="ai-photo-result__error" role="alert">
                 {{ nutritionErrorKey()! | translate }}
             </div>
         }
@@ -234,6 +234,7 @@
                                 type="button"
                                 class="ai-photo-result__satiety-card"
                                 (click)="openSatietyDialog('before')"
+                                [attr.aria-label]="getSatietyButtonAriaLabel('before')"
                                 [style.--satiety-gradient]="beforeMeta.gradient"
                             >
                                 <div class="ai-photo-result__satiety-indicator">
@@ -254,6 +255,7 @@
                                 type="button"
                                 class="ai-photo-result__satiety-card"
                                 (click)="openSatietyDialog('after')"
+                                [attr.aria-label]="getSatietyButtonAriaLabel('after')"
                                 [style.--satiety-gradient]="afterMeta.gradient"
                             >
                                 <div class="ai-photo-result__satiety-indicator">

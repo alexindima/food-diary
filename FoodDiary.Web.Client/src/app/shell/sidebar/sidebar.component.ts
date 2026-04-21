@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, DestroyRef, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
@@ -74,6 +75,8 @@ type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
 })
 export class SidebarComponent {
     protected readonly Math = Math;
+    private readonly document = inject(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly userService = inject(UserService);
@@ -218,6 +221,10 @@ export class SidebarComponent {
 
         return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * 100, 100));
     });
+    private readonly userMenuRef = viewChild<ElementRef<HTMLElement>>('userMenu');
+    private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheet');
+    private lastUserMenuTrigger: HTMLElement | null = null;
+    private lastMobileSheetTrigger: HTMLElement | null = null;
 
     private readonly userSync = effect(() => {
         if (!this.isAuthenticated()) {
@@ -244,6 +251,24 @@ export class SidebarComponent {
             this.notificationService.ensureNotificationsLoaded();
         }
     });
+    private readonly userMenuFocusSync = effect(() => {
+        if (!this.isUserMenuOpen()) {
+            return;
+        }
+
+        queueMicrotask(() => {
+            this.focusFirstInteractive(this.userMenuRef()?.nativeElement);
+        });
+    });
+    private readonly mobileSheetFocusSync = effect(() => {
+        if (!this.isMobileSheetOpen()) {
+            return;
+        }
+
+        queueMicrotask(() => {
+            this.focusFirstInteractive(this.mobileSheetRef()?.nativeElement);
+        });
+    });
 
     public constructor() {
         this.router.events.subscribe(event => {
@@ -251,6 +276,8 @@ export class SidebarComponent {
                 this.pendingRoute.set(null);
             }
         });
+        this.document.addEventListener('keydown', this.handleDocumentKeydown);
+        this.destroyRef.onDestroy(() => this.document.removeEventListener('keydown', this.handleDocumentKeydown));
     }
 
     protected onPrimaryAction(action: SidebarActionItem['action']): void {
@@ -303,8 +330,17 @@ export class SidebarComponent {
         this.toggleDesktopSection('body');
     }
 
-    protected toggleUserMenu(): void {
-        this.isUserMenuOpen.set(!this.isUserMenuOpen());
+    protected toggleUserMenu(trigger?: HTMLElement): void {
+        if (trigger) {
+            this.lastUserMenuTrigger = trigger;
+        }
+
+        if (this.isUserMenuOpen()) {
+            this.closeUserMenu();
+            return;
+        }
+
+        this.isUserMenuOpen.set(true);
     }
 
     protected async openNotifications(): Promise<void> {
@@ -334,24 +370,27 @@ export class SidebarComponent {
         });
     }
 
-    protected toggleMobileFood(): void {
-        this.toggleMobileSheet('food');
+    protected toggleMobileFood(trigger?: HTMLElement): void {
+        this.toggleMobileSheet('food', trigger);
     }
 
-    protected toggleMobileBody(): void {
-        this.toggleMobileSheet('body');
+    protected toggleMobileBody(trigger?: HTMLElement): void {
+        this.toggleMobileSheet('body', trigger);
     }
 
-    protected toggleMobileReports(): void {
-        this.toggleMobileSheet('reports');
+    protected toggleMobileReports(trigger?: HTMLElement): void {
+        this.toggleMobileSheet('reports', trigger);
     }
 
-    protected toggleMobileUser(): void {
-        this.toggleMobileSheet('user');
+    protected toggleMobileUser(trigger?: HTMLElement): void {
+        this.toggleMobileSheet('user', trigger);
     }
 
     protected closeMobileMenus(): void {
+        const focusTarget = this.lastMobileSheetTrigger;
         this.mobileSheet.set(null);
+        this.lastMobileSheetTrigger = null;
+        focusTarget?.focus();
     }
 
     protected async logout(): Promise<void> {
@@ -361,7 +400,7 @@ export class SidebarComponent {
         }
 
         await this.authService.onLogout(true);
-        this.isUserMenuOpen.set(false);
+        this.closeUserMenu();
         this.closeMobileMenus();
     }
 
@@ -396,8 +435,17 @@ export class SidebarComponent {
         this.openDesktopSection.update(current => (current === section ? null : section));
     }
 
-    private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>): void {
-        this.mobileSheet.update(current => (current === sheet ? null : sheet));
+    private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>, trigger?: HTMLElement): void {
+        if (trigger) {
+            this.lastMobileSheetTrigger = trigger;
+        }
+
+        if (this.mobileSheet() === sheet) {
+            this.closeMobileMenus();
+            return;
+        }
+
+        this.mobileSheet.set(sheet);
     }
 
     private isRouteActive(route: string, exact: boolean): boolean {
@@ -407,5 +455,36 @@ export class SidebarComponent {
         }
 
         return currentPath === route || currentPath.startsWith(`${route}/`);
+    }
+
+    private readonly handleDocumentKeydown = (event: KeyboardEvent): void => {
+        if (event.key !== 'Escape') {
+            return;
+        }
+
+        if (this.isMobileSheetOpen()) {
+            event.preventDefault();
+            this.closeMobileMenus();
+            return;
+        }
+
+        if (this.isUserMenuOpen()) {
+            event.preventDefault();
+            this.closeUserMenu();
+        }
+    };
+
+    private closeUserMenu(): void {
+        this.isUserMenuOpen.set(false);
+        this.lastUserMenuTrigger?.focus();
+    }
+
+    private focusFirstInteractive(container?: HTMLElement | null): void {
+        if (!container) {
+            return;
+        }
+
+        const firstInteractive = container.querySelector<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
+        firstInteractive?.focus();
     }
 }

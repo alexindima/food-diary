@@ -1,57 +1,60 @@
 <fd-ui-dialog-shell [title]="'NOTIFICATIONS.TITLE' | translate" size="md">
-    <div class="notifications-dialog__body">
+    <div class="notifications-dialog__body" [attr.aria-busy]="isLoading()">
         @if (isLoading()) {
-            <div class="notifications-dialog__state">
+            <div class="notifications-dialog__state" role="status" aria-live="polite">
                 <fd-ui-icon name="hourglass_top"></fd-ui-icon>
                 <p>{{ 'COMMON.LOADING' | translate }}</p>
             </div>
         } @else if (notifications().length === 0) {
-            <div class="notifications-dialog__state notifications-dialog__state--empty">
+            <div class="notifications-dialog__state notifications-dialog__state--empty" role="status" aria-live="polite">
                 <fd-ui-icon name="notifications_none"></fd-ui-icon>
                 <p class="notifications-dialog__state-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
                 <p class="notifications-dialog__state-text">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
             </div>
         } @else {
-            <div class="notifications-dialog__list">
+            <div class="notifications-dialog__list" role="list" aria-live="polite">
                 @for (notification of notifications(); track notification.id) {
-                    <button
-                        type="button"
-                        class="notifications-dialog__item"
-                        [class.is-read]="notification.isRead"
-                        [class.notifications-dialog__item--dietologist]="isDietologistInvitation(notification)"
-                        (click)="openNotification(notification)"
-                    >
-                        <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
-                        <span
-                            class="notifications-dialog__item-icon"
-                            [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
+                    <div role="listitem">
+                        <button
+                            type="button"
+                            class="notifications-dialog__item"
+                            [class.is-read]="notification.isRead"
+                            [class.notifications-dialog__item--dietologist]="isDietologistInvitation(notification)"
+                            [attr.aria-label]="getNotificationAriaLabel(notification)"
+                            (click)="openNotification(notification)"
                         >
-                            <fd-ui-icon [name]="getNotificationIcon(notification)"></fd-ui-icon>
-                        </span>
-                        <div class="notifications-dialog__item-content">
-                            <div class="notifications-dialog__item-head">
-                                <div class="notifications-dialog__item-head-main">
-                                    @if (isDietologistInvitation(notification)) {
-                                        <span class="notifications-dialog__item-badge">
-                                            {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE' | translate }}
-                                        </span>
-                                    }
-                                    <span class="notifications-dialog__item-title">{{ notification.title }}</span>
+                            <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
+                            <span
+                                class="notifications-dialog__item-icon"
+                                [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
+                            >
+                                <fd-ui-icon [name]="getNotificationIcon(notification)"></fd-ui-icon>
+                            </span>
+                            <div class="notifications-dialog__item-content">
+                                <div class="notifications-dialog__item-head">
+                                    <div class="notifications-dialog__item-head-main">
+                                        @if (isDietologistInvitation(notification)) {
+                                            <span class="notifications-dialog__item-badge">
+                                                {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE' | translate }}
+                                            </span>
+                                        }
+                                        <span class="notifications-dialog__item-title">{{ notification.title }}</span>
+                                    </div>
+                                    <span class="notifications-dialog__item-date">{{
+                                        notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
+                                    }}</span>
                                 </div>
-                                <span class="notifications-dialog__item-date">{{
-                                    notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
-                                }}</span>
+                                @if (notification.body) {
+                                    <p class="notifications-dialog__item-body">{{ notification.body }}</p>
+                                }
+                                @if (isDietologistInvitation(notification)) {
+                                    <div class="notifications-dialog__item-cta" aria-hidden="true">
+                                        {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION' | translate }}
+                                    </div>
+                                }
                             </div>
-                            @if (notification.body) {
-                                <p class="notifications-dialog__item-body">{{ notification.body }}</p>
-                            }
-                            @if (isDietologistInvitation(notification)) {
-                                <div class="notifications-dialog__item-cta">
-                                    {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION' | translate }}
-                                </div>
-                            }
-                        </div>
-                    </button>
+                        </button>
+                    </div>
                 }
             </div>
         }

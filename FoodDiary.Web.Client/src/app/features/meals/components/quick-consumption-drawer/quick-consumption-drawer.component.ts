@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -18,11 +18,15 @@ import { QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuickConsumptionDrawerComponent {
+    private static nextId = 0;
+
     private readonly quickService = inject(QuickMealService);
+    private readonly translateService = inject(TranslateService);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
 
     public readonly forceShow = input(false);
     public readonly layout = input<'fixed' | 'inline'>('fixed');
+    public readonly titleId = `fd-quick-consumption-title-${QuickConsumptionDrawerComponent.nextId++}`;
 
     public readonly items = this.quickService.items;
     public readonly hasItems = this.quickService.hasItems;
@@ -42,6 +46,16 @@ export class QuickConsumptionDrawerComponent {
         }
 
         return this.fallbackImage;
+    }
+
+    public itemName(item: QuickMealItem): string {
+        return item.type === 'product' ? (item.product?.name ?? '') : (item.recipe?.name ?? '');
+    }
+
+    public removeItemAriaLabel(item: QuickMealItem): string {
+        return this.translateService.instant('QUICK_CONSUMPTION.REMOVE_ITEM_NAMED', {
+            name: this.itemName(item),
+        });
     }
 
     public remove(key: string): void {

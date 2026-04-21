@@ -51,6 +51,8 @@ export class StatisticsFacade {
 
     public readonly isLoading = signal(false);
     public readonly isBodyLoading = signal(false);
+    public readonly hasLoadError = signal(false);
+    public readonly hasBodyLoadError = signal(false);
     public readonly chartStatisticsData = signal<MappedStatistics | null>(null);
     public readonly weightSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
@@ -187,6 +189,11 @@ export class StatisticsFacade {
         this.selectedBodyTab.set(value);
     }
 
+    public reload(): void {
+        this.lastLoadedRangeKey = null;
+        this.loadAllData();
+    }
+
     private loadAllData(): void {
         const range = getCurrentDateRange(this.selectedRange(), this.customRangeControl.value);
         const normalizedStart = normalizeStartOfDay(range.start);
@@ -204,6 +211,7 @@ export class StatisticsFacade {
 
     private loadStatistics(range: DateRange): void {
         this.isLoading.set(true);
+        this.hasLoadError.set(false);
         const normalizedStart = normalizeStartOfDay(range.start);
         const normalizedEnd = normalizeEndOfDay(range.end);
         const quantizationDays = getQuantizationDays(normalizedStart, normalizedEnd);
@@ -221,15 +229,18 @@ export class StatisticsFacade {
             .subscribe({
                 next: data => {
                     this.chartStatisticsData.set(StatisticsMapper.mapStatistics(data ?? []));
+                    this.hasLoadError.set(false);
                 },
                 error: () => {
                     this.chartStatisticsData.set(null);
+                    this.hasLoadError.set(true);
                 },
             });
     }
 
     private loadBodySummaries(range: DateRange): void {
         this.isBodyLoading.set(true);
+        this.hasBodyLoadError.set(false);
         const normalizedStart = normalizeStartOfDay(range.start).toISOString();
         const normalizedEnd = normalizeEndOfDay(range.end).toISOString();
         const quantizationDays = getQuantizationDays(range.start, range.end);
@@ -254,10 +265,12 @@ export class StatisticsFacade {
                 next: ({ weight, waist }) => {
                     this.weightSummaryPoints.set(weight);
                     this.waistSummaryPoints.set(waist);
+                    this.hasBodyLoadError.set(false);
                 },
                 error: () => {
                     this.weightSummaryPoints.set([]);
                     this.waistSummaryPoints.set([]);
+                    this.hasBodyLoadError.set(true);
                 },
             });
     }

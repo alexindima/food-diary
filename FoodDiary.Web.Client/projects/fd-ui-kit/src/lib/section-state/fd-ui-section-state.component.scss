@@ -1,0 +1,43 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.fd-ui-section-state__surface {
+    display: flex;
+    min-height: var(--fd-section-state-min-height, 176px);
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+}
+
+:host(.fd-ui-section-state--compact) .fd-ui-section-state__surface {
+    min-height: var(--fd-section-state-compact-min-height, 128px);
+    padding: 16px;
+}
+
+.fd-ui-section-state__surface--loading,
+.fd-ui-section-state__surface--error {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fd-ui-section-state__loading-label,
+.fd-ui-section-state__error-message {
+    color: var(--fd-color-text-muted);
+    line-height: 1.5;
+}
+
+.fd-ui-section-state__error-icon {
+    color: var(--fd-color-danger);
+    font-size: 2rem;
+}
+
+.fd-ui-section-state__error-title {
+    color: var(--fd-color-text);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+}

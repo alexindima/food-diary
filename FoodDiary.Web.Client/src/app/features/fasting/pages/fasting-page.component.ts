@@ -24,6 +24,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { LocalizationService } from '../../../services/localization.service';
+import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import {
     FastingEndConfirmDialogComponent,
     FastingEndConfirmDialogData,
@@ -77,6 +78,7 @@ import {
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        SkeletonCardComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,
@@ -661,6 +663,10 @@ export class FastingPageComponent {
             ...current,
             [sessionId]: (current[sessionId] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE) + FASTING_SESSION_CHECK_INS_PAGE_SIZE,
         }));
+    }
+
+    public getHistoryCheckInRegionId(sessionId: string): string {
+        return `fasting-history-checkins-${sessionId}`;
     }
 
     public getHistorySessionTypeLabel(session: FastingSession): string {

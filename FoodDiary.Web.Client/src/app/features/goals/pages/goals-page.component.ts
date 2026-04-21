@@ -8,6 +8,8 @@ import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-se
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
+import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { BodyTargetKey, GoalsFacade, MacroKey, MacroPresetKey } from '../lib/goals.facade';
 import { DAYS_OF_WEEK } from '../models/goals.data';
 
@@ -38,6 +40,8 @@ type TimeframeOption = {
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ErrorStateComponent,
+        SkeletonCardComponent,
     ],
     templateUrl: './goals-page.component.html',
     styleUrls: ['./goals-page.component.scss'],
@@ -53,6 +57,7 @@ export class GoalsPageComponent {
     protected readonly calorieTarget = this.facade.calorieTarget;
     protected readonly isLoadingGoals = this.facade.isLoadingGoals;
     protected readonly isSavingGoals = this.facade.isSavingGoals;
+    protected readonly hasLoadError = this.facade.hasLoadError;
     protected readonly saveStatusKey = this.facade.saveStatusKey;
     protected readonly macroPresets = this.facade.macroPresets;
     protected readonly selectedPreset = this.facade.selectedPreset;
@@ -75,6 +80,10 @@ export class GoalsPageComponent {
             this.buildMacroPresetOptions();
         });
         this.facade.initialize();
+    }
+
+    protected reload(): void {
+        this.facade.reload();
     }
 
     protected readonly currentBodyTargets = computed(() =>

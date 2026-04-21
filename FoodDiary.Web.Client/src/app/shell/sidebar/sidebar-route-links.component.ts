@@ -64,6 +64,12 @@ import { SidebarRouteItem } from './sidebar.models';
                 color: var(--fd-color-text-strong, var(--fd-color-slate-900));
             }
 
+            .sidebar__link:focus-visible,
+            .sidebar-mobile__sheet-link:focus-visible {
+                outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
+                outline-offset: 2px;
+            }
+
             .sidebar__link.is-active {
                 background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
                 color: var(--fd-color-on-brand, var(--fd-color-white));

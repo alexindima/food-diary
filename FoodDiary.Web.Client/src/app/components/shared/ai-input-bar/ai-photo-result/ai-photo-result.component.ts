@@ -107,6 +107,20 @@ export class AiPhotoResultComponent {
         return unitKey ? this.translateService.instant(unitKey) : unit;
     }
 
+    public removeEditItemAriaLabel(item: EditableAiItem): string {
+        return this.translateService.instant('AI_INPUT_BAR.REMOVE_AI_ITEM', {
+            name: item.name.trim() || item.nameEn.trim() || '?',
+        });
+    }
+
+    public getSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
+        const meta = this.getSatietyLevelMeta(kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel());
+        const fieldLabel = this.translateService.instant(
+            kind === 'before' ? 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' : 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER',
+        );
+        return `${fieldLabel}. ${meta.label}. ${meta.description}`.trim();
+    }
+
     public startEditing(): void {
         const items = this.results().length
             ? this.results()

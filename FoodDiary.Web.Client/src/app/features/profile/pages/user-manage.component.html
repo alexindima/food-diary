@@ -6,7 +6,7 @@
     />
 
     <fd-page-body>
-        <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSurfaceBusy()">
             <div class="user-manage__stack">
                 <fd-ui-card class="user-manage__card user-manage__card--account" tone="profile" density="profile">
                     <div class="user-manage__card-header">
@@ -15,6 +15,11 @@
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.ACCOUNT_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">
                                 {{ 'USER_MANAGE.ACCOUNT_DESC' | translate }}
+                            </div>
+                            <div class="user-manage__status-row">
+                                <fd-ui-status-badge [tone]="getProfileStatusTone()">
+                                    {{ getProfileStatusKey() | translate }}
+                                </fd-ui-status-badge>
                             </div>
                         </div>
                     </div>
@@ -164,6 +169,11 @@
                         <div class="user-manage__card-text">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</div>
+                            @if (getNotificationsStatusKey(); as notificationsStatusKey) {
+                                <div class="user-manage__section-status">
+                                    {{ notificationsStatusKey | translate }}
+                                </div>
+                            }
                         </div>
                     </div>
                     <div class="user-manage__notifications">
@@ -329,15 +339,13 @@
                                 </div>
                             </div>
 
-                            @if (isLoadingConnectedDevices()) {
-                                <div class="user-manage__notifications-devices-empty">
-                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate }}
-                                </div>
-                            } @else if (connectedDevices().length === 0) {
-                                <div class="user-manage__notifications-devices-empty">
-                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate }}
-                                </div>
-                            } @else {
+                            <fd-ui-section-state
+                                appearance="compact"
+                                [state]="isLoadingConnectedDevices() ? 'loading' : connectedDevices().length === 0 ? 'empty' : 'content'"
+                                [loadingLabel]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate"
+                                [emptyMessage]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate"
+                                emptyIcon="devices"
+                            >
                                 <div class="user-manage__notifications-device-list">
                                     @for (subscription of connectedDevices(); track subscription.endpoint) {
                                         <div class="user-manage__notifications-device-item">
@@ -365,6 +373,7 @@
                                                 variant="secondary"
                                                 size="sm"
                                                 icon="close"
+                                                [loading]="removingConnectedDeviceEndpoint() === subscription.endpoint"
                                                 [disabled]="
                                                     pushNotificationsBusy() || removingConnectedDeviceEndpoint() === subscription.endpoint
                                                 "
@@ -375,7 +384,7 @@
                                         </div>
                                     }
                                 </div>
-                            }
+                            </fd-ui-section-state>
                         </div>
 
                         <!-- Fasting telemetry summary moved to fasting page. -->
@@ -667,13 +676,21 @@
                             </div>
                         </div>
                         @if (hasAiConsent()) {
-                            <fd-ui-button type="button" fill="outline" variant="secondary" size="sm" (click)="onRevokeAiConsent()">
+                            <fd-ui-button
+                                type="button"
+                                fill="outline"
+                                variant="secondary"
+                                size="sm"
+                                [disabled]="isRevokingAiConsent()"
+                                [loading]="isRevokingAiConsent()"
+                                (click)="onRevokeAiConsent()"
+                            >
                                 {{ 'USER_MANAGE.AI_CONSENT_REVOKE' | translate }}
                             </fd-ui-button>
                         }
                     </div>
                     <div class="user-manage__privacy-item">
-                        <a class="user-manage__privacy-link" href="/privacy-policy" target="_blank">
+                        <a class="user-manage__privacy-link" href="/privacy-policy" target="_blank" rel="noopener noreferrer">
                             {{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}
                         </a>
                     </div>

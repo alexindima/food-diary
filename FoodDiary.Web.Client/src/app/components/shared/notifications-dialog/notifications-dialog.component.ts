@@ -89,4 +89,9 @@ export class NotificationsDialogComponent {
     protected getNotificationIcon(notification: NotificationItem): string {
         return this.isDietologistInvitation(notification) ? 'medical_information' : 'notifications';
     }
+
+    protected getNotificationAriaLabel(notification: NotificationItem): string {
+        const parts = [notification.title?.trim(), notification.body?.trim()].filter(Boolean);
+        return parts.join('. ');
+    }
 }

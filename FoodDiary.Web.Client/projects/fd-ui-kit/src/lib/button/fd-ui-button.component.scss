@@ -8,6 +8,10 @@
     --fd-button-height: 40px;
     --fd-button-padding-x: 0.75rem;
     --fd-button-text-padding-x: 0.375rem;
+    --fd-button-focus-ring-color: color-mix(in srgb, var(--fd-color-primary-400) 72%, var(--fd-color-white));
+    --fd-button-focus-ring-shadow:
+        0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 86%, transparent),
+        0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 64%, transparent);
     appearance: none;
     background: var(--fd-button-background-default);
     border: var(--fd-button-border-width, 1px) var(--fd-button-border-style, solid) var(--fd-button-border-default);
@@ -58,6 +62,13 @@
         color: var(--fd-button-text-active, var(--fd-button-text-hover, var(--fd-button-text-default)));
         box-shadow: var(--fd-button-shadow-active, none);
         transform: var(--fd-button-transform-active, translateY(0));
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow:
+            var(--fd-button-focus-ring-shadow),
+            var(--fd-button-shadow-hover, var(--fd-button-shadow-default, none));
     }
 
     &:disabled {
@@ -163,6 +174,9 @@
     --fd-button-background-default: var(--fd-color-surface-raised);
     --fd-button-shadow-default: none;
     --fd-button-shadow-hover: none;
+    --fd-button-focus-ring-shadow:
+        0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
+        0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
 }
 
 @keyframes fd-ui-button-spin {
@@ -237,6 +251,9 @@
     --fd-button-text-default: var(--fd-color-text);
     --fd-button-shadow-default: none;
     --fd-button-shadow-hover: none;
+    --fd-button-focus-ring-shadow:
+        0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
+        0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     border-radius: 12px;

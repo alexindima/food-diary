@@ -90,6 +90,7 @@
                                 class="consumption-manage__satiety-card"
                                 (click)="openSatietyDialog('preMealSatietyLevel')"
                                 [style.--satiety-gradient]="beforeMeta.gradient"
+                                [attr.aria-label]="getSatietyButtonAriaLabel('preMealSatietyLevel')"
                             >
                                 <div class="consumption-manage__satiety-card-indicator">
                                     {{
@@ -119,6 +120,7 @@
                                 class="consumption-manage__satiety-card"
                                 (click)="openSatietyDialog('postMealSatietyLevel')"
                                 [style.--satiety-gradient]="afterMeta.gradient"
+                                [attr.aria-label]="getSatietyButtonAriaLabel('postMealSatietyLevel')"
                             >
                                 <div class="consumption-manage__satiety-card-indicator">
                                     {{

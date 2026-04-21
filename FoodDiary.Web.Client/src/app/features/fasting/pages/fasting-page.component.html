@@ -3,7 +3,11 @@
 
     <fd-page-body>
         @if (isLoading()) {
-            <div class="fasting__loader">{{ 'FASTING.LOADING' | translate }}</div>
+            <div class="fasting__skeleton-grid">
+                <fd-skeleton-card class="fasting__skeleton fasting__skeleton--hero" />
+                <fd-skeleton-card class="fasting__skeleton fasting__skeleton--section" />
+                <fd-skeleton-card class="fasting__skeleton fasting__skeleton--section" />
+            </div>
         } @else {
             <div class="fasting__grid">
                 <fd-fasting-timer-card
@@ -37,7 +41,7 @@
                                     class="fasting__segmented-toggle"
                                     [options]="modeOptions()"
                                     [selectedValue]="selectedMode()"
-                                    ariaLabel="Fasting mode"
+                                    [ariaLabel]="'FASTING.MODE_GROUP' | translate"
                                     (selectedValueChange)="onModeChange($event)"
                                 />
                             </div>
@@ -49,7 +53,7 @@
                                         class="fasting__segmented-toggle"
                                         [options]="intermittentProtocolOptions()"
                                         [selectedValue]="selectedProtocol()"
-                                        ariaLabel="Intermittent protocol"
+                                        [ariaLabel]="'FASTING.INTERMITTENT_GROUP' | translate"
                                         [shrinkItems]="true"
                                         (selectedValueChange)="onProtocolChange($event)"
                                     />
@@ -79,7 +83,7 @@
                                         class="fasting__segmented-toggle"
                                         [options]="extendedProtocolOptions()"
                                         [selectedValue]="selectedProtocol()"
-                                        ariaLabel="Extended protocol"
+                                        [ariaLabel]="'FASTING.EXTENDED_GROUP' | translate"
                                         [shrinkItems]="true"
                                         (selectedValueChange)="onProtocolChange($event)"
                                     />
@@ -104,7 +108,7 @@
                                         class="fasting__segmented-toggle"
                                         [options]="cyclicPresetOptions()"
                                         [selectedValue]="selectedCyclicPresetValue()"
-                                        ariaLabel="Cyclic fasting pattern"
+                                        [ariaLabel]="'FASTING.CYCLIC_GROUP' | translate"
                                         [shrinkItems]="true"
                                         (selectedValueChange)="onCyclicPresetChange($event)"
                                     />
@@ -140,7 +144,7 @@
                                         class="fasting__segmented-toggle"
                                         [options]="cyclicEatDayProtocolOptions()"
                                         [selectedValue]="cyclicEatDayProtocol()"
-                                        ariaLabel="Eat day window"
+                                        [ariaLabel]="'FASTING.EAT_DAY_WINDOW_GROUP' | translate"
                                         [shrinkItems]="true"
                                         (selectedValueChange)="onCyclicEatDayProtocolChange($event)"
                                     />
@@ -221,6 +225,7 @@
                                                 variant="secondary"
                                                 fill="outline"
                                                 (click)="extendByCustom()"
+                                                [loading]="isExtending()"
                                                 [disabled]="isExtending() || isReducing() || isEnding()"
                                             >
                                                 {{ 'FASTING.ADD_TIME' | translate }}
@@ -284,6 +289,7 @@
                                                 variant="secondary"
                                                 fill="outline"
                                                 (click)="reduceByCustom()"
+                                                [loading]="isReducing()"
                                                 [disabled]="isReducing() || isExtending() || isEnding()"
                                             >
                                                 {{ 'FASTING.REDUCE_TIME' | translate }}
@@ -320,11 +326,15 @@
 
                         <div class="fasting__actions" [class.fasting__actions--separated]="isActive()">
                             @if (isActive()) {
-                                <fd-ui-button (click)="endFasting()" [disabled]="isEnding() || isReducing() || isUpdatingCycle()">
+                                <fd-ui-button
+                                    (click)="endFasting()"
+                                    [loading]="isEnding()"
+                                    [disabled]="isEnding() || isReducing() || isUpdatingCycle()"
+                                >
                                     {{ getEndActionLabelKey() | translate }}
                                 </fd-ui-button>
                             } @else {
-                                <fd-ui-button (click)="startFasting()" [disabled]="isStarting()">
+                                <fd-ui-button (click)="startFasting()" [loading]="isStarting()" [disabled]="isStarting()">
                                     {{ 'FASTING.START_FAST' | translate }}
                                 </fd-ui-button>
                             }
@@ -439,7 +449,7 @@
 
             @if (isActive()) {
                 <fd-ui-card class="fasting__card" [title]="'FASTING.CHECK_IN.TITLE' | translate">
-                    <div class="fasting__checkin">
+                    <div class="fasting__checkin" [attr.aria-busy]="isSavingCheckIn()">
                         @if (!isCheckInExpanded()) {
                             <div class="fasting__checkin-summary">
                                 <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
@@ -547,7 +557,11 @@
                                 >
                                     {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
                                 </fd-ui-button>
-                                <fd-ui-button (click)="saveCheckIn()" [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()">
+                                <fd-ui-button
+                                    (click)="saveCheckIn()"
+                                    [loading]="isSavingCheckIn()"
+                                    [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()"
+                                >
                                     {{ 'FASTING.CHECK_IN.SAVE' | translate }}
                                 </fd-ui-button>
                             </div>
@@ -634,6 +648,7 @@
                                                     variant="secondary"
                                                     fill="text"
                                                     [attr.aria-expanded]="isHistorySessionExpanded(session.id)"
+                                                    [attr.aria-controls]="getHistoryCheckInRegionId(session.id)"
                                                     (click)="toggleHistorySession(session.id)"
                                                 >
                                                     {{
@@ -645,7 +660,7 @@
                                         </div>
 
                                         @if (isHistorySessionExpanded(session.id)) {
-                                            <div class="fasting__history-checkin">
+                                            <div class="fasting__history-checkin" [id]="getHistoryCheckInRegionId(session.id)">
                                                 @for (checkIn of getVisibleSessionCheckIns(session); track checkIn.id) {
                                                     <div class="fasting__history-checkin-entry">
                                                         <div class="fasting__history-checkin-header">
@@ -704,10 +719,11 @@
                                     fill="outline"
                                     variant="secondary"
                                     size="sm"
+                                    [loading]="isLoadingMoreHistory()"
                                     [disabled]="isLoadingMoreHistory()"
                                     (click)="loadMoreHistory()"
                                 >
-                                    {{ (isLoadingMoreHistory() ? 'FASTING.LOADING' : 'FASTING.LOAD_MORE_HISTORY') | translate }}
+                                    {{ 'FASTING.LOAD_MORE_HISTORY' | translate }}
                                 </fd-ui-button>
                             </div>
                         }

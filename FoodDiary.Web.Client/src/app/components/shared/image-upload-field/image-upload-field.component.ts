@@ -64,6 +64,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly imageChanged = output<ImageSelection | null>();
 
     private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
+    protected readonly errorId = `image-upload-error-${crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
+    protected readonly cropTitleId = `image-upload-crop-title-${crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
+    protected readonly cropSubtitleId = `image-upload-crop-subtitle-${crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
 
     public selection: ImageSelection = { url: null, assetId: null };
     public isDragging = false;
@@ -190,6 +193,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     public openFilePicker(): void {
         this.fileInputRef()?.nativeElement?.click();
+    }
+
+    protected previewAlt(): string {
+        return this.translateService.instant('IMAGE_PREVIEW.ALT', { name: this.label() });
     }
 
     public onZoneClick(fileInput: HTMLInputElement): void {

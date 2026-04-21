@@ -21,7 +21,9 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
@@ -73,7 +75,9 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiSelectComponent,
         FdUiDateInputComponent,
         FdUiButtonComponent,
+        FdUiSectionStateComponent,
         FdUiFormErrorComponent,
+        FdUiStatusBadgeComponent,
         FdUiSwitchComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -122,8 +126,21 @@ export class UserManageComponent {
     public readonly isSavingDietologist = signal(false);
     public readonly isDeleting = this.facade.isDeleting;
     public readonly isSavingProfile = this.facade.isSavingProfile;
+    public readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
     public readonly isUpdatingNotifications = this.facade.isUpdatingNotifications;
     public readonly isSchedulingTestNotification = signal(false);
+    public readonly isSurfaceBusy = computed(
+        () =>
+            this.isSavingProfile() ||
+            this.isDeleting() ||
+            this.isRevokingAiConsent() ||
+            this.isUpdatingNotifications() ||
+            this.isSchedulingTestNotification() ||
+            this.isSavingDietologist() ||
+            this.isLoadingDietologist() ||
+            this.isLoadingConnectedDevices() ||
+            !!this.removingConnectedDeviceEndpoint(),
+    );
     public readonly hasAiConsent = computed(() => !!this.facade.user()?.aiConsentAcceptedAt);
     public readonly pushNotificationsEnabled = computed(() => this.facade.user()?.pushNotificationsEnabled ?? false);
     public readonly fastingPushNotificationsEnabled = computed(() => this.facade.user()?.fastingPushNotificationsEnabled ?? true);
@@ -715,6 +732,59 @@ export class UserManageComponent {
         }
 
         return Number.isInteger(value) ? `${value}` : value.toFixed(1);
+    }
+
+    public getProfileStatusKey(): string {
+        if (this.globalError() && this.userForm.dirty) {
+            return 'USER_MANAGE.PROFILE_STATUS_ERROR';
+        }
+
+        if (this.isSavingProfile()) {
+            return 'USER_MANAGE.PROFILE_STATUS_SAVING';
+        }
+
+        if (this.userForm.dirty) {
+            return this.userForm.valid ? 'USER_MANAGE.PROFILE_STATUS_PENDING' : 'USER_MANAGE.PROFILE_STATUS_INVALID';
+        }
+
+        return 'USER_MANAGE.PROFILE_STATUS_SAVED';
+    }
+
+    public getProfileStatusTone(): 'success' | 'warning' | 'danger' | 'muted' {
+        const statusKey = this.getProfileStatusKey();
+        if (statusKey === 'USER_MANAGE.PROFILE_STATUS_ERROR') {
+            return 'danger';
+        }
+
+        if (statusKey === 'USER_MANAGE.PROFILE_STATUS_PENDING' || statusKey === 'USER_MANAGE.PROFILE_STATUS_INVALID') {
+            return 'warning';
+        }
+
+        if (statusKey === 'USER_MANAGE.PROFILE_STATUS_SAVING') {
+            return 'muted';
+        }
+
+        return 'success';
+    }
+
+    public getNotificationsStatusKey(): string | null {
+        if (this.isSchedulingTestNotification()) {
+            return 'USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING';
+        }
+
+        if (this.removingConnectedDeviceEndpoint()) {
+            return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_REMOVING';
+        }
+
+        if (this.pushNotificationsBusy()) {
+            return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_SYNCING';
+        }
+
+        if (this.isUpdatingNotifications()) {
+            return 'USER_MANAGE.NOTIFICATIONS_STATUS_SAVING';
+        }
+
+        return null;
     }
 
     private applyUserData(userData: Partial<UserFormValues>): void {
