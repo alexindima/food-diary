@@ -16,7 +16,7 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    font-size: 0.875rem;
+    --fd-button-font-size: var(--fd-text-caption-size, 0.85rem);
 
     &--liked {
         --fd-button-border-default: var(--fd-error, var(--fd-color-red-700));

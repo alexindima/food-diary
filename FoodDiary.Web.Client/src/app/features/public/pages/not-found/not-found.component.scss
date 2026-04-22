@@ -16,21 +16,21 @@
 }
 
 .not-found__icon {
-    font-size: 4em;
     color: var(--fd-color-danger);
     margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .not-found__title {
-    font-size: 2.5em;
-    font-weight: bold;
-    line-height: 36px;
     color: var(--fd-color-danger);
     margin-bottom: 20px;
+    --fd-page-title-size: clamp(2rem, 4vw, 2.5rem);
+    --fd-page-title-line-height: 1.1;
 }
 
 .not-found__description {
-    font-size: 1.2em;
     color: var(--fd-color-text-muted);
     margin-bottom: 20px;
 }
@@ -44,8 +44,6 @@
 
 .not-found__button {
     padding: 10px 20px;
-    font-size: variables.$font-size-main;
-    font-weight: bold;
     border: none;
     border-radius: variables.$border-radius-s;
     cursor: pointer;

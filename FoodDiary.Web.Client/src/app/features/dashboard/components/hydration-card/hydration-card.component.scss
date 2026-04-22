@@ -16,24 +16,6 @@
         pointer-events: none;
     }
 
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
-    }
-
-    &__title {
-        font-weight: 700;
-        font-size: 1rem;
-        letter-spacing: 0.01em;
-        min-width: 0;
-    }
-
-    &__add {
-        font-size: 1rem;
-    }
-
     &__content {
         display: flex;
         flex-direction: column;
@@ -44,12 +26,9 @@
         display: flex;
         align-items: baseline;
         gap: 6px;
-        font-weight: 600;
     }
 
     &__liters {
-        font-size: 2.2rem;
-        line-height: 1.1;
         min-width: 0;
     }
 
@@ -85,7 +64,6 @@
     }
 
     &__percent {
-        font-weight: 600;
         color: color-mix(in srgb, var(--fd-color-white) 95%, transparent);
     }
 
@@ -106,19 +84,8 @@
 
     @media #{variables.$media-compact} {
 
-        &__header {
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        &__add {
-            flex-shrink: 0;
-        }
-
         &__value {
             flex-wrap: wrap;
         }
     }
 }
-
-

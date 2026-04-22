@@ -2,7 +2,6 @@
 
 .custom-group-wrapper {
     padding-top: variables.$gap-xs;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .custom-group {
@@ -20,9 +19,8 @@
     border: 2px solid var(--fd-color-border);
     border-radius: variables.$border-radius-s;
     padding: 0 variables.$gap-xs;
-    font-weight: bold;
-    font-size: 10px;
     line-height: 20px;
+    color: var(--fd-color-text);
 }
 
 .custom-group__toggle {
@@ -34,7 +32,6 @@
     border-radius: variables.$border-radius-s;
     padding: 0;
     width: 24px;
-    font-weight: bold;
     font-size: 16px;
     line-height: 20px;
 }
@@ -61,7 +58,6 @@
 .custom-group__hint {
     margin: 0;
     color: var(--fd-color-text-muted);
-    font-size: 0.9rem;
     font-style: italic;
     white-space: nowrap;
     overflow: hidden;

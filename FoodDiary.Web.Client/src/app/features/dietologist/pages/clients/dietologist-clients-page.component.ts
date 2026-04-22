@@ -12,12 +12,12 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
     imports: [DatePipe, FdUiCardComponent],
     template: `
         <div class="dietologist-clients">
-            <h1 class="dietologist-clients__title">My Clients</h1>
+            <h1 class="dietologist-clients__title fd-page-title">My Clients</h1>
 
             @if (loading()) {
-                <p>Loading...</p>
+                <p class="fd-ui-body-sm">Loading...</p>
             } @else if (clients().length === 0) {
-                <p class="dietologist-clients__empty">No clients yet. Clients can invite you by email.</p>
+                <p class="dietologist-clients__empty fd-ui-body-sm">No clients yet. Clients can invite you by email.</p>
             } @else {
                 <div class="dietologist-clients__list">
                     @for (client of clients(); track client.userId) {
@@ -31,23 +31,25 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                                     }
                                 </div>
                                 <div class="dietologist-clients__info">
-                                    <span class="dietologist-clients__name">{{ getClientTitle(client) }}</span>
-                                    <span class="dietologist-clients__email">{{ client.email }}</span>
+                                    <span class="dietologist-clients__name fd-ui-action-text">{{ getClientTitle(client) }}</span>
+                                    <span class="dietologist-clients__email fd-ui-caption">{{ client.email }}</span>
                                     @if (client.permissions.shareProfile) {
                                         <div class="dietologist-clients__meta">
                                             @if (client.height) {
-                                                <span class="dietologist-clients__chip">{{ client.height }} cm</span>
+                                                <span class="dietologist-clients__chip fd-ui-overline">{{ client.height }} cm</span>
                                             }
                                             @if (client.gender) {
-                                                <span class="dietologist-clients__chip">{{ client.gender }}</span>
+                                                <span class="dietologist-clients__chip fd-ui-overline">{{ client.gender }}</span>
                                             }
                                             @if (client.activityLevel) {
-                                                <span class="dietologist-clients__chip">{{ client.activityLevel }}</span>
+                                                <span class="dietologist-clients__chip fd-ui-overline">{{ client.activityLevel }}</span>
                                             }
                                         </div>
                                     }
                                 </div>
-                                <span class="dietologist-clients__date"> Connected {{ client.acceptedAtUtc | date: 'mediumDate' }} </span>
+                                <span class="dietologist-clients__date fd-ui-caption">
+                                    Connected {{ client.acceptedAtUtc | date: 'mediumDate' }}
+                                </span>
                             </div>
                         </fd-ui-card>
                     }
@@ -62,8 +64,6 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
             margin: 0 auto;
 
             &__title {
-                font-size: 24px;
-                font-weight: 600;
                 margin: 0 0 24px;
             }
 
@@ -135,23 +135,18 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 border-radius: 999px;
                 background: color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white));
                 color: var(--fd-color-primary-700);
-                font-size: 12px;
-                font-weight: 600;
             }
 
             &__name {
-                font-weight: 600;
-                font-size: 16px;
+                line-height: 1.3;
             }
 
             &__email {
                 color: var(--fd-text-secondary);
-                font-size: 14px;
             }
 
             &__date {
                 color: var(--fd-text-secondary);
-                font-size: 13px;
             }
         }
     `,

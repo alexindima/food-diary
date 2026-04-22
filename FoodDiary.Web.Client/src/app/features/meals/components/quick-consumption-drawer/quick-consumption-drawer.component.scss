@@ -31,15 +31,11 @@
 }
 
 .quick-consumption__title {
-    font-weight: 800;
-    font-size: 1.05rem;
     color: var(--fd-color-text);
 }
 
 .quick-consumption__subtitle {
     color: var(--fd-color-text-muted);
-    font-weight: 600;
-    font-size: 0.9rem;
 }
 
 .quick-consumption__clear {
@@ -109,7 +105,6 @@
 }
 
 .quick-consumption__name {
-    font-weight: 700;
     color: var(--fd-color-text);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -118,7 +113,6 @@
 
 .quick-consumption__meta {
     color: var(--fd-color-text-muted);
-    font-size: 0.9rem;
 }
 
 .quick-consumption__remove {
@@ -158,7 +152,6 @@
     background: color-mix(in srgb, var(--fd-color-slate-50) 70%, var(--fd-color-white));
     border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     color: var(--fd-color-text-muted);
-    font-weight: 600;
     text-align: center;
 }
 

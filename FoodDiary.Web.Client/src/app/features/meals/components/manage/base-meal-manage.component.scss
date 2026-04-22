@@ -87,21 +87,25 @@
 
     &__summary-calories {
         margin: 0;
-        font-size: 0.95rem;
+        font-size: var(--fd-text-body-sm-size);
+        line-height: var(--fd-text-body-sm-line-height);
+        font-weight: var(--fd-text-body-sm-weight);
         color: var(--fd-color-text);
 
         strong {
-            font-weight: 600;
+            font-weight: var(--fd-text-action-weight);
         }
     }
 
     &__summary-alcohol {
         margin: 0;
-        font-size: 0.9rem;
+        font-size: var(--fd-text-stat-value-size);
+        line-height: var(--fd-text-stat-value-line-height);
+        font-weight: var(--fd-text-stat-value-weight);
         color: var(--fd-color-text-muted);
 
         strong {
-            font-weight: 600;
+            font-weight: var(--fd-text-action-weight);
         }
     }
 
@@ -262,7 +266,6 @@
 
     &__satiety-note {
         margin: 0 0 variables.$gap-m;
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -274,8 +277,6 @@
 
     &__satiety-picker-label {
         margin: 0;
-        font-size: 0.95rem;
-        font-weight: 600;
         color: var(--fd-color-text);
     }
 
@@ -330,8 +331,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: var(--fd-text-card-title-size);
+        line-height: var(--fd-text-card-title-line-height);
+        font-weight: var(--fd-text-card-title-weight);
         color: var(--fd-color-text);
         position: relative;
         z-index: 1;
@@ -347,12 +349,10 @@
     }
 
     &__satiety-card-title {
-        font-weight: 600;
         color: var(--fd-color-text);
     }
 
     &__satiety-card-description {
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -366,14 +366,14 @@
 
     &__section-title {
         margin: 0;
-        font-size: 1.3rem;
-        font-weight: 600;
         color: var(--fd-color-text);
     }
 
     &__items-hint {
         margin: 0;
-        font-size: 0.9rem;
+        font-size: var(--fd-text-body-sm-size);
+        line-height: var(--fd-text-body-sm-line-height);
+        font-weight: var(--fd-text-body-sm-weight);
         color: var(--fd-color-text-muted);
     }
 
@@ -416,8 +416,9 @@
     }
 
     &__ai-summary-title {
-        font-size: 0.85rem;
-        font-weight: 700;
+        font-size: var(--fd-text-stat-label-size);
+        line-height: var(--fd-text-stat-label-line-height);
+        font-weight: var(--fd-text-stat-label-weight);
         text-transform: uppercase;
         letter-spacing: 0.04em;
         color: var(--fd-color-slate-500);
@@ -427,7 +428,9 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
-        font-size: 0.9rem;
+        font-size: var(--fd-text-stat-value-size);
+        line-height: var(--fd-text-stat-value-line-height);
+        font-weight: var(--fd-text-stat-value-weight);
         color: var(--fd-color-text-muted);
     }
 
@@ -436,12 +439,12 @@
         align-items: baseline;
         gap: 6px;
         color: var(--fd-color-text);
-        font-weight: 600;
+        font-weight: var(--fd-text-action-weight);
     }
 
     &__ai-summary-label {
         color: var(--fd-color-text-muted);
-        font-weight: 600;
+        font-weight: var(--fd-text-action-weight);
     }
 
     &__ai-summary-nutrients {
@@ -449,7 +452,7 @@
         flex-wrap: wrap;
         gap: 12px;
         color: var(--fd-color-text-muted);
-        font-weight: 500;
+        font-weight: var(--fd-font-weight-medium);
     }
 
     &__ai-summary-actions {
@@ -523,7 +526,9 @@
         display: flex;
         justify-content: space-between;
         gap: variables.$gap-m;
-        font-size: 0.95rem;
+        font-size: var(--fd-text-body-sm-size);
+        line-height: var(--fd-text-body-sm-line-height);
+        font-weight: var(--fd-text-body-sm-weight);
         color: var(--fd-color-text);
     }
 
@@ -564,8 +569,8 @@
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-justify-content: flex-start;
-        font-size: 0.9rem;
-        font-weight: 600;
+        --fd-button-font-size: var(--fd-text-action-size);
+        --fd-button-font-weight: var(--fd-text-action-weight);
     }
 }
 
@@ -615,8 +620,9 @@
 }
 
 .consumption-item-card__title {
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: var(--fd-text-action-weight);
+    font-size: var(--fd-text-action-size);
+    line-height: var(--fd-text-action-line-height);
     color: var(--fd-color-text);
     white-space: nowrap;
     overflow: hidden;
@@ -624,7 +630,9 @@
 }
 
 .consumption-item-card__meta {
-    font-size: 0.85rem;
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+    font-weight: var(--fd-text-caption-weight);
     color: var(--fd-color-text-muted);
     padding: 0 variables.$gap-s;
     border-radius: var(--fd-radius-badge);
@@ -711,8 +719,9 @@
     text-align: center;
 
     &-title {
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: var(--fd-text-metric-lg-size);
+        line-height: var(--fd-text-metric-lg-line-height);
+        font-weight: var(--fd-text-metric-lg-weight);
         color: var(--fd-color-text);
         margin: 0 0 variables.$gap-l;
     }

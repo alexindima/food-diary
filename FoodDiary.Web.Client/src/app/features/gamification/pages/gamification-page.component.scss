@@ -20,12 +20,11 @@
         gap: 4px;
         padding: 20px 14px;
         border: 1px solid var(--fd-color-border);
-        background:
-            linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--accent-color, var(--fd-color-primary-500)) 8%),
-                color-mix(in srgb, var(--fd-color-surface) 96%, var(--accent-color, var(--fd-color-primary-500)) 4%)
-            );
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--accent-color, var(--fd-color-primary-500)) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--accent-color, var(--fd-color-primary-500)) 4%)
+        );
         box-shadow: 0 12px 32px color-mix(in srgb, rgb(0 0 0) 24%, transparent);
         text-align: center;
     }
@@ -69,13 +68,10 @@
     }
 
     &__stat-value {
-        font-size: 1.8rem;
-        font-weight: 700;
         color: var(--fd-color-text-strong);
     }
 
     &__stat-label {
-        font-size: 0.85rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -128,19 +124,15 @@
     }
 
     &__score-value {
-        font-size: 2.4rem;
-        font-weight: 700;
         color: var(--fd-color-text-strong);
     }
 
     &__score-label {
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted);
     }
 
     &__score-hint {
         margin: 0;
-        font-size: 0.85rem;
         color: var(--fd-color-text-muted);
         text-align: center;
         max-width: 280px;
@@ -166,12 +158,11 @@
             box-shadow 0.15s;
 
         &--earned {
-            background:
-                linear-gradient(
-                    135deg,
-                    color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-yellow-400) 12%),
-                    color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-yellow-500) 8%)
-                );
+            background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-yellow-400) 12%),
+                color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-yellow-500) 8%)
+            );
             border-color: color-mix(in srgb, var(--fd-color-amber-500) 55%, var(--fd-color-border));
             box-shadow: 0 8px 20px color-mix(in srgb, rgb(0 0 0) 18%, transparent);
 
@@ -197,15 +188,10 @@
     }
 
     &__badge-label {
-        font-size: 0.7rem;
-        font-weight: 600;
         color: var(--fd-color-text);
-        line-height: 1.2;
     }
 
     &__badge-threshold {
-        font-size: 0.75rem;
-        font-weight: 700;
         color: var(--fd-color-text-muted);
     }
 
@@ -216,5 +202,3 @@
         color: var(--fd-color-text-muted);
     }
 }
-
-

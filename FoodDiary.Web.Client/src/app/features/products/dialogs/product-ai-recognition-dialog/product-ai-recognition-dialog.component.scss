@@ -16,8 +16,6 @@
     right: 12px;
     padding: 6px 12px;
     border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 600;
     letter-spacing: 0.01em;
     background: var(--fd-color-white);
     color: var(--fd-color-text-muted);
@@ -111,7 +109,6 @@
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
     color: var(--fd-color-red-700);
-    font-size: 0.9rem;
 }
 
 .product-ai-dialog__summary {
@@ -127,8 +124,6 @@
 }
 
 .product-ai-dialog__items-label {
-    font-size: 0.85rem;
-    font-weight: 600;
     color: var(--fd-color-text-muted);
 }
 
@@ -143,8 +138,6 @@
     border-radius: 999px;
     background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
     color: var(--fd-color-primary-700);
-    font-size: 0.85rem;
-    font-weight: 600;
 }
 
 .product-ai-dialog__note {
@@ -152,8 +145,6 @@
     border-radius: 12px;
     background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
     color: var(--fd-color-text);
-    font-size: 0.85rem;
-    line-height: 1.4;
 }
 
 .product-ai-dialog__form-grid {

@@ -33,10 +33,7 @@
 
     &__text {
         margin: 0;
-        font-size: var(--fd-font-size-base, 1rem);
-        line-height: 1.6;
         color: var(--fd-color-text);
-        font-weight: 600;
     }
 
     &__chip {
@@ -47,10 +44,6 @@
         border-radius: var(--fd-radius-panel, 12px);
         background: rgba(14, 165, 233, 0.14);
         color: var(--fd-color-sky-500);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        font-size: var(--fd-text-helper-size, 0.75rem);
 
         fd-ui-icon {
             font-size: 16px;
@@ -65,7 +58,6 @@
         align-items: center;
         gap: 8px;
         color: var(--fd-color-text-muted);
-        font-weight: 600;
         padding: 2px 0;
 
         fd-ui-icon {

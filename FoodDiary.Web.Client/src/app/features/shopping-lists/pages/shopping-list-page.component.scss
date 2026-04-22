@@ -3,7 +3,6 @@
 .shopping-list {
     margin: 0 auto;
     box-sizing: border-box;
-    font-size: 14px;
     --fd-layout-page-section-spacing: variables.$gap-m;
     background: transparent;
     padding: 0;
@@ -52,7 +51,7 @@
     &__new-button,
     &__delete-button,
     &__clear-button {
-        font-weight: 700;
+        --fd-button-font-weight: 700;
     }
 
     &__loader {
@@ -128,12 +127,10 @@
     }
 
     &__item-name {
-        font-weight: 700;
         color: var(--fd-color-text);
     }
 
     &__item-meta {
-        font-size: 0.85rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -168,7 +165,6 @@
         align-items: center;
         gap: variables.$gap-xs;
         color: var(--fd-color-text-muted);
-        font-weight: 600;
         padding: variables.$gap-xl 0;
     }
 
@@ -184,17 +180,12 @@
     }
 
     &__empty-title {
-        font-size: 1rem;
-        font-weight: 800;
         color: var(--fd-color-text);
         text-align: center;
     }
 
     &__empty-copy {
         max-width: 420px;
-        font-size: 0.95rem;
-        font-weight: 500;
-        line-height: 1.5;
         text-align: center;
     }
 

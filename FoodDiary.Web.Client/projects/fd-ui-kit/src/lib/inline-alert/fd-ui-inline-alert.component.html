@@ -4,23 +4,23 @@
 
 <div class="fd-ui-inline-alert__content">
     @if (title()) {
-        <div class="fd-ui-inline-alert__title">{{ title() }}</div>
+        <div class="fd-ui-inline-alert__title fd-ui-card-title">{{ title() }}</div>
     }
 
     @if (message()) {
-        <p class="fd-ui-inline-alert__message">{{ message() }}</p>
+        <p class="fd-ui-inline-alert__message fd-ui-body-sm">{{ message() }}</p>
     }
 
     @if (hasActions()) {
         <div class="fd-ui-inline-alert__actions">
             @if (primaryActionLabel()) {
-                <button type="button" class="fd-ui-inline-alert__action" (click)="primaryAction.emit()">
+                <button type="button" class="fd-ui-inline-alert__action fd-ui-action-text" (click)="primaryAction.emit()">
                     {{ primaryActionLabel() }}
                 </button>
             }
 
             @if (secondaryActionLabel()) {
-                <button type="button" class="fd-ui-inline-alert__action" (click)="secondaryAction.emit()">
+                <button type="button" class="fd-ui-inline-alert__action fd-ui-action-text" (click)="secondaryAction.emit()">
                     {{ secondaryActionLabel() }}
                 </button>
             }

@@ -41,8 +41,8 @@ import { SidebarActionItem } from './sidebar.models';
                 justify-content: center;
                 background: var(--fd-color-danger);
                 color: var(--fd-color-white);
-                font-size: 0.75rem;
-                font-weight: 800;
+                font-size: var(--fd-text-helper-size, 0.75rem);
+                font-weight: var(--fd-text-stat-label-weight, 600);
                 line-height: 1;
             }
         `,

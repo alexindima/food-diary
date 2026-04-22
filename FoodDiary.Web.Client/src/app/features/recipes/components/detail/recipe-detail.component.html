@@ -11,8 +11,8 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-                        <strong class="recipe-detail__surface-value">
+                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-action-text">
                             {{ calories }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
@@ -24,8 +24,8 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}</span>
-                        <strong class="recipe-detail__surface-value">{{ recipe.servings }}</strong>
+                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-action-text">{{ recipe.servings }}</strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
@@ -34,8 +34,8 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate }}</span>
-                        <strong class="recipe-detail__surface-value">
+                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-action-text">
                             @if (totalTime !== null) {
                                 {{ totalTime }} {{ 'RECIPE_DETAIL.MIN' | translate }}
                             } @else {
@@ -50,8 +50,10 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}</span>
-                        <strong class="recipe-detail__surface-value">{{ ingredientCount }}</strong>
+                        <span class="recipe-detail__surface-label fd-ui-caption">{{
+                            'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate
+                        }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-action-text">{{ ingredientCount }}</strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
@@ -60,7 +62,7 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
                         <div class="recipe-detail__quality">
                             <div class="recipe-detail__quality-bar" aria-hidden="true">
                                 <span
@@ -68,7 +70,10 @@
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
-                            <strong class="recipe-detail__quality-value" [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate">
+                            <strong
+                                class="recipe-detail__quality-value fd-ui-action-text"
+                                [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
+                            >
                                 {{ qualityScore }}
                             </strong>
                         </div>
@@ -81,8 +86,8 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.COMMENT' | translate }}</span>
-                        <span class="recipe-detail__surface-value">{{ recipe.comment }}</span>
+                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.COMMENT' | translate }}</span>
+                        <span class="recipe-detail__surface-value fd-ui-body-sm">{{ recipe.comment }}</span>
                     </fd-ui-accent-surface>
                 }
             }
@@ -96,8 +101,8 @@
                                 [accentColor]="macro.color"
                                 [tinted]="true"
                             >
-                                <span class="recipe-detail__surface-label">{{ macro.labelKey | translate }}</span>
-                                <strong class="recipe-detail__surface-value">
+                                <span class="recipe-detail__surface-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
+                                <strong class="recipe-detail__surface-value fd-ui-action-text">
                                     {{ macro.value }}
                                     {{ macro.unitKey | translate }}
                                 </strong>
@@ -135,7 +140,7 @@
 
     <div fdUiDialogFooter class="recipe-detail__footer">
         @if (warningMessage) {
-            <span class="recipe-detail__warning">{{ warningMessage | translate }}</span>
+            <span class="recipe-detail__warning fd-ui-stat-value">{{ warningMessage | translate }}</span>
         }
         <div class="recipe-detail__actions">
             <fd-ui-button

@@ -1,7 +1,7 @@
 <div class="dynamic-progress-bar-wrapper">
     <div class="dynamic-progress-bar">
         <div class="dynamic-progress-bar-line" [ngStyle]="{ width: progressBarWidth(), backgroundColor: barColor() }">
-            <div class="dynamic-progress-bar-title" [ngClass]="textColorClass()" [ngStyle]="{ left: textPosition() }">
+            <div class="dynamic-progress-bar-title fd-ui-stat-value" [ngClass]="textColorClass()" [ngStyle]="{ left: textPosition() }">
                 {{ current() }} {{ unit() }} ({{ progress() }}%)
             </div>
         </div>
@@ -9,6 +9,6 @@
 
     @if (progress() > 100) {
         <div class="dynamic-progress-bar-overflow-line" [ngStyle]="{ left: maxPosition() + '%' }"></div>
-        <div class="dynamic-progress-bar-overflow-label" [ngStyle]="{ left: maxPosition() + '%' }">100%</div>
+        <div class="dynamic-progress-bar-overflow-label fd-ui-caption" [ngStyle]="{ left: maxPosition() + '%' }">100%</div>
     }
 </div>

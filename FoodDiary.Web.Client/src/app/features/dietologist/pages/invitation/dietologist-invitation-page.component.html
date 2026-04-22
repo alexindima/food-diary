@@ -1,9 +1,9 @@
 <div class="dietologist-invitation">
     <fd-ui-card class="dietologist-invitation__card" [title]="'DIETOLOGIST_INVITATION.TITLE' | translate">
         @if (state() === 'loading') {
-            <p class="dietologist-invitation__description">{{ 'DIETOLOGIST_INVITATION.LOADING' | translate }}</p>
+            <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.LOADING' | translate }}</p>
         } @else if (state() === 'ready' && invitation(); as currentInvitation) {
-            <p class="dietologist-invitation__description">
+            <p class="dietologist-invitation__description fd-ui-body-sm">
                 {{
                     'DIETOLOGIST_INVITATION.DESCRIPTION'
                         | translate
@@ -13,7 +13,7 @@
                               }
                 }}
             </p>
-            <p class="dietologist-invitation__meta">
+            <p class="dietologist-invitation__meta fd-ui-caption">
                 {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: (currentInvitation.expiresAtUtc | date: 'mediumDate') } }}
             </p>
             <div class="dietologist-invitation__actions">
@@ -32,35 +32,37 @@
                 </fd-ui-button>
             </div>
         } @else if (state() === 'accepted') {
-            <p class="dietologist-invitation__description">{{ 'DIETOLOGIST_INVITATION.SUCCESS_ACCEPT' | translate }}</p>
+            <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.SUCCESS_ACCEPT' | translate }}</p>
             <div class="dietologist-invitation__actions">
                 <fd-ui-button type="button" variant="primary" (click)="goToClients()">
                     {{ 'DIETOLOGIST_INVITATION.OPEN_CLIENTS' | translate }}
                 </fd-ui-button>
             </div>
         } @else if (state() === 'declined') {
-            <p class="dietologist-invitation__description">{{ 'DIETOLOGIST_INVITATION.SUCCESS_DECLINE' | translate }}</p>
+            <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.SUCCESS_DECLINE' | translate }}</p>
             <div class="dietologist-invitation__actions">
                 <fd-ui-button type="button" variant="primary" (click)="goHome()">
                     {{ 'DIETOLOGIST_INVITATION.GO_HOME' | translate }}
                 </fd-ui-button>
             </div>
         } @else if (state() === 'expired') {
-            <p class="dietologist-invitation__description">{{ 'DIETOLOGIST_INVITATION.EXPIRED' | translate }}</p>
+            <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.EXPIRED' | translate }}</p>
             <div class="dietologist-invitation__actions">
                 <fd-ui-button type="button" variant="primary" (click)="goHome()">
                     {{ 'DIETOLOGIST_INVITATION.GO_HOME' | translate }}
                 </fd-ui-button>
             </div>
         } @else if (state() === 'revoked') {
-            <p class="dietologist-invitation__description">{{ 'DIETOLOGIST_INVITATION.REVOKED' | translate }}</p>
+            <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.REVOKED' | translate }}</p>
             <div class="dietologist-invitation__actions">
                 <fd-ui-button type="button" variant="primary" (click)="goHome()">
                     {{ 'DIETOLOGIST_INVITATION.GO_HOME' | translate }}
                 </fd-ui-button>
             </div>
         } @else {
-            <p class="dietologist-invitation__description">{{ errorMessage() || ('DIETOLOGIST_INVITATION.ERROR_LOAD' | translate) }}</p>
+            <p class="dietologist-invitation__description fd-ui-body-sm">
+                {{ errorMessage() || ('DIETOLOGIST_INVITATION.ERROR_LOAD' | translate) }}
+            </p>
             <fd-ui-form-error [error]="errorMessage()" />
             <div class="dietologist-invitation__actions">
                 <fd-ui-button type="button" variant="primary" (click)="goHome()">

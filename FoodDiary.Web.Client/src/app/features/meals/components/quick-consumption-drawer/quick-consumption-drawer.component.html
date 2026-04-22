@@ -2,8 +2,8 @@
     <div class="quick-consumption" [class.quick-consumption--inline]="isInline()" role="region" [attr.aria-labelledby]="titleId">
         <div class="quick-consumption__header">
             <div>
-                <div class="quick-consumption__title" [id]="titleId">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
-                <div class="quick-consumption__subtitle" aria-live="polite">
+                <div class="quick-consumption__title fd-ui-card-title" [id]="titleId">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
+                <div class="quick-consumption__subtitle fd-ui-action-text" aria-live="polite">
                     {{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}
                 </div>
             </div>
@@ -26,10 +26,10 @@
                             <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
                         </div>
                         <div class="quick-consumption__info">
-                            <div class="quick-consumption__name">
+                            <div class="quick-consumption__name fd-ui-action-text">
                                 {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
                             </div>
-                            <div class="quick-consumption__meta">
+                            <div class="quick-consumption__meta fd-ui-body-sm">
                                 {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
                                 @if (item.type === 'product') {
                                     {{ item.amount | number: '1.0-1' }}
@@ -53,7 +53,7 @@
                 }
             </div>
         } @else {
-            <p class="quick-consumption__empty">{{ 'QUICK_CONSUMPTION.PREVIEW_EMPTY' | translate }}</p>
+            <p class="quick-consumption__empty fd-ui-body-sm">{{ 'QUICK_CONSUMPTION.PREVIEW_EMPTY' | translate }}</p>
         }
 
         <div class="quick-consumption__actions">

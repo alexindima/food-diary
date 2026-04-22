@@ -11,8 +11,8 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-                        <strong class="product-detail__surface-value">
+                        <span class="product-detail__surface-label fd-ui-caption">{{ 'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate }}</span>
+                        <strong class="product-detail__surface-value fd-ui-card-title">
                             {{ calories }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
@@ -25,8 +25,10 @@
                             accentColor="var(--fd-color-primary-300)"
                             [tinted]="true"
                         >
-                            <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate }}</span>
-                            <strong class="product-detail__surface-value">{{ product.barcode }}</strong>
+                            <span class="product-detail__surface-label fd-ui-caption">{{
+                                'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate
+                            }}</span>
+                            <strong class="product-detail__surface-value fd-ui-card-title">{{ product.barcode }}</strong>
                         </fd-ui-accent-surface>
                     }
 
@@ -36,8 +38,10 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate }}</span>
-                        <strong class="product-detail__surface-value">
+                        <span class="product-detail__surface-label fd-ui-caption">{{
+                            'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate
+                        }}</span>
+                        <strong class="product-detail__surface-value fd-ui-card-title">
                             {{ product.defaultPortionAmount }}
                             {{ 'GENERAL.UNITS.' + product.baseUnit | translate }}
                         </strong>
@@ -49,8 +53,10 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate }}</span>
-                        <strong class="product-detail__surface-value">{{ productTypeKey | translate }}</strong>
+                        <span class="product-detail__surface-label fd-ui-caption">{{
+                            'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate
+                        }}</span>
+                        <strong class="product-detail__surface-value fd-ui-card-title">{{ productTypeKey | translate }}</strong>
                     </fd-ui-accent-surface>
                 </div>
             }
@@ -64,8 +70,8 @@
                                 [accentColor]="macro.color"
                                 [tinted]="true"
                             >
-                                <span class="product-detail__surface-label">{{ macro.labelKey | translate }}</span>
-                                <strong class="product-detail__surface-value">
+                                <span class="product-detail__surface-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
+                                <strong class="product-detail__surface-value fd-ui-card-title">
                                     {{ macro.value }}
                                     {{ macro.unitKey | translate }}
                                 </strong>
@@ -103,7 +109,7 @@
 
     <div fdUiDialogFooter class="product-detail__footer">
         @if (warningMessage(); as warningMessageKey) {
-            <span class="product-detail__warning">{{ warningMessageKey | translate }}</span>
+            <span class="product-detail__warning fd-ui-body-sm">{{ warningMessageKey | translate }}</span>
         }
         <div class="product-detail__actions">
             <fd-ui-button

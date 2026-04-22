@@ -1,5 +1,5 @@
 <fd-ui-dialog class="confirm-delete-dialog" [title]="data.title || ('CONFIRM_DELETE.TITLE' | translate: { type: data.entityType })">
-    <p class="confirm-delete-dialog__message">
+    <p class="confirm-delete-dialog__message fd-ui-body-sm">
         {{ data.message || ('CONFIRM_DELETE.MESSAGE' | translate: { name: data.name }) }}
     </p>
 

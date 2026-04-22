@@ -1,11 +1,11 @@
 <div class="email-verify">
     <fd-ui-card class="email-verify__card" [title]="'AUTH.VERIFY.TITLE' | translate">
         @if (state() === 'pending') {
-            <p class="email-verify__description">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
+            <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
         } @else if (state() === 'success') {
-            <p class="email-verify__description">{{ 'AUTH.VERIFY.SUCCESS' | translate }}</p>
+            <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.SUCCESS' | translate }}</p>
         } @else {
-            <p class="email-verify__description">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
+            <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
         }
 
         <div class="email-verify__actions">

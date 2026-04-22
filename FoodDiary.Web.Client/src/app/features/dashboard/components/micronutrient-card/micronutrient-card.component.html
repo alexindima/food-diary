@@ -8,23 +8,27 @@
             </div>
         } @else if (!hasData()) {
             <div class="micronutrient-card__empty">
-                <span class="micronutrient-card__empty-text">{{ 'MICRONUTRIENT_CARD.EMPTY' | translate }}</span>
+                <span class="micronutrient-card__empty-text fd-ui-body-sm">{{ 'MICRONUTRIENT_CARD.EMPTY' | translate }}</span>
             </div>
         } @else {
             @if (coverage(); as cov) {
-                <div class="micronutrient-card__coverage">
+                <div class="micronutrient-card__coverage fd-ui-meta-text">
                     {{ 'MICRONUTRIENT_CARD.COVERAGE' | translate: { linked: cov.linked, total: cov.total } }}
                 </div>
             }
 
             @if (topDeficiencies().length > 0) {
                 <div class="micronutrient-card__section">
-                    <span class="micronutrient-card__section-label">{{ 'MICRONUTRIENT_CARD.DEFICIENCIES' | translate }}</span>
+                    <span class="micronutrient-card__section-label fd-ui-overline">{{
+                        'MICRONUTRIENT_CARD.DEFICIENCIES' | translate
+                    }}</span>
                     @for (nutrient of topDeficiencies(); track nutrient.nutrientId) {
                         <div class="micronutrient-card__nutrient">
                             <div class="micronutrient-card__nutrient-header">
-                                <span class="micronutrient-card__nutrient-name">{{ shortenName(nutrient.name) }}</span>
-                                <span class="micronutrient-card__nutrient-value">{{ nutrient.percentDailyValue | number: '1.0-0' }}%</span>
+                                <span class="micronutrient-card__nutrient-name fd-ui-body-sm">{{ shortenName(nutrient.name) }}</span>
+                                <span class="micronutrient-card__nutrient-value fd-ui-meta-text"
+                                    >{{ nutrient.percentDailyValue | number: '1.0-0' }}%</span
+                                >
                             </div>
                             <div class="micronutrient-card__bar">
                                 <div
@@ -40,11 +44,11 @@
 
             @if (topSufficient().length > 0) {
                 <div class="micronutrient-card__section">
-                    <span class="micronutrient-card__section-label">{{ 'MICRONUTRIENT_CARD.SUFFICIENT' | translate }}</span>
+                    <span class="micronutrient-card__section-label fd-ui-overline">{{ 'MICRONUTRIENT_CARD.SUFFICIENT' | translate }}</span>
                     @for (nutrient of topSufficient(); track nutrient.nutrientId) {
                         <div class="micronutrient-card__nutrient micronutrient-card__nutrient--good">
-                            <span class="micronutrient-card__nutrient-name">{{ shortenName(nutrient.name) }}</span>
-                            <span class="micronutrient-card__nutrient-check">
+                            <span class="micronutrient-card__nutrient-name fd-ui-body-sm">{{ shortenName(nutrient.name) }}</span>
+                            <span class="micronutrient-card__nutrient-check fd-ui-meta-text">
                                 <fd-ui-icon name="check"></fd-ui-icon>
                                 {{ nutrient.percentDailyValue | number: '1.0-0' }}%
                             </span>
@@ -55,19 +59,19 @@
 
             @if (healthScores(); as scores) {
                 <div class="micronutrient-card__scores">
-                    <div class="micronutrient-card__score" [attr.data-grade]="scores.heart.grade">
+                    <div class="micronutrient-card__score fd-ui-meta-text" [attr.data-grade]="scores.heart.grade">
                         <fd-ui-icon name="favorite"></fd-ui-icon>
                         {{ scores.heart.score }}
                     </div>
-                    <div class="micronutrient-card__score" [attr.data-grade]="scores.bone.grade">
+                    <div class="micronutrient-card__score fd-ui-meta-text" [attr.data-grade]="scores.bone.grade">
                         <fd-ui-icon name="accessibility_new"></fd-ui-icon>
                         {{ scores.bone.score }}
                     </div>
-                    <div class="micronutrient-card__score" [attr.data-grade]="scores.immune.grade">
+                    <div class="micronutrient-card__score fd-ui-meta-text" [attr.data-grade]="scores.immune.grade">
                         <fd-ui-icon name="shield"></fd-ui-icon>
                         {{ scores.immune.score }}
                     </div>
-                    <div class="micronutrient-card__score" [attr.data-grade]="scores.energy.grade">
+                    <div class="micronutrient-card__score fd-ui-meta-text" [attr.data-grade]="scores.energy.grade">
                         <fd-ui-icon name="bolt"></fd-ui-icon>
                         {{ scores.energy.score }}
                     </div>

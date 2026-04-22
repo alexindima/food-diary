@@ -33,13 +33,10 @@
     }
 
     &__trend-label {
-        font-size: 0.8rem;
         color: var(--fd-color-text-muted);
     }
 
     &__trend-value {
-        font-size: 1.1rem;
-        font-weight: 700;
         color: var(--fd-color-text-strong);
     }
 
@@ -65,7 +62,6 @@
         align-items: center;
         padding: 8px 0;
         border-bottom: 1px solid var(--fd-color-border);
-        font-size: 0.9rem;
 
         span {
             color: var(--fd-color-text-muted);
@@ -90,9 +86,7 @@
         display: flex;
         align-items: flex-start;
         gap: 8px;
-        font-size: 0.9rem;
         color: var(--fd-color-text);
-        line-height: 1.4;
     }
 
     &__suggestion-icon {

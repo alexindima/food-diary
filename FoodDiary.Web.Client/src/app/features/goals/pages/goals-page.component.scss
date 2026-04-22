@@ -25,8 +25,6 @@
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
             inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 82%, transparent);
         color: var(--fd-color-text-muted);
-        font-size: 0.95rem;
-        font-weight: 700;
     }
 
     &__status--saving {
@@ -168,23 +166,17 @@
         gap: 4px;
         text-align: center;
         color: var(--fd-color-text-strong);
-        font-weight: 700;
         z-index: 2;
         pointer-events: none;
     }
 
     &__ring-label {
         margin: 0;
-        font-size: 0.8rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         color: color-mix(in srgb, var(--fd-color-text-muted) 88%, var(--fd-color-text) 12%);
     }
 
     &__calorie-input {
         text-align: center;
-        font-size: clamp(2rem, 3.5vw, 2.6rem);
-        font-weight: 800;
         border: none;
         background: linear-gradient(
             180deg,
@@ -220,15 +212,12 @@
 
     &__ring-value {
         margin: 0;
-        font-size: clamp(2.3rem, 4vw, 2.75rem);
         line-height: 1.1;
         letter-spacing: 0.02em;
     }
 
     &__ring-unit {
         color: color-mix(in srgb, var(--fd-color-text-muted) 82%, var(--fd-color-text) 18%);
-        font-size: 0.95rem;
-        font-weight: 600;
     }
 
     &__knob {
@@ -284,12 +273,6 @@
         }
     }
 
-    &__macro-group-title {
-        font-weight: 800;
-        color: var(--fd-color-slate-900);
-        letter-spacing: 0.01em;
-    }
-
     &__preset {
         display: flex;
         width: min(320px, 100%);
@@ -320,7 +303,6 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-weight: 700;
         color: var(--fd-color-text-strong);
     }
 
@@ -345,8 +327,6 @@
         border: none;
         outline: none;
         background: transparent;
-        font-weight: 800;
-        font-size: 1rem;
         text-align: right;
         color: var(--fd-color-text-strong);
 
@@ -363,8 +343,6 @@
 
     &__macro-unit {
         color: color-mix(in srgb, var(--fd-color-text-muted) 82%, var(--fd-color-text) 18%);
-        font-weight: 700;
-        font-size: 0.9rem;
     }
 
     &__macro-slider {
@@ -468,13 +446,6 @@
         flex-wrap: wrap;
     }
 
-    &__target-title {
-        font-size: 0.95rem;
-        color: var(--fd-color-text-muted);
-        font-weight: 700;
-        letter-spacing: 0.01em;
-    }
-
     &__target-value {
         display: flex;
         align-items: center;
@@ -482,23 +453,17 @@
     }
 
     &__target-number {
-        font-size: clamp(1.8rem, 3vw, 2.2rem);
-        font-weight: 800;
         color: var(--fd-color-slate-900);
         letter-spacing: 0.02em;
     }
 
     &__target-unit {
         color: var(--fd-color-text-muted);
-        font-weight: 700;
-        font-size: 0.95rem;
     }
 
     &__body-input {
         width: 140px;
         text-align: center;
-        font-size: clamp(1.8rem, 3.2vw, 2.2rem);
-        font-weight: 800;
         border: none;
         background: transparent;
         color: var(--fd-color-slate-900);
@@ -535,8 +500,6 @@
 
     &__meta-label {
         color: var(--fd-color-text-muted);
-        font-size: 0.95rem;
-        font-weight: 600;
     }
 
     &__delta {
@@ -547,7 +510,6 @@
         border-radius: 12px;
         background: color-mix(in srgb, var(--fd-color-green-500) 12%, transparent);
         color: var(--fd-color-emerald-700);
-        font-weight: 700;
 
         &--positive {
             box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-emerald-500) 18%, transparent);
@@ -597,7 +559,6 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 0.9rem;
         color: var(--fd-color-slate-700);
         cursor: pointer;
 
@@ -621,8 +582,6 @@
     }
 
     &__cycling-day-label {
-        font-size: 0.8rem;
-        font-weight: 600;
         color: var(--fd-color-slate-600);
     }
 
@@ -631,7 +590,6 @@
         padding: 8px 10px;
         border: 1px solid var(--fd-color-slate-200);
         border-radius: 8px;
-        font-size: 0.9rem;
         color: var(--fd-color-slate-900);
         background: var(--fd-color-slate-50);
         outline: none;

@@ -8,7 +8,7 @@
     tabindex="0"
 >
     <div class="waist-summary-card__content">
-        <strong class="waist-summary-card__value">
+        <strong class="waist-summary-card__value fd-ui-metric-lg">
             @if (latest()) {
                 {{ latest() | number: '1.0-1' }} {{ 'WAIST_CARD.CM' | translate }}
             } @else {
@@ -16,7 +16,7 @@
             }
         </strong>
         <span
-            class="waist-summary-card__trend"
+            class="waist-summary-card__trend fd-ui-body-sm"
             [class.waist-summary-card__trend--positive]="trend().status === 'positive'"
             [class.waist-summary-card__trend--negative]="trend().status === 'negative'"
             [class.waist-summary-card__trend--neutral]="trend().status === 'neutral'"

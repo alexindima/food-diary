@@ -131,13 +131,13 @@
                                     <div class="recipe-list__favorite-name">
                                         {{ favorite.name || favorite.recipeName || ('RECIPE_LIST.FAVORITE_UNNAMED' | translate) }}
                                     </div>
-                                    <div class="recipe-list__favorite-meta">
+                                    <div class="recipe-list__favorite-meta fd-ui-caption">
                                         <span>{{ favorite.ingredientCount }} {{ 'RECIPE_LIST.FAVORITE_INGREDIENTS' | translate }}</span>
                                         @if (favorite.totalTimeMinutes) {
-                                            <span>Â·</span>
+                                            <span>&middot;</span>
                                             <span>{{ favorite.totalTimeMinutes }} {{ 'RECIPE_LIST.FAVORITE_MINUTES' | translate }}</span>
                                         }
-                                        <span>Â·</span>
+                                        <span>&middot;</span>
                                         <span>{{ favorite.servings }} {{ 'RECIPE_LIST.FAVORITE_SERVINGS' | translate }}</span>
                                     </div>
                                 </button>
@@ -181,7 +181,7 @@
                     @if (showRecentSection()) {
                         <div class="recipe-list__section">
                             <div class="recipe-list__section-header">
-                                <span class="recipe-list__section-label">
+                                <span class="recipe-list__section-label fd-ui-card-title">
                                     {{ 'RECIPE_LIST.RECENT_RECIPES' | translate }}
                                 </span>
                                 <span class="recipe-list__section-line"></span>
@@ -203,7 +203,7 @@
                     @if (allRecipesSectionItems().length > 0) {
                         <div class="recipe-list__section">
                             <div class="recipe-list__section-header">
-                                <span class="recipe-list__section-label">
+                                <span class="recipe-list__section-label fd-ui-card-title">
                                     {{ allRecipesSectionLabelKey() | translate }}
                                 </span>
                                 <span class="recipe-list__section-line"></span>
@@ -225,8 +225,8 @@
             } @else if (isEmptyState()) {
                 <div class="recipe-list__empty-state">
                     <fd-ui-icon class="recipe-list__no-results-icon" name="menu_book" size="xl" />
-                    <div class="recipe-list__empty-title">{{ 'RECIPE_LIST.EMPTY_TITLE' | translate }}</div>
-                    <div class="recipe-list__empty-copy">{{ 'RECIPE_LIST.EMPTY_COPY' | translate }}</div>
+                    <div class="recipe-list__empty-title fd-ui-card-title">{{ 'RECIPE_LIST.EMPTY_TITLE' | translate }}</div>
+                    <div class="recipe-list__empty-copy fd-ui-body-sm">{{ 'RECIPE_LIST.EMPTY_COPY' | translate }}</div>
                     <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddRecipeClick()">
                         {{ 'RECIPE_LIST.ADD_FIRST_RECIPE_BUTTON' | translate }}
                     </fd-ui-button>
@@ -234,8 +234,8 @@
             } @else {
                 <div class="recipe-list__no-results">
                     <fd-ui-icon class="recipe-list__no-results-icon" name="search_off" size="xl" />
-                    <div class="recipe-list__empty-title">{{ 'RECIPE_LIST.NO_RESULTS_TITLE' | translate }}</div>
-                    <div class="recipe-list__empty-copy">{{ 'RECIPE_LIST.NO_RESULTS_COPY' | translate }}</div>
+                    <div class="recipe-list__empty-title fd-ui-card-title">{{ 'RECIPE_LIST.NO_RESULTS_TITLE' | translate }}</div>
+                    <div class="recipe-list__empty-copy fd-ui-body-sm">{{ 'RECIPE_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>
             }
         }

@@ -4,7 +4,6 @@
     --b2: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     margin: 0 auto;
     box-sizing: border-box;
-    font-size: 14px;
     --fd-layout-page-section-spacing: variables.$gap-m;
     background: transparent;
     padding: 0;
@@ -81,8 +80,6 @@
     }
 
     &__no-results {
-        font-size: 1.2em;
-        font-weight: bold;
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: variables.$gap-l;
@@ -110,16 +107,11 @@
     }
 
     &__empty-title {
-        font-size: 1rem;
-        font-weight: 800;
         color: var(--fd-color-text);
     }
 
     &__empty-copy {
         max-width: 420px;
-        font-size: 0.95rem;
-        font-weight: 500;
-        line-height: 1.5;
     }
 
     &__pagination {
@@ -161,8 +153,6 @@
     }
 
     &__favorite-name {
-        font-weight: 600;
-        font-size: 0.9rem;
         color: var(--fd-color-text);
         white-space: nowrap;
         overflow: hidden;
@@ -170,7 +160,6 @@
     }
 
     &__favorite-meta {
-        font-size: 0.8rem;
         color: var(--fd-color-text-muted);
         margin-top: 2px;
         display: flex;
@@ -231,8 +220,6 @@
     }
 
     &__section-label {
-        font-weight: 800;
-        font-size: 1.05rem;
         color: var(--fd-color-text);
         white-space: nowrap;
     }
@@ -304,8 +291,6 @@
     }
 
     &__off-name {
-        font-weight: 600;
-        font-size: 0.95rem;
         color: var(--fd-color-text);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -313,7 +298,6 @@
     }
 
     &__off-brand {
-        font-size: 0.85rem;
         color: var(--fd-color-text-muted);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -321,9 +305,7 @@
     }
 
     &__off-kcal {
-        font-size: 0.8rem;
         color: var(--fd-color-text-muted);
-        font-weight: 500;
     }
 
     &__off-arrow {
@@ -368,10 +350,6 @@
             padding: 0 16px;
         }
 
-        &__section-label {
-            font-size: 0.95rem;
-        }
-
         &__section-grid {
             gap: 0;
             margin: 0;
@@ -401,236 +379,9 @@
             flex: 0 0 auto;
         }
 
-
         &__add-button {
             flex: 0 0 auto;
             min-width: 44px;
         }
-    }
-}
-
-.product-card {
-    padding: 0;
-    background: transparent;
-    min-width: 0;
-    container-type: inline-size;
-
-    &__container {
-        padding: 20px;
-        border-radius: 24px;
-        background: linear-gradient(
-            145deg,
-            color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)),
-            var(--fd-color-white)
-        );
-        box-shadow: 0 18px 36px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-    }
-
-    &__top {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 16px;
-        align-items: center;
-    }
-
-    &__image {
-        width: 96px;
-        height: 96px;
-        min-width: 96px;
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-        background: linear-gradient(135deg, var(--fd-color-slate-200), var(--fd-color-slate-50));
-        display: grid;
-        place-items: center;
-
-        img {
-            width: 96px;
-            height: 96px;
-            object-fit: cover;
-            display: block;
-        }
-    }
-
-    &__info {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        min-width: 0;
-    }
-
-    &__name-row {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    &__name {
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: var(--fd-color-text);
-        line-height: 1.2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    &__calories {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 2px;
-        color: var(--fd-color-slate-900);
-    }
-
-    &__calories-value {
-        font-size: 1.6rem;
-        font-weight: 800;
-    }
-
-    &__calories-label {
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--fd-color-text-muted);
-    }
-
-    &__serving-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        color: var(--fd-color-text-muted);
-        font-size: 1rem;
-        font-weight: 600;
-    }
-
-    &__serving {
-        color: var(--fd-color-text-muted);
-    }
-
-    &__barcode-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 12px;
-        background: var(--fd-color-primary-50);
-        color: var(--fd-color-slate-600);
-        font-weight: 700;
-        font-size: 0.9rem;
-
-        fd-ui-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
-            color: var(--fd-color-sky-500);
-        }
-    }
-
-    &__badges {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    &__macros {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 12px;
-        padding: 14px 16px;
-        border-radius: 18px;
-        background: var(--fd-color-slate-50);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
-    }
-
-    &__macro {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto;
-        column-gap: 8px;
-        row-gap: 2px;
-        align-items: center;
-    }
-
-    &__macro-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        display: inline-block;
-        grid-row: span 2;
-
-        &--protein {
-            background: var(--fd-color-purple-500);
-        }
-
-        &--carb {
-            background: var(--fd-color-green-500);
-        }
-
-        &--fat {
-            background: var(--fd-color-amber-500);
-        }
-
-        &--fiber {
-            background: var(--fd-color-slate-400);
-        }
-    }
-
-    &__macro-value {
-        font-weight: 800;
-        font-size: 1rem;
-        color: var(--fd-color-text);
-    }
-
-    &__macro-label {
-        font-size: 0.85rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--fd-color-text-muted);
-    }
-
-    &__action {
-        width: 100%;
-    }
-
-    @media #{variables.$media-mobile} {
-
-        &__container {
-            padding: 16px;
-        }
-
-        &__name {
-            white-space: normal;
-        }
-
-        &__top {
-            grid-template-columns: 1fr;
-        }
-
-        &__image {
-            width: 100%;
-            height: 180px;
-        }
-
-        &__calories {
-            align-items: flex-start;
-        }
-    }
-}
-
-@container (min-width: 420px) {
-
-    .product-card__container {
-        max-width: 360px;
-        margin: 0 auto;
     }
 }

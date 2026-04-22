@@ -1,4 +1,5 @@
 @use 'variables' as variables;
+@use '../../components/landing-section.mixins' as landing;
 
 :host {
     display: flex;
@@ -82,9 +83,7 @@
 .landing-section {
 
     &__inner {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        @include landing.section-inner;
     }
 
     &__copy {
@@ -108,23 +107,15 @@
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
         color: var(--fd-color-primary-600);
-        font-weight: 700;
-        font-size: 0.9rem;
-        letter-spacing: 0.02em;
+        @include landing.marketing-eyebrow;
     }
 
     &__title {
-        margin: 0;
-        font-size: clamp(26px, 3vw, 34px);
-        color: var(--fd-color-text);
-        letter-spacing: -0.01em;
+        @include landing.marketing-title(clamp(26px, 3vw, 34px), 1.08, -0.01em, var(--fd-color-text));
     }
 
     &__subtitle {
-        margin: 6px 0 0;
-        color: var(--fd-color-text-muted);
-        font-size: 1.02rem;
-        max-width: 620px;
+        @include landing.marketing-body(1.02rem, 1.65, var(--fd-color-text-muted), 620px, 6px 0 0);
     }
 
     &__actions {
@@ -204,9 +195,7 @@
     }
 
     &__group-title {
-        font-weight: 800;
-        color: var(--fd-color-text);
-        letter-spacing: -0.01em;
+        @include landing.marketing-title(1.1rem, 1.2, -0.01em, var(--fd-color-text), 800);
     }
 
     &__cards {
@@ -232,9 +221,7 @@
     }
 
     &__hint {
-        margin: 0;
-        color: var(--fd-color-text-muted);
-        font-size: 0.95rem;
+        @include landing.marketing-body(0.95rem, 1.55, var(--fd-color-text-muted));
     }
 }
 
@@ -268,15 +255,11 @@
     }
 
     &__title {
-        margin: 0;
-        color: var(--fd-color-text);
-        font-size: 1.05rem;
+        @include landing.marketing-title(1.05rem, 1.25, -0.01em, var(--fd-color-text), 800);
     }
 
     &__text {
-        margin: 0;
-        color: var(--fd-color-text-muted);
-        line-height: 1.5;
+        @include landing.marketing-body(1rem, 1.5, var(--fd-color-text-muted));
     }
 }
 

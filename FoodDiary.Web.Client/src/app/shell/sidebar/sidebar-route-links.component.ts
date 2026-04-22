@@ -19,7 +19,7 @@ import { SidebarRouteItem } from './sidebar.models';
                 (click)="itemSelected.emit(item)"
             >
                 <fd-ui-icon [name]="item.icon"></fd-ui-icon>
-                <span>{{ item.labelKey | translate }}</span>
+                <span class="fd-ui-action-text">{{ item.labelKey | translate }}</span>
             </a>
         }
     `,
@@ -51,7 +51,6 @@ import { SidebarRouteItem } from './sidebar.models';
                 align-items: center;
                 padding: 10px 12px;
                 border-radius: var(--fd-radius-menu-item, 12px);
-                font-weight: 600;
             }
 
             .sidebar__link fd-ui-icon {
@@ -92,7 +91,6 @@ import { SidebarRouteItem } from './sidebar.models';
 
             .sidebar__link.sidebar__link--secondary {
                 padding: 8px 10px;
-                font-weight: 600;
             }
 
             .sidebar__link.sidebar__link--secondary fd-ui-icon {
@@ -108,7 +106,6 @@ import { SidebarRouteItem } from './sidebar.models';
                 background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
                 color: var(--fd-color-text-strong, var(--fd-color-slate-900));
                 border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
-                font-weight: 600;
             }
 
             .sidebar-mobile__sheet-link.is-pending:not(.is-active) {

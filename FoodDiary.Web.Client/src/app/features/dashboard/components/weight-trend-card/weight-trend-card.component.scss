@@ -36,8 +36,6 @@
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-surface-raised));
         color: var(--fd-color-text);
-        font-weight: 600;
-        font-size: 0.9rem;
         width: fit-content;
         margin-bottom: 10px;
 
@@ -61,16 +59,11 @@
     }
 
     &__value {
-        font-size: 2.6rem;
-        font-weight: 800;
-        letter-spacing: -0.03em;
         color: var(--fd-color-text);
-        line-height: 1;
     }
 
     &__unit {
         color: var(--fd-color-text-muted);
-        font-weight: 600;
     }
 
     &__chart {
@@ -81,19 +74,10 @@
     &__empty {
         margin: 8px 0 4px;
         color: var(--fd-color-text-muted);
-        font-size: 0.95rem;
     }
 
     &__footer {
         margin-top: 6px;
-        font-size: var(--fd-text-body-sm-size, 0.95rem);
         color: var(--fd-color-text-muted);
-    }
-
-    @media #{variables.$media-compact} {
-
-        &__value {
-            font-size: 2.2rem;
-        }
     }
 }

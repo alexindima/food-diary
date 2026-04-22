@@ -50,14 +50,14 @@
                 @if (ownershipIcon(); as icon) {
                     <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
                 }
-                <div class="entity-card__name">{{ title() }}</div>
+                <div class="entity-card__name fd-ui-card-title">{{ title() }}</div>
                 @if (titleMuted(); as mutedTitle) {
-                    <div class="entity-card__title-muted">{{ mutedTitle }}</div>
+                    <div class="entity-card__title-muted fd-ui-meta-text">{{ mutedTitle }}</div>
                 }
             </div>
 
             @if (description(); as bodyDescription) {
-                <div class="entity-card__description">{{ bodyDescription }}</div>
+                <div class="entity-card__description fd-ui-caption">{{ bodyDescription }}</div>
             }
         </div>
 
@@ -81,14 +81,17 @@
 
             @if (normalizedQuality(); as cardQuality) {
                 <div class="entity-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
-                    <span class="entity-card__quality-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                    <span class="entity-card__quality-label fd-ui-stat-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
                     <div class="entity-card__quality-bar" aria-hidden="true">
                         <span
                             class="entity-card__quality-fill entity-card__quality-fill--{{ cardQuality.grade }}"
                             [style.width.%]="cardQuality.score"
                         ></span>
                     </div>
-                    <span class="entity-card__quality-value" [fdUiHint]="'QUALITY.' + cardQuality.grade.toUpperCase() | translate">
+                    <span
+                        class="entity-card__quality-value fd-ui-stat-value"
+                        [fdUiHint]="'QUALITY.' + cardQuality.grade.toUpperCase() | translate"
+                    >
                         {{ cardQuality.score }}
                     </span>
                 </div>
@@ -98,10 +101,10 @@
 
     <div fdMediaCardActions class="entity-card__action-group">
         <div class="entity-card__calories-inline">
-            <span class="entity-card__calories-value">
+            <span class="entity-card__calories-value fd-ui-metric-lg">
                 {{ calories() | number: '1.0-0' }}
             </span>
-            <span class="entity-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+            <span class="entity-card__calories-unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
         </div>
 
         @if (showAction()) {

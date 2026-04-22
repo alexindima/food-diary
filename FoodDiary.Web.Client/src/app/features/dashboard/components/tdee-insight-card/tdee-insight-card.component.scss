@@ -41,15 +41,10 @@
     }
 
     &__number {
-        font-size: 2rem;
-        font-weight: 800;
-        line-height: 1;
         color: var(--fd-color-orange-700);
     }
 
     &__unit {
-        font-size: 0.85rem;
-        font-weight: 600;
         color: var(--fd-color-text-muted);
     }
 
@@ -57,10 +52,6 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
         padding: 4px 10px;
         border-radius: var(--fd-radius-button, 10px);
         width: fit-content;
@@ -91,18 +82,15 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: var(--fd-text-card-meta-size, 0.85rem);
         padding: 2px 0;
         gap: 12px;
     }
 
     &__meta-label {
         color: var(--fd-color-text-muted);
-        font-weight: 500;
     }
 
     &__meta-value {
-        font-weight: 700;
         text-align: right;
     }
 
@@ -114,8 +102,6 @@
         border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
-        font-size: var(--fd-text-card-meta-size, 0.85rem);
-        font-weight: 600;
         line-height: 1.5;
 
         fd-ui-icon {
@@ -138,8 +124,6 @@
     }
 
     &__suggestion-text {
-        font-size: var(--fd-text-card-meta-size, 0.85rem);
-        font-weight: 600;
         color: var(--fd-color-emerald-700);
     }
 
@@ -149,7 +133,6 @@
         align-items: center;
         gap: 8px;
         color: var(--fd-color-text-muted);
-        font-weight: 600;
         padding: 2px 0;
 
         fd-ui-icon {

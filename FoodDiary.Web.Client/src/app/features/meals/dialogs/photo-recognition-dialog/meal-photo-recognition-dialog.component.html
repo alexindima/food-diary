@@ -20,7 +20,7 @@
             />
 
             @if (statusKey()) {
-                <div class="photo-ai-dialog__status" [class.photo-ai-dialog__status--loading]="isLoading()">
+                <div class="photo-ai-dialog__status fd-ui-overline" [class.photo-ai-dialog__status--loading]="isLoading()">
                     {{ statusKey() | translate }}
                 </div>
             }
@@ -34,14 +34,14 @@
 
         @if (!isLoading()) {
             @if (errorKey()) {
-                <div class="photo-ai-dialog__error">
+                <div class="photo-ai-dialog__error fd-ui-body-sm">
                     {{ errorKey() | translate }}
                 </div>
             }
 
             @if (results().length) {
                 <div class="photo-ai-dialog__results">
-                    <div class="photo-ai-dialog__results-title">
+                    <div class="photo-ai-dialog__results-title fd-ui-card-title">
                         <span class="photo-ai-dialog__title-left">
                             <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
                             <fd-ui-button
@@ -129,19 +129,19 @@
                     } @else {
                         <div class="photo-ai-dialog__table">
                             <div class="photo-ai-dialog__table-head">
-                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
+                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-stat-label">
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
                                 </div>
-                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
+                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-label">
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
                                 </div>
                             </div>
                             <div class="photo-ai-dialog__table-body">
                                 <div class="photo-ai-dialog__table-row" *ngFor="let item of results(); let i = index">
-                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
+                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-body-sm">
                                         {{ getDisplayName(item) }}
                                     </div>
-                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
+                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-value">
                                         {{ formatAmount(item) }}
                                     </div>
                                 </div>
@@ -152,55 +152,55 @@
                     @if (!isNutritionLoading()) {
                         @if (nutrition()) {
                             <div class="photo-ai-dialog__nutrition">
-                                <div class="photo-ai-dialog__nutrition-title">
+                                <div class="photo-ai-dialog__nutrition-title fd-ui-card-title">
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE' | translate }}
                                 </div>
                                 <div class="photo-ai-dialog__nutrition-grid">
                                     <div class="photo-ai-dialog__nutrition-item">
-                                        <span class="photo-ai-dialog__nutrition-label">
+                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}
                                         </span>
-                                        <span class="photo-ai-dialog__nutrition-value">
+                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
                                             {{ formatMacro(nutrition()!.calories, 'GENERAL.UNITS.KCAL') }}
                                         </span>
                                     </div>
                                     <div class="photo-ai-dialog__nutrition-item">
-                                        <span class="photo-ai-dialog__nutrition-label">
+                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}
                                         </span>
-                                        <span class="photo-ai-dialog__nutrition-value">
+                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
                                             {{ formatMacro(nutrition()!.protein, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
                                     <div class="photo-ai-dialog__nutrition-item">
-                                        <span class="photo-ai-dialog__nutrition-label">
+                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.FAT' | translate }}
                                         </span>
-                                        <span class="photo-ai-dialog__nutrition-value">
+                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
                                             {{ formatMacro(nutrition()!.fat, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
                                     <div class="photo-ai-dialog__nutrition-item">
-                                        <span class="photo-ai-dialog__nutrition-label">
+                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.CARB' | translate }}
                                         </span>
-                                        <span class="photo-ai-dialog__nutrition-value">
+                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
                                             {{ formatMacro(nutrition()!.carbs, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
                                     <div class="photo-ai-dialog__nutrition-item">
-                                        <span class="photo-ai-dialog__nutrition-label">
+                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.FIBER' | translate }}
                                         </span>
-                                        <span class="photo-ai-dialog__nutrition-value">
+                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
                                             {{ formatMacro(nutrition()!.fiber, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
                                     <div class="photo-ai-dialog__nutrition-item">
-                                        <span class="photo-ai-dialog__nutrition-label">
+                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.ALCOHOL' | translate }}
                                         </span>
-                                        <span class="photo-ai-dialog__nutrition-value">
+                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
                                             {{ formatMacro(nutrition()!.alcohol, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
@@ -208,7 +208,7 @@
                             </div>
                         } @else {
                             @if (nutritionErrorKey()) {
-                                <div class="photo-ai-dialog__nutrition-error">
+                                <div class="photo-ai-dialog__nutrition-error fd-ui-body-sm">
                                     {{ nutritionErrorKey() | translate }}
                                 </div>
                             }

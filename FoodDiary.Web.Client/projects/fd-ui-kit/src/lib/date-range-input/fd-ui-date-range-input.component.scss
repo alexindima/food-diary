@@ -13,8 +13,8 @@
 
 .fd-ui-date-range-input__divider {
     color: var(--fd-color-text-muted);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: var(--fd-text-action-size);
+    font-weight: var(--fd-text-action-weight);
     line-height: 1;
 }
 

@@ -15,20 +15,6 @@
         width: 100%;
     }
 
-    &__title {
-        margin: 0;
-        font-size: var(--fd-page-title-size, 2rem);
-        line-height: var(--fd-page-title-line-height, 1.2);
-        font-weight: var(--fd-page-title-weight, 700);
-        color: var(--fd-color-slate-900);
-        width: 100%;
-    }
-
-    &__tabs {
-        flex: 1 1 220px;
-        min-width: 200px;
-    }
-
     &__card {
         height: 100%;
     }
@@ -58,18 +44,12 @@
     &__empty-chart {
         margin: 0;
         color: var(--fd-color-slate-400);
-        font-size: 0.95rem;
         text-align: center;
     }
 
     &__chart-canvas {
         width: 100%;
         min-height: 260px;
-    }
-
-    &__custom-range-input {
-        width: 320px;
-        max-width: 100%;
     }
 
     &__card--bmi {
@@ -80,7 +60,6 @@
 
     &__bmi-note {
         margin: 0 0 (variables.$gap-xs);
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -100,11 +79,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.7rem;
         color: var(--fd-color-slate-900);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
     }
 
     &__bmi-segment--under {
@@ -113,7 +88,11 @@
     }
 
     &__bmi-segment--normal {
-        background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-green-500) 26%, var(--fd-color-white)), var(--fd-color-green-500));
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-green-500) 26%, var(--fd-color-white)),
+            var(--fd-color-green-500)
+        );
         color: var(--fd-color-emerald-700);
     }
 
@@ -123,7 +102,11 @@
     }
 
     &__bmi-segment--obese {
-        background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-danger) 68%, var(--fd-color-white)));
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-danger) 68%, var(--fd-color-white))
+        );
         color: var(--fd-color-red-700);
     }
 
@@ -148,8 +131,6 @@
     }
 
     &__bmi-pointer span {
-        font-size: 0.8rem;
-        font-weight: 600;
         color: var(--fd-color-slate-900);
         transform: translateY(-6px);
     }
@@ -176,10 +157,8 @@
     }
 
     &__bmi-status {
-        font-weight: 600;
         padding: 2px 10px;
         border-radius: 999px;
-        font-size: 0.85rem;
     }
 
     &__bmi-status--under {
@@ -205,7 +184,6 @@
     &__bmi-description {
         margin: 0;
         color: var(--fd-color-text-muted);
-        font-size: 0.9rem;
     }
 
     &__content {
@@ -276,13 +254,10 @@
     }
 
     &__entry-date {
-        font-weight: 600;
         color: var(--fd-color-slate-900);
     }
 
     &__entry-weight {
-        font-size: 1.1rem;
-        font-weight: 600;
         color: var(--fd-color-primary-600);
     }
 
@@ -312,6 +287,3 @@
         }
     }
 }
-
-
-

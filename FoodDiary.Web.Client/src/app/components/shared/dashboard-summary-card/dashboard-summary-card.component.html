@@ -90,13 +90,13 @@
                     [class.is-weekly-hovered]="isWeeklyHovered()"
                 >
                     @if (normalizedDailyGoal() > 0) {
-                        <div class="dashboard-summary-card__percent">
+                        <div class="dashboard-summary-card__percent fd-ui-metric-hero">
                             <span class="dashboard-summary-card__percent-value">{{ dailyPercent() }}</span>
-                            <span class="dashboard-summary-card__percent-sign">%</span>
+                            <span class="dashboard-summary-card__percent-sign fd-ui-metric-unit">%</span>
                         </div>
                     }
                     <div
-                        class="dashboard-summary-card__primary-line"
+                        class="dashboard-summary-card__primary-line fd-ui-stat-value"
                         [class.dashboard-summary-card__primary-line--solo]="normalizedDailyGoal() <= 0"
                     >
                         {{ dailyConsumed() | number: '1.0-0' }}
@@ -106,12 +106,12 @@
                         {{ 'CONSUMPTION_RING.UNIT' | translate }}
                     </div>
                     @if (normalizedDailyGoal() > 0) {
-                        <div class="dashboard-summary-card__secondary-line">
+                        <div class="dashboard-summary-card__secondary-line fd-ui-body-sm">
                             {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
                         </div>
                     }
                     @if (caloriesBurned() > 0) {
-                        <div class="dashboard-summary-card__burned-line">
+                        <div class="dashboard-summary-card__burned-line fd-ui-overline">
                             {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }}
                             {{ 'CONSUMPTION_RING.UNIT' | translate }}
                         </div>
@@ -123,10 +123,10 @@
                 @for (bar of resolvedNutrientBars(); track bar.id) {
                     <div class="dashboard-summary-card__bar">
                         <div class="dashboard-summary-card__bar-header">
-                            <span class="dashboard-summary-card__bar-label">
+                            <span class="dashboard-summary-card__bar-label fd-ui-body-sm">
                                 {{ bar.labelKey ? (bar.labelKey | translate) : bar.label }}
                             </span>
-                            <span class="dashboard-summary-card__bar-value" [style.color]="getBarColor(bar)">
+                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text" [style.color]="getBarColor(bar)">
                                 {{ bar.current | number: '1.0-0' }}
                                 @if (bar.target > 0) {
                                     / {{ bar.target | number: '1.0-0' }}
@@ -138,7 +138,9 @@
                             <div
                                 class="dashboard-summary-card__bar-fill"
                                 [style.background]="
-                                    bar.target > 0 ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)' : '#d1d5db'
+                                    bar.target > 0
+                                        ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'
+                                        : '#d1d5db'
                                 "
                                 [style.width.%]="bar.target > 0 ? clampPercent((bar.current / bar.target) * 100) : 100"
                             ></div>

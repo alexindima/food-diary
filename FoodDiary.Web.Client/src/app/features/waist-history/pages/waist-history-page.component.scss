@@ -15,15 +15,6 @@
         width: 100%;
     }
 
-    &__title {
-        margin: 0;
-        font-size: var(--fd-page-title-size, 2rem);
-        line-height: var(--fd-page-title-line-height, 1.2);
-        font-weight: var(--fd-page-title-weight, 700);
-        color: var(--fd-color-slate-900);
-        width: 100%;
-    }
-
     &__card {
         height: 100%;
     }
@@ -55,16 +46,6 @@
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
-    }
-
-    &__tabs {
-        flex: 1 1 220px;
-        min-width: 200px;
-    }
-
-    &__custom-range-input {
-        width: 320px;
-        max-width: 100%;
     }
 
     &__chart-canvas {
@@ -149,13 +130,10 @@
     }
 
     &__entry-date {
-        font-weight: 600;
         color: var(--fd-color-slate-900);
     }
 
     &__entry-value {
-        font-size: 1.1rem;
-        font-weight: 600;
         color: var(--fd-color-sky-500);
     }
 
@@ -174,7 +152,6 @@
 
     &__wht-note {
         margin: 0 0 (variables.$gap-xs);
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -194,11 +171,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.7rem;
         color: var(--fd-color-slate-900);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
     }
 
     &__wht-segment--under {
@@ -207,7 +180,11 @@
     }
 
     &__wht-segment--normal {
-        background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-green-500) 26%, var(--fd-color-white)), var(--fd-color-green-500));
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-green-500) 26%, var(--fd-color-white)),
+            var(--fd-color-green-500)
+        );
         color: var(--fd-color-emerald-700);
     }
 
@@ -217,7 +194,11 @@
     }
 
     &__wht-segment--high {
-        background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-rose-500) 24%, var(--fd-color-white)), var(--fd-color-rose-500));
+        background: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-rose-500) 24%, var(--fd-color-white)),
+            var(--fd-color-rose-500)
+        );
         color: var(--fd-color-red-700);
     }
 
@@ -242,8 +223,6 @@
     }
 
     &__wht-pointer span {
-        font-size: 0.8rem;
-        font-weight: 600;
         color: var(--fd-color-slate-900);
         transform: translateY(-6px);
     }
@@ -264,10 +243,8 @@
     }
 
     &__wht-status {
-        font-weight: 600;
         padding: 2px 10px;
         border-radius: 999px;
-        font-size: 0.85rem;
     }
 
     &__wht-status--under {
@@ -293,7 +270,6 @@
     &__wht-description {
         margin: 0;
         color: var(--fd-color-text-muted);
-        font-size: 0.9rem;
     }
 
     @media #{variables.$media-phablet} {
@@ -308,6 +284,3 @@
         }
     }
 }
-
-
-

@@ -16,7 +16,7 @@
         [textColor]="nutrientTextColors.calories"
     />
     @if (caloriesError()) {
-        <div class="nutrition-editor__errors">
+        <div class="nutrition-editor__errors fd-ui-error-text">
             {{ caloriesError() }}
         </div>
     }
@@ -105,19 +105,19 @@
     </div>
 
     @if (macrosError()) {
-        <div class="nutrition-editor__errors">
+        <div class="nutrition-editor__errors fd-ui-error-text">
             {{ macrosError() }}
         </div>
     }
 
     @if (showManualHint() && manualHintKey()) {
-        <p class="nutrition-editor__hint">
+        <p class="nutrition-editor__hint fd-ui-body-sm">
             {{ manualHintKey() | translate }}
         </p>
     }
 
     @if (warning(); as warningData) {
-        <div class="nutrition-editor__warning">
+        <div class="nutrition-editor__warning fd-ui-body-sm">
             {{
                 'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING'
                     | translate

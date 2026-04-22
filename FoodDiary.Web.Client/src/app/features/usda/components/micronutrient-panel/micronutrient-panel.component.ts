@@ -9,15 +9,17 @@ import { Micronutrient } from '../../models/usda.data';
     imports: [CommonModule, TranslatePipe],
     template: `
         <div class="micronutrient-panel">
-            <h3 class="panel-title">{{ 'MICRONUTRIENTS.TITLE' | translate }}</h3>
+            <h3 class="panel-title fd-ui-card-title">{{ 'MICRONUTRIENTS.TITLE' | translate }}</h3>
 
             @if (vitamins().length > 0) {
                 <div class="section">
-                    <h4 class="section-title">{{ 'MICRONUTRIENTS.VITAMINS' | translate }}</h4>
+                    <h4 class="section-title fd-ui-overline">{{ 'MICRONUTRIENTS.VITAMINS' | translate }}</h4>
                     @for (nutrient of vitamins(); track nutrient.nutrientId) {
                         <div class="nutrient-row">
-                            <span class="nutrient-name">{{ nutrient.name }}</span>
-                            <span class="nutrient-amount">{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span>
+                            <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
+                            <span class="nutrient-amount fd-ui-caption"
+                                >{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span
+                            >
                             @if (nutrient.percentDailyValue !== null) {
                                 <div class="dv-bar-container">
                                     <div
@@ -28,7 +30,7 @@ import { Micronutrient } from '../../models/usda.data';
                                         [class.dv-high]="nutrient.percentDailyValue > 100"
                                     ></div>
                                 </div>
-                                <span class="dv-percent">{{ nutrient.percentDailyValue }}%</span>
+                                <span class="dv-percent fd-ui-caption">{{ nutrient.percentDailyValue }}%</span>
                             }
                         </div>
                     }
@@ -37,11 +39,13 @@ import { Micronutrient } from '../../models/usda.data';
 
             @if (minerals().length > 0) {
                 <div class="section">
-                    <h4 class="section-title">{{ 'MICRONUTRIENTS.MINERALS' | translate }}</h4>
+                    <h4 class="section-title fd-ui-overline">{{ 'MICRONUTRIENTS.MINERALS' | translate }}</h4>
                     @for (nutrient of minerals(); track nutrient.nutrientId) {
                         <div class="nutrient-row">
-                            <span class="nutrient-name">{{ nutrient.name }}</span>
-                            <span class="nutrient-amount">{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span>
+                            <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
+                            <span class="nutrient-amount fd-ui-caption"
+                                >{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span
+                            >
                             @if (nutrient.percentDailyValue !== null) {
                                 <div class="dv-bar-container">
                                     <div
@@ -52,7 +56,7 @@ import { Micronutrient } from '../../models/usda.data';
                                         [class.dv-high]="nutrient.percentDailyValue > 100"
                                     ></div>
                                 </div>
-                                <span class="dv-percent">{{ nutrient.percentDailyValue }}%</span>
+                                <span class="dv-percent fd-ui-caption">{{ nutrient.percentDailyValue }}%</span>
                             }
                         </div>
                     }
@@ -60,7 +64,7 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             @if (vitamins().length === 0 && minerals().length === 0) {
-                <p class="empty-state">{{ 'MICRONUTRIENTS.NO_DATA' | translate }}</p>
+                <p class="empty-state fd-ui-body-sm">{{ 'MICRONUTRIENTS.NO_DATA' | translate }}</p>
             }
         </div>
     `,
@@ -71,8 +75,6 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             .panel-title {
-                font-size: 16px;
-                font-weight: 600;
                 margin: 0 0 16px;
             }
 
@@ -81,12 +83,8 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             .section-title {
-                font-size: 13px;
-                font-weight: 600;
-                text-transform: uppercase;
                 color: var(--fd-color-text-muted);
                 margin: 0 0 8px;
-                letter-spacing: 0.5px;
             }
 
             .nutrient-row {
@@ -95,11 +93,6 @@ import { Micronutrient } from '../../models/usda.data';
                 align-items: center;
                 gap: 8px;
                 padding: 4px 0;
-                font-size: 13px;
-            }
-
-            .nutrient-name {
-                font-weight: 500;
             }
 
             .nutrient-amount {
@@ -132,7 +125,6 @@ import { Micronutrient } from '../../models/usda.data';
             }
 
             .dv-percent {
-                font-size: 12px;
                 color: var(--fd-color-text-muted);
                 min-width: 36px;
                 text-align: right;

@@ -39,15 +39,12 @@
         border: 1px solid var(--fd-color-nutrition-error-border);
         background: var(--fd-color-nutrition-error-bg);
         color: var(--fd-color-nutrition-error-text);
-        font-size: 0.85rem;
-        line-height: 1.4;
         display: grid;
         gap: 4px;
     }
 
     &__hint {
         margin: 0;
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted);
     }
 
@@ -57,8 +54,6 @@
         background: var(--fd-color-nutrition-warning-bg);
         color: var(--fd-color-nutrition-warning-text);
         padding: 12px 14px;
-        font-size: 0.9rem;
-        line-height: 1.4;
     }
 }
 

@@ -21,7 +21,7 @@
 
         <fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
             @if (isSummaryLoading()) {
-                <div class="waist-history-page__loader">
+                <div class="waist-history-page__loader fd-ui-body-sm">
                     {{ 'WAIST_HISTORY.LOADING' | translate }}
                 </div>
             } @else {
@@ -41,7 +41,7 @@
                         <fd-ui-loader />
                     }
                 } @else {
-                    <p class="waist-history-page__empty-chart">
+                    <p class="waist-history-page__empty-chart fd-ui-body-sm">
                         {{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}
                     </p>
                 }
@@ -53,7 +53,7 @@
                 @if (whtrValue() !== null) {
                     @if (whtrStatusInfo(); as status) {
                         <div class="waist-history-page__wht-top">
-                            <p class="waist-history-page__wht-note">
+                            <p class="waist-history-page__wht-note fd-ui-caption">
                                 {{ 'WAIST_HISTORY.WHT_NOTE' | translate }}
                             </p>
                             <div class="waist-history-page__wht-scale">
@@ -64,33 +64,33 @@
                                             [ngClass]="segment.class"
                                             [style.width]="getSegmentWidth(segment)"
                                         >
-                                            <span>{{ segment.labelKey | translate }}</span>
+                                            <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
                                         </div>
                                     }
                                 </div>
                                 <div class="waist-history-page__wht-pointer" [style.left]="whtrPointerPosition()">
                                     <div class="waist-history-page__wht-pointer-dot"></div>
-                                    <span>{{ whtrValue() }}</span>
+                                    <span class="fd-ui-meta-text">{{ whtrValue() }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="waist-history-page__wht-bottom">
                             <div class="waist-history-page__wht-footer">
-                                <div class="waist-history-page__wht-value">
+                                <div class="waist-history-page__wht-value fd-ui-body-sm">
                                     {{ 'WAIST_HISTORY.WHT_CURRENT' | translate }}:
                                     <strong>{{ whtrValue() }}</strong>
                                 </div>
-                                <div class="waist-history-page__wht-status" [ngClass]="status.class">
+                                <div class="waist-history-page__wht-status fd-ui-stat-value" [ngClass]="status.class">
                                     {{ status.labelKey | translate }}
                                 </div>
                             </div>
-                            <p class="waist-history-page__wht-description">
+                            <p class="waist-history-page__wht-description fd-ui-caption">
                                 {{ status.descriptionKey | translate }}
                             </p>
                         </div>
                     }
                 } @else {
-                    <p class="waist-history-page__empty">
+                    <p class="waist-history-page__empty fd-ui-body-sm">
                         {{ 'WAIST_HISTORY.WHT_NO_DATA' | translate }}
                     </p>
                 }
@@ -175,22 +175,22 @@
                     [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate"
                 >
                     @if (isLoading()) {
-                        <div class="waist-history-page__loader">
+                        <div class="waist-history-page__loader fd-ui-body-sm">
                             {{ 'WAIST_HISTORY.LOADING' | translate }}
                         </div>
                     } @else {
                         @if (entriesDescending().length === 0) {
-                            <div class="waist-history-page__empty">
+                            <div class="waist-history-page__empty fd-ui-body-sm">
                                 {{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}
                             </div>
                         } @else {
                             <div class="waist-history-page__entries">
                                 @for (entry of entriesDescending(); track entry.id) {
                                     <div class="waist-history-page__entry">
-                                        <div class="waist-history-page__entry-date">
+                                        <div class="waist-history-page__entry-date fd-ui-stat-value">
                                             {{ entry.date | date: 'dd.MM.yyyy' }}
                                         </div>
-                                        <div class="waist-history-page__entry-value">
+                                        <div class="waist-history-page__entry-value fd-ui-body">
                                             {{ entry.circumference | number: '1.0-2' }}
                                             {{ 'WAIST_HISTORY.CM' | translate }}
                                         </div>

@@ -15,18 +15,18 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
             <div class="client-dashboard__header">
                 <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">Back to clients</fd-ui-button>
                 @if (client()) {
-                    <h1 class="client-dashboard__title">{{ getClientTitle(client()!) }}</h1>
-                    <span class="client-dashboard__email">{{ client()!.email }}</span>
+                    <h1 class="client-dashboard__title fd-page-title">{{ getClientTitle(client()!) }}</h1>
+                    <span class="client-dashboard__email fd-ui-caption">{{ client()!.email }}</span>
                     @if (client()!.permissions.shareProfile) {
                         <div class="client-dashboard__profile-meta">
                             @if (client()!.height) {
-                                <span class="client-dashboard__chip">{{ client()!.height }} cm</span>
+                                <span class="client-dashboard__chip fd-ui-overline">{{ client()!.height }} cm</span>
                             }
                             @if (client()!.gender) {
-                                <span class="client-dashboard__chip">{{ client()!.gender }}</span>
+                                <span class="client-dashboard__chip fd-ui-overline">{{ client()!.gender }}</span>
                             }
                             @if (client()!.activityLevel) {
-                                <span class="client-dashboard__chip">{{ client()!.activityLevel }}</span>
+                                <span class="client-dashboard__chip fd-ui-overline">{{ client()!.activityLevel }}</span>
                             }
                         </div>
                     }
@@ -34,77 +34,77 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
             </div>
 
             @if (loading()) {
-                <p>Loading client data...</p>
+                <p class="fd-ui-body-sm">Loading client data...</p>
             } @else if (!client()) {
-                <p>Client not found.</p>
+                <p class="fd-ui-body-sm">Client not found.</p>
             } @else {
                 <div class="client-dashboard__sections">
                     @if (client()!.permissions.shareProfile) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Profile</h2>
-                                <p class="client-dashboard__placeholder">Client profile data will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Profile</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Client profile data will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareStatistics) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Statistics</h2>
-                                <p class="client-dashboard__placeholder">Dashboard data will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Statistics</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Dashboard data will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareMeals) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Meals</h2>
-                                <p class="client-dashboard__placeholder">Meal data will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Meals</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Meal data will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareWeight) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Weight</h2>
-                                <p class="client-dashboard__placeholder">Weight history will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Weight</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Weight history will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareWaist) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Waist</h2>
-                                <p class="client-dashboard__placeholder">Waist history will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Waist</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Waist history will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareGoals) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Goals</h2>
-                                <p class="client-dashboard__placeholder">Client goals will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Goals</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Client goals will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareHydration) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Hydration</h2>
-                                <p class="client-dashboard__placeholder">Hydration data will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Hydration</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Hydration data will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (client()!.permissions.shareFasting) {
                         <fd-ui-card>
                             <div class="client-dashboard__section">
-                                <h2>Fasting</h2>
-                                <p class="client-dashboard__placeholder">Fasting data will be displayed here.</p>
+                                <h2 class="fd-ui-card-title">Fasting</h2>
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">Fasting data will be displayed here.</p>
                             </div>
                         </fd-ui-card>
                     }
                     @if (!hasAnyPermission()) {
-                        <p class="client-dashboard__no-data">Client has not shared any data.</p>
+                        <p class="client-dashboard__no-data fd-ui-body-sm">Client has not shared any data.</p>
                     }
                 </div>
             }
@@ -124,14 +124,11 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
             }
 
             &__title {
-                font-size: 24px;
-                font-weight: 600;
                 margin: 8px 0 0;
             }
 
             &__email {
                 color: var(--fd-text-secondary);
-                font-size: 14px;
             }
 
             &__profile-meta {
@@ -147,8 +144,6 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 border-radius: 999px;
                 background: color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white));
                 color: var(--fd-color-primary-700);
-                font-size: 13px;
-                font-weight: 600;
             }
 
             &__sections {
@@ -161,15 +156,12 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
                 padding: 16px;
 
                 h2 {
-                    font-size: 18px;
-                    font-weight: 600;
                     margin: 0 0 8px;
                 }
             }
 
             &__placeholder {
                 color: var(--fd-text-secondary);
-                font-size: 14px;
             }
 
             &__no-data {

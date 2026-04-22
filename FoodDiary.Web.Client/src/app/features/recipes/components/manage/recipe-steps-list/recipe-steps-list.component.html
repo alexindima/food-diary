@@ -1,5 +1,5 @@
 <div class="recipe-steps-list__block">
-    <div class="recipe-steps-list__title">
+    <div class="recipe-steps-list__title fd-ui-overline">
         {{ 'RECIPE_MANAGE.STEPS_SECTION_TITLE' | translate }}
     </div>
     <section class="recipe-steps-list__section">
@@ -45,7 +45,7 @@
             {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
         </fd-ui-button>
         @if (stepsFormArray().invalid && stepsFormArray().touched) {
-            <div class="recipe-steps-list__array-error">
+            <div class="recipe-steps-list__array-error fd-ui-body-sm">
                 {{ 'FORM_ERRORS.NON_EMPTY_ARRAY' | translate }}
             </div>
         }

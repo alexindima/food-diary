@@ -38,14 +38,10 @@
     }
 
     &__surface-label {
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
-        font-weight: 500;
     }
 
     &__surface-value {
-        font-size: 1.1rem;
-        font-weight: 600;
         color: var(--fd-color-text, var(--fd-color-gray-900-static));
         word-break: break-word;
     }
@@ -85,8 +81,6 @@
     }
 
     &__quality-value {
-        font-size: 1.15rem;
-        font-weight: 700;
         color: var(--fd-color-text, var(--fd-color-gray-900-static));
         line-height: 1;
     }
@@ -169,8 +163,6 @@
 
     &__warning {
         color: var(--fd-color-warning, var(--fd-color-amber-500));
-        font-size: 0.9rem;
-        font-weight: 600;
         width: 100%;
     }
 
@@ -189,9 +181,6 @@
             height: 7px;
         }
 
-        &__quality-value {
-            font-size: 1rem;
-        }
     }
 }
 

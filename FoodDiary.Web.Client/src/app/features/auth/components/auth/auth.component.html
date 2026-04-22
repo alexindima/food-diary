@@ -1,7 +1,7 @@
 ﻿<div class="auth">
     <fd-ui-tabs class="auth__tabs" [tabs]="authTabs" [selectedValue]="authMode" (selectedValueChange)="handleTabChange($event)" />
 
-    <p class="auth__subtitle">
+    <p class="auth__subtitle fd-ui-body-sm">
         @if (authMode === 'login') {
             {{ 'AUTH.LOGIN.SUBTITLE' | translate }}
         } @else {
@@ -44,10 +44,10 @@
                         </fd-ui-button>
                         <fd-ui-form-error [error]="globalError()" />
                         @if (passwordResetSent()) {
-                            <p class="auth__hint" role="status" aria-live="polite">{{ 'AUTH.RESET.SENT' | translate }}</p>
+                            <p class="auth__hint fd-ui-body-sm" role="status" aria-live="polite">{{ 'AUTH.RESET.SENT' | translate }}</p>
                         }
                         @if (passwordResetCooldownSeconds() > 0) {
-                            <p class="auth__hint" role="status" aria-live="polite">
+                            <p class="auth__hint fd-ui-body-sm" role="status" aria-live="polite">
                                 {{ 'AUTH.RESET.RESEND_COOLDOWN' | translate: { seconds: passwordResetCooldownSeconds() } }}
                             </p>
                         }
@@ -130,13 +130,13 @@
                     </div>
 
                     <div class="auth__divider">
-                        <span>{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+                        <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
                     </div>
 
                     <div class="auth__social">
                         <div #googleLoginButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}"></div>
                         @if (!googleReady()) {
-                            <div class="auth__google-hint" role="status" aria-live="polite">
+                            <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
                                 {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}
                             </div>
                         }
@@ -182,7 +182,7 @@
                 <div class="auth__checkbox-row">
                     <fd-ui-checkbox formControlName="agreeTerms" label="" />
                     <div
-                        class="auth__checkbox-text"
+                        class="auth__checkbox-text fd-ui-body-sm"
                         [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy' }"
                     ></div>
                 </div>
@@ -203,7 +203,7 @@
                 </div>
 
                 <div class="auth__divider">
-                    <span>{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+                    <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
                 </div>
 
                 <div class="auth__social">
@@ -213,7 +213,9 @@
                         aria-label="{{ 'AUTH.GOOGLE.REGISTER_BUTTON' | translate }}"
                     ></div>
                     @if (!googleReady()) {
-                        <div class="auth__google-hint" role="status" aria-live="polite">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
+                        <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
+                            {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}
+                        </div>
                     }
                 </div>
             </form>

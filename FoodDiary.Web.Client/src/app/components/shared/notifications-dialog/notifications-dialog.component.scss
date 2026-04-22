@@ -27,7 +27,6 @@
 }
 
 .notifications-dialog__state-title {
-    font-weight: 700;
     color: var(--fd-color-slate-900);
 }
 
@@ -116,20 +115,17 @@
 }
 
 .notifications-dialog__item-title {
-    font-weight: 700;
     color: var(--fd-color-slate-900);
 }
 
 .notifications-dialog__item-date {
     flex-shrink: 0;
     color: var(--fd-color-slate-500);
-    font-size: 0.8rem;
 }
 
 .notifications-dialog__item-body {
     margin: 0;
     color: var(--fd-color-slate-600);
-    line-height: 1.45;
 }
 
 .notifications-dialog__item-icon {
@@ -164,10 +160,6 @@
     border-radius: 999px;
     background: color-mix(in srgb, var(--fd-color-teal-700) 12%, transparent);
     color: var(--fd-color-teal-700);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
 }
 
 .notifications-dialog__item-cta {
@@ -177,8 +169,6 @@
     border-radius: 999px;
     background: color-mix(in srgb, var(--fd-color-teal-700) 8%, transparent);
     color: var(--fd-color-teal-700);
-    font-size: 0.78rem;
-    font-weight: 700;
 }
 
 .notifications-dialog__footer {

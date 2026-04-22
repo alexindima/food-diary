@@ -3,7 +3,6 @@
 .recipe-list {
     margin: 0 auto;
     box-sizing: border-box;
-    font-size: 14px;
     --fd-layout-page-section-spacing: variables.$gap-m;
     background: transparent;
     padding: 0;
@@ -98,8 +97,6 @@
     }
 
     &__section-label {
-        font-weight: 800;
-        font-size: 1.05rem;
         color: var(--fd-color-text);
         white-space: nowrap;
     }
@@ -123,8 +120,6 @@
     }
 
     &__no-results {
-        font-size: 1.2em;
-        font-weight: bold;
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: variables.$gap-l;
@@ -152,16 +147,11 @@
     }
 
     &__empty-title {
-        font-size: 1rem;
-        font-weight: 800;
         color: var(--fd-color-text);
     }
 
     &__empty-copy {
         max-width: 420px;
-        font-size: 0.95rem;
-        font-weight: 500;
-        line-height: 1.5;
     }
 
     &__pagination {
@@ -203,8 +193,6 @@
     }
 
     &__favorite-name {
-        font-weight: 600;
-        font-size: 0.9rem;
         color: var(--fd-color-text);
         white-space: nowrap;
         overflow: hidden;
@@ -212,7 +200,6 @@
     }
 
     &__favorite-meta {
-        font-size: 0.8rem;
         color: var(--fd-color-text-muted);
         margin-top: 2px;
         display: flex;
@@ -291,10 +278,6 @@
             padding: 0 16px;
         }
 
-        &__section-label {
-            font-size: 0.95rem;
-        }
-
         &__section-grid {
             gap: 0;
             margin: 0;
@@ -323,7 +306,6 @@
         &__filter-button {
             flex: 0 0 auto;
         }
-
 
         &__add-button {
             flex: 0 0 auto;

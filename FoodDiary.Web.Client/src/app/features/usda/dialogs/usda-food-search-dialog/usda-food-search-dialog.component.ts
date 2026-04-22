@@ -41,9 +41,9 @@ import { UsdaFood } from '../../models/usda.data';
                 }
                 @for (food of results(); track food.fdcId) {
                     <button class="result-item" [class.selected]="selectedFood()?.fdcId === food.fdcId" (click)="selectFood(food)">
-                        <span class="food-name">{{ food.description }}</span>
+                        <span class="food-name fd-ui-action-text">{{ food.description }}</span>
                         @if (food.foodCategory) {
-                            <span class="food-category">{{ food.foodCategory }}</span>
+                            <span class="food-category fd-ui-caption">{{ food.foodCategory }}</span>
                         }
                     </button>
                 }
@@ -89,13 +89,7 @@ import { UsdaFood } from '../../models/usda.data';
                 }
             }
 
-            .food-name {
-                font-size: 14px;
-                font-weight: 500;
-            }
-
             .food-category {
-                font-size: 12px;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 margin-top: 2px;
             }

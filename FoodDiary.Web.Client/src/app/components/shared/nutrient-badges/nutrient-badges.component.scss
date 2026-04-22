@@ -24,8 +24,6 @@
     padding: 4px 12px;
     border-radius: 0;
     background: transparent;
-    font-size: 0.95rem;
-    font-weight: 600;
     color: var(--chip-color, var(--fd-color-text));
     box-shadow: none;
     border-right: 1px solid color-mix(in srgb, var(--fd-color-border) 72%, transparent);
@@ -45,6 +43,7 @@
 
 .nutrient-badges__chip-value {
     font-variant-numeric: tabular-nums;
+    color: inherit;
 }
 
 .nutrient-badges__unit {
@@ -105,8 +104,8 @@
     }
 
     .nutrient-badges__chip-value {
-        font-size: 0.85rem;
-        line-height: 1.1;
+        font-size: var(--fd-text-caption-size, 0.85rem);
+        line-height: var(--fd-text-caption-line-height, 1.35);
     }
 
     .nutrient-badges__unit {

@@ -30,14 +30,10 @@
     }
 
     &__surface-label {
-        font-size: 0.9rem;
         color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
-        font-weight: 500;
     }
 
     &__surface-value {
-        font-size: 1.1rem;
-        font-weight: 600;
         color: var(--fd-color-text, var(--fd-color-gray-900-static));
         word-break: break-word;
     }
@@ -120,8 +116,6 @@
 
     &__warning {
         color: var(--fd-color-warning);
-        font-size: 0.9rem;
-        font-weight: 600;
         width: 100%;
     }
 

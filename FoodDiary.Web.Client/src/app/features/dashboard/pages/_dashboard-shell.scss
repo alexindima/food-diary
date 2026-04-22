@@ -22,9 +22,6 @@
 
     &__subtitle {
         margin: 0;
-        font-size: 0.95rem;
-        line-height: 1.35;
-        font-weight: 500;
         color: var(--fd-color-text-muted);
     }
 
@@ -62,20 +59,8 @@
         }
     }
 
-    &__eyebrow {
-        margin: 0 0 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-size: 0.75rem;
-        color: $color-text-secondary;
-        font-weight: 600;
-    }
-
     &__title {
         margin: 0;
-        font-size: var(--fd-page-title-size, 2rem);
-        line-height: var(--fd-page-title-line-height, 1.2);
-        font-weight: var(--fd-page-title-weight, 700);
         color: var(--fd-color-text);
     }
 
@@ -152,8 +137,6 @@
     }
 
     &__manual-add-label {
-        font-size: 0.95rem;
-        font-weight: 600;
         color: var(--fd-color-text-muted);
     }
 
@@ -178,14 +161,6 @@
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 18px;
-        font-size: 1rem;
-        font-weight: 700;
-    }
-
-    &__manual-add-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
     }
 
     &__edit-hint {

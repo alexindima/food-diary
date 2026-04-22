@@ -1,6 +1,6 @@
 <div class="custom-group-wrapper">
     <div class="custom-group">
-        <div class="custom-group__title" [ngStyle]="{ left: titleLeftOffset() }">
+        <div class="custom-group__title fd-ui-overline" [ngStyle]="{ left: titleLeftOffset() }">
             <span>{{ title() }}</span>
         </div>
         @if (isAccordion()) {
@@ -17,7 +17,7 @@
             @if (isOpen() || !isAccordion()) {
                 <ng-content />
             } @else if (collapsedHint()) {
-                <div class="custom-group__hint">
+                <div class="custom-group__hint fd-ui-body-sm">
                     {{ collapsedHint() }}
                 </div>
             }

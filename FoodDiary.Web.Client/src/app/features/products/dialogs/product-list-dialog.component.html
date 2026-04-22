@@ -2,8 +2,8 @@
     @if (!embedded()) {
         <div class="product-select__header">
             <div>
-                <h2 class="product-select__title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
-                <p class="product-select__subtitle">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
+                <h2 class="product-select__title fd-page-title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
+                <p class="product-select__subtitle fd-ui-body-sm">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
             </div>
         </div>
     }
@@ -47,8 +47,8 @@
                             }
                         </div>
                         <div class="product-select__info">
-                            <div class="product-select__name">{{ product.name }}</div>
-                            <div class="product-select__meta">
+                            <div class="product-select__name fd-ui-action-text">{{ product.name }}</div>
+                            <div class="product-select__meta fd-ui-caption">
                                 @if (product.brand) {
                                     {{ product.brand }} ·
                                 }
@@ -70,7 +70,7 @@
                 }
             </div>
         } @else {
-            <div class="product-select__no-results">
+            <div class="product-select__no-results fd-ui-body-sm">
                 <fd-ui-icon class="product-select__no-results-icon" name="search_off" size="lg" />
                 {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
             </div>

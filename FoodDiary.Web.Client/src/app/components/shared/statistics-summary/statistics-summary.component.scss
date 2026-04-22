@@ -107,23 +107,17 @@
 }
 
 .stats-summary-card__label {
-    font-size: 0.85rem;
     color: var(--fd-color-text-muted);
     margin: 0;
 }
 
 .stats-summary-card__value {
     margin: 0;
-    font-size: 1.4rem;
-    font-weight: 700;
     color: var(--fd-color-text);
 }
 
 .stats-summary-card__note {
-    font-size: 0.75rem;
     color: var(--fd-color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
 }
 
 .stats-summary-card__macro-trend {

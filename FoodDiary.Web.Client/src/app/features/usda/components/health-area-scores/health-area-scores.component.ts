@@ -16,12 +16,12 @@ interface HealthAreaDisplay {
     imports: [CommonModule, TranslatePipe],
     template: `
         <div class="health-scores">
-            <h3 class="title">{{ 'HEALTH_SCORES.TITLE' | translate }}</h3>
+            <h3 class="title fd-ui-card-title">{{ 'HEALTH_SCORES.TITLE' | translate }}</h3>
             <div class="areas-grid">
                 @for (area of areas(); track area.key) {
                     <div class="area-card" [class]="'area-card--' + area.grade">
                         <span class="area-icon">{{ area.icon }}</span>
-                        <span class="area-name">{{ 'HEALTH_SCORES.' + area.key | translate }}</span>
+                        <span class="area-name fd-ui-overline">{{ 'HEALTH_SCORES.' + area.key | translate }}</span>
                         <div class="area-score-ring">
                             <svg viewBox="0 0 36 36" class="ring-svg">
                                 <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -31,9 +31,9 @@ interface HealthAreaDisplay {
                                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                 />
                             </svg>
-                            <span class="score-text">{{ area.score }}</span>
+                            <span class="score-text fd-ui-stat-value">{{ area.score }}</span>
                         </div>
-                        <span class="area-grade">{{ 'HEALTH_SCORES.GRADE_' + area.grade.toUpperCase() | translate }}</span>
+                        <span class="area-grade fd-ui-overline">{{ 'HEALTH_SCORES.GRADE_' + area.grade.toUpperCase() | translate }}</span>
                     </div>
                 }
             </div>
@@ -46,8 +46,6 @@ interface HealthAreaDisplay {
             }
 
             .title {
-                font-size: 16px;
-                font-weight: 600;
                 margin: 0 0 16px;
             }
 
@@ -72,10 +70,6 @@ interface HealthAreaDisplay {
             }
 
             .area-name {
-                font-size: 11px;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.3px;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
@@ -126,14 +120,6 @@ interface HealthAreaDisplay {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 14px;
-                font-weight: 700;
-            }
-
-            .area-grade {
-                font-size: 10px;
-                font-weight: 600;
-                text-transform: uppercase;
             }
 
             .area-card--excellent .area-grade {

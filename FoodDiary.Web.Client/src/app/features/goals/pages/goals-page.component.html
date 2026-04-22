@@ -3,7 +3,7 @@
         <ng-container fdPageHeaderActions>
             @if (saveStatusKey(); as statusKey) {
                 <span
-                    class="goals__status"
+                    class="goals__status fd-ui-action-text"
                     [class.goals__status--saving]="isSavingGoals()"
                     [class.goals__status--loading]="isLoadingGoals()"
                 >
@@ -54,17 +54,19 @@
                                     >
                                         <div class="goals__ring-track"></div>
                                         <div class="goals__ring-center">
-                                            <span class="goals__ring-label">{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}</span>
+                                            <span class="goals__ring-label fd-ui-overline">{{
+                                                'GOALS_PAGE.DAILY_TARGET' | translate
+                                            }}</span>
                                             <input
                                                 type="number"
-                                                class="goals__calorie-input"
+                                                class="goals__calorie-input fd-ui-metric-hero"
                                                 [min]="minCalories"
                                                 [max]="maxCalories"
                                                 [value]="calorieTarget()"
                                                 (input)="onCaloriesInput($event)"
                                                 (blur)="onCaloriesBlur($event)"
                                             />
-                                            <span class="goals__ring-unit">kcal</span>
+                                            <span class="goals__ring-unit fd-ui-metric-unit">kcal</span>
                                         </div>
                                         <div class="goals__knob" aria-hidden="true"></div>
                                         <input
@@ -84,7 +86,7 @@
                             <fd-ui-card class="goals__card goals__card--cycling" [title]="'GOALS_PAGE.CYCLING_TITLE' | translate">
                                 <div class="goals__card-inner goals__card-inner--column">
                                     <div class="goals__cycling-toggle">
-                                        <label class="goals__cycling-label">
+                                        <label class="goals__cycling-label fd-ui-body-sm">
                                             <input type="checkbox" [checked]="calorieCyclingEnabled()" (change)="toggleCalorieCycling()" />
                                             <span>{{ 'GOALS_PAGE.CYCLING_ENABLE' | translate }}</span>
                                         </label>
@@ -93,7 +95,10 @@
                                         <div class="goals__cycling-days">
                                             @for (day of daysOfWeek; track day.key) {
                                                 <div class="goals__cycling-day">
-                                                    <label class="goals__cycling-day-label" [attr.for]="'cycling-day-' + day.key">
+                                                    <label
+                                                        class="goals__cycling-day-label fd-ui-meta-text"
+                                                        [attr.for]="'cycling-day-' + day.key"
+                                                    >
                                                         {{ day.labelKey | translate }}
                                                     </label>
                                                     <input
@@ -118,18 +123,18 @@
                                         <div class="goals__macro goals__macro--slider">
                                             <div class="goals__macro-header">
                                                 <div class="goals__macro-label">
-                                                    <span>{{ water.labelKey | translate }}</span>
+                                                    <span class="fd-ui-card-title">{{ water.labelKey | translate }}</span>
                                                 </div>
                                                 <div class="goals__macro-value-block">
                                                     <input
                                                         type="number"
-                                                        class="goals__macro-input"
+                                                        class="goals__macro-input fd-ui-stat-value"
                                                         [min]="0"
                                                         [max]="water.max"
                                                         [value]="water.value"
                                                         (input)="onWaterInputChange($event)"
                                                     />
-                                                    <span class="goals__macro-unit">{{ water.unit }}</span>
+                                                    <span class="goals__macro-unit fd-ui-meta-text">{{ water.unit }}</span>
                                                 </div>
                                             </div>
 
@@ -175,18 +180,18 @@
                                         <div class="goals__macro goals__macro--slider">
                                             <div class="goals__macro-header">
                                                 <div class="goals__macro-label">
-                                                    <span>{{ macro.labelKey | translate }}</span>
+                                                    <span class="fd-ui-card-title">{{ macro.labelKey | translate }}</span>
                                                 </div>
                                                 <div class="goals__macro-value-block">
                                                     <input
                                                         type="number"
-                                                        class="goals__macro-input"
+                                                        class="goals__macro-input fd-ui-stat-value"
                                                         [min]="0"
                                                         [max]="macro.max"
                                                         [value]="macro.value"
                                                         (input)="onMacroInputChange(macro.key, $event)"
                                                     />
-                                                    <span class="goals__macro-unit">{{ macro.unit }}</span>
+                                                    <span class="goals__macro-unit fd-ui-meta-text">{{ macro.unit }}</span>
                                                 </div>
                                             </div>
 
@@ -220,18 +225,18 @@
                                         <div class="goals__macro goals__macro--slider">
                                             <div class="goals__macro-header">
                                                 <div class="goals__macro-label">
-                                                    <span>{{ fiber.labelKey | translate }}</span>
+                                                    <span class="fd-ui-card-title">{{ fiber.labelKey | translate }}</span>
                                                 </div>
                                                 <div class="goals__macro-value-block">
                                                     <input
                                                         type="number"
-                                                        class="goals__macro-input"
+                                                        class="goals__macro-input fd-ui-stat-value"
                                                         [min]="0"
                                                         [max]="fiber.max"
                                                         [value]="fiber.value"
                                                         (input)="onMacroInputChange(fiber.key, $event)"
                                                     />
-                                                    <span class="goals__macro-unit">{{ fiber.unit }}</span>
+                                                    <span class="goals__macro-unit fd-ui-meta-text">{{ fiber.unit }}</span>
                                                 </div>
                                             </div>
 
@@ -268,22 +273,22 @@
                                                     <div class="goals__target-value">
                                                         <input
                                                             type="number"
-                                                            class="goals__body-input"
+                                                            class="goals__body-input fd-ui-metric-lg"
                                                             [value]="target.value"
                                                             (input)="onBodyTargetChange(target.key, $event)"
                                                         />
-                                                        <span class="goals__target-unit">{{ target.unit }}</span>
+                                                        <span class="goals__target-unit fd-ui-metric-unit">{{ target.unit }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="goals__target-meta">
                                                     @if (target.current && target.delta) {
-                                                        <span class="goals__meta-label">
+                                                        <span class="goals__meta-label fd-ui-body-sm">
                                                             {{
                                                                 'GOALS_PAGE.CURRENT_LABEL'
                                                                     | translate: { value: target.current, unit: target.unit }
                                                             }}
                                                         </span>
-                                                        <span class="goals__delta goals__delta--positive">
+                                                        <span class="goals__delta goals__delta--positive fd-ui-action-text">
                                                             {{ target.delta }} {{ 'GOALS_PAGE.TO_GO' | translate }}
                                                         </span>
                                                     }

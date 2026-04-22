@@ -6,7 +6,6 @@
 
 .comments-title {
     margin: 0 0 16px;
-    font-size: 1.1rem;
 }
 
 .comment-form {
@@ -36,7 +35,6 @@
     }
 
     &-hint {
-        font-size: 0.875rem;
         margin-top: 4px !important;
     }
 }
@@ -58,11 +56,10 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 4px;
-    font-size: 0.875rem;
 }
 
 .comment-author {
-    font-weight: 500;
+    color: var(--fd-text-primary, var(--fd-color-text));
 }
 
 .comment-date {
@@ -98,7 +95,7 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    font-size: 0.8rem;
+    --fd-button-font-size: var(--fd-text-caption-size, 0.85rem);
 
     &:not(.comment-action--delete) {
         --fd-button-secondary-text-background-default: transparent;

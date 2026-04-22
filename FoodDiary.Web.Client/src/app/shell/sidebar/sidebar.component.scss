@@ -38,14 +38,11 @@
     }
 
     &__brand-title {
-        font-weight: 800;
         color: var(--fd-color-text-strong, var(--fd-color-slate-900));
     }
 
     &__brand-plan {
-        font-size: 0.85rem;
         color: var(--fd-color-primary-600);
-        font-weight: 700;
     }
 
     &__brand-notifications {
@@ -165,8 +162,6 @@
         background: transparent;
         border: none;
         color: var(--fd-color-text-muted, var(--fd-color-slate-600));
-        font-weight: 700;
-        font-size: 0.95rem;
         cursor: pointer;
         letter-spacing: 0.01em;
 
@@ -220,13 +215,10 @@
     }
 
     &__premium-title {
-        font-weight: 700;
         color: var(--fd-color-white);
     }
 
     &__premium-text {
-        font-size: 0.9rem;
-        line-height: 1.4;
         color: var(--fd-color-slate-300);
     }
 
@@ -293,7 +285,6 @@
         place-items: center;
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
         color: var(--fd-color-on-brand, var(--fd-color-white));
-        font-weight: 800;
 
         &--image {
             padding: 0;
@@ -310,7 +301,6 @@
     }
 
     &__user-name {
-        font-weight: 700;
         color: var(--fd-color-text-strong, var(--fd-color-slate-900));
         white-space: nowrap;
         overflow: hidden;
@@ -318,7 +308,6 @@
     }
 
     &__user-plan {
-        font-size: 0.9rem;
         color: var(--fd-color-gray-400, var(--fd-color-slate-400));
     }
 
@@ -347,8 +336,9 @@
     }
 
     &__theme-label {
-        font-size: 0.78rem;
-        font-weight: 800;
+        font-size: var(--fd-text-helper-size, 0.75rem);
+        line-height: var(--fd-text-helper-line-height, 1.2);
+        font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--fd-color-text-muted, var(--fd-color-slate-600));
@@ -469,8 +459,6 @@
 
     &__progress-title,
     &__progress-value {
-        font-size: 0.74rem;
-        font-weight: 700;
         color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         white-space: nowrap;
     }
@@ -511,8 +499,6 @@
         align-items: center;
         justify-content: center;
         gap: 4px;
-        font-weight: 600;
-        font-size: 0.75rem;
         padding: 6px 4px;
         border-radius: 12px;
         text-decoration: none;
@@ -619,8 +605,9 @@
         }
 
         .sidebar-mobile__theme-label {
-            font-size: 0.78rem;
-            font-weight: 800;
+            font-size: var(--fd-text-helper-size, 0.75rem);
+            line-height: var(--fd-text-helper-line-height, 1.2);
+            font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--fd-color-text-muted, var(--fd-color-slate-600));

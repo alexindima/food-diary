@@ -12,7 +12,6 @@
     display: inline-flex;
     flex-direction: column;
     gap: 6px;
-    font-size: 0.95rem;
 }
 
 .fd-ui-checkbox__label {
@@ -61,7 +60,6 @@
 }
 
 .fd-ui-checkbox__label-text {
-    font-weight: 500;
     color: var(--fd-checkbox-label-color);
 }
 
@@ -81,6 +79,5 @@
 
 .fd-ui-checkbox__hint {
     margin-left: 28px;
-    font-size: 0.8rem;
     color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
 }

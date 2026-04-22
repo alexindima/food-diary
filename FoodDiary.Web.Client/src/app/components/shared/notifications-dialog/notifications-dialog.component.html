@@ -3,13 +3,13 @@
         @if (isLoading()) {
             <div class="notifications-dialog__state" role="status" aria-live="polite">
                 <fd-ui-icon name="hourglass_top"></fd-ui-icon>
-                <p>{{ 'COMMON.LOADING' | translate }}</p>
+                <p class="fd-ui-body-sm">{{ 'COMMON.LOADING' | translate }}</p>
             </div>
         } @else if (notifications().length === 0) {
             <div class="notifications-dialog__state notifications-dialog__state--empty" role="status" aria-live="polite">
                 <fd-ui-icon name="notifications_none"></fd-ui-icon>
-                <p class="notifications-dialog__state-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
-                <p class="notifications-dialog__state-text">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
+                <p class="notifications-dialog__state-title fd-ui-card-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
+                <p class="notifications-dialog__state-text fd-ui-body-sm">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
             </div>
         } @else {
             <div class="notifications-dialog__list" role="list" aria-live="polite">
@@ -34,21 +34,21 @@
                                 <div class="notifications-dialog__item-head">
                                     <div class="notifications-dialog__item-head-main">
                                         @if (isDietologistInvitation(notification)) {
-                                            <span class="notifications-dialog__item-badge">
+                                            <span class="notifications-dialog__item-badge fd-ui-overline">
                                                 {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE' | translate }}
                                             </span>
                                         }
-                                        <span class="notifications-dialog__item-title">{{ notification.title }}</span>
+                                        <span class="notifications-dialog__item-title fd-ui-card-title">{{ notification.title }}</span>
                                     </div>
-                                    <span class="notifications-dialog__item-date">{{
+                                    <span class="notifications-dialog__item-date fd-ui-caption">{{
                                         notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
                                     }}</span>
                                 </div>
                                 @if (notification.body) {
-                                    <p class="notifications-dialog__item-body">{{ notification.body }}</p>
+                                    <p class="notifications-dialog__item-body fd-ui-body-sm">{{ notification.body }}</p>
                                 }
                                 @if (isDietologistInvitation(notification)) {
-                                    <div class="notifications-dialog__item-cta" aria-hidden="true">
+                                    <div class="notifications-dialog__item-cta fd-ui-action-text" aria-hidden="true">
                                         {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION' | translate }}
                                     </div>
                                 }

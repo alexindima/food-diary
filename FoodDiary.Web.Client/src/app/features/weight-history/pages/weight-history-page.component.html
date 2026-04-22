@@ -21,7 +21,7 @@
 
         <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
             @if (isSummaryLoading()) {
-                <div class="weight-history-page__loader">
+                <div class="weight-history-page__loader fd-ui-body-sm">
                     {{ 'WEIGHT_HISTORY.LOADING' | translate }}
                 </div>
             } @else {
@@ -41,7 +41,7 @@
                         <fd-ui-loader />
                     }
                 } @else {
-                    <p class="weight-history-page__empty-chart">
+                    <p class="weight-history-page__empty-chart fd-ui-body-sm">
                         {{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}
                     </p>
                 }
@@ -56,7 +56,7 @@
                 @if (bmiValue() !== null) {
                     @if (bmiStatusInfo(); as bmiInfo) {
                         <div class="weight-history-page__bmi-top">
-                            <p class="weight-history-page__bmi-note">
+                            <p class="weight-history-page__bmi-note fd-ui-caption">
                                 {{ 'WEIGHT_HISTORY.BMI_NOTE' | translate }}
                             </p>
                             <div class="weight-history-page__bmi-scale">
@@ -67,34 +67,34 @@
                                             [ngClass]="segment.class"
                                             [style.width]="getBmiSegmentWidth(segment)"
                                         >
-                                            <span>{{ segment.labelKey | translate }}</span>
+                                            <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
                                         </div>
                                     }
                                 </div>
                                 <div class="weight-history-page__bmi-pointer" [style.left]="bmiPointerPosition()">
                                     <div class="weight-history-page__bmi-pointer-dot"></div>
-                                    <span>{{ bmiValue() }}</span>
+                                    <span class="fd-ui-meta-text">{{ bmiValue() }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="weight-history-page__bmi-bottom">
                             <div class="weight-history-page__bmi-footer">
-                                <div class="weight-history-page__bmi-value">
+                                <div class="weight-history-page__bmi-value fd-ui-body-sm">
                                     {{ 'WEIGHT_HISTORY.BMI_CURRENT' | translate }}:
                                     <strong>{{ bmiValue() }}</strong>
                                 </div>
-                                <div class="weight-history-page__bmi-status" [ngClass]="bmiInfo.class">
+                                <div class="weight-history-page__bmi-status fd-ui-stat-value" [ngClass]="bmiInfo.class">
                                     {{ bmiInfo.labelKey | translate }}
                                 </div>
                             </div>
-                            <p class="weight-history-page__bmi-description">
+                            <p class="weight-history-page__bmi-description fd-ui-caption">
                                 {{ bmiInfo.descriptionKey | translate }}
                             </p>
                         </div>
                     }
                 } @else {
-                    <p class="weight-history-page__empty">
+                    <p class="weight-history-page__empty fd-ui-body-sm">
                         {{ 'WEIGHT_HISTORY.BMI_NO_DATA' | translate }}
                     </p>
                 }
@@ -179,22 +179,22 @@
                     [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate"
                 >
                     @if (isLoading()) {
-                        <div class="weight-history-page__loader">
+                        <div class="weight-history-page__loader fd-ui-body-sm">
                             {{ 'WEIGHT_HISTORY.LOADING' | translate }}
                         </div>
                     } @else {
                         @if (entriesDescending().length === 0) {
-                            <div class="weight-history-page__empty">
+                            <div class="weight-history-page__empty fd-ui-body-sm">
                                 {{ 'WEIGHT_HISTORY.NO_ENTRIES' | translate }}
                             </div>
                         } @else {
                             <div class="weight-history-page__entries">
                                 @for (entry of entriesDescending(); track entry.id) {
                                     <div class="weight-history-page__entry">
-                                        <div class="weight-history-page__entry-date">
+                                        <div class="weight-history-page__entry-date fd-ui-stat-value">
                                             {{ entry.date | date: 'dd.MM.yyyy' }}
                                         </div>
-                                        <div class="weight-history-page__entry-weight">
+                                        <div class="weight-history-page__entry-weight fd-ui-body">
                                             {{ entry.weight | number: '1.0-2' }}
                                             {{ 'DASHBOARD.KG' | translate }}
                                         </div>

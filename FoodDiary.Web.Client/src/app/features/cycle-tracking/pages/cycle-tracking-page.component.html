@@ -38,7 +38,7 @@
 
             <fd-ui-card class="cycle-tracking__card" [title]="currentCycleTitle() | translate">
                 @if (isLoading()) {
-                    <div class="cycle-tracking__loader">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
+                    <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
                 } @else {
                     @if (cycle(); as current) {
                         <div class="cycle-tracking__summary">
@@ -48,8 +48,8 @@
                                 accentColor="var(--fd-color-purple-500)"
                                 [tinted]="true"
                             >
-                                <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.STARTED' | translate }}</span>
-                                <strong class="cycle-tracking__value">{{ current.startDate | date: 'd MMM y' }}</strong>
+                                <span class="cycle-tracking__label fd-ui-meta-text">{{ 'CYCLE_TRACKING.STARTED' | translate }}</span>
+                                <strong class="cycle-tracking__value fd-ui-body">{{ current.startDate | date: 'd MMM y' }}</strong>
                             </fd-ui-accent-surface>
                             <fd-ui-accent-surface
                                 class="cycle-tracking__summary-item"
@@ -57,8 +57,8 @@
                                 accentColor="var(--fd-color-sky-500)"
                                 [tinted]="true"
                             >
-                                <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.AVG_LENGTH' | translate }}</span>
-                                <strong class="cycle-tracking__value"
+                                <span class="cycle-tracking__label fd-ui-meta-text">{{ 'CYCLE_TRACKING.AVG_LENGTH' | translate }}</span>
+                                <strong class="cycle-tracking__value fd-ui-body"
                                     >{{ current.averageLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}</strong
                                 >
                             </fd-ui-accent-surface>
@@ -68,8 +68,8 @@
                                 accentColor="var(--fd-color-teal-500)"
                                 [tinted]="true"
                             >
-                                <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.LUTEAL_LENGTH' | translate }}</span>
-                                <strong class="cycle-tracking__value"
+                                <span class="cycle-tracking__label fd-ui-meta-text">{{ 'CYCLE_TRACKING.LUTEAL_LENGTH' | translate }}</span>
+                                <strong class="cycle-tracking__value fd-ui-body"
                                     >{{ current.lutealLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}</strong
                                 >
                             </fd-ui-accent-surface>
@@ -83,8 +83,8 @@
                                     accentColor="var(--fd-color-orange-500)"
                                     [tinted]="true"
                                 >
-                                    <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_NEXT' | translate }}</span>
-                                    <strong class="cycle-tracking__value">
+                                    <span class="cycle-tracking__label fd-ui-meta-text">{{ 'CYCLE_TRACKING.PRED_NEXT' | translate }}</span>
+                                    <strong class="cycle-tracking__value fd-ui-body">
                                         {{ prediction.nextPeriodStart | date: 'd MMM' : 'UTC' }}
                                     </strong>
                                 </fd-ui-accent-surface>
@@ -94,8 +94,10 @@
                                     accentColor="var(--fd-color-green-500)"
                                     [tinted]="true"
                                 >
-                                    <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_OVULATION' | translate }}</span>
-                                    <strong class="cycle-tracking__value">
+                                    <span class="cycle-tracking__label fd-ui-meta-text">{{
+                                        'CYCLE_TRACKING.PRED_OVULATION' | translate
+                                    }}</span>
+                                    <strong class="cycle-tracking__value fd-ui-body">
                                         {{ prediction.ovulationDate | date: 'd MMM' : 'UTC' }}
                                     </strong>
                                 </fd-ui-accent-surface>
@@ -105,15 +107,15 @@
                                     accentColor="#3b82f6"
                                     [tinted]="true"
                                 >
-                                    <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_PMS' | translate }}</span>
-                                    <strong class="cycle-tracking__value">
+                                    <span class="cycle-tracking__label fd-ui-meta-text">{{ 'CYCLE_TRACKING.PRED_PMS' | translate }}</span>
+                                    <strong class="cycle-tracking__value fd-ui-body">
                                         {{ prediction.pmsStart | date: 'd MMM' : 'UTC' }}
                                     </strong>
                                 </fd-ui-accent-surface>
                             </div>
                         }
                     } @else {
-                        <p class="cycle-tracking__empty">{{ 'CYCLE_TRACKING.NO_CYCLE_COPY' | translate }}</p>
+                        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_COPY' | translate }}</p>
                     }
                 }
             </fd-ui-card>
@@ -122,7 +124,7 @@
         <div class="cycle-tracking__grid cycle-tracking__grid--log">
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate">
                 @if (!cycle()) {
-                    <p class="cycle-tracking__empty">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
+                    <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
                 } @else {
                     <form class="cycle-tracking__form" [formGroup]="dayForm" (ngSubmit)="saveDay()">
                         <div class="cycle-tracking__form-row cycle-tracking__form-row--wide">
@@ -166,10 +168,10 @@
 
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.DAYS_TITLE' | translate">
                 @if (isLoading()) {
-                    <div class="cycle-tracking__loader">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
+                    <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
                 } @else {
                     @if (days().length === 0) {
-                        <p class="cycle-tracking__empty">{{ 'CYCLE_TRACKING.NO_DAYS' | translate }}</p>
+                        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_DAYS' | translate }}</p>
                     } @else {
                         <div class="cycle-tracking__days">
                             @for (day of days(); track day.id) {
@@ -184,10 +186,13 @@
                                     [tinted]="true"
                                 >
                                     <div class="cycle-tracking__day-header">
-                                        <div class="cycle-tracking__day-date">
+                                        <div class="cycle-tracking__day-date fd-ui-stat-value">
                                             {{ day.date | date: 'd MMM, y' }}
                                         </div>
-                                        <div class="cycle-tracking__day-badge" [class.cycle-tracking__day-badge--period]="day.isPeriod">
+                                        <div
+                                            class="cycle-tracking__day-badge fd-ui-meta-text"
+                                            [class.cycle-tracking__day-badge--period]="day.isPeriod"
+                                        >
                                             {{
                                                 day.isPeriod
                                                     ? ('CYCLE_TRACKING.BADGE_PERIOD' | translate)
@@ -195,14 +200,14 @@
                                             }}
                                         </div>
                                     </div>
-                                    <div class="cycle-tracking__symptoms-row">
+                                    <div class="cycle-tracking__symptoms-row fd-ui-body-sm">
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_PAIN' | translate }}: {{ day.symptoms.pain }}/9</span>
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_MOOD' | translate }}: {{ day.symptoms.mood }}/9</span>
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_ENERGY' | translate }}: {{ day.symptoms.energy }}/9</span>
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_SLEEP' | translate }}: {{ day.symptoms.sleepQuality }}/9</span>
                                     </div>
                                     @if (day.notes) {
-                                        <p class="cycle-tracking__day-notes">{{ day.notes }}</p>
+                                        <p class="cycle-tracking__day-notes fd-ui-caption">{{ day.notes }}</p>
                                     }
                                 </fd-ui-accent-surface>
                             }

@@ -15,7 +15,7 @@
             />
 
             @if (statusKey(); as status) {
-                <div class="product-ai-dialog__status" [class.product-ai-dialog__status--loading]="isLoading()">
+                <div class="product-ai-dialog__status fd-ui-overline" [class.product-ai-dialog__status--loading]="isLoading()">
                     {{ status | translate }}
                 </div>
             }
@@ -62,13 +62,13 @@
         </div>
 
         @if (errorKey(); as error) {
-            <div class="product-ai-dialog__error">
+            <div class="product-ai-dialog__error fd-ui-body-sm">
                 {{ error | translate }}
             </div>
         }
 
         @if (nutritionErrorKey(); as error) {
-            <div class="product-ai-dialog__error">
+            <div class="product-ai-dialog__error fd-ui-body-sm">
                 {{ error | translate }}
             </div>
         }
@@ -77,25 +77,25 @@
             <div class="product-ai-dialog__summary" [formGroup]="resultForm">
                 @if (itemNames().length) {
                     <div class="product-ai-dialog__items">
-                        <div class="product-ai-dialog__items-label">
+                        <div class="product-ai-dialog__items-label fd-ui-caption">
                             {{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}
                         </div>
                         <div class="product-ai-dialog__items-list">
                             @for (item of itemNames(); track item) {
-                                <span class="product-ai-dialog__item-chip">{{ item }}</span>
+                                <span class="product-ai-dialog__item-chip fd-ui-caption">{{ item }}</span>
                             }
                         </div>
                     </div>
                 }
 
                 @if (hasMultipleItems()) {
-                    <div class="product-ai-dialog__note">
+                    <div class="product-ai-dialog__note fd-ui-body-sm">
                         {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
                     </div>
                 }
 
                 @if (nutrition.notes) {
-                    <div class="product-ai-dialog__note">
+                    <div class="product-ai-dialog__note fd-ui-body-sm">
                         {{ nutrition.notes }}
                     </div>
                 }

@@ -51,14 +51,17 @@
 
 .fd-ui-dialog__title {
     margin: 0;
-    font-size: 1.125rem;
-    font-weight: 600;
+    font-size: var(--fd-text-section-title-size);
+    line-height: var(--fd-text-section-title-line-height);
+    font-weight: var(--fd-text-section-title-weight);
     color: inherit;
 }
 
 .fd-ui-dialog__subtitle {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-body-sm-weight);
     color: var(--fd-color-text-muted);
 }
 

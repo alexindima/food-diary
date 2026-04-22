@@ -51,25 +51,27 @@
         } @else {
             <div class="image-upload-field__placeholder">
                 <div class="image-upload-field__icon">&#8593;</div>
-                <div class="image-upload-field__main-text">{{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}</div>
-                <div class="image-upload-field__sub-text image-upload-field__sub-text--plain">
+                <div class="image-upload-field__main-text fd-ui-card-title">{{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}</div>
+                <div class="image-upload-field__sub-text image-upload-field__sub-text--plain fd-ui-caption">
                     {{ 'IMAGE_UPLOAD_FIELD.DROP_HERE' | translate }}
                 </div>
-                <div class="image-upload-field__sub-text">
+                <div class="image-upload-field__sub-text fd-ui-caption">
                     {{ description() || ('IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate: { maxSizeMb: maxSizeMb() }) }}
                 </div>
-                <div class="image-upload-field__hint">
+                <div class="image-upload-field__hint fd-ui-helper-text">
                     {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate: { size: recommendedSize() } }}
                 </div>
             </div>
         }
 
         @if (isUploading) {
-            <div class="image-upload-field__overlay" role="status" aria-live="polite">{{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}</div>
+            <div class="image-upload-field__overlay fd-ui-action-text" role="status" aria-live="polite">
+                {{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}
+            </div>
         }
     </div>
     @if (error) {
-        <span [id]="errorId" class="image-upload-field__error" role="alert">{{ error }}</span>
+        <span [id]="errorId" class="image-upload-field__error fd-ui-error-text" role="alert">{{ error }}</span>
     }
 
     @defer (when isCropping && cropPreviewUrl) {
@@ -83,10 +85,10 @@
                 [attr.aria-describedby]="cropSubtitleId"
             >
                 <div class="image-upload-field__cropper-header">
-                    <div [id]="cropTitleId" class="image-upload-field__cropper-title">
+                    <div [id]="cropTitleId" class="image-upload-field__cropper-title fd-ui-card-title">
                         {{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}
                     </div>
-                    <div [id]="cropSubtitleId" class="image-upload-field__cropper-subtitle">
+                    <div [id]="cropSubtitleId" class="image-upload-field__cropper-subtitle fd-ui-body-sm">
                         {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
                     </div>
                 </div>

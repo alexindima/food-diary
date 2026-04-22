@@ -18,18 +18,18 @@ interface ProviderConfig {
     imports: [CommonModule, TranslatePipe, FdUiButtonComponent],
     template: `
         <div class="connections">
-            <h3 class="title">{{ 'WEARABLES.CONNECTIONS_TITLE' | translate }}</h3>
+            <h3 class="title fd-ui-card-title">{{ 'WEARABLES.CONNECTIONS_TITLE' | translate }}</h3>
             @for (provider of providers; track provider.id) {
                 <div class="provider-row">
                     <span class="provider-icon">{{ provider.icon }}</span>
                     <div class="provider-info">
-                        <span class="provider-name">{{ provider.name }}</span>
+                        <span class="provider-name fd-ui-action-text">{{ provider.name }}</span>
                         @if (getConnection(provider.id); as conn) {
-                            <span class="provider-status connected">
+                            <span class="provider-status fd-ui-caption connected">
                                 {{ 'WEARABLES.CONNECTED' | translate }}
                             </span>
                         } @else {
-                            <span class="provider-status">{{ 'WEARABLES.NOT_CONNECTED' | translate }}</span>
+                            <span class="provider-status fd-ui-caption">{{ 'WEARABLES.NOT_CONNECTED' | translate }}</span>
                         }
                     </div>
                     @if (getConnection(provider.id); as conn) {
@@ -52,8 +52,6 @@ interface ProviderConfig {
             }
 
             .title {
-                font-size: 16px;
-                font-weight: 600;
                 margin: 0 0 16px;
             }
 
@@ -82,13 +80,7 @@ interface ProviderConfig {
                 gap: 2px;
             }
 
-            .provider-name {
-                font-size: 14px;
-                font-weight: 600;
-            }
-
             .provider-status {
-                font-size: 12px;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 

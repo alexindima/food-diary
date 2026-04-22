@@ -11,12 +11,12 @@
             [ariaLabel]="backAriaLabel()"
             (click)="onBackClick()"
         />
-        <h1 class="fd-manage-header__title">{{ title() }}</h1>
+        <h1 class="fd-manage-header__title fd-page-title">{{ title() }}</h1>
         <div class="fd-manage-header__actions">
             <ng-content select="[fdManageHeaderActions]"></ng-content>
         </div>
     </div>
     @if (subtitle()) {
-        <p class="fd-manage-header__subtitle">{{ subtitle() }}</p>
+        <p class="fd-manage-header__subtitle fd-page-subtitle">{{ subtitle() }}</p>
     }
 </header>

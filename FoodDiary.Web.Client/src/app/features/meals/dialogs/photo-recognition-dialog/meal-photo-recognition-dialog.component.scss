@@ -17,15 +17,12 @@
     right: 12px;
     padding: 6px 12px;
     border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
     letter-spacing: 0.01em;
     background: var(--fd-color-white);
     color: var(--fd-color-primary-700);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     z-index: 2;
-    text-transform: uppercase;
 }
 
 .photo-ai-dialog__status--loading {
@@ -107,7 +104,6 @@
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 12px;
     padding: 12px 14px;
-    font-size: 0.95rem;
 }
 
 .photo-ai-dialog__results {
@@ -117,7 +113,6 @@
 }
 
 .photo-ai-dialog__results-title {
-    font-weight: 600;
     color: var(--fd-color-slate-800);
     display: inline-flex;
     align-items: center;
@@ -136,11 +131,6 @@
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
-}
-
-.photo-ai-dialog__edit-title {
-    font-weight: 600;
-    color: var(--fd-color-slate-800);
 }
 
 .photo-ai-dialog__edit-list {
@@ -178,7 +168,6 @@
     border-radius: 12px;
     border: 1px solid var(--fd-color-slate-200);
     padding: 0 12px;
-    font-size: 0.95rem;
     background: var(--fd-color-white);
 }
 
@@ -228,7 +217,8 @@
 }
 
 .photo-ai-dialog__edit-toggle {
-    font-weight: 600;
+    --fd-button-font-size: var(--fd-text-action-size);
+    --fd-button-font-weight: var(--fd-text-action-weight);
 }
 
 .photo-ai-dialog__action-button {
@@ -272,10 +262,6 @@
 .photo-ai-dialog__table-head {
     background: var(--fd-color-slate-50);
     color: var(--fd-color-slate-500);
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
     padding: 10px 16px;
 }
 
@@ -286,7 +272,6 @@
 
 .photo-ai-dialog__table-row {
     padding: 12px 16px;
-    font-size: 0.95rem;
     color: var(--fd-color-slate-900);
     border-top: 1px solid var(--fd-color-slate-200);
 }
@@ -313,9 +298,7 @@
 }
 
 .photo-ai-dialog__nutrition-title {
-    font-weight: 600;
     color: var(--fd-color-slate-900);
-    font-size: 0.95rem;
 }
 
 .photo-ai-dialog__nutrition-grid {
@@ -331,14 +314,10 @@
 }
 
 .photo-ai-dialog__nutrition-label {
-    font-size: 0.78rem;
     color: var(--fd-color-slate-500);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
 }
 
 .photo-ai-dialog__nutrition-value {
-    font-weight: 600;
     color: var(--fd-color-slate-800);
     font-variant-numeric: tabular-nums;
 }
@@ -381,7 +360,9 @@
 }
 
 .photo-ai-dialog__nutrition-text {
-    font-size: 0.9rem;
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-body-sm-weight);
     color: var(--fd-color-slate-600);
 }
 
@@ -392,7 +373,6 @@
     border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     border-radius: 12px;
     padding: 10px 12px;
-    font-size: 0.9rem;
 }
 
 @keyframes nutrition-progress {

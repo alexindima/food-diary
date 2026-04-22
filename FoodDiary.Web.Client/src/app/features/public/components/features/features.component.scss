@@ -36,18 +36,13 @@
     }
 
     &__title {
-        margin: 0;
-        font-size: clamp(24px, 3vw, 34px);
-        color: var(--fd-color-text);
+        @include landing.marketing-title(clamp(24px, 3vw, 34px), 1.08, -0.02em, var(--fd-color-text));
     }
 
     &__subtitle,
     &__panel-text,
     &__summary-text {
-        margin: 8px 0 0;
-        color: var(--fd-color-text-muted);
-        font-size: 1rem;
-        line-height: 1.6;
+        @include landing.marketing-body(1rem, 1.6, var(--fd-color-text-muted), null, 8px 0 0);
     }
 
     &__summary {
@@ -62,7 +57,6 @@
     &__summary-title {
         margin: 14px 0 0;
         color: var(--fd-color-text);
-        font-size: 1.1rem;
         font-weight: 700;
     }
 
@@ -128,8 +122,7 @@
 
     &__panel-title {
         margin: 14px 0 0;
-        color: var(--fd-color-text);
-        font-size: clamp(22px, 2.4vw, 30px);
+        @include landing.marketing-title(clamp(22px, 2.4vw, 30px), 1.08, -0.02em, var(--fd-color-text));
     }
 
     &__cards {
@@ -166,22 +159,15 @@
         margin: 0;
         color: var(--fd-color-primary-600);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.76rem;
-        font-weight: 700;
+        @include landing.marketing-eyebrow(0.76rem, 0.08em);
     }
 
     &__card-title {
-        margin: 0;
-        font-size: 1.15rem;
-        color: var(--fd-color-text);
+        @include landing.marketing-title(1.15rem, 1.25, -0.01em, var(--fd-color-text));
     }
 
     &__card-description {
-        margin: 0;
-        color: var(--fd-color-text-muted);
-        line-height: 1.55;
-        font-size: 0.97rem;
+        @include landing.marketing-body(0.97rem, 1.55, var(--fd-color-text-muted));
     }
 
     @media #{variables.$media-desktop} {

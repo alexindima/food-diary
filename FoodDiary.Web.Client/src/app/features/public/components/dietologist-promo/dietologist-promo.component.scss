@@ -39,17 +39,12 @@
 
     &__title {
         margin: 14px 0 0;
-        font-size: clamp(28px, 3vw, 38px);
-        line-height: 1.08;
-        color: var(--fd-color-text);
+        @include landing.marketing-title(clamp(28px, 3vw, 38px), 1.08, -0.02em, var(--fd-color-text));
     }
 
     &__subtitle,
     &__card-text {
-        margin: 12px 0 0;
-        color: var(--fd-color-text-muted);
-        line-height: 1.65;
-        font-size: 1rem;
+        @include landing.marketing-body(1rem, 1.65, var(--fd-color-text-muted), null, 12px 0 0);
     }
 
     &__steps {
@@ -121,9 +116,7 @@
         margin: 0 0 8px;
         color: color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.76rem;
-        font-weight: 700;
+        @include landing.marketing-eyebrow(0.76rem, 0.08em);
     }
 
     &__status {

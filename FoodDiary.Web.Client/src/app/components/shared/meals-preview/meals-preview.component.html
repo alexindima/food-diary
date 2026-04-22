@@ -1,6 +1,6 @@
 ﻿<section class="meals-preview">
     <div class="meals-preview__header">
-        <h2 class="meals-preview__title">
+        <h2 class="meals-preview__title fd-ui-page-title">
             {{ titleText() || (titleKey() | translate) }}
         </h2>
         @if (showViewAll()) {
@@ -12,7 +12,7 @@
 
     <div class="meals-preview__list">
         @if (!entries().length && showEmptyState()) {
-            <div class="meals-preview__empty">
+            <div class="meals-preview__empty fd-ui-body-sm">
                 {{ emptyKey() | translate }}
             </div>
         } @else {
@@ -27,7 +27,7 @@
                                     <div class="meals-preview__placeholder-icon">
                                         <fd-ui-icon [name]="entry.icon || 'restaurant_menu'"></fd-ui-icon>
                                     </div>
-                                    <div class="meals-preview__placeholder-text">
+                                    <div class="meals-preview__placeholder-text fd-ui-body">
                                         {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
                                     </div>
                                 </div>

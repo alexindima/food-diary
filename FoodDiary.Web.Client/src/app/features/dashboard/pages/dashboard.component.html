@@ -4,7 +4,7 @@
     }
     <header class="dashboard__header">
         <div class="dashboard__title-block">
-            <h1 class="dashboard__title">
+            <h1 class="dashboard__title fd-ui-page-title">
                 @if (isTodaySelected()) {
                     <span class="dashboard__title-text dashboard__title-text--full">{{ 'DASHBOARD.TITLE' | translate }}</span>
                     <span class="dashboard__title-text dashboard__title-text--compact">{{ 'DASHBOARD.TITLE_SHORT' | translate }}</span>
@@ -17,7 +17,7 @@
                     </span>
                 }
             </h1>
-            <p class="dashboard__subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
+            <p class="dashboard__subtitle fd-ui-page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
         </div>
 
         <div class="dashboard__header-actions">
@@ -60,7 +60,7 @@
     <fd-page-body>
         <div class="dashboard__body">
             @if (isLoading()) {
-                <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
+                <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>
             } @else {
                 @if (isTodaySelected() && !layout.isEditingLayout()) {
                     <section class="dashboard__quick-add" aria-label="Quick meal add">
@@ -70,10 +70,12 @@
                             <div class="dashboard__quick-add-placeholder" aria-hidden="true"></div>
                         }
                         <div class="dashboard__manual-add">
-                            <span class="dashboard__manual-add-label">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
+                            <span class="dashboard__manual-add-label fd-ui-action-text">{{
+                                'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate
+                            }}</span>
                             <fd-ui-button
                                 type="button"
-                                class="dashboard__manual-add-button"
+                                class="dashboard__manual-add-button fd-ui-action-text"
                                 variant="secondary"
                                 fill="text"
                                 icon="add"
@@ -142,10 +144,10 @@
                                 </fd-dashboard-card-shell>
                                 @if (layout.isEditingLayout()) {
                                     <div class="dashboard__fasting-overlay">
-                                        <div class="dashboard__fasting-overlay-title">
+                                        <div class="dashboard__fasting-overlay-title fd-ui-card-title">
                                             {{ 'DASHBOARD.FASTING_EDIT_TITLE' | translate }}
                                         </div>
-                                        <div class="dashboard__fasting-overlay-text">
+                                        <div class="dashboard__fasting-overlay-text fd-ui-caption">
                                             {{ 'DASHBOARD.FASTING_EDIT_HINT' | translate }}
                                         </div>
                                     </div>
@@ -165,7 +167,7 @@
                                 (keydown.enter)="layout.toggleBlock('summary')"
                             >
                                 @if (layout.isEditingLayout()) {
-                                    <div class="dashboard__block-label dashboard__block-label--locked">
+                                    <div class="dashboard__block-label dashboard__block-label--locked fd-ui-overline">
                                         {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
                                     </div>
                                 }

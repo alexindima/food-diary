@@ -17,7 +17,7 @@
                         (blur)="onStepTitleBlur()"
                     />
                 } @else {
-                    <span class="recipe-step-card__title">
+                    <span class="recipe-step-card__title fd-ui-action-text">
                         {{ titleDisplay }}
                     </span>
                 }
@@ -52,10 +52,10 @@
 
         @if (!isExpanded()) {
             <div class="recipe-step-card__summary">
-                <div class="recipe-step-card__summary-description">
+                <div class="recipe-step-card__summary-description fd-ui-body-sm">
                     {{ descriptionSummary }}
                 </div>
-                <div class="recipe-step-card__summary-meta">
+                <div class="recipe-step-card__summary-meta fd-ui-caption">
                     {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount } }}
                 </div>
             </div>
@@ -89,7 +89,7 @@
             </div>
 
             <div class="recipe-step-card__ingredients" formArrayName="ingredients">
-                <div class="recipe-step-card__subtitle">
+                <div class="recipe-step-card__subtitle fd-ui-caption">
                     {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
                 </div>
                 @for (ingredient of ingredients.controls; track $index; let ingredientIndex = $index; let firstIngredient = $first) {

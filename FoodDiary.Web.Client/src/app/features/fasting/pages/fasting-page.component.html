@@ -48,7 +48,9 @@
 
                             @if (selectedMode() === 'intermittent') {
                                 <div class="fasting__protocol-group">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.INTERMITTENT_GROUP' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">
+                                        {{ 'FASTING.INTERMITTENT_GROUP' | translate }}
+                                    </div>
                                     <fd-ui-segmented-toggle
                                         class="fasting__segmented-toggle"
                                         [options]="intermittentProtocolOptions()"
@@ -68,7 +70,7 @@
                                                     (ngModelChange)="onCustomIntermittentFastHoursChange($event)"
                                                 />
                                             </div>
-                                            <div class="fasting__custom-intermittent-summary">
+                                            <div class="fasting__custom-intermittent-summary fd-ui-stat-value">
                                                 {{ customIntermittentFastHours() }}:{{ getCustomIntermittentEatingWindowHours() }}
                                             </div>
                                         </div>
@@ -78,7 +80,9 @@
 
                             @if (selectedMode() === 'extended') {
                                 <div class="fasting__protocol-group">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.EXTENDED_GROUP' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">
+                                        {{ 'FASTING.EXTENDED_GROUP' | translate }}
+                                    </div>
                                     <fd-ui-segmented-toggle
                                         class="fasting__segmented-toggle"
                                         [options]="extendedProtocolOptions()"
@@ -103,7 +107,7 @@
 
                             @if (selectedMode() === 'cyclic') {
                                 <div class="fasting__protocol-group">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CYCLIC_GROUP' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CYCLIC_GROUP' | translate }}</div>
                                     <fd-ui-segmented-toggle
                                         class="fasting__segmented-toggle"
                                         [options]="cyclicPresetOptions()"
@@ -131,7 +135,7 @@
                                                     (ngModelChange)="onCyclicEatDaysChange($event)"
                                                 />
                                             </div>
-                                            <div class="fasting__custom-intermittent-summary">
+                                            <div class="fasting__custom-intermittent-summary fd-ui-stat-value">
                                                 {{ cyclicFastDays() }}:{{ cyclicEatDays() }}
                                             </div>
                                         </div>
@@ -139,7 +143,9 @@
                                 </div>
 
                                 <div class="fasting__protocol-group">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">
+                                        {{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}
+                                    </div>
                                     <fd-ui-segmented-toggle
                                         class="fasting__segmented-toggle"
                                         [options]="cyclicEatDayProtocolOptions()"
@@ -159,7 +165,7 @@
                                                     (ngModelChange)="onCyclicEatDayFastHoursChange($event)"
                                                 />
                                             </div>
-                                            <div class="fasting__custom-intermittent-summary">
+                                            <div class="fasting__custom-intermittent-summary fd-ui-stat-value">
                                                 {{ cyclicEatDayFastHours() }}:{{ getCyclicEatDayEatingWindowHours() }}
                                             </div>
                                         </div>
@@ -172,7 +178,9 @@
                             <div class="fasting__session-actions-grid">
                                 <div class="fasting__extend-panel">
                                     <div class="fasting__extend-panel-header">
-                                        <div class="fasting__protocol-group-title">{{ 'FASTING.EXTEND_GROUP' | translate }}</div>
+                                        <div class="fasting__protocol-group-title fd-ui-overline">
+                                            {{ 'FASTING.EXTEND_GROUP' | translate }}
+                                        </div>
                                     </div>
 
                                     <div class="fasting__extend-toolbar">
@@ -236,7 +244,9 @@
 
                                 <div class="fasting__extend-panel fasting__extend-panel--subtle">
                                     <div class="fasting__extend-panel-header">
-                                        <div class="fasting__protocol-group-title">{{ 'FASTING.REDUCE_GROUP' | translate }}</div>
+                                        <div class="fasting__protocol-group-title fd-ui-overline">
+                                            {{ 'FASTING.REDUCE_GROUP' | translate }}
+                                        </div>
                                     </div>
 
                                     <div class="fasting__extend-toolbar">
@@ -302,7 +312,9 @@
 
                         @if (canManageCurrentCyclicDay()) {
                             <div class="fasting__protocol-group">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.CYCLIC_ACTIONS_GROUP' | translate }}</div>
+                                <div class="fasting__protocol-group-title fd-ui-overline">
+                                    {{ 'FASTING.CYCLIC_ACTIONS_GROUP' | translate }}
+                                </div>
                                 <div class="fasting__extend-custom">
                                     <fd-ui-button
                                         variant="secondary"
@@ -351,8 +363,8 @@
                                 accentColor="var(--fd-color-purple-500)"
                                 [tinted]="true"
                             >
-                                <span class="fasting__stat-label">{{ 'FASTING.TOTAL_COMPLETED' | translate }}</span>
-                                <strong class="fasting__stat-value">{{ s.totalCompleted }}</strong>
+                                <span class="fasting__stat-label fd-ui-meta-text">{{ 'FASTING.TOTAL_COMPLETED' | translate }}</span>
+                                <strong class="fasting__stat-value fd-ui-metric-lg">{{ s.totalCompleted }}</strong>
                             </fd-ui-accent-surface>
                             <fd-ui-accent-surface
                                 class="fasting__stat"
@@ -360,8 +372,10 @@
                                 accentColor="var(--fd-color-orange-500)"
                                 [tinted]="true"
                             >
-                                <span class="fasting__stat-label">{{ 'FASTING.CURRENT_STREAK' | translate }}</span>
-                                <strong class="fasting__stat-value">{{ s.currentStreak }} {{ 'FASTING.DAYS' | translate }}</strong>
+                                <span class="fasting__stat-label fd-ui-meta-text">{{ 'FASTING.CURRENT_STREAK' | translate }}</span>
+                                <strong class="fasting__stat-value fd-ui-metric-lg"
+                                    >{{ s.currentStreak }} {{ 'FASTING.DAYS' | translate }}</strong
+                                >
                             </fd-ui-accent-surface>
                             <fd-ui-accent-surface
                                 class="fasting__stat"
@@ -369,8 +383,8 @@
                                 accentColor="var(--fd-color-sky-500)"
                                 [tinted]="true"
                             >
-                                <span class="fasting__stat-label">{{ 'FASTING.AVG_DURATION' | translate }}</span>
-                                <strong class="fasting__stat-value"
+                                <span class="fasting__stat-label fd-ui-meta-text">{{ 'FASTING.AVG_DURATION' | translate }}</span>
+                                <strong class="fasting__stat-value fd-ui-metric-lg"
                                     >{{ s.averageDurationHours | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong
                                 >
                             </fd-ui-accent-surface>
@@ -379,8 +393,10 @@
                         @if (hasPersonalSummary(s)) {
                             <div class="fasting__personal-summary">
                                 <div class="fasting__personal-summary-header">
-                                    <div class="fasting__section-label">{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</div>
-                                    <div class="fasting__personal-summary-window">
+                                    <div class="fasting__section-label fd-ui-card-title">
+                                        {{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}
+                                    </div>
+                                    <div class="fasting__personal-summary-window fd-ui-caption">
                                         {{ 'FASTING.PERSONAL_SUMMARY.WINDOW' | translate }}
                                     </div>
                                 </div>
@@ -393,10 +409,10 @@
                                             accentColor="var(--fd-color-teal-700)"
                                             [tinted]="true"
                                         >
-                                            <span class="fasting__stat-label fasting__stat-label--compact">
+                                            <span class="fasting__stat-label fasting__stat-label--compact fd-ui-meta-text">
                                                 {{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}
                                             </span>
-                                            <strong class="fasting__stat-value fasting__stat-value--compact">
+                                            <strong class="fasting__stat-value fasting__stat-value--compact fd-ui-body">
                                                 {{ s.completionRateLast30Days | number: '1.0-1' }}%
                                             </strong>
                                         </fd-ui-accent-surface>
@@ -406,26 +422,28 @@
                                             accentColor="var(--fd-color-primary-600)"
                                             [tinted]="true"
                                         >
-                                            <span class="fasting__stat-label fasting__stat-label--compact">
+                                            <span class="fasting__stat-label fasting__stat-label--compact fd-ui-meta-text">
                                                 {{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}
                                             </span>
-                                            <strong class="fasting__stat-value fasting__stat-value--compact">
+                                            <strong class="fasting__stat-value fasting__stat-value--compact fd-ui-body">
                                                 {{ s.checkInRateLast30Days | number: '1.0-1' }}%
                                             </strong>
                                         </fd-ui-accent-surface>
                                     </div>
 
                                     <div class="fasting__pattern-symptom">
-                                        <span class="fasting__stat-label fasting__stat-label--compact">
+                                        <span class="fasting__stat-label fasting__stat-label--compact fd-ui-meta-text">
                                             {{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}
                                         </span>
-                                        <strong class="fasting__personal-summary-text">{{ getTopSymptomLabel(s.topSymptom) }}</strong>
+                                        <strong class="fasting__personal-summary-text fd-ui-body">{{
+                                            getTopSymptomLabel(s.topSymptom)
+                                        }}</strong>
                                     </div>
                                 </div>
                             </div>
                         }
                     } @else {
-                        <p class="fasting__empty">{{ 'FASTING.NO_STATS' | translate }}</p>
+                        <p class="fasting__empty fd-ui-body-sm">{{ 'FASTING.NO_STATS' | translate }}</p>
                     }
                 </fd-ui-card>
             </div>
@@ -452,16 +470,16 @@
                     <div class="fasting__checkin" [attr.aria-busy]="isSavingCheckIn()">
                         @if (!isCheckInExpanded()) {
                             <div class="fasting__checkin-summary">
-                                <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
+                                <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
 
                                 @if (currentSessionLatestCheckIn(); as latestCheckIn) {
-                                    <div class="fasting__checkin-meta">
+                                    <div class="fasting__checkin-meta fd-ui-meta-text">
                                         {{
                                             'FASTING.CHECK_IN.LAST_SAVED'
                                                 | translate: { value: formatRelativeTime(latestCheckIn.checkedInAtUtc) }
                                         }}
                                     </div>
-                                    <div class="fasting__checkin-summary-text">
+                                    <div class="fasting__checkin-summary-text fd-ui-body-sm">
                                         {{
                                             getCheckInSummary(latestCheckIn.hungerLevel, latestCheckIn.energyLevel, latestCheckIn.moodLevel)
                                         }}
@@ -469,14 +487,14 @@
                                     @if (latestCheckIn.symptoms.length > 0) {
                                         <div class="fasting__history-symptoms">
                                             @for (symptom of latestCheckIn.symptoms; track symptom) {
-                                                <span class="fasting__history-symptom">
+                                                <span class="fasting__history-symptom fd-ui-caption">
                                                     {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
                                                 </span>
                                             }
                                         </div>
                                     }
                                     @if (latestCheckIn.notes) {
-                                        <p class="fasting__checkin-summary-note">{{ latestCheckIn.notes }}</p>
+                                        <p class="fasting__checkin-summary-note fd-ui-caption">{{ latestCheckIn.notes }}</p>
                                     }
                                 }
 
@@ -492,11 +510,13 @@
                                 </div>
                             </div>
                         } @else {
-                            <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
+                            <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
 
                             <div class="fasting__checkin-grid">
                                 <div class="fasting__checkin-field">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">
+                                        {{ 'FASTING.CHECK_IN.HUNGER' | translate }}
+                                    </div>
                                     <fd-ui-emoji-picker
                                         [options]="hungerEmojiOptions()"
                                         [(selectedValue)]="hungerLevel"
@@ -506,7 +526,9 @@
                                 </div>
 
                                 <div class="fasting__checkin-field">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">
+                                        {{ 'FASTING.CHECK_IN.ENERGY' | translate }}
+                                    </div>
                                     <fd-ui-emoji-picker
                                         [options]="energyEmojiOptions()"
                                         [(selectedValue)]="energyLevel"
@@ -516,7 +538,9 @@
                                 </div>
 
                                 <div class="fasting__checkin-field">
-                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
+                                    <div class="fasting__protocol-group-title fd-ui-overline">
+                                        {{ 'FASTING.CHECK_IN.MOOD' | translate }}
+                                    </div>
                                     <fd-ui-emoji-picker
                                         [options]="moodEmojiOptions()"
                                         [(selectedValue)]="moodLevel"
@@ -527,7 +551,9 @@
                             </div>
 
                             <div class="fasting__checkin-field">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}</div>
+                                <div class="fasting__protocol-group-title fd-ui-overline">
+                                    {{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}
+                                </div>
                                 <fd-ui-chip-select
                                     class="fasting__symptom-chips"
                                     [options]="symptomChipOptions()"
@@ -538,7 +564,7 @@
                             </div>
 
                             <label class="fasting__checkin-notes">
-                                <span class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
+                                <span class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
                                 <textarea
                                     class="fasting__textarea"
                                     [ngModel]="checkInNotes()"
@@ -572,7 +598,7 @@
 
             @if (insights().length > 0) {
                 <div class="fasting__insights-section">
-                    <div class="fasting__section-label">{{ 'FASTING.INSIGHTS.TITLE' | translate }}</div>
+                    <div class="fasting__section-label fd-ui-card-title">{{ 'FASTING.INSIGHTS.TITLE' | translate }}</div>
                     <div class="fasting__insights">
                         @for (insight of insights(); track insight.titleKey) {
                             <fd-ui-inline-alert
@@ -589,7 +615,7 @@
             <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
                 <div class="fasting__history-content">
                     @if (history().length === 0) {
-                        <p class="fasting__empty">{{ 'FASTING.NO_HISTORY' | translate }}</p>
+                        <p class="fasting__empty fd-ui-body-sm">{{ 'FASTING.NO_HISTORY' | translate }}</p>
                     } @else {
                         <div class="fasting__history">
                             @for (session of visibleHistory(); track session.id) {
@@ -601,16 +627,16 @@
                                 >
                                     <div class="fasting__history-header">
                                         <div class="fasting__history-heading">
-                                            <span class="fasting__history-date">
+                                            <span class="fasting__history-date fd-ui-stat-value">
                                                 {{ session.startedAtUtc | localizedDate: 'd MMM y, HH:mm' }}
                                             </span>
                                             <span class="fasting__history-separator" aria-hidden="true">&middot;</span>
-                                            <span class="fasting__history-details">
+                                            <span class="fasting__history-details fd-ui-body-sm">
                                                 {{ getHistorySessionTypeLabel(session) }} &middot; {{ getHistoryProtocolDisplay(session) }}
                                             </span>
                                         </div>
                                         <div
-                                            class="fasting__history-badge"
+                                            class="fasting__history-badge fd-ui-meta-text"
                                             [class.fasting__history-badge--completed]="session.status === 'Completed'"
                                             [class.fasting__history-badge--interrupted]="session.status === 'Interrupted'"
                                             [class.fasting__history-badge--skipped]="session.status === 'Skipped'"
@@ -620,11 +646,11 @@
                                         </div>
                                     </div>
                                     @if (session.notes) {
-                                        <p class="fasting__history-notes">{{ session.notes }}</p>
+                                        <p class="fasting__history-notes fd-ui-caption">{{ session.notes }}</p>
                                     }
                                     @if (hasCheckIn(session)) {
                                         <div class="fasting__history-toggle-row">
-                                            <span class="fasting__history-toggle-count">
+                                            <span class="fasting__history-toggle-count fd-ui-caption">
                                                 {{
                                                     'FASTING.HISTORY_CHECK_INS_COUNT'
                                                         | translate: { count: getSessionCheckInCount(session) }
@@ -664,11 +690,11 @@
                                                 @for (checkIn of getVisibleSessionCheckIns(session); track checkIn.id) {
                                                     <div class="fasting__history-checkin-entry">
                                                         <div class="fasting__history-checkin-header">
-                                                            <div class="fasting__history-checkin-time">
+                                                            <div class="fasting__history-checkin-time fd-ui-caption">
                                                                 {{ checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
                                                             </div>
                                                         </div>
-                                                        <div class="fasting__history-checkin-summary">
+                                                        <div class="fasting__history-checkin-summary fd-ui-body-sm">
                                                             {{
                                                                 getCheckInSummary(
                                                                     checkIn.hungerLevel,
@@ -680,7 +706,7 @@
                                                         @if (checkIn.symptoms.length > 0) {
                                                             <div class="fasting__history-symptoms">
                                                                 @for (symptom of checkIn.symptoms; track symptom) {
-                                                                    <span class="fasting__history-symptom">
+                                                                    <span class="fasting__history-symptom fd-ui-caption">
                                                                         {{
                                                                             'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate
                                                                         }}
@@ -689,7 +715,7 @@
                                                             </div>
                                                         }
                                                         @if (checkIn.notes) {
-                                                            <p class="fasting__history-notes">{{ checkIn.notes }}</p>
+                                                            <p class="fasting__history-notes fd-ui-caption">{{ checkIn.notes }}</p>
                                                         }
                                                     </div>
                                                 }

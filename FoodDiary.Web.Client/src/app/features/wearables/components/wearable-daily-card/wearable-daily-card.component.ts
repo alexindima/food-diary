@@ -16,18 +16,18 @@ interface WearableMetric {
     imports: [CommonModule, TranslatePipe],
     template: `
         <div class="card">
-            <h3 class="card-title">{{ 'WEARABLES.DAILY_TITLE' | translate }}</h3>
+            <h3 class="card-title fd-ui-card-title">{{ 'WEARABLES.DAILY_TITLE' | translate }}</h3>
 
             @if (metrics().length === 0) {
-                <p class="empty-state">{{ 'WEARABLES.NO_DATA' | translate }}</p>
+                <p class="empty-state fd-ui-caption">{{ 'WEARABLES.NO_DATA' | translate }}</p>
             } @else {
                 <div class="metrics-grid">
                     @for (metric of metrics(); track metric.key) {
                         <div class="metric-item">
                             <span class="metric-icon">{{ metric.icon }}</span>
-                            <span class="metric-value">{{ metric.value | number: '1.0-0' }}</span>
-                            <span class="metric-unit">{{ metric.unit }}</span>
-                            <span class="metric-label">{{ 'WEARABLES.' + metric.key | translate }}</span>
+                            <span class="metric-value fd-ui-metric-lg">{{ metric.value | number: '1.0-0' }}</span>
+                            <span class="metric-unit fd-ui-helper-text">{{ metric.unit }}</span>
+                            <span class="metric-label fd-ui-overline">{{ 'WEARABLES.' + metric.key | translate }}</span>
                         </div>
                     }
                 </div>
@@ -41,8 +41,6 @@ interface WearableMetric {
             }
 
             .card-title {
-                font-size: 16px;
-                font-weight: 600;
                 margin: 0 0 16px;
             }
 
@@ -67,19 +65,15 @@ interface WearableMetric {
             }
 
             .metric-value {
-                font-size: 20px;
-                font-weight: 700;
+                --fd-text-metric-lg-size: 1.25rem;
+                --fd-text-metric-lg-line-height: 1.1;
             }
 
             .metric-unit {
-                font-size: 11px;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .metric-label {
-                font-size: 11px;
-                font-weight: 600;
-                text-transform: uppercase;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
@@ -87,7 +81,6 @@ interface WearableMetric {
                 text-align: center;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 padding: 16px;
-                font-size: 13px;
             }
         `,
     ],

@@ -8,10 +8,10 @@
                 <div class="fd-ui-entity-card__header">
                     <div class="fd-ui-entity-card__title-block">
                         @if (title()) {
-                            <p class="fd-ui-entity-card__title">{{ title() }}</p>
+                            <p class="fd-ui-entity-card__title fd-ui-card-title">{{ title() }}</p>
                         }
                         @if (meta()) {
-                            <span class="fd-ui-entity-card__meta">{{ meta() }}</span>
+                            <span class="fd-ui-entity-card__meta fd-ui-meta-text">{{ meta() }}</span>
                         }
                     </div>
                     @if (headerTemplate()) {

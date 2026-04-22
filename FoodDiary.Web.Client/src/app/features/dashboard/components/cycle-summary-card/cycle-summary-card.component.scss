@@ -21,13 +21,10 @@
     }
 
     &__day {
-        font-size: 2rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
+        color: var(--fd-color-text);
     }
 
     &__status {
-        font-size: var(--fd-text-body-sm-size, 0.95rem);
         color: var(--fd-color-text-muted);
     }
 }

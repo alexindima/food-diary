@@ -53,16 +53,11 @@
 .fd-ui-inline-alert__title {
     margin: 0;
     color: var(--fd-inline-alert-title);
-    font-size: 1.05rem;
-    font-weight: 700;
-    line-height: 1.35;
 }
 
 .fd-ui-inline-alert__message {
     margin: 0;
     color: var(--fd-inline-alert-text);
-    font-size: 0.96rem;
-    line-height: 1.55;
 }
 
 :host-context(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__message,
@@ -89,7 +84,6 @@
 .fd-ui-inline-alert__action {
     padding: 0;
     color: var(--fd-inline-alert-accent);
-    font-weight: 700;
 }
 
 .fd-ui-inline-alert__action:hover {

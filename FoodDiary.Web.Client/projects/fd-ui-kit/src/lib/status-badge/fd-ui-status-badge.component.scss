@@ -5,15 +5,15 @@
     padding: 4px 10px;
     border-radius: 999px;
     border: 1px solid var(--fd-color-border);
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 1.2;
     box-sizing: border-box;
     color: var(--fd-color-text-muted);
     background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
 }
 
 .fd-ui-status-badge__label {
+    font-size: var(--fd-text-caption-size, 0.85rem);
+    line-height: var(--fd-text-caption-line-height, 1.35);
+    font-weight: var(--fd-text-stat-value-weight, 600);
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;

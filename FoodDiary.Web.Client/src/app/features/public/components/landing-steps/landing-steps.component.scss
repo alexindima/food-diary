@@ -82,15 +82,11 @@
     }
 
     &__title {
-        margin: 0;
-        color: var(--fd-color-slate-900);
-        font-size: 1.08rem;
+        @include landing.marketing-title(1.08rem, 1.25, -0.01em, var(--fd-color-slate-900), 800);
     }
 
     &__text {
-        margin: 0;
-        color: var(--fd-color-slate-600);
-        line-height: 1.6;
+        @include landing.marketing-body(1rem, 1.6, var(--fd-color-slate-600));
     }
 
     &__cta {
@@ -120,18 +116,11 @@
     }
 
     &__cta-title {
-        margin: 0;
-        font-size: clamp(24px, 2.6vw, 34px);
-        line-height: 1.08;
-        letter-spacing: -0.02em;
-        color: var(--fd-color-slate-50);
+        @include landing.marketing-title(clamp(24px, 2.6vw, 34px), 1.08, -0.02em, var(--fd-color-slate-50));
     }
 
     &__cta-text {
-        margin: 0;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent);
-        font-size: 1rem;
-        line-height: 1.65;
+        @include landing.marketing-body(1rem, 1.65, color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent));
     }
 
     &__cta-actions {

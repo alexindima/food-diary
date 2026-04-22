@@ -1,4 +1,5 @@
 @use 'variables' as variables;
+@use '../landing-section.mixins' as landing;
 
 :host {
     display: block;
@@ -13,19 +14,11 @@
     }
 
     &__title {
-        margin: 0;
-        font-size: clamp(28px, 3vw, 38px);
-        color: var(--fd-color-slate-50);
-        letter-spacing: -0.02em;
-        line-height: 1.05;
+        @include landing.marketing-title(clamp(28px, 3vw, 38px), 1.05, -0.02em, var(--fd-color-slate-50));
     }
 
     &__subtitle {
-        margin: 8px 0 0;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent);
-        font-size: 1.02rem;
-        max-width: 620px;
-        line-height: 1.65;
+        @include landing.marketing-body(1.02rem, 1.65, color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent), 620px, 8px 0 0);
     }
 
     &__actions {

@@ -13,11 +13,12 @@
 
     &__section-title {
         margin: 0;
-        font-size: 0.82rem;
+        font-size: var(--fd-text-helper-size, 0.75rem);
+        line-height: var(--fd-text-helper-line-height, 1.2);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--fd-color-slate-400);
-        font-weight: 700;
+        font-weight: 600;
     }
 
     &__types {

@@ -37,8 +37,6 @@
     color: var(--fd-notice-icon-fg);
     display: grid;
     place-items: center;
-    font-weight: 800;
-    font-size: 1rem;
     flex: 0 0 auto;
 }
 
@@ -51,12 +49,10 @@
 }
 
 .fd-notice__title {
-    font-weight: 700;
-    font-size: 0.95rem;
+    color: var(--fd-notice-text);
 }
 
 .fd-notice__message {
-    font-size: 0.9rem;
     color: var(--fd-notice-message);
 }
 
@@ -88,7 +84,6 @@
     --fd-button-transform-disabled: none;
     white-space: nowrap;
     flex: 0 0 auto;
-    font-weight: 700;
     text-decoration: none;
 
     &:hover {

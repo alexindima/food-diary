@@ -9,7 +9,7 @@
 
     <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
         @if (globalError()) {
-            <div class="recipe-manage__error" role="alert">
+            <div class="recipe-manage__error fd-ui-body-sm" role="alert">
                 {{ globalError() }}
             </div>
         }

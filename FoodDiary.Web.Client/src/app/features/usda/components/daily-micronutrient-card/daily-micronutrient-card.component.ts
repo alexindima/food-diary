@@ -10,21 +10,23 @@ import { DailyMicronutrient } from '../../models/usda.data';
     template: `
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">{{ 'MICRONUTRIENTS.DAILY_TITLE' | translate }}</h3>
+                <h3 class="card-title fd-ui-card-title">{{ 'MICRONUTRIENTS.DAILY_TITLE' | translate }}</h3>
                 @if (linkedCount() > 0) {
-                    <span class="coverage-badge"> {{ linkedCount() }}/{{ totalCount() }} {{ 'MICRONUTRIENTS.LINKED' | translate }} </span>
+                    <span class="coverage-badge fd-ui-overline">
+                        {{ linkedCount() }}/{{ totalCount() }} {{ 'MICRONUTRIENTS.LINKED' | translate }}
+                    </span>
                 }
             </div>
 
             @if (keyNutrients().length === 0) {
-                <p class="empty-state">{{ 'MICRONUTRIENTS.NO_DAILY_DATA' | translate }}</p>
+                <p class="empty-state fd-ui-body-sm">{{ 'MICRONUTRIENTS.NO_DAILY_DATA' | translate }}</p>
             } @else {
                 <div class="nutrients-grid">
                     @for (nutrient of keyNutrients(); track nutrient.nutrientId) {
                         <div class="nutrient-item">
                             <div class="nutrient-header">
-                                <span class="nutrient-name">{{ nutrient.name }}</span>
-                                <span class="nutrient-value">
+                                <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
+                                <span class="nutrient-value fd-ui-caption">
                                     {{ nutrient.totalAmount | number: '1.0-1' }}{{ nutrient.unit }}
                                     @if (nutrient.percentDailyValue !== null) {
                                         <span
@@ -69,13 +71,10 @@ import { DailyMicronutrient } from '../../models/usda.data';
             }
 
             .card-title {
-                font-size: 16px;
-                font-weight: 600;
                 margin: 0;
             }
 
             .coverage-badge {
-                font-size: 11px;
                 padding: 2px 8px;
                 border-radius: 12px;
                 background: var(--fd-surface-variant, var(--fd-color-slate-200));
@@ -101,18 +100,12 @@ import { DailyMicronutrient } from '../../models/usda.data';
                 margin-bottom: 6px;
             }
 
-            .nutrient-name {
-                font-size: 12px;
-                font-weight: 500;
-            }
-
             .nutrient-value {
-                font-size: 12px;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
             }
 
             .dv-text {
-                font-weight: 600;
+                font-weight: var(--fd-text-stat-value-weight, 600);
                 margin-left: 4px;
             }
 
@@ -153,7 +146,6 @@ import { DailyMicronutrient } from '../../models/usda.data';
                 text-align: center;
                 color: var(--fd-text-secondary, var(--fd-color-neutral-600));
                 padding: 16px;
-                font-size: 13px;
             }
 
             @media (max-width: 480px) {

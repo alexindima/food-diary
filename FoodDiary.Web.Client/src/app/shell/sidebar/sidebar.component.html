@@ -4,8 +4,8 @@
             <img src="assets/images/header/logo.svg" alt="Food Diary" />
         </div>
         <div class="sidebar__brand-text">
-            <span class="sidebar__brand-title">Food Diary</span>
-            <span class="sidebar__brand-plan">{{ brandStatusKey() | translate }}</span>
+            <span class="sidebar__brand-title fd-ui-action-text">Food Diary</span>
+            <span class="sidebar__brand-plan fd-ui-caption">{{ brandStatusKey() | translate }}</span>
         </div>
         <fd-ui-button
             class="sidebar__brand-notifications"
@@ -39,7 +39,7 @@
 
     <div class="sidebar__section">
         <button class="sidebar__section-header" type="button" (click)="toggleFoodTracking()">
-            <span>{{ 'SIDEBAR.FOOD_TRACKING' | translate }}</span>
+            <span class="fd-ui-action-text">{{ 'SIDEBAR.FOOD_TRACKING' | translate }}</span>
             <fd-ui-icon name="expand_more" [class.is-open]="isFoodTrackingOpen()"></fd-ui-icon>
         </button>
         @if (isFoodTrackingOpen()) {
@@ -56,7 +56,7 @@
 
     <div class="sidebar__section">
         <button class="sidebar__section-header" type="button" (click)="toggleBodyTracking()">
-            <span>{{ 'SIDEBAR.BODY_TRACKING' | translate }}</span>
+            <span class="fd-ui-action-text">{{ 'SIDEBAR.BODY_TRACKING' | translate }}</span>
             <fd-ui-icon name="expand_more" [class.is-open]="isBodyTrackingOpen()"></fd-ui-icon>
         </button>
         @if (isBodyTrackingOpen()) {
@@ -102,8 +102,8 @@
                     </div>
                 }
                 <div class="sidebar__user-meta">
-                    <div class="sidebar__user-name">{{ user.username || user.email }}</div>
-                    <div class="sidebar__user-plan">
+                    <div class="sidebar__user-name fd-ui-action-text">{{ user.username || user.email }}</div>
+                    <div class="sidebar__user-plan fd-ui-caption">
                         {{ (isPremium() ? 'SIDEBAR.PLAN_PRO' : 'SIDEBAR.PLAN_FREE') | translate }}
                     </div>
                 </div>
@@ -145,7 +145,7 @@
         <section class="sidebar-mobile__progress" aria-live="polite">
             <div class="sidebar-mobile__progress-head">
                 <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
-                <span class="sidebar-mobile__progress-value">
+                <span class="sidebar-mobile__progress-value fd-ui-caption">
                     {{ Math.round(dailyConsumedKcal()) }}/{{ Math.round(dailyGoalKcal()) }} {{ 'GENERAL.UNITS.KCAL' | translate }}
                 </span>
             </div>
@@ -165,7 +165,7 @@
             (click)="onDirectRouteClick('/', true); closeMobileMenus()"
         >
             <fd-ui-icon name="dashboard"></fd-ui-icon>
-            <span class="sidebar-mobile__label">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </a>
         <button
             #mobileFoodButton
@@ -177,7 +177,7 @@
             [attr.aria-expanded]="isMobileFoodOpen()"
         >
             <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
-            <span class="sidebar-mobile__label">{{ 'SIDEBAR.FOOD' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.FOOD' | translate }}</span>
         </button>
         <button
             #mobileBodyButton
@@ -189,7 +189,7 @@
             [attr.aria-expanded]="isMobileBodyOpen()"
         >
             <fd-ui-icon name="monitor_weight"></fd-ui-icon>
-            <span class="sidebar-mobile__label">{{ 'SIDEBAR.BODY' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.BODY' | translate }}</span>
         </button>
         <button
             #mobileReportsButton
@@ -201,7 +201,7 @@
             [attr.aria-expanded]="isMobileReportsOpen()"
         >
             <fd-ui-icon name="bar_chart"></fd-ui-icon>
-            <span class="sidebar-mobile__label">{{ 'SIDEBAR.REPORTS' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.REPORTS' | translate }}</span>
         </button>
         <button
             #mobileUserButton
@@ -216,7 +216,7 @@
             @if (unreadNotificationCount() > 0) {
                 <span class="sidebar-mobile__item-dot" aria-hidden="true"></span>
             }
-            <span class="sidebar-mobile__label">{{ 'SIDEBAR.USER' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.USER' | translate }}</span>
         </button>
     </div>
 </nav>

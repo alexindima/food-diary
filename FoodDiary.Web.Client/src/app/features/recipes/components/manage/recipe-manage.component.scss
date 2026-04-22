@@ -35,7 +35,6 @@
         border-radius: var(--fd-radius-card);
         background: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-surface-raised));
         color: var(--fd-color-danger-400);
-        font-weight: 500;
         border: 1px solid color-mix(in srgb, var(--fd-color-danger) 32%, transparent);
     }
 
@@ -88,7 +87,6 @@
 
     &__summary-calories {
         margin: 0;
-        font-size: 0.95rem;
         color: var(--fd-color-text);
 
         strong {
@@ -155,7 +153,6 @@
         padding: variables.$gap-m;
         text-align: center;
         color: var(--fd-color-text-muted);
-        font-size: 0.9rem;
     }
 }
 

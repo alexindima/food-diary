@@ -129,13 +129,13 @@
                         @for (favorite of favorites(); track favorite.id) {
                             <div class="product-list__favorite-card">
                                 <button type="button" class="product-list__favorite-info" (click)="openFavoriteProduct(favorite)">
-                                    <div class="product-list__favorite-name">
+                                    <div class="product-list__favorite-name fd-ui-action-text">
                                         {{ favorite.name || favorite.productName || ('PRODUCT_LIST.FAVORITE_UNNAMED' | translate) }}
                                     </div>
-                                    <div class="product-list__favorite-meta">
+                                    <div class="product-list__favorite-meta fd-ui-caption">
                                         @if (favorite.brand) {
                                             <span>{{ favorite.brand }}</span>
-                                            <span>Â·</span>
+                                            <span>&middot;</span>
                                         }
                                         <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
                                     </div>
@@ -180,7 +180,7 @@
                     @if (showRecentSection()) {
                         <div class="product-list__section">
                             <div class="product-list__section-header">
-                                <span class="product-list__section-label">
+                                <span class="product-list__section-label fd-ui-card-title">
                                     {{ 'PRODUCT_LIST.RECENT_PRODUCTS' | translate }}
                                 </span>
                                 <span class="product-list__section-line"></span>
@@ -202,7 +202,7 @@
                     @if (allProductsSectionItems().length > 0) {
                         <div class="product-list__section">
                             <div class="product-list__section-header">
-                                <span class="product-list__section-label">
+                                <span class="product-list__section-label fd-ui-card-title">
                                     {{ allProductsSectionLabelKey() | translate }}
                                 </span>
                                 <span class="product-list__section-line"></span>
@@ -224,8 +224,8 @@
             } @else if (isEmptyState()) {
                 <div class="product-list__empty-state">
                     <fd-ui-icon class="product-list__no-results-icon" name="inventory_2" size="xl" />
-                    <div class="product-list__empty-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
-                    <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
+                    <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
+                    <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
                     <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
                         {{ 'PRODUCT_LIST.ADD_FIRST_PRODUCT_BUTTON' | translate }}
                     </fd-ui-button>
@@ -233,15 +233,15 @@
             } @else {
                 <div class="product-list__no-results">
                     <fd-ui-icon class="product-list__no-results-icon" name="search_off" size="xl" />
-                    <div class="product-list__empty-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
-                    <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
+                    <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
+                    <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>
             }
 
             @if (offProducts().length > 0) {
                 <div class="product-list__section product-list__section--off">
                     <div class="product-list__section-header">
-                        <span class="product-list__section-label">
+                        <span class="product-list__section-label fd-ui-card-title">
                             {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
                         </span>
                         <span class="product-list__section-line"></span>
@@ -263,12 +263,12 @@
                                     </div>
                                 }
                                 <div class="product-list__off-info">
-                                    <div class="product-list__off-name">{{ offProduct.name }}</div>
+                                    <div class="product-list__off-name fd-ui-body-sm">{{ offProduct.name }}</div>
                                     @if (offProduct.brand) {
-                                        <div class="product-list__off-brand">{{ offProduct.brand }}</div>
+                                        <div class="product-list__off-brand fd-ui-caption">{{ offProduct.brand }}</div>
                                     }
                                     @if (offProduct.caloriesPer100G != null) {
-                                        <div class="product-list__off-kcal">
+                                        <div class="product-list__off-kcal fd-ui-caption">
                                             {{ offProduct.caloriesPer100G | number: '1.0-0' }} {{ 'PRODUCT_LIST.OFF_KCAL' | translate }}
                                         </div>
                                     }
@@ -281,7 +281,7 @@
             } @else if (offLoading()) {
                 <div class="product-list__section product-list__section--off">
                     <div class="product-list__section-header">
-                        <span class="product-list__section-label">
+                        <span class="product-list__section-label fd-ui-card-title">
                             {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
                         </span>
                         <span class="product-list__section-line"></span>

@@ -177,9 +177,9 @@
                                     label=""
                                 />
                                 <div class="shopping-list__item-body">
-                                    <div class="shopping-list__item-name">{{ item.name }}</div>
+                                    <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>
                                     @if (formatItemMeta(item)) {
-                                        <div class="shopping-list__item-meta">{{ formatItemMeta(item) }}</div>
+                                        <div class="shopping-list__item-meta fd-ui-caption">{{ formatItemMeta(item) }}</div>
                                     }
                                 </div>
                                 <fd-ui-button
@@ -197,8 +197,8 @@
                 } @else {
                     <div class="shopping-list__empty-state">
                         <fd-ui-icon name="shopping_cart" size="xl" />
-                        <div class="shopping-list__empty-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
-                        <div class="shopping-list__empty-copy">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
+                        <div class="shopping-list__empty-title fd-ui-card-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
+                        <div class="shopping-list__empty-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
                     </div>
                 }
             </div>

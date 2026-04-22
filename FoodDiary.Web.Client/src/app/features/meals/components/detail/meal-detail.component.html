@@ -11,8 +11,10 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label">{{ 'CONSUMPTION_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-                        <strong class="consumption-detail__surface-value">
+                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                            'CONSUMPTION_DETAIL.SUMMARY.CALORIES' | translate
+                        }}</span>
+                        <strong class="consumption-detail__surface-value fd-ui-action-text">
                             {{ calories }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
@@ -24,8 +26,10 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label">{{ 'CONSUMPTION_DETAIL.SUMMARY.MEAL_TYPE' | translate }}</span>
-                        <strong class="consumption-detail__surface-value">
+                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                            'CONSUMPTION_DETAIL.SUMMARY.MEAL_TYPE' | translate
+                        }}</span>
+                        <strong class="consumption-detail__surface-value fd-ui-action-text">
                             {{ mealTypeLabel || ('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_MEAL' | translate) }}
                         </strong>
                     </fd-ui-accent-surface>
@@ -36,8 +40,10 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label">{{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}</span>
-                        <strong class="consumption-detail__surface-value">{{ itemsCount }}</strong>
+                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                            'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate
+                        }}</span>
+                        <strong class="consumption-detail__surface-value fd-ui-action-text">{{ itemsCount }}</strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
@@ -46,7 +52,9 @@
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                            'PRODUCT_CARD.QUALITY_SCORE' | translate
+                        }}</span>
                         <div class="consumption-detail__quality">
                             <div class="consumption-detail__quality-bar" aria-hidden="true">
                                 <span
@@ -55,7 +63,7 @@
                                 ></span>
                             </div>
                             <strong
-                                class="consumption-detail__quality-value"
+                                class="consumption-detail__quality-value fd-ui-card-title"
                                 [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
                             >
                                 {{ qualityScore }}
@@ -71,8 +79,10 @@
                         accentColor="var(--fd-color-primary-200)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label">{{ 'CONSUMPTION_DETAIL.SUMMARY.COMMENT' | translate }}</span>
-                        <span class="consumption-detail__surface-value">{{ consumption.comment }}</span>
+                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                            'CONSUMPTION_DETAIL.SUMMARY.COMMENT' | translate
+                        }}</span>
+                        <span class="consumption-detail__surface-value fd-ui-body-sm">{{ consumption.comment }}</span>
                     </fd-ui-accent-surface>
                 }
             }
@@ -86,8 +96,8 @@
                                 [accentColor]="macro.color"
                                 [tinted]="true"
                             >
-                                <span class="consumption-detail__surface-label">{{ macro.labelKey | translate }}</span>
-                                <strong class="consumption-detail__surface-value">
+                                <span class="consumption-detail__surface-label fd-ui-meta-text">{{ macro.labelKey | translate }}</span>
+                                <strong class="consumption-detail__surface-value fd-ui-action-text">
                                     {{ macro.value }}
                                     {{ macro.unitKey | translate }}
                                 </strong>

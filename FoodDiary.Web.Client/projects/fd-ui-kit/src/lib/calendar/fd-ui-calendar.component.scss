@@ -22,8 +22,9 @@
 
 .fd-ui-calendar__title {
     text-align: center;
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: var(--fd-text-action-size);
+    line-height: var(--fd-text-action-line-height);
+    font-weight: var(--fd-text-card-title-weight);
     color: var(--fd-color-text-primary, #fff);
     text-transform: capitalize;
 }
@@ -40,8 +41,10 @@
     align-items: center;
     justify-content: center;
     min-height: 2rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: var(--fd-text-stat-label-size);
+    line-height: var(--fd-text-stat-label-line-height);
+    font-weight: var(--fd-text-stat-label-weight);
+    letter-spacing: var(--fd-text-stat-label-tracking);
     color: var(--fd-color-text-muted, rgba(255, 255, 255, 0.68));
     text-transform: uppercase;
 }

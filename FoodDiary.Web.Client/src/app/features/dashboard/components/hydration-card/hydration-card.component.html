@@ -16,8 +16,8 @@
         }
         <div class="hydration-card__content">
             <div class="hydration-card__value">
-                <span class="hydration-card__liters">{{ total() | number: '1.0-0' }}</span>
-                <span class="hydration-card__unit">
+                <span class="hydration-card__liters fd-ui-metric-hero">{{ total() | number: '1.0-0' }}</span>
+                <span class="hydration-card__unit fd-ui-metric-unit">
                     @if (hasGoal()) {
                         / {{ goal() | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}
                     } @else {
@@ -30,7 +30,7 @@
                     <div class="hydration-card__progress-track">
                         <div class="hydration-card__progress-fill" [style.width]="trackWidth()"></div>
                     </div>
-                    <div class="hydration-card__percent">{{ percent() | number: '1.0-0' }}%</div>
+                    <div class="hydration-card__percent fd-ui-stat-value">{{ percent() | number: '1.0-0' }}%</div>
                 </div>
             } @else {
                 <fd-notice-banner

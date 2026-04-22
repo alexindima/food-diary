@@ -22,9 +22,10 @@
     align-items: center;
     justify-content: var(--fd-button-justify-content, center);
     gap: 4px;
-    letter-spacing: 0.02em;
-    line-height: 1;
-    font-weight: 600;
+    font-size: var(--fd-button-font-size, var(--fd-text-action-size));
+    line-height: var(--fd-button-line-height, var(--fd-text-action-line-height));
+    font-weight: var(--fd-button-font-weight, var(--fd-text-action-weight));
+    letter-spacing: var(--fd-button-letter-spacing, 0.02em);
     width: var(--fd-button-width, auto);
     min-width: var(--fd-button-min-width, 0);
     height: var(--fd-button-height-explicit, auto);
@@ -237,7 +238,7 @@
     --fd-button-text-default: var(--fd-color-text-muted);
     --fd-button-shadow-default: none;
     --fd-button-shadow-hover: none;
-    font-weight: 600;
+    --fd-button-font-weight: var(--fd-text-action-weight);
 }
 
 .fd-ui-button--appearance-plain-icon {
@@ -262,7 +263,7 @@
 .fd-ui-button--appearance-brand-action {
     --fd-button-border-radius: var(--fd-radius-button);
     --fd-button-padding-x: 16px;
-    font-weight: 800;
+    --fd-button-font-weight: var(--fd-text-metric-lg-weight);
 }
 
 .fd-ui-button--appearance-ai-action.fd-ui-button--primary.fd-ui-button--solid {

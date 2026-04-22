@@ -1,6 +1,6 @@
 <div class="email-verify-pending">
     <fd-ui-card class="email-verify-pending__card" [title]="'AUTH.VERIFY_PENDING.TITLE' | translate">
-        <p class="email-verify-pending__description">
+        <p class="email-verify-pending__description fd-ui-body-sm">
             @if (email()) {
                 {{ 'AUTH.VERIFY_PENDING.DESCRIPTION' | translate: { email: email() } }}
             } @else {
@@ -9,7 +9,7 @@
         </p>
 
         @if (statusMessage()) {
-            <div class="email-verify-pending__status">{{ statusMessage() }}</div>
+            <div class="email-verify-pending__status fd-ui-body-sm">{{ statusMessage() }}</div>
         }
 
         <div class="email-verify-pending__actions">
@@ -34,7 +34,7 @@
             </fd-ui-button>
         </div>
         @if (resendCooldownSeconds() > 0) {
-            <div class="email-verify-pending__cooldown">
+            <div class="email-verify-pending__cooldown fd-ui-caption">
                 {{ 'AUTH.VERIFY_PENDING.RESEND_COOLDOWN' | translate: { seconds: resendCooldownSeconds() } }}
             </div>
         }
