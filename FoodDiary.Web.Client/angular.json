@@ -105,6 +105,17 @@
                             "extractLicenses": false,
                             "sourceMap": true
                         },
+                        "tunnel": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.tunnel.ts"
+                                }
+                            ],
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        },
                         "staging": {
                             "fileReplacements": [
                                 {
@@ -133,6 +144,10 @@
                         },
                         "development": {
                             "buildTarget": "food-diary-web-client:build:development"
+                        },
+                        "tunnel": {
+                            "buildTarget": "food-diary-web-client:build:tunnel",
+                            "allowedHosts": ["dev.fooddiary.club"]
                         }
                     },
                     "defaultConfiguration": "development"
@@ -178,6 +193,7 @@
                         "configDir": ".storybook",
                         "browserTarget": "fd-ui-kit:build",
                         "port": 6006,
+                        "allowedHosts": ["storybook-dev.fooddiary.club"],
                         "styles": [
                             "node_modules/@material-design-icons/font/filled.css",
                             "src/styles/design-tokens.global.scss",
@@ -293,7 +309,8 @@
                     "builder": "@angular/build:dev-server",
                     "options": {
                         "port": 4300,
-                        "hmr": false
+                        "hmr": false,
+                        "allowedHosts": ["admin-dev.fooddiary.club"]
                     },
                     "configurations": {
                         "production": {
