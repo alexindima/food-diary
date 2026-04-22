@@ -31,6 +31,7 @@ import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { environment } from '../../../../../environments/environment';
 import { GoogleLoginRequest } from '../../models/google-auth.data';
+import { firstValueFrom } from 'rxjs';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -103,6 +104,7 @@ export class AuthComponent {
     ];
 
     private returnUrl: string | null = null;
+    private adminReturnUrl: string | null = null;
 
     public constructor() {
         this.loginForm = new FormGroup<LoginFormGroup>({
@@ -150,6 +152,7 @@ export class AuthComponent {
             const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
             this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
+            this.adminReturnUrl = this.useRouting() ? this.route?.snapshot.queryParams['adminReturnUrl'] || null : null;
         });
         void this.initializeGoogle();
     }
@@ -194,9 +197,9 @@ export class AuthComponent {
         this.isSubmitting.set(true);
 
         this.authService.login(loginRequest).subscribe({
-            next: () => {
+            next: async () => {
                 this.isSubmitting.set(false);
-                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                await this.completeAuthenticatedNavigation();
                 this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
@@ -216,9 +219,9 @@ export class AuthComponent {
         this.isRestoring.set(true);
 
         this.authService.restoreAccount(restoreRequest, rememberMe).subscribe({
-            next: () => {
+            next: async () => {
                 this.isRestoring.set(false);
-                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                await this.completeAuthenticatedNavigation();
                 this.closeDialogIfAny();
             },
             error: () => {
@@ -290,9 +293,9 @@ export class AuthComponent {
         const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
         const request: GoogleLoginRequest = { credential, rememberMe: !!rememberMe };
         this.authService.loginWithGoogle(request).subscribe({
-            next: () => {
+            next: async () => {
                 this.isSubmitting.set(false);
-                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                await this.completeAuthenticatedNavigation();
                 this.closeDialogIfAny();
             },
             error: () => {
@@ -372,6 +375,81 @@ export class AuthComponent {
 
     private closeDialogIfAny(): void {
         this.dialogRef?.close();
+    }
+
+    private async completeAuthenticatedNavigation(): Promise<void> {
+        const adminRedirectUrl = await this.tryBuildAdminRedirectUrl();
+        if (adminRedirectUrl) {
+            window.location.assign(adminRedirectUrl);
+            return;
+        }
+
+        await this.navigationService.navigateToReturnUrl(this.returnUrl);
+    }
+
+    private async tryBuildAdminRedirectUrl(): Promise<string | null> {
+        if (!this.adminReturnUrl || !environment.adminAppUrl) {
+            return null;
+        }
+
+        const adminPath = this.normalizeAdminReturnUrl(this.adminReturnUrl);
+        if (!adminPath) {
+            return null;
+        }
+
+        if (!this.authService.isAdmin()) {
+            return this.buildAdminUnauthorizedUrl(adminPath, 'forbidden');
+        }
+
+        try {
+            const response = await firstValueFrom(this.authService.startAdminSso());
+            const adminUrl = new URL(adminPath, environment.adminAppUrl);
+            adminUrl.searchParams.set('code', response.code);
+            return adminUrl.toString();
+        } catch {
+            return this.buildAdminUnauthorizedUrl(adminPath, 'forbidden');
+        }
+    }
+
+    private buildAdminUnauthorizedUrl(returnUrl: string, reason: 'forbidden' | 'unauthenticated'): string {
+        const unauthorizedUrl = new URL('/unauthorized', environment.adminAppUrl);
+        unauthorizedUrl.searchParams.set('reason', reason);
+        unauthorizedUrl.searchParams.set('returnUrl', returnUrl);
+        return unauthorizedUrl.toString();
+    }
+
+    private normalizeAdminReturnUrl(value: string): string | null {
+        if (!value) {
+            return '/';
+        }
+
+        const decoded = this.safeDecode(value);
+        if (decoded.includes('returnUrl=')) {
+            return '/';
+        }
+
+        try {
+            const parsed = new URL(decoded, environment.adminAppUrl || window.location.origin);
+            if (environment.adminAppUrl) {
+                const adminOrigin = new URL(environment.adminAppUrl).origin;
+                if (parsed.origin !== adminOrigin) {
+                    return '/';
+                }
+            }
+
+            const search = parsed.searchParams.toString();
+            return search ? `${parsed.pathname}?${search}` : parsed.pathname;
+        } catch {
+            return decoded.startsWith('/') ? decoded : '/';
+        }
+    }
+
+    private safeDecode(value: string): string {
+        try {
+            return decodeURIComponent(value);
+        } catch {
+            return value;
+        }
     }
 
     private handleLoginError(errorCode?: string): void {

@@ -36,11 +36,11 @@ export class UnauthorizedComponent {
 
     public goToLogin(): void {
         const url = new URL('/auth/login', environment.mainAppUrl);
-        const returnUrl = this.normalizeReturnUrl(this.returnUrl);
-        if (returnUrl) {
-            url.searchParams.set('returnUrl', returnUrl);
+        const adminReturnUrl = this.normalizeReturnUrl(this.returnUrl);
+        if (adminReturnUrl) {
+            url.searchParams.set('adminReturnUrl', adminReturnUrl);
         }
-        window.location.href = url.toString();
+        window.location.assign(url.toString());
     }
 
     private async tryRecoverFromSso(returnUrl: string): Promise<void> {
