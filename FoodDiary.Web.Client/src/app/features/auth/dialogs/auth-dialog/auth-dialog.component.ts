@@ -6,17 +6,7 @@ import { AuthComponent } from '../../components/auth/auth.component';
 @Component({
     selector: 'fd-auth-dialog',
     standalone: true,
-    template: `
-        <fd-ui-dialog-shell [title]="''" size="md" [dismissible]="false" [flush]="true">
-            <fd-auth
-                class="auth-dialog__auth"
-                [useRouting]="false"
-                [initialMode]="data.mode"
-                [initialReturnUrl]="data.returnUrl ?? null"
-                [initialAdminReturnUrl]="data.adminReturnUrl ?? null"
-            />
-        </fd-ui-dialog-shell>
-    `,
+    templateUrl: './auth-dialog.component.html',
     styleUrls: ['./auth-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FdUiDialogShellComponent, AuthComponent],

@@ -1,0 +1,27 @@
+<div class="connections">
+    <h3 class="title fd-ui-card-title">{{ 'WEARABLES.CONNECTIONS_TITLE' | translate }}</h3>
+    @for (provider of providers; track provider.id) {
+        <div class="provider-row">
+            <span class="provider-icon">{{ provider.icon }}</span>
+            <div class="provider-info">
+                <span class="provider-name fd-ui-action-text">{{ provider.name }}</span>
+                @if (getConnection(provider.id); as conn) {
+                    <span class="provider-status connected fd-ui-caption">
+                        {{ 'WEARABLES.CONNECTED' | translate }}
+                    </span>
+                } @else {
+                    <span class="provider-status fd-ui-caption">{{ 'WEARABLES.NOT_CONNECTED' | translate }}</span>
+                }
+            </div>
+            @if (getConnection(provider.id); as conn) {
+                <fd-ui-button variant="text" (click)="disconnect(provider.id)">
+                    {{ 'WEARABLES.DISCONNECT' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-ui-button variant="flat" (click)="connect(provider.id)">
+                    {{ 'WEARABLES.CONNECT' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,45 @@
+<div class="dietologist-clients">
+    <h1 class="dietologist-clients__title fd-page-title">My Clients</h1>
+
+    @if (loading()) {
+        <p class="fd-ui-body-sm">Loading...</p>
+    } @else if (clients().length === 0) {
+        <p class="dietologist-clients__empty fd-ui-body-sm">No clients yet. Clients can invite you by email.</p>
+    } @else {
+        <div class="dietologist-clients__list">
+            @for (client of clients(); track client.userId) {
+                <fd-ui-card class="dietologist-clients__card" (click)="openClient(client)">
+                    <div class="dietologist-clients__card-content">
+                        <div class="dietologist-clients__avatar" [class.dietologist-clients__avatar--image]="!!client.profileImage">
+                            @if (client.profileImage) {
+                                <img [src]="client.profileImage" [alt]="getClientTitle(client)" />
+                            } @else {
+                                <span>{{ getClientInitials(client) }}</span>
+                            }
+                        </div>
+                        <div class="dietologist-clients__info">
+                            <span class="dietologist-clients__name fd-ui-action-text">{{ getClientTitle(client) }}</span>
+                            <span class="dietologist-clients__email fd-ui-caption">{{ client.email }}</span>
+                            @if (client.permissions.shareProfile) {
+                                <div class="dietologist-clients__meta">
+                                    @if (client.height) {
+                                        <span class="dietologist-clients__chip fd-ui-overline">{{ client.height }} cm</span>
+                                    }
+                                    @if (client.gender) {
+                                        <span class="dietologist-clients__chip fd-ui-overline">{{ client.gender }}</span>
+                                    }
+                                    @if (client.activityLevel) {
+                                        <span class="dietologist-clients__chip fd-ui-overline">{{ client.activityLevel }}</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <span class="dietologist-clients__date fd-ui-caption">
+                            Connected {{ client.acceptedAtUtc | date: 'mediumDate' }}
+                        </span>
+                    </div>
+                </fd-ui-card>
+            }
+        </div>
+    }
+</div>

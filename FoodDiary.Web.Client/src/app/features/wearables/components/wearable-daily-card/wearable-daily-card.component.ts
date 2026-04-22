@@ -14,76 +14,8 @@ interface WearableMetric {
     selector: 'fd-wearable-daily-card',
     standalone: true,
     imports: [CommonModule, TranslatePipe],
-    template: `
-        <div class="card">
-            <h3 class="card-title fd-ui-card-title">{{ 'WEARABLES.DAILY_TITLE' | translate }}</h3>
-
-            @if (metrics().length === 0) {
-                <p class="empty-state fd-ui-caption">{{ 'WEARABLES.NO_DATA' | translate }}</p>
-            } @else {
-                <div class="metrics-grid">
-                    @for (metric of metrics(); track metric.key) {
-                        <div class="metric-item">
-                            <span class="metric-icon">{{ metric.icon }}</span>
-                            <span class="metric-value fd-ui-metric-lg">{{ metric.value | number: '1.0-0' }}</span>
-                            <span class="metric-unit fd-ui-helper-text">{{ metric.unit }}</span>
-                            <span class="metric-label fd-ui-overline">{{ 'WEARABLES.' + metric.key | translate }}</span>
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-    `,
-    styles: [
-        `
-            .card {
-                padding: 16px;
-            }
-
-            .card-title {
-                margin: 0 0 16px;
-            }
-
-            .metrics-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-                gap: 12px;
-            }
-
-            .metric-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 12px 8px;
-                border-radius: 12px;
-                background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
-                gap: 2px;
-            }
-
-            .metric-icon {
-                font-size: 24px;
-            }
-
-            .metric-value {
-                --fd-text-metric-lg-size: 1.25rem;
-                --fd-text-metric-lg-line-height: 1.1;
-            }
-
-            .metric-unit {
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
-            }
-
-            .metric-label {
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
-            }
-
-            .empty-state {
-                text-align: center;
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
-                padding: 16px;
-            }
-        `,
-    ],
+    templateUrl: './wearable-daily-card.component.html',
+    styleUrls: ['./wearable-daily-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WearableDailyCardComponent {

@@ -9,15 +9,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 @Component({
     selector: 'fd-user-manage-password-success-dialog',
     standalone: true,
-    template: `
-        <fd-ui-dialog [title]="'USER_MANAGE.CHANGE_PASSWORD_SUCCESS' | translate" size="sm">
-            <div fdUiDialogFooter class="password-success-dialog__footer">
-                <fd-ui-button icon="check" (click)="close()">
-                    {{ 'USER_MANAGE.CHANGE_PASSWORD_OK' | translate }}
-                </fd-ui-button>
-            </div>
-        </fd-ui-dialog>
-    `,
+    templateUrl: './password-success-dialog.component.html',
     styleUrls: ['./password-success-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],

@@ -1,0 +1,98 @@
+<div class="client-dashboard">
+    <div class="client-dashboard__header">
+        <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">Back to clients</fd-ui-button>
+        @if (client(); as currentClient) {
+            <h1 class="client-dashboard__title fd-page-title">{{ getClientTitle(currentClient) }}</h1>
+            <span class="client-dashboard__email fd-ui-caption">{{ currentClient.email }}</span>
+            @if (currentClient.permissions.shareProfile) {
+                <div class="client-dashboard__profile-meta">
+                    @if (currentClient.height) {
+                        <span class="client-dashboard__chip fd-ui-overline">{{ currentClient.height }} cm</span>
+                    }
+                    @if (currentClient.gender) {
+                        <span class="client-dashboard__chip fd-ui-overline">{{ currentClient.gender }}</span>
+                    }
+                    @if (currentClient.activityLevel) {
+                        <span class="client-dashboard__chip fd-ui-overline">{{ currentClient.activityLevel }}</span>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    @if (loading()) {
+        <p class="fd-ui-body-sm">Loading client data...</p>
+    } @else if (!client()) {
+        <p class="fd-ui-body-sm">Client not found.</p>
+    } @else {
+        <div class="client-dashboard__sections">
+            @if (client()!.permissions.shareProfile) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Profile</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Client profile data will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareStatistics) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Statistics</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Dashboard data will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareMeals) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Meals</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Meal data will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareWeight) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Weight</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Weight history will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareWaist) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Waist</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Waist history will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareGoals) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Goals</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Client goals will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareHydration) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Hydration</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Hydration data will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (client()!.permissions.shareFasting) {
+                <fd-ui-card>
+                    <div class="client-dashboard__section">
+                        <h2 class="fd-ui-card-title">Fasting</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">Fasting data will be displayed here.</p>
+                    </div>
+                </fd-ui-card>
+            }
+            @if (!hasAnyPermission()) {
+                <p class="client-dashboard__no-data fd-ui-body-sm">Client has not shared any data.</p>
+            }
+        </div>
+    }
+</div>

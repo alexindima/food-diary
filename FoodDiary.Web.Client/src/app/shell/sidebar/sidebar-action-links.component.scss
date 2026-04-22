@@ -1,0 +1,19 @@
+:host {
+    display: contents;
+}
+
+.sidebar-action-links__badge {
+    margin-left: auto;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fd-color-danger);
+    color: var(--fd-color-white);
+    font-size: var(--fd-text-helper-size, 0.75rem);
+    font-weight: var(--fd-text-stat-label-weight, 600);
+    line-height: 1;
+}

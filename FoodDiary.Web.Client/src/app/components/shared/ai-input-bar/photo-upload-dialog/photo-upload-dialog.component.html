@@ -1,0 +1,19 @@
+<fd-ui-dialog
+    [title]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.TITLE' | translate"
+    [subtitle]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
+    size="lg"
+>
+    <fd-image-upload-field
+        [cropEnabled]="true"
+        [cropSize]="null"
+        [cropMaxSize]="1024"
+        [cropAspectRatio]="null"
+        [deleteOnClear]="true"
+        (imageChanged)="onImageChanged($event)"
+    />
+    <div fdUiDialogFooter class="photo-upload-dialog__footer">
+        <fd-ui-button fill="outline" variant="secondary" (click)="close()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

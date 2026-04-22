@@ -1,0 +1,29 @@
+<fd-ui-dialog [title]="'USDA_SEARCH.TITLE' | translate">
+    <fd-ui-input [placeholder]="'USDA_SEARCH.PLACEHOLDER' | translate" [ngModel]="searchQuery()" (ngModelChange)="onSearchChange($event)" />
+
+    <div class="results-container">
+        @if (isLoading()) {
+            <div class="loading">{{ 'COMMON.LOADING' | translate }}...</div>
+        }
+        @if (!isLoading() && results().length === 0 && searchQuery().length > 0) {
+            <div class="no-results">{{ 'USDA_SEARCH.NO_RESULTS' | translate }}</div>
+        }
+        @for (food of results(); track food.fdcId) {
+            <button class="result-item" [class.selected]="selectedFood()?.fdcId === food.fdcId" (click)="selectFood(food)">
+                <span class="food-name fd-ui-action-text">{{ food.description }}</span>
+                @if (food.foodCategory) {
+                    <span class="food-category fd-ui-caption">{{ food.foodCategory }}</span>
+                }
+            </button>
+        }
+    </div>
+
+    <div *fdUiDialogFooter class="dialog-footer">
+        <fd-ui-button variant="text" (click)="onCancel()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-button variant="flat" [disabled]="!selectedFood()" (click)="onConfirm()">
+            {{ 'USDA_SEARCH.LINK' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

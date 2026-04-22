@@ -6,22 +6,7 @@ import { FdUiMenuComponent } from './fd-ui-menu.component';
     selector: 'fd-ui-menu-item',
     standalone: true,
     imports: [RouterModule],
-    template: `
-        <button
-            class="fd-ui-menu__item"
-            [class.fd-ui-menu__item--disabled]="disabled()"
-            [type]="type()"
-            [routerLink]="routerLink()"
-            [queryParams]="queryParams()"
-            [fragment]="fragment()"
-            [disabled]="disabled()"
-            [attr.role]="'menuitem'"
-            tabindex="-1"
-            (click)="onClick($event)"
-        >
-            <ng-content />
-        </button>
-    `,
+    templateUrl: './fd-ui-menu-item.component.html',
     styleUrls: ['./fd-ui-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

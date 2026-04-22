@@ -1,0 +1,43 @@
+.card {
+    padding: 16px;
+}
+
+.card-title {
+    margin: 0 0 16px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    border-radius: 12px;
+    background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
+    gap: 2px;
+}
+
+.metric-icon {
+    font-size: 24px;
+}
+
+.metric-value {
+    --fd-text-metric-lg-size: 1.25rem;
+    --fd-text-metric-lg-line-height: 1.1;
+}
+
+.metric-unit,
+.metric-label,
+.empty-state {
+    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+}
+
+.empty-state {
+    text-align: center;
+    padding: 16px;
+}

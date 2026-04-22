@@ -15,21 +15,7 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
 @Component({
     selector: 'fd-meal-manage-success-dialog',
     standalone: true,
-    template: `
-        <fd-ui-dialog
-            [title]="data.isEdit ? ('CONSUMPTION_MANAGE.EDIT_SUCCESS' | translate) : ('CONSUMPTION_MANAGE.CREATE_SUCCESS' | translate)"
-            size="sm"
-        >
-            <div fdUiDialogFooter class="meal-manage-success-dialog__footer">
-                <fd-ui-button fill="text" (click)="close('Home')">
-                    {{ 'CONSUMPTION_MANAGE.GO_TO_HOME_BUTTON' | translate }}
-                </fd-ui-button>
-                <fd-ui-button fill="text" (click)="close('ConsumptionList')">
-                    {{ 'CONSUMPTION_MANAGE.GO_TO_CONSUMPTION_LIST_BUTTON' | translate }}
-                </fd-ui-button>
-            </div>
-        </fd-ui-dialog>
-    `,
+    templateUrl: './meal-manage-success-dialog.component.html',
     styleUrls: ['./meal-manage-success-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],

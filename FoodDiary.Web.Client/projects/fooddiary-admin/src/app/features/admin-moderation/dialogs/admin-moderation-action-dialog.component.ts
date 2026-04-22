@@ -22,44 +22,8 @@ export type AdminModerationActionDialogResult = {
     selector: 'fd-admin-moderation-action-dialog',
     standalone: true,
     imports: [FormsModule, FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
-    template: `
-        <fd-ui-dialog [title]="dialogTitle" size="sm">
-            <p><strong>Target:</strong> {{ data.report.targetType }} ({{ data.report.targetId }})</p>
-            <p><strong>Reason:</strong> {{ data.report.reason }}</p>
-
-            <label>Admin note (optional)</label>
-            <fd-ui-textarea [(ngModel)]="adminNote" placeholder="Add an admin note..." [rows]="3" />
-
-            <div class="dialog-actions">
-                <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="onCancel()"> Cancel </fd-ui-button>
-                <fd-ui-button
-                    type="button"
-                    [variant]="data.action === 'review' ? 'danger' : 'secondary'"
-                    size="sm"
-                    [disabled]="isSubmitting()"
-                    (click)="onConfirm()"
-                >
-                    {{ data.action === 'review' ? 'Review & Remove' : 'Dismiss' }}
-                </fd-ui-button>
-            </div>
-        </fd-ui-dialog>
-    `,
-    styles: `
-        .dialog-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 16px;
-        }
-        label {
-            display: block;
-            font-weight: 500;
-            margin: 12px 0 4px;
-        }
-        p {
-            margin: 4px 0;
-        }
-    `,
+    templateUrl: './admin-moderation-action-dialog.component.html',
+    styleUrls: ['./admin-moderation-action-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminModerationActionDialogComponent {

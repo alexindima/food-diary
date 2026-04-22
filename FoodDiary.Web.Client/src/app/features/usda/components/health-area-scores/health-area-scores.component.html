@@ -1,0 +1,23 @@
+<div class="health-scores">
+    <h3 class="title fd-ui-card-title">{{ 'HEALTH_SCORES.TITLE' | translate }}</h3>
+    <div class="areas-grid">
+        @for (area of areas(); track area.key) {
+            <div class="area-card" [class]="'area-card--' + area.grade">
+                <span class="area-icon">{{ area.icon }}</span>
+                <span class="area-name fd-ui-overline">{{ 'HEALTH_SCORES.' + area.key | translate }}</span>
+                <div class="area-score-ring">
+                    <svg viewBox="0 0 36 36" class="ring-svg">
+                        <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path
+                            class="ring-fill"
+                            [attr.stroke-dasharray]="area.score + ', 100'"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                    </svg>
+                    <span class="score-text fd-ui-stat-value">{{ area.score }}</span>
+                </div>
+                <span class="area-grade fd-ui-overline">{{ 'HEALTH_SCORES.GRADE_' + area.grade.toUpperCase() | translate }}</span>
+            </div>
+        }
+    </div>
+</div>

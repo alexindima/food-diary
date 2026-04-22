@@ -16,79 +16,8 @@ interface ProviderConfig {
     selector: 'fd-wearable-connections',
     standalone: true,
     imports: [CommonModule, TranslatePipe, FdUiButtonComponent],
-    template: `
-        <div class="connections">
-            <h3 class="title fd-ui-card-title">{{ 'WEARABLES.CONNECTIONS_TITLE' | translate }}</h3>
-            @for (provider of providers; track provider.id) {
-                <div class="provider-row">
-                    <span class="provider-icon">{{ provider.icon }}</span>
-                    <div class="provider-info">
-                        <span class="provider-name fd-ui-action-text">{{ provider.name }}</span>
-                        @if (getConnection(provider.id); as conn) {
-                            <span class="provider-status fd-ui-caption connected">
-                                {{ 'WEARABLES.CONNECTED' | translate }}
-                            </span>
-                        } @else {
-                            <span class="provider-status fd-ui-caption">{{ 'WEARABLES.NOT_CONNECTED' | translate }}</span>
-                        }
-                    </div>
-                    @if (getConnection(provider.id); as conn) {
-                        <fd-ui-button variant="text" (click)="disconnect(provider.id)">
-                            {{ 'WEARABLES.DISCONNECT' | translate }}
-                        </fd-ui-button>
-                    } @else {
-                        <fd-ui-button variant="flat" (click)="connect(provider.id)">
-                            {{ 'WEARABLES.CONNECT' | translate }}
-                        </fd-ui-button>
-                    }
-                </div>
-            }
-        </div>
-    `,
-    styles: [
-        `
-            .connections {
-                padding: 16px;
-            }
-
-            .title {
-                margin: 0 0 16px;
-            }
-
-            .provider-row {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                padding: 12px 0;
-                border-bottom: 1px solid var(--fd-divider, rgba(0, 0, 0, 0.08));
-
-                &:last-child {
-                    border-bottom: none;
-                }
-            }
-
-            .provider-icon {
-                font-size: 28px;
-                width: 40px;
-                text-align: center;
-            }
-
-            .provider-info {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-            }
-
-            .provider-status {
-                color: var(--fd-text-secondary, var(--fd-color-neutral-600));
-            }
-
-            .provider-status.connected {
-                color: var(--fd-success, #4caf50);
-            }
-        `,
-    ],
+    templateUrl: './wearable-connections.component.html',
+    styleUrls: ['./wearable-connections.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WearableConnectionsComponent {

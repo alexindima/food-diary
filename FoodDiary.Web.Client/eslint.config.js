@@ -90,7 +90,7 @@ export default [
     },
     {
         files: ['**/*.ts'],
-        ignores: ['**/*.spec.ts'],
+        ignores: ['**/*.spec.ts', '**/*.stories.ts'],
         rules: {
             'no-restricted-syntax': [
                 'error',
@@ -198,6 +198,16 @@ export default [
                 {
                     selector: 'Decorator[expression.callee.name="ContentChildren"]',
                     message: 'Use contentChildren() signal query instead of @ContentChildren(). See: https://angular.dev/guide/signals/queries',
+                },
+                {
+                    selector:
+                        'Decorator[expression.callee.name="Component"] CallExpression[callee.name="Component"] > ObjectExpression > Property[key.name="template"]',
+                    message: 'Use templateUrl with a dedicated .html file instead of inline component templates. Specs may keep inline templates.',
+                },
+                {
+                    selector:
+                        'Decorator[expression.callee.name="Component"] CallExpression[callee.name="Component"] > ObjectExpression > Property[key.name="styles"]',
+                    message: 'Use styleUrls with dedicated .scss files instead of inline component styles. Specs may keep inline styles.',
                 },
             ],
             'no-restricted-imports': [

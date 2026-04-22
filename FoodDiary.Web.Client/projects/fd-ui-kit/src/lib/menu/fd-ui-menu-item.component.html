@@ -1,0 +1,14 @@
+<button
+    class="fd-ui-menu__item"
+    [class.fd-ui-menu__item--disabled]="disabled()"
+    [type]="type()"
+    [routerLink]="routerLink()"
+    [queryParams]="queryParams()"
+    [fragment]="fragment()"
+    [disabled]="disabled()"
+    [attr.role]="'menuitem'"
+    tabindex="-1"
+    (click)="onClick($event)"
+>
+    <ng-content />
+</button>

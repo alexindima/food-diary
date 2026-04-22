@@ -1,0 +1,73 @@
+.micronutrient-panel {
+    padding: 16px 0;
+}
+
+.panel-title {
+    margin: 0 0 16px;
+}
+
+.section {
+    margin-bottom: 16px;
+}
+
+.section-title {
+    color: var(--fd-color-text-muted);
+    margin: 0 0 8px;
+}
+
+.nutrient-row {
+    display: grid;
+    grid-template-columns: 1fr auto 80px auto;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.nutrient-amount,
+.dv-percent,
+.empty-state {
+    color: var(--fd-color-text-muted);
+}
+
+.nutrient-amount,
+.dv-percent {
+    text-align: right;
+}
+
+.nutrient-amount {
+    min-width: 60px;
+}
+
+.dv-bar-container {
+    height: 6px;
+    background: var(--fd-color-slate-200);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.dv-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.dv-low {
+    background-color: var(--fd-color-orange-500);
+}
+
+.dv-good {
+    background-color: var(--fd-color-green-500);
+}
+
+.dv-high {
+    background-color: var(--fd-color-primary-500);
+}
+
+.dv-percent {
+    min-width: 36px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 24px;
+}

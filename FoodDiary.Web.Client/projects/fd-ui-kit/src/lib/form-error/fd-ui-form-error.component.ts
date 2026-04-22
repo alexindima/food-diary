@@ -29,11 +29,7 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
     selector: 'fd-ui-form-error',
     standalone: true,
     imports: [TranslateModule],
-    template: `
-        @if (message) {
-            <p class="fd-ui-form-error__text" role="alert" aria-live="assertive">{{ message }}</p>
-        }
-    `,
+    templateUrl: './fd-ui-form-error.component.html',
     styleUrls: ['./fd-ui-form-error.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

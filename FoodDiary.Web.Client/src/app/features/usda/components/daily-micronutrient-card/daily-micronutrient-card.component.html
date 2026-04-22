@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title fd-ui-card-title">{{ 'MICRONUTRIENTS.DAILY_TITLE' | translate }}</h3>
+        @if (linkedCount() > 0) {
+            <span class="coverage-badge fd-ui-overline">
+                {{ linkedCount() }}/{{ totalCount() }} {{ 'MICRONUTRIENTS.LINKED' | translate }}
+            </span>
+        }
+    </div>
+
+    @if (keyNutrients().length === 0) {
+        <p class="empty-state fd-ui-body-sm">{{ 'MICRONUTRIENTS.NO_DAILY_DATA' | translate }}</p>
+    } @else {
+        <div class="nutrients-grid">
+            @for (nutrient of keyNutrients(); track nutrient.nutrientId) {
+                <div class="nutrient-item">
+                    <div class="nutrient-header">
+                        <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
+                        <span class="nutrient-value fd-ui-caption">
+                            {{ nutrient.totalAmount | number: '1.0-1' }}{{ nutrient.unit }}
+                            @if (nutrient.percentDailyValue !== null) {
+                                <span
+                                    class="dv-text"
+                                    [class.dv-low]="nutrient.percentDailyValue < 25"
+                                    [class.dv-mid]="nutrient.percentDailyValue >= 25 && nutrient.percentDailyValue < 75"
+                                    [class.dv-good]="nutrient.percentDailyValue >= 75"
+                                >
+                                    {{ nutrient.percentDailyValue | number: '1.0-0' }}%
+                                </span>
+                            }
+                        </span>
+                    </div>
+                    @if (nutrient.percentDailyValue !== null) {
+                        <div class="progress-bar">
+                            <div
+                                class="progress-fill"
+                                [style.width.%]="Math.min(nutrient.percentDailyValue, 100)"
+                                [class.fill-low]="nutrient.percentDailyValue < 25"
+                                [class.fill-mid]="nutrient.percentDailyValue >= 25 && nutrient.percentDailyValue < 75"
+                                [class.fill-good]="nutrient.percentDailyValue >= 75"
+                            ></div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

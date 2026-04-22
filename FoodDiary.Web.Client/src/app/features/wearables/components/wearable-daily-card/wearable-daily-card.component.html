@@ -1,0 +1,18 @@
+<div class="card">
+    <h3 class="card-title fd-ui-card-title">{{ 'WEARABLES.DAILY_TITLE' | translate }}</h3>
+
+    @if (metrics().length === 0) {
+        <p class="empty-state fd-ui-caption">{{ 'WEARABLES.NO_DATA' | translate }}</p>
+    } @else {
+        <div class="metrics-grid">
+            @for (metric of metrics(); track metric.key) {
+                <div class="metric-item">
+                    <span class="metric-icon">{{ metric.icon }}</span>
+                    <span class="metric-value fd-ui-metric-lg">{{ metric.value | number: '1.0-0' }}</span>
+                    <span class="metric-unit fd-ui-helper-text">{{ metric.unit }}</span>
+                    <span class="metric-label fd-ui-overline">{{ 'WEARABLES.' + metric.key | translate }}</span>
+                </div>
+            }
+        </div>
+    }
+</div>

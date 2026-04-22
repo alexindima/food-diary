@@ -3,36 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 @Component({
     selector: 'fd-ui-pagination',
     standalone: true,
-    template: `
-        @if (pageCount() > 1) {
-            <nav class="fd-ui-pagination" aria-label="Pagination">
-                <button class="fd-ui-pagination__button" type="button" [disabled]="pageIndex() <= 0" (click)="goToPage(pageIndex() - 1)">
-                    Prev
-                </button>
-
-                @for (page of visiblePages(); track page) {
-                    <button
-                        class="fd-ui-pagination__button"
-                        type="button"
-                        [class.fd-ui-pagination__button--active]="page === pageIndex()"
-                        [attr.aria-current]="page === pageIndex() ? 'page' : null"
-                        (click)="goToPage(page)"
-                    >
-                        {{ page + 1 }}
-                    </button>
-                }
-
-                <button
-                    class="fd-ui-pagination__button"
-                    type="button"
-                    [disabled]="pageIndex() >= pageCount() - 1"
-                    (click)="goToPage(pageIndex() + 1)"
-                >
-                    Next
-                </button>
-            </nav>
-        }
-    `,
+    templateUrl: './fd-ui-pagination.component.html',
     styleUrls: ['./fd-ui-pagination.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

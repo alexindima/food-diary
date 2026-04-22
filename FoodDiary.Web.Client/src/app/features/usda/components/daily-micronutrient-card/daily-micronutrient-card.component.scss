@@ -1,0 +1,99 @@
+.card {
+    padding: 16px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    margin: 0;
+}
+
+.coverage-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: var(--fd-surface-variant, var(--fd-color-slate-200));
+    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+}
+
+.nutrients-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.nutrient-item {
+    padding: 8px;
+    border-radius: 8px;
+    background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
+}
+
+.nutrient-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+}
+
+.nutrient-value,
+.empty-state {
+    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+}
+
+.dv-text {
+    font-weight: var(--fd-text-stat-value-weight, 600);
+    margin-left: 4px;
+}
+
+.dv-low {
+    color: var(--fd-error, var(--fd-color-danger));
+}
+
+.dv-mid {
+    color: var(--fd-warning, var(--fd-color-orange-500));
+}
+
+.dv-good {
+    color: var(--fd-success, var(--fd-color-green-500));
+}
+
+.progress-bar {
+    height: 4px;
+    background: var(--fd-surface-variant, var(--fd-color-slate-200));
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.fill-low {
+    background-color: var(--fd-error, var(--fd-color-danger));
+}
+
+.fill-mid {
+    background-color: var(--fd-warning, var(--fd-color-orange-500));
+}
+
+.fill-good {
+    background-color: var(--fd-success, var(--fd-color-green-500));
+}
+
+.empty-state {
+    text-align: center;
+    padding: 16px;
+}
+
+@media (max-width: 480px) {
+
+    .nutrients-grid {
+        grid-template-columns: 1fr;
+    }
+}

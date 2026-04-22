@@ -11,35 +11,8 @@ import { ImageSelection } from '../../../../shared/models/image-upload.data';
     selector: 'fd-photo-upload-dialog',
     standalone: true,
     imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, ImageUploadFieldComponent],
-    template: `
-        <fd-ui-dialog
-            [title]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.TITLE' | translate"
-            [subtitle]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
-            size="lg"
-        >
-            <fd-image-upload-field
-                [cropEnabled]="true"
-                [cropSize]="null"
-                [cropMaxSize]="1024"
-                [cropAspectRatio]="null"
-                [deleteOnClear]="true"
-                (imageChanged)="onImageChanged($event)"
-            />
-            <div fdUiDialogFooter class="photo-upload-dialog__footer">
-                <fd-ui-button fill="outline" variant="secondary" (click)="close()">
-                    {{ 'COMMON.CANCEL' | translate }}
-                </fd-ui-button>
-            </div>
-        </fd-ui-dialog>
-    `,
-    styles: [
-        `
-            .photo-upload-dialog__footer {
-                display: flex;
-                justify-content: flex-end;
-            }
-        `,
-    ],
+    templateUrl: './photo-upload-dialog.component.html',
+    styleUrls: ['./photo-upload-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotoUploadDialogComponent {

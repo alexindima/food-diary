@@ -1,0 +1,40 @@
+.connections {
+    padding: 16px;
+}
+
+.title {
+    margin: 0 0 16px;
+}
+
+.provider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--fd-divider, rgba(0, 0, 0, 0.08));
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.provider-icon {
+    font-size: 28px;
+    width: 40px;
+    text-align: center;
+}
+
+.provider-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.provider-status {
+    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+}
+
+.provider-status.connected {
+    color: var(--fd-success, #4caf50);
+}
