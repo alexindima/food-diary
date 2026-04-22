@@ -1,30 +1,29 @@
 <div class="daily-advice-card" [class.daily-advice-card--loading]="isLoading()">
-    <div class="daily-advice-card__header">
-        <div class="daily-advice-card__title">{{ 'DASHBOARD.ADVICE_TITLE' | translate }}</div>
-    </div>
-    <div class="daily-advice-card__body">
-        @if (isLoading()) {
-            <div class="daily-advice-card__loading">
-                <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
-                <span>{{ 'DASHBOARD.ADVICE_LOADING' | translate }}</span>
-            </div>
-        } @else if (advice()) {
-            <div class="daily-advice-card__content">
-                @if (advice()?.tag) {
-                    <div class="daily-advice-card__chip">
-                        <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
-                        <span>{{ 'DASHBOARD.ADVICE_TAGS.' + (advice()?.tag | uppercase) | translate }}</span>
-                    </div>
-                }
-                <p class="daily-advice-card__text">
-                    {{ advice()?.value }}
-                </p>
-            </div>
-        } @else {
-            <div class="daily-advice-card__empty">
-                <fd-ui-icon name="lightbulb"></fd-ui-icon>
-                <span>{{ 'DASHBOARD.ADVICE_EMPTY' | translate }}</span>
-            </div>
-        }
-    </div>
+    <fd-dashboard-widget-frame [title]="'DASHBOARD.ADVICE_TITLE' | translate" iconName="tips_and_updates" iconTone="info">
+        <div class="daily-advice-card__body">
+            @if (isLoading()) {
+                <div class="daily-advice-card__loading">
+                    <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
+                    <span>{{ 'DASHBOARD.ADVICE_LOADING' | translate }}</span>
+                </div>
+            } @else if (advice()) {
+                <div class="daily-advice-card__content">
+                    @if (advice()?.tag) {
+                        <div class="daily-advice-card__chip">
+                            <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
+                            <span>{{ 'DASHBOARD.ADVICE_TAGS.' + (advice()?.tag | uppercase) | translate }}</span>
+                        </div>
+                    }
+                    <p class="daily-advice-card__text">
+                        {{ advice()?.value }}
+                    </p>
+                </div>
+            } @else {
+                <div class="daily-advice-card__empty">
+                    <fd-ui-icon name="lightbulb"></fd-ui-icon>
+                    <span>{{ 'DASHBOARD.ADVICE_EMPTY' | translate }}</span>
+                </div>
+            }
+        </div>
+    </fd-dashboard-widget-frame>
 </div>

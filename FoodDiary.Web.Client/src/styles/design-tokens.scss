@@ -27,6 +27,28 @@ $fd-typography-tokens: (
     font-weight-bold: 600,
     font-size-base: 1rem,
     line-height-base: 1.5,
+    text-body-sm-size: 0.95rem,
+    text-body-sm-line-height: 1.45,
+    text-body-sm-weight: 400,
+    text-caption-size: 0.85rem,
+    text-caption-line-height: 1.35,
+    text-caption-weight: 500,
+    text-helper-size: 0.75rem,
+    text-helper-line-height: 1.2,
+    text-helper-weight: 400,
+    text-label-size: 1rem,
+    text-label-line-height: 1.2,
+    text-label-weight: 600,
+    text-label-floating-size: 0.8rem,
+    text-section-title-size: 1.1rem,
+    text-section-title-line-height: 1.3,
+    text-section-title-weight: 700,
+    text-card-title-size: 1.05rem,
+    text-card-title-line-height: 1.3,
+    text-card-title-weight: 700,
+    text-card-meta-size: 0.85rem,
+    text-card-meta-line-height: 1.2,
+    text-card-meta-weight: 600,
 );
 
 $fd-elevation-tokens: (
@@ -516,6 +538,28 @@ $fd-theme-design-tokens: (
         --fd-font-weight-regular: #{fd-token(typography, font-weight-regular)};
         --fd-font-weight-medium: #{fd-token(typography, font-weight-medium)};
         --fd-font-weight-bold: #{fd-token(typography, font-weight-bold)};
+        --fd-text-body-sm-size: #{fd-token(typography, text-body-sm-size)};
+        --fd-text-body-sm-line-height: #{fd-token(typography, text-body-sm-line-height)};
+        --fd-text-body-sm-weight: #{fd-token(typography, text-body-sm-weight)};
+        --fd-text-caption-size: #{fd-token(typography, text-caption-size)};
+        --fd-text-caption-line-height: #{fd-token(typography, text-caption-line-height)};
+        --fd-text-caption-weight: #{fd-token(typography, text-caption-weight)};
+        --fd-text-helper-size: #{fd-token(typography, text-helper-size)};
+        --fd-text-helper-line-height: #{fd-token(typography, text-helper-line-height)};
+        --fd-text-helper-weight: #{fd-token(typography, text-helper-weight)};
+        --fd-text-label-size: #{fd-token(typography, text-label-size)};
+        --fd-text-label-line-height: #{fd-token(typography, text-label-line-height)};
+        --fd-text-label-weight: #{fd-token(typography, text-label-weight)};
+        --fd-text-label-floating-size: #{fd-token(typography, text-label-floating-size)};
+        --fd-text-section-title-size: #{fd-token(typography, text-section-title-size)};
+        --fd-text-section-title-line-height: #{fd-token(typography, text-section-title-line-height)};
+        --fd-text-section-title-weight: #{fd-token(typography, text-section-title-weight)};
+        --fd-text-card-title-size: #{fd-token(typography, text-card-title-size)};
+        --fd-text-card-title-line-height: #{fd-token(typography, text-card-title-line-height)};
+        --fd-text-card-title-weight: #{fd-token(typography, text-card-title-weight)};
+        --fd-text-card-meta-size: #{fd-token(typography, text-card-meta-size)};
+        --fd-text-card-meta-line-height: #{fd-token(typography, text-card-meta-line-height)};
+        --fd-text-card-meta-weight: #{fd-token(typography, text-card-meta-weight)};
 
         --fd-shadow-xs: #{fd-token(elevation, xs)};
         --fd-shadow-sm: #{fd-token(elevation, sm)};

@@ -1,8 +1,8 @@
 <div class="hydration-card" [class.hydration-card--loading]="isLoading()">
-    <div class="hydration-card__header">
-        <div class="hydration-card__title">{{ title() | translate }}</div>
+    <fd-dashboard-widget-frame [title]="title() | translate">
         @if (canAdd()) {
             <fd-ui-button
+                fdDashboardWidgetHeaderEnd
                 size="sm"
                 variant="primary"
                 fill="solid"
@@ -14,36 +14,35 @@
                 +{{ addStep() }} {{ 'GENERAL.UNITS.ML' | translate }}
             </fd-ui-button>
         }
-    </div>
-
-    <div class="hydration-card__content">
-        <div class="hydration-card__value">
-            <span class="hydration-card__liters">{{ total() | number: '1.0-0' }}</span>
-            <span class="hydration-card__unit">
-                @if (hasGoal()) {
-                    / {{ goal() | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}
-                } @else {
-                    {{ 'GENERAL.UNITS.ML' | translate }}
-                }
-            </span>
-        </div>
-        @if (hasGoal()) {
-            <div class="hydration-card__progress">
-                <div class="hydration-card__progress-track">
-                    <div class="hydration-card__progress-fill" [style.width]="trackWidth()"></div>
-                </div>
-                <div class="hydration-card__percent">{{ percent() | number: '1.0-0' }}%</div>
+        <div class="hydration-card__content">
+            <div class="hydration-card__value">
+                <span class="hydration-card__liters">{{ total() | number: '1.0-0' }}</span>
+                <span class="hydration-card__unit">
+                    @if (hasGoal()) {
+                        / {{ goal() | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}
+                    } @else {
+                        {{ 'GENERAL.UNITS.ML' | translate }}
+                    }
+                </span>
             </div>
-        } @else {
-            <fd-notice-banner
-                type="info"
-                [title]="'HYDRATION_CARD.GOAL_TITLE' | translate"
-                [message]="'HYDRATION_CARD.GOAL_BODY' | translate"
-                [actionLabel]="'HYDRATION_CARD.GOAL_ACTION' | translate"
-                (action)="onGoalAction()"
-            />
-        }
-    </div>
+            @if (hasGoal()) {
+                <div class="hydration-card__progress">
+                    <div class="hydration-card__progress-track">
+                        <div class="hydration-card__progress-fill" [style.width]="trackWidth()"></div>
+                    </div>
+                    <div class="hydration-card__percent">{{ percent() | number: '1.0-0' }}%</div>
+                </div>
+            } @else {
+                <fd-notice-banner
+                    type="info"
+                    [title]="'HYDRATION_CARD.GOAL_TITLE' | translate"
+                    [message]="'HYDRATION_CARD.GOAL_BODY' | translate"
+                    [actionLabel]="'HYDRATION_CARD.GOAL_ACTION' | translate"
+                    (action)="onGoalAction()"
+                />
+            }
+        </div>
+    </fd-dashboard-widget-frame>
 
     <div class="hydration-card__watermark" aria-hidden="true"></div>
 </div>

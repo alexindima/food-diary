@@ -1,75 +1,71 @@
 <div class="tdee-card" [class.tdee-card--loading]="isLoading()">
-    <div class="tdee-card__header">
-        <div class="tdee-card__icon">
-            <fd-ui-icon name="local_fire_department"></fd-ui-icon>
-        </div>
-        <div class="tdee-card__title">{{ 'TDEE_CARD.TITLE' | translate }}</div>
-    </div>
-    <div class="tdee-card__body">
-        @if (isLoading()) {
-            <div class="tdee-card__loading">
-                <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
-                <span>{{ 'TDEE_CARD.LOADING' | translate }}</span>
-            </div>
-        } @else if (effectiveTdee()) {
-            <div class="tdee-card__content">
-                <div class="tdee-card__main-value">
-                    <span class="tdee-card__number">{{ effectiveTdee() | number: '1.0-0' }}</span>
-                    <span class="tdee-card__unit">{{ 'TDEE_CARD.KCAL_DAY' | translate }}</span>
+    <fd-dashboard-widget-frame [title]="'TDEE_CARD.TITLE' | translate" iconName="local_fire_department" iconTone="energy">
+        <div class="tdee-card__body">
+            @if (isLoading()) {
+                <div class="tdee-card__loading">
+                    <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
+                    <span>{{ 'TDEE_CARD.LOADING' | translate }}</span>
                 </div>
-
-                @if (confidenceLabel()) {
-                    <div class="tdee-card__confidence tdee-card__confidence--{{ confidenceClass() }}">
-                        <fd-ui-icon name="verified"></fd-ui-icon>
-                        <span>{{ confidenceLabel()! | translate }}</span>
+            } @else if (effectiveTdee()) {
+                <div class="tdee-card__content">
+                    <div class="tdee-card__main-value">
+                        <span class="tdee-card__number">{{ effectiveTdee() | number: '1.0-0' }}</span>
+                        <span class="tdee-card__unit">{{ 'TDEE_CARD.KCAL_DAY' | translate }}</span>
                     </div>
-                }
 
-                @if (insight()?.bmr) {
-                    <div class="tdee-card__meta">
-                        <span class="tdee-card__meta-label">{{ 'TDEE_CARD.BMR' | translate }}</span>
-                        <span class="tdee-card__meta-value">{{ insight()!.bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span>
-                    </div>
-                }
+                    @if (confidenceLabel()) {
+                        <div class="tdee-card__confidence tdee-card__confidence--{{ confidenceClass() }}">
+                            <fd-ui-icon name="verified"></fd-ui-icon>
+                            <span>{{ confidenceLabel()! | translate }}</span>
+                        </div>
+                    }
 
-                @if (insight()?.adaptiveTdee && insight()?.estimatedTdee) {
-                    <div class="tdee-card__meta">
-                        <span class="tdee-card__meta-label">{{ 'TDEE_CARD.FORMULA_ESTIMATE' | translate }}</span>
-                        <span class="tdee-card__meta-value"
-                            >{{ insight()!.estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
-                        >
-                    </div>
-                }
+                    @if (insight()?.bmr) {
+                        <div class="tdee-card__meta">
+                            <span class="tdee-card__meta-label">{{ 'TDEE_CARD.BMR' | translate }}</span>
+                            <span class="tdee-card__meta-value">{{ insight()!.bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span>
+                        </div>
+                    }
 
-                @if (weightTrendFormatted()) {
-                    <div class="tdee-card__meta">
-                        <span class="tdee-card__meta-label">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
-                        <span class="tdee-card__meta-value">{{ weightTrendFormatted() }} {{ 'TDEE_CARD.KG_WEEK' | translate }}</span>
-                    </div>
-                }
+                    @if (insight()?.adaptiveTdee && insight()?.estimatedTdee) {
+                        <div class="tdee-card__meta">
+                            <span class="tdee-card__meta-label">{{ 'TDEE_CARD.FORMULA_ESTIMATE' | translate }}</span>
+                            <span class="tdee-card__meta-value"
+                                >{{ insight()!.estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                            >
+                        </div>
+                    }
 
-                @if (hintKey()) {
-                    <div class="tdee-card__hint">
-                        <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
-                        <span>{{ hintKey()! | translate }}</span>
-                    </div>
-                }
+                    @if (weightTrendFormatted()) {
+                        <div class="tdee-card__meta">
+                            <span class="tdee-card__meta-label">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
+                            <span class="tdee-card__meta-value">{{ weightTrendFormatted() }} {{ 'TDEE_CARD.KG_WEEK' | translate }}</span>
+                        </div>
+                    }
 
-                @if (showSuggestion()) {
-                    <div class="tdee-card__suggestion">
-                        <span class="tdee-card__suggestion-text">
-                            {{ 'TDEE_CARD.SUGGESTED_GOAL' | translate: { value: insight()!.suggestedCalorieTarget | number: '1.0-0' } }}
-                        </span>
-                        <fd-ui-button variant="primary" fill="outline" size="sm" (click)="onApplyGoal()">
-                            {{ 'TDEE_CARD.APPLY' | translate }}
-                        </fd-ui-button>
-                    </div>
-                }
-            </div>
-        } @else {
-            <div class="tdee-card__empty">
-                <span>{{ 'TDEE_CARD.EMPTY' | translate }}</span>
-            </div>
-        }
-    </div>
+                    @if (hintKey()) {
+                        <div class="tdee-card__hint">
+                            <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
+                            <span>{{ hintKey()! | translate }}</span>
+                        </div>
+                    }
+
+                    @if (showSuggestion()) {
+                        <div class="tdee-card__suggestion">
+                            <span class="tdee-card__suggestion-text">
+                                {{ 'TDEE_CARD.SUGGESTED_GOAL' | translate: { value: insight()!.suggestedCalorieTarget | number: '1.0-0' } }}
+                            </span>
+                            <fd-ui-button variant="primary" fill="outline" size="sm" (click)="onApplyGoal()">
+                                {{ 'TDEE_CARD.APPLY' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <div class="tdee-card__empty">
+                    <span>{{ 'TDEE_CARD.EMPTY' | translate }}</span>
+                </div>
+            }
+        </div>
+    </fd-dashboard-widget-frame>
 </div>

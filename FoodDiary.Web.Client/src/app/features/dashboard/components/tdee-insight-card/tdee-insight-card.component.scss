@@ -25,31 +25,7 @@
     }
 
     &__header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    &__icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: var(--fd-radius-button, 10px);
-        background: linear-gradient(135deg, var(--fd-color-orange-500), color-mix(in srgb, var(--fd-color-orange-500) 78%, var(--fd-color-white)));
-        color: var(--fd-color-white);
-
-        fd-ui-icon {
-            font-size: 18px;
-            width: 18px;
-            height: 18px;
-        }
-    }
-
-    &__title {
-        font-weight: 700;
-        font-size: 1.05rem;
+        margin-bottom: 2px;
     }
 
     &__content {
@@ -115,8 +91,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.875rem;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         padding: 2px 0;
+        gap: 12px;
     }
 
     &__meta-label {
@@ -126,6 +103,7 @@
 
     &__meta-value {
         font-weight: 700;
+        text-align: right;
     }
 
     &__hint {
@@ -136,7 +114,7 @@
         border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
-        font-size: 0.85rem;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         font-weight: 600;
         line-height: 1.5;
 
@@ -160,7 +138,7 @@
     }
 
     &__suggestion-text {
-        font-size: 0.85rem;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         font-weight: 600;
         color: var(--fd-color-emerald-700);
     }
@@ -179,6 +157,3 @@
         }
     }
 }
-
-
-

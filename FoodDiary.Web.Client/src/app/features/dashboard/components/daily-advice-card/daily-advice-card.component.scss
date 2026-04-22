@@ -21,14 +21,7 @@
     }
 
     &__header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    &__title {
-        font-weight: 700;
-        font-size: 1.05rem;
+        margin-bottom: 2px;
     }
 
     &__content {
@@ -40,7 +33,7 @@
 
     &__text {
         margin: 0;
-        font-size: 1rem;
+        font-size: var(--fd-font-size-base, 1rem);
         line-height: 1.6;
         color: var(--fd-color-text);
         font-weight: 600;
@@ -57,7 +50,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        font-size: 0.75rem;
+        font-size: var(--fd-text-helper-size, 0.75rem);
 
         fd-ui-icon {
             font-size: 16px;
@@ -80,7 +73,3 @@
         }
     }
 }
-
-
-
-

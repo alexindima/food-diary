@@ -2,11 +2,12 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { DashboardWidgetFrameComponent } from '../../../dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
 
 @Component({
     selector: 'fd-fasting-timer-card',
     standalone: true,
-    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent],
+    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent, DashboardWidgetFrameComponent],
     templateUrl: './fasting-timer-card.component.html',
     styleUrl: './fasting-timer-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

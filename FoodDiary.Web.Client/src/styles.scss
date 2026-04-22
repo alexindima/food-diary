@@ -1,4 +1,5 @@
 @use 'variables';
+@use 'typography';
 
 /* Global styles piggyback on design tokens */
 
@@ -76,22 +77,6 @@ body {
     flex-direction: column;
     gap: 4px;
     min-width: 220px;
-}
-
-.fd-page-title {
-    margin: 0;
-    font-size: var(--fd-page-title-size, 2rem);
-    line-height: var(--fd-page-title-line-height, 1.2);
-    font-weight: var(--fd-page-title-weight, 700);
-    color: var(--fd-color-text);
-}
-
-.fd-page-subtitle {
-    margin: 0;
-    font-size: var(--fd-page-subtitle-size, 1rem);
-    line-height: var(--fd-page-subtitle-line-height, 1.5);
-    font-weight: var(--fd-page-subtitle-weight, 500);
-    color: var(--fd-color-text-muted);
 }
 
 .fd-page-header__actions {

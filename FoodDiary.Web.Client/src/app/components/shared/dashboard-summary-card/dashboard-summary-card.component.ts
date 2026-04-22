@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
+import { DashboardWidgetFrameComponent } from '../../../features/dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
 
 export interface NutrientBar {
     id: string;
@@ -18,7 +19,7 @@ export interface NutrientBar {
 @Component({
     selector: 'fd-dashboard-summary-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, NoticeBannerComponent],
+    imports: [CommonModule, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
     templateUrl: './dashboard-summary-card.component.html',
     styleUrl: './dashboard-summary-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

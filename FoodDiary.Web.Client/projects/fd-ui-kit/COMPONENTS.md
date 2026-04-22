@@ -24,6 +24,26 @@ Most form controls implement **ControlValueAccessor** and work with `formControl
 
 Most inputs accept `size` (`'sm' | 'md' | 'lg'`). The default is `md`.
 
+## Typography
+
+Shared typography should come from the design-system semantic layer rather than ad-hoc `font-size` and `font-weight` values inside feature styles.
+
+Use the global semantic classes when styling projected content or app-level markup:
+
+- `.fd-ui-page-title`
+- `.fd-ui-page-subtitle`
+- `.fd-ui-section-title`
+- `.fd-ui-card-title`
+- `.fd-ui-meta-text`
+- `.fd-ui-body-sm`
+- `.fd-ui-caption`
+- `.fd-ui-field-label`
+- `.fd-ui-field-label--floating`
+- `.fd-ui-helper-text`
+- `.fd-ui-error-text`
+
+Back these classes with CSS variables from `src/styles/design-tokens.scss`. Component internals should prefer those variables over hardcoded typography values.
+
 ## Components
 
 ### Inputs

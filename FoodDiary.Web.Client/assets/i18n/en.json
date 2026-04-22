@@ -2311,6 +2311,7 @@
         }
     },
     "DASHBOARD_SUMMARY": {
+        "TITLE": "Nutrition summary",
         "GOALS_TITLE": "Goals not set",
         "GOALS_BODY": "Set goals to see progress rings and daily limits.",
         "GOALS_ACTION": "Add goals",

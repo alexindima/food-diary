@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FdUiIconComponent } from 'fd-ui-kit';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiIconComponent } from 'fd-ui-kit';
 import { DailyAdvice } from '../../models/daily-advice.data';
+import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 
 @Component({
     selector: 'fd-daily-advice-card',
     standalone: true,
-    imports: [CommonModule, FdUiIconComponent, TranslatePipe],
+    imports: [CommonModule, FdUiIconComponent, TranslatePipe, DashboardWidgetFrameComponent],
     templateUrl: './daily-advice-card.component.html',
     styleUrl: './daily-advice-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

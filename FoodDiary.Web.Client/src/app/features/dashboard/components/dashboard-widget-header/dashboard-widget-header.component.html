@@ -1,0 +1,19 @@
+<div class="dashboard-widget-header" [class.dashboard-widget-header--with-icon]="hasIcon()">
+    @if (hasIcon()) {
+        <div class="dashboard-widget-header__icon" [attr.data-tone]="iconTone()" aria-hidden="true">
+            @if (iconName()) {
+                <fd-ui-icon [name]="iconName()!"></fd-ui-icon>
+            } @else {
+                <span>{{ iconLabel() }}</span>
+            }
+        </div>
+    }
+
+    <div class="dashboard-widget-header__copy">
+        <div class="dashboard-widget-header__title">{{ title() }}</div>
+
+        @if (description()) {
+            <div class="dashboard-widget-header__description">{{ description() }}</div>
+        }
+    </div>
+</div>

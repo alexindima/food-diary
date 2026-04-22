@@ -1,0 +1,18 @@
+<div class="dashboard-widget-frame">
+    <div class="dashboard-widget-frame__header">
+        <fd-dashboard-widget-header
+            [title]="title()"
+            [description]="description()"
+            [iconName]="iconName()"
+            [iconLabel]="iconLabel()"
+            [iconTone]="iconTone()"
+        />
+        <div class="dashboard-widget-frame__header-end">
+            <ng-content select="[fdDashboardWidgetHeaderEnd]" />
+        </div>
+    </div>
+
+    <div class="dashboard-widget-frame__body">
+        <ng-content />
+    </div>
+</div>

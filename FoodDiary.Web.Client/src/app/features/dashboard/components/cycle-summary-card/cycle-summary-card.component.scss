@@ -20,30 +20,6 @@
         pointer-events: none;
     }
 
-    &__header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    &__icon {
-        width: 46px;
-        height: 46px;
-        border-radius: var(--fd-radius-panel, 14px);
-        background: linear-gradient(135deg, var(--fd-color-purple-500), var(--fd-color-rose-500));
-        color: var(--fd-color-white);
-        display: grid;
-        place-items: center;
-        font-weight: 800;
-        letter-spacing: 0.02em;
-        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.14);
-    }
-
-    &__title {
-        font-weight: 700;
-        font-size: 1.05rem;
-    }
-
     &__day {
         font-size: 2rem;
         font-weight: 800;
@@ -51,11 +27,7 @@
     }
 
     &__status {
-        font-size: 0.95rem;
+        font-size: var(--fd-text-body-sm-size, 0.95rem);
         color: var(--fd-color-text-muted);
     }
 }
-
-
-
-

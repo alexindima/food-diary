@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
+import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 
 export interface WeightTrendPoint {
     date: string | Date;
@@ -12,7 +13,7 @@ export interface WeightTrendPoint {
 @Component({
     selector: 'fd-weight-trend-card',
     standalone: true,
-    imports: [CommonModule, BaseChartDirective, TranslatePipe],
+    imports: [CommonModule, BaseChartDirective, TranslatePipe, DashboardWidgetFrameComponent],
     templateUrl: './weight-trend-card.component.html',
     styleUrl: './weight-trend-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,11 +26,10 @@ export class WeightTrendCardComponent {
     public readonly points = input<WeightTrendPoint[]>([]);
     public readonly isLoading = input<boolean>(false);
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
+    public readonly iconName = input<string | null>('monitor_weight');
     public readonly iconLabel = input<string>('WT');
+    public readonly iconTone = input<'neutral' | 'info' | 'success' | 'energy' | 'accent'>('neutral');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
-    public readonly iconGradient = input<string>(
-        'linear-gradient(135deg, var(--fd-color-rose-500), color-mix(in srgb, var(--fd-color-rose-500) 70%, var(--fd-color-white)))',
-    );
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
         const ordered = [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());

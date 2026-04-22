@@ -9,23 +9,6 @@
     flex-direction: column;
     gap: 12px;
 
-    &__header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    &__icon {
-        font-size: 1.2em;
-    }
-
-    &__title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        margin: 0;
-        color: var(--fd-color-text);
-    }
-
     &__loading {
         display: flex;
         flex-direction: column;
@@ -44,16 +27,16 @@
     }
 
     &__empty {
-        padding: 8px 0;
+        padding-top: 4px;
     }
 
     &__empty-text {
-        font-size: 0.85rem;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         color: var(--fd-color-text-muted);
     }
 
     &__coverage {
-        font-size: 0.8rem;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         color: var(--fd-color-text-muted);
         background: color-mix(in srgb, var(--fd-color-slate-400) 8%, transparent);
         padding: 4px 8px;
@@ -67,7 +50,7 @@
     }
 
     &__section-label {
-        font-size: 0.75rem;
+        font-size: var(--fd-text-helper-size, 0.75rem);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -90,24 +73,36 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 8px;
     }
 
     &__nutrient-name {
-        font-size: 0.85rem;
+        font-size: var(--fd-text-body-sm-size, 0.95rem);
         color: var(--fd-color-text);
         font-weight: 500;
     }
 
     &__nutrient-value {
-        font-size: 0.8rem;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         font-weight: 600;
         color: var(--fd-color-text-muted);
+        flex-shrink: 0;
     }
 
     &__nutrient-check {
-        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         font-weight: 600;
         color: var(--fd-color-green-500);
+        flex-shrink: 0;
+
+        fd-ui-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+        }
     }
 
     &__bar {
@@ -132,12 +127,21 @@
     }
 
     &__score {
-        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: var(--fd-text-card-meta-size, 0.85rem);
         font-weight: 600;
         padding: 3px 8px;
         border-radius: var(--fd-radius-panel, 8px);
         background: color-mix(in srgb, var(--fd-color-slate-400) 10%, transparent);
         color: var(--fd-color-text-muted);
+
+        fd-ui-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+        }
 
         &[data-grade='excellent'],
         &[data-grade='good'] {
@@ -168,6 +172,3 @@
         opacity: 0.5;
     }
 }
-
-
-

@@ -28,9 +28,9 @@
 
 .fd-ui-datetime-input__label {
     color: var(--fd-color-slate-500);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: var(--fd-text-label-size, 1rem);
+    font-weight: var(--fd-text-label-weight, 600);
+    line-height: var(--fd-text-label-line-height, 1.2);
     display: inline-flex;
     align-items: center;
     max-width: calc(100% - 28px);
@@ -163,7 +163,7 @@
 .fd-ui-datetime-input--floating .fd-ui-datetime-input__label {
     top: 0;
     transform: translateY(-50%);
-    font-size: 0.8rem;
+    font-size: var(--fd-text-label-floating-size, 0.8rem);
 }
 
 .fd-ui-datetime-input--floating .fd-ui-datetime-input__control-wrap {
@@ -173,8 +173,8 @@
 
 .fd-ui-datetime-input__error {
     color: var(--fd-color-danger);
-    font-size: 0.75rem;
-    line-height: 1.2;
+    font-size: var(--fd-text-helper-size, 0.75rem);
+    line-height: var(--fd-text-helper-line-height, 1.2);
     margin-top: 2px;
     max-width: 100%;
     white-space: normal;

@@ -1,12 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DailyMicronutrientSummary, DailyMicronutrient, HealthAreaScores } from '../../../usda/models/usda.data';
+import { FdUiIconComponent } from 'fd-ui-kit';
+import { DailyMicronutrient, DailyMicronutrientSummary, HealthAreaScores } from '../../../usda/models/usda.data';
+import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 
 @Component({
     selector: 'fd-micronutrient-card',
     standalone: true,
-    imports: [DecimalPipe, TranslatePipe],
+    imports: [DecimalPipe, TranslatePipe, FdUiIconComponent, DashboardWidgetFrameComponent],
     templateUrl: './micronutrient-card.component.html',
     styleUrl: './micronutrient-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
