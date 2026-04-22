@@ -154,6 +154,21 @@ export class AuthComponent {
             this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
             this.adminReturnUrl = this.useRouting() ? this.route?.snapshot.queryParams['adminReturnUrl'] || null : null;
         });
+        effect(() => {
+            if (!this.useRouting()) {
+                return;
+            }
+
+            if (!this.adminReturnUrl) {
+                return;
+            }
+
+            if (!this.authService.isAuthenticated()) {
+                return;
+            }
+
+            void this.completeAuthenticatedNavigation();
+        });
         void this.initializeGoogle();
     }
 

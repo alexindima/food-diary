@@ -60,4 +60,15 @@ describe('loggedInGuard', () => {
         expect(result).toBe(false);
         expect(navigationServiceMock.navigateToHome).toHaveBeenCalled();
     });
+
+    it('should allow access for authenticated user when adminReturnUrl is present', async () => {
+        authServiceMock.isAuthenticated.set(true);
+        const adminRedirectState = { url: '/auth/login?adminReturnUrl=%2F' };
+        state = adminRedirectState as RouterStateSnapshot;
+
+        const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
+
+        expect(result).toBe(true);
+        expect(navigationServiceMock.navigateToHome).not.toHaveBeenCalled();
+    });
 });
