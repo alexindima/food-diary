@@ -1,14 +1,147 @@
 <section fdPageContainer class="premium-access-page">
-    <fd-page-header [title]="'AI.PREMIUM_PAGE.TITLE' | translate" [subtitle]="'AI.PREMIUM_PAGE.SUBTITLE' | translate"></fd-page-header>
+    <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate"></fd-page-header>
+
+    @if (checkoutReturnState() === 'success') {
+        <fd-notice-banner
+            type="info"
+            [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_TITLE' | translate"
+            [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE' | translate"
+        ></fd-notice-banner>
+    }
+
+    @if (checkoutReturnState() === 'canceled') {
+        <fd-notice-banner
+            type="warning"
+            [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_TITLE' | translate"
+            [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE' | translate"
+        ></fd-notice-banner>
+    }
+
+    @if (overview()?.cancelAtPeriodEnd) {
+        <fd-notice-banner
+            type="warning"
+            [title]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_TITLE' | translate"
+            [message]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE' | translate"
+        ></fd-notice-banner>
+    }
+
+    @if (errorMessage(); as errorMessage) {
+        <fd-notice-banner
+            type="error"
+            [title]="'PREMIUM_PAGE.ERROR_TITLE' | translate"
+            [message]="errorMessage"
+            [actionLabel]="'PREMIUM_PAGE.RETRY_ACTION' | translate"
+            (action)="reloadOverview()"
+        ></fd-notice-banner>
+    }
+
+    <fd-ui-card class="premium-access-page__card premium-access-page__card--overview">
+        <div class="premium-access-page__section-header">
+            <div class="premium-access-page__section-copy">
+                <h2 class="premium-access-page__title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
+                <p class="premium-access-page__text">
+                    {{ (isPremium() ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE') | translate }}
+                </p>
+            </div>
+
+            @if (canManageBilling()) {
+                <fd-ui-button
+                    variant="secondary"
+                    fill="outline"
+                    [loading]="portalLoading()"
+                    [disabled]="portalLoading()"
+                    (click)="openPortal()"
+                >
+                    {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+
+        @if (isLoading()) {
+            <p class="premium-access-page__text premium-access-page__text--muted">{{ 'PREMIUM_PAGE.STATUS_LOADING' | translate }}</p>
+        } @else if (overview(); as overview) {
+            <div class="premium-access-page__badges">
+                <span class="premium-access-page__badge premium-access-page__badge--plan">
+                    {{ getPlanLabelKey(overview.plan) | translate }}
+                </span>
+                <span class="premium-access-page__badge premium-access-page__badge--status">
+                    {{ getStatusLabelKey(overview.subscriptionStatus) | translate }}
+                </span>
+            </div>
+
+            @if (overview.currentPeriodEndUtc) {
+                <p class="premium-access-page__meta">
+                    {{ (overview.cancelAtPeriodEnd ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON') | translate }}
+                    <strong>{{ overview.currentPeriodEndUtc | date: 'mediumDate' }}</strong>
+                </p>
+            }
+
+            <p class="premium-access-page__text premium-access-page__text--muted">
+                {{ (canManageBilling() ? 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT') | translate }}
+            </p>
+        }
+    </fd-ui-card>
+
+    @if (showPlans()) {
+        <fd-ui-card class="premium-access-page__card">
+            <div class="premium-access-page__section-copy">
+                <h2 class="premium-access-page__title">{{ 'PREMIUM_PAGE.PLANS.TITLE' | translate }}</h2>
+                <p class="premium-access-page__text premium-access-page__text--muted">{{ 'PREMIUM_PAGE.PLANS.SUBTITLE' | translate }}</p>
+            </div>
+
+            <div class="premium-access-page__plans">
+                <article class="premium-access-page__plan">
+                    <div class="premium-access-page__plan-copy">
+                        <h3 class="premium-access-page__plan-title">{{ 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE' | translate }}</h3>
+                        <p class="premium-access-page__text">{{ 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION' | translate }}</p>
+                    </div>
+                    <fd-ui-button
+                        fullWidth
+                        [loading]="isPlanLoading('monthly')"
+                        [disabled]="checkoutLoadingPlan() !== null"
+                        (click)="startCheckout('monthly')"
+                    >
+                        {{ 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION' | translate }}
+                    </fd-ui-button>
+                </article>
+
+                <article class="premium-access-page__plan premium-access-page__plan--featured">
+                    <div class="premium-access-page__plan-copy">
+                        <span class="premium-access-page__plan-kicker">{{ 'PREMIUM_PAGE.PLANS.YEARLY.KICKER' | translate }}</span>
+                        <h3 class="premium-access-page__plan-title">{{ 'PREMIUM_PAGE.PLANS.YEARLY.TITLE' | translate }}</h3>
+                        <p class="premium-access-page__text">{{ 'PREMIUM_PAGE.PLANS.YEARLY.DESCRIPTION' | translate }}</p>
+                    </div>
+                    <fd-ui-button
+                        fullWidth
+                        [loading]="isPlanLoading('yearly')"
+                        [disabled]="checkoutLoadingPlan() !== null"
+                        (click)="startCheckout('yearly')"
+                    >
+                        {{ 'PREMIUM_PAGE.PLANS.YEARLY.ACTION' | translate }}
+                    </fd-ui-button>
+                </article>
+            </div>
+        </fd-ui-card>
+    }
 
     <fd-ui-card class="premium-access-page__card">
-        <h2 class="premium-access-page__title">{{ 'AI.PREMIUM_PAGE.CARD_TITLE' | translate }}</h2>
-        <p class="premium-access-page__text">
-            {{ 'AI.PREMIUM_PAGE.CARD_LINE_ONE' | translate }}
-        </p>
-        <p class="premium-access-page__text">
-            {{ 'AI.PREMIUM_PAGE.CARD_LINE_TWO' | translate }}
-            <a class="premium-access-page__link" href="mailto:admin@fooddiary.club">admin@fooddiary.club</a>.
+        <div class="premium-access-page__section-copy">
+            <h2 class="premium-access-page__title">{{ 'PREMIUM_PAGE.BENEFITS.TITLE' | translate }}</h2>
+            <p class="premium-access-page__text premium-access-page__text--muted">{{ 'PREMIUM_PAGE.BENEFITS.SUBTITLE' | translate }}</p>
+        </div>
+
+        <ul class="premium-access-page__benefits">
+            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_1' | translate }}</li>
+            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_2' | translate }}</li>
+            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_3' | translate }}</li>
+            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_4' | translate }}</li>
+            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_5' | translate }}</li>
+            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_6' | translate }}</li>
+        </ul>
+
+        <p class="premium-access-page__text premium-access-page__text--muted">
+            {{ 'PREMIUM_PAGE.SUPPORT.TEXT' | translate }}
+            <a class="premium-access-page__link" href="mailto:admin@fooddiary.club">admin@fooddiary.club</a>
         </p>
     </fd-ui-card>
 </section>

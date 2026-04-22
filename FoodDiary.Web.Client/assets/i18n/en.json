@@ -2358,6 +2358,69 @@
             "CARD_LINE_TWO": "To get AI access, email"
         }
     },
+    "PREMIUM_PAGE": {
+        "TITLE": "Premium",
+        "SUBTITLE": "Unlock adaptive insights, AI tools, and advanced nutrition support.",
+        "STATUS_LOADING": "Loading subscription details...",
+        "ERROR_TITLE": "Billing is temporarily unavailable",
+        "ERROR_GENERIC": "We couldn't load billing details right now. Please try again.",
+        "RETRY_ACTION": "Try again",
+        "BANNERS": {
+            "CHECKOUT_SUCCESS_TITLE": "Payment received",
+            "CHECKOUT_SUCCESS_MESSAGE": "Your subscription is updating. Premium access should appear in a few seconds.",
+            "CHECKOUT_CANCELED_TITLE": "Checkout canceled",
+            "CHECKOUT_CANCELED_MESSAGE": "No payment was charged. You can return anytime and choose a plan again.",
+            "CANCEL_AT_PERIOD_END_TITLE": "Subscription ends later",
+            "CANCEL_AT_PERIOD_END_MESSAGE": "Auto-renewal is disabled. Premium remains active until the end of the current period."
+        },
+        "OVERVIEW": {
+            "TITLE": "Your access",
+            "PREMIUM_STATE": "Premium is active on this account.",
+            "FREE_STATE": "You are currently using the free plan.",
+            "RENEWS_ON": "Renews on",
+            "ENDS_ON": "Access ends on",
+            "MANAGE_HINT": "Open the billing portal to update payment details, cancel renewal, or switch plans.",
+            "CHECKOUT_HINT": "Choose a plan below to start Premium with Stripe Checkout.",
+            "MANAGE_ACTION": "Manage subscription"
+        },
+        "STATUS": {
+            "ACTIVE": "Active",
+            "TRIALING": "Trial",
+            "PAST_DUE": "Payment overdue",
+            "CANCELED": "Canceled",
+            "UNPAID": "Unpaid",
+            "INCOMPLETE": "Incomplete",
+            "NONE": "Free plan"
+        },
+        "PLANS": {
+            "TITLE": "Choose a plan",
+            "SUBTITLE": "Both plans unlock the same Premium features. Billing and renewals are handled by Stripe.",
+            "MONTHLY": {
+                "TITLE": "Monthly",
+                "DESCRIPTION": "Flexible month-to-month access for trying Premium without a long commitment.",
+                "ACTION": "Start monthly"
+            },
+            "YEARLY": {
+                "KICKER": "Best for consistency",
+                "TITLE": "Yearly",
+                "DESCRIPTION": "A long-term option for users who want Premium support built into their weekly routine.",
+                "ACTION": "Start yearly"
+            }
+        },
+        "BENEFITS": {
+            "TITLE": "What Premium includes",
+            "SUBTITLE": "Premium is positioned around guidance and interpretation, not just raw logging.",
+            "ITEM_1": "Adaptive Coach recommendations based on your diary and body trends",
+            "ITEM_2": "TDEE insights and calorie adjustment guidance",
+            "ITEM_3": "Weekly review with personalized summaries",
+            "ITEM_4": "Fasting insights and recurring pattern detection",
+            "ITEM_5": "Advanced analytics and longer history",
+            "ITEM_6": "AI-powered summaries plus dietologist collaboration tools"
+        },
+        "SUPPORT": {
+            "TEXT": "If checkout or billing management does not open correctly, contact"
+        }
+    },
     "SEO": {
         "DEFAULT_DESCRIPTION": "Food diary - manage your nutrition!",
         "LANDING_DESCRIPTION": "Track your meals, manage nutrition, and reach your health goals with Food Diary.",

@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.FavoriteMeals;
@@ -46,6 +47,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();
     public DbSet<AiPromptTemplate> AiPromptTemplates => Set<AiPromptTemplate>();
+    public DbSet<BillingSubscription> BillingSubscriptions => Set<BillingSubscription>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<DietologistInvitation> DietologistInvitations => Set<DietologistInvitation>();
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();

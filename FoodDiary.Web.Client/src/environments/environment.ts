@@ -5,6 +5,7 @@ const serverUrl = 'http://localhost:5300';
 export const environment: AppConfig = {
     apiUrls: {
         auth: `${serverUrl}/api/v1/auth`,
+        billing: `${serverUrl}/api/v1/billing`,
         products: `${serverUrl}/api/v1/products`,
         consumptions: `${serverUrl}/api/v1/consumptions`,
         statistics: `${serverUrl}/api/v1/statistics`,
@@ -37,6 +38,7 @@ export const environment: AppConfig = {
         openFoodFacts: `${serverUrl}/api/v1/open-food-facts`,
         export: `${serverUrl}/api/v1/export`,
     },
+    paddleClientToken: '',
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',
     buildVersion: 'dev',

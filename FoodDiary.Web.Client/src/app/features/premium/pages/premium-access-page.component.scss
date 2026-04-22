@@ -1,25 +1,150 @@
 .premium-access-page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
 }
 
 .premium-access-page__card {
     padding: 24px;
     display: grid;
-    gap: 12px;
+    gap: 18px;
+}
+
+.premium-access-page__card--overview {
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--fd-gradient-premium-end) 18%, transparent), transparent 52%),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--fd-gradient-premium-start) 10%, var(--fd-color-surface)) 0%,
+            color-mix(in srgb, var(--fd-gradient-premium-end) 7%, var(--fd-color-surface)) 100%
+        );
+}
+
+.premium-access-page__section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.premium-access-page__section-copy {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
 }
 
 .premium-access-page__title {
     margin: 0;
     font-size: 1.25rem;
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
 }
 
 .premium-access-page__text {
     margin: 0;
-    color: var(--fd-color-slate-600);
+    color: var(--fd-color-text);
     line-height: 1.6;
+}
+
+.premium-access-page__text--muted {
+    color: var(--fd-color-text-muted);
+}
+
+.premium-access-page__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.premium-access-page__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.premium-access-page__badge--plan {
+    background: color-mix(in srgb, var(--fd-gradient-premium-start) 14%, var(--fd-color-surface));
+    color: var(--fd-color-text);
+    border: 1px solid color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
+}
+
+.premium-access-page__badge--status {
+    background: color-mix(in srgb, var(--fd-color-primary-500) 12%, var(--fd-color-surface));
+    color: var(--fd-color-text);
+    border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 30%, var(--fd-color-border));
+}
+
+.premium-access-page__meta {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+    font-size: 0.95rem;
+}
+
+.premium-access-page__plans {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.premium-access-page__plan {
+    display: grid;
+    gap: 18px;
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid var(--fd-color-border);
+    background: color-mix(in srgb, var(--fd-color-surface-elevated) 82%, rgb(255 255 255));
+}
+
+.premium-access-page__plan--featured {
+    border-color: color-mix(in srgb, var(--fd-gradient-premium-end) 30%, var(--fd-color-border));
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-gradient-premium-start) 8%, var(--fd-color-surface-elevated)) 0%,
+            color-mix(in srgb, var(--fd-gradient-premium-end) 8%, var(--fd-color-surface-elevated)) 100%
+        );
+}
+
+.premium-access-page__plan-copy {
+    display: grid;
+    gap: 8px;
+}
+
+.premium-access-page__plan-kicker {
+    display: inline-flex;
+    width: fit-content;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
+    color: var(--fd-color-primary-700);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.premium-access-page__plan-title {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--fd-color-text);
+}
+
+.premium-access-page__benefits {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding-left: 18px;
+    color: var(--fd-color-text);
+}
+
+.premium-access-page__benefits li::marker {
+    color: var(--fd-color-primary-600);
 }
 
 .premium-access-page__link {
@@ -33,4 +158,16 @@
     text-decoration: underline;
 }
 
+@media (max-width: 860px) {
 
+    .premium-access-page__plans {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .premium-access-page__card {
+        padding: 20px;
+    }
+}

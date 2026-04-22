@@ -278,6 +278,43 @@ public static class Errors {
             kind: ErrorKind.RateLimited);
     }
 
+    public static class Billing {
+        public static Error InvalidPlan => new(
+            "Billing.InvalidPlan",
+            "Billing plan is invalid.",
+            kind: ErrorKind.Validation);
+
+        public static Error InvalidProvider(string provider) => new(
+            "Billing.InvalidProvider",
+            $"'{provider}' is not a valid billing provider.",
+            kind: ErrorKind.Validation);
+
+        public static Error ProviderNotConfigured(string provider) => new(
+            "Billing.ProviderNotConfigured",
+            $"Billing provider '{provider}' is not configured.",
+            kind: ErrorKind.ExternalFailure);
+
+        public static Error ProviderOperationFailed(string provider, string reason) => new(
+            "Billing.ProviderOperationFailed",
+            $"Billing provider '{provider}' request failed: {reason}",
+            kind: ErrorKind.ExternalFailure);
+
+        public static Error SubscriptionAlreadyActive => new(
+            "Billing.SubscriptionAlreadyActive",
+            "Premium subscription is already active for the current user.",
+            kind: ErrorKind.Conflict);
+
+        public static Error CustomerPortalUnavailable => new(
+            "Billing.CustomerPortalUnavailable",
+            "Billing management is not available for the current user.",
+            kind: ErrorKind.NotFound);
+
+        public static Error WebhookValidationFailed(string reason) => new(
+            "Billing.WebhookValidationFailed",
+            reason,
+            kind: ErrorKind.Validation);
+    }
+
     public static class Image {
         public static Error InvalidData(string message) => new(
             "Image.InvalidData",

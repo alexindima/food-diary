@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Ai.Common;
@@ -35,8 +36,10 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Infrastructure.Billing;
 using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Infrastructure.Persistence.Billing;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Infrastructure.Persistence;
@@ -146,6 +149,26 @@ public static class DependencyInjection {
             .Validate(static options => string.IsNullOrWhiteSpace(options.ApiKey) || !string.IsNullOrWhiteSpace(options.VisionModel),
                 "OpenAi:VisionModel is required when ApiKey is configured.")
             .ValidateOnStart();
+        services.AddOptions<BillingOptions>()
+            .Bind(configuration.GetSection(BillingOptions.SectionName))
+            .Validate(static options => !string.IsNullOrWhiteSpace(options.Provider),
+                "Billing:Provider is required.")
+            .Validate(static options => Domain.Entities.Billing.BillingProviderNames.IsSupported(options.Provider),
+                "Billing:Provider must be a supported billing provider.")
+            .ValidateOnStart();
+        services.AddOptions<StripeOptions>()
+            .Bind(configuration.GetSection(StripeOptions.SectionName))
+            .Validate(static options =>
+                    string.IsNullOrWhiteSpace(options.SecretKey) ||
+                    (!string.IsNullOrWhiteSpace(options.WebhookSecret) &&
+                     !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
+                     !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
+                     Uri.IsWellFormedUriString(options.SuccessUrl, UriKind.Absolute) &&
+                     Uri.IsWellFormedUriString(options.CancelUrl, UriKind.Absolute) &&
+                     Uri.IsWellFormedUriString(options.PortalReturnUrl, UriKind.Absolute)),
+                "Stripe configuration is incomplete.");
+        services.AddOptions<PaddleOptions>()
+            .Bind(configuration.GetSection(PaddleOptions.SectionName));
         services.AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(EmailOptions.SectionName))
             .Validate(static options => options.SmtpPort > 0,
@@ -164,6 +187,8 @@ public static class DependencyInjection {
             .ValidateOnStart();
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IBillingSubscriptionRepository, BillingSubscriptionRepository>();
+        services.AddSingleton<IBillingPublicConfigProvider, BillingPublicConfigProvider>();
         services.AddScoped<ProductRepository>();
         services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductLookupService, ProductLookupService>();
@@ -227,6 +252,12 @@ public static class DependencyInjection {
         services.AddSingleton<ITelegramAuthValidator, TelegramAuthValidator>();
         services.AddSingleton<ITelegramLoginWidgetValidator, TelegramLoginWidgetValidator>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
+        services.AddScoped<IBillingProviderGateway, StripeBillingGateway>();
+        services.AddHttpClient<PaddleBillingGateway>(client => {
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+        services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
+        services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddSingleton<IEmailTransport, SmtpClientEmailTransport>();

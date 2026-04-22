@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Services;
@@ -34,6 +35,7 @@ public static class DependencyInjection {
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
+        services.AddScoped<BillingAccessService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
 

@@ -1,5 +1,6 @@
 export interface AppConfig {
     apiUrls: AppConfigApiUrls;
+    paddleClientToken?: string;
     googleClientId?: string;
     telegramBotUsername?: string;
     buildVersion?: string;
@@ -10,6 +11,7 @@ export interface AppConfig {
 
 export interface AppConfigApiUrls {
     auth: string;
+    billing: string;
     products: string;
     consumptions: string;
     statistics: string;
