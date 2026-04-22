@@ -935,7 +935,7 @@ export class UserManageComponent {
             username: user.username ?? null,
             firstName: user.firstName ?? null,
             lastName: user.lastName ?? null,
-            gender: user.gender as Gender | null,
+            gender: this.normalizeGender(user.gender),
             language: this.normalizeLanguage(user.language),
             theme: this.normalizeTheme(user.theme),
             uiStyle: this.normalizeUiStyle(user.uiStyle),
@@ -957,12 +957,50 @@ export class UserManageComponent {
         return `${year}-${month}-${day}`;
     }
 
+    private normalizeGender(value: string | null | undefined): Gender | null {
+        if (!value) {
+            return null;
+        }
+
+        const normalized = value.trim().toLowerCase();
+        const genderMap: Record<string, Gender> = {
+            m: Gender.Male,
+            male: Gender.Male,
+            f: Gender.Female,
+            female: Gender.Female,
+            o: Gender.Other,
+            other: Gender.Other,
+        };
+
+        return genderMap[normalized] ?? null;
+    }
+
     private normalizeTheme(value: string | null | undefined): AppThemeName | null {
-        return isAppThemeName(value) ? value : null;
+        if (!value) {
+            return null;
+        }
+
+        const normalized = value.trim().toLowerCase();
+        const legacyThemeMap: Record<string, AppThemeName> = {
+            default: 'ocean',
+        };
+        const resolved = legacyThemeMap[normalized] ?? normalized;
+
+        return isAppThemeName(resolved) ? resolved : null;
     }
 
     private normalizeUiStyle(value: string | null | undefined): AppUiStyleName | null {
-        return isAppUiStyleName(value) ? value : null;
+        if (!value) {
+            return null;
+        }
+
+        const normalized = value.trim().toLowerCase();
+        const legacyUiStyleMap: Record<string, AppUiStyleName> = {
+            default: 'classic',
+        };
+        const resolved = legacyUiStyleMap[normalized] ?? normalized;
+
+        return isAppUiStyleName(resolved) ? resolved : null;
     }
 
     private readNotificationPermission(): NotificationPermission | 'unsupported' {

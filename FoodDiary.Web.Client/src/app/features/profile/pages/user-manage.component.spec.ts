@@ -31,8 +31,8 @@ describe('UserManageComponent dietologist section', () => {
         notificationsChangedVersion: ReturnType<typeof signal<number>>;
     };
 
-    async function createComponent(relationship: any, dialogResult = false): Promise<void> {
-        facade = createFacadeMock(relationship);
+    async function createComponent(relationship: any, dialogResult = false, user: any = null): Promise<void> {
+        facade = createFacadeMock(relationship, user);
         dietologistService = {
             getRelationship: vi.fn().mockReturnValue(of(relationship)),
             invite: vi.fn().mockReturnValue(of(undefined)),
@@ -327,9 +327,38 @@ describe('UserManageComponent dietologist section', () => {
         fixture.detectChanges();
         expect(component.getNotificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING');
     });
+
+    it('normalizes legacy profile select values from user overview', async () => {
+        await createComponent(null, false, {
+            id: 'u1',
+            email: 'user@example.com',
+            username: 'alexi',
+            firstName: 'Alex',
+            lastName: 'User',
+            gender: 'female',
+            language: 'en-US',
+            theme: 'default',
+            uiStyle: 'classic',
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: true,
+            socialPushNotificationsEnabled: false,
+            fastingCheckInReminderHours: 4,
+            fastingCheckInFollowUpReminderHours: 8,
+            isActive: true,
+            isEmailConfirmed: true,
+        });
+
+        expect(component.userForm.controls.gender.value).toBe('F');
+        expect(component.userForm.controls.language.value).toBe('en');
+        expect(component.userForm.controls.theme.value).toBe('ocean');
+        expect(component.userForm.controls.uiStyle.value).toBe('classic');
+    });
 });
 
-function createFacadeMock(relationship: any): {
+function createFacadeMock(
+    relationship: any,
+    user: any = null,
+): {
     user: ReturnType<typeof signal<any>>;
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
@@ -354,7 +383,7 @@ function createFacadeMock(relationship: any): {
     openAdminPanel: ReturnType<typeof vi.fn>;
 } {
     return {
-        user: signal<any>(null),
+        user: signal<any>(user),
         globalError: signal<string | null>(null),
         isDeleting: signal(false),
         isSavingProfile: signal(false),

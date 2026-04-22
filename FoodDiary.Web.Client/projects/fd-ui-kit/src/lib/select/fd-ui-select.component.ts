@@ -1,6 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, forwardRef, input, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    ViewEncapsulation,
+    forwardRef,
+    inject,
+    input,
+    viewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
@@ -30,8 +40,11 @@ export interface FdUiSelectOption<T = unknown> {
     ],
 })
 export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
+    private readonly cdr = inject(ChangeDetectorRef);
+
     protected readonly isEqual = Object.is;
     protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
+    protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
 
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
@@ -87,6 +100,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
 
     public writeValue(value: T | null): void {
         this.internalValue = value;
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: T | null) => void): void {
@@ -99,6 +113,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+        this.cdr.markForCheck();
     }
 
     protected onOptionSelect(option: FdUiSelectOption<T>): void {
@@ -130,7 +145,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
             return;
         }
 
-        this.overlayMinWidth = this.controlRef()?.nativeElement.getBoundingClientRect().width ?? 0;
+        this.overlayMinWidth = this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0;
         this.isOpen = true;
         this.isFocused = true;
         this.activeIndex = Math.max(this.selectedIndex, 0);
@@ -149,6 +164,20 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         }
 
         this.openMenu(event);
+    }
+
+    protected onControlWrapClick(event: MouseEvent): void {
+        if (this.disabled) {
+            return;
+        }
+
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('.fd-ui-select__control')) {
+            return;
+        }
+
+        this.controlRef()?.nativeElement.focus();
+        this.toggleMenu(event);
     }
 
     protected onControlKeydown(event: KeyboardEvent): void {

@@ -2,7 +2,15 @@
     class="fd-ui-select"
     [ngClass]="[sizeClass, error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel ? 'fd-ui-select--floating' : '']"
 >
-    <div class="fd-ui-select__control-wrap" [style.background]="fillColor() || null" role="presentation">
+    <div
+        #controlWrap
+        cdkOverlayOrigin
+        #origin="cdkOverlayOrigin"
+        class="fd-ui-select__control-wrap"
+        [style.background]="fillColor() || null"
+        role="presentation"
+        (click)="onControlWrapClick($event)"
+    >
         @if (label()) {
             <label class="fd-ui-select__label" [attr.for]="id()">
                 <span class="fd-ui-select__label-text">{{ label() }}</span>
@@ -14,8 +22,6 @@
 
         <button
             #control
-            cdkOverlayOrigin
-            #origin="cdkOverlayOrigin"
             class="fd-ui-select__control"
             type="button"
             [id]="id()"
