@@ -19,26 +19,6 @@
                         (click)="openFilters()"
                         [class.consumption-list__filter-button--active]="hasDateFilter()"
                     />
-                    <fd-ui-button
-                        class="consumption-list__icon-button"
-                        appearance="toolbar"
-                        variant="secondary"
-                        fill="outline"
-                        icon="download"
-                        [fdUiHint]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
-                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
-                        (click)="exportCsv()"
-                    />
-                    <fd-ui-button
-                        class="consumption-list__icon-button"
-                        appearance="toolbar"
-                        variant="secondary"
-                        fill="outline"
-                        icon="picture_as_pdf"
-                        [fdUiHint]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
-                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
-                        (click)="exportPdf()"
-                    />
                 </div>
             } @else {
                 <div class="consumption-list__header-actions">
@@ -52,26 +32,6 @@
                         [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                         (click)="openFilters()"
                         [class.consumption-list__filter-button--active]="hasDateFilter()"
-                    />
-                    <fd-ui-button
-                        class="consumption-list__icon-button"
-                        appearance="toolbar"
-                        variant="secondary"
-                        fill="outline"
-                        icon="download"
-                        [fdUiHint]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
-                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
-                        (click)="exportCsv()"
-                    />
-                    <fd-ui-button
-                        class="consumption-list__icon-button"
-                        appearance="toolbar"
-                        variant="secondary"
-                        fill="outline"
-                        icon="picture_as_pdf"
-                        [fdUiHint]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
-                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
-                        (click)="exportPdf()"
                     />
                 </div>
             }

@@ -1,4 +1,5 @@
 @use 'variables' as variables;
+@use '../landing-section.mixins' as landing;
 
 :host {
     display: block;
@@ -7,21 +8,11 @@
 .landing-section {
 
     &__inner {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        @include landing.section-inner;
     }
 
     &__copy {
-        display: flex;
-        flex-direction: column;
-        gap: variables.$gap-xs;
-        padding: clamp(18px, 2vw, 24px);
-        border-radius: 26px;
-        background: color-mix(in srgb, var(--fd-color-white) 80%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
-        box-shadow: 0 20px 46px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        animation: landingFadeUp 700ms ease-out both;
+        @include landing.section-copy-shell;
 
         &--center {
             align-items: center;
@@ -30,37 +21,19 @@
     }
 
     &__eyebrow {
-        display: inline-flex;
-        align-self: flex-start;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
-        color: var(--fd-color-primary-600);
-        font-weight: 700;
-        font-size: 0.9rem;
-        letter-spacing: 0.02em;
-        width: fit-content;
-        max-width: 100%;
+        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent));
     }
 
     &__title {
-        margin: 0;
-        font-size: clamp(28px, 3vw, 36px);
-        color: var(--fd-color-slate-900);
-        letter-spacing: -0.02em;
-        line-height: 1.08;
+        @include landing.section-title;
     }
 
     &__subtitle {
-        margin: 6px 0 0;
-        color: var(--fd-color-slate-600);
-        font-size: 1.02rem;
-        max-width: 620px;
-        line-height: 1.65;
+        @include landing.section-subtitle;
     }
 
     &--steps {
-        padding: clamp(34px, 4vw, 56px) 0;
+        padding: var(--fd-landing-section-space) 0;
         background:
             radial-gradient(circle at top left, rgba(37, 99, 235, 0.07), transparent 22%),
             var(--fd-color-white);
@@ -77,10 +50,10 @@
         position: relative;
         overflow: hidden;
         background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
-        border-radius: 24px;
-        padding: clamp(18px, 2vw, 24px);
-        border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
-        box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        border-radius: var(--fd-landing-radius-card);
+        padding: var(--fd-landing-surface-padding);
+        border: 1px solid var(--fd-landing-border-soft);
+        box-shadow: var(--fd-landing-shadow-soft);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-s;
@@ -118,6 +91,66 @@
         margin: 0;
         color: var(--fd-color-slate-600);
         line-height: 1.6;
+    }
+
+    &__cta {
+        margin-top: clamp(20px, 3vw, 32px);
+        display: flex;
+        justify-content: space-between;
+        gap: variables.$gap-m;
+        align-items: center;
+        padding: var(--fd-landing-surface-padding-lg);
+        border-radius: var(--fd-landing-radius-panel);
+        background: linear-gradient(
+            140deg,
+            color-mix(in srgb, var(--fd-color-slate-900) 98%, transparent),
+            color-mix(in srgb, var(--fd-color-primary-600) 94%, transparent) 55%,
+            color-mix(in srgb, var(--fd-color-teal-500) 90%, transparent)
+        );
+        border: 1px solid var(--fd-landing-dark-border);
+        box-shadow: var(--fd-landing-shadow-strong);
+        animation: landingFadeUp 880ms ease-out both;
+    }
+
+    &__cta-copy {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$gap-xs;
+        max-width: 620px;
+    }
+
+    &__cta-title {
+        margin: 0;
+        font-size: clamp(24px, 2.6vw, 34px);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        color: var(--fd-color-slate-50);
+    }
+
+    &__cta-text {
+        margin: 0;
+        color: color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent);
+        font-size: 1rem;
+        line-height: 1.65;
+    }
+
+    &__cta-actions {
+        display: flex;
+        gap: variables.$gap-s;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    @media #{variables.$media-tablet} {
+
+        &__cta {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        &__cta-actions {
+            justify-content: flex-start;
+        }
     }
 }
 

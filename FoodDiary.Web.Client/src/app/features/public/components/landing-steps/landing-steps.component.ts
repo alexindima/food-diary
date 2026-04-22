@@ -1,11 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-landing-steps',
     standalone: true,
-    imports: [TranslateModule],
+    imports: [TranslateModule, FdUiButtonComponent],
     templateUrl: './landing-steps.component.html',
     styleUrls: ['./landing-steps.component.scss'],
 })
-export class LandingStepsComponent {}
+export class LandingStepsComponent {
+    private readonly fdDialogService = inject(FdUiDialogService);
+
+    protected readonly stepKeys = ['STEP1', 'STEP2', 'STEP3'] as const;
+
+    public async openAuth(mode: 'login' | 'register'): Promise<void> {
+        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
+
+        this.fdDialogService.open(AuthDialogComponent, {
+            size: 'md',
+            data: { mode },
+        });
+    }
+}

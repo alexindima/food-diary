@@ -1,29 +1,39 @@
 @use 'variables' as variables;
+@use '../landing-section.mixins' as landing;
+@use '../landing-dark-panel.mixins' as dark-panel;
 
 :host {
     display: block;
-    --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
+    --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
+}
+
+@mixin preview-light-surface($padding: 14px 16px) {
+    display: grid;
+    gap: variables.$gap-s;
+    padding: $padding;
+    border-radius: var(--fd-landing-radius-card);
+    background: var(--fd-landing-surface-strong);
+    border: 1px solid var(--fd-landing-border-soft);
+    box-shadow: var(--fd-landing-shadow-soft);
+}
+
+@mixin preview-dark-inset-surface($padding: clamp(14px, 1.8vw, 18px)) {
+    display: grid;
+    gap: variables.$gap-s;
+    padding: $padding;
+    border-radius: var(--fd-landing-radius-card);
+    background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+    border: 1px solid var(--fd-landing-dark-border);
 }
 
 .landing-section {
 
     &__inner {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
-        min-width: 0;
+        @include landing.section-inner;
     }
 
     &__copy {
-        display: flex;
-        flex-direction: column;
-        gap: variables.$gap-xs;
-        padding: clamp(18px, 2vw, 24px);
-        border-radius: 26px;
-        background: color-mix(in srgb, var(--fd-color-white) 76%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
-        box-shadow: 0 20px 46px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        animation: landingFadeUp 680ms ease-out both;
+        @include landing.section-copy-shell;
 
         &--secondary {
             margin-top: variables.$gap-l;
@@ -45,37 +55,19 @@
     }
 
     &__eyebrow {
-        display: inline-flex;
-        align-self: flex-start;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
-        color: var(--fd-color-primary-600);
-        font-weight: 700;
-        font-size: 0.9rem;
-        letter-spacing: 0.02em;
-        width: fit-content;
-        max-width: 100%;
+        @include landing.section-eyebrow;
     }
 
     &__title {
-        margin: 0;
-        font-size: clamp(28px, 3vw, 36px);
-        color: var(--fd-color-slate-900);
-        letter-spacing: -0.02em;
-        line-height: 1.08;
+        @include landing.section-title;
     }
 
     &__subtitle {
-        margin: 6px 0 0;
-        color: var(--fd-color-slate-600);
-        font-size: 1.02rem;
-        max-width: 620px;
-        line-height: 1.65;
+        @include landing.section-subtitle;
     }
 
     &--tour {
-        padding: clamp(34px, 4vw, 56px) 0;
+        padding: var(--fd-landing-section-space) 0;
         background:
             radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent), transparent 24%),
             linear-gradient(
@@ -87,7 +79,7 @@
 }
 
 .landing-section--preview.landing-section--tour {
-    padding: clamp(14px, 1.8vw, 22px) 0 clamp(20px, 2.4vw, 30px);
+    padding: clamp(14px, 1.8vw, 22px) 0 var(--fd-landing-section-space-compact);
 }
 
 .landing-preview {
@@ -207,11 +199,11 @@
 .landing-preview__showcase {
     display: grid;
     gap: clamp(variables.$gap-m, 3vw, 28px);
-    padding: clamp(20px, 2.2vw, 28px);
-    border-radius: 34px;
-    background: color-mix(in srgb, var(--fd-color-white) 68%, transparent);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
-    box-shadow: 0 24px 54px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    padding: var(--fd-landing-surface-padding-lg);
+    border-radius: var(--fd-landing-radius-panel);
+    background: var(--fd-landing-surface);
+    border: 1px solid var(--fd-landing-border-soft);
+    box-shadow: var(--fd-landing-shadow-medium);
     animation: landingFadeUp 720ms ease-out both;
 }
 
@@ -223,21 +215,15 @@
 }
 
 .landing-preview__meals-card {
-    display: grid;
-    gap: variables.$gap-s;
+    @include preview-light-surface(clamp(14px, 1.8vw, 18px));
     padding: clamp(14px, 1.8vw, 18px);
-    border-radius: 30px;
-    background: color-mix(in srgb, var(--fd-color-white) 76%, transparent);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
-    box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    border-radius: var(--fd-landing-radius-panel);
     min-width: 0;
 }
 
 .landing-preview__meals-note {
-    display: grid;
+    @include preview-light-surface(14px 16px);
     gap: 6px;
-    padding: 14px 16px;
-    border-radius: 22px;
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-primary-100) 34%, var(--fd-color-white)) 0%,
@@ -263,8 +249,8 @@
     max-width: 100%;
     padding: 5px 10px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
-    color: var(--fd-color-primary-600);
+    background: color-mix(in srgb, var(--fd-color-primary-100) 86%, var(--fd-color-white));
+    color: var(--fd-color-primary-700);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.03em;
@@ -282,14 +268,11 @@
     gap: clamp(variables.$gap-m, 3vw, 34px);
     align-items: start;
     min-width: 0;
-    padding: clamp(18px, 2vw, 24px);
-    border-radius: 32px;
-    background: linear-gradient(
-        160deg,
+    @include dark-panel.dark-panel(
         color-mix(in srgb, var(--fd-color-slate-900) 97%, transparent),
         color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
     );
-    box-shadow: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
+    padding: var(--fd-landing-surface-padding);
     animation: landingFadeUp 860ms ease-out both;
 
     &__intro {
@@ -318,7 +301,7 @@
     &__catalog-subtitle {
         margin: 0;
         max-width: 760px;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 85%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
         font-size: 1rem;
         line-height: 1.6;
     }
@@ -338,13 +321,9 @@
     }
 
     &__draft-copy {
-        display: grid;
+        @include preview-dark-inset-surface(clamp(18px, 2vw, 24px));
         gap: 14px;
         align-content: start;
-        padding: clamp(18px, 2vw, 24px);
-        border-radius: 24px;
-        background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
     }
 
     &__draft-eyebrow {
@@ -371,7 +350,7 @@
     &__draft-subtitle,
     &__draft-note {
         margin: 0;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 84%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
         font-size: 1rem;
         line-height: 1.65;
     }
@@ -398,7 +377,7 @@
     .landing-section__copy--secondary {
         margin-top: 0;
         background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-        border-color: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
+        border-color: var(--fd-landing-dark-border);
         box-shadow: none;
     }
 
@@ -413,7 +392,7 @@
     }
 
     .landing-section__subtitle {
-        color: color-mix(in srgb, var(--fd-color-slate-200) 85%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
     }
 
     @media #{variables.$media-desktop} {
@@ -437,12 +416,7 @@
     }
 
     &__group {
-        padding: clamp(14px, 1.8vw, 18px);
-        display: grid;
-        gap: variables.$gap-s;
-        border-radius: 24px;
-        background: color-mix(in srgb, var(--fd-color-white) 9%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+        @include preview-dark-inset-surface(clamp(14px, 1.8vw, 18px));
     }
 
     &__group-title {
@@ -464,21 +438,16 @@
 
     &__drawer {
         position: relative;
-        padding: clamp(14px, 1.8vw, 18px);
-        display: grid;
-        gap: variables.$gap-s;
+        @include preview-dark-inset-surface(clamp(14px, 1.8vw, 18px));
         align-content: start;
         width: 100%;
         margin: 0;
         min-width: 0;
-        border-radius: 24px;
-        background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
     }
 
     &__hint {
         margin: 0;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 82%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-100) 93%, transparent);
         font-size: 0.95rem;
         line-height: 1.55;
     }

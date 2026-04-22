@@ -5,19 +5,11 @@ import { HeroComponent } from '../../components/hero/hero.component';
 import { FeaturesComponent } from '../../components/features/features.component';
 import { LandingPreviewTourComponent } from '../../components/landing-preview-tour/landing-preview-tour.component';
 import { LandingStepsComponent } from '../../components/landing-steps/landing-steps.component';
-import { LandingCtaComponent } from '../../components/landing-cta/landing-cta.component';
 import { DietologistPromoComponent } from '../../components/dietologist-promo/dietologist-promo.component';
 
 @Component({
     selector: 'fd-main',
-    imports: [
-        HeroComponent,
-        FeaturesComponent,
-        LandingPreviewTourComponent,
-        LandingStepsComponent,
-        LandingCtaComponent,
-        DietologistPromoComponent,
-    ],
+    imports: [HeroComponent, FeaturesComponent, LandingPreviewTourComponent, LandingStepsComponent, DietologistPromoComponent],
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],
 })

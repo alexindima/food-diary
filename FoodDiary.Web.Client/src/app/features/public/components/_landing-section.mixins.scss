@@ -1,0 +1,51 @@
+@mixin section-inner {
+    max-width: var(--fd-landing-container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--fd-layout-page-horizontal-padding, var(--fd-landing-inline-padding));
+    min-width: 0;
+}
+
+@mixin section-copy-shell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-landing-copy-gap, 8px);
+    padding: var(--fd-landing-surface-padding);
+    border-radius: var(--fd-landing-radius-panel);
+    background: var(--fd-landing-surface);
+    border: 1px solid var(--fd-landing-border-soft);
+    box-shadow: var(--fd-landing-shadow-medium);
+    animation: landingFadeUp 700ms ease-out both;
+}
+
+@mixin section-eyebrow(
+    $background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent),
+    $color: var(--fd-color-primary-600)
+) {
+    display: inline-flex;
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    padding: 6px 12px;
+    border-radius: var(--fd-landing-radius-chip);
+    background: $background;
+    color: $color;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+}
+
+@mixin section-title {
+    margin: 0;
+    font-size: clamp(28px, 3vw, 36px);
+    color: var(--fd-color-slate-900);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+}
+
+@mixin section-subtitle {
+    margin: 6px 0 0;
+    color: var(--fd-color-slate-600);
+    font-size: 1.02rem;
+    max-width: 620px;
+    line-height: 1.65;
+}

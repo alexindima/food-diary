@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
 
 import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
 import { Meal } from '../../../meals/models/meal.data';
@@ -14,13 +13,10 @@ import {
     DashboardSummaryCardComponent,
     NutrientBar,
 } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import { SummaryMetrics } from '../../../../components/shared/statistics-summary/statistics-summary.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { AuthService } from '../../../../services/auth.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @Component({
     selector: 'fd-landing-preview-tour',
@@ -33,7 +29,6 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
         RecipeCardComponent,
         QuickConsumptionDrawerComponent,
     ],
-    providers: [provideCharts(withDefaultRegisterables())],
     templateUrl: './landing-preview-tour.component.html',
     styleUrls: ['./landing-preview-tour.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,63 +94,9 @@ export class LandingPreviewTourComponent {
         ] satisfies NutrientBar[],
     };
     public guestMealEntries: MealPreviewEntry[] = [];
-    public guestSummary = this.buildGuestSummary();
-    public guestSummarySparkline = this.buildSparkline();
-    public guestMacroSparkline = this.buildMacroSparkline();
-    public guestSummarySparklineOptions: ChartConfiguration['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        elements: { line: { borderJoinStyle: 'round' } },
-        scales: { x: { display: false }, y: { display: false } },
-    };
-    public nutritionTabs: FdUiTab[] = [
-        { value: 'calories', labelKey: 'STATISTICS.NUTRITION_TABS.CALORIES' },
-        { value: 'macros', labelKey: 'STATISTICS.NUTRITION_TABS.MACROS' },
-        { value: 'distribution', labelKey: 'STATISTICS.NUTRITION_TABS.DISTRIBUTION' },
-    ];
-    public bodyTabs: FdUiTab[] = [
-        { value: 'weight', labelKey: 'STATISTICS.BODY_TABS.WEIGHT' },
-        { value: 'bmi', labelKey: 'STATISTICS.BODY_TABS.BMI' },
-        { value: 'waist', labelKey: 'STATISTICS.BODY_TABS.WAIST' },
-        { value: 'whtr', labelKey: 'STATISTICS.BODY_TABS.WHTR' },
-    ];
-    public selectedNutritionTab: string = 'calories';
-    public selectedBodyTab: string = 'weight';
-    public guestCaloriesLineData = this.buildLineData([1200, 1450, 1600, 1800, 1750, 1900, 2000]);
-    public guestNutrientsLineData = this.buildMultiLineData();
-    public guestPieData = this.buildPieData();
-    public guestRadarData = this.buildRadarData();
-    public guestBarData = this.buildBarData();
-    public guestBodyDataByTab: Record<string, ChartConfiguration<'line'>['data']> = {
-        weight: this.buildBodyLineData([72.4, 72.1, 71.9, 72.0, 71.8, 71.6, 71.5]),
-        bmi: this.buildBodyLineData([23.6, 23.5, 23.4, 23.4, 23.3, 23.3, 23.2]),
-        waist: this.buildBodyLineData([82.0, 81.6, 81.4, 81.3, 81.0, 80.8, 80.6]),
-        whtr: this.buildBodyLineData([0.49, 0.49, 0.48, 0.48, 0.47, 0.47, 0.46]),
-    };
     public previewProducts: Product[] = [];
     public previewRecipes: Recipe[] = [];
     public previewQuickItems: QuickMealItem[] = [];
-    public lineOptions: ChartConfiguration['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-            y: { beginAtZero: true, ticks: { color: 'var(--fd-color-slate-600)' } },
-            x: { ticks: { color: 'var(--fd-color-slate-600)', maxRotation: 0 } },
-        },
-    };
-    public lineOptionsWithLegend: ChartConfiguration['options'] = {
-        ...this.lineOptions,
-        plugins: { legend: { position: 'bottom' } },
-    };
-    public pieOptions: ChartOptions<'pie'> = {};
-    public radarOptions: ChartOptions<'radar'> = { scales: { r: { beginAtZero: true } } };
-    public barOptions: ChartOptions<'bar'> = {
-        plugins: { legend: { display: false } },
-        responsive: true,
-        scales: { y: { beginAtZero: true } },
-    };
 
     private readonly clearPreviewOnAuth = effect(() => {
         if (this.isAuthenticated()) {
@@ -215,165 +156,6 @@ export class LandingPreviewTourComponent {
             { slot: 'LUNCH', icon: 'lunch_dining', labelKey: 'MEAL_CARD.MEAL_TYPES.LUNCH', meal: lunch },
             { slot: 'DINNER', icon: 'nights_stay', labelKey: 'MEAL_CARD.MEAL_TYPES.DINNER', meal: null },
         ];
-    }
-
-    private buildGuestSummary(): SummaryMetrics {
-        return {
-            totalCalories: 1820,
-            averageCard: { consumption: 1740, steps: 6400, burned: 215 },
-            macros: [
-                { key: 'proteins', labelKey: 'GENERAL.NUTRIENTS.PROTEIN', value: 110, color: 'var(--fd-color-sky-500)' },
-                { key: 'fats', labelKey: 'GENERAL.NUTRIENTS.FAT', value: 45, color: 'var(--fd-color-yellow-300)' },
-                { key: 'carbs', labelKey: 'GENERAL.NUTRIENTS.CARB', value: 180, color: 'var(--fd-color-teal-500)' },
-                { key: 'fiber', labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER', value: 18, color: 'var(--fd-color-purple-500)' },
-            ],
-        };
-    }
-
-    private buildSparkline(): ChartConfiguration<'line'>['data'] {
-        return {
-            labels: this.getWeekdayLabels(),
-            datasets: [
-                {
-                    data: [1600, 1700, 1800, 1500, 1900, 1750, 1820],
-                    borderColor: 'var(--fd-color-primary-600)',
-                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent)',
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 0,
-                },
-            ],
-        };
-    }
-
-    private buildMacroSparkline(): Record<string, ChartConfiguration<'line'>['data']> {
-        const template = (color: string): ChartConfiguration<'line'>['data'] => ({
-            labels: this.getWeekdayLabels(),
-            datasets: [
-                {
-                    data: [12, 14, 16, 11, 18, 15, 17],
-                    borderColor: color,
-                    backgroundColor: `${color}29`,
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 0,
-                },
-            ],
-        });
-        return {
-            proteins: template('var(--fd-color-sky-500)'),
-            fats: template('var(--fd-color-yellow-300)'),
-            carbs: template('var(--fd-color-teal-500)'),
-            fiber: template('var(--fd-color-purple-500)'),
-        };
-    }
-
-    private buildLineData(values: number[]): ChartConfiguration<'line'>['data'] {
-        return {
-            labels: this.getWeekdayLabels(),
-            datasets: [
-                {
-                    data: values,
-                    borderColor: 'var(--fd-color-primary-600)',
-                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent)',
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 0,
-                },
-            ],
-        };
-    }
-
-    private buildMultiLineData(): ChartConfiguration<'line'>['data'] {
-        const nutrientLabels = this.getNutrientLabels();
-        return {
-            labels: this.getWeekdayLabels(),
-            datasets: [
-                {
-                    data: [110, 120, 130, 125, 140, 135, 138],
-                    label: nutrientLabels.proteins,
-                    borderColor: 'var(--fd-color-sky-500)',
-                    tension: 0.35,
-                    borderWidth: 2,
-                },
-                {
-                    data: [40, 42, 45, 44, 46, 48, 47],
-                    label: nutrientLabels.fats,
-                    borderColor: 'var(--fd-color-yellow-300)',
-                    tension: 0.35,
-                    borderWidth: 2,
-                },
-                {
-                    data: [160, 170, 180, 175, 185, 190, 195],
-                    label: nutrientLabels.carbs,
-                    borderColor: 'var(--fd-color-teal-500)',
-                    tension: 0.35,
-                    borderWidth: 2,
-                },
-            ],
-        };
-    }
-
-    private buildPieData(): ChartConfiguration<'pie'>['data'] {
-        const nutrientLabels = this.getNutrientLabels();
-        return {
-            labels: [nutrientLabels.proteins, nutrientLabels.fats, nutrientLabels.carbs],
-            datasets: [
-                {
-                    data: [24, 18, 58],
-                    backgroundColor: ['var(--fd-color-sky-500)', 'var(--fd-color-yellow-300)', 'var(--fd-color-teal-500)'],
-                },
-            ],
-        };
-    }
-
-    private buildRadarData(): ChartConfiguration<'radar'>['data'] {
-        const nutrientLabels = this.getNutrientLabels();
-        return {
-            labels: [nutrientLabels.proteins, nutrientLabels.fats, nutrientLabels.carbs, nutrientLabels.fiber],
-            datasets: [
-                {
-                    data: [70, 55, 80, 60],
-                    label: 'Macros',
-                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent)',
-                    borderColor: 'var(--fd-color-primary-600)',
-                    pointBackgroundColor: 'var(--fd-color-primary-600)',
-                },
-            ],
-        };
-    }
-
-    private buildBarData(): ChartConfiguration<'bar'>['data'] {
-        const shortLabels = this.getNutrientShortLabels();
-        return {
-            labels: [shortLabels.proteins, shortLabels.fats, shortLabels.carbs],
-            datasets: [
-                {
-                    data: [110, 45, 180],
-                    backgroundColor: ['var(--fd-color-sky-500)', 'var(--fd-color-yellow-300)', 'var(--fd-color-teal-500)'],
-                },
-            ],
-        };
-    }
-
-    private buildBodyLineData(values: number[]): ChartConfiguration<'line'>['data'] {
-        return {
-            labels: this.getWeekdayLabels(),
-            datasets: [
-                {
-                    data: values,
-                    borderColor: 'var(--fd-color-primary-600)',
-                    backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent)',
-                    tension: 0.3,
-                    borderWidth: 2,
-                    pointRadius: 3,
-                    fill: true,
-                },
-            ],
-        };
     }
 
     private buildPreviewProducts(): Product[] {
@@ -563,53 +345,11 @@ export class LandingPreviewTourComponent {
         this.previewRecipes = this.buildPreviewRecipes();
         this.previewQuickItems = this.buildPreviewQuickItems();
         this.guestMealEntries = this.buildGuestMeals();
-        this.guestSummarySparkline = this.buildSparkline();
-        this.guestMacroSparkline = this.buildMacroSparkline();
-        this.guestCaloriesLineData = this.buildLineData([1200, 1450, 1600, 1800, 1750, 1900, 2000]);
-        this.guestNutrientsLineData = this.buildMultiLineData();
-        this.guestPieData = this.buildPieData();
-        this.guestRadarData = this.buildRadarData();
-        this.guestBarData = this.buildBarData();
-        this.guestBodyDataByTab = {
-            weight: this.buildBodyLineData([72.4, 72.1, 71.9, 72.0, 71.8, 71.6, 71.5]),
-            bmi: this.buildBodyLineData([23.6, 23.5, 23.4, 23.4, 23.3, 23.3, 23.2]),
-            waist: this.buildBodyLineData([82.0, 81.6, 81.4, 81.3, 81.0, 80.8, 80.6]),
-            whtr: this.buildBodyLineData([0.49, 0.49, 0.48, 0.48, 0.47, 0.47, 0.46]),
-        };
 
         if (this.isAuthenticated()) {
             return;
         }
 
         this.quickConsumptionService.setPreviewItems(this.previewQuickItems);
-    }
-
-    private getWeekdayLabels(): string[] {
-        return [
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.MON'),
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.TUE'),
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.WED'),
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.THU'),
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.FRI'),
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.SAT'),
-            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.SUN'),
-        ];
-    }
-
-    private getNutrientLabels(): { proteins: string; fats: string; carbs: string; fiber: string } {
-        return {
-            proteins: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.PROTEINS'),
-            fats: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.FATS'),
-            carbs: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.CARBS'),
-            fiber: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.FIBER'),
-        };
-    }
-
-    private getNutrientShortLabels(): { proteins: string; fats: string; carbs: string } {
-        return {
-            proteins: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS_SHORT.PROTEINS'),
-            fats: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS_SHORT.FATS'),
-            carbs: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS_SHORT.CARBS'),
-        };
     }
 }

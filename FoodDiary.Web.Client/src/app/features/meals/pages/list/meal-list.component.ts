@@ -6,7 +6,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { ExportService } from '../../api/export.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
@@ -61,7 +60,6 @@ export class MealListComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly exportService = inject(ExportService);
     private readonly viewportService = inject(ViewportService);
 
     public searchForm: FormGroup<SearchFormGroup>;
@@ -238,23 +236,6 @@ export class MealListComponent {
 
     public async goToMealAdd(): Promise<void> {
         await this.navigationService.navigateToConsumptionAdd();
-    }
-
-    public exportCsv(): void {
-        this.exportDiary('csv');
-    }
-
-    public exportPdf(): void {
-        this.exportDiary('pdf');
-    }
-
-    private exportDiary(format: 'csv' | 'pdf'): void {
-        const dateRange = this.searchForm.controls.dateRange.value;
-        const now = new Date();
-        const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
-        const dateFrom = this.toIsoDate(dateRange?.start ?? thirtyDaysAgo) ?? new Date().toISOString();
-        const dateTo = this.toIsoDate(dateRange?.end ?? now) ?? new Date().toISOString();
-        this.exportService.exportDiary(dateFrom, dateTo, format);
     }
 
     public openFilters(): void {

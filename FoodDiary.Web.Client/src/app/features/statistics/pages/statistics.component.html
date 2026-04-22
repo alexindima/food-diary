@@ -1,5 +1,35 @@
 <div class="statistics" fdPageContainer>
-    <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" [subtitle]="'STATISTICS.SUBTITLE' | translate" />
+    <fd-page-header
+        class="statistics__header"
+        [title]="'STATISTICS.TITLE' | translate"
+        [subtitle]="'STATISTICS.SUBTITLE' | translate"
+        [compactActions]="true"
+    >
+        <ng-container fdPageHeaderActions>
+            <div class="statistics__header-actions">
+                <fd-ui-button
+                    class="statistics__icon-button"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="download"
+                    [fdUiHint]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
+                    [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
+                    (click)="exportDiary('csv')"
+                />
+                <fd-ui-button
+                    class="statistics__icon-button"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="picture_as_pdf"
+                    [fdUiHint]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
+                    [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
+                    (click)="exportDiary('pdf')"
+                />
+            </div>
+        </ng-container>
+    </fd-page-header>
 
     <fd-page-body>
         @if (hasLoadError()) {

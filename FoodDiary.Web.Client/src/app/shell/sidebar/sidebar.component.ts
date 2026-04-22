@@ -356,7 +356,30 @@ export class SidebarComponent {
             return;
         }
 
-        const adminWindow = window.open('', '_blank', 'noopener');
+        const adminWindow = window.open('about:blank', '_blank');
+        adminWindow?.document.write(`
+            <!doctype html>
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Opening admin panel...</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            min-height: 100vh;
+                            display: grid;
+                            place-items: center;
+                            background: #0f172a;
+                            color: #e2e8f0;
+                            font: 600 16px/1.5 Inter, Arial, sans-serif;
+                        }
+                    </style>
+                </head>
+                <body>Opening admin panel...</body>
+            </html>
+        `);
+        adminWindow?.document.close();
+
         this.authService.startAdminSso().subscribe({
             next: response => {
                 const url = new URL('/', environment.adminAppUrl);

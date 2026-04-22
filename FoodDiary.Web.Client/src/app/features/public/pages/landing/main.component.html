@@ -1,10 +1,11 @@
 <fd-hero />
-@defer (on viewport) {
-    <fd-landing-preview-tour />
-} @placeholder {
-    <div style="min-height: 400px"></div>
-}
-<fd-features />
-<fd-dietologist-promo />
-<fd-landing-steps />
-<fd-landing-cta />
+<main class="landing-main">
+    @defer (on viewport) {
+        <fd-landing-preview-tour />
+    } @placeholder {
+        <div class="landing-main__preview-placeholder" aria-hidden="true"></div>
+    }
+    <fd-features />
+    <fd-dietologist-promo />
+    <fd-landing-steps />
+</main>

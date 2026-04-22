@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -25,6 +27,7 @@ import {
 } from '../lib/statistics-chart-config';
 import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { StatisticsFacade } from '../lib/statistics.facade';
+import { ExportFormat, ExportService } from '../../meals/api/export.service';
 
 @Component({
     selector: 'fd-statistics',
@@ -34,6 +37,8 @@ import { StatisticsFacade } from '../lib/statistics.facade';
         CommonModule,
         TranslatePipe,
         ReactiveFormsModule,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         FdUiEmptyStateComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -51,6 +56,7 @@ import { StatisticsFacade } from '../lib/statistics.facade';
 })
 export class StatisticsComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly exportService = inject(ExportService);
     protected readonly facade = inject(StatisticsFacade);
 
     public constructor() {
@@ -128,5 +134,12 @@ export class StatisticsComponent {
 
     public reload(): void {
         this.facade.reload();
+    }
+
+    public exportDiary(format: ExportFormat): void {
+        const range = this.currentRange();
+        const dateFrom = new Date(Date.UTC(range.start.getFullYear(), range.start.getMonth(), range.start.getDate())).toISOString();
+        const dateTo = new Date(Date.UTC(range.end.getFullYear(), range.end.getMonth(), range.end.getDate())).toISOString();
+        this.exportService.exportDiary(dateFrom, dateTo, format);
     }
 }

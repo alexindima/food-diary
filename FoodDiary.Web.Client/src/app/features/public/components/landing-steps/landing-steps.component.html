@@ -6,20 +6,27 @@
             <p class="landing-section__subtitle">{{ 'LANDING_STEPS.SUBTITLE' | translate }}</p>
         </div>
         <div class="landing-steps">
-            <div class="landing-steps__item">
-                <div class="landing-steps__icon">1</div>
-                <h3 class="landing-steps__title">{{ 'LANDING_STEPS.STEP1.TITLE' | translate }}</h3>
-                <p class="landing-steps__text">{{ 'LANDING_STEPS.STEP1.TEXT' | translate }}</p>
+            @for (stepKey of stepKeys; track stepKey; let index = $index) {
+                <article class="landing-steps__item">
+                    <div class="landing-steps__icon">{{ index + 1 }}</div>
+                    <h3 class="landing-steps__title">{{ 'LANDING_STEPS.' + stepKey + '.TITLE' | translate }}</h3>
+                    <p class="landing-steps__text">{{ 'LANDING_STEPS.' + stepKey + '.TEXT' | translate }}</p>
+                </article>
+            }
+        </div>
+
+        <div class="landing-steps__cta">
+            <div class="landing-steps__cta-copy">
+                <h3 class="landing-steps__cta-title">{{ 'LANDING_CTA.TITLE' | translate }}</h3>
+                <p class="landing-steps__cta-text">{{ 'LANDING_CTA.SUBTITLE' | translate }}</p>
             </div>
-            <div class="landing-steps__item">
-                <div class="landing-steps__icon">2</div>
-                <h3 class="landing-steps__title">{{ 'LANDING_STEPS.STEP2.TITLE' | translate }}</h3>
-                <p class="landing-steps__text">{{ 'LANDING_STEPS.STEP2.TEXT' | translate }}</p>
-            </div>
-            <div class="landing-steps__item">
-                <div class="landing-steps__icon">3</div>
-                <h3 class="landing-steps__title">{{ 'LANDING_STEPS.STEP3.TITLE' | translate }}</h3>
-                <p class="landing-steps__text">{{ 'LANDING_STEPS.STEP3.TEXT' | translate }}</p>
+            <div class="landing-steps__cta-actions">
+                <fd-ui-button size="lg" variant="primary" (click)="openAuth('register')">
+                    {{ 'LANDING_CTA.REGISTER' | translate }}
+                </fd-ui-button>
+                <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuth('login')">
+                    {{ 'LANDING_CTA.LOGIN' | translate }}
+                </fd-ui-button>
             </div>
         </div>
     </div>

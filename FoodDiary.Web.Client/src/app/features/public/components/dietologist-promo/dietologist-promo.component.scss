@@ -1,11 +1,13 @@
 @use 'variables' as variables;
+@use '../landing-section.mixins' as landing;
+@use '../landing-dark-panel.mixins' as dark-panel;
 
 :host {
     display: block;
 }
 
 .dietologist-promo {
-    padding: clamp(24px, 3vw, 44px) 0;
+    padding: var(--fd-landing-section-space-compact) 0;
     background:
         linear-gradient(
             180deg,
@@ -15,9 +17,7 @@
         var(--fd-color-white);
 
     &__inner {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        @include landing.section-inner;
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
         gap: clamp(variables.$gap-l, 3vw, variables.$gap-xxl);
@@ -31,14 +31,10 @@
     }
 
     &__eyebrow {
-        display: inline-flex;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent);
-        color: var(--fd-color-teal-700);
-        font-weight: 700;
-        font-size: 0.9rem;
-        letter-spacing: 0.02em;
+        @include landing.section-eyebrow(
+            color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent),
+            var(--fd-color-teal-700)
+        );
     }
 
     &__title {
@@ -67,10 +63,10 @@
         grid-template-columns: 40px minmax(0, 1fr);
         gap: variables.$gap-s;
         padding: 14px 16px;
-        border-radius: 18px;
-        background: color-mix(in srgb, var(--fd-color-white) 92%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-teal-700) 10%, transparent);
-        box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        border-radius: var(--fd-landing-radius-card);
+        background: var(--fd-landing-surface-strong);
+        border: 1px solid var(--fd-landing-border-soft);
+        box-shadow: var(--fd-landing-shadow-soft);
         animation: landingFadeUp 820ms ease-out both;
     }
 
@@ -107,15 +103,8 @@
     }
 
     &__card {
-        border-radius: 28px;
-        background: linear-gradient(
-            160deg,
-            color-mix(in srgb, var(--fd-color-slate-900) 96%, transparent),
-            color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
-        );
-        color: var(--fd-color-white);
-        padding: clamp(20px, 2vw, 28px);
-        box-shadow: 0 24px 54px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
+        @include dark-panel.dark-panel;
+        padding: var(--fd-landing-surface-padding-lg);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-m;
@@ -130,7 +119,7 @@
 
     &__card-label {
         margin: 0 0 8px;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 80%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         font-size: 0.76rem;
@@ -157,11 +146,11 @@
 
     &__card-text {
         margin-top: 0;
-        color: color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
     }
 
     &__permission-label {
-        color: color-mix(in srgb, var(--fd-color-white) 82%, transparent);
+        color: color-mix(in srgb, var(--fd-color-white) 92%, transparent);
         font-size: 0.92rem;
         font-weight: 700;
     }
@@ -195,7 +184,7 @@
     &__note {
         margin-top: auto;
         background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-        color: color-mix(in srgb, var(--fd-color-slate-200) 92%, transparent);
+        color: color-mix(in srgb, var(--fd-color-slate-100) 95%, transparent);
 
         fd-ui-icon {
             color: color-mix(in srgb, var(--fd-color-sky-500) 55%, var(--fd-color-white));

@@ -1,20 +1,18 @@
 @use 'variables' as variables;
+@use '../landing-section.mixins' as landing;
 
 .features {
-    padding: clamp(28px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
+    padding: var(--fd-landing-section-space) 0 var(--fd-landing-section-space-compact);
     background:
         radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent), transparent 32%),
         linear-gradient(180deg, var(--fd-color-slate-50) 0%, color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-white)) 100%);
-    --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
+    --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
 
     &__inner {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        @include landing.section-inner;
         display: flex;
         flex-direction: column;
         gap: clamp(variables.$gap-m, 3vw, variables.$gap-xxl);
-        min-width: 0;
     }
 
     &__header {
@@ -34,15 +32,7 @@
     &__eyebrow,
     &__panel-eyebrow,
     &__summary-badge {
-        display: inline-flex;
-        width: fit-content;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
-        color: var(--fd-color-primary-600);
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        font-size: 0.9rem;
+        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent));
     }
 
     &__title {
@@ -61,11 +51,11 @@
     }
 
     &__summary {
-        padding: clamp(16px, 2vw, 24px);
-        border-radius: 24px;
-        background: color-mix(in srgb, var(--fd-color-white) 80%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
-        box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+        padding: var(--fd-landing-surface-padding);
+        border-radius: var(--fd-landing-radius-panel);
+        background: var(--fd-landing-surface);
+        border: 1px solid var(--fd-landing-border-soft);
+        box-shadow: var(--fd-landing-shadow-soft);
         backdrop-filter: blur(16px);
     }
 
@@ -125,9 +115,9 @@
         align-items: start;
         background: color-mix(in srgb, var(--fd-color-white) 68%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
-        border-radius: 28px;
-        padding: clamp(18px, 2vw, 28px);
-        box-shadow: 0 20px 48px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        border-radius: var(--fd-landing-radius-panel);
+        padding: var(--fd-landing-surface-padding-lg);
+        box-shadow: var(--fd-landing-shadow-medium);
         animation: landingFadeUp 860ms ease-out both;
     }
 
@@ -153,11 +143,11 @@
         position: relative;
         overflow: hidden;
         min-height: 220px;
-        padding: 20px;
-        border-radius: 22px;
-        background: var(--fd-color-white);
-        border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
-        box-shadow: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        padding: var(--fd-landing-surface-padding);
+        border-radius: var(--fd-landing-radius-card);
+        background: var(--fd-landing-surface-strong);
+        border: 1px solid var(--fd-landing-border-soft);
+        box-shadow: var(--fd-landing-shadow-soft);
         display: flex;
         flex-direction: column;
         gap: variables.$gap-s;

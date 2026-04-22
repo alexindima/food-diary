@@ -29,6 +29,16 @@
         margin: 0;
     }
 
+    &__header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__icon-button {
+        flex-shrink: 0;
+    }
+
     &__period {
         width: 100%;
     }
@@ -209,6 +219,11 @@
 
         &__header {
             align-items: flex-start;
+        }
+
+        &__header-actions {
+            width: 100%;
+            justify-content: flex-start;
         }
     }
 }

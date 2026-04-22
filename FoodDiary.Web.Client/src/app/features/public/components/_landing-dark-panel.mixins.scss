@@ -1,0 +1,12 @@
+@mixin dark-panel(
+    $gradient-start: color-mix(in srgb, var(--fd-color-slate-900) 96%, transparent),
+    $gradient-end: color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
+) {
+    border-radius: var(--fd-landing-radius-panel);
+    background: linear-gradient(160deg, $gradient-start, $gradient-end);
+    border: 1px solid var(--fd-landing-dark-border);
+    box-shadow:
+        var(--fd-landing-shadow-strong),
+        inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent);
+    color: var(--fd-color-slate-50);
+}
