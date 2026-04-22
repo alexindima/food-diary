@@ -8,7 +8,13 @@ import { AuthComponent } from '../../components/auth/auth.component';
     standalone: true,
     template: `
         <fd-ui-dialog-shell [title]="''" size="md" [dismissible]="false" [flush]="true">
-            <fd-auth class="auth-dialog__auth" [useRouting]="false" [initialMode]="data.mode" />
+            <fd-auth
+                class="auth-dialog__auth"
+                [useRouting]="false"
+                [initialMode]="data.mode"
+                [initialReturnUrl]="data.returnUrl ?? null"
+                [initialAdminReturnUrl]="data.adminReturnUrl ?? null"
+            />
         </fd-ui-dialog-shell>
     `,
     styleUrls: ['./auth-dialog.component.scss'],
@@ -16,7 +22,13 @@ import { AuthComponent } from '../../components/auth/auth.component';
     imports: [FdUiDialogShellComponent, AuthComponent],
 })
 export class AuthDialogComponent {
-    public readonly data: { mode: 'login' | 'register' } = inject<{ mode: 'login' | 'register' }>(FD_UI_DIALOG_DATA, {
+    public readonly data = inject<AuthDialogData | null>(FD_UI_DIALOG_DATA, {
         optional: true,
-    }) ?? { mode: 'login' };
+    }) ?? { mode: 'login', returnUrl: null, adminReturnUrl: null };
+}
+
+interface AuthDialogData {
+    mode: 'login' | 'register';
+    returnUrl?: string | null;
+    adminReturnUrl?: string | null;
 }

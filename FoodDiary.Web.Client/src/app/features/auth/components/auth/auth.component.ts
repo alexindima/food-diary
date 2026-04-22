@@ -67,6 +67,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 export class AuthComponent {
     public readonly useRouting = input(true);
     public readonly initialMode = input<'login' | 'register'>('login');
+    public readonly initialReturnUrl = input<string | null>(null);
+    public readonly initialAdminReturnUrl = input<string | null>(null);
     private readonly googleLoginButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
     private readonly googleRegisterButton = viewChild<ElementRef<HTMLElement>>('googleRegisterButton');
 
@@ -151,14 +153,12 @@ export class AuthComponent {
         effect(() => {
             const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
-            this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
-            this.adminReturnUrl = this.useRouting() ? this.route?.snapshot.queryParams['adminReturnUrl'] || null : null;
+            this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : this.initialReturnUrl();
+            this.adminReturnUrl = this.useRouting()
+                ? this.route?.snapshot.queryParams['adminReturnUrl'] || null
+                : this.initialAdminReturnUrl();
         });
         effect(() => {
-            if (!this.useRouting()) {
-                return;
-            }
-
             if (!this.adminReturnUrl) {
                 return;
             }

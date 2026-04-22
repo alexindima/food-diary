@@ -28,10 +28,12 @@ export class MainComponent {
 
     private async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        const adminReturnUrl = this.route.snapshot.queryParamMap.get('adminReturnUrl');
 
         this.fdDialogService.open(AuthDialogComponent, {
             size: 'md',
-            data: { mode },
+            data: { mode, returnUrl, adminReturnUrl },
         });
     }
 }
