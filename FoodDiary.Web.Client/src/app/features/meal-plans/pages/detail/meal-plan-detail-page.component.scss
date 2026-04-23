@@ -14,16 +14,10 @@
     }
 
     &__badge {
-        display: inline-flex;
         width: fit-content;
-        padding: 4px 12px;
-        border-radius: 10px;
-        background: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
-        color: var(--fd-color-orange-700);
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-orange-700);
     }
 
     &__title {

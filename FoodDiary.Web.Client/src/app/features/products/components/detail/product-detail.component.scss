@@ -18,24 +18,11 @@
     }
 
     &__surface {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        padding: 0.75rem 1rem;
-        border-radius: var(--fd-radius-lg, 12px);
+        --fd-summary-surface-padding: 0.75rem 1rem;
     }
 
     &__surface--summary {
-        background: var(--fd-color-primary-50, var(--fd-color-primary-50));
-    }
-
-    &__surface-label {
-        color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
-    }
-
-    &__surface-value {
-        color: var(--fd-color-text, var(--fd-color-gray-900-static));
-        word-break: break-word;
+        --fd-summary-surface-background: var(--fd-color-primary-50, var(--fd-color-primary-50));
     }
 
     &__nutrients {
@@ -73,11 +60,6 @@
     }
 
     &__actions {
-        display: inline-flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
         align-self: flex-end;
     }
 

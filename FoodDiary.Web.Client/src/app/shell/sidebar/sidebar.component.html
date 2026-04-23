@@ -149,8 +149,8 @@
                     {{ Math.round(dailyConsumedKcal()) }}/{{ Math.round(dailyGoalKcal()) }} {{ 'GENERAL.UNITS.KCAL' | translate }}
                 </span>
             </div>
-            <div class="sidebar-mobile__progress-track" aria-hidden="true">
-                <span class="sidebar-mobile__progress-fill" [style.width.%]="dailyProgressPercent()"></span>
+            <div class="sidebar-mobile__progress-track fd-ui-progress-track" aria-hidden="true">
+                <span class="sidebar-mobile__progress-fill fd-ui-progress-fill" [style.width.%]="dailyProgressPercent()"></span>
             </div>
         </section>
     }

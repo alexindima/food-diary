@@ -156,27 +156,25 @@
 .notifications-dialog__item-badge {
     width: fit-content;
     max-width: 100%;
-    padding: 0.2rem 0.55rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--fd-color-teal-700) 12%, transparent);
-    color: var(--fd-color-teal-700);
+    --fd-pill-min-height: 22px;
+    --fd-pill-padding-inline: 0.55rem;
+    --fd-pill-bg: color-mix(in srgb, var(--fd-color-teal-700) 12%, transparent);
+    --fd-pill-border: transparent;
+    --fd-pill-color: var(--fd-color-teal-700);
 }
 
 .notifications-dialog__item-cta {
     margin-top: 0.25rem;
     width: fit-content;
-    padding: 0.35rem 0.6rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--fd-color-teal-700) 8%, transparent);
-    color: var(--fd-color-teal-700);
+    --fd-pill-min-height: 24px;
+    --fd-pill-padding-inline: 0.6rem;
+    --fd-pill-bg: color-mix(in srgb, var(--fd-color-teal-700) 8%, transparent);
+    --fd-pill-border: transparent;
+    --fd-pill-color: var(--fd-color-teal-700);
 }
 
 .notifications-dialog__footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
     padding: 0 1.25rem 1.25rem;
-    flex-wrap: wrap;
 }
 
 @media #{variables.$media-phablet} {

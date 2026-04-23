@@ -55,25 +55,8 @@
 }
 
 .premium-access-page__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     min-height: 32px;
-    padding: 0 12px;
-    border-radius: 999px;
     letter-spacing: 0.01em;
-}
-
-.premium-access-page__badge--plan {
-    background: color-mix(in srgb, var(--fd-gradient-premium-start) 14%, var(--fd-color-surface));
-    color: var(--fd-color-text);
-    border: 1px solid color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
-}
-
-.premium-access-page__badge--status {
-    background: color-mix(in srgb, var(--fd-color-primary-500) 12%, var(--fd-color-surface));
-    color: var(--fd-color-text);
-    border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 30%, var(--fd-color-border));
 }
 
 .premium-access-page__meta {
@@ -112,12 +95,7 @@
 }
 
 .premium-access-page__plan-kicker {
-    display: inline-flex;
-    width: fit-content;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
-    color: var(--fd-color-primary-700);
+    --fd-pill-border: transparent;
 }
 
 .premium-access-page__plan-title {

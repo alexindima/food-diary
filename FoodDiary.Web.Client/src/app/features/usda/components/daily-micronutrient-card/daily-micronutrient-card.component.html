@@ -13,10 +13,10 @@
     } @else {
         <div class="nutrients-grid">
             @for (nutrient of keyNutrients(); track nutrient.nutrientId) {
-                <div class="nutrient-item">
-                    <div class="nutrient-header">
+                <div class="nutrient-item fd-ui-progress-item">
+                    <div class="nutrient-header fd-ui-progress-item__header">
                         <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
-                        <span class="nutrient-value fd-ui-caption">
+                        <span class="nutrient-value fd-ui-progress-item__value fd-ui-caption">
                             {{ nutrient.totalAmount | number: '1.0-1' }}{{ nutrient.unit }}
                             @if (nutrient.percentDailyValue !== null) {
                                 <span
@@ -31,9 +31,9 @@
                         </span>
                     </div>
                     @if (nutrient.percentDailyValue !== null) {
-                        <div class="progress-bar">
+                        <div class="progress-bar fd-ui-progress-track">
                             <div
-                                class="progress-fill"
+                                class="progress-fill fd-ui-progress-fill"
                                 [style.width.%]="Math.min(nutrient.percentDailyValue, 100)"
                                 [class.fill-low]="nutrient.percentDailyValue < 25"
                                 [class.fill-mid]="nutrient.percentDailyValue >= 25 && nutrient.percentDailyValue < 75"

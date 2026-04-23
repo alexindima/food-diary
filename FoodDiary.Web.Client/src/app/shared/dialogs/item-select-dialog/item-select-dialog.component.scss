@@ -17,8 +17,7 @@
     }
 
     &__footer {
-        display: flex;
-        justify-content: flex-end;
+        --fd-actions-gap: #{variables.$gap-s};
         padding-top: variables.$gap-s;
     }
 }

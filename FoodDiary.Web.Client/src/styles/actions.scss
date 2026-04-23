@@ -1,0 +1,33 @@
+.fd-ui-actions {
+    --fd-actions-gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: var(--fd-actions-gap);
+    flex-wrap: wrap;
+}
+
+.fd-ui-actions--end {
+    justify-content: flex-end;
+}
+
+.fd-ui-actions--between {
+    justify-content: space-between;
+}
+
+.fd-ui-actions--stack {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.fd-ui-actions--split {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+}
+
+@media (max-width: 640px) {
+
+    .fd-ui-actions--split {
+        grid-template-columns: 1fr;
+    }
+}

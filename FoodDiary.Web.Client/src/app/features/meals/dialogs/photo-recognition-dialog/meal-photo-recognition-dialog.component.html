@@ -20,7 +20,10 @@
             />
 
             @if (statusKey()) {
-                <div class="photo-ai-dialog__status fd-ui-overline" [class.photo-ai-dialog__status--loading]="isLoading()">
+                <div
+                    class="photo-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
+                    [class.photo-ai-dialog__status--loading]="isLoading()"
+                >
                     {{ statusKey() | translate }}
                 </div>
             }
@@ -34,7 +37,7 @@
 
         @if (!isLoading()) {
             @if (errorKey()) {
-                <div class="photo-ai-dialog__error fd-ui-body-sm">
+                <div class="photo-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
                     {{ errorKey() | translate }}
                 </div>
             }
@@ -208,7 +211,9 @@
                             </div>
                         } @else {
                             @if (nutritionErrorKey()) {
-                                <div class="photo-ai-dialog__nutrition-error fd-ui-body-sm">
+                                <div
+                                    class="photo-ai-dialog__nutrition-error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm"
+                                >
                                     {{ nutritionErrorKey() | translate }}
                                 </div>
                             }
@@ -219,7 +224,7 @@
         }
     </div>
 
-    <div fdUiDialogFooter class="photo-ai-dialog__actions">
+    <div fdUiDialogFooter class="photo-ai-dialog__actions fd-ui-actions fd-ui-actions--end">
         <fd-ui-button fill="outline" variant="secondary" (click)="close()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>

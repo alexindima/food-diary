@@ -254,10 +254,9 @@
 
     &__bar-track {
         width: 100%;
-        height: 20px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-color-surface-raised));
-        overflow: hidden;
+        --fd-progress-height: 20px;
+        --fd-progress-radius: 999px;
+        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-color-surface-raised));
         position: relative;
     }
 
@@ -265,8 +264,6 @@
         position: absolute;
         inset: 0;
         width: 0;
-        height: 100%;
-        border-radius: 999px;
         opacity: 0.96;
         transition:
             width 0.4s ease,

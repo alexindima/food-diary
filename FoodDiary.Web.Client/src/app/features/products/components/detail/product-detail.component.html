@@ -6,13 +6,15 @@
             @case ('summary') {
                 <div class="product-detail__summary">
                     <fd-ui-accent-surface
-                        class="product-detail__surface product-detail__surface--summary"
+                        class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label fd-ui-caption">{{ 'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-                        <strong class="product-detail__surface-value fd-ui-card-title">
+                        <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                            'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate
+                        }}</span>
+                        <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
                             {{ calories }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
@@ -20,43 +22,47 @@
 
                     @if (product.barcode) {
                         <fd-ui-accent-surface
-                            class="product-detail__surface product-detail__surface--summary"
+                            class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
                             accentSide="top"
                             accentColor="var(--fd-color-primary-300)"
                             [tinted]="true"
                         >
-                            <span class="product-detail__surface-label fd-ui-caption">{{
+                            <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
                                 'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate
                             }}</span>
-                            <strong class="product-detail__surface-value fd-ui-card-title">{{ product.barcode }}</strong>
+                            <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
+                                {{ product.barcode }}
+                            </strong>
                         </fd-ui-accent-surface>
                     }
 
                     <fd-ui-accent-surface
-                        class="product-detail__surface product-detail__surface--summary"
+                        class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label fd-ui-caption">{{
+                        <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
                             'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate
                         }}</span>
-                        <strong class="product-detail__surface-value fd-ui-card-title">
+                        <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
                             {{ product.defaultPortionAmount }}
                             {{ 'GENERAL.UNITS.' + product.baseUnit | translate }}
                         </strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="product-detail__surface product-detail__surface--summary"
+                        class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label fd-ui-caption">{{
+                        <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
                             'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate
                         }}</span>
-                        <strong class="product-detail__surface-value fd-ui-card-title">{{ productTypeKey | translate }}</strong>
+                        <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
+                            {{ productTypeKey | translate }}
+                        </strong>
                     </fd-ui-accent-surface>
                 </div>
             }
@@ -65,13 +71,15 @@
                     <div class="product-detail__macro-grid">
                         @for (macro of macroBlocks; track macro.labelKey) {
                             <fd-ui-accent-surface
-                                class="product-detail__surface"
+                                class="product-detail__surface fd-ui-summary-surface"
                                 accentSide="top"
                                 [accentColor]="macro.color"
                                 [tinted]="true"
                             >
-                                <span class="product-detail__surface-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
-                                <strong class="product-detail__surface-value fd-ui-card-title">
+                                <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                                    macro.labelKey | translate
+                                }}</span>
+                                <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
                                     {{ macro.value }}
                                     {{ macro.unitKey | translate }}
                                 </strong>
@@ -111,7 +119,7 @@
         @if (warningMessage(); as warningMessageKey) {
             <span class="product-detail__warning fd-ui-body-sm">{{ warningMessageKey | translate }}</span>
         }
-        <div class="product-detail__actions">
+        <div class="product-detail__actions fd-ui-actions fd-ui-actions--end">
             <fd-ui-button
                 class="product-detail__favorite-btn"
                 variant="secondary"

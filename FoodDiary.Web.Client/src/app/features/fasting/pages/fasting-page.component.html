@@ -336,7 +336,7 @@
                             </div>
                         }
 
-                        <div class="fasting__actions" [class.fasting__actions--separated]="isActive()">
+                        <div class="fasting__actions fd-ui-actions" [class.fasting__actions--separated]="isActive()">
                             @if (isActive()) {
                                 <fd-ui-button
                                     (click)="endFasting()"
@@ -358,33 +358,39 @@
                     @if (stats(); as s) {
                         <div class="fasting__stats fasting__stats--primary">
                             <fd-ui-accent-surface
-                                class="fasting__stat"
+                                class="fasting__stat fd-ui-stat-tile"
                                 accentSide="top"
                                 accentColor="var(--fd-color-purple-500)"
                                 [tinted]="true"
                             >
-                                <span class="fasting__stat-label fd-ui-meta-text">{{ 'FASTING.TOTAL_COMPLETED' | translate }}</span>
-                                <strong class="fasting__stat-value fd-ui-metric-lg">{{ s.totalCompleted }}</strong>
+                                <span class="fasting__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                                    'FASTING.TOTAL_COMPLETED' | translate
+                                }}</span>
+                                <strong class="fasting__stat-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ s.totalCompleted }}</strong>
                             </fd-ui-accent-surface>
                             <fd-ui-accent-surface
-                                class="fasting__stat"
+                                class="fasting__stat fd-ui-stat-tile"
                                 accentSide="top"
                                 accentColor="var(--fd-color-orange-500)"
                                 [tinted]="true"
                             >
-                                <span class="fasting__stat-label fd-ui-meta-text">{{ 'FASTING.CURRENT_STREAK' | translate }}</span>
-                                <strong class="fasting__stat-value fd-ui-metric-lg"
+                                <span class="fasting__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                                    'FASTING.CURRENT_STREAK' | translate
+                                }}</span>
+                                <strong class="fasting__stat-value fd-ui-stat-tile__value fd-ui-metric-lg"
                                     >{{ s.currentStreak }} {{ 'FASTING.DAYS' | translate }}</strong
                                 >
                             </fd-ui-accent-surface>
                             <fd-ui-accent-surface
-                                class="fasting__stat"
+                                class="fasting__stat fd-ui-stat-tile"
                                 accentSide="top"
                                 accentColor="var(--fd-color-sky-500)"
                                 [tinted]="true"
                             >
-                                <span class="fasting__stat-label fd-ui-meta-text">{{ 'FASTING.AVG_DURATION' | translate }}</span>
-                                <strong class="fasting__stat-value fd-ui-metric-lg"
+                                <span class="fasting__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                                    'FASTING.AVG_DURATION' | translate
+                                }}</span>
+                                <strong class="fasting__stat-value fd-ui-stat-tile__value fd-ui-metric-lg"
                                     >{{ s.averageDurationHours | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong
                                 >
                             </fd-ui-accent-surface>
@@ -401,31 +407,39 @@
                                     </div>
                                 </div>
 
-                                <div class="fasting__pattern-panel">
+                                <div class="fasting__pattern-panel fd-ui-surface fd-ui-surface--raised">
                                     <div class="fasting__stats fasting__stats--compact">
                                         <fd-ui-accent-surface
-                                            class="fasting__stat fasting__stat--compact"
+                                            class="fasting__stat fasting__stat--compact fd-ui-stat-tile fd-ui-stat-tile--compact"
                                             accentSide="top"
                                             accentColor="var(--fd-color-teal-700)"
                                             [tinted]="true"
                                         >
-                                            <span class="fasting__stat-label fasting__stat-label--compact fd-ui-meta-text">
+                                            <span
+                                                class="fasting__stat-label fasting__stat-label--compact fd-ui-stat-tile__label fd-ui-meta-text"
+                                            >
                                                 {{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}
                                             </span>
-                                            <strong class="fasting__stat-value fasting__stat-value--compact fd-ui-body">
+                                            <strong
+                                                class="fasting__stat-value fasting__stat-value--compact fd-ui-stat-tile__value fd-ui-body"
+                                            >
                                                 {{ s.completionRateLast30Days | number: '1.0-1' }}%
                                             </strong>
                                         </fd-ui-accent-surface>
                                         <fd-ui-accent-surface
-                                            class="fasting__stat fasting__stat--compact"
+                                            class="fasting__stat fasting__stat--compact fd-ui-stat-tile fd-ui-stat-tile--compact"
                                             accentSide="top"
                                             accentColor="var(--fd-color-primary-600)"
                                             [tinted]="true"
                                         >
-                                            <span class="fasting__stat-label fasting__stat-label--compact fd-ui-meta-text">
+                                            <span
+                                                class="fasting__stat-label fasting__stat-label--compact fd-ui-stat-tile__label fd-ui-meta-text"
+                                            >
                                                 {{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}
                                             </span>
-                                            <strong class="fasting__stat-value fasting__stat-value--compact fd-ui-body">
+                                            <strong
+                                                class="fasting__stat-value fasting__stat-value--compact fd-ui-stat-tile__value fd-ui-body"
+                                            >
                                                 {{ s.checkInRateLast30Days | number: '1.0-1' }}%
                                             </strong>
                                         </fd-ui-accent-surface>
@@ -487,7 +501,7 @@
                                     @if (latestCheckIn.symptoms.length > 0) {
                                         <div class="fasting__history-symptoms">
                                             @for (symptom of latestCheckIn.symptoms; track symptom) {
-                                                <span class="fasting__history-symptom fd-ui-caption">
+                                                <span class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption">
                                                     {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
                                                 </span>
                                             }
@@ -498,7 +512,7 @@
                                     }
                                 }
 
-                                <div class="fasting__actions fasting__actions--start">
+                                <div class="fasting__actions fasting__actions--start fd-ui-actions">
                                     <fd-ui-button
                                         variant="secondary"
                                         fill="outline"
@@ -574,7 +588,7 @@
                                 ></textarea>
                             </label>
 
-                            <div class="fasting__actions fasting__actions--split">
+                            <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">
                                 <fd-ui-button
                                     variant="secondary"
                                     fill="outline"
@@ -636,7 +650,7 @@
                                             </span>
                                         </div>
                                         <div
-                                            class="fasting__history-badge fd-ui-meta-text"
+                                            class="fasting__history-badge fd-ui-pill fd-ui-pill--compact fd-ui-meta-text"
                                             [class.fasting__history-badge--completed]="session.status === 'Completed'"
                                             [class.fasting__history-badge--interrupted]="session.status === 'Interrupted'"
                                             [class.fasting__history-badge--skipped]="session.status === 'Skipped'"
@@ -706,7 +720,9 @@
                                                         @if (checkIn.symptoms.length > 0) {
                                                             <div class="fasting__history-symptoms">
                                                                 @for (symptom of checkIn.symptoms; track symptom) {
-                                                                    <span class="fasting__history-symptom fd-ui-caption">
+                                                                    <span
+                                                                        class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption"
+                                                                    >
                                                                         {{
                                                                             'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate
                                                                         }}

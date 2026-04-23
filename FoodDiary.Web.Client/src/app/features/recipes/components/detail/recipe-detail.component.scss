@@ -18,15 +18,11 @@
     }
 
     &__surface {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        padding: 0.75rem 1rem;
-        border-radius: var(--fd-radius-lg, 12px);
+        --fd-summary-surface-padding: 0.75rem 1rem;
     }
 
     &__surface--summary {
-        background: var(--fd-color-primary-50, var(--fd-color-primary-50));
+        --fd-summary-surface-background: var(--fd-color-primary-50, var(--fd-color-primary-50));
     }
 
     &__surface--comment {
@@ -34,16 +30,7 @@
     }
 
     &__surface--quality {
-        gap: 0.6rem;
-    }
-
-    &__surface-label {
-        color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
-    }
-
-    &__surface-value {
-        color: var(--fd-color-text, var(--fd-color-gray-900-static));
-        word-break: break-word;
+        --fd-summary-surface-gap: 0.6rem;
     }
 
     &__quality {
@@ -56,16 +43,12 @@
     }
 
     &__quality-bar {
-        height: 8px;
-        border-radius: 999px;
-        overflow: hidden;
-        background: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+        --fd-progress-height: 8px;
+        --fd-progress-radius: 999px;
+        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
     }
 
     &__quality-fill {
-        display: block;
-        height: 100%;
-        border-radius: inherit;
 
         &--green {
             background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-color-white)));
@@ -120,11 +103,6 @@
     }
 
     &__actions {
-        display: inline-flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
         align-self: flex-end;
     }
 
@@ -183,7 +161,3 @@
 
     }
 }
-
-
-
-

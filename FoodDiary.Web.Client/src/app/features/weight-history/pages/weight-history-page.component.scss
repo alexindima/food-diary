@@ -157,28 +157,29 @@
     }
 
     &__bmi-status {
-        padding: 2px 10px;
-        border-radius: 999px;
+        --fd-pill-min-height: 24px;
+        --fd-pill-padding-inline: 10px;
+        --fd-pill-border: transparent;
     }
 
     &__bmi-status--under {
-        background-color: var(--fd-color-primary-100);
-        color: var(--fd-color-primary-700);
+        --fd-pill-bg: var(--fd-color-primary-100);
+        --fd-pill-color: var(--fd-color-primary-700);
     }
 
     &__bmi-status--normal {
-        background-color: color-mix(in srgb, var(--fd-color-green-500) 18%, var(--fd-color-white));
-        color: var(--fd-color-emerald-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 18%, var(--fd-color-white));
+        --fd-pill-color: var(--fd-color-emerald-700);
     }
 
     &__bmi-status--over {
-        background-color: color-mix(in srgb, var(--fd-color-yellow-300) 55%, var(--fd-color-white));
-        color: var(--fd-color-orange-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-yellow-300) 55%, var(--fd-color-white));
+        --fd-pill-color: var(--fd-color-orange-700);
     }
 
     &__bmi-status--obese {
-        background-color: color-mix(in srgb, var(--fd-color-danger) 18%, var(--fd-color-white));
-        color: var(--fd-color-red-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-danger) 18%, var(--fd-color-white));
+        --fd-pill-color: var(--fd-color-red-700);
     }
 
     &__bmi-description {

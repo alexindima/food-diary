@@ -27,16 +27,13 @@
 }
 
 .nutrient-item {
-    padding: 8px;
-    border-radius: 8px;
-    background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
+    --fd-progress-item-padding: 8px;
+    --fd-progress-item-radius: 8px;
+    --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
 }
 
 .nutrient-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 6px;
+    min-width: 0;
 }
 
 .nutrient-value,
@@ -62,16 +59,13 @@
 }
 
 .progress-bar {
-    height: 4px;
-    background: var(--fd-surface-variant, var(--fd-color-slate-200));
-    border-radius: 2px;
-    overflow: hidden;
+    --fd-progress-height: 4px;
+    --fd-progress-radius: 2px;
+    --fd-progress-track-background: var(--fd-surface-variant, var(--fd-color-slate-200));
 }
 
 .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.3s ease;
+    background-color: currentColor;
 }
 
 .fill-low {

@@ -9,7 +9,7 @@
 
     <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
         @if (globalError()) {
-            <div class="recipe-manage__error fd-ui-body-sm" role="alert">
+            <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
                 {{ globalError() }}
             </div>
         }
@@ -78,7 +78,7 @@
                     </fd-ui-card>
 
                     <div class="recipe-manage__actions-panel">
-                        <div class="recipe-manage__footer-actions">
+                        <div class="recipe-manage__footer-actions fd-ui-actions fd-ui-actions--split">
                             <fd-ui-button
                                 type="button"
                                 class="recipe-manage__cancel-button"

@@ -44,7 +44,9 @@
                         (click)="openPlan(plan.id)"
                         (keydown.enter)="openPlan(plan.id)"
                     >
-                        <div class="meal-plan-card__badge">{{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}</div>
+                        <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                            {{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}
+                        </div>
                         <h3 class="meal-plan-card__name">{{ plan.name }}</h3>
                         @if (plan.description) {
                             <p class="meal-plan-card__desc">{{ plan.description }}</p>
@@ -57,7 +59,7 @@
                             }
                         </div>
                         @if (plan.isCurated) {
-                            <div class="meal-plan-card__curated">
+                            <div class="meal-plan-card__curated fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
                                 <fd-ui-icon name="verified" size="sm" />
                                 {{ 'MEAL_PLANS.CURATED' | translate }}
                             </div>

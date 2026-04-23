@@ -6,64 +6,68 @@
             @case ('summary') {
                 <div class="consumption-detail__summary">
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary"
+                        class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
                             'CONSUMPTION_DETAIL.SUMMARY.CALORIES' | translate
                         }}</span>
-                        <strong class="consumption-detail__surface-value fd-ui-action-text">
+                        <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                             {{ calories }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary"
+                        class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
                             'CONSUMPTION_DETAIL.SUMMARY.MEAL_TYPE' | translate
                         }}</span>
-                        <strong class="consumption-detail__surface-value fd-ui-action-text">
+                        <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                             {{ mealTypeLabel || ('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_MEAL' | translate) }}
                         </strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary"
+                        class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
                             'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate
                         }}</span>
-                        <strong class="consumption-detail__surface-value fd-ui-action-text">{{ itemsCount }}</strong>
+                        <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">{{
+                            itemsCount
+                        }}</strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary consumption-detail__surface--quality"
+                        class="consumption-detail__surface consumption-detail__surface--summary consumption-detail__surface--quality fd-ui-summary-surface fd-ui-summary-surface--quality"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
                             'PRODUCT_CARD.QUALITY_SCORE' | translate
                         }}</span>
                         <div class="consumption-detail__quality">
-                            <div class="consumption-detail__quality-bar" aria-hidden="true">
+                            <div class="consumption-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                                 <span
-                                    class="consumption-detail__quality-fill consumption-detail__quality-fill--{{ qualityGrade }}"
+                                    class="consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--{{
+                                        qualityGrade
+                                    }}"
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
                             <strong
-                                class="consumption-detail__quality-value fd-ui-card-title"
+                                class="consumption-detail__quality-value fd-ui-summary-surface__value fd-ui-card-title"
                                 [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
                             >
                                 {{ qualityScore }}
@@ -74,15 +78,17 @@
 
                 @if (consumption.comment) {
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--comment"
+                        class="consumption-detail__surface consumption-detail__surface--comment fd-ui-summary-surface"
                         accentSide="left"
                         accentColor="var(--fd-color-primary-200)"
                         [tinted]="true"
                     >
-                        <span class="consumption-detail__surface-label fd-ui-meta-text">{{
+                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
                             'CONSUMPTION_DETAIL.SUMMARY.COMMENT' | translate
                         }}</span>
-                        <span class="consumption-detail__surface-value fd-ui-body-sm">{{ consumption.comment }}</span>
+                        <span class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-body-sm">{{
+                            consumption.comment
+                        }}</span>
                     </fd-ui-accent-surface>
                 }
             }
@@ -91,13 +97,15 @@
                     <div class="consumption-detail__macro-grid">
                         @for (macro of macroBlocks; track macro.labelKey) {
                             <fd-ui-accent-surface
-                                class="consumption-detail__surface"
+                                class="consumption-detail__surface fd-ui-summary-surface"
                                 accentSide="top"
                                 [accentColor]="macro.color"
                                 [tinted]="true"
                             >
-                                <span class="consumption-detail__surface-label fd-ui-meta-text">{{ macro.labelKey | translate }}</span>
-                                <strong class="consumption-detail__surface-value fd-ui-action-text">
+                                <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                                    macro.labelKey | translate
+                                }}</span>
+                                <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                                     {{ macro.value }}
                                     {{ macro.unitKey | translate }}
                                 </strong>
@@ -134,7 +142,7 @@
     </div>
 
     <div fdUiDialogFooter class="consumption-detail__footer">
-        <div class="consumption-detail__actions">
+        <div class="consumption-detail__actions fd-ui-actions fd-ui-actions--end">
             <fd-ui-button
                 class="consumption-detail__favorite-btn"
                 variant="secondary"

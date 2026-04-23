@@ -15,19 +15,17 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    padding: 6px 12px;
-    border-radius: 999px;
     letter-spacing: 0.01em;
-    background: var(--fd-color-white);
-    color: var(--fd-color-primary-700);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
+    --fd-pill-bg: var(--fd-color-white);
+    --fd-pill-color: var(--fd-color-primary-700);
+    --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     z-index: 2;
 }
 
 .photo-ai-dialog__status--loading {
-    color: var(--fd-color-primary-900);
-    border-color: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
+    --fd-pill-color: var(--fd-color-primary-900);
+    --fd-pill-border: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
     box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
 }
 
@@ -99,11 +97,7 @@
 }
 
 .photo-ai-dialog__error {
-    background: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
-    color: var(--fd-color-red-700);
-    border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
-    border-radius: 12px;
-    padding: 12px 14px;
+    margin: 0;
 }
 
 .photo-ai-dialog__results {
@@ -368,11 +362,6 @@
 
 .photo-ai-dialog__nutrition-error {
     margin-top: 12px;
-    background: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
-    color: var(--fd-color-red-700);
-    border: 1px solid color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
-    border-radius: 12px;
-    padding: 10px 12px;
 }
 
 @keyframes nutrition-progress {
@@ -394,9 +383,7 @@
 }
 
 .photo-ai-dialog__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+    --fd-actions-gap: 12px;
 }
 
 @media #{variables.$media-phablet} {

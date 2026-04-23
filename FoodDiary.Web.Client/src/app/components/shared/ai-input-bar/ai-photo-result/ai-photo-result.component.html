@@ -28,11 +28,11 @@
                 </div>
             }
             @if (isAnalyzing()) {
-                <div class="ai-photo-result__status fd-ui-stat-value" role="status" aria-live="polite">
+                <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
                 </div>
             } @else if (isNutritionLoading()) {
-                <div class="ai-photo-result__status fd-ui-stat-value" role="status" aria-live="polite">
+                <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION' | translate }}
                 </div>
             }
@@ -40,7 +40,7 @@
     }
 
     @if (errorKey()) {
-        <div class="ai-photo-result__error fd-ui-error-text" role="alert">
+        <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
             {{ errorKey()! | translate }}
         </div>
     }
@@ -177,13 +177,13 @@
         }
 
         @if (!isNutritionLoading() && nutritionErrorKey()) {
-            <div class="ai-photo-result__error fd-ui-error-text" role="alert">
+            <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
                 {{ nutritionErrorKey()! | translate }}
             </div>
         }
 
         @if (!isEditing()) {
-            <div class="ai-photo-result__actions">
+            <div class="ai-photo-result__actions fd-ui-actions fd-ui-actions--split">
                 @if (showDetails()) {
                     <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="toggleDetails()">
                         <span>{{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}</span>

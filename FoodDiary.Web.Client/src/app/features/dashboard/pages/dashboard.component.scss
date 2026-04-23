@@ -185,22 +185,21 @@ $color-text-secondary: var(--fd-color-text-muted);
         position: absolute;
         top: 12px;
         right: 12px;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        color: var(--fd-color-text);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-text);
         pointer-events: none;
         z-index: 3;
     }
 
     &__block-label--hidden {
-        background: color-mix(in srgb, var(--fd-color-slate-400) 30%, transparent);
-        color: var(--fd-color-slate-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-slate-400) 30%, transparent);
+        --fd-pill-color: var(--fd-color-slate-700);
     }
 
     &__block-label--locked {
-        background: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
-        color: var(--fd-color-primary-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
+        --fd-pill-color: var(--fd-color-primary-700);
     }
 
     &__loader,

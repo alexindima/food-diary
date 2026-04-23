@@ -1,0 +1,41 @@
+.fd-ui-progress-item {
+    --fd-progress-item-padding: 8px;
+    --fd-progress-item-radius: 8px;
+    --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
+    display: block;
+    padding: var(--fd-progress-item-padding);
+    border-radius: var(--fd-progress-item-radius);
+    background: var(--fd-progress-item-background);
+}
+
+.fd-ui-progress-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.fd-ui-progress-item__value {
+    color: var(--fd-color-text-muted);
+}
+
+.fd-ui-progress-track {
+    --fd-progress-height: 4px;
+    --fd-progress-radius: 2px;
+    --fd-progress-track-background: var(--fd-surface-variant, var(--fd-color-slate-200));
+    position: relative;
+    display: block;
+    width: 100%;
+    height: var(--fd-progress-height);
+    background: var(--fd-progress-track-background);
+    border-radius: var(--fd-progress-radius);
+    overflow: hidden;
+}
+
+.fd-ui-progress-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.3s ease;
+}

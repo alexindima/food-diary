@@ -10,28 +10,56 @@
             <div class="gamification__loader fd-ui-body-sm">{{ 'GAMIFICATION.LOADING' | translate }}</div>
         } @else {
             <div class="gamification__stats-grid">
-                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="var(--fd-color-orange-500)" [tinted]="true">
+                <fd-ui-accent-surface
+                    class="gamification__stat fd-ui-stat-tile fd-ui-stat-tile--centered"
+                    accentSide="top"
+                    accentColor="var(--fd-color-orange-500)"
+                    [tinted]="true"
+                >
                     <fd-ui-icon class="gamification__stat-icon gamification__stat-icon--streak" name="local_fire_department"></fd-ui-icon>
-                    <strong class="gamification__stat-value fd-ui-metric-lg">{{ currentStreak() }}</strong>
-                    <span class="gamification__stat-label fd-ui-meta-text">{{ 'GAMIFICATION.CURRENT_STREAK' | translate }}</span>
+                    <strong class="gamification__stat-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ currentStreak() }}</strong>
+                    <span class="gamification__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                        'GAMIFICATION.CURRENT_STREAK' | translate
+                    }}</span>
                 </fd-ui-accent-surface>
 
-                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="var(--fd-color-purple-500)" [tinted]="true">
+                <fd-ui-accent-surface
+                    class="gamification__stat fd-ui-stat-tile fd-ui-stat-tile--centered"
+                    accentSide="top"
+                    accentColor="var(--fd-color-purple-500)"
+                    [tinted]="true"
+                >
                     <fd-ui-icon class="gamification__stat-icon gamification__stat-icon--longest" name="emoji_events"></fd-ui-icon>
-                    <strong class="gamification__stat-value fd-ui-metric-lg">{{ longestStreak() }}</strong>
-                    <span class="gamification__stat-label fd-ui-meta-text">{{ 'GAMIFICATION.LONGEST_STREAK' | translate }}</span>
+                    <strong class="gamification__stat-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ longestStreak() }}</strong>
+                    <span class="gamification__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                        'GAMIFICATION.LONGEST_STREAK' | translate
+                    }}</span>
                 </fd-ui-accent-surface>
 
-                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="var(--fd-color-sky-500)" [tinted]="true">
+                <fd-ui-accent-surface
+                    class="gamification__stat fd-ui-stat-tile fd-ui-stat-tile--centered"
+                    accentSide="top"
+                    accentColor="var(--fd-color-sky-500)"
+                    [tinted]="true"
+                >
                     <fd-ui-icon class="gamification__stat-icon gamification__stat-icon--meals" name="restaurant"></fd-ui-icon>
-                    <strong class="gamification__stat-value fd-ui-metric-lg">{{ totalMealsLogged() }}</strong>
-                    <span class="gamification__stat-label fd-ui-meta-text">{{ 'GAMIFICATION.TOTAL_MEALS' | translate }}</span>
+                    <strong class="gamification__stat-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ totalMealsLogged() }}</strong>
+                    <span class="gamification__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                        'GAMIFICATION.TOTAL_MEALS' | translate
+                    }}</span>
                 </fd-ui-accent-surface>
 
-                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="var(--fd-color-green-500)" [tinted]="true">
+                <fd-ui-accent-surface
+                    class="gamification__stat fd-ui-stat-tile fd-ui-stat-tile--centered"
+                    accentSide="top"
+                    accentColor="var(--fd-color-green-500)"
+                    [tinted]="true"
+                >
                     <fd-ui-icon class="gamification__stat-icon gamification__stat-icon--adherence" name="check_circle"></fd-ui-icon>
-                    <strong class="gamification__stat-value fd-ui-metric-lg">{{ weeklyAdherence() }}%</strong>
-                    <span class="gamification__stat-label fd-ui-meta-text">{{ 'GAMIFICATION.WEEKLY_ADHERENCE' | translate }}</span>
+                    <strong class="gamification__stat-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ weeklyAdherence() }}%</strong>
+                    <span class="gamification__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                        'GAMIFICATION.WEEKLY_ADHERENCE' | translate
+                    }}</span>
                 </fd-ui-accent-surface>
             </div>
 

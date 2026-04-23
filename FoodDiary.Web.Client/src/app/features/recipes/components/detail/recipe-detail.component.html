@@ -6,36 +6,44 @@
             @case ('summary') {
                 <div class="recipe-detail__summary">
                     <fd-ui-accent-surface
-                        class="recipe-detail__surface recipe-detail__surface--summary"
+                        class="recipe-detail__surface recipe-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-                        <strong class="recipe-detail__surface-value fd-ui-action-text">
+                        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                            'RECIPE_DETAIL.SUMMARY.CALORIES' | translate
+                        }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                             {{ calories }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="recipe-detail__surface recipe-detail__surface--summary"
+                        class="recipe-detail__surface recipe-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}</span>
-                        <strong class="recipe-detail__surface-value fd-ui-action-text">{{ recipe.servings }}</strong>
+                        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                            'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate
+                        }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">{{
+                            recipe.servings
+                        }}</strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="recipe-detail__surface recipe-detail__surface--summary"
+                        class="recipe-detail__surface recipe-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate }}</span>
-                        <strong class="recipe-detail__surface-value fd-ui-action-text">
+                        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                            'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate
+                        }}</span>
+                        <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                             @if (totalTime !== null) {
                                 {{ totalTime }} {{ 'RECIPE_DETAIL.MIN' | translate }}
                             } @else {
@@ -45,33 +53,37 @@
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="recipe-detail__surface recipe-detail__surface--summary"
+                        class="recipe-detail__surface recipe-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label fd-ui-caption">{{
+                        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
                             'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate
                         }}</span>
-                        <strong class="recipe-detail__surface-value fd-ui-action-text">{{ ingredientCount }}</strong>
+                        <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">{{
+                            ingredientCount
+                        }}</strong>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--quality"
+                        class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--quality fd-ui-summary-surface fd-ui-summary-surface--quality"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                            'PRODUCT_CARD.QUALITY_SCORE' | translate
+                        }}</span>
                         <div class="recipe-detail__quality">
-                            <div class="recipe-detail__quality-bar" aria-hidden="true">
+                            <div class="recipe-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                                 <span
-                                    class="recipe-detail__quality-fill recipe-detail__quality-fill--{{ qualityGrade }}"
+                                    class="recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--{{ qualityGrade }}"
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
                             <strong
-                                class="recipe-detail__quality-value fd-ui-action-text"
+                                class="recipe-detail__quality-value fd-ui-summary-surface__value fd-ui-action-text"
                                 [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
                             >
                                 {{ qualityScore }}
@@ -81,13 +93,15 @@
                 </div>
                 @if (recipe.comment) {
                     <fd-ui-accent-surface
-                        class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--comment"
+                        class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--comment fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
-                        <span class="recipe-detail__surface-label fd-ui-caption">{{ 'RECIPE_DETAIL.SUMMARY.COMMENT' | translate }}</span>
-                        <span class="recipe-detail__surface-value fd-ui-body-sm">{{ recipe.comment }}</span>
+                        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                            'RECIPE_DETAIL.SUMMARY.COMMENT' | translate
+                        }}</span>
+                        <span class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-body-sm">{{ recipe.comment }}</span>
                     </fd-ui-accent-surface>
                 }
             }
@@ -96,13 +110,15 @@
                     <div class="recipe-detail__macro-grid">
                         @for (macro of macroBlocks; track macro.labelKey) {
                             <fd-ui-accent-surface
-                                class="recipe-detail__surface"
+                                class="recipe-detail__surface fd-ui-summary-surface"
                                 accentSide="top"
                                 [accentColor]="macro.color"
                                 [tinted]="true"
                             >
-                                <span class="recipe-detail__surface-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
-                                <strong class="recipe-detail__surface-value fd-ui-action-text">
+                                <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                                    macro.labelKey | translate
+                                }}</span>
+                                <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                                     {{ macro.value }}
                                     {{ macro.unitKey | translate }}
                                 </strong>
@@ -142,7 +158,7 @@
         @if (warningMessage) {
             <span class="recipe-detail__warning fd-ui-stat-value">{{ warningMessage | translate }}</span>
         }
-        <div class="recipe-detail__actions">
+        <div class="recipe-detail__actions fd-ui-actions fd-ui-actions--end">
             <fd-ui-button
                 class="recipe-detail__favorite-btn"
                 variant="secondary"

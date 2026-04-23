@@ -134,9 +134,9 @@
                                 {{ bar.unitKey ? (bar.unitKey | translate) : bar.unit }}
                             </span>
                         </div>
-                        <div class="dashboard-summary-card__bar-track">
+                        <div class="dashboard-summary-card__bar-track fd-ui-progress-track">
                             <div
-                                class="dashboard-summary-card__bar-fill"
+                                class="dashboard-summary-card__bar-fill fd-ui-progress-fill"
                                 [style.background]="
                                     bar.target > 0
                                         ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'

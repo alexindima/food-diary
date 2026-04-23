@@ -84,7 +84,10 @@
                                     {{ 'WEIGHT_HISTORY.BMI_CURRENT' | translate }}:
                                     <strong>{{ bmiValue() }}</strong>
                                 </div>
-                                <div class="weight-history-page__bmi-status fd-ui-stat-value" [ngClass]="bmiInfo.class">
+                                <div
+                                    class="weight-history-page__bmi-status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value"
+                                    [ngClass]="bmiInfo.class"
+                                >
                                     {{ bmiInfo.labelKey | translate }}
                                 </div>
                             </div>

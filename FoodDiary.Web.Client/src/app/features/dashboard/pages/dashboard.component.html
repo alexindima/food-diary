@@ -167,7 +167,9 @@
                                 (keydown.enter)="layout.toggleBlock('summary')"
                             >
                                 @if (layout.isEditingLayout()) {
-                                    <div class="dashboard__block-label dashboard__block-label--locked fd-ui-overline">
+                                    <div
+                                        class="dashboard__block-label dashboard__block-label--locked fd-ui-pill fd-ui-pill--compact fd-ui-overline"
+                                    >
                                         {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
                                     </div>
                                 }

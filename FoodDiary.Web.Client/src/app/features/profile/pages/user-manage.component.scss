@@ -222,15 +222,9 @@
         align-items: center;
         justify-content: space-between;
         gap: 18px;
-        padding: 16px 18px;
-        border-radius: var(--fd-radius-panel);
-        background: color-mix(in srgb, var(--fd-color-primary-500) 14%, var(--fd-color-surface-raised));
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 22%, var(--fd-color-border));
 
         &--nested {
-            padding: 14px 16px;
-            background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
-            border-color: var(--fd-color-border);
+            --fd-surface-padding: 14px 16px;
         }
     }
 
@@ -254,18 +248,10 @@
     }
 
     &__notifications-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
-        border: 1px solid var(--fd-color-border);
-        color: var(--fd-color-primary-300);
-        font-size: 0.8rem;
-        font-weight: 700;
+        --fd-pill-color: var(--fd-color-primary-300);
 
         &--account {
-            color: var(--fd-color-text-strong);
+            --fd-pill-color: var(--fd-color-text-strong);
         }
     }
 
@@ -339,10 +325,6 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        padding: 14px 16px;
-        border-radius: var(--fd-radius-card);
-        background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
-        border: 1px solid var(--fd-color-border);
     }
 
     &__error {
@@ -368,10 +350,6 @@
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 16px;
-        padding: 16px 18px;
-        border-radius: var(--fd-radius-panel);
-        background: color-mix(in srgb, var(--fd-color-yellow-300) 16%, var(--fd-color-surface-raised));
-        border: 1px solid color-mix(in srgb, var(--fd-color-yellow-300) 26%, var(--fd-color-border));
     }
 
     &__dietologist-copy,
@@ -456,10 +434,6 @@
     }
 
     &__dietologist-empty {
-        padding: 14px 16px;
-        border-radius: var(--fd-radius-card);
-        background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, transparent);
-        border: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent);
         color: var(--fd-color-text-muted);
         font-size: 0.9rem;
         line-height: 1.35;
@@ -504,20 +478,19 @@
     }
 
     &__privacy-badge {
-        display: inline-block;
-        padding: 2px 10px;
-        border-radius: var(--fd-radius-badge);
-        font-size: 0.8rem;
-        font-weight: 500;
+        --fd-pill-min-height: 24px;
+        --fd-pill-padding-inline: 10px;
 
         &--active {
-            background: color-mix(in srgb, var(--fd-color-emerald-500) 18%, var(--fd-color-surface-raised));
-            color: var(--fd-color-emerald-300);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-emerald-500) 18%, var(--fd-color-surface-raised));
+            --fd-pill-border: transparent;
+            --fd-pill-color: var(--fd-color-emerald-300);
         }
 
         &--inactive {
-            background: color-mix(in srgb, var(--fd-color-surface) 92%, transparent);
-            color: var(--fd-color-text-muted);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-surface) 92%, transparent);
+            --fd-pill-border: transparent;
+            --fd-pill-color: var(--fd-color-text-muted);
         }
     }
 

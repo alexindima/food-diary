@@ -63,10 +63,10 @@
             </p>
         } @else if (overview(); as overview) {
             <div class="premium-access-page__badges">
-                <span class="premium-access-page__badge premium-access-page__badge--plan fd-ui-action-text">
+                <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
                     {{ getPlanLabelKey(overview.plan) | translate }}
                 </span>
-                <span class="premium-access-page__badge premium-access-page__badge--status fd-ui-action-text">
+                <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
                     {{ getStatusLabelKey(overview.subscriptionStatus) | translate }}
                 </span>
             </div>
@@ -113,7 +113,7 @@
 
                 <article class="premium-access-page__plan premium-access-page__plan--featured">
                     <div class="premium-access-page__plan-copy">
-                        <span class="premium-access-page__plan-kicker fd-ui-overline">{{
+                        <span class="premium-access-page__plan-kicker fd-ui-pill fd-ui-pill--primary fd-ui-overline">{{
                             'PREMIUM_PAGE.PLANS.YEARLY.KICKER' | translate
                         }}</span>
                         <h3 class="premium-access-page__plan-title fd-ui-card-title">

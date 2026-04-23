@@ -34,7 +34,7 @@
                                 <div class="notifications-dialog__item-head">
                                     <div class="notifications-dialog__item-head-main">
                                         @if (isDietologistInvitation(notification)) {
-                                            <span class="notifications-dialog__item-badge fd-ui-overline">
+                                            <span class="notifications-dialog__item-badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                                                 {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE' | translate }}
                                             </span>
                                         }
@@ -48,7 +48,10 @@
                                     <p class="notifications-dialog__item-body fd-ui-body-sm">{{ notification.body }}</p>
                                 }
                                 @if (isDietologistInvitation(notification)) {
-                                    <div class="notifications-dialog__item-cta fd-ui-action-text" aria-hidden="true">
+                                    <div
+                                        class="notifications-dialog__item-cta fd-ui-pill fd-ui-pill--compact fd-ui-action-text"
+                                        aria-hidden="true"
+                                    >
                                         {{ 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION' | translate }}
                                     </div>
                                 }
@@ -60,7 +63,7 @@
         }
     </div>
 
-    <div fdUiDialogFooter class="notifications-dialog__footer">
+    <div fdUiDialogFooter class="notifications-dialog__footer fd-ui-actions fd-ui-actions--end">
         <fd-ui-button
             variant="secondary"
             fill="outline"

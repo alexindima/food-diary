@@ -54,7 +54,9 @@
                         (keydown.enter)="openLesson(lesson.id)"
                     >
                         <div class="lesson-card__top">
-                            <span class="lesson-card__category">{{ 'LESSONS.CATEGORY.' + lesson.category | translate }}</span>
+                            <span class="lesson-card__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                                {{ 'LESSONS.CATEGORY.' + lesson.category | translate }}
+                            </span>
                             @if (lesson.isRead) {
                                 <fd-ui-icon class="lesson-card__check" name="check_circle" />
                             }

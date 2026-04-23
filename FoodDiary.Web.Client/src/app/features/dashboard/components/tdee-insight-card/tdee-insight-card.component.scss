@@ -49,11 +49,7 @@
     }
 
     &__confidence {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 10px;
-        border-radius: var(--fd-radius-button, 10px);
+        --fd-pill-border: transparent;
         width: fit-content;
 
         fd-ui-icon {
@@ -63,18 +59,18 @@
         }
 
         &--low {
-            background: color-mix(in srgb, var(--fd-color-danger) 12%, transparent);
-            color: var(--fd-color-danger);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-danger) 12%, transparent);
+            --fd-pill-color: var(--fd-color-danger);
         }
 
         &--medium {
-            background: color-mix(in srgb, var(--fd-color-yellow-300) 20%, transparent);
-            color: var(--fd-color-orange-700);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-yellow-300) 20%, transparent);
+            --fd-pill-color: var(--fd-color-orange-700);
         }
 
         &--high {
-            background: color-mix(in srgb, var(--fd-color-green-500) 14%, transparent);
-            color: var(--fd-color-emerald-700);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 14%, transparent);
+            --fd-pill-color: var(--fd-color-emerald-700);
         }
     }
 

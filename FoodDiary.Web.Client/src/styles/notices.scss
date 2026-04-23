@@ -1,0 +1,40 @@
+.fd-ui-notice-surface {
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-surface));
+    --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 24%, var(--fd-color-border));
+    --fd-notice-surface-color: var(--fd-color-text);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--fd-notice-surface-border);
+    background: var(--fd-notice-surface-bg);
+    color: var(--fd-notice-surface-color);
+}
+
+.fd-ui-notice-surface--info {
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-surface));
+    --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 24%, var(--fd-color-border));
+    --fd-notice-surface-color: var(--fd-color-text);
+}
+
+.fd-ui-notice-surface--muted {
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+    --fd-notice-surface-border: transparent;
+    --fd-notice-surface-color: var(--fd-color-text);
+}
+
+.fd-ui-notice-surface--warning {
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-amber-500) 11%, var(--fd-color-surface));
+    --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-amber-500) 30%, var(--fd-color-border));
+    --fd-notice-surface-color: var(--fd-color-text);
+}
+
+.fd-ui-notice-surface--danger {
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-surface-raised, var(--fd-color-surface)));
+    --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-danger) 32%, transparent);
+    --fd-notice-surface-color: var(--fd-color-red-700, var(--fd-color-danger));
+}
+
+.fd-ui-notice-surface--success {
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-emerald-500) 14%, var(--fd-color-surface));
+    --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-emerald-500) 28%, var(--fd-color-border));
+    --fd-notice-surface-color: var(--fd-color-text);
+}

@@ -29,24 +29,20 @@
     }
 
     &__delta {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-surface-raised));
-        color: var(--fd-color-text);
-        width: fit-content;
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-color-surface-raised));
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-text);
+        --fd-pill-min-height: 30px;
         margin-bottom: 10px;
 
         &--positive {
-            background: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-color-surface-raised));
-            color: var(--fd-color-emerald-700);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-color-surface-raised));
+            --fd-pill-color: var(--fd-color-emerald-700);
         }
 
         &--negative {
-            background: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-surface-raised));
-            color: var(--fd-color-orange-700);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-surface-raised));
+            --fd-pill-color: var(--fd-color-orange-700);
         }
     }
 

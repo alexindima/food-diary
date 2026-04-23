@@ -13,13 +13,11 @@
 }
 
 .metric-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 12px 8px;
-    border-radius: 12px;
-    background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
-    gap: 2px;
+    --fd-stat-tile-padding: 12px 8px;
+    --fd-stat-tile-gap: 2px;
+    --fd-stat-tile-radius: 12px;
+    --fd-stat-tile-border: 0;
+    --fd-stat-tile-background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
 }
 
 .metric-icon {

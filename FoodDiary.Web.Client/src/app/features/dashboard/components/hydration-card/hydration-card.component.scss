@@ -44,23 +44,18 @@
 
     &__progress-track {
         flex: 1;
-        height: 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-white) 28%, transparent);
-        overflow: hidden;
-        position: relative;
+        --fd-progress-height: 10px;
+        --fd-progress-radius: 999px;
+        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-white) 28%, transparent);
     }
 
     &__progress-fill {
-        height: 100%;
-        border-radius: inherit;
         background: linear-gradient(
             90deg,
             color-mix(in srgb, var(--fd-color-white) 95%, transparent),
             color-mix(in srgb, var(--fd-color-white) 65%, transparent)
         );
         box-shadow: 0 0 12px color-mix(in srgb, var(--fd-color-white) 50%, transparent);
-        transition: width 0.25s ease;
     }
 
     &__percent {

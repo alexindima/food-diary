@@ -88,13 +88,16 @@ describe('NoticeBannerComponent', () => {
         const types = ['info', 'warning', 'error'] as const;
 
         types.forEach(type => {
-            it(`should apply fd-notice--${type} class for type "${type}"`, () => {
+            it(`should apply notice surface class for type "${type}"`, () => {
                 fixture.componentRef.setInput('type', type);
                 fixture.detectChanges();
 
                 const el: HTMLElement = fixture.nativeElement;
                 const notice = el.querySelector('.fd-notice');
-                expect(notice?.classList.contains(`fd-notice--${type}`)).toBe(true);
+                const toneClass =
+                    type === 'error' ? 'fd-ui-notice-surface--danger' : `fd-ui-notice-surface--${type}`;
+                expect(notice?.classList.contains('fd-ui-notice-surface')).toBe(true);
+                expect(notice?.classList.contains(toneClass)).toBe(true);
             });
         });
     });
@@ -103,6 +106,7 @@ describe('NoticeBannerComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const notice = el.querySelector('.fd-notice');
-        expect(notice?.classList.contains('fd-notice--info')).toBe(true);
+        expect(notice?.classList.contains('fd-ui-notice-surface')).toBe(true);
+        expect(notice?.classList.contains('fd-ui-notice-surface--info')).toBe(true);
     });
 });

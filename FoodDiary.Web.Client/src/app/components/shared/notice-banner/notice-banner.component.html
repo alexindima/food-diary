@@ -1,4 +1,9 @@
-﻿<div class="fd-notice" [class]="'fd-notice--' + type()">
+<div
+    class="fd-notice fd-ui-notice-surface"
+    [class.fd-ui-notice-surface--info]="type() === 'info'"
+    [class.fd-ui-notice-surface--warning]="type() === 'warning'"
+    [class.fd-ui-notice-surface--danger]="type() === 'error'"
+>
     <div class="fd-notice__main">
         <div class="fd-notice__icon" aria-hidden="true">
             @switch (type()) {

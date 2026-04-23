@@ -14,19 +14,14 @@
     }
 
     &__stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        padding: 20px 14px;
-        border: 1px solid var(--fd-color-border);
-        background: linear-gradient(
+        --fd-stat-tile-padding: 20px 14px;
+        --fd-stat-tile-gap: 4px;
+        --fd-stat-tile-background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--accent-color, var(--fd-color-primary-500)) 8%),
             color-mix(in srgb, var(--fd-color-surface) 96%, var(--accent-color, var(--fd-color-primary-500)) 4%)
         );
-        box-shadow: 0 12px 32px color-mix(in srgb, rgb(0 0 0) 24%, transparent);
-        text-align: center;
+        --fd-stat-tile-shadow: 0 12px 32px color-mix(in srgb, rgb(0 0 0) 24%, transparent);
     }
 
     &__stat:nth-child(1) {

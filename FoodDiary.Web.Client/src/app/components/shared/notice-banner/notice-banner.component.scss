@@ -1,9 +1,6 @@
 @use 'variables';
 
 .fd-notice {
-    --fd-notice-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-surface));
-    --fd-notice-border: color-mix(in srgb, var(--fd-color-primary-500) 24%, var(--fd-color-border));
-    --fd-notice-text: var(--fd-color-text);
     --fd-notice-message: var(--fd-color-text-muted);
     --fd-notice-icon-bg: color-mix(in srgb, var(--fd-color-primary-500) 82%, var(--fd-color-primary-600));
     --fd-notice-icon-fg: var(--fd-color-white);
@@ -14,9 +11,6 @@
     gap: 14px;
     padding: 14px 16px;
     border-radius: var(--fd-radius-panel);
-    border: 1px solid var(--fd-notice-border);
-    background: var(--fd-notice-bg);
-    color: var(--fd-notice-text);
     width: 100%;
     box-sizing: border-box;
 }
@@ -49,7 +43,7 @@
 }
 
 .fd-notice__title {
-    color: var(--fd-notice-text);
+    color: inherit;
 }
 
 .fd-notice__message {
@@ -91,19 +85,13 @@
     }
 }
 
-.fd-notice--warning {
-    --fd-notice-bg: color-mix(in srgb, var(--fd-color-amber-500) 11%, var(--fd-color-surface));
-    --fd-notice-border: color-mix(in srgb, var(--fd-color-amber-500) 30%, var(--fd-color-border));
-    --fd-notice-text: var(--fd-color-text);
+.fd-ui-notice-surface--warning.fd-notice {
     --fd-notice-message: color-mix(in srgb, var(--fd-color-amber-400) 48%, var(--fd-color-text-muted));
     --fd-notice-icon-bg: var(--fd-color-amber-500);
     --fd-notice-action: color-mix(in srgb, var(--fd-color-amber-400) 72%, var(--fd-color-text));
 }
 
-.fd-notice--error {
-    --fd-notice-bg: color-mix(in srgb, var(--fd-color-danger) 11%, var(--fd-color-surface));
-    --fd-notice-border: color-mix(in srgb, var(--fd-color-danger) 30%, var(--fd-color-border));
-    --fd-notice-text: var(--fd-color-text);
+.fd-ui-notice-surface--danger.fd-notice {
     --fd-notice-message: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-color-text-muted));
     --fd-notice-icon-bg: var(--fd-color-danger);
     --fd-notice-action: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-text));

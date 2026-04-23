@@ -19,14 +19,9 @@
     }
 
     &__category {
-        padding: 4px 10px;
-        border-radius: 10px;
-        background: rgba(139, 92, 246, 0.12);
-        color: var(--fd-color-purple-500);
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        --fd-pill-bg: rgba(139, 92, 246, 0.12);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-purple-500);
     }
 
     &__difficulty,
@@ -54,12 +49,9 @@
     }
 
     &__read-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: var(--fd-color-green-500);
-        font-weight: 700;
-        font-size: 0.9rem;
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-green-500);
     }
 }
 

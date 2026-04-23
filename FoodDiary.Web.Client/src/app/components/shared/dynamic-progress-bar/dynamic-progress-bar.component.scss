@@ -6,16 +6,15 @@
 .dynamic-progress-bar {
     position: relative;
     width: 100%;
-    background-color: var(--fd-color-slate-200);
-    border-radius: 10px;
-    overflow: hidden;
+    --fd-progress-height: 25px;
+    --fd-progress-radius: 10px;
+    --fd-progress-track-background: var(--fd-color-slate-200);
     height: 25px;
     margin: 20px 0;
 }
 
 .dynamic-progress-bar-line {
     height: 100%;
-    text-align: center;
     color: var(--fd-color-white);
     transition:
         background-color 0.3s ease,

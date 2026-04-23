@@ -1,6 +1,6 @@
 <div class="dynamic-progress-bar-wrapper">
-    <div class="dynamic-progress-bar">
-        <div class="dynamic-progress-bar-line" [ngStyle]="{ width: progressBarWidth(), backgroundColor: barColor() }">
+    <div class="dynamic-progress-bar fd-ui-progress-track">
+        <div class="dynamic-progress-bar-line fd-ui-progress-fill" [ngStyle]="{ width: progressBarWidth(), backgroundColor: barColor() }">
             <div class="dynamic-progress-bar-title fd-ui-stat-value" [ngClass]="textColorClass()" [ngStyle]="{ left: textPosition() }">
                 {{ current() }} {{ unit() }} ({{ progress() }}%)
             </div>

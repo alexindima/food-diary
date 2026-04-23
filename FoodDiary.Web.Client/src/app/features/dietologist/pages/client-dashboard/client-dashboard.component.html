@@ -7,13 +7,19 @@
             @if (currentClient.permissions.shareProfile) {
                 <div class="client-dashboard__profile-meta">
                     @if (currentClient.height) {
-                        <span class="client-dashboard__chip fd-ui-overline">{{ currentClient.height }} cm</span>
+                        <span class="client-dashboard__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ currentClient.height }} cm
+                        </span>
                     }
                     @if (currentClient.gender) {
-                        <span class="client-dashboard__chip fd-ui-overline">{{ currentClient.gender }}</span>
+                        <span class="client-dashboard__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ currentClient.gender }}
+                        </span>
                     }
                     @if (currentClient.activityLevel) {
-                        <span class="client-dashboard__chip fd-ui-overline">{{ currentClient.activityLevel }}</span>
+                        <span class="client-dashboard__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ currentClient.activityLevel }}
+                        </span>
                     }
                 </div>
             }

@@ -265,11 +265,9 @@
     }
 
     &__actions {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
         padding: 16px 0;
         width: 100%;
+        justify-content: center;
 
         &--start {
             padding-bottom: 0;
@@ -277,8 +275,6 @@
 
         &--split {
             justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
         }
 
         &--separated {
@@ -420,21 +416,14 @@
     }
 
     &__stat {
-        padding: 14px;
-        border-radius: var(--fd-radius-card);
-        border: 1px solid var(--fd-color-border);
-        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
-        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
+        --fd-stat-tile-gap: 6px;
 
         &--compact {
-            padding: 12px 14px;
-            border-radius: var(--fd-radius-card);
-            box-shadow: none;
+            --fd-stat-tile-gap: 4px;
         }
     }
 
     &__stat-label {
-        display: block;
         color: var(--fd-color-text-muted);
         margin-bottom: 4px;
 
@@ -444,7 +433,6 @@
     }
 
     &__stat-value {
-        display: block;
         color: var(--fd-color-text-strong);
     }
 
@@ -471,9 +459,8 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        padding: 14px;
-        border: 1px solid var(--fd-color-border);
-        border-radius: var(--fd-radius-panel);
+        --fd-surface-padding: 14px;
+        --fd-surface-radius: var(--fd-radius-panel);
         background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
     }
 
@@ -536,13 +523,7 @@
     }
 
     &__telemetry-metric {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding: 14px 16px;
-        border-radius: 16px;
-        background: color-mix(in srgb, var(--fd-color-white) 78%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+        --fd-stat-tile-padding: 14px 16px;
     }
 
     &__telemetry-value {
@@ -632,29 +613,28 @@
     }
 
     &__history-badge {
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
-        color: var(--fd-color-text-muted);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-surface) 88%, transparent);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-text-muted);
 
         &--completed {
-            background: color-mix(in srgb, var(--fd-color-green-500) 14%, var(--fd-color-surface));
-            color: var(--fd-color-emerald-300);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 14%, var(--fd-color-surface));
+            --fd-pill-color: var(--fd-color-emerald-300);
         }
 
         &--interrupted {
-            background: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-surface));
-            color: var(--fd-color-orange-300);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-color-surface));
+            --fd-pill-color: var(--fd-color-orange-300);
         }
 
         &--skipped {
-            background: color-mix(in srgb, var(--fd-color-sky-500) 14%, var(--fd-color-surface));
-            color: var(--fd-color-sky-300);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-sky-500) 14%, var(--fd-color-surface));
+            --fd-pill-color: var(--fd-color-sky-300);
         }
 
         &--postponed {
-            background: color-mix(in srgb, var(--fd-color-purple-500) 14%, var(--fd-color-surface));
-            color: var(--fd-color-purple-300);
+            --fd-pill-bg: color-mix(in srgb, var(--fd-color-purple-500) 14%, var(--fd-color-surface));
+            --fd-pill-color: var(--fd-color-purple-300);
         }
     }
 
@@ -790,10 +770,9 @@
     }
 
     &__history-symptom {
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-color-surface));
-        color: var(--fd-color-purple-300);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-color-surface));
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-purple-300);
     }
 
     &__empty,

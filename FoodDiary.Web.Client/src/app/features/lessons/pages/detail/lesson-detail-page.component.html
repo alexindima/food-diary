@@ -9,7 +9,9 @@
         } @else if (facade.selectedLesson(); as lesson) {
             <article class="lesson-detail__article">
                 <div class="lesson-detail__meta-row">
-                    <span class="lesson-detail__category">{{ 'LESSONS.CATEGORY.' + lesson.category | translate }}</span>
+                    <span class="lesson-detail__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                        {{ 'LESSONS.CATEGORY.' + lesson.category | translate }}
+                    </span>
                     <span class="lesson-detail__difficulty">{{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}</span>
                     <span class="lesson-detail__time">{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
                 </div>
@@ -22,7 +24,7 @@
                             {{ 'LESSONS.MARK_READ' | translate }}
                         </fd-ui-button>
                     } @else {
-                        <div class="lesson-detail__read-badge">
+                        <div class="lesson-detail__read-badge fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
                             <fd-ui-icon name="check_circle" />
                             {{ 'LESSONS.ALREADY_READ' | translate }}
                         </div>

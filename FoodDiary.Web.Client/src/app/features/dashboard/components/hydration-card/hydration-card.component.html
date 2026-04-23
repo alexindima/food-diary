@@ -27,8 +27,8 @@
             </div>
             @if (hasGoal()) {
                 <div class="hydration-card__progress">
-                    <div class="hydration-card__progress-track">
-                        <div class="hydration-card__progress-fill" [style.width]="trackWidth()"></div>
+                    <div class="hydration-card__progress-track fd-ui-progress-track">
+                        <div class="hydration-card__progress-fill fd-ui-progress-fill" [style.width]="trackWidth()"></div>
                     </div>
                     <div class="hydration-card__percent fd-ui-stat-value">{{ percent() | number: '1.0-0' }}%</div>
                 </div>

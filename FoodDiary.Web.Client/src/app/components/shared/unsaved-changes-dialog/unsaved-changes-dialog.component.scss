@@ -10,9 +10,7 @@
 }
 
 .unsaved-changes-dialog__footer {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    --fd-actions-gap: 12px;
     padding: 0 1.25rem 1.25rem;
     width: 100%;
 }

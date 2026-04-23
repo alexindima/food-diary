@@ -8,9 +8,11 @@
         @if (summary(); as data) {
             <div class="stats-summary-card__content">
                 <div class="stats-summary-card__row stats-summary-card__row--top">
-                    <div class="stats-summary-card__total">
-                        <span class="stats-summary-card__label fd-ui-meta-text">{{ 'STATISTICS.TOTAL_CALORIES' | translate }}</span>
-                        <strong class="stats-summary-card__value fd-ui-metric-lg">
+                    <div class="stats-summary-card__total fd-ui-stat-tile">
+                        <span class="stats-summary-card__label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                            'STATISTICS.TOTAL_CALORIES' | translate
+                        }}</span>
+                        <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                             {{ data.totalCalories | number: '1.0-0' }}
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
@@ -23,32 +25,34 @@
                             ></canvas>
                         </div>
                     </div>
-                    <div class="stats-summary-card__average">
+                    <div class="stats-summary-card__average fd-ui-stat-tile">
                         <div class="stats-summary-card__average-main">
-                            <span class="stats-summary-card__label fd-ui-meta-text">{{ 'STATISTICS.AVERAGE_CALORIES' | translate }}</span>
-                            <strong class="stats-summary-card__value fd-ui-metric-lg">
+                            <span class="stats-summary-card__label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                                'STATISTICS.AVERAGE_CALORIES' | translate
+                            }}</span>
+                            <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                 {{ data.averageCard.consumption | number: '1.0-0' }}
                                 {{ 'GENERAL.UNITS.KCAL' | translate }}
                             </strong>
-                            <span class="stats-summary-card__note fd-ui-overline">
+                            <span class="stats-summary-card__note fd-ui-stat-tile__meta fd-ui-overline">
                                 {{ 'STATISTICS.AVERAGE_CARD.CONSUMPTION' | translate }}
                             </span>
                         </div>
                         <div class="stats-summary-card__average-details">
                             <div class="stats-summary-card__average-item">
-                                <strong class="stats-summary-card__value fd-ui-metric-lg">
+                                <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                     {{ data.averageCard.steps | number: '1.0-0' }}
                                 </strong>
-                                <span class="stats-summary-card__note fd-ui-overline">
+                                <span class="stats-summary-card__note fd-ui-stat-tile__meta fd-ui-overline">
                                     {{ 'STATISTICS.AVERAGE_CARD.STEPS' | translate }}
                                 </span>
                             </div>
                             <div class="stats-summary-card__average-item">
-                                <strong class="stats-summary-card__value fd-ui-metric-lg">
+                                <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                     {{ data.averageCard.burned | number: '1.0-0' }}
                                     {{ 'GENERAL.UNITS.KCAL' | translate }}
                                 </strong>
-                                <span class="stats-summary-card__note fd-ui-overline">
+                                <span class="stats-summary-card__note fd-ui-stat-tile__meta fd-ui-overline">
                                     {{ 'STATISTICS.AVERAGE_CARD.BURNED' | translate }}
                                 </span>
                             </div>
@@ -58,13 +62,15 @@
                 <div class="stats-summary-card__row stats-summary-card__row--macros">
                     @for (macro of data.macros; track macro.labelKey) {
                         <fd-ui-accent-surface
-                            class="stats-summary-card__macro-card"
+                            class="stats-summary-card__macro-card fd-ui-stat-tile"
                             accentSide="top"
                             [accentColor]="macro.color"
                             [tinted]="true"
                         >
-                            <span class="stats-summary-card__label fd-ui-meta-text">{{ macro.labelKey | translate }}</span>
-                            <strong class="stats-summary-card__value fd-ui-metric-lg">
+                            <span class="stats-summary-card__label fd-ui-stat-tile__label fd-ui-meta-text">{{
+                                macro.labelKey | translate
+                            }}</span>
+                            <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                 {{ macro.value | number: '1.0-1' }} {{ 'GENERAL.UNITS.G' | translate }}
                             </strong>
                             <div class="stats-summary-card__macro-trend">

@@ -3,7 +3,7 @@
         <ng-container fdPageHeaderActions>
             @if (saveStatusKey(); as statusKey) {
                 <span
-                    class="goals__status fd-ui-action-text"
+                    class="goals__status fd-ui-pill fd-ui-action-text"
                     [class.goals__status--saving]="isSavingGoals()"
                     [class.goals__status--loading]="isLoadingGoals()"
                 >
@@ -288,7 +288,9 @@
                                                                     | translate: { value: target.current, unit: target.unit }
                                                             }}
                                                         </span>
-                                                        <span class="goals__delta goals__delta--positive fd-ui-action-text">
+                                                        <span
+                                                            class="goals__delta goals__delta--positive fd-ui-pill fd-ui-pill--compact fd-ui-action-text"
+                                                        >
                                                             {{ target.delta }} {{ 'GOALS_PAGE.TO_GO' | translate }}
                                                         </span>
                                                     }

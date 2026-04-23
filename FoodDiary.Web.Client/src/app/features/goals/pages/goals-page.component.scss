@@ -15,20 +15,18 @@
     }
 
     &__status {
-        display: inline-flex;
-        align-items: center;
-        min-height: 40px;
-        padding: 8px 14px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%);
+        --fd-pill-min-height: 40px;
+        --fd-pill-padding-inline: 14px;
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-text-muted);
         box-shadow:
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
             inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 82%, transparent);
-        color: var(--fd-color-text-muted);
     }
 
     &__status--saving {
-        color: var(--fd-color-primary-700);
+        --fd-pill-color: var(--fd-color-primary-700);
         box-shadow:
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
             inset 0 0 0 1px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent),
@@ -36,7 +34,7 @@
     }
 
     &__status--loading {
-        color: var(--fd-color-text-subtle);
+        --fd-pill-color: var(--fd-color-text-subtle);
     }
 
     &__grid {
@@ -503,13 +501,9 @@
     }
 
     &__delta {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 12px;
-        background: color-mix(in srgb, var(--fd-color-green-500) 12%, transparent);
-        color: var(--fd-color-emerald-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 12%, transparent);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-emerald-700);
 
         &--positive {
             box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-emerald-500) 18%, transparent);

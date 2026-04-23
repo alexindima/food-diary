@@ -6,8 +6,6 @@
     }
 
     &__footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
+        --fd-actions-gap: 12px;
     }
 }

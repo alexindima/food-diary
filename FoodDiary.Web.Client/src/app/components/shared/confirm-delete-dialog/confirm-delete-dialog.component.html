@@ -3,7 +3,7 @@
         {{ data.message || ('CONFIRM_DELETE.MESSAGE' | translate: { name: data.name }) }}
     </p>
 
-    <div fdUiDialogFooter class="confirm-delete-dialog__footer">
+    <div fdUiDialogFooter class="confirm-delete-dialog__footer fd-ui-actions fd-ui-actions--end">
         <fd-ui-button type="button" fill="ghost" variant="secondary" (click)="onCancel()">
             {{ data.cancelLabel || ('CONFIRM_DELETE.CANCEL' | translate) }}
         </fd-ui-button>

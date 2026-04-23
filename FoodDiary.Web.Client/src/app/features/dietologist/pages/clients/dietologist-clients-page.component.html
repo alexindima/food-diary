@@ -23,13 +23,19 @@
                             @if (client.permissions.shareProfile) {
                                 <div class="dietologist-clients__meta">
                                     @if (client.height) {
-                                        <span class="dietologist-clients__chip fd-ui-overline">{{ client.height }} cm</span>
+                                        <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                                            {{ client.height }} cm
+                                        </span>
                                     }
                                     @if (client.gender) {
-                                        <span class="dietologist-clients__chip fd-ui-overline">{{ client.gender }}</span>
+                                        <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                                            {{ client.gender }}
+                                        </span>
                                     }
                                     @if (client.activityLevel) {
-                                        <span class="dietologist-clients__chip fd-ui-overline">{{ client.activityLevel }}</span>
+                                        <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                                            {{ client.activityLevel }}
+                                        </span>
                                     }
                                 </div>
                             }

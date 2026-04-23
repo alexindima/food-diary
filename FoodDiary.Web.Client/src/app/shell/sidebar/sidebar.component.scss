@@ -468,16 +468,12 @@
     }
 
     &__progress-track {
-        height: 5px;
-        border-radius: 999px;
-        overflow: hidden;
-        background: color-mix(in srgb, var(--fd-color-slate-400) 26%, transparent);
+        --fd-progress-height: 5px;
+        --fd-progress-radius: 999px;
+        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-slate-400) 26%, transparent);
     }
 
     &__progress-fill {
-        display: block;
-        height: 100%;
-        border-radius: 999px;
         background: linear-gradient(90deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
     }
 

@@ -177,16 +177,18 @@
                         </div>
                     </div>
                     <div class="user-manage__notifications">
-                        <div class="user-manage__notifications-item">
+                        <div class="user-manage__notifications-item fd-ui-surface fd-ui-surface--primary">
                             <div class="user-manage__notifications-copy">
                                 <div class="user-manage__notifications-label">
                                     {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
                                 </div>
                                 <div class="user-manage__notifications-meta">
-                                    <span class="user-manage__notifications-badge user-manage__notifications-badge--account">
+                                    <span
+                                        class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
+                                    >
                                         {{ pushNotificationsAccountStatusKey() | translate }}
                                     </span>
-                                    <span class="user-manage__notifications-badge">
+                                    <span class="user-manage__notifications-badge fd-ui-pill fd-ui-pill--muted fd-ui-caption">
                                         {{ pushNotificationsDeviceStatusKey() | translate }}
                                     </span>
                                 </div>
@@ -208,7 +210,9 @@
 
                         @if (pushNotificationsEnabled()) {
                             <div class="user-manage__notifications-category-list">
-                                <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                <div
+                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                >
                                     <div class="user-manage__notifications-copy">
                                         <div class="user-manage__notifications-label">
                                             {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}
@@ -227,7 +231,9 @@
                                 </div>
 
                                 @if (fastingPushNotificationsEnabled()) {
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_TITLE' | translate }}
@@ -290,7 +296,9 @@
                                     </div>
                                 }
 
-                                <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                <div
+                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                >
                                     <div class="user-manage__notifications-copy">
                                         <div class="user-manage__notifications-label">
                                             {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}
@@ -348,7 +356,7 @@
                             >
                                 <div class="user-manage__notifications-device-list">
                                     @for (subscription of connectedDevices(); track subscription.endpoint) {
-                                        <div class="user-manage__notifications-device-item">
+                                        <div class="user-manage__notifications-device-item fd-ui-surface fd-ui-surface--raised">
                                             <div class="user-manage__notifications-copy">
                                                 <div class="user-manage__notifications-label">
                                                     {{ getConnectedDeviceLabel(subscription) }}
@@ -356,7 +364,7 @@
                                                 <div class="user-manage__notifications-meta">
                                                     @if (isCurrentDevice(subscription)) {
                                                         <span
-                                                            class="user-manage__notifications-badge user-manage__notifications-badge--account"
+                                                            class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
                                                         >
                                                             {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_CURRENT' | translate }}
                                                         </span>
@@ -402,11 +410,11 @@
 
                     <div class="user-manage__dietologist" [formGroup]="dietologistForm">
                         @if (isLoadingDietologist()) {
-                            <div class="user-manage__dietologist-empty">
+                            <div class="user-manage__dietologist-empty fd-ui-surface fd-ui-surface--dashed">
                                 {{ 'USER_MANAGE.DIETOLOGIST_LOADING' | translate }}
                             </div>
                         } @else {
-                            <div class="user-manage__dietologist-summary">
+                            <div class="user-manage__dietologist-summary fd-ui-surface fd-ui-surface--warning">
                                 <div class="user-manage__dietologist-copy">
                                     <div class="user-manage__dietologist-label">
                                         @if (isDietologistConnected()) {
@@ -506,7 +514,9 @@
                                 }
                                 @if (hasDietologistRelationship() && !isDietologistConnected()) {
                                     <div class="user-manage__notifications-meta">
-                                        <span class="user-manage__notifications-badge user-manage__notifications-badge--account">
+                                        <span
+                                            class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--warning fd-ui-caption"
+                                        >
                                             {{ 'USER_MANAGE.DIETOLOGIST_STATUS_PENDING' | translate }}
                                         </span>
                                     </div>
@@ -523,7 +533,9 @@
 
                             <div class="user-manage__dietologist-permissions">
                                 <div class="user-manage__dietologist-permission-list">
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate }}
@@ -538,7 +550,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate }}
@@ -553,7 +567,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate }}
@@ -568,7 +584,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate }}
@@ -583,7 +601,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate }}
@@ -598,7 +618,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate }}
@@ -613,7 +635,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate }}
@@ -628,7 +652,9 @@
                                         />
                                     </div>
 
-                                    <div class="user-manage__notifications-item user-manage__notifications-item--nested">
+                                    <div
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    >
                                         <div class="user-manage__notifications-copy">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate }}
@@ -665,11 +691,15 @@
                             <div class="user-manage__privacy-label">{{ 'USER_MANAGE.AI_CONSENT_LABEL' | translate }}</div>
                             <div class="user-manage__privacy-status">
                                 @if (hasAiConsent()) {
-                                    <span class="user-manage__privacy-badge user-manage__privacy-badge--active">
+                                    <span
+                                        class="user-manage__privacy-badge user-manage__privacy-badge--active fd-ui-pill fd-ui-pill--success fd-ui-caption"
+                                    >
                                         {{ 'USER_MANAGE.AI_CONSENT_ACTIVE' | translate }}
                                     </span>
                                 } @else {
-                                    <span class="user-manage__privacy-badge user-manage__privacy-badge--inactive">
+                                    <span
+                                        class="user-manage__privacy-badge user-manage__privacy-badge--inactive fd-ui-pill fd-ui-pill--muted fd-ui-caption"
+                                    >
                                         {{ 'USER_MANAGE.AI_CONSENT_INACTIVE' | translate }}
                                     </span>
                                 }

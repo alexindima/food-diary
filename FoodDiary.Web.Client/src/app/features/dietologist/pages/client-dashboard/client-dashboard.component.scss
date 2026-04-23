@@ -25,12 +25,9 @@
     }
 
     &__chip {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white));
-        color: var(--fd-color-primary-700);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-primary-100, var(--fd-color-primary-100)) 45%, var(--fd-color-white));
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-primary-700);
     }
 
     &__sections {
