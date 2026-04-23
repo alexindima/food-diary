@@ -85,129 +85,129 @@ app.MapGet("/api/email/queue/stats", async (
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    var stats = await queueStore.GetStatsAsync(cancellationToken);
-    return Results.Ok(stats);
-});
+        var stats = await queueStore.GetStatsAsync(cancellationToken);
+        return Results.Ok(stats);
+    });
 app.MapGet("/api/email/suppressions", async (
     string? email,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    var suppressions = await queueStore.GetSuppressionsAsync(email, cancellationToken);
-    return Results.Ok(suppressions);
-});
+        var suppressions = await queueStore.GetSuppressionsAsync(email, cancellationToken);
+        return Results.Ok(suppressions);
+    });
 app.MapGet("/api/email/events", async (
     string? email,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    var events = await queueStore.GetDeliveryEventsAsync(email, cancellationToken);
-    return Results.Ok(events);
-});
+        var events = await queueStore.GetDeliveryEventsAsync(email, cancellationToken);
+        return Results.Ok(events);
+    });
 app.MapPost("/api/email/suppressions", async (
     CreateSuppressionRequest request,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    await queueStore.UpsertSuppressionAsync(request, cancellationToken);
-    return Results.Created($"/api/email/suppressions?email={Uri.EscapeDataString(request.Email)}", new { status = "suppressed" });
-});
+        await queueStore.UpsertSuppressionAsync(request, cancellationToken);
+        return Results.Created($"/api/email/suppressions?email={Uri.EscapeDataString(request.Email)}", new { status = "suppressed" });
+    });
 app.MapPost("/api/email/events", async (
     IngestMailEventRequest request,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayDeliveryEventIngestionService ingestionService,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    try {
-        var deliveryEvent = await ingestionService.IngestAsync(request, cancellationToken);
-        return Results.Created($"/api/email/events?email={Uri.EscapeDataString(request.Email)}", deliveryEvent);
-    } catch (InvalidOperationException ex) {
-        return Results.BadRequest(new { error = ex.Message });
-    }
-});
+        try {
+            var deliveryEvent = await ingestionService.IngestAsync(request, cancellationToken);
+            return Results.Created($"/api/email/events?email={Uri.EscapeDataString(request.Email)}", deliveryEvent);
+        } catch (InvalidOperationException ex) {
+            return Results.BadRequest(new { error = ex.Message });
+        }
+    });
 app.MapPost("/api/email/providers/aws-ses/sns", async (
     AwsSesSnsWebhookRequest request,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayDeliveryEventIngestionService ingestionService,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    if (!AwsSesSnsEventMapper.TryMap(request, out var events, out var error)) {
-        return Results.BadRequest(new { error });
-    }
+        if (!AwsSesSnsEventMapper.TryMap(request, out var events, out var error)) {
+            return Results.BadRequest(new { error });
+        }
 
-    var createdEvents = await ingestionService.IngestManyAsync(events, cancellationToken);
-    return Results.Created("/api/email/providers/aws-ses/sns", new { accepted = createdEvents.Count });
-});
+        var createdEvents = await ingestionService.IngestManyAsync(events, cancellationToken);
+        return Results.Created("/api/email/providers/aws-ses/sns", new { accepted = createdEvents.Count });
+    });
 app.MapPost("/api/email/providers/mailgun/events", async (
     MailgunWebhookRequest request,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayDeliveryEventIngestionService ingestionService,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    if (!MailgunEventMapper.TryMap(request, out var deliveryEvent, out var error) || deliveryEvent is null) {
-        return Results.BadRequest(new { error });
-    }
+        if (!MailgunEventMapper.TryMap(request, out var deliveryEvent, out var error) || deliveryEvent is null) {
+            return Results.BadRequest(new { error });
+        }
 
-    var createdEvent = await ingestionService.IngestAsync(deliveryEvent, cancellationToken);
-    return Results.Created("/api/email/providers/mailgun/events", createdEvent);
-});
+        var createdEvent = await ingestionService.IngestAsync(deliveryEvent, cancellationToken);
+        return Results.Created("/api/email/providers/mailgun/events", createdEvent);
+    });
 app.MapDelete("/api/email/suppressions/{email}", async (
     string email,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    var removed = await queueStore.RemoveSuppressionAsync(email, cancellationToken);
-    return removed ? Results.NoContent() : Results.NotFound();
-});
+        var removed = await queueStore.RemoveSuppressionAsync(email, cancellationToken);
+        return removed ? Results.NoContent() : Results.NotFound();
+    });
 app.MapGet("/api/email/messages/{id:guid}", async (
     Guid id,
     HttpContext httpContext,
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    var message = await queueStore.GetMessageDetailsAsync(id, cancellationToken);
-    return message is null ? Results.NotFound() : Results.Ok(message);
-});
+        var message = await queueStore.GetMessageDetailsAsync(id, cancellationToken);
+        return message is null ? Results.NotFound() : Results.Ok(message);
+    });
 
 app.MapPost("/api/email/send", async (
     RelayEmailMessageRequest request,
@@ -215,15 +215,15 @@ app.MapPost("/api/email/send", async (
     IOptions<MailRelayOptions> relayOptions,
     MailRelayQueueStore queueStore,
     CancellationToken cancellationToken) => {
-    if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
-        return Results.Unauthorized();
-    }
+        if (!RelayRequestAuthorizer.IsAuthorized(httpContext.Request, relayOptions.Value)) {
+            return Results.Unauthorized();
+        }
 
-    var queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken);
-    var dispatchNotifier = httpContext.RequestServices.GetRequiredService<IMailRelayDispatchNotifier>();
-    await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken);
-    return Results.Accepted($"/api/email/messages/{queuedEmailId}", new { id = queuedEmailId, status = "queued" });
-});
+        var queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken);
+        var dispatchNotifier = httpContext.RequestServices.GetRequiredService<IMailRelayDispatchNotifier>();
+        await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken);
+        return Results.Accepted($"/api/email/messages/{queuedEmailId}", new { id = queuedEmailId, status = "queued" });
+    });
 
 app.Run();
 
