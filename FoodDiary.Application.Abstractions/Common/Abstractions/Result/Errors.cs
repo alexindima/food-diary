@@ -63,6 +63,16 @@ public static class Errors {
             "The current password is incorrect.",
             kind: ErrorKind.Unauthorized);
 
+        public static Error PasswordNotSet => new(
+            "User.PasswordNotSet",
+            "Password is not configured for this account.",
+            kind: ErrorKind.Conflict);
+
+        public static Error PasswordAlreadySet => new(
+            "User.PasswordAlreadySet",
+            "Password is already configured for this account.",
+            kind: ErrorKind.Conflict);
+
         public static Error NotFound() => new(
             "User.NotFound",
             "User was not found.",

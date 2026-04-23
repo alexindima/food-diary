@@ -98,7 +98,7 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         repo.Seed(Notification.Create(userId, "info", "{}"));
 
-        var handler = new GetUnreadCountQueryHandler(repo);
+        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(User.Create("notifications@example.com", "hash")));
         var result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
@@ -154,6 +154,9 @@ public class NotificationsFeatureTests {
 
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead));
+
+        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) =>
+            Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead && n.Type == type));
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) {
             MarkAllReadCalled = true;

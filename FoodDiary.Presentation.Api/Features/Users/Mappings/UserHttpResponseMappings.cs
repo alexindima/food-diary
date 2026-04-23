@@ -11,6 +11,7 @@ public static class UserHttpResponseMappings {
         return new UserHttpResponse(
             model.Id,
             model.Email,
+            model.HasPassword,
             model.Username,
             model.FirstName,
             model.LastName,

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -26,12 +27,18 @@ describe('UserManageComponent dietologist section', () => {
     };
     let facade: ReturnType<typeof createFacadeMock>;
     let dialogService: { open: ReturnType<typeof vi.fn> };
+    let router: { navigate: ReturnType<typeof vi.fn> };
     let notificationService: {
         scheduleTestNotification: ReturnType<typeof vi.fn>;
         notificationsChangedVersion: ReturnType<typeof signal<number>>;
     };
 
-    async function createComponent(relationship: any, dialogResult = false, user: any = null): Promise<void> {
+    async function createComponent(
+        relationship: any,
+        dialogResult = false,
+        user: any = null,
+        queryParams: Record<string, string> = {},
+    ): Promise<void> {
         facade = createFacadeMock(relationship, user);
         dietologistService = {
             getRelationship: vi.fn().mockReturnValue(of(relationship)),
@@ -44,6 +51,9 @@ describe('UserManageComponent dietologist section', () => {
                 afterClosed: () => of(dialogResult),
             }),
         };
+        router = {
+            navigate: vi.fn().mockResolvedValue(true),
+        };
         notificationService = {
             scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
             notificationsChangedVersion: signal(0),
@@ -55,6 +65,13 @@ describe('UserManageComponent dietologist section', () => {
                 { provide: DietologistService, useValue: dietologistService },
                 { provide: ImageUploadService, useValue: { deleteAsset: vi.fn().mockReturnValue(of(undefined)) } },
                 { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParamMap: of(convertToParamMap(queryParams)),
+                    },
+                },
+                { provide: Router, useValue: router },
                 {
                     provide: LocalizationService,
                     useValue: {
@@ -352,6 +369,34 @@ describe('UserManageComponent dietologist section', () => {
         expect(component.userForm.controls.language.value).toBe('en');
         expect(component.userForm.controls.theme.value).toBe('ocean');
         expect(component.userForm.controls.uiStyle.value).toBe('classic');
+    });
+
+    it('opens set password dialog from notifications intent for google-only account', async () => {
+        await createComponent(
+            null,
+            false,
+            {
+                id: 'u1',
+                email: 'user@example.com',
+                hasPassword: false,
+                pushNotificationsEnabled: true,
+                fastingPushNotificationsEnabled: true,
+                socialPushNotificationsEnabled: true,
+                fastingCheckInReminderHours: 4,
+                fastingCheckInFollowUpReminderHours: 8,
+                isActive: true,
+                isEmailConfirmed: true,
+            },
+            { intent: 'set-password' },
+        );
+
+        expect(facade.openChangePasswordDialog).toHaveBeenCalledTimes(1);
+        expect(router.navigate).toHaveBeenCalledWith([], {
+            relativeTo: expect.anything(),
+            queryParams: { intent: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
     });
 });
 

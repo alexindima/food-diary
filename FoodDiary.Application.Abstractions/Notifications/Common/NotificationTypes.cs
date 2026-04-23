@@ -2,6 +2,7 @@ namespace FoodDiary.Application.Notifications.Common;
 
 public static class NotificationTypes {
     public const string NewRecommendation = "NewRecommendation";
+    public const string PasswordSetupSuggested = "PasswordSetupSuggested";
     public const string DietologistInvitationReceived = "DietologistInvitationReceived";
     public const string DietologistInvitationAccepted = "DietologistInvitationAccepted";
     public const string DietologistInvitationDeclined = "DietologistInvitationDeclined";

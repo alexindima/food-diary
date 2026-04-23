@@ -7,10 +7,15 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { UserService } from '../../../../shared/api/user.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
-import { ChangePasswordRequest } from '../../../../shared/models/user.data';
+import { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
+
+export interface ChangePasswordDialogData {
+    hasPassword?: boolean;
+}
 
 @Component({
     selector: 'fd-change-password-dialog',
@@ -31,9 +36,14 @@ export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
+    private readonly data = inject<ChangePasswordDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
+    public readonly hasPassword = this.data.hasPassword ?? true;
 
     public readonly form = new FormGroup<ChangePasswordFormData>({
-        currentPassword: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        currentPassword: new FormControl<string>('', {
+            nonNullable: true,
+            validators: this.hasPassword ? [Validators.required] : [],
+        }),
         newPassword: new FormControl<string>('', {
             nonNullable: true,
             validators: [Validators.required, Validators.minLength(6)],
@@ -62,15 +72,22 @@ export class ChangePasswordDialogComponent {
         }
 
         const value = this.form.value;
-        const payload: ChangePasswordRequest = {
-            currentPassword: value.currentPassword?.trim() ?? '',
-            newPassword: value.newPassword?.trim() ?? '',
-        };
+        const currentPassword = value.currentPassword?.trim() ?? '';
+        const newPassword = value.newPassword?.trim() ?? '';
 
         this.isSubmitting.set(true);
         this.passwordError.set(null);
 
-        this.userService.changePassword(payload).subscribe({
+        const request$ = this.hasPassword
+            ? this.userService.changePassword({
+                  currentPassword,
+                  newPassword,
+              } satisfies ChangePasswordRequest)
+            : this.userService.setPassword({
+                  newPassword,
+              } satisfies SetPasswordRequest);
+
+        request$.subscribe({
             next: success => {
                 this.isSubmitting.set(false);
                 if (success) {
@@ -78,11 +95,11 @@ export class ChangePasswordDialogComponent {
                     return;
                 }
 
-                this.setPasswordError('USER_MANAGE.CHANGE_PASSWORD_ERROR');
+                this.setPasswordError(this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_ERROR' : 'USER_MANAGE.SET_PASSWORD_ERROR');
             },
             error: () => {
                 this.isSubmitting.set(false);
-                this.setPasswordError('USER_MANAGE.CHANGE_PASSWORD_ERROR');
+                this.setPasswordError(this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_ERROR' : 'USER_MANAGE.SET_PASSWORD_ERROR');
             },
         });
     }

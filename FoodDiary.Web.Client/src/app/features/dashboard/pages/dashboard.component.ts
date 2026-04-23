@@ -20,6 +20,7 @@ import { MicronutrientCardComponent } from '../components/micronutrient-card/mic
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
+import { ThemeService } from '../../../services/theme.service';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
@@ -70,6 +71,7 @@ export class DashboardComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
+    private readonly themeService = inject(ThemeService);
     private readonly facade = inject(DashboardFacade);
     private readonly translateService = inject(TranslateService);
     private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
@@ -82,6 +84,8 @@ export class DashboardComponent {
     public readonly isTodaySelected = this.facade.isTodaySelected;
     public readonly snapshot = this.facade.snapshot;
     public readonly isLoading = this.facade.isLoading;
+    public readonly activeThemeDefinition = this.themeService.activeThemeDefinition;
+    public readonly activeUiStyleDefinition = this.themeService.activeUiStyleDefinition;
     public readonly dailyGoal = this.facade.dailyGoal;
     public readonly todayCalories = this.facade.todayCalories;
     public readonly caloriesBurned = this.facade.caloriesBurned;
@@ -284,6 +288,23 @@ export class DashboardComponent {
 
     public async openNotificationSettings(): Promise<void> {
         await this.navigationService.navigateToProfile();
+    }
+
+    public async openAppearanceDialog(): Promise<void> {
+        const { DashboardAppearanceDialogComponent } =
+            await import('../dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.component');
+
+        this.dialogService
+            .open(DashboardAppearanceDialogComponent, {
+                size: 'md',
+                data: {
+                    theme: this.themeService.theme(),
+                    uiStyle: this.themeService.uiStyle(),
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     public async addConsumption(mealType?: string | null): Promise<void> {

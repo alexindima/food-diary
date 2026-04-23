@@ -1,6 +1,7 @@
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
@@ -10,6 +11,8 @@ using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -114,6 +117,42 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.Null(user.DeletedAt);
     }
 
+    [Fact]
+    public async Task GoogleLoginHandler_ForGoogleOnlyAccount_CreatesPasswordSetupNotification() {
+        var notificationRepository = new StubNotificationRepository();
+        var handler = new GoogleLoginCommandHandler(
+            new StubUserRepository(),
+            notificationRepository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload("google@example.com", "Alex", "User", "en")),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var notification = Assert.Single(notificationRepository.Notifications);
+        Assert.Equal(NotificationTypes.PasswordSetupSuggested, notification.Type);
+        Assert.StartsWith("password-setup:", notification.ReferenceId, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GoogleLoginHandler_DoesNotDuplicatePasswordSetupNotification() {
+        var user = User.Create("google@example.com", "secret", hasPassword: false);
+        var existingNotification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, $"password-setup:{user.Id.Value}");
+        var notificationRepository = new StubNotificationRepository(existingNotification);
+        var handler = new GoogleLoginCommandHandler(
+            new StubUserRepository(user),
+            notificationRepository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload("google@example.com", "Alex", "User", "en")),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(notificationRepository.Notifications);
+    }
+
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
@@ -137,8 +176,8 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => Task.FromResult(userToAdd);
+        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     private sealed class StubPasswordHasher : IPasswordHasher {
@@ -158,6 +197,43 @@ public sealed class AuthenticationCommandHandlerTests {
         public string IssueAccessToken(User user) => throw new NotSupportedException();
     }
 
+    private sealed class StubNotificationRepository(params Notification[] notifications) : INotificationRepository {
+        public List<Notification> Notifications { get; } = notifications.ToList();
+
+        public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Notification>>(Notifications.Where(x => x.UserId == userId).Take(limit).ToList());
+
+        public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Notification?>(Notifications.FirstOrDefault(x => x.Id == id));
+
+        public Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
+            Notifications.Add(notification);
+            return Task.FromResult(notification);
+        }
+
+        public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Notifications.Any(x => x.UserId == userId && x.Type == type && x.ReferenceId == referenceId));
+
+        public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead));
+
+        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead && x.Type == type));
+
+        public Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<int> DeleteExpiredBatchAsync(
+            IReadOnlyCollection<string> transientTypes,
+            DateTime transientReadOlderThanUtc,
+            DateTime transientUnreadOlderThanUtc,
+            DateTime standardReadOlderThanUtc,
+            DateTime standardUnreadOlderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
     private sealed class StubEmailVerificationNotifier : IEmailVerificationNotifier {
         public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
@@ -174,5 +250,12 @@ public sealed class AuthenticationCommandHandlerTests {
     private sealed class StubTelegramAuthValidator : ITelegramAuthValidator {
         public FoodDiary.Application.Common.Abstractions.Result.Result<TelegramInitData> ValidateInitData(string initData) =>
             throw new NotSupportedException();
+    }
+
+    private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload) : IGoogleTokenValidator {
+        public Task<FoodDiary.Application.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
+            string credential,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(FoodDiary.Application.Common.Abstractions.Result.Result.Success(payload));
     }
 }

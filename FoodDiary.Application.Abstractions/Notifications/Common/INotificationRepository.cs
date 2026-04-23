@@ -10,6 +10,7 @@ public interface INotificationRepository {
     Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default);
     Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default);
+    Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default);
     Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default);
     Task<int> DeleteExpiredBatchAsync(
         IReadOnlyCollection<string> transientTypes,

@@ -5,6 +5,7 @@ namespace FoodDiary.Presentation.Api.Features.Users.Responses;
 public sealed record UserHttpResponse(
     Guid Id,
     string Email,
+    bool HasPassword,
     string? Username,
     string? FirstName,
     string? LastName,

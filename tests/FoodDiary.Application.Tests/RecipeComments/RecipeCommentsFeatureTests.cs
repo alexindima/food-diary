@@ -169,6 +169,7 @@ public class RecipeCommentsFeatureTests {
         public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) => throw new NotSupportedException();
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<int> DeleteExpiredBatchAsync(
             IReadOnlyCollection<string> transientTypes,

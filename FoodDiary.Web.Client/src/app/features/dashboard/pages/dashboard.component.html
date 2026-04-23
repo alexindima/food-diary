@@ -32,6 +32,26 @@
             </div>
 
             <fd-ui-button
+                class="dashboard__appearance-action"
+                variant="secondary"
+                fill="outline"
+                icon="palette"
+                [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+                [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+                (click)="openAppearanceDialog()"
+            >
+                <span class="dashboard__appearance-button">
+                    <span class="dashboard__appearance-swatch dashboard__appearance-swatch--{{ activeThemeDefinition().name }}"></span>
+                    <span class="dashboard__appearance-copy">
+                        <span class="dashboard__appearance-label">{{ 'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate }}</span>
+                        <span class="dashboard__appearance-meta">
+                            {{ activeThemeDefinition().labelKey | translate }} · {{ activeUiStyleDefinition().labelKey | translate }}
+                        </span>
+                    </span>
+                </span>
+            </fd-ui-button>
+
+            <fd-ui-button
                 class="dashboard__settings-action"
                 appearance="toolbar"
                 variant="secondary"

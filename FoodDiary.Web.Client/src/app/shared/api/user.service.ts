@@ -12,6 +12,7 @@ import {
     DashboardLayoutSettings,
     DesiredWaistResponse,
     DesiredWeightResponse,
+    SetPasswordRequest,
     UpdateUserDto,
     User,
 } from '../models/user.data';
@@ -108,6 +109,19 @@ export class UserService extends ApiService {
         return this.patch<void>('password', request).pipe(
             map(() => true),
             catchError(error => fallbackApiError('Change password error', error, false)),
+        );
+    }
+
+    public setPassword(request: SetPasswordRequest): Observable<boolean> {
+        return this.patch<void>('password/set', request).pipe(
+            tap(() => {
+                const current = this.userSignal();
+                if (current) {
+                    this.userSignal.set({ ...current, hasPassword: true });
+                }
+            }),
+            map(() => true),
+            catchError(error => fallbackApiError('Set password error', error, false)),
         );
     }
 

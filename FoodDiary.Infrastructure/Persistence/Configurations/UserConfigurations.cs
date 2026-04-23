@@ -22,6 +22,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         entity.HasIndex(e => e.Email).IsUnique();
         entity.Property(e => e.IsActive).HasDefaultValue(true);
         entity.Property(e => e.IsEmailConfirmed).HasDefaultValue(false);
+        entity.Property(e => e.HasPassword).HasDefaultValue(true);
         entity.Property(e => e.EmailConfirmationTokenExpiresAtUtc)
             .HasColumnType("timestamp with time zone");
         entity.Property(e => e.EmailConfirmationSentAtUtc)

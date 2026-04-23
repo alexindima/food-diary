@@ -30,6 +30,7 @@ describe('ProfileManageFacade', () => {
     const user = {
         id: 'u1',
         email: 'test@example.com',
+        hasPassword: false,
         language: 'ru',
         isActive: true,
         isEmailConfirmed: true,
@@ -149,10 +150,17 @@ describe('ProfileManageFacade', () => {
 
     it('opens password success dialog after successful password dialog close', () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of(undefined) });
+        facade.user.set(user as any);
 
         facade.openChangePasswordDialog();
 
         expect(dialogService.open).toHaveBeenCalledTimes(2);
+        expect(dialogService.open.mock.calls[0][1]).toEqual(
+            expect.objectContaining({
+                data: { hasPassword: false },
+            }),
+        );
+        expect(facade.user()?.hasPassword).toBe(true);
     });
 
     it('logs out after confirmed successful account deletion', () => {

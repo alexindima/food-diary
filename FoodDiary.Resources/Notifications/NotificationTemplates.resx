@@ -12,6 +12,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
   </resheader>
+  <data name="PasswordSetupSuggested_Title" xml:space="preserve">
+    <value>Add a backup password</value>
+  </data>
+  <data name="PasswordSetupSuggested_Body" xml:space="preserve">
+    <value>Set a password to keep a backup sign-in method besides Google.</value>
+  </data>
   <data name="NewRecommendation_Title" xml:space="preserve">
     <value>New recommendation from {0}</value>
   </data>

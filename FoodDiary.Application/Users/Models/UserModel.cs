@@ -3,6 +3,7 @@ namespace FoodDiary.Application.Users.Models;
 public sealed record UserModel(
     Guid Id,
     string Email,
+    bool HasPassword,
     string? Username,
     string? FirstName,
     string? LastName,

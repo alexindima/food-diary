@@ -6,6 +6,7 @@ using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 
@@ -13,6 +14,7 @@ namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandHandler(
     IUserRepository userRepository,
+    INotificationRepository notificationRepository,
     IGoogleTokenValidator googleTokenValidator,
     IPasswordHasher passwordHasher,
     IAuthenticationTokenService authenticationTokenService)
@@ -39,13 +41,15 @@ public sealed class GoogleLoginCommandHandler(
             await userRepository.UpdateAsync(user, cancellationToken);
         }
 
+        await EnsurePasswordSetupReminderAsync(user, notificationRepository, cancellationToken);
+
         var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 
     private static User CreateGoogleUser(GoogleIdentityPayload payload, IPasswordHasher passwordHasher) {
         var placeholderPasswordHash = passwordHasher.Hash(SecurityTokenGenerator.GenerateUrlSafeToken());
-        var user = User.Create(payload.Email, placeholderPasswordHash);
+        var user = User.Create(payload.Email, placeholderPasswordHash, hasPassword: false);
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,
@@ -72,5 +76,23 @@ public sealed class GoogleLoginCommandHandler(
         user.UpdatePersonalInfo(
             firstName: payload.FirstName,
             lastName: payload.LastName);
+    }
+
+    private static async Task EnsurePasswordSetupReminderAsync(
+        User user,
+        INotificationRepository notificationRepository,
+        CancellationToken cancellationToken) {
+        if (user.HasPassword) {
+            return;
+        }
+
+        var referenceId = $"password-setup:{user.Id.Value}";
+        var exists = await notificationRepository.ExistsAsync(user.Id, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken);
+        if (exists) {
+            return;
+        }
+
+        var notification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, referenceId);
+        await notificationRepository.AddAsync(notification, cancellationToken);
     }
 }

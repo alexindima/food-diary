@@ -21,6 +21,7 @@ public static class UserMappings {
         return new UserModel(
             user.Id.Value,
             user.Email,
+            user.HasPassword,
             user.Username,
             user.FirstName,
             user.LastName,

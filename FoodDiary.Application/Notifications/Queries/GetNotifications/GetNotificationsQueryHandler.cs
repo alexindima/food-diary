@@ -28,7 +28,10 @@ public class GetNotificationsQueryHandler(
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         var notifications = await notificationRepository.GetByUserAsync(userId, cancellationToken: cancellationToken);
-        var models = notifications
+        var visibleNotifications = user?.HasPassword == true
+            ? notifications.Where(notification => !string.Equals(notification.Type, NotificationTypes.PasswordSetupSuggested, StringComparison.Ordinal))
+            : notifications;
+        var models = visibleNotifications
             .Select(notification => notification.ToModel(
                 notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, user?.Language)))
             .ToList();

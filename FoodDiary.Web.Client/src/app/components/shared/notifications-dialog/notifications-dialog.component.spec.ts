@@ -90,4 +90,26 @@ describe('NotificationsDialogComponent', () => {
         expect(router.navigateByUrl).toHaveBeenCalledWith('/dietologist-invitations/inv-1');
         expect(dialogRef.close).toHaveBeenCalled();
     });
+
+    it('renders a highlighted password setup reminder card', () => {
+        createComponent([
+            {
+                id: 'n2',
+                type: 'PasswordSetupSuggested',
+                title: 'Add a backup password',
+                body: 'Set a password to keep a backup sign-in method besides Google.',
+                targetUrl: '/profile?intent=set-password',
+                referenceId: 'password-setup:user-1',
+                isRead: false,
+                createdAtUtc: '2026-04-15T00:00:00Z',
+            },
+        ]);
+
+        const host: HTMLElement = fixture.nativeElement;
+        const card = host.querySelector('.notifications-dialog__item--security');
+        expect(card).toBeTruthy();
+        expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_BADGE');
+        expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_ACTION');
+        expect((component as any).getNotificationIcon(notificationService.notifications()[0])).toBe('password');
+    });
 });

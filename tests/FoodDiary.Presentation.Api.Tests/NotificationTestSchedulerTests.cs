@@ -92,6 +92,9 @@ public sealed class NotificationTestSchedulerTests {
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead));
 
+        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) =>
+            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead && x.Type == type));
+
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) => Task.CompletedTask;
 
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken ct = default) =>

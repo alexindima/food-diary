@@ -78,10 +78,19 @@ export class ProfileManageFacade {
 
     public openChangePasswordDialog(): void {
         this.dialogService
-            .open(ChangePasswordDialogComponent, { size: 'sm' })
+            .open(ChangePasswordDialogComponent, {
+                size: 'sm',
+                data: {
+                    hasPassword: this.user()?.hasPassword ?? true,
+                },
+            })
             .afterClosed()
             .subscribe(success => {
                 if (success) {
+                    const current = this.user();
+                    if (current && !current.hasPassword) {
+                        this.user.set({ ...current, hasPassword: true });
+                    }
                     this.openPasswordSuccessDialog();
                 }
             });

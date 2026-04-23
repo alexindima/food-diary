@@ -4,6 +4,15 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Notifications.Common;
 
 public static class NotificationFactory {
+    public static Notification CreatePasswordSetupSuggested(
+        UserId userId,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.PasswordSetupSuggested,
+            NotificationPayloads.Empty(),
+            referenceId);
+
     public static Notification CreateNewRecommendation(
         UserId userId,
         string dietologistName,

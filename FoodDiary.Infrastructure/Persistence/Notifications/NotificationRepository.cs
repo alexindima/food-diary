@@ -57,6 +57,11 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
             .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken);
     }
 
+    public async Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) {
+        return await context.Notifications
+            .CountAsync(n => n.UserId == userId && !n.IsRead && n.Type == type, cancellationToken);
+    }
+
     public async Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) {
         await context.Notifications
             .Where(n => n.UserId == userId && !n.IsRead)

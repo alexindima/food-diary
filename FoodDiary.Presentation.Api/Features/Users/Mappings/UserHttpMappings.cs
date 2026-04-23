@@ -1,6 +1,7 @@
 using FoodDiary.Application.Users.Commands.AcceptAiConsent;
 using FoodDiary.Application.Users.Commands.RevokeAiConsent;
 using FoodDiary.Application.Users.Commands.ChangePassword;
+using FoodDiary.Application.Users.Commands.SetPassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
@@ -66,6 +67,13 @@ public static class UserHttpMappings {
         return new ChangePasswordCommand(
             UserId: userId,
             CurrentPassword: request.CurrentPassword,
+            NewPassword: request.NewPassword
+        );
+    }
+
+    public static SetPasswordCommand ToCommand(this SetPasswordHttpRequest request, Guid? userId) {
+        return new SetPasswordCommand(
+            UserId: userId,
             NewPassword: request.NewPassword
         );
     }

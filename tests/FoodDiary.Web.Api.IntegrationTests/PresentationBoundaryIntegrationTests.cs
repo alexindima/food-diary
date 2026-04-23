@@ -519,6 +519,8 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/auth/password-reset/confirm",
             "/api/v{version}/auth/admin-sso/start",
             "/api/v{version}/auth/admin-sso/exchange",
+            "/api/v{version}/users/password",
+            "/api/v{version}/users/password/set",
             "/api/v{version}/admin/dashboard",
             "/api/v{version}/admin/users",
             "/api/v{version}/admin/users/{id}",

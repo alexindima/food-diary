@@ -873,6 +873,9 @@ public class FastingFeatureTests {
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead));
 
+        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead && x.Type == type));
+
         public Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task<int> DeleteExpiredBatchAsync(

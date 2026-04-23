@@ -6,18 +6,18 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 
-namespace FoodDiary.Application.Users.Commands.ChangePassword;
+namespace FoodDiary.Application.Users.Commands.SetPassword;
 
-public class ChangePasswordCommandHandler(
+public sealed class SetPasswordCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher)
-    : ICommandHandler<ChangePasswordCommand, Result> {
-    public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<SetPasswordCommand, Result> {
+    public async Task<Result> Handle(SetPasswordCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId!.Value);
+        var userId = new UserId(command.UserId.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
@@ -25,13 +25,8 @@ public class ChangePasswordCommandHandler(
         }
 
         var currentUser = user!;
-        if (!currentUser.HasPassword) {
-            return Result.Failure(User.PasswordNotSet);
-        }
-
-        var isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, currentUser.Password);
-        if (!isCurrentPasswordValid) {
-            return Result.Failure(User.InvalidPassword);
+        if (currentUser.HasPassword) {
+            return Result.Failure(User.PasswordAlreadySet);
         }
 
         var hashedPassword = passwordHasher.Hash(command.NewPassword);

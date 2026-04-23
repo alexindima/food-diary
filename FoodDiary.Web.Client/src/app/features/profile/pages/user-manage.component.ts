@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -94,6 +95,8 @@ export class UserManageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly authService = inject(AuthService);
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
     private readonly localizationService = inject(LocalizationService);
     private readonly facade = inject(ProfileManageFacade);
     private readonly dialogService = inject(FdUiDialogService);
@@ -108,6 +111,7 @@ export class UserManageComponent {
     private lastNotificationSyncVersion = -1;
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
     private readonly hasTrackedNotificationsView = signal(false);
+    private readonly pendingPasswordSetupIntent = signal(false);
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
@@ -142,6 +146,7 @@ export class UserManageComponent {
             !!this.removingConnectedDeviceEndpoint(),
     );
     public readonly hasAiConsent = computed(() => !!this.facade.user()?.aiConsentAcceptedAt);
+    public readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
     public readonly pushNotificationsEnabled = computed(() => this.facade.user()?.pushNotificationsEnabled ?? false);
     public readonly fastingPushNotificationsEnabled = computed(() => this.facade.user()?.fastingPushNotificationsEnabled ?? true);
     public readonly socialPushNotificationsEnabled = computed(() => this.facade.user()?.socialPushNotificationsEnabled ?? true);
@@ -238,6 +243,9 @@ export class UserManageComponent {
 
         this.buildSelectOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.buildSelectOptions());
+        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+            this.pendingPasswordSetupIntent.set(params.get('intent') === 'set-password');
+        });
         effect(() => {
             const user = this.facade.user();
             if (!user) {
@@ -257,6 +265,19 @@ export class UserManageComponent {
                     socialEnabled: user.socialPushNotificationsEnabled,
                 });
                 this.hasTrackedNotificationsView.set(true);
+            }
+        });
+        effect(() => {
+            const user = this.facade.user();
+            if (!user || !this.pendingPasswordSetupIntent()) {
+                return;
+            }
+
+            void this.clearProfileIntentQueryParam();
+            this.pendingPasswordSetupIntent.set(false);
+
+            if (!user.hasPassword) {
+                this.facade.openChangePasswordDialog();
             }
         });
 
@@ -955,6 +976,15 @@ export class UserManageComponent {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    private async clearProfileIntentQueryParam(): Promise<void> {
+        await this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { intent: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
     }
 
     private normalizeGender(value: string | null | undefined): Gender | null {

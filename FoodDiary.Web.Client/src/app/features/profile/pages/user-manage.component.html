@@ -130,8 +130,14 @@
                                         icon="lock"
                                         (click)="openChangePasswordDialog()"
                                     >
-                                        {{ 'USER_MANAGE.CHANGE_PASSWORD' | translate }}
+                                        {{ (hasPassword() ? 'USER_MANAGE.CHANGE_PASSWORD' : 'USER_MANAGE.SET_PASSWORD') | translate }}
                                     </fd-ui-button>
+                                </div>
+                                <div class="user-manage__account-row-field user-manage__card-subtitle">
+                                    {{
+                                        (hasPassword() ? 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION' : 'USER_MANAGE.SET_PASSWORD_DESCRIPTION')
+                                            | translate
+                                    }}
                                 </div>
                             </div>
                         </div>

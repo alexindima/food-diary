@@ -11,6 +11,7 @@ export interface DashboardLayoutSettings {
 export interface User {
     id: string;
     email: string;
+    hasPassword: boolean;
     username?: string;
     firstName?: string;
     lastName?: string;
@@ -201,6 +202,10 @@ const normalizeProfileImage = (value: ImageSelection | string | null | undefined
 
 export interface ChangePasswordRequest {
     currentPassword: string;
+    newPassword: string;
+}
+
+export interface SetPasswordRequest {
     newPassword: string;
 }
 

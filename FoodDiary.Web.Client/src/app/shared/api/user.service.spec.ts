@@ -15,6 +15,7 @@ describe('UserService', () => {
     const mockUser = {
         id: 'user-1',
         email: 'test@example.com',
+        hasPassword: true,
         name: 'Test User',
         calories: 2000,
     };
@@ -116,6 +117,23 @@ describe('UserService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/password`);
         req.flush('Server error', { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('should set password and update hasPassword in signal', () => {
+        service.getInfo().subscribe();
+        const infoReq = httpMock.expectOne(`${baseUrl}/info`);
+        infoReq.flush({ ...mockUser, hasPassword: false });
+
+        service.setPassword({ newPassword: 'new-secret' }).subscribe(result => {
+            expect(result).toBe(true);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/password/set`);
+        expect(req.request.method).toBe('PATCH');
+        expect(req.request.body).toEqual({ newPassword: 'new-secret' });
+        req.flush(null);
+
+        expect(service.user()?.hasPassword).toBe(true);
     });
 
     it('should delete current user and clear signal', () => {

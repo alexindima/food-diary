@@ -6,6 +6,7 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
+using FoodDiary.Application.Users.Commands.SetPassword;
 using FoodDiary.Application.Users.Queries.GetProfileOverview;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
@@ -79,6 +80,52 @@ public class UsersFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ChangePasswordHandler_WithoutConfiguredPassword_ReturnsConflict() {
+        var user = User.Create("google@example.com", "hash", hasPassword: false);
+        var handler = new ChangePasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new ChangePasswordCommand(user.Id.Value, "old", "new"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.PasswordNotSet", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task SetPasswordHandler_ForGoogleOnlyAccount_SetsPassword() {
+        var user = User.Create("google@example.com", "hash", hasPassword: false);
+        var handler = new SetPasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new SetPasswordCommand(user.Id.Value, "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.HasPassword);
+        Assert.Equal("new-password", user.Password);
+    }
+
+    [Fact]
+    public async Task SetPasswordHandler_WhenPasswordAlreadyExists_ReturnsConflict() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new SetPasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new SetPasswordCommand(user.Id.Value, "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.PasswordAlreadySet", result.Error.Code);
     }
 
     [Fact]

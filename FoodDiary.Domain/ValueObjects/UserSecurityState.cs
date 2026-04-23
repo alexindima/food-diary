@@ -2,6 +2,7 @@ namespace FoodDiary.Domain.ValueObjects;
 
 public readonly record struct UserSecurityState(
     string Password,
+    bool HasPassword,
     string? RefreshToken,
     bool IsEmailConfirmed,
     string? EmailConfirmationTokenHash,
@@ -11,9 +12,10 @@ public readonly record struct UserSecurityState(
     DateTime? PasswordResetTokenExpiresAtUtc,
     DateTime? PasswordResetSentAtUtc,
     DateTime? LastLoginAtUtc) {
-    public static UserSecurityState CreateInitial(string passwordHash) {
+    public static UserSecurityState CreateInitial(string passwordHash, bool hasPassword = true) {
         return new UserSecurityState(
             Password: passwordHash,
+            HasPassword: hasPassword,
             RefreshToken: null,
             IsEmailConfirmed: false,
             EmailConfirmationTokenHash: null,
@@ -26,7 +28,10 @@ public readonly record struct UserSecurityState(
     }
 
     public UserSecurityState WithPassword(string passwordHash) {
-        return this with { Password = passwordHash };
+        return this with {
+            Password = passwordHash,
+            HasPassword = true,
+        };
     }
 
     public UserSecurityState WithRefreshToken(string? refreshToken, DateTime nowUtc) {

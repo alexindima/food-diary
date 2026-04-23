@@ -267,6 +267,38 @@
           ]
         }
       ]
+    },
+    {
+      "Path": "/api/v{version}/users/password",
+      "Operations": [
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/users/password/set",
+      "Operations": [
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
     }
   ]
 }

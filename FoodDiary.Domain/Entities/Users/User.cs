@@ -19,6 +19,7 @@ public sealed partial class User : AggregateRoot<UserId> {
 
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
+    public bool HasPassword { get; private set; }
     public string? RefreshToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public string? EmailConfirmationTokenHash { get; private set; }
@@ -94,7 +95,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     private User() {
     }
 
-    public static User Create(string email, string hashedPassword) {
+    public static User Create(string email, string hashedPassword, bool hasPassword = true) {
         var normalizedEmail = NormalizeRequiredEmail(email);
         var normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
 
@@ -102,9 +103,10 @@ public sealed partial class User : AggregateRoot<UserId> {
             Id = UserId.New(),
             Email = normalizedEmail,
             Password = normalizedPassword,
+            HasPassword = hasPassword,
             IsEmailConfirmed = false
         };
-        user.ApplySecurityState(UserSecurityState.CreateInitial(normalizedPassword));
+        user.ApplySecurityState(UserSecurityState.CreateInitial(normalizedPassword, hasPassword));
         user.ApplyPersonalProfileState(UserPersonalProfileState.CreateInitial());
         user.ApplyProfileMediaState(UserProfileMediaState.CreateInitial());
         user.ApplyPreferenceState(UserPreferenceState.CreateInitial());
@@ -355,6 +357,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     private UserSecurityState GetSecurityState() {
         return new UserSecurityState(
             Password,
+            HasPassword,
             RefreshToken,
             IsEmailConfirmed,
             EmailConfirmationTokenHash,
@@ -368,6 +371,7 @@ public sealed partial class User : AggregateRoot<UserId> {
 
     private void ApplySecurityState(UserSecurityState state) {
         Password = state.Password;
+        HasPassword = state.HasPassword;
         RefreshToken = state.RefreshToken;
         IsEmailConfirmed = state.IsEmailConfirmed;
         EmailConfirmationTokenHash = state.EmailConfirmationTokenHash;

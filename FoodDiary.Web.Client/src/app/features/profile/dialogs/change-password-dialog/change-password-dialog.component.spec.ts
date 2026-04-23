@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -14,8 +15,8 @@ describe('ChangePasswordDialogComponent', () => {
     let dialogRefSpy: any;
     let translateServiceSpy: TranslateService;
 
-    beforeEach(() => {
-        userServiceSpy = { changePassword: vi.fn() } as any;
+    function configureComponent(dialogData: any = null): void {
+        userServiceSpy = { changePassword: vi.fn(), setPassword: vi.fn() } as any;
         dialogRefSpy = { close: vi.fn() } as any;
 
         TestBed.configureTestingModule({
@@ -24,6 +25,7 @@ describe('ChangePasswordDialogComponent', () => {
                 provideNoopAnimations(),
                 { provide: UserService, useValue: userServiceSpy },
                 { provide: FdUiDialogRef, useValue: dialogRefSpy },
+                { provide: FD_UI_DIALOG_DATA, useValue: dialogData },
             ],
         });
 
@@ -33,6 +35,10 @@ describe('ChangePasswordDialogComponent', () => {
         fixture = TestBed.createComponent(ChangePasswordDialogComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+    }
+
+    beforeEach(() => {
+        configureComponent();
     });
 
     it('should create', () => {
@@ -138,5 +144,23 @@ describe('ChangePasswordDialogComponent', () => {
     it('should close dialog on cancel when not submitting', () => {
         component.onCancel();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
+    });
+
+    it('should use setPassword mode when account has no password', () => {
+        TestBed.resetTestingModule();
+        configureComponent({ hasPassword: false });
+
+        expect(component.hasPassword).toBe(false);
+
+        userServiceSpy.setPassword.mockReturnValue(of(true));
+        component.form.controls.newPassword.setValue('newPass123');
+        component.form.controls.confirmPassword.setValue('newPass123');
+        component.onSubmit();
+
+        expect(userServiceSpy.setPassword).toHaveBeenCalledWith({
+            newPassword: 'newPass123',
+        });
+        expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+        expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 });

@@ -82,12 +82,48 @@ export class NotificationsDialogComponent {
         return this.notifications().some(item => !item.isRead);
     }
 
+    protected isPasswordSetupSuggestion(notification: NotificationItem): boolean {
+        return notification.type === 'PasswordSetupSuggested';
+    }
+
     protected isDietologistInvitation(notification: NotificationItem): boolean {
         return notification.type === 'DietologistInvitationReceived';
     }
 
     protected getNotificationIcon(notification: NotificationItem): string {
-        return this.isDietologistInvitation(notification) ? 'medical_information' : 'notifications';
+        if (this.isDietologistInvitation(notification)) {
+            return 'medical_information';
+        }
+
+        if (this.isPasswordSetupSuggestion(notification)) {
+            return 'password';
+        }
+
+        return 'notifications';
+    }
+
+    protected getNotificationBadgeKey(notification: NotificationItem): string | null {
+        if (this.isDietologistInvitation(notification)) {
+            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE';
+        }
+
+        if (this.isPasswordSetupSuggestion(notification)) {
+            return 'NOTIFICATIONS.PASSWORD_SETUP_BADGE';
+        }
+
+        return null;
+    }
+
+    protected getNotificationActionKey(notification: NotificationItem): string | null {
+        if (this.isDietologistInvitation(notification)) {
+            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION';
+        }
+
+        if (this.isPasswordSetupSuggestion(notification)) {
+            return 'NOTIFICATIONS.PASSWORD_SETUP_ACTION';
+        }
+
+        return null;
     }
 
     protected getNotificationAriaLabel(notification: NotificationItem): string {

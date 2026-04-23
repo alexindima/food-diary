@@ -80,6 +80,18 @@
             box-shadow: 0 16px 34px color-mix(in srgb, var(--fd-color-slate-900) 10%, var(--fd-color-teal-700));
         }
     }
+
+    &--security {
+        border-color: color-mix(in srgb, var(--fd-color-amber-600) 28%, transparent);
+        background:
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-amber-400) 20%, transparent), transparent 48%),
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-amber-100) 72%, var(--fd-color-white)), var(--fd-color-white));
+
+        &:hover {
+            border-color: color-mix(in srgb, var(--fd-color-amber-700) 36%, transparent);
+            box-shadow: 0 16px 34px color-mix(in srgb, var(--fd-color-slate-900) 10%, var(--fd-color-amber-700));
+        }
+    }
 }
 
 .notifications-dialog__item-indicator {
@@ -150,6 +162,15 @@
             color-mix(in srgb, var(--fd-color-sky-500) 8%, transparent)
         );
         color: var(--fd-color-teal-700);
+    }
+
+    &--security {
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--fd-color-amber-500) 20%, transparent),
+            color-mix(in srgb, var(--fd-color-orange-500) 10%, transparent)
+        );
+        color: var(--fd-color-amber-800);
     }
 }
 
