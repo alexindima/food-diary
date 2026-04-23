@@ -84,8 +84,6 @@ export class DashboardComponent {
     public readonly isTodaySelected = this.facade.isTodaySelected;
     public readonly snapshot = this.facade.snapshot;
     public readonly isLoading = this.facade.isLoading;
-    public readonly activeThemeDefinition = this.themeService.activeThemeDefinition;
-    public readonly activeUiStyleDefinition = this.themeService.activeUiStyleDefinition;
     public readonly dailyGoal = this.facade.dailyGoal;
     public readonly todayCalories = this.facade.todayCalories;
     public readonly caloriesBurned = this.facade.caloriesBurned;
