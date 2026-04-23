@@ -10,6 +10,7 @@
 | `FoodDiary.Presentation.Api.Tests` | Unit | Controller tests, error mapping, DTO mapping, security contract reflection |
 | `FoodDiary.Telegram.Bot.Tests` | Unit | Bot utility tests |
 | `FoodDiary.JobManager.Tests` | Unit | Options validation |
+| `FoodDiary.MailRelay.Tests` | Integration | WebApplicationFactory + Testcontainers PostgreSQL/RabbitMQ |
 | `FoodDiary.Infrastructure.Tests` | Unit + Integration | JWT round-trip, Testcontainers PostgreSQL, migration safety |
 | `FoodDiary.Web.Api.IntegrationTests` | Integration | WebApplicationFactory, API contract snapshots |
 | `FoodDiary.ArchitectureTests` | Architecture guardrails | Layering, naming, forbidden patterns |

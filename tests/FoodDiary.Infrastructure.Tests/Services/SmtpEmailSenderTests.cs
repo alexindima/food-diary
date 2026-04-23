@@ -110,24 +110,10 @@ public sealed class SmtpEmailSenderTests {
     }
 
     private sealed class RecordingEmailTransport : IEmailTransport {
-        public Task SendAsync(
-            MailMessage message,
-            string host,
-            int port,
-            bool useSsl,
-            string? username,
-            string? password,
-            CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
     private sealed class ThrowingEmailTransport(Exception exception) : IEmailTransport {
-        public Task SendAsync(
-            MailMessage message,
-            string host,
-            int port,
-            bool useSsl,
-            string? username,
-            string? password,
-            CancellationToken cancellationToken) => Task.FromException(exception);
+        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) => Task.FromException(exception);
     }
 }

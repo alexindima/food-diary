@@ -10,6 +10,7 @@ FoodDiary is a food tracking platform with a .NET backend, Angular frontend, Tel
 - `FoodDiary.Presentation.Api` - HTTP transport layer, controllers, request/response mappings
 - `FoodDiary.Web.Api` - ASP.NET Core host and composition root
 - `FoodDiary.JobManager` - background jobs host
+- `FoodDiary.MailRelay` - internal outbound email relay and queue processor
 - `FoodDiary.Telegram.Bot` - Telegram adapter/worker
 - `FoodDiary.Web.Client` - Angular web client and admin frontend
 - `tests` - application, architecture, infrastructure, API, bot, jobs, and integration tests

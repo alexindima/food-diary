@@ -42,8 +42,10 @@
     <!-- Infrastructure -->
     <PackageVersion Include="AWSSDK.S3" Version="4.0.21.2" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.6" />
+    <PackageVersion Include="MailKit" Version="4.16.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QuestPDF" Version="2026.2.4" />
+    <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageVersion Include="Stripe.net" Version="50.4.1" />
     <PackageVersion Include="WebPush" Version="1.0.12" />
 
@@ -66,6 +68,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
     <PackageVersion Include="Npgsql" Version="10.0.2" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.11.0" />
+    <PackageVersion Include="Testcontainers.RabbitMq" Version="4.11.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>

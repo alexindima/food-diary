@@ -114,8 +114,7 @@ public sealed class DietologistEmailSenderTests {
         public string LastSubject { get; private set; } = string.Empty;
         public string LastHtmlBody { get; private set; } = string.Empty;
 
-        public Task SendAsync(MailMessage message, string host, int port, bool useSsl,
-            string? username, string? password, CancellationToken cancellationToken) {
+        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
             SentCount++;
             LastRecipient = message.To[0].Address;
             LastSubject = message.Subject;

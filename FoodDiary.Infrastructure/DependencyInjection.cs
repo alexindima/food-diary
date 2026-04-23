@@ -180,6 +180,13 @@ public static class DependencyInjection {
             .Validate(static options => !string.IsNullOrWhiteSpace(options.PasswordResetPath),
                 "Email:PasswordResetPath is required.")
             .ValidateOnStart();
+        services.AddOptions<EmailDeliveryOptions>()
+            .Bind(configuration.GetSection(EmailDeliveryOptions.SectionName))
+            .Validate(EmailDeliveryOptions.HasSupportedMode,
+                "EmailDelivery:Mode must be either Smtp or Relay.")
+            .Validate(EmailDeliveryOptions.HasValidRelayBaseUrl,
+                "EmailDelivery:RelayBaseUrl must be an absolute URL when relay mode is enabled.")
+            .ValidateOnStart();
         services.AddOptions<WebPushOptions>()
             .Bind(configuration.GetSection(WebPushOptions.SectionName))
             .Validate(WebPushOptions.HasValidConfiguration,
@@ -260,7 +267,12 @@ public static class DependencyInjection {
         services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
-        services.AddSingleton<IEmailTransport, SmtpClientEmailTransport>();
+        services.AddHttpClient(RelayEmailTransport.HttpClientName, client => {
+            client.Timeout = TimeSpan.FromSeconds(15);
+        });
+        services.AddSingleton<SmtpClientEmailTransport>();
+        services.AddSingleton<RelayEmailTransport>();
+        services.AddSingleton<IEmailTransport, ConfigurableEmailTransport>();
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();

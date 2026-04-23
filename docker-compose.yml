@@ -33,6 +33,25 @@ services:
       - full
       - backend
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    restart: unless-stopped
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MailRelayBroker__UserName:-guest}
+      RABBITMQ_DEFAULT_PASS: ${MailRelayBroker__Password:-guest}
+      RABBITMQ_DEFAULT_VHOST: ${MailRelayBroker__VirtualHost:-/}
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    profiles:
+      - full
+      - backend
+
   api:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/api:${API_IMAGE_TAG:-latest}
     build:
@@ -46,6 +65,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
+      EmailDelivery__RelayBaseUrl: http://mail-relay:5088
     env_file:
       - .env
     healthcheck:
@@ -57,6 +77,39 @@ services:
     depends_on:
       db-init:
         condition: service_completed_successfully
+      mail-relay:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    profiles:
+      - full
+      - backend
+
+  mail-relay:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: FoodDiary.MailRelay/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${MAIL_RELAY_PORT:-5088}:5088"
+    environment:
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      MailRelayBroker__HostName: rabbitmq
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5088/health/ready >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
     profiles:
       - full
       - backend

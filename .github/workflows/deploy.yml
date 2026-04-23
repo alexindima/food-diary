@@ -164,6 +164,27 @@ jobs:
             echo "FAILED_TARGET=Build and push Job Manager"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Build and push Mail Relay
+        id: build_mail_relay
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: FoodDiary.MailRelay/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/mail-relay:latest
+            ${{ env.IMAGE_PREFIX }}/mail-relay:sha-${{ github.sha }}
+
+      - name: Record failure step
+        if: always() && steps.build_mail_relay.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Mail Relay"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push Client
         id: build_client
         uses: docker/build-push-action@v7
@@ -241,7 +262,8 @@ jobs:
           cd /opt/fooddiary
 
           cp /etc/fooddiary/fooddiary.env .env
-          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nJOB_MANAGER_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nJOB_MANAGER_IMAGE_TAG=%s\nMAIL_RELAY_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+            "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
@@ -253,12 +275,15 @@ jobs:
           export INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export JOB_MANAGER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export MAIL_RELAY_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
 
           docker compose --profile backend --profile full pull
 
           docker compose --profile backend run -T --rm db-init update
 
+          docker compose --profile backend up -d rabbitmq
+          docker compose --profile backend up -d --force-recreate --no-deps mail-relay
           docker compose --profile backend up -d --force-recreate --no-deps api
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager

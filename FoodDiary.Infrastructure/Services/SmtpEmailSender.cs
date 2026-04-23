@@ -210,10 +210,6 @@ public sealed class SmtpEmailSender(
     }
 
     private async Task SendAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
-        if (string.IsNullOrWhiteSpace(_options.SmtpHost)) {
-            throw new InvalidOperationException("Email SMTP host is not configured.");
-        }
-
         using var message = new MailMessage {
             From = new MailAddress(_options.FromAddress, _options.FromName),
             Subject = subject,
@@ -230,13 +226,6 @@ public sealed class SmtpEmailSender(
 
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
 
-        await _emailTransport.SendAsync(
-            message,
-            _options.SmtpHost,
-            _options.SmtpPort,
-            _options.UseSsl,
-            _options.SmtpUser,
-            _options.SmtpPassword,
-            cancellationToken);
+        await _emailTransport.SendAsync(message, cancellationToken);
     }
 }
