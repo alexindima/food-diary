@@ -94,8 +94,7 @@ describe('NoticeBannerComponent', () => {
 
                 const el: HTMLElement = fixture.nativeElement;
                 const notice = el.querySelector('.fd-notice');
-                const toneClass =
-                    type === 'error' ? 'fd-ui-notice-surface--danger' : `fd-ui-notice-surface--${type}`;
+                const toneClass = type === 'error' ? 'fd-ui-notice-surface--danger' : `fd-ui-notice-surface--${type}`;
                 expect(notice?.classList.contains('fd-ui-notice-surface')).toBe(true);
                 expect(notice?.classList.contains(toneClass)).toBe(true);
             });
