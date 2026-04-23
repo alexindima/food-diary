@@ -462,6 +462,1273 @@
         "REGISTER": "Register",
         "LOGIN": "Login"
     },
+    "LANDING_FAQ": {
+        "EYEBROW": "FAQ",
+        "TITLE": "Questions before you start",
+        "SUBTITLE": "Short answers about what Food Diary already covers and how it fits into a long-term nutrition routine.",
+        "DETAIL_LINK": "Read the detailed Food Diary page",
+        "GUIDES_TITLE": "Explore dedicated pages for key nutrition use cases",
+        "ITEMS": {
+            "APP_SCOPE": {
+                "QUESTION": "Is Food Diary only a calorie counter?",
+                "ANSWER": "No. Food Diary combines meal logging, calorie and macro tracking, recipes, meal planning, fasting tools, body metrics, weekly reviews, and guided nutrition workflows in one workspace."
+            },
+            "PLANNING": {
+                "QUESTION": "Can I plan meals in advance?",
+                "ANSWER": "Yes. You can build meal plans, turn planned meals into shopping lists, and keep products and recipes ready so future meals are easier to assemble."
+            },
+            "PROGRESS": {
+                "QUESTION": "Can I track long-term progress, not just daily entries?",
+                "ANSWER": "Yes. Food Diary includes charts for calories and macros, body progress such as weight and waist history, and weekly check-ins so you can review trends over time."
+            },
+            "DIETOLOGIST": {
+                "QUESTION": "Can I work with a dietologist inside the app?",
+                "ANSWER": "Yes. You can invite a dietologist by email, share only the data categories you choose, and keep meals, progress, and body metrics in the same workflow."
+            }
+        }
+    },
+    "NUTRITION_DIARY_PAGE": {
+        "EYEBROW": "Food Diary Guide",
+        "TITLE": "Food Diary App for Meals, Calories, and Nutrition Planning",
+        "SUBTITLE": "Use Food Diary as an online nutrition diary to log meals, count calories and macros, plan ahead, review body progress, and collaborate with a dietologist in one place.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Calories and macros",
+            "PLANNING": "Meal planning",
+            "PROGRESS": "Progress tracking"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "A food diary should be more than a static logbook",
+            "TEXT": "Food Diary is built for people who want one app for logging meals, planning nutrition, reviewing trends, and keeping specialist support inside the same workflow.",
+            "ITEMS": {
+                "MEALS": "Log breakfasts, lunches, dinners, and snacks",
+                "CALORIES": "Track calories, macros, and nutrition totals",
+                "PLANS": "Plan meals and build shopping lists",
+                "BODY": "Review weight, waist, and weekly progress"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What an online food diary should cover",
+            "SUBTITLE": "This page is focused on the core jobs users expect from a modern food diary app and the extra workflows that help Food Diary stand out.",
+            "ITEMS": {
+                "MEAL_LOGGING": {
+                    "TITLE": "Log meals without rebuilding the same entries",
+                    "TEXT": "Track food with reusable products, recipes, and meal records so daily logging stays fast after the first week."
+                },
+                "CALORIES": {
+                    "TITLE": "See calories and macros as you log",
+                    "TEXT": "Calories, proteins, fats, and carbs stay visible while you build your day instead of appearing only after the meal is saved."
+                },
+                "PLANNING": {
+                    "TITLE": "Plan meals before hunger makes the decision",
+                    "TEXT": "Use meal plans and shopping lists to move from reactive logging toward a clearer nutrition routine."
+                },
+                "PROGRESS": {
+                    "TITLE": "Review long-term nutrition and body trends",
+                    "TEXT": "Charts, weekly check-ins, weight history, and waist tracking help you compare routine changes with actual progress."
+                },
+                "DIETOLOGIST": {
+                    "TITLE": "Keep dietologist collaboration inside the app",
+                    "TEXT": "Invite a dietologist by email and share only the data categories you want visible instead of sending manual reports."
+                },
+                "FASTING": {
+                    "TITLE": "Add focused workflows such as fasting",
+                    "TEXT": "Food Diary can support more structured health routines when you need more than a basic meal diary."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start using the food diary in three steps",
+            "SUBTITLE": "The core workflow is simple enough for daily use but still supports more advanced planning and review.",
+            "ITEMS": {
+                "ACCOUNT": {
+                    "TITLE": "Create your account",
+                    "TEXT": "Set up your profile so your diary, goals, and progress stay synchronized over time."
+                },
+                "LOG": {
+                    "TITLE": "Log meals and build your day",
+                    "TEXT": "Add products, recipes, and portions while keeping nutrition totals visible across the day."
+                },
+                "REVIEW": {
+                    "TITLE": "Review trends and adjust your routine",
+                    "TEXT": "Use weekly summaries, body metrics, and nutrition charts to see what is actually working."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Food diary FAQ",
+            "TITLE": "Common questions about using Food Diary",
+            "SUBTITLE": "These answers focus on the most common expectations behind queries such as food diary, online nutrition diary, and calorie diary.",
+            "ITEMS": {
+                "APP_SCOPE": {
+                    "QUESTION": "Is Food Diary only a food diary?",
+                    "ANSWER": "No. Food Diary also covers calories, macros, meal planning, body progress, weekly reviews, fasting workflows, and dietologist collaboration."
+                },
+                "CALORIES": {
+                    "QUESTION": "Can I use it as a calorie and macro tracker?",
+                    "ANSWER": "Yes. Food Diary keeps calories and macro totals visible across the day and connects them to meal logging, planning, and trend review."
+                },
+                "PLANNING": {
+                    "QUESTION": "Can I plan meals in advance in the same app?",
+                    "ANSWER": "Yes. Meal plans and shopping lists are part of the product, so planning does not need a separate tool."
+                },
+                "DIETOLOGIST": {
+                    "QUESTION": "Can a dietologist work with me inside Food Diary?",
+                    "ANSWER": "Yes. You can invite a dietologist, share selected categories of diary data, and manage access later if your workflow changes."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Start with a food diary and grow into a full nutrition workflow",
+            "SUBTITLE": "Create an account to log meals, track calories and macros, plan nutrition, and keep your progress in one connected system.",
+            "PRIMARY": "Start now",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "CALORIE_COUNTER_PAGE": {
+        "EYEBROW": "Calorie Counter Guide",
+        "TITLE": "Calorie Counter App for Meals, Macros, and Daily Targets",
+        "SUBTITLE": "Use Food Diary as a calorie counter app to log meals, track calories and macros, compare daily intake with goals, and review trends over time.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Daily calories",
+            "PLANNING": "Target tracking",
+            "PROGRESS": "Weekly trends"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "A calorie counter should connect intake, goals, and routine",
+            "TEXT": "Food Diary helps you track calories in context, not as isolated numbers, so meals, macros, and longer-term progress stay connected.",
+            "ITEMS": {
+                "FIRST": "Log calories across breakfast, lunch, dinner, and snacks",
+                "SECOND": "Track proteins, fats, and carbs next to calories",
+                "THIRD": "Compare actual intake with daily targets",
+                "FOURTH": "Review trends instead of relying on one-day snapshots"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What users expect from a modern calorie counter",
+            "SUBTITLE": "This page targets users who want daily calorie control without losing meal quality, macro balance, or long-term visibility.",
+            "ITEMS": {
+                "DAILY_LOG": {
+                    "TITLE": "Track calories as you build the day",
+                    "TEXT": "Food Diary keeps daily totals visible while you log meals, which makes adjustments easier before the day is over."
+                },
+                "MACROS": {
+                    "TITLE": "Keep macros next to calories",
+                    "TEXT": "Calories make more sense when proteins, fats, and carbs are visible in the same workflow."
+                },
+                "GOALS": {
+                    "TITLE": "Measure intake against your targets",
+                    "TEXT": "Daily calorie goals are easier to follow when actual meals and target values stay in one place."
+                },
+                "RECIPES": {
+                    "TITLE": "Reuse products and recipes",
+                    "TEXT": "Saved foods and recipes reduce manual work and make daily calorie tracking more realistic."
+                },
+                "PROGRESS": {
+                    "TITLE": "Review calorie trends over time",
+                    "TEXT": "Weekly summaries and progress charts help you understand consistency instead of overreacting to one meal or one day."
+                },
+                "COACHING": {
+                    "TITLE": "Share structured data with a dietologist",
+                    "TEXT": "If you need specialist support, you can keep calorie data, meals, and progress inside one workflow."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start using the calorie counter in three steps",
+            "SUBTITLE": "The daily flow stays simple, but it scales into a more complete nutrition routine when you need it.",
+            "ITEMS": {
+                "TARGETS": {
+                    "TITLE": "Set calorie and macro targets",
+                    "TEXT": "Define the daily range you want to follow, so your numbers have context from the start."
+                },
+                "LOG": {
+                    "TITLE": "Log meals throughout the day",
+                    "TEXT": "Add foods, recipes, and portions while watching totals update in real time."
+                },
+                "REVIEW": {
+                    "TITLE": "Review trends and adjust",
+                    "TEXT": "Use daily and weekly summaries to see whether your routine actually matches your targets."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Calorie counter FAQ",
+            "TITLE": "Common questions about calorie tracking in Food Diary",
+            "SUBTITLE": "These answers focus on how Food Diary works for users searching for a calorie counter, calorie tracker, or meal calorie app.",
+            "ITEMS": {
+                "SCOPE": {
+                    "QUESTION": "Is Food Diary just a calorie counter?",
+                    "ANSWER": "No. It also covers meal logging, macro tracking, planning, progress analytics, fasting tools, and dietologist collaboration."
+                },
+                "MACROS": {
+                    "QUESTION": "Can I track calories and macros together?",
+                    "ANSWER": "Yes. Food Diary shows calories together with proteins, fats, and carbs, so daily decisions are easier to make."
+                },
+                "WEIGHT_LOSS": {
+                    "QUESTION": "Can I use it for weight loss routines?",
+                    "ANSWER": "Yes. The app helps you compare intake with targets and review trends over time, which is more useful than one-off logging."
+                },
+                "GOALS": {
+                    "QUESTION": "Can I compare intake with daily goals?",
+                    "ANSWER": "Yes. Food Diary is built to keep real intake and target values visible in the same workflow."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Track calories with more context than a basic counter",
+            "SUBTITLE": "Create an account to log meals, monitor calories and macros, and connect your intake with longer-term nutrition goals.",
+            "PRIMARY": "Start calorie tracking",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "MEAL_PLANNER_PAGE": {
+        "EYEBROW": "Meal Planner Guide",
+        "TITLE": "Meal Planner App for Weekly Nutrition and Shopping Lists",
+        "SUBTITLE": "Use Food Diary as a meal planner to organize the week ahead, connect recipes with your nutrition goals, and turn plans into shopping lists.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Weekly plans",
+            "PLANNING": "Shopping lists",
+            "PROGRESS": "Routine support"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Meal planning works better when it stays close to real logging",
+            "TEXT": "Food Diary connects planning with recipes, products, meal records, and nutrition review so the plan does not stay theoretical.",
+            "ITEMS": {
+                "FIRST": "Build a practical plan for the next few days or the week",
+                "SECOND": "Turn planned meals into shopping lists",
+                "THIRD": "Reuse recipes and products across future days",
+                "FOURTH": "Adjust the plan as life changes"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What a meal planner should cover",
+            "SUBTITLE": "This page is built for users who want to reduce daily friction, eat with more structure, and keep planning aligned with actual nutrition targets.",
+            "ITEMS": {
+                "WEEKLY_PLAN": {
+                    "TITLE": "Build weekly meal plans",
+                    "TEXT": "Plan meals before the week gets busy, so food choices are less reactive."
+                },
+                "RECIPES": {
+                    "TITLE": "Use recipes as planning blocks",
+                    "TEXT": "Recipes make planning more realistic because they can be reused instead of rebuilt from scratch."
+                },
+                "SHOPPING": {
+                    "TITLE": "Generate shopping lists from the plan",
+                    "TEXT": "When planned meals connect to groceries, the plan is easier to follow in real life."
+                },
+                "ROUTINE": {
+                    "TITLE": "Keep planning aligned with your routine",
+                    "TEXT": "Food Diary helps you connect the plan with your actual days, not just an ideal schedule."
+                },
+                "ADJUSTMENTS": {
+                    "TITLE": "Adapt the plan without losing structure",
+                    "TEXT": "You can update meals as needed while still keeping the week organized."
+                },
+                "COACHING": {
+                    "TITLE": "Coordinate planning with a dietologist",
+                    "TEXT": "Planning becomes easier when a specialist can review structured nutrition data inside the same app."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start meal planning in three steps",
+            "SUBTITLE": "The process stays lightweight enough for daily use while supporting more structured planning habits.",
+            "ITEMS": {
+                "GOALS": {
+                    "TITLE": "Define your nutrition direction",
+                    "TEXT": "Set the context for the plan, including calorie and macro expectations if you use them."
+                },
+                "BUILD": {
+                    "TITLE": "Build meals for the coming days",
+                    "TEXT": "Use saved foods and recipes to assemble a plan that is practical to repeat."
+                },
+                "FOLLOW": {
+                    "TITLE": "Follow the plan and adjust",
+                    "TEXT": "Turn planned meals into real meals, then update the schedule when the week changes."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Meal planner FAQ",
+            "TITLE": "Common questions about meal planning in Food Diary",
+            "SUBTITLE": "These answers focus on the needs behind searches like meal planner, weekly meal planner, and nutrition planning app.",
+            "ITEMS": {
+                "WEEK": {
+                    "QUESTION": "Can I plan meals for the whole week?",
+                    "ANSWER": "Yes. Food Diary supports planning ahead, so you can build a repeatable structure instead of deciding meal by meal."
+                },
+                "SHOPPING": {
+                    "QUESTION": "Can I create shopping lists from planned meals?",
+                    "ANSWER": "Yes. Planned meals can connect with shopping lists, which makes execution easier."
+                },
+                "RECIPES": {
+                    "QUESTION": "Can I use recipes inside the planner?",
+                    "ANSWER": "Yes. Recipes are part of the workflow, so planning does not require rebuilding the same meals manually."
+                },
+                "FLEXIBLE": {
+                    "QUESTION": "Can I change the plan later?",
+                    "ANSWER": "Yes. Food Diary supports adjustments, so the plan can stay useful even when your week shifts."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Plan meals before the week starts driving decisions",
+            "SUBTITLE": "Create an account to build meal plans, connect them to groceries, and keep planning tied to your nutrition routine.",
+            "PRIMARY": "Start meal planning",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "MACRO_TRACKER_PAGE": {
+        "EYEBROW": "Macro Tracker Guide",
+        "TITLE": "Macro Tracker for Protein, Fat, Carbs, and Daily Meals",
+        "SUBTITLE": "Use Food Diary as a macro tracker to monitor proteins, fats, and carbs alongside meals, calories, goals, and long-term progress.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Protein, fat, carbs",
+            "PLANNING": "Macro goals",
+            "PROGRESS": "Trend review"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Macros are easier to manage when they stay connected to meals",
+            "TEXT": "Food Diary keeps macro totals close to daily logging, planning, and progress review so protein, fat, and carb decisions are easier to maintain.",
+            "ITEMS": {
+                "FIRST": "Track proteins, fats, and carbs across the day",
+                "SECOND": "Compare totals with personal macro goals",
+                "THIRD": "Use meals and recipes instead of raw numbers alone",
+                "FOURTH": "Review whether your routine stays consistent week to week"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What a macro tracker should actually help with",
+            "SUBTITLE": "This page is for users who care about macro balance, muscle support, satiety, or more precise nutrition than calories alone can provide.",
+            "ITEMS": {
+                "BALANCE": {
+                    "TITLE": "Track macro balance, not just totals",
+                    "TEXT": "Daily food choices are easier to improve when protein, fat, and carbs remain visible together."
+                },
+                "MEALS": {
+                    "TITLE": "See macros inside real meals",
+                    "TEXT": "Macro data matters more when it is attached to the meals and recipes you actually use."
+                },
+                "GOALS": {
+                    "TITLE": "Compare intake with macro goals",
+                    "TEXT": "Targets help you understand whether a day is aligned with your nutrition strategy."
+                },
+                "PATTERNS": {
+                    "TITLE": "Review patterns over time",
+                    "TEXT": "Weekly and longer-term review helps you see whether your macro routine is sustainable."
+                },
+                "RECIPES": {
+                    "TITLE": "Reuse foods and recipes to stay consistent",
+                    "TEXT": "Saved ingredients and meals make macro tracking less repetitive and easier to maintain."
+                },
+                "COACHING": {
+                    "TITLE": "Discuss macro data with a dietologist",
+                    "TEXT": "If needed, you can keep structured meal and macro data ready for specialist collaboration."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start macro tracking in three steps",
+            "SUBTITLE": "The flow stays usable for everyday meals while still supporting more detailed nutrition work.",
+            "ITEMS": {
+                "TARGETS": {
+                    "TITLE": "Set your macro targets",
+                    "TEXT": "Define the protein, fat, and carb range you want your routine to follow."
+                },
+                "TRACK": {
+                    "TITLE": "Track meals through the day",
+                    "TEXT": "Log meals and watch macro totals evolve as your day fills up."
+                },
+                "OPTIMIZE": {
+                    "TITLE": "Review patterns and optimize",
+                    "TEXT": "Use trend reviews to see where consistency breaks and which meals support your goals."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Macro tracker FAQ",
+            "TITLE": "Common questions about tracking macros in Food Diary",
+            "SUBTITLE": "These answers focus on users who search for a macro tracker, macro counter, or protein-fat-carb tracker.",
+            "ITEMS": {
+                "TRACKING": {
+                    "QUESTION": "Can I track protein, fat, and carbs separately?",
+                    "ANSWER": "Yes. Food Diary shows proteins, fats, and carbs as part of the same daily workflow as meals and calories."
+                },
+                "CALORIES": {
+                    "QUESTION": "Does it also show calories with macros?",
+                    "ANSWER": "Yes. Macro tracking is connected with calorie totals, so you can review both without switching tools."
+                },
+                "GOALS": {
+                    "QUESTION": "Can I compare my day with macro goals?",
+                    "ANSWER": "Yes. Food Diary is designed to keep actual intake and target values visible together."
+                },
+                "BODY_COMPOSITION": {
+                    "QUESTION": "Is it useful for body recomposition or performance routines?",
+                    "ANSWER": "Yes. The app supports more structured monitoring than a basic food log because macros, meals, and trend review stay connected."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Track macros with real meal context",
+            "SUBTITLE": "Create an account to monitor proteins, fats, and carbs while keeping meals, calories, and progress in one place.",
+            "PRIMARY": "Start macro tracking",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "INTERMITTENT_FASTING_PAGE": {
+        "EYEBROW": "Fasting Guide",
+        "TITLE": "Intermittent Fasting App with Meal Logging and Progress Review",
+        "SUBTITLE": "Use Food Diary to support intermittent fasting while keeping meals, calories, body progress, and nutrition review in the same workflow.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Fasting windows",
+            "PLANNING": "Meal timing",
+            "PROGRESS": "Routine review"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Fasting works better when timing and nutrition stay together",
+            "TEXT": "Food Diary supports fasting routines without separating fasting from meals, calories, and body progress.",
+            "ITEMS": {
+                "FIRST": "Track fasting windows as part of your routine",
+                "SECOND": "Keep meals and calorie intake in the same system",
+                "THIRD": "Review whether the schedule stays consistent",
+                "FOURTH": "Connect fasting with broader nutrition planning"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What an intermittent fasting app should help with",
+            "SUBTITLE": "This page targets users who want fasting structure but still need meal logging, calories, and progress review in one place.",
+            "ITEMS": {
+                "WINDOWS": {
+                    "TITLE": "Track fasting windows",
+                    "TEXT": "Food Diary can support routines where eating windows and non-eating windows matter."
+                },
+                "MEALS": {
+                    "TITLE": "Keep meal logging in the same app",
+                    "TEXT": "Fasting is easier to review when meals and eating windows are connected."
+                },
+                "CONSISTENCY": {
+                    "TITLE": "Review consistency across days",
+                    "TEXT": "Progress becomes clearer when you can see whether fasting routines are actually repeatable."
+                },
+                "PROGRESS": {
+                    "TITLE": "Compare fasting with body and nutrition trends",
+                    "TEXT": "Food Diary helps you connect fasting structure with broader nutrition and progress data."
+                },
+                "FLEXIBILITY": {
+                    "TITLE": "Adapt fasting to real life",
+                    "TEXT": "Your routine can shift without losing visibility into the bigger pattern."
+                },
+                "COACHING": {
+                    "TITLE": "Coordinate fasting routines with a dietologist",
+                    "TEXT": "If you use specialist support, keeping the full routine in one app is easier than sharing fragmented data."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start an intermittent fasting routine in three steps",
+            "SUBTITLE": "The process stays simple enough for daily use while still supporting a more structured review habit.",
+            "ITEMS": {
+                "SCHEDULE": {
+                    "TITLE": "Choose your fasting rhythm",
+                    "TEXT": "Set the structure you want to follow so fasting fits into your day rather than disrupting it."
+                },
+                "TRACK": {
+                    "TITLE": "Track meals and fasting windows",
+                    "TEXT": "Keep timing, meals, and nutrition data in one daily workflow."
+                },
+                "REVIEW": {
+                    "TITLE": "Review consistency and outcomes",
+                    "TEXT": "Look at patterns over time to see whether the fasting routine is sustainable and useful."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Fasting FAQ",
+            "TITLE": "Common questions about intermittent fasting in Food Diary",
+            "SUBTITLE": "These answers focus on users searching for an intermittent fasting app, fasting tracker, or fasting meal log.",
+            "ITEMS": {
+                "TRACKER": {
+                    "QUESTION": "Can I use Food Diary as a fasting tracker?",
+                    "ANSWER": "Yes. Food Diary can support fasting workflows while keeping them connected to meal logging and nutrition review."
+                },
+                "CALORIES": {
+                    "QUESTION": "Can I track calories while following fasting?",
+                    "ANSWER": "Yes. Fasting and calorie tracking can stay in the same workflow, which makes the routine easier to review."
+                },
+                "SCHEDULE": {
+                    "QUESTION": "Can I follow a repeatable fasting schedule?",
+                    "ANSWER": "Yes. The app is designed to support structure and consistency rather than one-off fasting days."
+                },
+                "RESULTS": {
+                    "QUESTION": "Can I compare fasting with progress trends?",
+                    "ANSWER": "Yes. Food Diary helps you connect fasting routines with broader nutrition and body progress data."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Keep fasting inside a broader nutrition workflow",
+            "SUBTITLE": "Create an account to combine fasting routines with meals, calories, and long-term progress review.",
+            "PRIMARY": "Start fasting workflow",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "MEAL_TRACKER_PAGE": {
+        "EYEBROW": "Meal Tracker Guide",
+        "TITLE": "Meal Tracker App for Daily Meal Logging and Nutrition History",
+        "SUBTITLE": "Use Food Diary as a meal tracker to log breakfast, lunch, dinner, and snacks, review nutrition totals, and keep a clear history of your routine.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Daily meals",
+            "PLANNING": "Meal history",
+            "PROGRESS": "Nutrition review"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Meal tracking should stay practical enough to repeat every day",
+            "TEXT": "Food Diary is built for repeatable logging, so meals, recipes, portions, and nutrition totals are easier to maintain over time.",
+            "ITEMS": {
+                "FIRST": "Log breakfast, lunch, dinner, and snacks quickly",
+                "SECOND": "Keep meal history easy to review",
+                "THIRD": "Reuse recipes and saved foods to cut friction",
+                "FOURTH": "Connect daily meals with broader nutrition patterns"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What users usually need from a meal tracker",
+            "SUBTITLE": "This page targets users who want reliable meal logging without turning it into a heavy manual task.",
+            "ITEMS": {
+                "QUICK_LOGGING": {
+                    "TITLE": "Log meals without rebuilding the day every time",
+                    "TEXT": "Reusable foods, recipes, and portions make meal tracking more realistic for long-term use."
+                },
+                "MEAL_HISTORY": {
+                    "TITLE": "Keep a clear meal history",
+                    "TEXT": "Past meals stay visible, which makes it easier to review patterns instead of relying on memory."
+                },
+                "RECIPES": {
+                    "TITLE": "Track recipes as real meals",
+                    "TEXT": "Recipes are part of the workflow, so meal tracking does not stop at raw ingredients."
+                },
+                "NUTRITION_TOTALS": {
+                    "TITLE": "See nutrition totals as meals are added",
+                    "TEXT": "Daily calories and macros stay close to meal logging, which helps you adjust earlier."
+                },
+                "ROUTINE": {
+                    "TITLE": "Build a repeatable routine",
+                    "TEXT": "Meal tracking becomes more useful when it supports habits rather than one-off days."
+                },
+                "PROGRESS": {
+                    "TITLE": "Review patterns across days and weeks",
+                    "TEXT": "Meal history becomes more valuable when it connects with summaries and longer-term trend review."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start using the meal tracker in three steps",
+            "SUBTITLE": "The workflow stays simple enough for daily use while still giving you a useful record over time.",
+            "ITEMS": {
+                "START": {
+                    "TITLE": "Create your account",
+                    "TEXT": "Set up your diary so meals and nutrition history are stored in one place."
+                },
+                "LOG": {
+                    "TITLE": "Log meals during the day",
+                    "TEXT": "Add foods, recipes, and portions as you go so the day does not need to be rebuilt later."
+                },
+                "REVIEW": {
+                    "TITLE": "Review your meal history",
+                    "TEXT": "Look back at patterns, totals, and repeated meals to understand your routine more clearly."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Meal tracker FAQ",
+            "TITLE": "Common questions about meal tracking in Food Diary",
+            "SUBTITLE": "These answers focus on users searching for a meal tracker, meal log app, or meal diary.",
+            "ITEMS": {
+                "QUICK": {
+                    "QUESTION": "Can I log meals quickly every day?",
+                    "ANSWER": "Yes. Food Diary is designed to reduce repeated manual work by reusing saved foods, recipes, and portions."
+                },
+                "CALORIES": {
+                    "QUESTION": "Does it also show calories and macros?",
+                    "ANSWER": "Yes. Meal tracking is connected with daily nutrition totals, so logging and review stay in the same flow."
+                },
+                "HISTORY": {
+                    "QUESTION": "Can I review what I ate before?",
+                    "ANSWER": "Yes. Food Diary keeps meal history available so you can look for patterns across days and weeks."
+                },
+                "RECIPES": {
+                    "QUESTION": "Can I track recipes, not only single foods?",
+                    "ANSWER": "Yes. Recipes are part of the product, which makes meal logging more practical for real-life eating."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Track meals without turning the routine into admin work",
+            "SUBTITLE": "Create an account to log meals, keep history, and connect daily eating with nutrition review.",
+            "PRIMARY": "Start meal tracking",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "WEIGHT_LOSS_APP_PAGE": {
+        "EYEBROW": "Weight Loss Guide",
+        "TITLE": "Weight Loss App for Meals, Calories, and Progress Tracking",
+        "SUBTITLE": "Use Food Diary as a weight loss app to connect meal logging, calories, goals, body metrics, and weekly review in one consistent workflow.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Weight goals",
+            "PLANNING": "Body metrics",
+            "PROGRESS": "Weekly review"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Weight loss works better when the process is visible, not improvised",
+            "TEXT": "Food Diary supports weight loss with daily logging, targets, body progress, and reviews that help you stay consistent instead of starting over repeatedly.",
+            "ITEMS": {
+                "FIRST": "Set practical nutrition and weight goals",
+                "SECOND": "Track meals, calories, and macro patterns",
+                "THIRD": "Review body progress such as weight and waist changes",
+                "FOURTH": "Use weekly review to adjust your routine"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What users expect from a weight loss app",
+            "SUBTITLE": "This page is built for users who need a more structured process than a simple food log or generic motivation app.",
+            "ITEMS": {
+                "GOALS": {
+                    "TITLE": "Set measurable goals",
+                    "TEXT": "Weight loss is easier to manage when calorie, meal, and progress targets are clear from the start."
+                },
+                "CALORIES": {
+                    "TITLE": "Connect calorie tracking with the bigger goal",
+                    "TEXT": "Daily intake matters more when it is part of a visible process instead of isolated numbers."
+                },
+                "MEALS": {
+                    "TITLE": "Keep meals and routines visible",
+                    "TEXT": "Meal history helps you understand which habits support progress and which ones repeat the same setbacks."
+                },
+                "BODY_METRICS": {
+                    "TITLE": "Track body metrics over time",
+                    "TEXT": "Weight and waist history help you compare nutrition patterns with actual changes."
+                },
+                "WEEKLY_REVIEW": {
+                    "TITLE": "Review the week instead of judging one day",
+                    "TEXT": "Weekly review makes the process more realistic and less reactive."
+                },
+                "COACHING": {
+                    "TITLE": "Coordinate with a dietologist when needed",
+                    "TEXT": "If you want support, structured meals and progress data can stay in one shared workflow."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start a structured weight loss workflow in three steps",
+            "SUBTITLE": "The process stays lightweight enough for everyday use while still giving you useful accountability.",
+            "ITEMS": {
+                "SETUP": {
+                    "TITLE": "Set goals and starting metrics",
+                    "TEXT": "Create the baseline for your process so daily actions have a clear direction."
+                },
+                "FOLLOW": {
+                    "TITLE": "Track meals and body progress",
+                    "TEXT": "Keep meals, calories, and body metrics visible in the same place."
+                },
+                "ADJUST": {
+                    "TITLE": "Review and adjust the routine",
+                    "TEXT": "Use weekly summaries and trend review to improve the process over time."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Weight loss FAQ",
+            "TITLE": "Common questions about using Food Diary for weight loss",
+            "SUBTITLE": "These answers focus on the expectations behind searches like weight loss app, похудение app, and nutrition app for losing weight.",
+            "ITEMS": {
+                "WEIGHT_LOSS": {
+                    "QUESTION": "Can I use Food Diary as a weight loss app?",
+                    "ANSWER": "Yes. Food Diary connects meals, calories, goals, and body progress so the process is easier to manage over time."
+                },
+                "GOALS": {
+                    "QUESTION": "Can I set goals and compare progress with them?",
+                    "ANSWER": "Yes. The app supports goal-oriented routines, not only daily logging."
+                },
+                "BODY": {
+                    "QUESTION": "Can I track body metrics as well as meals?",
+                    "ANSWER": "Yes. Weight and waist history can be reviewed alongside nutrition and weekly summaries."
+                },
+                "COACHING": {
+                    "QUESTION": "Can I work with a dietologist during the process?",
+                    "ANSWER": "Yes. Food Diary can support a shared workflow where progress and nutrition stay visible in one place."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Turn weight loss from a vague intention into a visible process",
+            "SUBTITLE": "Create an account to connect meals, calories, goals, and progress in one system.",
+            "PRIMARY": "Start weight loss workflow",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "DIETOLOGIST_COLLABORATION_PAGE": {
+        "EYEBROW": "Dietologist Collaboration Guide",
+        "TITLE": "Work with a Dietologist Inside Your Nutrition App",
+        "SUBTITLE": "Use Food Diary to invite a dietologist, share selected nutrition data, review progress together, and keep meals and plans in one workflow.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Email invites",
+            "PLANNING": "Controlled sharing",
+            "PROGRESS": "Shared review"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Specialist collaboration is easier when data does not live in scattered tools",
+            "TEXT": "Food Diary is built so meals, body metrics, progress, and planning can stay inside one system when you work with a dietologist.",
+            "ITEMS": {
+                "FIRST": "Invite a dietologist by email",
+                "SECOND": "Choose which categories of data are visible",
+                "THIRD": "Review meals and progress in one place",
+                "FOURTH": "Keep planning and follow-up in the same workflow"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What dietologist collaboration should actually cover",
+            "SUBTITLE": "This page targets a core differentiator of Food Diary: keeping specialist collaboration inside the product instead of exporting fragmented reports.",
+            "ITEMS": {
+                "INVITES": {
+                    "TITLE": "Invite a dietologist directly",
+                    "TEXT": "Collaboration starts inside the product instead of through separate spreadsheets or screenshots."
+                },
+                "VISIBILITY": {
+                    "TITLE": "Control what is shared",
+                    "TEXT": "Food Diary lets you decide which parts of your diary and progress are visible."
+                },
+                "MEALS": {
+                    "TITLE": "Keep meals available for review",
+                    "TEXT": "Meal history is easier to discuss when it stays inside the same app as the rest of the process."
+                },
+                "PROGRESS": {
+                    "TITLE": "Review progress together",
+                    "TEXT": "Body metrics and nutrition trends stay close to meal data, which makes review more coherent."
+                },
+                "PLANS": {
+                    "TITLE": "Coordinate plans and recommendations",
+                    "TEXT": "Planning becomes easier when goals, meals, and feedback are not spread across different tools."
+                },
+                "WORKFLOW": {
+                    "TITLE": "Keep one connected workflow",
+                    "TEXT": "Food Diary reduces fragmentation by keeping meals, planning, and progress together."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start working with a dietologist in three steps",
+            "SUBTITLE": "The workflow is meant to stay controlled and practical, not heavy or overcomplicated.",
+            "ITEMS": {
+                "INVITE": {
+                    "TITLE": "Invite the dietologist",
+                    "TEXT": "Send access by email from inside the app."
+                },
+                "SHARE": {
+                    "TITLE": "Choose what to share",
+                    "TEXT": "Open only the categories of data that matter for your current process."
+                },
+                "REVIEW": {
+                    "TITLE": "Review meals and progress together",
+                    "TEXT": "Use the shared workflow to discuss routine, progress, and next adjustments."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Dietologist FAQ",
+            "TITLE": "Common questions about specialist collaboration in Food Diary",
+            "SUBTITLE": "These answers focus on users who want a nutrition app that supports direct collaboration with a dietologist.",
+            "ITEMS": {
+                "INVITE": {
+                    "QUESTION": "Can I invite a dietologist directly into Food Diary?",
+                    "ANSWER": "Yes. Food Diary supports invitations by email, so collaboration starts inside the app."
+                },
+                "PRIVACY": {
+                    "QUESTION": "Can I control what data is shared?",
+                    "ANSWER": "Yes. You can choose which categories of nutrition and progress data are visible."
+                },
+                "SHARING": {
+                    "QUESTION": "Can the dietologist review meals and progress together?",
+                    "ANSWER": "Yes. The workflow is designed so meals, body metrics, and trend review stay connected."
+                },
+                "PLANS": {
+                    "QUESTION": "Does this also help with planning and follow-up?",
+                    "ANSWER": "Yes. Food Diary is meant to keep planning, review, and ongoing routine in one system."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Keep dietologist collaboration inside the product, not in scattered files",
+            "SUBTITLE": "Create an account to invite a specialist and keep meals, progress, and planning in one shared workflow.",
+            "PRIMARY": "Start collaboration",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "NUTRITION_PLANNER_PAGE": {
+        "EYEBROW": "Nutrition Planner Guide",
+        "TITLE": "Nutrition Planner for Meal Structure, Goals, and Weekly Review",
+        "SUBTITLE": "Use Food Diary as a nutrition planner to connect meal plans, calorie goals, recipes, shopping lists, and review habits in one workflow.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Nutrition goals",
+            "PLANNING": "Weekly structure",
+            "PROGRESS": "Review routine"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Nutrition planning works better when goals and execution stay connected",
+            "TEXT": "Food Diary supports planning that goes beyond ideas by keeping meals, recipes, shopping, and review in one system.",
+            "ITEMS": {
+                "FIRST": "Set practical nutrition goals",
+                "SECOND": "Build plans from real meals and recipes",
+                "THIRD": "Turn plans into shopping actions",
+                "FOURTH": "Review whether the routine actually works"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What users usually need from a nutrition planner",
+            "SUBTITLE": "This page targets users who want more structure than a food log but do not want planning to live in separate tools.",
+            "ITEMS": {
+                "GOALS": {
+                    "TITLE": "Define nutrition goals clearly",
+                    "TEXT": "Planning becomes more useful when calorie, macro, and meal goals are visible from the start."
+                },
+                "MEAL_PLANS": {
+                    "TITLE": "Build plans around real meals",
+                    "TEXT": "Food Diary keeps meal planning tied to products and recipes you can actually use."
+                },
+                "SHOPPING": {
+                    "TITLE": "Connect planning with groceries",
+                    "TEXT": "Shopping lists make plans easier to execute in real life."
+                },
+                "RECIPES": {
+                    "TITLE": "Use recipes as repeatable planning units",
+                    "TEXT": "Recipes reduce friction and make planning more sustainable week to week."
+                },
+                "REVIEW": {
+                    "TITLE": "Review whether the plan fits your routine",
+                    "TEXT": "Weekly review helps you see whether the plan was realistic, not just well-written."
+                },
+                "COACHING": {
+                    "TITLE": "Coordinate with a dietologist if needed",
+                    "TEXT": "Food Diary can keep goals, plans, and progress visible in the same shared process."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start planning nutrition in three steps",
+            "SUBTITLE": "The process stays practical while still giving enough structure for consistent routines.",
+            "ITEMS": {
+                "DEFINE": {
+                    "TITLE": "Define goals and constraints",
+                    "TEXT": "Set the direction for calories, macros, timing, and the overall nutrition pattern you want to follow."
+                },
+                "PLAN": {
+                    "TITLE": "Build the plan from meals and recipes",
+                    "TEXT": "Use the foods and meals you can actually repeat, not abstract ideals."
+                },
+                "REFINE": {
+                    "TITLE": "Review and refine the routine",
+                    "TEXT": "Adjust the plan after looking at how your week really went."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Nutrition planner FAQ",
+            "TITLE": "Common questions about nutrition planning in Food Diary",
+            "SUBTITLE": "These answers focus on users searching for a nutrition planner, nutrition planning app, or structured meal planning tool.",
+            "ITEMS": {
+                "PLANNER": {
+                    "QUESTION": "Can I use Food Diary as a nutrition planner, not only a food log?",
+                    "ANSWER": "Yes. Food Diary connects planning with goals, meals, shopping, and review rather than leaving you with isolated entries."
+                },
+                "GOALS": {
+                    "QUESTION": "Can I plan around calorie and macro goals?",
+                    "ANSWER": "Yes. Planning works best when targets stay visible in the same workflow."
+                },
+                "SHOPPING": {
+                    "QUESTION": "Can I connect nutrition planning with shopping lists?",
+                    "ANSWER": "Yes. Food Diary supports this connection so plans are easier to execute."
+                },
+                "ROUTINE": {
+                    "QUESTION": "Can I review whether my nutrition plan is realistic?",
+                    "ANSWER": "Yes. Weekly review and routine tracking help you refine the plan over time."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Plan nutrition with enough structure to be useful in real life",
+            "SUBTITLE": "Create an account to connect goals, meals, shopping, and weekly review in one planner.",
+            "PRIMARY": "Start nutrition planning",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "WEIGHT_TRACKER_PAGE": {
+        "EYEBROW": "Weight Tracker Guide",
+        "TITLE": "Weight Tracker for Progress History, Meals, and Weekly Review",
+        "SUBTITLE": "Use Food Diary as a weight tracker to record weight history, connect it with meals and calorie routines, and review trends over time.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Weight history",
+            "PLANNING": "Weekly review",
+            "PROGRESS": "Goal tracking"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Weight tracking is more useful when it is linked to routine, not isolated weigh-ins",
+            "TEXT": "Food Diary connects weight history with meals, calories, body trends, and weekly review so progress is easier to interpret.",
+            "ITEMS": {
+                "FIRST": "Record weight history over time",
+                "SECOND": "Compare patterns with meals and calorie routines",
+                "THIRD": "Review progress with weekly check-ins",
+                "FOURTH": "Keep goals visible while monitoring trends"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What a weight tracker should actually help with",
+            "SUBTITLE": "This page is aimed at users who want more context than a simple scale log.",
+            "ITEMS": {
+                "WEIGHT_HISTORY": {
+                    "TITLE": "Keep a clear weight history",
+                    "TEXT": "Progress becomes easier to understand when weigh-ins stay organized over time."
+                },
+                "PATTERNS": {
+                    "TITLE": "Compare weight with routine patterns",
+                    "TEXT": "Meals, calories, and habits help explain what weight data means."
+                },
+                "MEALS": {
+                    "TITLE": "Keep meal data close to weight trends",
+                    "TEXT": "Food Diary makes it easier to connect what you eat with what happens over time."
+                },
+                "GOALS": {
+                    "TITLE": "Track progress against goals",
+                    "TEXT": "Weight history is more useful when it stays tied to the direction you want to move in."
+                },
+                "CHECK_INS": {
+                    "TITLE": "Use weekly review instead of random interpretation",
+                    "TEXT": "Weekly check-ins help you review progress with more structure and less noise."
+                },
+                "COACHING": {
+                    "TITLE": "Review progress with a dietologist if needed",
+                    "TEXT": "Weight, meals, and progress can stay visible in one shared workflow."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start weight tracking in three steps",
+            "SUBTITLE": "The process stays simple while still giving you enough context to understand trends.",
+            "ITEMS": {
+                "BASELINE": {
+                    "TITLE": "Set your baseline",
+                    "TEXT": "Start with current weight and the direction you want to work toward."
+                },
+                "TRACK": {
+                    "TITLE": "Record weight consistently",
+                    "TEXT": "Keep regular entries instead of relying on occasional snapshots."
+                },
+                "REVIEW": {
+                    "TITLE": "Review trends with your routine",
+                    "TEXT": "Compare weight history with meals, calories, and weekly review to make better adjustments."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Weight tracker FAQ",
+            "TITLE": "Common questions about weight tracking in Food Diary",
+            "SUBTITLE": "These answers focus on users searching for a weight tracker, weight progress app, or weight history tool.",
+            "ITEMS": {
+                "TRACKER": {
+                    "QUESTION": "Can I use Food Diary as a weight tracker?",
+                    "ANSWER": "Yes. Food Diary supports weight history as part of a wider nutrition and progress workflow."
+                },
+                "PROGRESS": {
+                    "QUESTION": "Can I review progress over time, not only single weigh-ins?",
+                    "ANSWER": "Yes. The app keeps weight history visible so trend review is easier."
+                },
+                "MEALS": {
+                    "QUESTION": "Can I compare weight with meals and calorie habits?",
+                    "ANSWER": "Yes. Food Diary is meant to keep those signals connected rather than split across tools."
+                },
+                "GOALS": {
+                    "QUESTION": "Can I track weight alongside goals?",
+                    "ANSWER": "Yes. Goal tracking is more useful when progress and routine stay in the same place."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Track weight with more context than a basic scale log",
+            "SUBTITLE": "Create an account to connect weight history with meals, goals, and weekly review.",
+            "PRIMARY": "Start weight tracking",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "BODY_PROGRESS_TRACKER_PAGE": {
+        "EYEBROW": "Body Progress Guide",
+        "TITLE": "Body Progress Tracker for Weight, Waist, and Trend Review",
+        "SUBTITLE": "Use Food Diary as a body progress tracker to record weight and waist measurements, compare trends, and keep body metrics close to your nutrition routine.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Weight and waist",
+            "PLANNING": "Trend review",
+            "PROGRESS": "Body metrics"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Body progress is easier to interpret when multiple signals move together",
+            "TEXT": "Food Diary helps you review weight, waist, and routine trends together instead of watching a single metric in isolation.",
+            "ITEMS": {
+                "FIRST": "Track more than one body metric",
+                "SECOND": "Review waist and weight together",
+                "THIRD": "Compare body progress with nutrition habits",
+                "FOURTH": "Use trends instead of overreacting to one entry"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What users need from a body progress tracker",
+            "SUBTITLE": "This page targets users who want a clearer view of how body changes relate to routine, not only isolated measurements.",
+            "ITEMS": {
+                "METRICS": {
+                    "TITLE": "Track multiple body metrics",
+                    "TEXT": "Body progress becomes clearer when you can review more than one signal."
+                },
+                "WAIST": {
+                    "TITLE": "Keep waist history visible",
+                    "TEXT": "Waist changes can add useful context when weight alone feels noisy."
+                },
+                "WEIGHT": {
+                    "TITLE": "Keep weight in the same workflow",
+                    "TEXT": "Weight remains valuable when it stays connected to other body and nutrition data."
+                },
+                "TRENDS": {
+                    "TITLE": "Review progress as a trend",
+                    "TEXT": "Trend review helps reduce overreaction to short-term fluctuations."
+                },
+                "CHECK_INS": {
+                    "TITLE": "Use regular check-ins",
+                    "TEXT": "Structured review makes progress easier to interpret than occasional logging."
+                },
+                "ROUTINE": {
+                    "TITLE": "Connect body metrics with routine",
+                    "TEXT": "Food Diary keeps meals, calories, and body progress close enough to compare patterns."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start body progress tracking in three steps",
+            "SUBTITLE": "The workflow is simple, but it gives you a more useful picture than one isolated metric.",
+            "ITEMS": {
+                "STARTING_POINT": {
+                    "TITLE": "Set your starting point",
+                    "TEXT": "Begin with current body measurements so progress has a clear baseline."
+                },
+                "LOG": {
+                    "TITLE": "Record metrics consistently",
+                    "TEXT": "Add weight and waist entries often enough to build a real pattern."
+                },
+                "COMPARE": {
+                    "TITLE": "Compare trends with your routine",
+                    "TEXT": "Review body progress next to meals and weekly summaries for better decisions."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Body progress FAQ",
+            "TITLE": "Common questions about body progress tracking in Food Diary",
+            "SUBTITLE": "These answers focus on users searching for body progress, waist tracking, and body measurement review.",
+            "ITEMS": {
+                "METRICS": {
+                    "QUESTION": "Can I track more than one body metric?",
+                    "ANSWER": "Yes. Food Diary supports body progress workflows that go beyond one isolated number."
+                },
+                "WAIST": {
+                    "QUESTION": "Can I track waist measurements as well as weight?",
+                    "ANSWER": "Yes. Waist history can be kept visible alongside weight trends."
+                },
+                "WEIGHT": {
+                    "QUESTION": "Does it also include weight tracking?",
+                    "ANSWER": "Yes. Weight remains part of the same overall progress workflow."
+                },
+                "TRENDS": {
+                    "QUESTION": "Can I review body progress as trends over time?",
+                    "ANSWER": "Yes. Food Diary is built to support trend review rather than one-off interpretation."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Track body progress with more than one signal",
+            "SUBTITLE": "Create an account to connect weight, waist, meals, and routine review in one tracker.",
+            "PRIMARY": "Start body progress tracking",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "SHOPPING_LIST_MEAL_PLANNER_PAGE": {
+        "EYEBROW": "Shopping List Guide",
+        "TITLE": "Meal Planning with Shopping Lists for Weekly Nutrition",
+        "SUBTITLE": "Use Food Diary to connect meal planning with shopping lists, recipes, and a weekly nutrition routine so plans are easier to execute.",
+        "PRIMARY_ACTION": "Create account",
+        "SECONDARY_ACTION": "Back to homepage",
+        "CHIPS": {
+            "FREE": "Free to start",
+            "CALORIES": "Weekly groceries",
+            "PLANNING": "Meal plan flow",
+            "PROGRESS": "Recipe-based planning"
+        },
+        "PANEL": {
+            "EYEBROW": "Why this page matters",
+            "TITLE": "Meal planning works better when the grocery step is built in",
+            "TEXT": "Food Diary connects planned meals with shopping actions so your week is easier to prepare in advance.",
+            "ITEMS": {
+                "FIRST": "Build plans from meals and recipes",
+                "SECOND": "Turn planned meals into grocery lists",
+                "THIRD": "Reduce friction before the week starts",
+                "FOURTH": "Keep planning and execution in one flow"
+            }
+        },
+        "FEATURES": {
+            "EYEBROW": "What you can do",
+            "TITLE": "What users expect when meal planning meets shopping lists",
+            "SUBTITLE": "This page targets a practical intent: users who want plans they can actually shop for and follow.",
+            "ITEMS": {
+                "PLANS": {
+                    "TITLE": "Build weekly meal plans",
+                    "TEXT": "Planning works better when meals are already organized before the week starts."
+                },
+                "GROCERIES": {
+                    "TITLE": "Create grocery lists from the plan",
+                    "TEXT": "Food Diary makes planning easier to execute by connecting it with shopping."
+                },
+                "RECIPES": {
+                    "TITLE": "Use recipes to shape the list",
+                    "TEXT": "Recipes help convert a plan into a practical set of ingredients."
+                },
+                "REPEATABLE": {
+                    "TITLE": "Keep the process repeatable",
+                    "TEXT": "The workflow becomes more useful when you can repeat it week after week."
+                },
+                "ORGANIZED": {
+                    "TITLE": "Stay organized instead of reactive",
+                    "TEXT": "Shopping and planning together reduce last-minute decisions."
+                },
+                "WEEKLY_FLOW": {
+                    "TITLE": "Keep one weekly planning flow",
+                    "TEXT": "Food Diary keeps planning, shopping, and meal execution close enough to support routine."
+                }
+            }
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Start planning meals with shopping lists in three steps",
+            "SUBTITLE": "The workflow stays simple, but it helps you turn ideas into real groceries and meals.",
+            "ITEMS": {
+                "BUILD": {
+                    "TITLE": "Build the meal plan",
+                    "TEXT": "Choose meals and recipes for the coming days."
+                },
+                "EXPORT": {
+                    "TITLE": "Turn the plan into shopping actions",
+                    "TEXT": "Use the planning flow to prepare groceries before the week begins."
+                },
+                "FOLLOW": {
+                    "TITLE": "Follow the week and refine the process",
+                    "TEXT": "Review what worked, then reuse the flow for the next week."
+                }
+            }
+        },
+        "FAQ": {
+            "EYEBROW": "Shopping list FAQ",
+            "TITLE": "Common questions about planning meals with shopping lists in Food Diary",
+            "SUBTITLE": "These answers focus on users who want meal planning that connects directly with grocery preparation.",
+            "ITEMS": {
+                "SHOPPING": {
+                    "QUESTION": "Can I connect meal planning with shopping lists?",
+                    "ANSWER": "Yes. Food Diary supports this connection so plans are easier to execute in real life."
+                },
+                "RECIPES": {
+                    "QUESTION": "Can recipes be part of the shopping flow?",
+                    "ANSWER": "Yes. Recipes help structure the meals and the ingredients behind them."
+                },
+                "WEEK": {
+                    "QUESTION": "Is this useful for weekly planning?",
+                    "ANSWER": "Yes. The workflow is especially useful when you want to prepare the week in advance."
+                },
+                "FLOW": {
+                    "QUESTION": "Does it help reduce last-minute decisions?",
+                    "ANSWER": "Yes. Combining planning with shopping makes the process more organized and repeatable."
+                }
+            }
+        },
+        "CTA": {
+            "TITLE": "Turn meal planning into a weekly system you can actually shop for",
+            "SUBTITLE": "Create an account to connect meals, recipes, and grocery preparation in one planner.",
+            "PRIMARY": "Start planning with shopping lists",
+            "SECONDARY": "Explore homepage"
+        }
+    },
+    "SEO_PAGE": {
+        "RELATED_EYEBROW": "Related pages",
+        "RELATED_TITLE": "Explore more nutrition landing pages",
+        "RELATED_SUBTITLE": "These pages target adjacent user intents and help search engines understand the product beyond one generic homepage.",
+        "RELATED_CTA": "Open page"
+    },
     "AUTH": {
         "LOGIN": {
             "TITLE": "Login",
@@ -2423,8 +3690,33 @@
         }
     },
     "SEO": {
-        "DEFAULT_DESCRIPTION": "Food diary - manage your nutrition!",
-        "LANDING_DESCRIPTION": "Track your meals, manage nutrition, and reach your health goals with Food Diary.",
+        "DEFAULT_DESCRIPTION": "Food Diary is a meal tracker and nutrition planner with calories, macros, fasting, progress analytics, and dietologist collaboration.",
+        "LANDING_TITLE": "Meal Tracker, Nutrition Planner, and Progress Diary",
+        "LANDING_DESCRIPTION": "Track meals, plan nutrition, monitor calories and macros, follow fasting and body progress, and collaborate with a dietologist in one app.",
+        "FOOD_DIARY_PAGE": "Food Diary App and Online Nutrition Diary",
+        "FOOD_DIARY_PAGE_DESCRIPTION": "Use Food Diary as an online food diary to log meals, count calories and macros, plan nutrition, review progress, and work with a dietologist in one app.",
+        "CALORIE_COUNTER_PAGE": "Calorie Counter App for Daily Meals and Goals",
+        "CALORIE_COUNTER_PAGE_DESCRIPTION": "Track calories, macros, meals, and daily nutrition targets in Food Diary, with trend review and dietologist collaboration in one app.",
+        "MEAL_PLANNER_PAGE": "Meal Planner App for Weekly Nutrition and Shopping Lists",
+        "MEAL_PLANNER_PAGE_DESCRIPTION": "Plan meals for the week, connect them with recipes and shopping lists, and keep nutrition planning inside Food Diary.",
+        "MACRO_TRACKER_PAGE": "Macro Tracker for Protein, Fat, Carbs, and Meals",
+        "MACRO_TRACKER_PAGE_DESCRIPTION": "Use Food Diary to track proteins, fats, carbs, calories, and meals while reviewing nutrition trends over time.",
+        "INTERMITTENT_FASTING_PAGE": "Intermittent Fasting App with Meals and Progress Tracking",
+        "INTERMITTENT_FASTING_PAGE_DESCRIPTION": "Support intermittent fasting with meal logging, calorie tracking, nutrition review, and progress monitoring in Food Diary.",
+        "MEAL_TRACKER_PAGE": "Meal Tracker App for Daily Meals and Nutrition History",
+        "MEAL_TRACKER_PAGE_DESCRIPTION": "Track breakfast, lunch, dinner, snacks, meal history, and nutrition totals in Food Diary.",
+        "WEIGHT_LOSS_APP_PAGE": "Weight Loss App for Meals, Goals, and Progress Tracking",
+        "WEIGHT_LOSS_APP_PAGE_DESCRIPTION": "Use Food Diary as a weight loss app to connect meals, calories, goals, body metrics, and weekly review in one workflow.",
+        "DIETOLOGIST_COLLABORATION_PAGE": "Work with a Dietologist Inside Your Nutrition App",
+        "DIETOLOGIST_COLLABORATION_PAGE_DESCRIPTION": "Invite a dietologist, share selected nutrition data, and review meals and progress together inside Food Diary.",
+        "NUTRITION_PLANNER_PAGE": "Nutrition Planner for Meal Structure, Goals, and Weekly Review",
+        "NUTRITION_PLANNER_PAGE_DESCRIPTION": "Use Food Diary as a nutrition planner to connect goals, meal plans, shopping lists, recipes, and weekly review in one workflow.",
+        "WEIGHT_TRACKER_PAGE": "Weight Tracker for Progress History, Meals, and Weekly Review",
+        "WEIGHT_TRACKER_PAGE_DESCRIPTION": "Track weight history, compare it with meals and calorie habits, and review progress trends in Food Diary.",
+        "BODY_PROGRESS_TRACKER_PAGE": "Body Progress Tracker for Weight, Waist, and Trend Review",
+        "BODY_PROGRESS_TRACKER_PAGE_DESCRIPTION": "Use Food Diary to track weight, waist, and body progress trends while keeping them close to your nutrition routine.",
+        "SHOPPING_LIST_MEAL_PLANNER_PAGE": "Meal Planning with Shopping Lists for Weekly Nutrition",
+        "SHOPPING_LIST_MEAL_PLANNER_PAGE_DESCRIPTION": "Connect meal planning with shopping lists, recipes, and weekly nutrition routines inside Food Diary.",
         "AUTH_LOGIN": "Sign In",
         "AUTH_DESCRIPTION": "Sign in or create an account to start tracking your nutrition with Food Diary.",
         "VERIFY_PENDING": "Verify Email",

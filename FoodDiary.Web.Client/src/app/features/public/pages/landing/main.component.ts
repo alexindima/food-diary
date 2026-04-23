@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { FeaturesComponent } from '../../components/features/features.component';
@@ -9,13 +11,53 @@ import { DietologistPromoComponent } from '../../components/dietologist-promo/di
 
 @Component({
     selector: 'fd-main',
-    imports: [HeroComponent, FeaturesComponent, LandingPreviewTourComponent, LandingStepsComponent, DietologistPromoComponent],
+    imports: [
+        HeroComponent,
+        FeaturesComponent,
+        LandingPreviewTourComponent,
+        LandingStepsComponent,
+        DietologistPromoComponent,
+        TranslatePipe,
+        RouterLink,
+    ],
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly route = inject(ActivatedRoute);
+    protected readonly faqItems = [
+        {
+            questionKey: 'LANDING_FAQ.ITEMS.APP_SCOPE.QUESTION',
+            answerKey: 'LANDING_FAQ.ITEMS.APP_SCOPE.ANSWER',
+        },
+        {
+            questionKey: 'LANDING_FAQ.ITEMS.PLANNING.QUESTION',
+            answerKey: 'LANDING_FAQ.ITEMS.PLANNING.ANSWER',
+        },
+        {
+            questionKey: 'LANDING_FAQ.ITEMS.PROGRESS.QUESTION',
+            answerKey: 'LANDING_FAQ.ITEMS.PROGRESS.ANSWER',
+        },
+        {
+            questionKey: 'LANDING_FAQ.ITEMS.DIETOLOGIST.QUESTION',
+            answerKey: 'LANDING_FAQ.ITEMS.DIETOLOGIST.ANSWER',
+        },
+    ] as const;
+    protected readonly seoGuides = [
+        { path: '/food-diary', labelKey: 'SEO.FOOD_DIARY_PAGE' },
+        { path: '/calorie-counter', labelKey: 'SEO.CALORIE_COUNTER_PAGE' },
+        { path: '/meal-planner', labelKey: 'SEO.MEAL_PLANNER_PAGE' },
+        { path: '/macro-tracker', labelKey: 'SEO.MACRO_TRACKER_PAGE' },
+        { path: '/intermittent-fasting', labelKey: 'SEO.INTERMITTENT_FASTING_PAGE' },
+        { path: '/meal-tracker', labelKey: 'SEO.MEAL_TRACKER_PAGE' },
+        { path: '/weight-loss-app', labelKey: 'SEO.WEIGHT_LOSS_APP_PAGE' },
+        { path: '/dietologist-collaboration', labelKey: 'SEO.DIETOLOGIST_COLLABORATION_PAGE' },
+        { path: '/nutrition-planner', labelKey: 'SEO.NUTRITION_PLANNER_PAGE' },
+        { path: '/weight-tracker', labelKey: 'SEO.WEIGHT_TRACKER_PAGE' },
+        { path: '/body-progress-tracker', labelKey: 'SEO.BODY_PROGRESS_TRACKER_PAGE' },
+        { path: '/shopping-list-for-meal-planning', labelKey: 'SEO.SHOPPING_LIST_MEAL_PLANNER_PAGE' },
+    ] as const;
 
     public constructor() {
         const path = this.route.snapshot.routeConfig?.path ?? '';

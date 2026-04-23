@@ -137,6 +137,12 @@
         padding: clamp(30px, 3vw, 50px) 0 clamp(36px, 4vw, 60px);
     }
 
+    &--faq {
+        padding: clamp(28px, 3vw, 48px) 0 clamp(40px, 4vw, 64px);
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 42%, var(--fd-color-white)), var(--fd-color-white));
+    }
+
     &--tour {
         padding: clamp(28px, 3vw, 48px) 0;
         background: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white));
@@ -260,6 +266,96 @@
 
     &__text {
         @include landing.marketing-body(1rem, 1.5, var(--fd-color-text-muted));
+    }
+}
+
+.landing-faq {
+    display: grid;
+    gap: variables.$gap-s;
+    margin-top: variables.$gap-m;
+
+    &__item {
+        background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
+        border-radius: 18px;
+        box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        padding: 0;
+        overflow: hidden;
+    }
+
+    &__question {
+        list-style: none;
+        cursor: pointer;
+        padding: 18px 22px;
+        @include landing.marketing-title(1.02rem, 1.35, -0.01em, var(--fd-color-text), 800);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: variables.$gap-s;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &::after {
+            content: '+';
+            flex: 0 0 auto;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+            color: var(--fd-color-primary-700);
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+    }
+
+    &__item[open] &__question::after {
+        content: '-';
+    }
+
+    &__answer {
+        margin: 0;
+        padding: 0 22px 20px;
+        @include landing.marketing-body(1rem, 1.65, var(--fd-color-text-muted), 760px);
+    }
+
+    &__guides {
+        display: grid;
+        gap: variables.$gap-s;
+        margin-top: variables.$gap-m;
+    }
+
+    &__guides-title {
+        margin: 0;
+        @include landing.marketing-title(1rem, 1.4, -0.01em, var(--fd-color-text), 800);
+    }
+
+    &__guides-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: variables.$gap-s;
+    }
+
+    &__guide-link {
+        display: flex;
+        align-items: center;
+        min-height: 56px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
+        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-slate-900) 7%, transparent);
+        color: var(--fd-color-primary-700);
+        font-weight: 800;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 

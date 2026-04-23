@@ -8,12 +8,16 @@ const ENGLISH_SITE_URL = 'https://fooddiary.club';
 const RUSSIAN_SITE_URL = 'https://xn--b1adbcbrouc8l.xn--p1ai';
 const RUSSIAN_HOSTS = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai']);
 const STRUCTURED_DATA_SELECTOR = 'script[data-seo-structured-data="app"]';
+const ROOT_PATHS = new Set(['', '/']);
 
 export interface SeoData {
     titleKey?: string | null;
     descriptionKey?: string;
     path?: string;
     noIndex?: boolean;
+    structuredDataBaseKey?: string;
+    structuredDataFeatureKeys?: readonly string[];
+    structuredDataFaqKeys?: readonly string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -50,7 +54,7 @@ export class SeoService {
 
         this.updateCanonical(currentUrl);
         this.updateAlternateLinks(data.path);
-        this.updateStructuredData(pageTitle, description, currentUrl);
+        this.updateStructuredData(pageTitle, description, currentUrl, data);
 
         if (data.noIndex) {
             this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
@@ -127,7 +131,7 @@ export class SeoService {
         }
     }
 
-    private updateStructuredData(pageTitle: string, description: string, currentUrl: string): void {
+    private updateStructuredData(pageTitle: string, description: string, currentUrl: string, data: SeoData): void {
         let script = this.document.querySelector(STRUCTURED_DATA_SELECTOR) as HTMLScriptElement | null;
         if (!script) {
             script = this.document.createElement('script');
@@ -138,6 +142,14 @@ export class SeoService {
 
         const currentSiteUrl = this.getCurrentSiteUrl();
         const inLanguage = this.translate.currentLang === 'ru' ? 'ru' : 'en';
+        const normalizedPath = this.normalizePath(this.document.location.pathname);
+        const isLandingPage = ROOT_PATHS.has(normalizedPath);
+        const featureList = isLandingPage
+            ? this.getLandingFeatureList()
+            : this.getStructuredFeatureList(data.structuredDataBaseKey, data.structuredDataFeatureKeys);
+        const faqEntity = isLandingPage
+            ? this.getLandingFaqEntity(currentUrl)
+            : this.getStructuredFaqEntity(data.structuredDataBaseKey, data.structuredDataFaqKeys, currentUrl);
         const structuredData = {
             '@context': 'https://schema.org',
             '@graph': [
@@ -155,6 +167,13 @@ export class SeoService {
                     url: currentUrl,
                     description,
                     inLanguage,
+                    ...(featureList ? { featureList } : {}),
+                    offers: {
+                        '@type': 'Offer',
+                        price: '0',
+                        priceCurrency: 'USD',
+                        availability: 'https://schema.org/InStock',
+                    },
                 },
                 {
                     '@type': 'WebPage',
@@ -168,9 +187,71 @@ export class SeoService {
                     },
                     inLanguage,
                 },
+                ...(faqEntity ? [faqEntity] : []),
             ],
         };
 
         script.textContent = JSON.stringify(structuredData);
+    }
+
+    private getLandingFeatureList(): string[] {
+        return [
+            this.translate.instant('FEATURES.ITEMS.LOG_MEALS.TITLE'),
+            this.translate.instant('FEATURES.ITEMS.MEAL_PLANS.TITLE'),
+            this.translate.instant('FEATURES.ITEMS.STATISTICS.TITLE'),
+            this.translate.instant('FEATURES.ITEMS.BODY_HISTORY.TITLE'),
+            this.translate.instant('FEATURES.ITEMS.FASTING.TITLE'),
+            this.translate.instant('LANDING_DIETOLOGIST.CARD.TITLE'),
+        ];
+    }
+
+    private getLandingFaqEntity(currentUrl: string): Record<string, unknown> {
+        const faqItems = ['APP_SCOPE', 'PLANNING', 'PROGRESS', 'DIETOLOGIST'] as const;
+
+        return {
+            '@type': 'FAQPage',
+            url: currentUrl,
+            inLanguage: this.translate.currentLang === 'ru' ? 'ru' : 'en',
+            mainEntity: faqItems.map(item => ({
+                '@type': 'Question',
+                name: this.translate.instant(`LANDING_FAQ.ITEMS.${item}.QUESTION`),
+                acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: this.translate.instant(`LANDING_FAQ.ITEMS.${item}.ANSWER`),
+                },
+            })),
+        };
+    }
+
+    private getStructuredFeatureList(baseKey?: string, featureKeys?: readonly string[]): string[] | undefined {
+        if (!baseKey || !featureKeys?.length) {
+            return undefined;
+        }
+
+        return featureKeys.map(key => this.translate.instant(`${baseKey}.FEATURES.ITEMS.${key}.TITLE`));
+    }
+
+    private getStructuredFaqEntity(
+        baseKey: string | undefined,
+        faqKeys: readonly string[] | undefined,
+        currentUrl: string,
+    ): Record<string, unknown> | null {
+        if (!baseKey || !faqKeys?.length) {
+            return null;
+        }
+
+        return {
+            '@type': 'FAQPage',
+            url: currentUrl,
+            inLanguage: this.translate.currentLang === 'ru' ? 'ru' : 'en',
+            mainEntity: faqKeys.map(item => ({
+                '@type': 'Question',
+                name: this.translate.instant(`${baseKey}.FAQ.ITEMS.${item}.QUESTION`),
+                acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: this.translate.instant(`${baseKey}.FAQ.ITEMS.${item}.ANSWER`),
+                },
+            })),
+        };
     }
 }

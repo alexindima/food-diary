@@ -6,6 +6,54 @@ export const serverRoutes: ServerRoute[] = [
         renderMode: RenderMode.Prerender,
     },
     {
+        path: 'food-diary',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'calorie-counter',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'meal-planner',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'macro-tracker',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'intermittent-fasting',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'meal-tracker',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'weight-loss-app',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'dietologist-collaboration',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'nutrition-planner',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'weight-tracker',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'body-progress-tracker',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'shopping-list-for-meal-planning',
+        renderMode: RenderMode.Prerender,
+    },
+    {
         path: 'auth',
         renderMode: RenderMode.Client,
     },

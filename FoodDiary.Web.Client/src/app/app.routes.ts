@@ -1,9 +1,41 @@
-import { Routes } from '@angular/router';
+import { Type } from '@angular/core';
+import { Route, Routes } from '@angular/router';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
 import { authRoutes } from './features/auth/auth.routes';
 import { loggedInGuard } from './guards/logged-in.guard';
+
+const publicSeoLanding = (
+    path: string,
+    titleKey: string,
+    descriptionKey: string,
+    baseKey: string,
+    featureKeys: readonly string[],
+    stepKeys: readonly string[],
+    faqKeys: readonly string[],
+    relatedPaths: readonly string[],
+): Route => ({
+    path,
+    loadComponent: (): Promise<Type<unknown>> =>
+        import('./features/public/pages/seo-landing/seo-landing-page.component').then(m => m.SeoLandingPageComponent),
+    data: {
+        seo: {
+            titleKey,
+            descriptionKey,
+            structuredDataBaseKey: baseKey,
+            structuredDataFeatureKeys: featureKeys,
+            structuredDataFaqKeys: faqKeys,
+        },
+        seoPage: {
+            baseKey,
+            featureKeys,
+            stepKeys,
+            faqKeys,
+            relatedPaths,
+        },
+    },
+});
 
 export const routes: Routes = [
     {
@@ -11,8 +43,128 @@ export const routes: Routes = [
         loadComponent: () => import('./features/public/pages/landing/main.component').then(m => m.MainComponent),
         canActivate: [loggedInGuard],
         canDeactivate: [unsavedChangesGuard],
-        data: { seo: { titleKey: null, descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
+        data: { seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
     },
+    publicSeoLanding(
+        'food-diary',
+        'SEO.FOOD_DIARY_PAGE',
+        'SEO.FOOD_DIARY_PAGE_DESCRIPTION',
+        'NUTRITION_DIARY_PAGE',
+        ['MEAL_LOGGING', 'CALORIES', 'PLANNING', 'PROGRESS', 'DIETOLOGIST', 'FASTING'],
+        ['ACCOUNT', 'LOG', 'REVIEW'],
+        ['APP_SCOPE', 'CALORIES', 'PLANNING', 'DIETOLOGIST'],
+        ['calorie-counter', 'meal-planner', 'macro-tracker', 'intermittent-fasting'],
+    ),
+    publicSeoLanding(
+        'calorie-counter',
+        'SEO.CALORIE_COUNTER_PAGE',
+        'SEO.CALORIE_COUNTER_PAGE_DESCRIPTION',
+        'CALORIE_COUNTER_PAGE',
+        ['DAILY_LOG', 'MACROS', 'GOALS', 'RECIPES', 'PROGRESS', 'COACHING'],
+        ['TARGETS', 'LOG', 'REVIEW'],
+        ['SCOPE', 'MACROS', 'WEIGHT_LOSS', 'GOALS'],
+        ['food-diary', 'meal-planner', 'macro-tracker', 'intermittent-fasting'],
+    ),
+    publicSeoLanding(
+        'meal-planner',
+        'SEO.MEAL_PLANNER_PAGE',
+        'SEO.MEAL_PLANNER_PAGE_DESCRIPTION',
+        'MEAL_PLANNER_PAGE',
+        ['WEEKLY_PLAN', 'RECIPES', 'SHOPPING', 'ROUTINE', 'ADJUSTMENTS', 'COACHING'],
+        ['GOALS', 'BUILD', 'FOLLOW'],
+        ['WEEK', 'SHOPPING', 'RECIPES', 'FLEXIBLE'],
+        ['food-diary', 'calorie-counter', 'macro-tracker', 'intermittent-fasting'],
+    ),
+    publicSeoLanding(
+        'macro-tracker',
+        'SEO.MACRO_TRACKER_PAGE',
+        'SEO.MACRO_TRACKER_PAGE_DESCRIPTION',
+        'MACRO_TRACKER_PAGE',
+        ['BALANCE', 'MEALS', 'GOALS', 'PATTERNS', 'RECIPES', 'COACHING'],
+        ['TARGETS', 'TRACK', 'OPTIMIZE'],
+        ['TRACKING', 'CALORIES', 'GOALS', 'BODY_COMPOSITION'],
+        ['food-diary', 'calorie-counter', 'meal-planner', 'intermittent-fasting'],
+    ),
+    publicSeoLanding(
+        'intermittent-fasting',
+        'SEO.INTERMITTENT_FASTING_PAGE',
+        'SEO.INTERMITTENT_FASTING_PAGE_DESCRIPTION',
+        'INTERMITTENT_FASTING_PAGE',
+        ['WINDOWS', 'MEALS', 'CONSISTENCY', 'PROGRESS', 'FLEXIBILITY', 'COACHING'],
+        ['SCHEDULE', 'TRACK', 'REVIEW'],
+        ['TRACKER', 'CALORIES', 'SCHEDULE', 'RESULTS'],
+        ['food-diary', 'calorie-counter', 'meal-planner', 'macro-tracker', 'meal-tracker', 'weight-loss-app'],
+    ),
+    publicSeoLanding(
+        'meal-tracker',
+        'SEO.MEAL_TRACKER_PAGE',
+        'SEO.MEAL_TRACKER_PAGE_DESCRIPTION',
+        'MEAL_TRACKER_PAGE',
+        ['QUICK_LOGGING', 'MEAL_HISTORY', 'RECIPES', 'NUTRITION_TOTALS', 'ROUTINE', 'PROGRESS'],
+        ['START', 'LOG', 'REVIEW'],
+        ['QUICK', 'CALORIES', 'HISTORY', 'RECIPES'],
+        ['food-diary', 'calorie-counter', 'macro-tracker', 'meal-planner', 'weight-loss-app', 'dietologist-collaboration'],
+    ),
+    publicSeoLanding(
+        'weight-loss-app',
+        'SEO.WEIGHT_LOSS_APP_PAGE',
+        'SEO.WEIGHT_LOSS_APP_PAGE_DESCRIPTION',
+        'WEIGHT_LOSS_APP_PAGE',
+        ['GOALS', 'CALORIES', 'MEALS', 'BODY_METRICS', 'WEEKLY_REVIEW', 'COACHING'],
+        ['SETUP', 'FOLLOW', 'ADJUST'],
+        ['WEIGHT_LOSS', 'GOALS', 'BODY', 'COACHING'],
+        ['calorie-counter', 'meal-tracker', 'food-diary', 'macro-tracker', 'intermittent-fasting', 'dietologist-collaboration'],
+    ),
+    publicSeoLanding(
+        'dietologist-collaboration',
+        'SEO.DIETOLOGIST_COLLABORATION_PAGE',
+        'SEO.DIETOLOGIST_COLLABORATION_PAGE_DESCRIPTION',
+        'DIETOLOGIST_COLLABORATION_PAGE',
+        ['INVITES', 'VISIBILITY', 'MEALS', 'PROGRESS', 'PLANS', 'WORKFLOW'],
+        ['INVITE', 'SHARE', 'REVIEW'],
+        ['INVITE', 'PRIVACY', 'SHARING', 'PLANS'],
+        ['food-diary', 'meal-planner', 'weight-loss-app', 'calorie-counter', 'macro-tracker', 'meal-tracker', 'nutrition-planner'],
+    ),
+    publicSeoLanding(
+        'nutrition-planner',
+        'SEO.NUTRITION_PLANNER_PAGE',
+        'SEO.NUTRITION_PLANNER_PAGE_DESCRIPTION',
+        'NUTRITION_PLANNER_PAGE',
+        ['GOALS', 'MEAL_PLANS', 'SHOPPING', 'RECIPES', 'REVIEW', 'COACHING'],
+        ['DEFINE', 'PLAN', 'REFINE'],
+        ['PLANNER', 'GOALS', 'SHOPPING', 'ROUTINE'],
+        ['meal-planner', 'food-diary', 'calorie-counter', 'macro-tracker', 'shopping-list-for-meal-planning', 'dietologist-collaboration'],
+    ),
+    publicSeoLanding(
+        'weight-tracker',
+        'SEO.WEIGHT_TRACKER_PAGE',
+        'SEO.WEIGHT_TRACKER_PAGE_DESCRIPTION',
+        'WEIGHT_TRACKER_PAGE',
+        ['WEIGHT_HISTORY', 'PATTERNS', 'MEALS', 'GOALS', 'CHECK_INS', 'COACHING'],
+        ['BASELINE', 'TRACK', 'REVIEW'],
+        ['TRACKER', 'PROGRESS', 'MEALS', 'GOALS'],
+        ['weight-loss-app', 'body-progress-tracker', 'food-diary', 'calorie-counter', 'meal-tracker', 'dietologist-collaboration'],
+    ),
+    publicSeoLanding(
+        'body-progress-tracker',
+        'SEO.BODY_PROGRESS_TRACKER_PAGE',
+        'SEO.BODY_PROGRESS_TRACKER_PAGE_DESCRIPTION',
+        'BODY_PROGRESS_TRACKER_PAGE',
+        ['METRICS', 'WAIST', 'WEIGHT', 'TRENDS', 'CHECK_INS', 'ROUTINE'],
+        ['STARTING_POINT', 'LOG', 'COMPARE'],
+        ['METRICS', 'WAIST', 'WEIGHT', 'TRENDS'],
+        ['weight-tracker', 'weight-loss-app', 'food-diary', 'macro-tracker', 'intermittent-fasting', 'dietologist-collaboration'],
+    ),
+    publicSeoLanding(
+        'shopping-list-for-meal-planning',
+        'SEO.SHOPPING_LIST_MEAL_PLANNER_PAGE',
+        'SEO.SHOPPING_LIST_MEAL_PLANNER_PAGE_DESCRIPTION',
+        'SHOPPING_LIST_MEAL_PLANNER_PAGE',
+        ['PLANS', 'GROCERIES', 'RECIPES', 'REPEATABLE', 'ORGANIZED', 'WEEKLY_FLOW'],
+        ['BUILD', 'EXPORT', 'FOLLOW'],
+        ['SHOPPING', 'RECIPES', 'WEEK', 'FLOW'],
+        ['meal-planner', 'nutrition-planner', 'food-diary', 'meal-tracker', 'calorie-counter', 'dietologist-collaboration'],
+    ),
     ...authRoutes,
     {
         path: 'dashboard',

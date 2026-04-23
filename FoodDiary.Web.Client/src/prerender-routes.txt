@@ -1,2 +1,14 @@
 /
+/food-diary
+/calorie-counter
+/meal-planner
+/macro-tracker
+/intermittent-fasting
+/meal-tracker
+/weight-loss-app
+/dietologist-collaboration
+/nutrition-planner
+/weight-tracker
+/body-progress-tracker
+/shopping-list-for-meal-planning
 /privacy-policy

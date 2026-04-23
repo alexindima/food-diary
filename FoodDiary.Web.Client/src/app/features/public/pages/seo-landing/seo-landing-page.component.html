@@ -1,0 +1,126 @@
+<div class="seo-landing">
+    <section class="seo-landing__hero">
+        <div class="seo-landing__container seo-landing__container--hero">
+            <div class="seo-landing__hero-copy">
+                <span class="seo-landing__eyebrow">{{ baseKey + '.EYEBROW' | translate }}</span>
+                <h1 class="seo-landing__title">{{ baseKey + '.TITLE' | translate }}</h1>
+                <p class="seo-landing__subtitle">{{ baseKey + '.SUBTITLE' | translate }}</p>
+                <div class="seo-landing__actions">
+                    <fd-ui-button routerLink="/auth/register" variant="primary" size="lg">
+                        {{ baseKey + '.PRIMARY_ACTION' | translate }}
+                    </fd-ui-button>
+                    <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg">
+                        {{ baseKey + '.SECONDARY_ACTION' | translate }}
+                    </fd-ui-button>
+                </div>
+                <div class="seo-landing__chips">
+                    <span class="seo-landing__chip">{{ baseKey + '.CHIPS.FREE' | translate }}</span>
+                    <span class="seo-landing__chip">{{ baseKey + '.CHIPS.CALORIES' | translate }}</span>
+                    <span class="seo-landing__chip">{{ baseKey + '.CHIPS.PLANNING' | translate }}</span>
+                    <span class="seo-landing__chip">{{ baseKey + '.CHIPS.PROGRESS' | translate }}</span>
+                </div>
+            </div>
+            <aside class="seo-landing__hero-panel">
+                <div class="seo-landing__panel-label">{{ baseKey + '.PANEL.EYEBROW' | translate }}</div>
+                <h2 class="seo-landing__panel-title">{{ baseKey + '.PANEL.TITLE' | translate }}</h2>
+                <p class="seo-landing__panel-text">{{ baseKey + '.PANEL.TEXT' | translate }}</p>
+                <ul class="seo-landing__panel-list">
+                    <li>{{ baseKey + '.PANEL.ITEMS.FIRST' | translate }}</li>
+                    <li>{{ baseKey + '.PANEL.ITEMS.SECOND' | translate }}</li>
+                    <li>{{ baseKey + '.PANEL.ITEMS.THIRD' | translate }}</li>
+                    <li>{{ baseKey + '.PANEL.ITEMS.FOURTH' | translate }}</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <section class="seo-landing__section">
+        <div class="seo-landing__container">
+            <div class="seo-landing__section-copy">
+                <span class="seo-landing__eyebrow">{{ baseKey + '.FEATURES.EYEBROW' | translate }}</span>
+                <h2 class="seo-landing__section-title">{{ baseKey + '.FEATURES.TITLE' | translate }}</h2>
+                <p class="seo-landing__section-subtitle">{{ baseKey + '.FEATURES.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="seo-landing__feature-grid">
+                @for (key of featureKeys; track key) {
+                    <article class="seo-landing__feature-card">
+                        <h3 class="seo-landing__feature-title">{{ baseKey + '.FEATURES.ITEMS.' + key + '.TITLE' | translate }}</h3>
+                        <p class="seo-landing__feature-text">{{ baseKey + '.FEATURES.ITEMS.' + key + '.TEXT' | translate }}</p>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="seo-landing__section seo-landing__section--steps">
+        <div class="seo-landing__container">
+            <div class="seo-landing__section-copy">
+                <span class="seo-landing__eyebrow">{{ baseKey + '.STEPS.EYEBROW' | translate }}</span>
+                <h2 class="seo-landing__section-title">{{ baseKey + '.STEPS.TITLE' | translate }}</h2>
+                <p class="seo-landing__section-subtitle">{{ baseKey + '.STEPS.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="seo-landing__steps">
+                @for (key of stepKeys; track key; let index = $index) {
+                    <article class="seo-landing__step-card">
+                        <div class="seo-landing__step-index">{{ index + 1 }}</div>
+                        <h3 class="seo-landing__step-title">{{ baseKey + '.STEPS.ITEMS.' + key + '.TITLE' | translate }}</h3>
+                        <p class="seo-landing__step-text">{{ baseKey + '.STEPS.ITEMS.' + key + '.TEXT' | translate }}</p>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="seo-landing__section seo-landing__section--faq">
+        <div class="seo-landing__container">
+            <div class="seo-landing__section-copy">
+                <span class="seo-landing__eyebrow">{{ baseKey + '.FAQ.EYEBROW' | translate }}</span>
+                <h2 class="seo-landing__section-title">{{ baseKey + '.FAQ.TITLE' | translate }}</h2>
+                <p class="seo-landing__section-subtitle">{{ baseKey + '.FAQ.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="seo-landing__faq">
+                @for (key of faqKeys; track key) {
+                    <details class="seo-landing__faq-item">
+                        <summary class="seo-landing__faq-question">{{ baseKey + '.FAQ.ITEMS.' + key + '.QUESTION' | translate }}</summary>
+                        <p class="seo-landing__faq-answer">{{ baseKey + '.FAQ.ITEMS.' + key + '.ANSWER' | translate }}</p>
+                    </details>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="seo-landing__section seo-landing__section--related">
+        <div class="seo-landing__container">
+            <div class="seo-landing__section-copy">
+                <span class="seo-landing__eyebrow">{{ 'SEO_PAGE.RELATED_EYEBROW' | translate }}</span>
+                <h2 class="seo-landing__section-title">{{ 'SEO_PAGE.RELATED_TITLE' | translate }}</h2>
+                <p class="seo-landing__section-subtitle">{{ 'SEO_PAGE.RELATED_SUBTITLE' | translate }}</p>
+            </div>
+            <div class="seo-landing__related-grid">
+                @for (page of relatedPages; track page.path) {
+                    <a class="seo-landing__related-card" [routerLink]="page.path">
+                        <span class="seo-landing__related-label">{{ page.labelKey | translate }}</span>
+                        <span class="seo-landing__related-arrow">{{ 'SEO_PAGE.RELATED_CTA' | translate }}</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="seo-landing__section seo-landing__section--cta">
+        <div class="seo-landing__container seo-landing__container--cta">
+            <div>
+                <h2 class="seo-landing__section-title">{{ baseKey + '.CTA.TITLE' | translate }}</h2>
+                <p class="seo-landing__section-subtitle">{{ baseKey + '.CTA.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="seo-landing__actions">
+                <fd-ui-button routerLink="/auth/register" variant="primary" size="lg">
+                    {{ baseKey + '.CTA.PRIMARY' | translate }}
+                </fd-ui-button>
+                <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg">
+                    {{ baseKey + '.CTA.SECONDARY' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+    </section>
+</div>

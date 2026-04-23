@@ -9,6 +9,102 @@
         <priority>1.0</priority>
     </url>
     <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/food-diary</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/food-diary" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/food-diary" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/food-diary" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/calorie-counter</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/calorie-counter" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/calorie-counter" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/calorie-counter" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/meal-planner</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/meal-planner" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/meal-planner" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/meal-planner" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/macro-tracker</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/macro-tracker" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/macro-tracker" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/macro-tracker" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/intermittent-fasting</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/intermittent-fasting" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/intermittent-fasting" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/intermittent-fasting" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/meal-tracker</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/meal-tracker" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/meal-tracker" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/meal-tracker" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/weight-loss-app</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/weight-loss-app" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/weight-loss-app" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/weight-loss-app" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/dietologist-collaboration</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/dietologist-collaboration" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/dietologist-collaboration" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/dietologist-collaboration" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/nutrition-planner</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/nutrition-planner" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/nutrition-planner" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/nutrition-planner" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/weight-tracker</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/weight-tracker" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/weight-tracker" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/weight-tracker" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/body-progress-tracker</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/body-progress-tracker" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/body-progress-tracker" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/body-progress-tracker" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://xn--b1adbcbrouc8l.xn--p1ai/shopping-list-for-meal-planning</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/shopping-list-for-meal-planning" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/shopping-list-for-meal-planning" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/shopping-list-for-meal-planning" />
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://xn--b1adbcbrouc8l.xn--p1ai/privacy-policy</loc>
         <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/privacy-policy" />
         <xhtml:link rel="alternate" hreflang="ru" href="https://xn--b1adbcbrouc8l.xn--p1ai/privacy-policy" />
