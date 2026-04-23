@@ -9,7 +9,7 @@ import {
     provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -91,7 +91,14 @@ export const appConfig: ApplicationConfig = {
         }),
         provideAnimationsAsync(),
         provideZonelessChangeDetection(),
-        provideRouter(routes, withComponentInputBinding(), withPreloading(IdleSelectivePreloadingStrategy)),
+        provideRouter(
+            routes,
+            withComponentInputBinding(),
+            withInMemoryScrolling({
+                scrollPositionRestoration: 'top',
+            }),
+            withPreloading(IdleSelectivePreloadingStrategy),
+        ),
         provideHttpClient(withInterceptorsFromDi(), withFetch()),
         importProvidersFrom(TranslateModule.forRoot()),
         provideTranslateHttpLoader({
