@@ -25,20 +25,6 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public Task<IActionResult> UpdateCurrentUser([FromCurrentUser] Guid userId, [FromBody] UpdateUserHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
-    [HttpPatch("password")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> ChangePassword([FromCurrentUser] Guid userId, [FromBody] ChangePasswordHttpRequest request) =>
-        HandleNoContent(request.ToCommand(userId));
-
-    [HttpPatch("password/set")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> SetPassword([FromCurrentUser] Guid userId, [FromBody] SetPasswordHttpRequest request) =>
-        HandleNoContent(request.ToCommand(userId));
-
     [HttpGet("desired-weight")]
     [ProducesResponseType<UserDesiredWeightHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
