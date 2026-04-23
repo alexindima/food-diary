@@ -420,12 +420,6 @@
     --fd-button-spinner-size: 0.8rem;
 }
 
-.fd-ui-button--size-md {
-    --fd-button-height: 40px;
-    --fd-button-padding-x: 0.75rem;
-    --fd-button-text-padding-x: 0.375rem;
-}
-
 .fd-ui-button--size-lg {
     --fd-button-height: 48px;
     --fd-button-padding-x: 1rem;
@@ -438,10 +432,6 @@
 
 .fd-ui-button--icon-xs {
     --fd-button-icon-size: 0.9rem;
-}
-
-.fd-ui-button--icon-md {
-    --fd-button-icon-size: 1.1rem;
 }
 
 .fd-ui-button--icon-lg {

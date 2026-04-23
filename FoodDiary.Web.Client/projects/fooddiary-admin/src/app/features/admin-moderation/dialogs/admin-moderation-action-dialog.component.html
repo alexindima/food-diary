@@ -2,8 +2,7 @@
     <p><strong>Target:</strong> {{ data.report.targetType }} ({{ data.report.targetId }})</p>
     <p><strong>Reason:</strong> {{ data.report.reason }}</p>
 
-    <label>Admin note (optional)</label>
-    <fd-ui-textarea [(ngModel)]="adminNote" placeholder="Add an admin note..." [rows]="3" />
+    <fd-ui-textarea [(ngModel)]="adminNote" label="Admin note (optional)" placeholder="Add an admin note..." [rows]="3" />
 
     <div class="dialog-actions">
         <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="onCancel()"> Cancel </fd-ui-button>
