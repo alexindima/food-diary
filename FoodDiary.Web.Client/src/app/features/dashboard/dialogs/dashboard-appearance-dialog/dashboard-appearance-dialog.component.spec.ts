@@ -80,9 +80,7 @@ describe('DashboardAppearanceDialogComponent', () => {
 
     it('queues the latest selection while a save is in flight', () => {
         const saveResponse$ = new Subject<{ theme: string; uiStyle: string }>();
-        userService.updateAppearance.mockImplementationOnce(
-            () => saveResponse$.asObservable(),
-        );
+        userService.updateAppearance.mockImplementationOnce(() => saveResponse$.asObservable());
 
         component.selectTheme('leaf');
         component.selectUiStyle('modern');
