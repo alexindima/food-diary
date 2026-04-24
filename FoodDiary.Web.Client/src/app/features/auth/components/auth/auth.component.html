@@ -179,13 +179,12 @@
                     />
                 </div>
 
-                <div class="auth__checkbox-row">
-                    <fd-ui-checkbox formControlName="agreeTerms" label="" />
-                    <div
+                <fd-ui-checkbox class="auth__terms" formControlName="agreeTerms" label="">
+                    <span
                         class="auth__checkbox-text fd-ui-body-sm"
                         [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy' }"
-                    ></div>
-                </div>
+                    ></span>
+                </fd-ui-checkbox>
 
                 <div class="auth__actions">
                     <fd-ui-button

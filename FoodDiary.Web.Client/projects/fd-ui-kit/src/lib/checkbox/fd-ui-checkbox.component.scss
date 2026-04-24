@@ -60,6 +60,12 @@
 }
 
 .fd-ui-checkbox__label-text {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--fd-checkbox-control-size);
+    font-size: var(--fd-text-body-sm-size, 0.95rem);
+    line-height: var(--fd-text-body-sm-line-height, 1.45);
+    font-weight: var(--fd-text-body-sm-weight, 400);
     color: var(--fd-checkbox-label-color);
 }
 

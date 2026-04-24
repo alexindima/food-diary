@@ -279,6 +279,7 @@ Dialog wrapper used with `FdUiDialogService`.
 **Inputs**
 - `dismissible?: boolean`
 - `size?: 'sm' | 'md' | 'lg' | 'xl'`
+- `bodyScrollInset?: 'default' | 'edge'`
 
 **Slots**
 - default `ng-content` for dialog body
@@ -307,11 +308,13 @@ Layout wrapper for dialog content.
 - `dismissible?: boolean`
 - `flush?: boolean`
 - `size?: 'sm' | 'md' | 'lg' | 'xl'`
+- `bodyScrollInset?: 'default' | 'edge'`
 
 **Recommended usage**
 - Use `title` and `subtitle` for standard dialogs.
 - Use `[fdUiDialogFooter]` for footer actions.
 - Use `[fdUiDialogHeader]` only when the header needs badges, counters, tabs, or richer composition than the standard heading block.
+- Use `bodyScrollInset="edge"` when the body scrollbar should sit flush against the dialog edge, such as list-heavy or feed-like dialogs.
 
 #### `fd-ui-confirm-dialog`
 Standard confirm dialog (uses dialog service).

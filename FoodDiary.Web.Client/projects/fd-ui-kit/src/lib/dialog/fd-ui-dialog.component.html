@@ -3,7 +3,11 @@
     role="dialog"
     aria-modal="true"
     [attr.aria-labelledby]="title() ? dialogTitleId : null"
-    [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']"
+    [ngClass]="[
+        'fd-ui-dialog--size-' + size(),
+        'fd-ui-dialog--body-scroll-' + bodyScrollInset(),
+        hasFooter ? 'fd-ui-dialog--has-footer' : '',
+    ]"
 >
     @if (hasCustomHeader()) {
         <header class="fd-ui-dialog__header fd-ui-dialog__header--custom">

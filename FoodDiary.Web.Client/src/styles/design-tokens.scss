@@ -473,6 +473,10 @@ $fd-theme-design-tokens: (
         --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
         --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
         --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
+        --fd-color-dialog-surface: #{fd-theme-token($theme, colors, surface-raised)};
+        --fd-color-dialog-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
+        --fd-color-dialog-border: #{fd-theme-token($theme, colors, border-strong)};
+        --fd-color-dialog-overlay: color-mix(in srgb, #{fd-token(colors, slate-900)} 60%, transparent);
         --fd-color-background: #{fd-theme-token($theme, layout-page, background)};
         --fd-color-text: #{fd-theme-token($theme, colors, text)};
         --fd-color-text-strong: #{fd-theme-token($theme, colors, text-strong)};

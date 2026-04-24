@@ -1,13 +1,19 @@
 @use 'variables';
 
+.auth-dialog__shell {
+    --fd-dialog-shell-shadow:
+        0 24px 64px color-mix(in srgb, var(--fd-color-slate-900) 26%, transparent),
+        0 4px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+}
+
 .auth-dialog__auth {
     display: block;
-    padding: 28px 24px 32px;
+    padding: 24px 20px 28px;
 }
 
 @media #{variables.$media-compact} {
 
     .auth-dialog__auth {
-        padding: 28px 20px 32px;
+        padding: 22px 16px 24px;
     }
 }

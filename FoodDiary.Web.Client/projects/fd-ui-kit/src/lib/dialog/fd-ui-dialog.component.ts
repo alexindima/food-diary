@@ -18,12 +18,14 @@ import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 let nextDialogId = 0;
 
 export type FdUiDialogSize = 'sm' | 'md' | 'lg' | 'xl';
+export type FdUiDialogBodyScrollInset = 'default' | 'edge';
 
 export interface FdUiDialogData {
     title?: string;
     subtitle?: string;
     size?: FdUiDialogSize;
     dismissible?: boolean;
+    bodyScrollInset?: FdUiDialogBodyScrollInset;
 }
 
 @Component({
@@ -47,6 +49,7 @@ export class FdUiDialogComponent {
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
     public readonly size = input<FdUiDialogSize>(this.injectedData?.size ?? 'md');
+    public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>(this.injectedData?.bodyScrollInset ?? 'default');
     public readonly dismissible = input(this.injectedData?.dismissible ?? true, {
         transform: booleanAttribute,
     });

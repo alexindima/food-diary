@@ -39,10 +39,11 @@
 }
 
 .fd-ui-input__control-wrap {
+    --fd-input-control-background: var(--fd-color-surface-raised);
     min-height: 40px;
     border: 1px solid var(--fd-color-border);
     border-radius: var(--fd-radius-input, 14px);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-input-control-background);
     display: flex;
     align-items: center;
     padding: 0 44px 0 12px;
@@ -94,6 +95,18 @@
     font: inherit;
     font-size: var(--fd-text-body-size);
     margin-top: 0;
+}
+
+.fd-ui-input__control:-webkit-autofill,
+.fd-ui-input__control:-webkit-autofill:hover,
+.fd-ui-input__control:-webkit-autofill:focus,
+.fd-ui-input__control:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--fd-color-text);
+    caret-color: var(--fd-color-text);
+    border-radius: inherit;
+    -webkit-box-shadow: 0 0 0 1000px var(--fd-input-control-background) inset;
+    box-shadow: 0 0 0 1000px var(--fd-input-control-background) inset;
+    transition: background-color 9999s ease-out 0s;
 }
 
 .fd-ui-input__prefix {
@@ -169,6 +182,7 @@
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap {
+    --fd-input-control-background: var(--fd-color-white);
     border-color: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
     border-radius: var(--fd-radius-input, var(--fd-radius-lg));
     background: var(--fd-color-white);

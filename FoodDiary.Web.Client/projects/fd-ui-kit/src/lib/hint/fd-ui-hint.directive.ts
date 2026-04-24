@@ -58,6 +58,10 @@ export class FdUiHintDirective {
     }
 
     public onFocusIn(): void {
+        if (!this.isKeyboardVisibleFocus()) {
+            return;
+        }
+
         this.queueShow(this.fdUiHintFocusShowDelay());
     }
 
@@ -66,11 +70,18 @@ export class FdUiHintDirective {
     }
 
     public onClick(): void {
+        this.cancelPendingDisplay();
         this.hide();
     }
 
     public onEscape(): void {
+        this.cancelPendingDisplay();
         this.hide();
+    }
+
+    private isKeyboardVisibleFocus(): boolean {
+        const host = this.elementRef.nativeElement;
+        return typeof host.matches === 'function' ? host.matches(':focus-visible') : false;
     }
 
     private queueShow(delay: number): void {
@@ -280,6 +291,11 @@ export class FdUiHintDirective {
     }
 
     private clearTimers(): void {
+        this.clearShowTimer();
+        this.clearHideTimer();
+    }
+
+    private cancelPendingDisplay(): void {
         this.clearShowTimer();
         this.clearHideTimer();
     }

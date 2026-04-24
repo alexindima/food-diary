@@ -57,14 +57,14 @@
 
             <fd-ui-button
                 class="dashboard__push-action"
+                appearance="toolbar"
                 variant="secondary"
                 fill="outline"
                 icon="notifications"
                 [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+                [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
                 (click)="openNotificationSettings()"
-            >
-                {{ 'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate }}
-            </fd-ui-button>
+            />
         </div>
     </header>
 
