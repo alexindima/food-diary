@@ -32,13 +32,11 @@
         </header>
     }
 
+    <footer class="fd-ui-dialog__footer">
+        <ng-content select="[fdUiDialogFooter]" />
+    </footer>
+
     <section class="fd-ui-dialog__body">
         <ng-content />
     </section>
-
-    @if (hasFooter) {
-        <footer class="fd-ui-dialog__footer">
-            <ng-content select="[fdUiDialogFooter]" />
-        </footer>
-    }
 </div>

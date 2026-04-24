@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 .notifications-dialog__body {
-    padding: 1.25rem 0 1.25rem 1.25rem;
     min-height: 18rem;
 }
 
@@ -11,7 +10,7 @@
     place-items: center;
     gap: 0.75rem;
     text-align: center;
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
 
     fd-ui-icon {
         font-size: 2rem;
@@ -27,31 +26,30 @@
 }
 
 .notifications-dialog__state-title {
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
 }
 
 .notifications-dialog__list {
     display: grid;
     gap: 0.75rem;
-    max-height: 24rem;
-    overflow-y: auto;
     padding-right: 1.25rem;
 }
 
 .notifications-dialog__item {
     width: 100%;
     display: grid;
-    grid-template-columns: auto auto 1fr;
-    gap: 0.875rem;
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
     align-items: start;
     padding: 0.875rem 1rem;
     border-radius: 14px;
-    border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),
-        var(--fd-color-white)
-    );
+    border: 1px solid transparent;
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-400) 10%, transparent), transparent 52%),
+        radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 44%),
+        var(--fd-color-surface-raised);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
+    color: var(--fd-color-text);
     text-align: left;
     cursor: pointer;
     transition:
@@ -61,36 +59,43 @@
 
     &:hover {
         transform: translateY(-1px);
-        box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        border-color: color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
+        box-shadow:
+            0 12px 28px color-mix(in srgb, var(--fd-color-text) 10%, transparent),
+            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     }
 
     &.is-read {
-        background: var(--fd-color-slate-50);
-        border-color: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+        background: var(--fd-color-surface);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border-strong) 62%, transparent);
+    }
+
+    &--without-icon {
+        gap: 0.35rem;
     }
 
     &--dietologist {
-        border-color: color-mix(in srgb, var(--fd-color-teal-700) 18%, transparent);
         background:
-            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-sky-500) 18%, transparent), transparent 45%),
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-teal-500) 10%, var(--fd-color-white)), var(--fd-color-white));
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-sky-500) 14%, transparent), transparent 45%),
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-teal-500) 8%, var(--fd-color-surface-raised)), var(--fd-color-surface-raised));
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-teal-700) 16%, transparent);
 
         &:hover {
-            border-color: color-mix(in srgb, var(--fd-color-teal-700) 30%, transparent);
-            box-shadow: 0 16px 34px color-mix(in srgb, var(--fd-color-slate-900) 10%, var(--fd-color-teal-700));
+            box-shadow:
+                0 16px 34px color-mix(in srgb, var(--fd-color-text) 12%, transparent),
+                inset 0 0 0 1px color-mix(in srgb, var(--fd-color-teal-700) 28%, transparent);
         }
     }
 
     &--security {
-        border-color: color-mix(in srgb, var(--fd-color-amber-600) 28%, transparent);
         background:
-            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-amber-400) 20%, transparent), transparent 48%),
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-amber-100) 72%, var(--fd-color-white)), var(--fd-color-white));
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-amber-400) 16%, transparent), transparent 48%),
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-amber-500) 10%, var(--fd-color-surface-raised)), var(--fd-color-surface-raised));
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-amber-600) 20%, transparent);
 
         &:hover {
-            border-color: color-mix(in srgb, var(--fd-color-amber-700) 36%, transparent);
-            box-shadow: 0 16px 34px color-mix(in srgb, var(--fd-color-slate-900) 10%, var(--fd-color-amber-700));
+            box-shadow:
+                0 16px 34px color-mix(in srgb, var(--fd-color-text) 12%, transparent),
+                inset 0 0 0 1px color-mix(in srgb, var(--fd-color-amber-700) 28%, transparent);
         }
     }
 }
@@ -98,10 +103,10 @@
 .notifications-dialog__item-indicator {
     width: 0.625rem;
     height: 0.625rem;
-    margin-top: 0.45rem;
     border-radius: 999px;
     background: var(--fd-color-danger);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--fd-color-danger) 12%, transparent);
+    flex-shrink: 0;
 
     &.is-hidden {
         opacity: 0;
@@ -121,6 +126,14 @@
     gap: 1rem;
 }
 
+.notifications-dialog__item-meta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    flex-shrink: 0;
+}
+
 .notifications-dialog__item-head-main {
     display: grid;
     gap: 0.35rem;
@@ -128,17 +141,17 @@
 }
 
 .notifications-dialog__item-title {
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text-strong);
 }
 
 .notifications-dialog__item-date {
     flex-shrink: 0;
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
 }
 
 .notifications-dialog__item-body {
     margin: 0;
-    color: var(--fd-color-slate-600);
+    color: var(--fd-color-text-muted);
 }
 
 .notifications-dialog__item-icon {
@@ -196,7 +209,7 @@
 }
 
 .notifications-dialog__footer {
-    padding: 0 1.25rem 1.25rem;
+    padding: 0 1.25rem;
 }
 
 @media #{variables.$media-phablet} {
@@ -207,11 +220,11 @@
     }
 
     .notifications-dialog__item {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 1fr;
     }
 
-    .notifications-dialog__item-indicator {
-        grid-row: span 2;
+    .notifications-dialog__item-meta {
+        justify-content: flex-start;
     }
 
     .notifications-dialog__item-icon {
@@ -223,6 +236,3 @@
         grid-template-columns: 1fr;
     }
 }
-
-
-

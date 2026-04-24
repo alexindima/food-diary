@@ -1,4 +1,4 @@
-<fd-ui-dialog-shell [title]="'NOTIFICATIONS.TITLE' | translate" size="lg" bodyScrollInset="edge">
+<fd-ui-dialog [title]="'NOTIFICATIONS.TITLE' | translate" size="lg" bodyScrollInset="edge">
     <div class="notifications-dialog__body" [attr.aria-busy]="isLoading()">
         @if (isLoading()) {
             <div class="notifications-dialog__state" role="status" aria-live="polite">
@@ -19,19 +19,21 @@
                             type="button"
                             class="notifications-dialog__item"
                             [class.is-read]="notification.isRead"
+                            [class.notifications-dialog__item--without-icon]="!hasNotificationAccentIcon(notification)"
                             [class.notifications-dialog__item--dietologist]="isDietologistInvitation(notification)"
                             [class.notifications-dialog__item--security]="isPasswordSetupSuggestion(notification)"
                             [attr.aria-label]="getNotificationAriaLabel(notification)"
                             (click)="openNotification(notification)"
                         >
-                            <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
-                            <span
-                                class="notifications-dialog__item-icon"
-                                [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
-                                [class.notifications-dialog__item-icon--security]="isPasswordSetupSuggestion(notification)"
-                            >
-                                <fd-ui-icon [name]="getNotificationIcon(notification)"></fd-ui-icon>
-                            </span>
+                            @if (hasNotificationAccentIcon(notification)) {
+                                <span
+                                    class="notifications-dialog__item-icon"
+                                    [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
+                                    [class.notifications-dialog__item-icon--security]="isPasswordSetupSuggestion(notification)"
+                                >
+                                    <fd-ui-icon [name]="getNotificationIcon(notification)"></fd-ui-icon>
+                                </span>
+                            }
                             <div class="notifications-dialog__item-content">
                                 <div class="notifications-dialog__item-head">
                                     <div class="notifications-dialog__item-head-main">
@@ -42,9 +44,12 @@
                                         }
                                         <span class="notifications-dialog__item-title fd-ui-card-title">{{ notification.title }}</span>
                                     </div>
-                                    <span class="notifications-dialog__item-date fd-ui-caption">{{
-                                        notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
-                                    }}</span>
+                                    <div class="notifications-dialog__item-meta">
+                                        <span class="notifications-dialog__item-date fd-ui-caption">{{
+                                            notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
+                                        }}</span>
+                                        <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
+                                    </div>
                                 </div>
                                 @if (notification.body) {
                                     <p class="notifications-dialog__item-body fd-ui-body-sm">{{ notification.body }}</p>
@@ -75,8 +80,5 @@
         >
             {{ 'NOTIFICATIONS.MARK_ALL_READ' | translate }}
         </fd-ui-button>
-        <fd-ui-button variant="primary" (click)="close()">
-            {{ 'COMMON.CLOSE' | translate }}
-        </fd-ui-button>
     </div>
-</fd-ui-dialog-shell>
+</fd-ui-dialog>

@@ -107,10 +107,19 @@
     font-size: 0.875rem;
 }
 
+.dashboard-notification-settings-dialog__footer {
+    padding-inline: 1.25rem;
+}
+
 @media #{variables.$media-mobile} {
 
     .dashboard-notification-settings-dialog__item {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .dashboard-notification-settings-dialog__footer {
+        display: grid;
+        grid-template-columns: 1fr;
     }
 }

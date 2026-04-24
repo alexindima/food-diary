@@ -5,14 +5,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { NotificationItem, NotificationService } from '../../../services/notification.service';
 
 @Component({
     selector: 'fd-notifications-dialog',
     standalone: true,
-    imports: [DatePipe, TranslateModule, FdUiButtonComponent, FdUiIconComponent, FdUiDialogFooterDirective, FdUiDialogShellComponent],
+    imports: [DatePipe, TranslateModule, FdUiButtonComponent, FdUiIconComponent, FdUiDialogFooterDirective, FdUiDialogComponent],
     templateUrl: './notifications-dialog.component.html',
     styleUrl: './notifications-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,10 +31,6 @@ export class NotificationsDialogComponent {
         this.notificationService.ensureNotificationsLoaded();
     }
 
-    protected close(): void {
-        this.dialogRef.close();
-    }
-
     protected openNotification(notification: NotificationItem): void {
         const navigate = (): void => {
             if (!notification.targetUrl) {
@@ -42,7 +38,7 @@ export class NotificationsDialogComponent {
             }
 
             void this.router.navigateByUrl(notification.targetUrl);
-            this.close();
+            this.dialogRef.close();
         };
 
         if (notification.isRead) {
@@ -100,6 +96,10 @@ export class NotificationsDialogComponent {
         }
 
         return 'notifications';
+    }
+
+    protected hasNotificationAccentIcon(notification: NotificationItem): boolean {
+        return this.isDietologistInvitation(notification) || this.isPasswordSetupSuggestion(notification);
     }
 
     protected getNotificationBadgeKey(notification: NotificationItem): string | null {

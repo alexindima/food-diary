@@ -66,6 +66,7 @@
 }
 
 .fd-ui-dialog__header {
+    order: 0;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -131,6 +132,7 @@
 }
 
 .fd-ui-dialog__body {
+    order: 1;
     --fd-dialog-body-scrollbar-offset: 12px;
     --fd-dialog-scrollbar-thumb: color-mix(in srgb, var(--fd-color-slate-500) 52%, transparent);
     --fd-dialog-scrollbar-thumb-hover: color-mix(in srgb, var(--fd-color-slate-600) 68%, transparent);
@@ -175,6 +177,7 @@
 }
 
 .fd-ui-dialog__footer {
+    order: 2;
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
