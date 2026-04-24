@@ -12,9 +12,9 @@
 .preview {
     min-height: 12rem;
     padding: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 64%, transparent);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-color-surface-raised);
 }
 
 .preview--text {

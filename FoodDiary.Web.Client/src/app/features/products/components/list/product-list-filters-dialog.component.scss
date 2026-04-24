@@ -13,17 +13,17 @@
 
     &__section-title {
         margin: 0;
-        font-size: var(--fd-text-helper-size, 0.75rem);
-        line-height: var(--fd-text-helper-line-height, 1.2);
+        font-size: var(--fd-text-helper-size);
+        line-height: var(--fd-text-helper-line-height);
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--fd-color-slate-400);
-        font-weight: 600;
+        color: var(--fd-color-text-muted);
+        font-weight: var(--fd-text-helper-weight);
     }
 
     &__types {
-        --fd-chip-select-font-weight: 600;
-        --fd-chip-select-font-size: 0.92rem;
+        --fd-chip-select-font-weight: var(--fd-text-action-weight);
+        --fd-chip-select-font-size: var(--fd-text-action-size);
         --fd-chip-select-item-height: 40px;
     }
 

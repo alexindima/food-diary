@@ -9,5 +9,8 @@
 }
 
 .roles__title {
-    font-weight: 600;
+    font-size: var(--fd-text-body-size);
+    line-height: var(--fd-text-body-line-height);
+    font-weight: var(--fd-text-action-weight);
+    color: var(--fd-color-text);
 }

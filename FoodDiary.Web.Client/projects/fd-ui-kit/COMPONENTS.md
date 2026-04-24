@@ -316,6 +316,12 @@ Layout wrapper for dialog content.
 - Use `[fdUiDialogHeader]` only when the header needs badges, counters, tabs, or richer composition than the standard heading block.
 - Use `bodyScrollInset="edge"` when the body scrollbar should sit flush against the dialog edge, such as list-heavy or feed-like dialogs.
 
+**Dialog Token Policy**
+- Dialog surfaces, borders, text, and state colors should use semantic tokens such as `--fd-color-dialog-surface`, `--fd-color-surface-raised`, `--fd-color-text`, `--fd-color-text-muted`, `--fd-color-danger`, and `--fd-color-border-strong`.
+- Dialog radii should use semantic radius tokens such as `--fd-radius-dialog`, `--fd-radius-panel`, `--fd-radius-card`, `--fd-radius-input`, and `--fd-radius-button`.
+- Dialog typography should use semantic text tokens such as `--fd-text-section-title-*`, `--fd-text-card-title-*`, `--fd-text-body-*`, `--fd-text-body-sm-*`, `--fd-text-helper-*`, and `--fd-text-action-*`.
+- Allowed local exceptions: `999px` pill/circle radii, `0` radius for fullscreen or edge-attached layouts, explicit icon sizes, and illustrative preview palettes that intentionally demonstrate theme or style variants.
+
 #### `fd-ui-confirm-dialog`
 Standard confirm dialog (uses dialog service).
 

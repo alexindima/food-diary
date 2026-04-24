@@ -42,7 +42,7 @@
     gap: 0.35rem;
     align-items: start;
     padding: 0.875rem 1rem;
-    border-radius: 14px;
+    border-radius: var(--fd-radius-card);
     border: 1px solid transparent;
     background:
         radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-400) 10%, transparent), transparent 52%),
@@ -157,7 +157,7 @@
 .notifications-dialog__item-icon {
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 12px;
+    border-radius: var(--fd-radius-input);
     display: grid;
     place-items: center;
     background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);

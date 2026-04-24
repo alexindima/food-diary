@@ -51,9 +51,9 @@
         gap: variables.$gap-s;
         align-items: center;
         padding: 12px 14px;
-        border-radius: 16px;
+        border-radius: var(--fd-radius-card);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        background: var(--fd-color-white);
+        background: var(--fd-color-surface-raised);
         box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         text-align: left;
         cursor: pointer;
@@ -62,7 +62,7 @@
     &__thumb {
         width: 44px;
         height: 44px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-input);
         overflow: hidden;
         display: grid;
         place-items: center;
@@ -80,13 +80,19 @@
     }
 
     &__name {
-        color: var(--fd-color-text);
+        font-size: var(--fd-text-body-size);
+        line-height: var(--fd-text-body-line-height);
+        font-weight: var(--fd-text-card-title-weight);
+        color: var(--fd-color-text-strong);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
     &__meta {
+        font-size: var(--fd-text-body-sm-size);
+        line-height: var(--fd-text-body-sm-line-height);
+        font-weight: var(--fd-text-body-sm-weight);
         color: var(--fd-color-text-muted);
         white-space: nowrap;
         overflow: hidden;

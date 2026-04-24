@@ -7,10 +7,14 @@
 
 label {
     display: block;
-    font-weight: 500;
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-action-weight);
+    color: var(--fd-color-text);
     margin: 12px 0 4px;
 }
 
 p {
     margin: 4px 0;
+    color: var(--fd-color-text-muted);
 }

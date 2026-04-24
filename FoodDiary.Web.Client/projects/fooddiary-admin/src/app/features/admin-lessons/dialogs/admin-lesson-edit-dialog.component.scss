@@ -14,18 +14,20 @@
 
 .content-counter {
     margin-top: 0.25rem;
-    font-size: 0.8125rem;
-    color: #6b7280;
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-helper-weight);
+    color: var(--fd-color-text-muted);
     text-align: right;
 }
 
 .content-counter--warning {
-    color: #d97706;
+    color: var(--fd-color-amber-700);
 }
 
 .content-counter--danger {
-    color: #dc2626;
-    font-weight: 600;
+    color: var(--fd-color-danger);
+    font-weight: var(--fd-text-action-weight);
 }
 
 .preview-toggle,
@@ -37,7 +39,7 @@
 .preview {
     min-height: 12rem;
     padding: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 64%, transparent);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-color-surface-raised);
 }

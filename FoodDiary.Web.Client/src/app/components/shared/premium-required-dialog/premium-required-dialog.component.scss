@@ -1,17 +1,19 @@
 .premium-required-dialog__message {
     margin: 0 0 12px;
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
 }
 
 .premium-required-dialog__note {
     margin: 0;
-    color: var(--fd-color-slate-600);
+    color: var(--fd-color-text-muted);
 }
 
 .premium-required-dialog__link {
     color: var(--fd-color-primary-600);
     text-decoration: none;
-    font-weight: 600;
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-action-weight);
 }
 
 .premium-required-dialog__link:hover,

@@ -14,22 +14,22 @@
     background: none;
     cursor: pointer;
     text-align: left;
-    border-radius: 6px;
+    border-radius: var(--fd-radius-input);
     transition: background-color 0.15s;
 
     &:hover {
-        background-color: var(--fd-surface-hover, rgba(0, 0, 0, 0.04));
+        background-color: color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-text) 4%);
     }
 
     &.selected {
-        background-color: var(--fd-primary-light, rgba(25, 118, 210, 0.08));
+        background-color: color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-surface-raised));
     }
 }
 
 .food-category,
 .loading,
 .no-results {
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    color: var(--fd-color-text-muted);
 }
 
 .food-category {
