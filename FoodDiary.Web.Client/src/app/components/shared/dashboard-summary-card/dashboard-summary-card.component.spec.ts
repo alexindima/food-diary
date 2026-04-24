@@ -21,6 +21,19 @@ describe('DashboardSummaryCardComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('keeps decorative chart svg out of the tab order', () => {
+        fixture.componentRef.setInput('dailyGoal', 2000);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const svg = host.querySelector('.dashboard-summary-card__svg');
+        const rings = host.querySelectorAll('.dashboard-summary-card__ring');
+
+        expect(svg?.getAttribute('aria-hidden')).toBe('true');
+        expect(svg?.getAttribute('focusable')).toBe('false');
+        expect(Array.from(rings).every(ring => !ring.hasAttribute('tabindex'))).toBe(true);
+    });
+
     describe('dailyPercent', () => {
         it('should calculate daily percent correctly', () => {
             fixture.componentRef.setInput('dailyConsumed', 1500);

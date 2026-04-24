@@ -1,0 +1,22 @@
+{
+    "ci": {
+        "collect": {
+            "staticDistDir": "./dist/browser",
+            "numberOfRuns": 1,
+            "settings": {
+                "chromeFlags": "--no-sandbox"
+            },
+            "url": [
+                "http://localhost/",
+                "http://localhost/food-diary",
+                "http://localhost/meal-planner",
+                "http://localhost/intermittent-fasting",
+                "http://localhost/privacy-policy"
+            ]
+        },
+        "upload": {
+            "target": "filesystem",
+            "outputDir": "./reports/lighthouse"
+        }
+    }
+}

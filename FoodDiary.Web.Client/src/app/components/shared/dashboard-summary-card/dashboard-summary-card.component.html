@@ -16,7 +16,7 @@
                 [class.is-weekly-hovered]="isWeeklyHovered()"
                 [class.is-goal-missing]="normalizedDailyGoal() <= 0"
             >
-                <svg class="dashboard-summary-card__svg" viewBox="-5 -5 270 270" aria-hidden="true">
+                <svg class="dashboard-summary-card__svg" viewBox="-5 -5 270 270" aria-hidden="true" focusable="false">
                     <defs>
                         <linearGradient [id]="dailyGradientId" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" [attr.stop-color]="dailyGradientStart()" />
@@ -32,9 +32,6 @@
                         [class.is-hovered]="isDailyHovered()"
                         (mouseenter)="setDailyHover(true)"
                         (mouseleave)="setDailyHover(false)"
-                        [attr.tabindex]="normalizedDailyGoal() > 0 ? 0 : null"
-                        (focus)="setDailyHover(true)"
-                        (blur)="setDailyHover(false)"
                         [style.--ring-color]="dailyStrokeColor()"
                     >
                         <circle
@@ -60,9 +57,6 @@
                         [class.is-hovered]="isWeeklyHovered()"
                         (mouseenter)="setWeeklyHover(true)"
                         (mouseleave)="setWeeklyHover(false)"
-                        [attr.tabindex]="normalizedDailyGoal() > 0 ? 0 : null"
-                        (focus)="setWeeklyHover(true)"
-                        (blur)="setWeeklyHover(false)"
                         [style.--ring-color]="weeklyStrokeColor()"
                     >
                         <circle

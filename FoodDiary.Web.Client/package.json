@@ -33,6 +33,8 @@
         "test:e2e:client:smoke:ui": "npx playwright test -c playwright.client.smoke.config.ts --ui",
         "test:e2e:admin:smoke": "npx playwright test -c playwright.admin.smoke.config.ts",
         "test:e2e:admin:smoke:ui": "npx playwright test -c playwright.admin.smoke.config.ts --ui",
+        "audit:lighthouse:collect": "node scripts/run-lighthouse.mjs",
+        "audit:lighthouse": "npm run build:prod && npm run audit:lighthouse:collect",
         "storybook": "ng run fd-ui-kit:storybook",
         "build:storybook": "ng run fd-ui-kit:build-storybook",
         "serve:ssr:food-diary-web-client": "node dist/server/server.mjs"
@@ -73,6 +75,7 @@
         "@emnapi/core": "^1.9.2",
         "@emnapi/runtime": "^1.9.2",
         "@emnapi/wasi-threads": "^1.2.0",
+        "@lhci/cli": "^0.15.1",
         "@material-design-icons/font": "^0.14.15",
         "@playwright/test": "^1.59.1",
         "@storybook/angular": "^10.3.5",
