@@ -1,5 +1,6 @@
 using FoodDiary.Application.Users.Commands.AcceptAiConsent;
 using FoodDiary.Application.Users.Commands.RevokeAiConsent;
+using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.SetPassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
@@ -60,6 +61,14 @@ public static class UserHttpMappings {
             ProfileImageAssetId: request.ProfileImageAssetId,
             DashboardLayout: request.DashboardLayout?.ToModel(),
             IsActive: request.IsActive
+        );
+    }
+
+    public static UpdateUserAppearanceCommand ToCommand(this UpdateUserAppearanceHttpRequest request, Guid? userId) {
+        return new UpdateUserAppearanceCommand(
+            UserId: userId,
+            Theme: request.Theme,
+            UiStyle: request.UiStyle
         );
     }
 

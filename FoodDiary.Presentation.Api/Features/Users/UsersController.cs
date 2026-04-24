@@ -25,6 +25,15 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public Task<IActionResult> UpdateCurrentUser([FromCurrentUser] Guid userId, [FromBody] UpdateUserHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
+    [HttpPatch("preferences/appearance")]
+    [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateAppearance(
+        [FromCurrentUser] Guid userId,
+        [FromBody] UpdateUserAppearanceHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+
     [HttpGet("desired-weight")]
     [ProducesResponseType<UserDesiredWeightHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

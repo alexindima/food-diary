@@ -1,25 +1,7 @@
-<fd-ui-dialog [title]="'DASHBOARD.APPEARANCE.TITLE' | translate" size="md" [dismissible]="false">
+<fd-ui-dialog [title]="'DASHBOARD.APPEARANCE.TITLE' | translate" size="md">
     <div class="dashboard-appearance-dialog" [attr.aria-busy]="isSaving()">
         <div class="dashboard-appearance-dialog__intro">
             <p class="dashboard-appearance-dialog__subtitle">{{ 'DASHBOARD.APPEARANCE.SUBTITLE' | translate }}</p>
-            <div class="dashboard-appearance-dialog__selection">
-                <span
-                    class="dashboard-appearance-dialog__selection-pill dashboard-appearance-dialog__selection-pill--{{ selectedTheme() }}"
-                >
-                    {{
-                        ('DASHBOARD.APPEARANCE.THEME_LABEL' | translate) +
-                            ': ' +
-                            ('SIDEBAR.THEME_' + selectedTheme().toUpperCase() | translate)
-                    }}
-                </span>
-                <span class="dashboard-appearance-dialog__selection-pill">
-                    {{
-                        ('DASHBOARD.APPEARANCE.UI_STYLE_LABEL' | translate) +
-                            ': ' +
-                            ('USER_MANAGE.UI_STYLE_OPTIONS.' + selectedUiStyle().toUpperCase() | translate)
-                    }}
-                </span>
-            </div>
         </div>
 
         <section class="dashboard-appearance-dialog__section" aria-labelledby="dashboard-appearance-theme-heading">
@@ -92,13 +74,5 @@
             <p class="dashboard-appearance-dialog__error" role="alert">{{ submitError() }}</p>
         }
 
-        <div fdUiDialogFooter class="dashboard-appearance-dialog__footer">
-            <fd-ui-button type="button" fill="outline" variant="primary" (click)="close()">
-                {{ 'DASHBOARD.APPEARANCE.CANCEL' | translate }}
-            </fd-ui-button>
-            <fd-ui-button type="button" icon="palette" [disabled]="isSaving()" [loading]="isSaving()" (click)="save()">
-                {{ 'DASHBOARD.APPEARANCE.SAVE' | translate }}
-            </fd-ui-button>
-        </div>
     </div>
 </fd-ui-dialog>

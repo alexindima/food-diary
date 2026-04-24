@@ -486,6 +486,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/recipes/{id}",
             "/api/v{version}/statistics",
             "/api/v{version}/users/info",
+            "/api/v{version}/users/preferences/appearance",
             "/api/v{version}/users/overview",
             "/api/v{version}/weight-entries",
             "/api/v{version}/waist-entries"

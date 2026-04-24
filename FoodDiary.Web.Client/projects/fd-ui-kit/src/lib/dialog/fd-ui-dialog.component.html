@@ -6,6 +6,7 @@
     [ngClass]="[
         'fd-ui-dialog--size-' + size(),
         'fd-ui-dialog--body-scroll-' + bodyScrollInset(),
+        showBuiltInHeader() || hasCustomHeader() ? 'fd-ui-dialog--has-header' : '',
         hasFooter ? 'fd-ui-dialog--has-footer' : '',
     ]"
 >

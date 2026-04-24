@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { ThemeService } from '../../../../services/theme.service';
 import { UserService } from '../../../../shared/api/user.service';
-import { UpdateUserDto } from '../../../../shared/models/user.data';
-import { APP_THEMES, APP_UI_STYLES, AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
+import { UpdateUserAppearanceDto } from '../../../../shared/models/user.data';
+import {
+    APP_THEMES,
+    APP_UI_STYLES,
+    AppThemeName,
+    AppUiStyleName,
+    isAppThemeName,
+    isAppUiStyleName,
+} from '../../../../theme/app-theme.config';
 
 export interface DashboardAppearanceDialogData {
     theme: AppThemeName;
@@ -22,25 +26,27 @@ export interface DashboardAppearanceDialogData {
     templateUrl: './dashboard-appearance-dialog.component.html',
     styleUrl: './dashboard-appearance-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
+    imports: [TranslateModule, FdUiDialogComponent],
 })
 export class DashboardAppearanceDialogComponent {
-    private readonly dialogRef = inject(FdUiDialogRef<DashboardAppearanceDialogComponent, boolean>);
     private readonly themeService = inject(ThemeService);
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
     private readonly data = inject<DashboardAppearanceDialogData>(FD_UI_DIALOG_DATA);
     private readonly initialTheme = this.data.theme;
     private readonly initialUiStyle = this.data.uiStyle;
+    private pendingPersist = false;
 
     public readonly themes = APP_THEMES;
     public readonly uiStyles = APP_UI_STYLES;
     public readonly selectedTheme = signal<AppThemeName>(this.initialTheme);
     public readonly selectedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
+    public readonly persistedTheme = signal<AppThemeName>(this.initialTheme);
+    public readonly persistedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
     public readonly isSaving = signal(false);
     public readonly submitError = signal<string | null>(null);
     public readonly hasChanges = computed(
-        () => this.selectedTheme() !== this.initialTheme || this.selectedUiStyle() !== this.initialUiStyle,
+        () => this.selectedTheme() !== this.persistedTheme() || this.selectedUiStyle() !== this.persistedUiStyle(),
     );
 
     public selectTheme(theme: AppThemeName): void {
@@ -50,6 +56,8 @@ export class DashboardAppearanceDialogComponent {
 
         this.selectedTheme.set(theme);
         this.themeService.setTheme(theme);
+        this.submitError.set(null);
+        this.persistSelection();
     }
 
     public selectUiStyle(uiStyle: AppUiStyleName): void {
@@ -59,59 +67,71 @@ export class DashboardAppearanceDialogComponent {
 
         this.selectedUiStyle.set(uiStyle);
         this.themeService.setUiStyle(uiStyle);
-    }
-
-    public close(): void {
-        if (this.isSaving()) {
-            return;
-        }
-
-        this.revertPreview();
-        this.dialogRef.close(false);
-    }
-
-    public save(): void {
-        if (this.isSaving()) {
-            return;
-        }
-
-        if (!this.hasChanges()) {
-            this.dialogRef.close(true);
-            return;
-        }
-
-        this.isSaving.set(true);
         this.submitError.set(null);
+        this.persistSelection();
+    }
+
+    private persistSelection(): void {
+        if (!this.hasChanges()) {
+            return;
+        }
+
+        if (this.isSaving()) {
+            this.pendingPersist = true;
+            return;
+        }
+
+        const requestedTheme = this.selectedTheme();
+        const requestedUiStyle = this.selectedUiStyle();
+        this.isSaving.set(true);
 
         this.userService
-            .update(
-                new UpdateUserDto({
-                    theme: this.selectedTheme(),
-                    uiStyle: this.selectedUiStyle(),
+            .updateAppearance(
+                new UpdateUserAppearanceDto({
+                    theme: requestedTheme,
+                    uiStyle: requestedUiStyle,
                 }),
             )
-            .pipe(finalize(() => this.isSaving.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSaving.set(false);
+
+                    if (this.pendingPersist) {
+                        this.pendingPersist = false;
+                        this.persistSelection();
+                    }
+                }),
+            )
             .subscribe({
                 next: user => {
                     if (!user) {
-                        this.revertPreview();
-                        this.submitError.set(this.translateService.instant('DASHBOARD.APPEARANCE.ERROR'));
+                        this.handlePersistError();
                         return;
                     }
 
-                    this.themeService.syncWithUserPreferences(user.theme, user.uiStyle);
-                    this.dialogRef.close(true);
+                    const persistedTheme = isAppThemeName(user.theme) ? user.theme : requestedTheme;
+                    const persistedUiStyle = isAppUiStyleName(user.uiStyle) ? user.uiStyle : requestedUiStyle;
+
+                    this.persistedTheme.set(persistedTheme);
+                    this.persistedUiStyle.set(persistedUiStyle);
+
+                    if (this.selectedTheme() === requestedTheme && this.selectedUiStyle() === requestedUiStyle) {
+                        this.themeService.syncWithUserPreferences(persistedTheme, persistedUiStyle);
+                    }
                 },
-                error: () => {
-                    this.revertPreview();
-                    this.submitError.set(this.translateService.instant('DASHBOARD.APPEARANCE.ERROR'));
-                },
+                error: () => this.handlePersistError(),
             });
     }
 
     private revertPreview(): void {
-        this.selectedTheme.set(this.initialTheme);
-        this.selectedUiStyle.set(this.initialUiStyle);
-        this.themeService.syncWithUserPreferences(this.initialTheme, this.initialUiStyle);
+        this.selectedTheme.set(this.persistedTheme());
+        this.selectedUiStyle.set(this.persistedUiStyle());
+        this.themeService.syncWithUserPreferences(this.persistedTheme(), this.persistedUiStyle());
+    }
+
+    private handlePersistError(): void {
+        this.pendingPersist = false;
+        this.revertPreview();
+        this.submitError.set(this.translateService.instant('DASHBOARD.APPEARANCE.ERROR'));
     }
 }

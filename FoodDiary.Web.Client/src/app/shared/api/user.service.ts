@@ -12,6 +12,7 @@ import {
     DashboardLayoutSettings,
     DesiredWaistResponse,
     DesiredWeightResponse,
+    UpdateUserAppearanceDto,
     SetPasswordRequest,
     UpdateUserDto,
     User,
@@ -84,13 +85,24 @@ export class UserService extends ApiService {
     }
 
     public updateTheme(theme: string): Observable<User | null> {
-        return this.patch<User>('info', { theme }).pipe(
+        return this.updateAppearance(new UpdateUserAppearanceDto({ theme })).pipe(
             tap(user => {
                 if (user) {
                     this.userSignal.set(user);
                 }
             }),
             catchError(error => fallbackApiError('Update user theme error', error, null)),
+        );
+    }
+
+    public updateAppearance(data: UpdateUserAppearanceDto): Observable<User | null> {
+        return this.patch<User>('preferences/appearance', data).pipe(
+            tap(user => {
+                if (user) {
+                    this.userSignal.set(user);
+                }
+            }),
+            catchError(error => fallbackApiError('Update user appearance error', error, null)),
         );
     }
 

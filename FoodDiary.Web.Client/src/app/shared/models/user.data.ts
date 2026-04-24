@@ -116,6 +116,16 @@ export class UpdateUserDto {
     }
 }
 
+export class UpdateUserAppearanceDto {
+    public theme?: string;
+    public uiStyle?: string;
+
+    public constructor(formValues: { theme?: string | null; uiStyle?: UiStyleOption | string | null }) {
+        this.theme = normalizeTheme(formValues.theme);
+        this.uiStyle = normalizeUiStyle(formValues.uiStyle);
+    }
+}
+
 const normalizeString = (value: string | null | undefined): string | undefined => {
     const trimmed = value?.trim();
     return trimmed ? trimmed : undefined;

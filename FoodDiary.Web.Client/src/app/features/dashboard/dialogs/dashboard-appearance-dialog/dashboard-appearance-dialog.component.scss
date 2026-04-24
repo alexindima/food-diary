@@ -1,6 +1,10 @@
 @use 'variables' as variables;
 
 .dashboard-appearance-dialog {
+    --dashboard-appearance-shell-radius: var(--fd-radius-panel, 20px);
+    --dashboard-appearance-option-radius: var(--fd-radius-card, 18px);
+    --dashboard-appearance-preview-radius: var(--fd-radius-input, 14px);
+    --dashboard-appearance-preview-line-radius: var(--fd-radius-button, 999px);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -9,9 +13,9 @@
 .dashboard-appearance-dialog__intro {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     padding: 16px;
-    border-radius: 20px;
+    border-radius: var(--dashboard-appearance-shell-radius);
     background:
         radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent), transparent 42%),
         linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
@@ -23,44 +27,12 @@
     color: var(--fd-color-text-muted);
 }
 
-.dashboard-appearance-dialog__selection {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.dashboard-appearance-dialog__selection-pill {
-    display: inline-flex;
-    align-items: center;
-    min-height: 30px;
-    padding: 0 12px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    line-height: 1;
-    font-weight: 600;
-    color: var(--fd-color-text);
-    background: color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 16%, transparent);
-}
-
-.dashboard-appearance-dialog__selection-pill--ocean {
-    background: color-mix(in srgb, #4bb5ff 16%, var(--fd-color-surface-raised));
-}
-
-.dashboard-appearance-dialog__selection-pill--leaf {
-    background: color-mix(in srgb, #5fcf91 18%, var(--fd-color-surface-raised));
-}
-
-.dashboard-appearance-dialog__selection-pill--dark {
-    background: color-mix(in srgb, #2b3340 64%, var(--fd-color-surface-raised));
-}
-
 .dashboard-appearance-dialog__section {
     display: flex;
     flex-direction: column;
     gap: 12px;
     padding: 16px;
-    border-radius: 20px;
+    border-radius: var(--dashboard-appearance-shell-radius);
     background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 14%, transparent);
 }
@@ -93,7 +65,7 @@
 .dashboard-appearance-dialog__option {
     appearance: none;
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 20%, transparent);
-    border-radius: 18px;
+    border-radius: var(--dashboard-appearance-option-radius);
     background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
     display: flex;
     flex-direction: column;
@@ -140,20 +112,24 @@
 }
 
 .dashboard-appearance-dialog__swatch {
+    display: block;
     width: 100%;
-    min-height: 52px;
-    border-radius: 14px;
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    aspect-ratio: 16 / 5;
+    min-height: 56px;
+    border-radius: var(--dashboard-appearance-preview-radius);
     position: relative;
     overflow: hidden;
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
+        inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
 }
 
 .dashboard-appearance-dialog__swatch::after {
     content: '';
     position: absolute;
-    inset: auto 10px 10px;
+    inset: auto 14px 12px;
     height: 10px;
-    border-radius: 999px;
+    border-radius: var(--dashboard-appearance-preview-line-radius);
     background: color-mix(in srgb, #fff 88%, transparent);
 }
 
@@ -170,23 +146,30 @@
 }
 
 .dashboard-appearance-dialog__style-preview {
-    width: 100%;
-    min-height: 52px;
-    border-radius: 14px;
-    padding: 10px;
+    --dashboard-style-preview-surface-radius: 14px;
+    --dashboard-style-preview-line-radius: 999px;
     display: grid;
+    width: 100%;
+    aspect-ratio: 16 / 5;
+    min-height: 56px;
+    border-radius: var(--dashboard-style-preview-surface-radius);
+    padding: 12px;
     align-content: center;
     gap: 6px;
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
+        inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
 }
 
 .dashboard-appearance-dialog__style-preview span {
     display: block;
     height: 8px;
-    border-radius: 999px;
+    border-radius: var(--dashboard-style-preview-line-radius);
 }
 
 .dashboard-appearance-dialog__style-preview--classic {
+    --dashboard-style-preview-surface-radius: 20px;
+    --dashboard-style-preview-line-radius: 12px;
     background: linear-gradient(180deg, #f6f8fb, #eef3f9);
 }
 
@@ -206,6 +189,8 @@
 }
 
 .dashboard-appearance-dialog__style-preview--modern {
+    --dashboard-style-preview-surface-radius: 8px;
+    --dashboard-style-preview-line-radius: 6px;
     background: linear-gradient(135deg, #fff9ec, #fff2cf);
 }
 
@@ -230,24 +215,10 @@
     font-size: 0.875rem;
 }
 
-.dashboard-appearance-dialog__footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-}
-
 @media #{variables.$media-mobile} {
-
-    .dashboard-appearance-dialog__selection {
-        flex-direction: column;
-    }
 
     .dashboard-appearance-dialog__grid,
     .dashboard-appearance-dialog__grid--styles {
         grid-template-columns: 1fr;
-    }
-
-    .dashboard-appearance-dialog__footer {
-        flex-direction: column-reverse;
     }
 }

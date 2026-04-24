@@ -215,6 +215,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/users/preferences/appearance",
+      "Operations": [
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/waist-entries",
       "Operations": [
         {
