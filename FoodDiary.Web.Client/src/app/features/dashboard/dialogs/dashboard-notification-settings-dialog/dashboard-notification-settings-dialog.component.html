@@ -1,0 +1,119 @@
+<fd-ui-dialog [title]="'DASHBOARD.NOTIFICATIONS.TITLE' | translate" size="md" bodyScrollInset="edge">
+    <div class="dashboard-notification-settings-dialog" [attr.aria-busy]="isLoading() || isUpdating() || pushNotificationsBusy()">
+        <div class="dashboard-notification-settings-dialog__intro">
+            <p class="dashboard-notification-settings-dialog__subtitle">{{ 'DASHBOARD.NOTIFICATIONS.SUBTITLE' | translate }}</p>
+        </div>
+
+        @if (submitError()) {
+            <p class="dashboard-notification-settings-dialog__error" role="alert">{{ submitError() }}</p>
+        }
+
+        <section class="dashboard-notification-settings-dialog__section" aria-labelledby="dashboard-notifications-main-heading">
+            <div class="dashboard-notification-settings-dialog__section-header">
+                <h3
+                    id="dashboard-notifications-main-heading"
+                    class="dashboard-notification-settings-dialog__section-title fd-ui-card-title"
+                >
+                    {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
+                </h3>
+                <p class="dashboard-notification-settings-dialog__section-copy fd-ui-body-sm">
+                    {{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}
+                </p>
+            </div>
+
+            <div class="dashboard-notification-settings-dialog__item dashboard-notification-settings-dialog__item--primary">
+                <div class="dashboard-notification-settings-dialog__copy">
+                    <div class="dashboard-notification-settings-dialog__label">
+                        {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
+                    </div>
+                    <div class="dashboard-notification-settings-dialog__meta">
+                        <span class="dashboard-notification-settings-dialog__badge fd-ui-pill fd-ui-pill--primary fd-ui-caption">
+                            {{ pushNotificationsAccountStatusKey() | translate }}
+                        </span>
+                        <span class="dashboard-notification-settings-dialog__badge fd-ui-pill fd-ui-pill--muted fd-ui-caption">
+                            {{ pushNotificationsDeviceStatusKey() | translate }}
+                        </span>
+                    </div>
+                    <div class="dashboard-notification-settings-dialog__hint">
+                        {{ pushNotificationsHintKey() | translate }}
+                    </div>
+                    <div class="dashboard-notification-settings-dialog__device-note">
+                        {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE' | translate }}
+                    </div>
+                </div>
+
+                <fd-ui-switch
+                    [checked]="pushNotificationsEnabled()"
+                    [disabled]="isLoading() || isUpdating() || pushNotificationsBusy()"
+                    [ariaLabel]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
+                    [fdUiHint]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
+                    [showStateLabel]="true"
+                    [onLabel]="'USER_MANAGE.NOTIFICATIONS_SWITCH_ON' | translate"
+                    [offLabel]="'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF' | translate"
+                    (checkedChange)="togglePushNotifications()"
+                />
+            </div>
+
+            @if (pushNotificationsEnabled()) {
+                <div class="dashboard-notification-settings-dialog__list">
+                    <div class="dashboard-notification-settings-dialog__item">
+                        <div class="dashboard-notification-settings-dialog__copy">
+                            <div class="dashboard-notification-settings-dialog__label">
+                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}
+                            </div>
+                            <div class="dashboard-notification-settings-dialog__hint">
+                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}
+                            </div>
+                        </div>
+
+                        <fd-ui-switch
+                            [checked]="fastingPushNotificationsEnabled()"
+                            [disabled]="isLoading() || isUpdating()"
+                            [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
+                            [fdUiHint]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
+                            [showStateLabel]="true"
+                            [onLabel]="'USER_MANAGE.NOTIFICATIONS_SWITCH_ON' | translate"
+                            [offLabel]="'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF' | translate"
+                            (checkedChange)="toggleFastingPushNotifications()"
+                        />
+                    </div>
+
+                    <div class="dashboard-notification-settings-dialog__item">
+                        <div class="dashboard-notification-settings-dialog__copy">
+                            <div class="dashboard-notification-settings-dialog__label">
+                                {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}
+                            </div>
+                            <div class="dashboard-notification-settings-dialog__hint">
+                                {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}
+                            </div>
+                        </div>
+
+                        <fd-ui-switch
+                            [checked]="socialPushNotificationsEnabled()"
+                            [disabled]="isLoading() || isUpdating()"
+                            [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
+                            [fdUiHint]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
+                            [showStateLabel]="true"
+                            [onLabel]="'USER_MANAGE.NOTIFICATIONS_SWITCH_ON' | translate"
+                            [offLabel]="'USER_MANAGE.NOTIFICATIONS_SWITCH_OFF' | translate"
+                            (checkedChange)="toggleSocialPushNotifications()"
+                        />
+                    </div>
+                </div>
+            }
+        </section>
+
+        <div fdUiDialogFooter>
+            <fd-ui-button
+                type="button"
+                fill="outline"
+                variant="secondary"
+                [disabled]="isOpeningProfile()"
+                [loading]="isOpeningProfile()"
+                (click)="openAdvancedSettings()"
+            >
+                {{ 'DASHBOARD.NOTIFICATIONS.OPEN_PROFILE' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-dialog>

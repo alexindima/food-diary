@@ -1,0 +1,116 @@
+@use 'variables' as variables;
+
+.dashboard-notification-settings-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dashboard-notification-settings-dialog__intro {
+    padding: 16px;
+    border-radius: var(--fd-radius-panel, 20px);
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent), transparent 42%),
+        linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 14%, transparent);
+}
+
+.dashboard-notification-settings-dialog__subtitle {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}
+
+.dashboard-notification-settings-dialog__section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: var(--fd-radius-panel, 20px);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 14%, transparent);
+}
+
+.dashboard-notification-settings-dialog__section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dashboard-notification-settings-dialog__section-title,
+.dashboard-notification-settings-dialog__section-copy {
+    margin: 0;
+}
+
+.dashboard-notification-settings-dialog__section-copy {
+    color: var(--fd-color-text-muted);
+}
+
+.dashboard-notification-settings-dialog__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dashboard-notification-settings-dialog__item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    border-radius: var(--fd-radius-card, 18px);
+    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 16%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
+}
+
+.dashboard-notification-settings-dialog__item--primary {
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 9%, transparent), transparent 40%),
+        linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 96%, #fff), var(--fd-color-surface));
+}
+
+.dashboard-notification-settings-dialog__copy {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dashboard-notification-settings-dialog__label {
+    font: var(--fd-text-action-font, 600 1rem/1.4 inherit);
+    color: var(--fd-color-text);
+}
+
+.dashboard-notification-settings-dialog__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dashboard-notification-settings-dialog__badge {
+    white-space: nowrap;
+}
+
+.dashboard-notification-settings-dialog__hint,
+.dashboard-notification-settings-dialog__device-note {
+    color: var(--fd-color-text-muted);
+    font: var(--fd-text-body-sm-font, 400 0.875rem/1.5 inherit);
+}
+
+.dashboard-notification-settings-dialog__device-note {
+    padding-top: 2px;
+}
+
+.dashboard-notification-settings-dialog__error {
+    margin: 0;
+    color: #e54d2e;
+    font-size: 0.875rem;
+}
+
+@media #{variables.$media-mobile} {
+
+    .dashboard-notification-settings-dialog__item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

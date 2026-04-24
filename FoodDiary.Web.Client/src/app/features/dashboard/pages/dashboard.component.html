@@ -25,6 +25,7 @@
                 <fd-ui-date-picker-button
                     class="dashboard__date-button"
                     [value]="selectedDate()"
+                    [disabled]="layout.isEditingLayout()"
                     [ariaLabel]="(selectedDate() | localizedDate: 'd MMMM y') ?? ''"
                     [hint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
                     (valueChange)="handleDateChange($event)"
@@ -37,9 +38,22 @@
                 variant="secondary"
                 fill="outline"
                 icon="palette"
+                [disabled]="layout.isEditingLayout()"
                 [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
                 [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
                 (click)="openAppearanceDialog()"
+            />
+
+            <fd-ui-button
+                class="dashboard__push-action"
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="notifications"
+                [disabled]="layout.isEditingLayout()"
+                [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+                [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+                (click)="openNotificationSettings()"
             />
 
             <fd-ui-button
@@ -53,17 +67,6 @@
                 [class.dashboard__settings-action--active]="layout.isEditingLayout()"
                 [attr.aria-pressed]="layout.isEditingLayout()"
                 (click)="layout.openSettings()"
-            />
-
-            <fd-ui-button
-                class="dashboard__push-action"
-                appearance="toolbar"
-                variant="secondary"
-                fill="outline"
-                icon="notifications"
-                [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
-                [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
-                (click)="openNotificationSettings()"
             />
         </div>
     </header>
@@ -127,7 +130,7 @@
                                 (keydown.enter)="handleFastingCardClick()"
                                 (keydown.space)="$event.preventDefault(); handleFastingCardClick()"
                             >
-                                <fd-dashboard-card-shell>
+                                <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                     <fd-fasting-timer-card
                                         class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
                                         [layout]="'summary'"
@@ -184,7 +187,7 @@
                                         {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
                                     </div>
                                 }
-                                <fd-dashboard-card-shell>
+                                <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                     <fd-dashboard-summary-card
                                         class="dashboard__card dashboard__card--ring"
                                         [dailyGoal]="consumptionRingData().dailyGoal"
@@ -210,6 +213,7 @@
                                 (keydown.enter)="layout.toggleBlock('meals')"
                             >
                                 <fd-meals-preview
+                                    [attr.inert]="layout.isEditingLayout() ? '' : null"
                                     [entries]="mealPreviewEntries()"
                                     [titleText]="
                                         isTodaySelected()
@@ -244,7 +248,7 @@
                                 (keydown.enter)="layout.toggleBlock('hydration')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-hydration-card
                                             class="dashboard__card dashboard__card--hydration"
                                             [total]="hydration()?.totalMl ?? 0"
@@ -273,7 +277,7 @@
                                 (keydown.enter)="layout.toggleBlock('micronutrients')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-micronutrient-card
                                             class="dashboard__card dashboard__card--micronutrients"
                                             [summary]="micronutrients()"
@@ -298,7 +302,7 @@
                                 (keydown.enter)="layout.toggleBlock('cycle')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-cycle-summary-card
                                             class="dashboard__card dashboard__card--cycle"
                                             [startDate]="cycle()?.startDate ?? null"
@@ -326,7 +330,7 @@
                                 (keydown.enter)="layout.toggleBlock('weight')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-weight-trend-card
                                             class="dashboard__card dashboard__card--weight-trend"
                                             [currentWeight]="weightTrend.weightTrendCurrent()"
@@ -354,7 +358,7 @@
                                 (keydown.enter)="layout.toggleBlock('waist')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-weight-trend-card
                                             class="dashboard__card dashboard__card--waist-trend"
                                             [title]="'WAIST_CARD.TITLE'"
@@ -386,7 +390,7 @@
                                 (keydown.enter)="layout.toggleBlock('tdee')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-tdee-insight-card
                                             class="dashboard__card dashboard__card--tdee"
                                             [insight]="tdeeInsight()"
@@ -412,7 +416,7 @@
                                 (keydown.enter)="layout.toggleBlock('advice')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell>
+                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-daily-advice-card
                                             class="dashboard__card dashboard__card--advice"
                                             [advice]="dailyAdvice()"

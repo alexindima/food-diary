@@ -285,7 +285,16 @@ export class DashboardComponent {
     }
 
     public async openNotificationSettings(): Promise<void> {
-        await this.navigationService.navigateToProfile();
+        const { DashboardNotificationSettingsDialogComponent } =
+            await import('../dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.component');
+
+        this.dialogService
+            .open(DashboardNotificationSettingsDialogComponent, {
+                preset: 'form',
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     public async openAppearanceDialog(): Promise<void> {

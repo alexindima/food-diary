@@ -3026,6 +3026,13 @@
             "SAVE": "Save appearance",
             "ERROR": "Couldn't save the new appearance. Restored your previous look."
         },
+        "NOTIFICATIONS": {
+            "TITLE": "Notification settings",
+            "SUBTITLE": "Control the most important dashboard reminders here. Detailed timing and device management remain available in your profile.",
+            "OPEN_PROFILE": "Open full settings",
+            "ERROR": "Couldn't update notification settings right now.",
+            "LOAD_ERROR": "Couldn't load notification settings."
+        },
         "SETTINGS": {
             "TITLE": "Dashboard editing",
             "HINT": "Click a card to hide or show it. Summary is always visible.",

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
@@ -17,6 +17,7 @@ export class FdUiDatePickerButtonComponent {
     public readonly value = input<Date | null>(null);
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
+    public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly ariaLabel = input<string>('');
     public readonly hint = input<string | null>(null);
     public readonly icon = input('calendar_today');
@@ -26,6 +27,10 @@ export class FdUiDatePickerButtonComponent {
     protected readonly displayMonth = signal(this.value() ?? new Date());
 
     public open(): void {
+        if (this.disabled()) {
+            return;
+        }
+
         this.displayMonth.set(this.value() ?? new Date());
         this.isOpen.set(true);
     }
