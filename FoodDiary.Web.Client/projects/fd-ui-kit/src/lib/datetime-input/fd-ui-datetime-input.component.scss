@@ -6,9 +6,9 @@
 
 .fd-ui-datetime-input {
     --fd-datetime-height: 40px;
-    --fd-datetime-radius: 14px;
-    --fd-datetime-border: color-mix(in srgb, var(--fd-color-slate-400) 38%, transparent);
-    --fd-datetime-label-bg: var(--fd-color-surface, var(--fd-color-white));
+    --fd-datetime-radius: var(--fd-radius-input, 14px);
+    --fd-datetime-border: var(--fd-color-border);
+    --fd-datetime-label-bg: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -27,7 +27,7 @@
 }
 
 .fd-ui-datetime-input__label {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
     font-size: var(--fd-text-label-size, 1rem);
     font-weight: var(--fd-text-label-weight, 600);
     line-height: var(--fd-text-label-line-height, 1.2);
@@ -47,6 +47,7 @@
         font-size 0.15s ease;
     background: var(--fd-datetime-label-bg);
     padding: 0 4px;
+    border-radius: var(--fd-radius-field-label, var(--fd-radius-pill));
     pointer-events: none;
 }
 
@@ -59,16 +60,20 @@
     min-height: var(--fd-datetime-height);
     border: 1px solid var(--fd-datetime-border);
     border-radius: var(--fd-datetime-radius);
-    background: var(--fd-color-white);
+    background: var(--fd-color-surface-raised);
     display: flex;
     align-items: center;
     padding: 0;
-    transition: border-color 0.15s ease;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
     position: relative;
 }
 
 .fd-ui-datetime-input__control-wrap:focus-within {
     border-color: var(--fd-color-primary-500);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
 }
 
 .fd-ui-datetime-input__fields {
@@ -85,7 +90,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: var(--fd-color-slate-800);
+    color: var(--fd-color-text);
     font: inherit;
 }
 
@@ -137,7 +142,7 @@
 .fd-ui-datetime-input__divider {
     width: 1px;
     align-self: stretch;
-    background: rgba(148, 163, 184, 0.28);
+    background: var(--fd-color-border-strong);
 }
 
 .fd-ui-datetime-input__suffix {
@@ -147,7 +152,7 @@
     transform: translateY(-50%);
     border: none;
     background: transparent;
-    color: var(--fd-color-slate-400);
+    color: var(--fd-color-text-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -167,8 +172,8 @@
 }
 
 .fd-ui-datetime-input--floating .fd-ui-datetime-input__control-wrap {
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .fd-ui-datetime-input__error {

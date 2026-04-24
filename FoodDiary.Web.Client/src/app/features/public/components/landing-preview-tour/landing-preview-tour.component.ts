@@ -119,7 +119,7 @@ export class LandingPreviewTourComponent {
 
     public openAuthDialog(mode: 'login' | 'register'): void {
         this.fdDialogService.open(AuthDialogComponent, {
-            size: 'md',
+            preset: 'form',
             data: { mode },
         });
     }

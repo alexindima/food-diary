@@ -158,10 +158,8 @@ export class RecipeListComponent {
         const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail.component');
         this.fdDialogService
             .open(RecipeDetailComponent, {
-                size: 'lg',
+                preset: 'detail',
                 data: recipe,
-                panelClass: 'fd-ui-dialog-panel--detail',
-                backdropClass: 'fd-ui-dialog-backdrop--detail',
             })
             .afterClosed()
             .subscribe(result => {
@@ -222,7 +220,7 @@ export class RecipeListComponent {
             .open<RecipeListFiltersDialogComponent, { onlyMine: boolean }, RecipeListFiltersDialogResult | null>(
                 RecipeListFiltersDialogComponent,
                 {
-                    size: 'sm',
+                    preset: 'form',
                     data: { onlyMine: currentOnlyMine },
                 },
             )

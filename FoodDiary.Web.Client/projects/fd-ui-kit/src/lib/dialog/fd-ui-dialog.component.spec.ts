@@ -1,9 +1,25 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { FdUiDialogComponent, FdUiDialogData } from './fd-ui-dialog.component';
+import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
+
+@Component({
+    standalone: true,
+    imports: [FdUiDialogComponent, FdUiDialogHeaderDirective],
+    template: `
+        <fd-ui-dialog title="Built In Title">
+            <div fdUiDialogHeader>
+                <div class="custom-header">Custom Header Content</div>
+            </div>
+            <p>Body</p>
+        </fd-ui-dialog>
+    `,
+})
+class DialogWithCustomHeaderHostComponent {}
 
 describe('FdUiDialogComponent', () => {
     let component: FdUiDialogComponent;
@@ -87,5 +103,26 @@ describe('FdUiDialogComponent', () => {
         createComponent({ title: 'Title', size: 'sm' });
         const dialogEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog');
         expect(dialogEl!.classList).toContain('fd-ui-dialog--size-sm');
+    });
+
+    it('should apply xl size class', () => {
+        createComponent({ title: 'Title', size: 'xl' });
+        const dialogEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog');
+        expect(dialogEl!.classList).toContain('fd-ui-dialog--size-xl');
+    });
+
+    it('should render custom header instead of built-in title block', () => {
+        TestBed.configureTestingModule({
+            imports: [DialogWithCustomHeaderHostComponent],
+            providers: [provideNoopAnimations()],
+        });
+
+        const hostFixture = TestBed.createComponent(DialogWithCustomHeaderHostComponent);
+        hostFixture.detectChanges();
+
+        const element = hostFixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.custom-header')?.textContent).toContain('Custom Header Content');
+        expect(element.querySelector('.fd-ui-dialog__title')).toBeNull();
+        expect(element.querySelector('.fd-ui-dialog__header--custom')).toBeTruthy();
     });
 });

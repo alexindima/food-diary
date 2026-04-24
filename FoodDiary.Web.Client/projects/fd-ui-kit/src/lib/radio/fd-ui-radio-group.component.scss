@@ -9,8 +9,8 @@
 }
 
 .fd-ui-radio-group__label {
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: var(--fd-text-caption-size);
+    font-weight: var(--fd-text-label-weight);
     color: var(--fd-color-text);
     margin: 0;
 }
@@ -33,7 +33,7 @@
 
 .fd-ui-radio-group__hint,
 .fd-ui-radio-group__error {
-    font-size: 0.75rem;
+    font-size: var(--fd-text-helper-size);
     margin: 0;
 }
 

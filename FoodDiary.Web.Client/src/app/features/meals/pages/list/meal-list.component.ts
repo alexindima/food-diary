@@ -200,10 +200,8 @@ export class MealListComponent {
 
         this.fdDialogService
             .open<MealDetailComponent, Meal, MealDetailActionResult>(MealDetailComponent, {
-                size: 'lg',
+                preset: 'detail',
                 data: consumption,
-                panelClass: 'fd-ui-dialog-panel--detail',
-                backdropClass: 'fd-ui-dialog-backdrop--detail',
             })
             .afterClosed()
             .subscribe(data => {
@@ -245,7 +243,7 @@ export class MealListComponent {
             .open<MealListFiltersDialogComponent, { dateRange: FdUiDateRangeValue | null }, MealListFiltersDialogResult | null>(
                 MealListFiltersDialogComponent,
                 {
-                    size: 'sm',
+                    preset: 'form',
                     data: {
                         dateRange: currentDateRange,
                     },

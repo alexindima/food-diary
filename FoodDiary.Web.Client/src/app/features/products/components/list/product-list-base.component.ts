@@ -197,7 +197,7 @@ export class ProductListBaseComponent {
                 },
                 ProductListFiltersDialogResult | null
             >(ProductListFiltersDialogComponent, {
-                size: 'sm',
+                preset: 'form',
                 data: {
                     onlyMine: currentOnlyMine,
                     productTypes: [...currentTypes],

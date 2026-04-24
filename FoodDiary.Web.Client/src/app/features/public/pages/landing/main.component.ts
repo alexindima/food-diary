@@ -74,7 +74,7 @@ export class MainComponent {
         const adminReturnUrl = this.route.snapshot.queryParamMap.get('adminReturnUrl');
 
         this.fdDialogService.open(AuthDialogComponent, {
-            size: 'md',
+            preset: 'form',
             data: { mode, returnUrl, adminReturnUrl },
         });
     }

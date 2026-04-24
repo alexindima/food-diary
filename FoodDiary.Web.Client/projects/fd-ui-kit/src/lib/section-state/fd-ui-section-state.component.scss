@@ -27,7 +27,7 @@
 .fd-ui-section-state__loading-label,
 .fd-ui-section-state__error-message {
     color: var(--fd-color-text-muted);
-    line-height: 1.5;
+    line-height: var(--fd-text-body-line-height);
 }
 
 .fd-ui-section-state__error-icon {
@@ -37,7 +37,7 @@
 
 .fd-ui-section-state__error-title {
     color: var(--fd-color-text);
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.35;
+    font-size: var(--fd-text-body-size);
+    font-weight: var(--fd-text-section-title-weight);
+    line-height: var(--fd-text-card-title-line-height);
 }

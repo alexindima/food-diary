@@ -39,8 +39,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     public override async onAddProductClick(): Promise<void> {
         this.fdDialogService
             .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
-                size: 'lg',
-                panelClass: 'fd-ui-dialog-panel--fullscreen',
+                preset: 'fullscreen',
             })
             .afterClosed()
             .subscribe(product => {

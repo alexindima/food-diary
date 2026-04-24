@@ -47,7 +47,7 @@
 .fd-ui-tabs__tab:focus-visible {
     outline: 2px solid var(--fd-color-primary-400);
     outline-offset: -2px;
-    border-radius: 8px 8px 0 0;
+    border-radius: var(--fd-radius-button, var(--fd-radius-md)) var(--fd-radius-button, var(--fd-radius-md)) 0 0;
 }
 
 .fd-ui-tabs__tab--active {
@@ -56,7 +56,7 @@
 }
 
 .fd-ui-tabs__label {
-    font-weight: 600;
+    font-weight: var(--fd-text-action-weight);
     opacity: 0.6;
     white-space: var(--fd-tabs-label-white-space);
     line-height: var(--fd-tabs-label-line-height);

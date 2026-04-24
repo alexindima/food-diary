@@ -26,7 +26,7 @@ export class ProductManageFacade {
         const confirmed = await firstValueFrom(
             this.fdDialogService
                 .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                    size: 'sm',
+                    preset: 'confirm',
                     data,
                 })
                 .afterClosed(),
@@ -41,7 +41,7 @@ export class ProductManageFacade {
         }
 
         this.fdDialogService
-            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
+            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { preset: 'confirm' })
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed) {
@@ -53,7 +53,7 @@ export class ProductManageFacade {
 
     public async deleteProduct(product: Product, confirmData: ConfirmDeleteDialogData): Promise<'deleted' | 'cancelled' | 'error'> {
         const confirmed = await firstValueFrom(
-            this.fdDialogService.open(ConfirmDeleteDialogComponent, { data: confirmData, size: 'sm' }).afterClosed(),
+            this.fdDialogService.open(ConfirmDeleteDialogComponent, { data: confirmData, preset: 'confirm' }).afterClosed(),
         );
 
         if (!confirmed) {
@@ -110,7 +110,7 @@ export class ProductManageFacade {
         const redirectAction = await firstValueFrom(
             this.fdDialogService
                 .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(ProductSaveSuccessDialogComponent, {
-                    size: 'sm',
+                    preset: 'confirm',
                     data,
                 })
                 .afterClosed(),

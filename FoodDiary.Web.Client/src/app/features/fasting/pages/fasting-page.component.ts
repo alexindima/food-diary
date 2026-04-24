@@ -352,7 +352,7 @@ export class FastingPageComponent {
             .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
                 FastingEndConfirmDialogComponent,
                 {
-                    size: 'sm',
+                    preset: 'confirm',
                     data,
                 },
             )
@@ -960,7 +960,7 @@ export class FastingPageComponent {
             .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
                 FastingEndConfirmDialogComponent,
                 {
-                    size: 'sm',
+                    preset: 'confirm',
                     data: {
                         title: this.translateService.instant(titleKey),
                         message: this.translateService.instant(messageKey),
@@ -981,7 +981,7 @@ export class FastingPageComponent {
     private openSafetyDialog(data: FastingSafetyDialogData): Observable<FastingSafetyDialogResult | undefined> {
         return this.dialogService
             .open<FastingSafetyDialogComponent, FastingSafetyDialogData, FastingSafetyDialogResult>(FastingSafetyDialogComponent, {
-                size: 'sm',
+                preset: 'confirm',
                 data,
             })
             .afterClosed();

@@ -63,7 +63,7 @@ describe('MainComponent', () => {
         expect(dialogServiceMock.open).toHaveBeenCalledWith(
             expect.any(Function),
             expect.objectContaining({
-                size: 'md',
+                preset: 'form',
                 data: {
                     mode: 'login',
                     returnUrl: '/dashboard',

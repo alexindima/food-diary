@@ -29,7 +29,7 @@
         font-size 0.15s ease;
     background: var(--fd-color-surface-raised);
     padding: 0 4px;
-    border-radius: var(--fd-radius-field-label, 8px);
+    border-radius: var(--fd-radius-field-label, var(--fd-radius-pill));
     pointer-events: none;
 }
 
@@ -72,7 +72,7 @@
     text-align: left;
     display: flex;
     align-items: center;
-    line-height: 1.25;
+    line-height: var(--fd-text-body-line-height);
 }
 
 .fd-ui-select__control:disabled {
@@ -165,7 +165,7 @@
     cursor: pointer;
     border-radius: var(--fd-radius-menu-item, 10px);
     min-height: 38px;
-    line-height: 1.2;
+    line-height: var(--fd-text-body-sm-line-height);
     padding: 10px 12px;
 }
 
@@ -182,5 +182,5 @@
 .fd-ui-select__menu-item--selected {
     background: color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
     color: var(--fd-color-primary-700);
-    font-weight: 700;
+    font-weight: var(--fd-font-weight-bold);
 }

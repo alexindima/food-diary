@@ -278,6 +278,27 @@ Dialog wrapper used with `FdUiDialogService`.
 
 **Inputs**
 - `dismissible?: boolean`
+- `size?: 'sm' | 'md' | 'lg' | 'xl'`
+
+**Slots**
+- default `ng-content` for dialog body
+- `[fdUiDialogFooter]` for action rows
+- `[fdUiDialogHeader]` for a fully custom header that replaces the built-in `title/subtitle` block
+
+**Service presets**
+- `confirm` for short confirmations and destructive actions
+- `form` for standard forms and settings flows
+- `list` for dense selectable lists or notification feeds
+- `detail` for rich detail overlays with emphasized presentation
+- `fullscreen` for editors, selectors, and heavy workflows
+
+`preset` is optional. If you omit it, `FdUiDialogService` uses the explicit `size` you pass; if `size` is also omitted, it falls back to `md`.
+
+**Size guidance**
+- `sm` for short confirmations and destructive actions
+- `md` for standard forms and auth/settings flows
+- `lg` for multi-step forms, richer detail dialogs, and AI flows
+- `xl` for dense review, table-like, or multi-column dialog content
 
 #### `fd-ui-dialog-shell`
 Layout wrapper for dialog content.
@@ -285,6 +306,12 @@ Layout wrapper for dialog content.
 **Inputs**
 - `dismissible?: boolean`
 - `flush?: boolean`
+- `size?: 'sm' | 'md' | 'lg' | 'xl'`
+
+**Recommended usage**
+- Use `title` and `subtitle` for standard dialogs.
+- Use `[fdUiDialogFooter]` for footer actions.
+- Use `[fdUiDialogHeader]` only when the header needs badges, counters, tabs, or richer composition than the standard heading block.
 
 #### `fd-ui-confirm-dialog`
 Standard confirm dialog (uses dialog service).

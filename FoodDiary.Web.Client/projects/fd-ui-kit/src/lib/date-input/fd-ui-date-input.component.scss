@@ -131,8 +131,8 @@
 .fd-ui-date-input__suffix fd-ui-icon {
     width: 20px;
     height: 20px;
-    font-size: 20px;
-    line-height: 20px;
+    font-size: var(--fd-text-card-title-size);
+    line-height: 1;
     display: block;
 }
 

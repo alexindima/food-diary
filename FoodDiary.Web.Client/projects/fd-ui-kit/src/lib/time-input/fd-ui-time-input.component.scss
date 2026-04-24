@@ -28,9 +28,9 @@
 
 .fd-ui-time-input__label {
     color: var(--fd-color-text-muted);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: var(--fd-text-label-size);
+    font-weight: var(--fd-text-label-weight);
+    line-height: var(--fd-text-label-line-height);
     display: inline-flex;
     align-items: center;
     max-width: calc(100% - 28px);
@@ -123,8 +123,8 @@
 .fd-ui-time-input__suffix fd-ui-icon {
     width: 20px;
     height: 20px;
-    font-size: 20px;
-    line-height: 20px;
+    font-size: var(--fd-text-card-title-size);
+    line-height: 1;
     display: block;
 }
 
@@ -135,7 +135,7 @@
 .fd-ui-time-input--floating .fd-ui-time-input__label {
     top: 0;
     transform: translateY(-50%);
-    font-size: 0.8rem;
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-time-input--floating .fd-ui-time-input__control-wrap {
@@ -145,8 +145,8 @@
 
 .fd-ui-time-input__error {
     color: var(--fd-color-danger);
-    font-size: 0.75rem;
-    line-height: 1.2;
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
     margin-top: 2px;
     max-width: 100%;
     white-space: normal;

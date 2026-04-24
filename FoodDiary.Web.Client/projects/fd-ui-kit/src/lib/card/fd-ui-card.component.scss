@@ -162,7 +162,7 @@
 
 .fd-ui-card--appearance-product .fd-ui-card__title,
 .fd-ui-card--appearance-recipe .fd-ui-card__title {
-    font-size: 1.2rem;
+    font-size: var(--fd-text-metric-unit-size);
 }
 
 .fd-ui-card--appearance-recipe {

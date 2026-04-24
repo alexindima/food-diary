@@ -257,7 +257,7 @@
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    border-radius: 12px;
+    border-radius: var(--fd-radius-button, var(--fd-radius-lg));
 }
 
 .fd-ui-button--appearance-brand-action {

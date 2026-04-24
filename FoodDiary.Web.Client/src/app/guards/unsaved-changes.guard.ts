@@ -27,7 +27,7 @@ export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {
 
     return dialogService
         .open<UnsavedChangesDialogComponent, null, UnsavedChangesDialogResult>(UnsavedChangesDialogComponent, {
-            size: 'sm',
+            preset: 'confirm',
         })
         .afterClosed()
         .pipe(

@@ -17,9 +17,9 @@
 }
 
 .fd-ui-nutrient-input__label {
-    font-size: 0.76rem;
+    font-size: var(--fd-text-stat-label-size);
     letter-spacing: 0.08em;
-    font-weight: 800;
+    font-weight: var(--fd-text-stat-label-weight);
     color: var(--fd-nutrient-text-color);
     display: inline-flex;
     align-items: center;
@@ -40,9 +40,9 @@
 }
 
 .fd-ui-nutrient-input__icon {
-    font-size: 1.2rem;
-    width: 1.2rem;
-    height: 1.2rem;
+    font-size: var(--fd-text-card-title-size);
+    width: var(--fd-text-card-title-size);
+    height: var(--fd-text-card-title-size);
     color: var(--fd-nutrient-text-color);
     flex: 0 0 auto;
 }
@@ -55,8 +55,8 @@
 .fd-ui-nutrient-input__control {
     border: none;
     background: transparent;
-    font-weight: 900;
-    font-size: 1.5rem;
+    font-weight: var(--fd-text-metric-hero-weight);
+    font-size: var(--fd-text-metric-lg-size);
     color: var(--fd-nutrient-text-color);
     outline: none;
     padding: 0;
@@ -87,7 +87,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--lg .fd-ui-nutrient-input__control {
-    font-size: 2rem;
+    font-size: var(--fd-text-metric-hero-size);
 }
 
 .fd-ui-nutrient-input--sm {
@@ -96,7 +96,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--sm .fd-ui-nutrient-input__control {
-    font-size: 1.25rem;
+    font-size: var(--fd-text-card-title-size);
 }
 
 .fd-ui-nutrient-input--error {
@@ -116,8 +116,8 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input__error {
-    font-size: 0.75rem;
-    color: #ef4444;
+    font-size: var(--fd-text-helper-size);
+    color: var(--fd-color-danger);
 }
 
 .fd-ui-nutrient-input--outline {
@@ -153,7 +153,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 
 .fd-ui-nutrient-input__unit {
     font-size: 1em;
-    font-weight: 700;
+    font-weight: var(--fd-font-weight-bold);
     color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, var(--fd-color-white));
     letter-spacing: 0.02em;
     text-transform: lowercase;

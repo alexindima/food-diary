@@ -3,16 +3,38 @@
     color: var(--fd-color-text);
 }
 
+.fd-ui-dialog-panel {
+    --fd-dialog-panel-max-width: 640px;
+    width: min(calc(100vw - 2rem), var(--fd-dialog-panel-max-width));
+}
+
+.fd-ui-dialog-panel--sm {
+    --fd-dialog-panel-max-width: 400px;
+}
+
+.fd-ui-dialog-panel--md {
+    --fd-dialog-panel-max-width: 640px;
+}
+
+.fd-ui-dialog-panel--lg {
+    --fd-dialog-panel-max-width: 840px;
+}
+
+.fd-ui-dialog-panel--xl {
+    --fd-dialog-panel-max-width: 1120px;
+}
+
 .fd-ui-dialog {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     background: var(--fd-color-dialog-surface);
-    border-radius: 1rem;
+    border-radius: var(--fd-radius-dialog, var(--fd-radius-xl));
     box-shadow: 0 20px 60px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
     border: 1px solid var(--fd-color-dialog-border);
     padding: 1.25rem;
     box-sizing: border-box;
     max-height: 80vh;
+    max-width: 100%;
     min-width: 0;
     width: 100%;
     overflow: hidden;
@@ -47,6 +69,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.375rem;
+}
+
+.fd-ui-dialog__header--custom {
+    display: block;
 }
 
 .fd-ui-dialog__title {
@@ -123,18 +149,6 @@
     }
 }
 
-.fd-ui-dialog-panel {
-    width: min(calc(100vw - 2rem), 520px);
-}
-
-.fd-ui-dialog-panel--sm {
-    width: min(calc(100vw - 2rem), 360px);
-}
-
-.fd-ui-dialog-panel--lg {
-    width: min(calc(100vw - 2rem), 720px);
-}
-
 .fd-ui-dialog-panel--fullscreen {
     width: 100vw;
     height: 100vh;
@@ -184,7 +198,7 @@
 
 .fd-ui-dialog-panel--detail .fd-ui-dialog {
     grid-template-rows: 1fr;
-    border-radius: 16px;
+    border-radius: var(--fd-radius-dialog, var(--fd-radius-xl));
     box-shadow: 0 18px 45px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     border: 1px solid color-mix(in srgb, var(--fd-color-white) 40%, transparent);
     background:
@@ -257,7 +271,7 @@
     .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile .cdk-dialog-container {
         padding: 0 !important;
         margin: 0 !important;
-        border-radius: 16px 16px 0 0 !important;
+        border-radius: var(--fd-radius-dialog, var(--fd-radius-xl)) var(--fd-radius-dialog, var(--fd-radius-xl)) 0 0 !important;
     }
 }
 

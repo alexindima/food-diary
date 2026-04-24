@@ -184,7 +184,7 @@ export class ShoppingListPageComponent {
 
         this.dialogService
             .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                size: 'sm',
+                preset: 'confirm',
                 data,
             })
             .afterClosed()
@@ -213,7 +213,7 @@ export class ShoppingListPageComponent {
 
         this.dialogService
             .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                size: 'sm',
+                preset: 'confirm',
                 data,
             })
             .afterClosed()

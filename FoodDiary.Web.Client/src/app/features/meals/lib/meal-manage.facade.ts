@@ -53,7 +53,7 @@ export class MealManageFacade {
         }
 
         this.fdDialogService
-            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
+            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { preset: 'confirm' })
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed) {
@@ -191,7 +191,7 @@ export class MealManageFacade {
         const selection = await firstValueFrom(
             this.fdDialogService
                 .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
-                    size: 'lg',
+                    preset: 'list',
                     data: { initialTab },
                 })
                 .afterClosed(),

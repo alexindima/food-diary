@@ -46,8 +46,8 @@
 
     &__label {
         min-width: 28px;
-        font-size: 0.75rem;
-        font-weight: 700;
+        font-size: var(--fd-text-helper-size);
+        font-weight: var(--fd-font-weight-bold);
         line-height: 1;
         text-transform: uppercase;
         letter-spacing: 0.04em;

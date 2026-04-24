@@ -74,8 +74,7 @@ export class ItemSelectDialogComponent {
         if (this.activeTab === 'Product') {
             this.fdDialogService
                 .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
-                    size: 'lg',
-                    panelClass: 'fd-ui-dialog-panel--fullscreen',
+                    preset: 'fullscreen',
                 })
                 .afterClosed()
                 .subscribe(product => {
@@ -89,8 +88,7 @@ export class ItemSelectDialogComponent {
 
         this.fdDialogService
             .open<RecipeManageComponent, null, Recipe | null>(RecipeManageComponent, {
-                size: 'lg',
-                panelClass: 'fd-ui-dialog-panel--fullscreen',
+                preset: 'fullscreen',
             })
             .afterClosed()
             .subscribe(recipe => {

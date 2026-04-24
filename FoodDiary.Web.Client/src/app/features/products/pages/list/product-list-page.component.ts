@@ -52,10 +52,8 @@ export class ProductListPageComponent extends ProductListBaseComponent {
         const { ProductDetailComponent } = await import('../../components/detail/product-detail.component');
         this.fdDialogService
             .open(ProductDetailComponent, {
-                size: 'lg',
+                preset: 'detail',
                 data: product,
-                panelClass: 'fd-ui-dialog-panel--detail',
-                backdropClass: 'fd-ui-dialog-backdrop--detail',
             })
             .afterClosed()
             .subscribe(data => {

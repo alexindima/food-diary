@@ -5,7 +5,11 @@
     [attr.aria-labelledby]="title() ? dialogTitleId : null"
     [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']"
 >
-    @if (showHeader()) {
+    @if (hasCustomHeader()) {
+        <header class="fd-ui-dialog__header fd-ui-dialog__header--custom">
+            <ng-content select="[fdUiDialogHeader]" />
+        </header>
+    } @else if (showBuiltInHeader()) {
         <header class="fd-ui-dialog__header">
             <div class="fd-ui-dialog__heading">
                 @if (title(); as titleValue) {

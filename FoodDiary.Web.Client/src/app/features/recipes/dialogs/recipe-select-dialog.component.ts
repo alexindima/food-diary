@@ -116,8 +116,7 @@ export class RecipeSelectDialogComponent {
     public async onCreateRecipeClick(): Promise<void> {
         this.fdDialogService
             .open<RecipeManageComponent, null, Recipe | null>(RecipeManageComponent, {
-                size: 'lg',
-                panelClass: 'fd-ui-dialog-panel--fullscreen',
+                preset: 'fullscreen',
             })
             .afterClosed()
             .subscribe(recipe => {

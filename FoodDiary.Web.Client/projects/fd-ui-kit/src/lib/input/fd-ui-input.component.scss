@@ -92,7 +92,7 @@
     background: transparent;
     color: var(--fd-color-text);
     font: inherit;
-    font-size: 1rem;
+    font-size: var(--fd-text-body-size);
     margin-top: 0;
 }
 
@@ -170,7 +170,7 @@
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap {
     border-color: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
-    border-radius: 12px;
+    border-radius: var(--fd-radius-input, var(--fd-radius-lg));
     background: var(--fd-color-white);
     padding-left: 16px;
     padding-right: 16px;
@@ -195,11 +195,11 @@
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control {
-    font-size: 16px;
+    font-size: var(--fd-text-body-size);
 }
 
 .fd-ui-input--appearance-search .fd-ui-input__control-wrap {
-    border-radius: 18px;
+    border-radius: var(--fd-radius-pill, 999px);
 }
 
 .fd-ui-input--appearance-inline-edit .fd-ui-input__control-wrap {
@@ -208,7 +208,7 @@
 }
 
 .fd-ui-input--appearance-inline-edit .fd-ui-input__control {
-    font-size: 0.95rem;
+    font-size: var(--fd-text-body-sm-size);
 }
 
 .fd-ui-input__control[type='number'] {

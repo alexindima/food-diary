@@ -34,8 +34,8 @@
     appearance: none;
     background: transparent;
     color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: var(--fd-text-caption-size);
+    font-weight: var(--fd-text-action-weight);
     line-height: 1;
     letter-spacing: 0.08em;
     text-transform: uppercase;

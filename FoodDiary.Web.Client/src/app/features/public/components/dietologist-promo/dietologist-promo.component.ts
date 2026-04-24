@@ -19,7 +19,7 @@ export class DietologistPromoComponent {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
 
         this.fdDialogService.open(AuthDialogComponent, {
-            size: 'md',
+            preset: 'form',
             data: { mode },
         });
     }

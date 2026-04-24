@@ -76,10 +76,8 @@ export class ExplorePageComponent {
 
     public onRecipeClick(recipe: ExploreRecipe): void {
         this.fdDialogService.open<RecipeDetailComponent, Recipe>(RecipeDetailComponent, {
-            size: 'lg',
+            preset: 'detail',
             data: recipe as Recipe,
-            panelClass: 'fd-ui-dialog-panel--detail',
-            backdropClass: 'fd-ui-dialog-backdrop--detail',
         });
     }
 

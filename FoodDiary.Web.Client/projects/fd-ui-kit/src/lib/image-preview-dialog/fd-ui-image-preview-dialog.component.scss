@@ -18,7 +18,7 @@
     background: var(--fd-color-dialog-surface);
     box-shadow: none;
     border: none;
-    border-radius: 28px;
+    border-radius: var(--fd-radius-dialog, var(--fd-radius-xl));
     max-height: min(90vh, 980px);
 }
 
@@ -93,15 +93,15 @@
     object-fit: contain;
     user-select: none;
     box-shadow: 0 24px 60px var(--fd-color-dialog-shadow);
-    border-radius: 20px;
+    border-radius: var(--fd-radius-card, var(--fd-radius-xl));
 }
 
 .fd-ui-image-preview-dialog__caption {
     max-width: min(100%, 960px);
     color: var(--fd-color-white);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.3;
+    font-size: var(--fd-text-body-size);
+    font-weight: var(--fd-text-card-title-weight);
+    line-height: var(--fd-text-card-title-line-height);
     text-align: center;
     text-shadow: 0 2px 12px var(--fd-color-dialog-text-shadow);
 }
@@ -121,13 +121,13 @@
 
     .fd-ui-image-preview-dialog__image {
         max-height: min(68vh, 560px);
-        border-radius: 16px;
+        border-radius: var(--fd-radius-card, var(--fd-radius-xl));
     }
 
     .fd-ui-image-preview-dialog__caption {
         width: 100%;
-        border-radius: 18px;
-        font-size: 0.95rem;
+        border-radius: var(--fd-radius-card, var(--fd-radius-xl));
+        font-size: var(--fd-text-body-sm-size);
     }
 }
 

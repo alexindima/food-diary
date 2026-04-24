@@ -13,9 +13,9 @@
 
 .fd-ui-textarea__label {
     color: var(--fd-color-text-muted);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: var(--fd-text-label-size);
+    font-weight: var(--fd-text-label-weight);
+    line-height: var(--fd-text-label-line-height);
     display: inline-flex;
     align-items: center;
     max-width: calc(100% - 28px);
@@ -68,7 +68,7 @@
     background: transparent;
     color: var(--fd-color-text);
     font: inherit;
-    line-height: 1.4;
+    line-height: var(--fd-text-body-line-height);
     padding: 0;
 }
 
@@ -83,13 +83,13 @@
 .fd-ui-textarea--floating .fd-ui-textarea__label {
     top: 0;
     transform: translateY(-50%);
-    font-size: 0.8rem;
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-textarea__error {
     color: var(--fd-color-danger);
-    font-size: 0.75rem;
-    line-height: 1.2;
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
     margin-top: 2px;
     max-width: 100%;
     white-space: normal;

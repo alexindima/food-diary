@@ -6,9 +6,18 @@ import { StaticProvider } from '@angular/core';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 import { FdUiDialogSize } from './fd-ui-dialog.component';
 
+export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
+
 export interface FdUiDialogConfig<D = unknown> extends Omit<DialogConfig<D>, 'providers' | 'container'> {
+    preset?: FdUiDialogPreset;
     size?: FdUiDialogSize;
     providers?: StaticProvider[];
+}
+
+interface ResolvedDialogPreset {
+    size?: FdUiDialogSize;
+    panelClass?: string[];
+    backdropClass?: string[];
 }
 
 @Injectable({
@@ -19,13 +28,21 @@ export class FdUiDialogService {
     private readonly overlay = inject(Overlay);
 
     public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
-        const size = config.size ?? 'md';
+        const resolvedPreset = this.resolvePreset(config.preset);
+        const presetPanelClasses = resolvedPreset.panelClass ?? [];
+        const presetBackdropClasses = resolvedPreset.backdropClass ?? [];
+        const size = config.size ?? resolvedPreset.size ?? 'md';
         const providedPanelClasses = this.asArray(config.panelClass);
-        const isFullscreen = providedPanelClasses.includes('fd-ui-dialog-panel--fullscreen');
+        const isFullscreen = [...presetPanelClasses, ...providedPanelClasses].includes('fd-ui-dialog-panel--fullscreen');
         const isEdgeMobile = this.isCompactMobile() && !isFullscreen;
         const mobileClasses = isEdgeMobile ? ['fd-ui-dialog-panel--edge-mobile'] : [];
-        const panelClass = this.mergeClasses(config.panelClass, ['fd-ui-dialog-panel', `fd-ui-dialog-panel--${size}`, ...mobileClasses]);
-        const backdropClass = this.mergeClasses(config.backdropClass, ['fd-ui-dialog-backdrop']);
+        const panelClass = this.mergeClasses(config.panelClass, [
+            ...presetPanelClasses,
+            'fd-ui-dialog-panel',
+            `fd-ui-dialog-panel--${size}`,
+            ...mobileClasses,
+        ]);
+        const backdropClass = this.mergeClasses(config.backdropClass, [...presetBackdropClasses, 'fd-ui-dialog-backdrop']);
         const positionStrategy =
             config.positionStrategy ?? (isEdgeMobile ? this.overlay.position().global().centerHorizontally().bottom('0') : undefined);
         const baseProviders = config.providers ?? [];
@@ -47,6 +64,30 @@ export class FdUiDialogService {
         const dialogRef = this.dialog.open<R, D, T>(component, dialogConfig);
 
         return new FdUiDialogRef<T, R>(dialogRef);
+    }
+
+    private resolvePreset(preset: FdUiDialogPreset | undefined): ResolvedDialogPreset {
+        switch (preset) {
+            case 'confirm':
+                return { size: 'sm' };
+            case 'form':
+                return { size: 'md' };
+            case 'list':
+                return { size: 'lg' };
+            case 'detail':
+                return {
+                    size: 'lg',
+                    panelClass: ['fd-ui-dialog-panel--detail'],
+                    backdropClass: ['fd-ui-dialog-backdrop--detail'],
+                };
+            case 'fullscreen':
+                return {
+                    size: 'xl',
+                    panelClass: ['fd-ui-dialog-panel--fullscreen'],
+                };
+            default:
+                return {};
+        }
     }
 
     private mergeClasses(provided: string | string[] | undefined, base: string[]): string[] {

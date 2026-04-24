@@ -347,7 +347,7 @@ export class SidebarComponent {
         const { NotificationsDialogComponent } =
             await import('../../components/shared/notifications-dialog/notifications-dialog.component');
         this.dialogService.open(NotificationsDialogComponent, {
-            size: 'md',
+            preset: 'list',
         });
     }
 
@@ -436,7 +436,7 @@ export class SidebarComponent {
         const result = await firstValueFrom(
             this.dialogService
                 .open<UnsavedChangesDialogComponent, null, UnsavedChangesDialogResult>(UnsavedChangesDialogComponent, {
-                    size: 'sm',
+                    preset: 'confirm',
                 })
                 .afterClosed(),
         );

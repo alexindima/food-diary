@@ -7,7 +7,7 @@
     --fd-emoji-picker-option-width: 56px;
     --fd-emoji-picker-option-height: 56px;
     --fd-emoji-picker-option-padding: 8px;
-    --fd-emoji-picker-option-radius: 18px;
+    --fd-emoji-picker-option-radius: var(--fd-radius-card, var(--fd-radius-xl));
     --fd-emoji-picker-option-bg-default: color-mix(in srgb, var(--fd-color-surface-raised) 96%, transparent);
     --fd-emoji-picker-option-bg-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-surface-raised));
     --fd-emoji-picker-option-bg-selected: color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-surface-raised));
@@ -115,14 +115,14 @@
 }
 
 .fd-ui-emoji-picker__label {
-    font-size: 0.78rem;
-    font-weight: 700;
+    font-size: var(--fd-text-helper-size);
+    font-weight: var(--fd-font-weight-bold);
     color: var(--fd-color-text);
-    line-height: 1.1;
+    line-height: var(--fd-text-helper-line-height);
 }
 
 .fd-ui-emoji-picker__description {
-    font-size: 0.72rem;
+    font-size: var(--fd-text-helper-size);
     color: var(--fd-color-text-muted);
-    line-height: 1.2;
+    line-height: var(--fd-text-helper-line-height);
 }

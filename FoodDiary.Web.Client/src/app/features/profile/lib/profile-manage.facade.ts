@@ -79,7 +79,7 @@ export class ProfileManageFacade {
     public openChangePasswordDialog(): void {
         this.dialogService
             .open(ChangePasswordDialogComponent, {
-                size: 'sm',
+                preset: 'form',
                 data: {
                     hasPassword: this.user()?.hasPassword ?? true,
                 },
@@ -110,7 +110,7 @@ export class ProfileManageFacade {
 
         this.dialogService
             .open(ConfirmDeleteDialogComponent, {
-                size: 'sm',
+                preset: 'confirm',
                 data,
             })
             .afterClosed()

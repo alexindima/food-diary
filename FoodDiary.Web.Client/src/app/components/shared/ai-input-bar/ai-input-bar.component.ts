@@ -378,7 +378,7 @@ export class AiInputBarComponent {
         }
 
         this.fdDialogService
-            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
+            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { preset: 'confirm' })
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {

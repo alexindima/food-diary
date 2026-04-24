@@ -647,7 +647,7 @@ export class UserManageComponent {
         if (this.isDietologistConnected()) {
             this.dialogService
                 .open(FdUiConfirmDialogComponent, {
-                    size: 'sm',
+                    preset: 'confirm',
                     data: {
                         title: this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECT_TITLE'),
                         message: this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECT_MESSAGE'),
@@ -688,7 +688,7 @@ export class UserManageComponent {
 
         this.dialogService
             .open(FdUiConfirmDialogComponent, {
-                size: 'sm',
+                preset: 'confirm',
                 data: {
                     title: this.translateService.instant('USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_TITLE'),
                     message: this.translateService.instant('USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_MESSAGE'),

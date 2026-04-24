@@ -270,7 +270,7 @@ export class DashboardComponent {
         const { CalorieGoalDialogComponent } = await import('../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component');
         this.dialogService
             .open(CalorieGoalDialogComponent, {
-                size: 'sm',
+                preset: 'form',
                 data: {
                     dailyCalorieTarget: this.dailyGoal() || null,
                 },
