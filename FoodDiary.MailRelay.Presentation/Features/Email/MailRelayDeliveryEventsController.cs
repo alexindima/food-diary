@@ -20,7 +20,7 @@ public sealed class MailRelayDeliveryEventsController(ISender sender) : Authoriz
     [ProducesResponseType<MailRelayDeliveryEventHttpResponse>(StatusCodes.Status201Created)]
     [ProducesMailRelayApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Ingest(IngestMailRelayDeliveryEventHttpRequest request) =>
-        HandleCreatedOrBadRequest(
+        HandleCreated(
             request.ToCommand(),
             static deliveryEvent => $"/api/email/events?email={Uri.EscapeDataString(deliveryEvent.Email)}",
             static deliveryEvent => deliveryEvent.ToHttpResponse());

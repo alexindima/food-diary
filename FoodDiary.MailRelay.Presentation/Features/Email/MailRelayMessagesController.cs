@@ -13,5 +13,5 @@ public sealed class MailRelayMessagesController(ISender sender) : AuthorizedMail
     [ProducesResponseType<MailRelayMessageDetailsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetById(Guid id) =>
-        HandleOkOrNotFound(id.ToMessageDetailsQuery(), static value => value.ToHttpResponse());
+        HandleOk(id.ToMessageDetailsQuery(), static value => value.ToHttpResponse());
 }

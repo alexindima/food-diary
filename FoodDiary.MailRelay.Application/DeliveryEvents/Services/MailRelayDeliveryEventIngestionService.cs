@@ -1,41 +1,41 @@
 namespace FoodDiary.MailRelay.Application.DeliveryEvents.Services;
 
 public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore queueStore) {
-    public async Task<MailRelayDeliveryEventEntry> IngestAsync(
+    public async Task<Result<MailRelayDeliveryEventEntry>> IngestAsync(
         IngestMailEventRequest request,
         CancellationToken cancellationToken) {
-        var eventType = request.EventType.Trim().ToLowerInvariant();
-        if (eventType is not ("bounce" or "complaint")) {
-            throw new InvalidOperationException("EventType must be either 'bounce' or 'complaint'.");
+        if (!MailRelayDeliveryEventType.TryNormalize(request.EventType, out var eventType)) {
+            return Result<MailRelayDeliveryEventEntry>.Failure(MailRelayErrors.InvalidDeliveryEventType());
         }
 
         var normalizedRequest = request with { EventType = eventType };
         var deliveryEvent = await queueStore.RecordDeliveryEventAsync(normalizedRequest, cancellationToken);
 
-        var shouldSuppress = eventType == "complaint" ||
-                             (eventType == "bounce" &&
-                              string.Equals(request.Classification, "hard", StringComparison.OrdinalIgnoreCase));
-
-        if (shouldSuppress) {
+        if (MailRelaySuppressionPolicy.ShouldSuppress(eventType, request.Classification)) {
             await queueStore.UpsertSuppressionAsync(
                 new CreateSuppressionRequest(
                     request.Email,
-                    request.Reason ?? (eventType == "complaint" ? "complaint" : "hard-bounce"),
+                    request.Reason ?? MailRelaySuppressionPolicy.GetDefaultReason(eventType),
                     request.Source),
                 cancellationToken);
         }
 
-        return deliveryEvent;
+        return Result<MailRelayDeliveryEventEntry>.Success(deliveryEvent);
     }
 
-    public async Task<IReadOnlyList<MailRelayDeliveryEventEntry>> IngestManyAsync(
+    public async Task<Result<IReadOnlyList<MailRelayDeliveryEventEntry>>> IngestManyAsync(
         IEnumerable<IngestMailEventRequest> requests,
         CancellationToken cancellationToken) {
         var result = new List<MailRelayDeliveryEventEntry>();
         foreach (var request in requests) {
-            result.Add(await IngestAsync(request, cancellationToken));
+            var deliveryEvent = await IngestAsync(request, cancellationToken);
+            if (deliveryEvent.IsFailure) {
+                return Result<IReadOnlyList<MailRelayDeliveryEventEntry>>.Failure(deliveryEvent.Error!);
+            }
+
+            result.Add(deliveryEvent.Value);
         }
 
-        return result;
+        return Result<IReadOnlyList<MailRelayDeliveryEventEntry>>.Success(result);
     }
 }

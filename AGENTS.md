@@ -15,6 +15,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
 - Mail relay application layer: `FoodDiary.MailRelay.Application/AGENTS.md`
+- Mail relay client package: `FoodDiary.MailRelay.Client/AGENTS.md`
 - Mail relay domain layer: `FoodDiary.MailRelay.Domain/AGENTS.md`
 - Mail relay infrastructure layer: `FoodDiary.MailRelay.Infrastructure/AGENTS.md`
 - Mail relay presentation layer: `FoodDiary.MailRelay.Presentation/AGENTS.md`

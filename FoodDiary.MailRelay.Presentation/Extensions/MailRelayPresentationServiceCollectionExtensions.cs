@@ -7,9 +7,12 @@ namespace FoodDiary.MailRelay.Presentation.Extensions;
 
 public static class MailRelayPresentationServiceCollectionExtensions {
     public static IServiceCollection AddMailRelayPresentation(this IServiceCollection services) {
+        services.AddScoped<MailRelayTelemetryActionFilter>();
         services.AddScoped<RelayApiKeyAuthorizationFilter>();
         services
-            .AddControllers()
+            .AddControllers(options => {
+                options.Filters.AddService<MailRelayTelemetryActionFilter>();
+            })
             .ConfigureApiBehaviorOptions(options => {
                 options.InvalidModelStateResponseFactory = context => {
                     var errors = context.ModelState

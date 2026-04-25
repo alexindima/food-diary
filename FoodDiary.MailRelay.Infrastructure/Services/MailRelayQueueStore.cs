@@ -797,16 +797,10 @@ public sealed class MailRelayQueueStore(
             suppressedRecipients);
     }
 
-    public async Task<MailRelayFailureResult> MarkFailedAttemptAsync(
-        Guid id,
-        int attemptCount,
-        int maxAttempts,
-        string error,
-        CancellationToken cancellationToken) {
-        var terminalFailure = attemptCount >= maxAttempts;
-        var nextAvailableAt = terminalFailure
+    public async Task MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) {
+        var nextAvailableAt = decision.IsTerminalFailure
             ? (DateTimeOffset?)null
-            : DateTimeOffset.UtcNow.Add(ComputeBackoff(attemptCount));
+            : DateTimeOffset.UtcNow.Add(ComputeBackoff(decision.AttemptCount));
 
         const string sql = """
                            update mailrelay_outbound_emails
@@ -819,12 +813,11 @@ public sealed class MailRelayQueueStore(
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("status", terminalFailure ? "failed" : "retry");
+        command.Parameters.AddWithValue("id", decision.Id.Value);
+        command.Parameters.AddWithValue("status", decision.Status);
         command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
-        command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
+        command.Parameters.AddWithValue("lastError", Truncate(decision.Error, 4000));
         await command.ExecuteNonQueryAsync(cancellationToken);
-        return new MailRelayFailureResult(terminalFailure);
     }
 
     private async Task ExecuteStatusCommandAsync(string sql, Guid id, CancellationToken cancellationToken) {

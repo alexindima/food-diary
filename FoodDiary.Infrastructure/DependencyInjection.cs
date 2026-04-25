@@ -71,6 +71,8 @@ using Amazon.S3;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Events;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.MailRelay.Client.Extensions;
+using FoodDiary.MailRelay.Client.Options;
 using FoodDiary.Application.Common.Abstractions.Events;
 using FoodDiary.Application.Common.Abstractions.Persistence;
 using Microsoft.Extensions.Http.Resilience;
@@ -171,21 +173,12 @@ public static class DependencyInjection {
             .Bind(configuration.GetSection(PaddleOptions.SectionName));
         services.AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(EmailOptions.SectionName))
-            .Validate(static options => options.SmtpPort > 0,
-                "Email:SmtpPort must be greater than zero.")
             .Validate(static options => string.IsNullOrWhiteSpace(options.FrontendBaseUrl) || Uri.IsWellFormedUriString(options.FrontendBaseUrl, UriKind.Absolute),
                 "Email:FrontendBaseUrl must be an absolute URL when provided.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.VerificationPath),
                 "Email:VerificationPath is required.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.PasswordResetPath),
                 "Email:PasswordResetPath is required.")
-            .ValidateOnStart();
-        services.AddOptions<EmailDeliveryOptions>()
-            .Bind(configuration.GetSection(EmailDeliveryOptions.SectionName))
-            .Validate(EmailDeliveryOptions.HasSupportedMode,
-                "EmailDelivery:Mode must be either Smtp or Relay.")
-            .Validate(EmailDeliveryOptions.HasValidRelayBaseUrl,
-                "EmailDelivery:RelayBaseUrl must be an absolute URL when relay mode is enabled.")
             .ValidateOnStart();
         services.AddOptions<WebPushOptions>()
             .Bind(configuration.GetSection(WebPushOptions.SectionName))
@@ -267,13 +260,15 @@ public static class DependencyInjection {
         services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
-        services.AddHttpClient(RelayEmailTransport.HttpClientName, client => {
-            client.Timeout = TimeSpan.FromSeconds(15);
+        services.AddMailRelayClient(options => {
+            var section = configuration.GetSection(MailRelayClientOptions.SectionName);
+            options.BaseUrl = section["BaseUrl"] ?? string.Empty;
+            options.ApiKey = section["ApiKey"] ?? string.Empty;
+            options.Timeout = TimeSpan.FromSeconds(15);
         });
-        services.AddSingleton<SmtpClientEmailTransport>();
         services.AddSingleton<RelayEmailTransport>();
-        services.AddSingleton<IEmailTransport, ConfigurableEmailTransport>();
-        services.AddSingleton<IEmailSender, SmtpEmailSender>();
+        services.AddSingleton<IEmailTransport>(static sp => sp.GetRequiredService<RelayEmailTransport>());
+        services.AddSingleton<IEmailSender, EmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
         services.AddScoped<IWebPushNotificationSender, WebPushNotificationSender>();

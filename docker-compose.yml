@@ -33,6 +33,26 @@ services:
       - full
       - backend
 
+  mailrelay-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay}
+      POSTGRES_USER: ${MAIL_RELAY_POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${MAIL_RELAY_POSTGRES_PASSWORD:-change-me-local-password}
+    ports:
+      - "${MAIL_RELAY_POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - mailrelay-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MAIL_RELAY_POSTGRES_USER:-postgres} -d ${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    profiles:
+      - full
+      - backend
+
   rabbitmq:
     image: rabbitmq:4-management
     restart: unless-stopped
@@ -65,7 +85,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
-      EmailDelivery__RelayBaseUrl: http://mail-relay:5088
+      MailRelayClient__BaseUrl: http://mail-relay:5088
     env_file:
       - .env
     healthcheck:
@@ -94,7 +114,7 @@ services:
     ports:
       - "${MAIL_RELAY_PORT:-5088}:5088"
     environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
+      ConnectionStrings__DefaultConnection: Host=mailrelay-postgres;Port=5432;Database=${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay};Username=${MAIL_RELAY_POSTGRES_USER:-postgres};Password=${MAIL_RELAY_POSTGRES_PASSWORD:-change-me-local-password}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       MailRelayBroker__HostName: rabbitmq
     env_file:
@@ -106,8 +126,8 @@ services:
       retries: 6
       start_period: 10s
     depends_on:
-      db-init:
-        condition: service_completed_successfully
+      mailrelay-postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     profiles:
@@ -176,3 +196,4 @@ services:
 
 volumes:
   postgres-data:
+  mailrelay-postgres-data:

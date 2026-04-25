@@ -1,10 +1,11 @@
 using System.Diagnostics.Metrics;
 using System.Net.Http.Json;
+using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
-using FoodDiary.MailRelay.Application.DeliveryEvents.Models;
-using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Application.Telemetry;
+using FoodDiary.MailRelay.Domain.DeliveryEvents;
+using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Tests.TestInfrastructure;
 
 namespace FoodDiary.MailRelay.Tests;
@@ -29,7 +30,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             deliveryOutcome = GetTagValue(tags, "fooddiary.mailrelay.delivery.outcome");
         });
 
-        var response = await client.PostAsJsonAsync("/api/email/send", new RelayEmailMessageRequest(
+        var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
             "FoodDiary",
             ["user@example.com"],
@@ -58,7 +59,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
         using var client = factory.CreateClient();
 
-        var response = await client.PostAsJsonAsync("/api/email/send", new RelayEmailMessageRequest(
+        var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
             "FoodDiary",
             ["user@example.com"],
@@ -93,7 +94,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "integration-test"));
         suppressionResponse.EnsureSuccessStatusCode();
 
-        var response = await client.PostAsJsonAsync("/api/email/send", new RelayEmailMessageRequest(
+        var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
             "FoodDiary",
             ["user@example.com"],

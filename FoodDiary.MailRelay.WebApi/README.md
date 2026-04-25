@@ -69,11 +69,14 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `MailRelayDkim__*`
 - `OpenTelemetry__Otlp__Endpoint`
 
+MailRelay should use its own PostgreSQL database. The local default is `fooddiary_mailrelay`; in Docker Compose it runs against the separate `mailrelay-postgres` service and `mailrelay-postgres-data` volume.
+
 ## Containers And Deploy
 
 - `rabbitmq` runs as a separate infrastructure container
+- `mailrelay-postgres` runs as the relay's separate PostgreSQL container
 - `mail-relay` runs as a separate application container built from `FoodDiary.MailRelay.WebApi/Dockerfile`
-- `api` depends on `mail-relay` when `EmailDelivery__Mode=Relay`
+- `api` calls `mail-relay` through `MailRelayClient__BaseUrl`
 - production deploy must build and push the `mail-relay` image and start `rabbitmq`, then `mail-relay`, then `api`
 
 ## Build And Run

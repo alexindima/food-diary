@@ -178,8 +178,7 @@ public static class ApiServiceCollectionExtensions {
         services
             .AddHealthChecks()
             .AddDbContextCheck<FoodDiaryDbContext>("postgresql", tags: ["ready"])
-            .AddCheck<S3HealthCheck>("s3", tags: ["ready"])
-            .AddCheck<SmtpHealthCheck>("smtp", tags: ["ready"]);
+            .AddCheck<S3HealthCheck>("s3", tags: ["ready"]);
 
         return services;
     }

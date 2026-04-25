@@ -1,3 +1,5 @@
+using FoodDiary.MailRelay.Application.Common.Result;
+using FoodDiary.MailRelay.Presentation.Extensions;
 using FoodDiary.MailRelay.Presentation.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,53 +16,24 @@ public abstract class MailRelayControllerBase(ISender sender) : ControllerBase {
         return sender.Send(request, HttpContext.RequestAborted);
     }
 
-    protected async Task<IActionResult> HandleOk<TResponse>(IRequest<TResponse> request) {
-        var response = await Send(request);
-        return Ok(response);
-    }
-
     protected async Task<IActionResult> HandleOk<TResponse, THttpResponse>(
-        IRequest<TResponse> request,
+        IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
-        var response = await Send(request);
-        return Ok(map(response));
+        var result = await Send(request);
+        return result.ToOkActionResult(this, map);
     }
 
-    protected async Task<IActionResult> HandleOk(IRequest request, object response) {
-        await Send(request);
-        return Ok(response);
-    }
-
-    protected async Task<IActionResult> HandleOkOrNotFound<TResponse>(IRequest<TResponse?> request) {
-        var response = await Send(request);
-        return response is null ? NotFound() : Ok(response);
-    }
-
-    protected async Task<IActionResult> HandleOkOrNotFound<TResponse, THttpResponse>(
-        IRequest<TResponse?> request,
-        Func<TResponse, THttpResponse> map) {
-        var response = await Send(request);
-        return response is null ? NotFound() : Ok(map(response));
+    protected async Task<IActionResult> HandleOk(IRequest<Result> request, object response) {
+        var result = await Send(request);
+        return result.ToOkActionResult(this, response);
     }
 
     protected async Task<IActionResult> HandleCreated<TResponse>(
-        IRequest<TResponse> request,
+        IRequest<Result<TResponse>> request,
         Func<TResponse, string> locationFactory,
         Func<TResponse, object> responseFactory) {
-        var response = await Send(request);
-        return Created(locationFactory(response), responseFactory(response));
-    }
-
-    protected async Task<IActionResult> HandleCreatedOrBadRequest<TResponse, THttpResponse>(
-        IRequest<TResponse> request,
-        Func<TResponse, string> locationFactory,
-        Func<TResponse, THttpResponse> responseFactory) {
-        try {
-            var response = await Send(request);
-            return Created(locationFactory(response), responseFactory(response));
-        } catch (InvalidOperationException ex) {
-            return BadRequest(CreateErrorResponse("MailRelay.InvalidDeliveryEvent", ex.Message));
-        }
+        var result = await Send(request);
+        return result.ToCreatedActionResult(this, locationFactory, responseFactory);
     }
 
     protected async Task<IActionResult> HandleCreated<TInput, TResponse, THttpResponse>(
@@ -75,29 +48,31 @@ public abstract class MailRelayControllerBase(ISender sender) : ControllerBase {
                 mapped.Error ?? "The provider webhook payload is invalid."));
         }
 
-        var response = await Send(mapped.Request);
-        return Created(location, responseFactory(response));
+        var result = await Send(mapped.Request);
+        return result.ToCreatedActionResult(this, _ => location, responseFactory);
     }
 
     protected async Task<IActionResult> HandleCreated(
-        IRequest request,
+        IRequest<Result> request,
         string location,
         object response) {
-        await Send(request);
-        return Created(location, response);
+        var result = await Send(request);
+        return result.IsSuccess
+            ? Created(location, response)
+            : MailRelayResultExtensions.ErrorResult(result.Error!, HttpContext.TraceIdentifier);
     }
 
     protected async Task<IActionResult> HandleAccepted<TResponse>(
-        IRequest<TResponse> request,
+        IRequest<Result<TResponse>> request,
         Func<TResponse, string> locationFactory,
         Func<TResponse, object> responseFactory) {
-        var response = await Send(request);
-        return Accepted(locationFactory(response), responseFactory(response));
+        var result = await Send(request);
+        return result.ToAcceptedActionResult(this, locationFactory, responseFactory);
     }
 
-    protected async Task<IActionResult> HandleNoContentOrNotFound(IRequest<bool> request) {
-        var removed = await Send(request);
-        return removed ? NoContent() : NotFound();
+    protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
+        var result = await Send(request);
+        return result.ToNoContentActionResult(this);
     }
 
     private MailRelayApiErrorHttpResponse CreateErrorResponse(string error, string message) =>

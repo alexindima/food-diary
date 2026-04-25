@@ -1,6 +1,6 @@
+using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Presentation.Controllers;
 using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
-using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Presentation.Features.Email.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +16,8 @@ public sealed class MailRelayQueueController(ISender sender) : AuthorizedMailRel
         HandleOk(MailRelayEmailHttpMappings.ToQueueStatsQuery(), static value => value.ToHttpResponse());
 
     [HttpPost("send")]
-    [ProducesResponseType<EnqueuedMailRelayEmailHttpResponse>(StatusCodes.Status202Accepted)]
-    public Task<IActionResult> Enqueue(EnqueueMailRelayEmailHttpRequest request) =>
+    [ProducesResponseType<EnqueueMailRelayEmailResponse>(StatusCodes.Status202Accepted)]
+    public Task<IActionResult> Enqueue(EnqueueMailRelayEmailRequest request) =>
         HandleAccepted(
             request.ToCommand(),
             static queuedEmailId => $"/api/email/messages/{queuedEmailId}",

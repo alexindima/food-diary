@@ -3,8 +3,8 @@ using MediatR;
 namespace FoodDiary.MailRelay.Application.Emails.Commands;
 
 public sealed class IngestManyMailRelayDeliveryEventsCommandHandler(MailRelayDeliveryEventIngestionService ingestionService)
-    : IRequestHandler<IngestManyMailRelayDeliveryEventsCommand, IReadOnlyList<MailRelayDeliveryEventEntry>> {
-    public Task<IReadOnlyList<MailRelayDeliveryEventEntry>> Handle(
+    : IRequestHandler<IngestManyMailRelayDeliveryEventsCommand, Result<IReadOnlyList<MailRelayDeliveryEventEntry>>> {
+    public Task<Result<IReadOnlyList<MailRelayDeliveryEventEntry>>> Handle(
         IngestManyMailRelayDeliveryEventsCommand command,
         CancellationToken cancellationToken) {
         return ingestionService.IngestManyAsync(command.Requests, cancellationToken);

@@ -7,9 +7,6 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 
 public sealed class DietologistEmailSenderTests {
     private static readonly EmailOptions DefaultOptions = new() {
-        SmtpHost = "smtp.test.local",
-        SmtpPort = 587,
-        UseSsl = true,
         FromAddress = "noreply@fooddiary.club",
         FromName = "FoodDiary",
         FrontendBaseUrl = "https://fooddiary.club",

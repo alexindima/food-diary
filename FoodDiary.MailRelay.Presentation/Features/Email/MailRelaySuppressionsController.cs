@@ -27,5 +27,5 @@ public sealed class MailRelaySuppressionsController(ISender sender) : Authorized
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Delete(string email) =>
-        HandleNoContentOrNotFound(email.ToRemoveSuppressionCommand());
+        HandleNoContent(email.ToRemoveSuppressionCommand());
 }

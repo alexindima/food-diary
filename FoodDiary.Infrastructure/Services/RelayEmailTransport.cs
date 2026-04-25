@@ -1,48 +1,22 @@
 using System.Net.Mail;
-using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
-using System.Text.Json;
-using FoodDiary.Infrastructure.Options;
-using Microsoft.Extensions.Options;
+using FoodDiary.MailRelay.Client;
+using FoodDiary.MailRelay.Client.Models;
 
 namespace FoodDiary.Infrastructure.Services;
 
-internal sealed class RelayEmailTransport(
-    IHttpClientFactory httpClientFactory,
-    IOptions<EmailDeliveryOptions> deliveryOptions) : IEmailTransport {
-    public const string HttpClientName = "FoodDiary.MailRelay";
-
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
-    private readonly EmailDeliveryOptions _deliveryOptions = deliveryOptions.Value;
-
+internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IEmailTransport {
     public async Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
-        if (string.IsNullOrWhiteSpace(_deliveryOptions.RelayBaseUrl)) {
-            throw new InvalidOperationException("Email relay base URL is not configured.");
-        }
-
-        var client = _httpClientFactory.CreateClient(HttpClientName);
-        client.BaseAddress = new Uri(_deliveryOptions.RelayBaseUrl, UriKind.Absolute);
-
-        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/email/send") {
-            Content = JsonContent.Create(CreatePayload(message), options: JsonOptions)
-        };
-
-        if (!string.IsNullOrWhiteSpace(_deliveryOptions.RelayApiKey)) {
-            request.Headers.TryAddWithoutValidation("X-Relay-Api-Key", _deliveryOptions.RelayApiKey);
-        }
-
-        using var response = await client.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await mailRelayClient.EnqueueAsync(CreatePayload(message), cancellationToken);
     }
 
-    private static RelayEmailMessageRequest CreatePayload(MailMessage message) {
+    private static EnqueueMailRelayEmailRequest CreatePayload(MailMessage message) {
         if (message.From is null) {
             throw new InvalidOperationException("Email message must include a From address.");
         }
 
-        return new RelayEmailMessageRequest(
+        return new EnqueueMailRelayEmailRequest(
             message.From.Address,
             message.From.DisplayName,
             message.To.Select(static recipient => recipient.Address).ToArray(),
@@ -73,14 +47,4 @@ internal sealed class RelayEmailTransport(
 
         return null;
     }
-
-    private sealed record RelayEmailMessageRequest(
-        string FromAddress,
-        string FromName,
-        IReadOnlyList<string> To,
-        string Subject,
-        string HtmlBody,
-        string? TextBody,
-        string? CorrelationId = null,
-        string? IdempotencyKey = null);
 }

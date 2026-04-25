@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
 namespace FoodDiary.MailRelay.Application.Telemetry;
@@ -6,6 +7,8 @@ public static class MailRelayTelemetry {
     public const string MeterName = "FoodDiary.MailRelay";
 
     private static readonly Meter Meter = new(MeterName);
+
+    public static readonly ActivitySource ActivitySource = new(MeterName);
 
     public static readonly Counter<long> QueueEventCounter = Meter.CreateCounter<long>(
         "fooddiary.mailrelay.queue.events");
@@ -18,6 +21,12 @@ public static class MailRelayTelemetry {
 
     public static readonly Counter<long> DeliveryEventCounter = Meter.CreateCounter<long>(
         "fooddiary.mailrelay.delivery.events");
+
+    public static readonly Counter<long> PresentationRequestCounter = Meter.CreateCounter<long>(
+        "fooddiary.mailrelay.presentation.requests");
+
+    public static readonly Histogram<double> PresentationRequestDuration = Meter.CreateHistogram<double>(
+        "fooddiary.mailrelay.presentation.duration_ms");
 
     public static void RecordQueueEvent(string outcome) {
         QueueEventCounter.Add(1, new KeyValuePair<string, object?>("fooddiary.mailrelay.outcome", outcome));

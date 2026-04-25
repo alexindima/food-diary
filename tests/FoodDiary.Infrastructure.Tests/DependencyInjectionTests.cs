@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.MailRelay.Client.Options;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,7 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
-    public void AddInfrastructure_WithInvalidRelayBaseUrlInRelayMode_FailsOptionsValidation() {
+    public void AddInfrastructure_WithInvalidMailRelayClientBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
         var configuration = CreateConfiguration(new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
@@ -42,15 +43,14 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
-            ["EmailDelivery:Mode"] = "Relay",
-            ["EmailDelivery:RelayBaseUrl"] = "not-a-url"
+            ["MailRelayClient:BaseUrl"] = "not-a-url"
         });
 
         services.AddInfrastructure(configuration);
         using var provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailDeliveryOptions>>().Value);
-        Assert.Contains("RelayBaseUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
+        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value);
+        Assert.Contains("base URL", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

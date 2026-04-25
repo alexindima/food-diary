@@ -8,6 +8,7 @@ public sealed class MailRelayArchitectureTests {
         var references = GetProjectReferences("FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailRelay.Application", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Presentation", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.WebApi", references);
@@ -18,6 +19,18 @@ public sealed class MailRelayArchitectureTests {
         var references = GetProjectReferences("FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Domain", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Infrastructure", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Presentation", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.WebApi", references);
+    }
+
+    [Fact]
+    public void MailRelayClientProject_DoesNotReferenceMailRelayLayers() {
+        var references = GetProjectReferences("FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj");
+
+        Assert.DoesNotContain("FoodDiary.MailRelay.Application", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Domain", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Presentation", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.WebApi", references);
@@ -33,10 +46,11 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
-    public void MailRelayPresentationProject_ReferencesApplicationButNotInfrastructureOrWebApi() {
+    public void MailRelayPresentationProject_ReferencesApplicationAndClientButNotInfrastructureOrWebApi() {
         var references = GetProjectReferences("FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
+        Assert.Contains("FoodDiary.MailRelay.Client", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.WebApi", references);
     }
@@ -238,6 +252,7 @@ public sealed class MailRelayArchitectureTests {
         var root = GetRepositoryRoot();
         var mailRelayRoots = new[] {
             "FoodDiary.MailRelay.Application",
+            "FoodDiary.MailRelay.Client",
             "FoodDiary.MailRelay.Domain",
             "FoodDiary.MailRelay.Infrastructure",
             "FoodDiary.MailRelay.Presentation",
@@ -245,6 +260,7 @@ public sealed class MailRelayArchitectureTests {
         };
         var allowedOptionFiles = new HashSet<string>(StringComparer.Ordinal) {
             Path.Combine("FoodDiary.MailRelay.Application", "Options", "MailRelayOptions.cs"),
+            Path.Combine("FoodDiary.MailRelay.Client", "Options", "MailRelayClientOptions.cs"),
         };
 
         var violations = mailRelayRoots
@@ -285,6 +301,49 @@ public sealed class MailRelayArchitectureTests {
             Directory.Exists(servicesRoot) &&
             Directory.EnumerateFileSystemEntries(servicesRoot).Any(),
             "FoodDiary.MailRelay.Application should stay organized by feature/purpose folders instead of a flat Services folder.");
+    }
+
+    [Fact]
+    public void PrimaryApiAndInfrastructure_DoNotOwnSmtpDeliveryConfiguration() {
+        var root = GetRepositoryRoot();
+        var sourceRoots = new[] {
+            Path.Combine(root, "FoodDiary.Infrastructure"),
+            Path.Combine(root, "FoodDiary.Web.Api"),
+        };
+        var forbiddenPatterns = new[] {
+            "EmailDelivery",
+            "SmtpClientEmailTransport",
+            "ConfigurableEmailTransport",
+            "SmtpHealthCheck",
+            "SmtpHost",
+            "SmtpPort",
+            "SmtpUser",
+            "SmtpPassword",
+            "new SmtpClient",
+        };
+
+        var violations = sourceRoots
+            .SelectMany(sourceRoot => FindSourcePatternViolations(root, sourceRoot, forbiddenPatterns))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MailRelayRuntimeConfiguration_UsesSeparateDatabase() {
+        var root = GetRepositoryRoot();
+        var appsettingsPath = Path.Combine(root, "FoodDiary.MailRelay.WebApi", "appsettings.json");
+        var composePath = Path.Combine(root, "docker-compose.yml");
+
+        var appsettings = File.ReadAllText(appsettingsPath);
+        var compose = File.ReadAllText(composePath);
+
+        Assert.Contains("Database=fooddiary_mailrelay", appsettings, StringComparison.Ordinal);
+        Assert.DoesNotContain("Database=fooddiary;", appsettings, StringComparison.Ordinal);
+        Assert.Contains("mailrelay-postgres:", compose, StringComparison.Ordinal);
+        Assert.Contains("mailrelay-postgres-data:", compose, StringComparison.Ordinal);
+        Assert.Contains("Host=mailrelay-postgres", compose, StringComparison.Ordinal);
+        Assert.Contains("MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay", compose, StringComparison.Ordinal);
     }
 
     private static HashSet<string> GetProjectReferences(string relativeProjectPath) {

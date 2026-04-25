@@ -6,15 +6,10 @@ public sealed class SmtpSubmissionService(IRelayDeliveryTransport relayDeliveryT
     }
 
     public Task SendAsync(QueuedEmailMessage message, CancellationToken cancellationToken) {
-        return SendAsync(
-            new RelayEmailMessageRequest(
-                message.FromAddress,
-                message.FromName,
-                message.To,
-                message.Subject,
-                message.HtmlBody,
-                message.TextBody,
-                message.CorrelationId),
-            cancellationToken);
+        return SendAsync(QueuedEmail.FromPersistence(message), cancellationToken);
+    }
+
+    public Task SendAsync(QueuedEmail email, CancellationToken cancellationToken) {
+        return SendAsync(email.ToSubmissionRequest(), cancellationToken);
     }
 }

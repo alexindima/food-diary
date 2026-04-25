@@ -1,3 +1,4 @@
+using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Presentation.Controllers;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Presentation.Features.Email.Responses;
@@ -13,16 +14,8 @@ public static class MailRelayEmailHttpMappings {
 
     public static GetMailRelayDeliveryEventsQuery ToDeliveryEventsQuery(this string? email) => new(email);
 
-    public static EnqueueMailRelayEmailCommand ToCommand(this EnqueueMailRelayEmailHttpRequest request) =>
-        new(new RelayEmailMessageRequest(
-            request.FromAddress,
-            request.FromName,
-            request.To,
-            request.Subject,
-            request.HtmlBody,
-            request.TextBody,
-            request.CorrelationId,
-            request.IdempotencyKey));
+    public static EnqueueMailRelayEmailCommand ToCommand(this EnqueueMailRelayEmailRequest request) =>
+        new(request.ToApplicationRequest());
 
     public static CreateMailRelaySuppressionCommand ToCommand(this CreateMailRelaySuppressionHttpRequest request) =>
         new(new CreateSuppressionRequest(
@@ -54,7 +47,7 @@ public static class MailRelayEmailHttpMappings {
             ? MailRelayMappedRequest<MailRelayDeliveryEventEntry>.Success(deliveryEvent.ToCommand())
             : MailRelayMappedRequest<MailRelayDeliveryEventEntry>.Failure(error);
 
-    public static RelayEmailMessageRequest ToApplicationRequest(this EnqueueMailRelayEmailHttpRequest request) =>
+    public static RelayEmailMessageRequest ToApplicationRequest(this EnqueueMailRelayEmailRequest request) =>
         new(
             request.FromAddress,
             request.FromName,
@@ -75,7 +68,7 @@ public static class MailRelayEmailHttpMappings {
             request.Reason,
             request.OccurredAtUtc);
 
-    public static EnqueuedMailRelayEmailHttpResponse ToEnqueuedHttpResponse(this Guid id) =>
+    public static EnqueueMailRelayEmailResponse ToEnqueuedHttpResponse(this Guid id) =>
         new(id, "queued");
 
     public static MailRelaySuppressionCreatedHttpResponse ToSuppressionCreatedHttpResponse() =>
