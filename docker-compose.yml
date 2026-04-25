@@ -70,6 +70,41 @@ services:
       - full
       - backend
 
+  mailinbox-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox}
+      POSTGRES_USER: ${MAIL_INBOX_POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${MAIL_INBOX_POSTGRES_PASSWORD:-change-me-local-password}
+    ports:
+      - "${MAIL_INBOX_POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - mailinbox-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MAIL_INBOX_POSTGRES_USER:-postgres} -d ${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    profiles:
+      - mail-inbox
+
+  mailinbox-db-init:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailinbox-initializer:${MAIL_INBOX_INITIALIZER_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: FoodDiary.MailInbox.Initializer/Dockerfile
+    command: ["dotnet", "FoodDiary.MailInbox.Initializer.dll", "update"]
+    env_file:
+      - .env
+    environment:
+      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:-change-me-local-password}
+    depends_on:
+      mailinbox-postgres:
+        condition: service_healthy
+    profiles:
+      - mail-inbox
+
   rabbitmq:
     image: rabbitmq:4-management
     restart: unless-stopped
@@ -151,6 +186,32 @@ services:
       - full
       - backend
 
+  mail-inbox:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-inbox:${MAIL_INBOX_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: FoodDiary.MailInbox.WebApi/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${MAIL_INBOX_PORT:-5098}:5098"
+      - "${MAIL_INBOX_SMTP_PORT:-2525}:2525"
+    environment:
+      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:-change-me-local-password}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    depends_on:
+      mailinbox-db-init:
+        condition: service_completed_successfully
+    profiles:
+      - mail-inbox
+
   telegram-bot:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/telegram-bot:${TELEGRAM_BOT_IMAGE_TAG:-latest}
     build:
@@ -214,3 +275,4 @@ services:
 volumes:
   postgres-data:
   mailrelay-postgres-data:
+  mailinbox-postgres-data:
