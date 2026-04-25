@@ -57,3 +57,4 @@ appsettings.*.json
 Thumbs.db
 /FoodDiary.Web.Client/dist-admin/
 /coverage-results/
+/.artifacts/
