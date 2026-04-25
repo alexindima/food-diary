@@ -245,6 +245,9 @@ public sealed class AuthenticationCommandHandlerTests {
 
         public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+
+        public Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class StubTelegramAuthValidator : ITelegramAuthValidator {

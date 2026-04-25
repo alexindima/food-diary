@@ -102,6 +102,32 @@ public sealed class EmailSender(
             cancellationToken: cancellationToken);
     }
 
+    public async Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
+        var locale = NormalizeLanguage(message.Language);
+        var subject = locale == "ru"
+            ? "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e FoodDiary"
+            : "FoodDiary test email";
+        var intro = locale == "ru"
+            ? "\u042d\u0442\u043e \u0442\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0432\u0430\u0448\u0435\u0433\u043e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e FoodDiary \u0447\u0435\u0440\u0435\u0437 MailRelay."
+            : "This test email was sent from your local FoodDiary through MailRelay.";
+        var footer = locale == "ru"
+            ? "\u0415\u0441\u043b\u0438 \u043f\u0438\u0441\u044c\u043c\u043e \u0434\u043e\u0448\u043b\u043e, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0443\u0442\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442."
+            : "If this message arrived, the main email dispatch path is working.";
+
+        try {
+            await SendAsync(
+                message.ToEmail,
+                subject,
+                BuildTemplate(subject, intro, "FoodDiary", _options.FrontendBaseUrl, footer),
+                $"{intro}{Environment.NewLine}{footer}",
+                cancellationToken);
+            InfrastructureTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "success");
+        } catch (Exception ex) {
+            InfrastructureTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "failure", ex.GetType().Name);
+            throw;
+        }
+    }
+
     private string BuildLink(string path, string userId, string token) {
         if (string.IsNullOrWhiteSpace(_options.FrontendBaseUrl)) {
             throw new InvalidOperationException("Email FrontendBaseUrl is not configured.");

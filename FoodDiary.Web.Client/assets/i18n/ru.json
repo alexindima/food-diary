@@ -2601,6 +2601,9 @@
             "ADD_CONSUMPTION_BUTTON": "Добавить приём",
             "OPEN_APPEARANCE": "Внешний вид",
             "OPEN_NOTIFICATION_SETTINGS": "Уведомления",
+            "SEND_TEST_EMAIL": "Отправить тестовое письмо",
+            "TEST_EMAIL_SENT": "Тестовое письмо поставлено в очередь отправки.",
+            "TEST_EMAIL_ERROR": "Не удалось отправить тестовое письмо.",
             "OPEN_DATE_PICKER": "Выбрать дату",
             "ENABLE_PUSH_BUTTON": "Включить push",
             "DISABLE_PUSH_BUTTON": "Выключить push",
@@ -3976,4 +3979,3 @@
         "REASON_LABEL": "Причина"
     }
 }
-

@@ -777,6 +777,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/dashboard/test-email",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/dietologist/accept",
       "Operations": [
         {

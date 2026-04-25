@@ -277,6 +277,15 @@ $color-text-secondary: var(--fd-color-text-muted);
             --fd-button-padding-x: 0;
         }
 
+        &__test-email-action {
+            min-width: 44px;
+            padding-inline: 0;
+            --fd-button-label-display: none;
+            --fd-button-width: 44px;
+            --fd-button-min-width: 44px;
+            --fd-button-padding-x: 0;
+        }
+
         &__grid {
             grid-template-columns: 1fr;
         }
@@ -340,6 +349,15 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &__appearance-action {
+            min-width: 44px;
+            padding-inline: 0;
+            --fd-button-label-display: none;
+            --fd-button-width: 44px;
+            --fd-button-min-width: 44px;
+            --fd-button-padding-x: 0;
+        }
+
+        &__test-email-action {
             min-width: 44px;
             padding-inline: 0;
             --fd-button-label-display: none;

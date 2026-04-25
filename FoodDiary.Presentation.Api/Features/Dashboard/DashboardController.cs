@@ -26,5 +26,10 @@ public class DashboardController(ISender mediator) : AuthorizedController(mediat
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetAdvice([FromCurrentUser] Guid userId, [FromQuery] GetDailyAdviceHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
-}
 
+    [HttpPost("test-email")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> SendTestEmail([FromCurrentUser] Guid userId) =>
+        HandleNoContent(userId.ToTestEmailCommand());
+}

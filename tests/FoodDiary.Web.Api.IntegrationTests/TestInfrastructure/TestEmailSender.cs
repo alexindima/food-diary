@@ -19,6 +19,11 @@ public sealed class TestEmailSender : IEmailSender {
         return Task.CompletedTask;
     }
 
+    public Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.CompletedTask;
+    }
+
     public PasswordResetMessage GetRequiredPasswordResetMessage(string email) {
         return _passwordResetMessages.TryGetValue(email, out var message)
             ? message

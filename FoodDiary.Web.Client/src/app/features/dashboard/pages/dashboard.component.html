@@ -57,6 +57,18 @@
             />
 
             <fd-ui-button
+                class="dashboard__test-email-action"
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="mail"
+                [disabled]="layout.isEditingLayout() || isTestEmailSending()"
+                [ariaLabel]="'DASHBOARD.ACTIONS.SEND_TEST_EMAIL' | translate"
+                [fdUiHint]="'DASHBOARD.ACTIONS.SEND_TEST_EMAIL' | translate"
+                (click)="sendTestEmail()"
+            />
+
+            <fd-ui-button
                 class="dashboard__settings-action"
                 appearance="toolbar"
                 variant="secondary"

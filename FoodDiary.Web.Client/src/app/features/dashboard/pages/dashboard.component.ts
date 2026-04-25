@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    ElementRef,
+    afterNextRender,
+    computed,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -23,11 +34,13 @@ import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/
 import { ThemeService } from '../../../services/theme.service';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardFacade } from '../lib/dashboard.facade';
+import { DashboardService } from '../api/dashboard.service';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
 import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     formatDashboardFastingDuration,
     getDashboardCyclicPhaseProgressLabel,
@@ -73,7 +86,9 @@ export class DashboardComponent {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
     private readonly facade = inject(DashboardFacade);
+    private readonly dashboardService = inject(DashboardService);
     private readonly translateService = inject(TranslateService);
+    private readonly toastService = inject(FdUiToastService);
     private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
     public readonly layout = inject(DashboardLayoutService);
 
@@ -107,6 +122,7 @@ export class DashboardComponent {
     public readonly isTdeeLoading = this.facade.isTdeeLoading;
     public readonly micronutrients = this.facade.micronutrients;
     public readonly isMicronutrientsLoading = this.facade.isMicronutrientsLoading;
+    public readonly isTestEmailSending = signal(false);
     public readonly weightTrend = this.facade.weightTrend;
     public readonly waistTrend = this.facade.waistTrend;
     public readonly nutrientBars = this.facade.nutrientBars;
@@ -295,6 +311,24 @@ export class DashboardComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
+    }
+
+    public sendTestEmail(): void {
+        if (this.isTestEmailSending()) {
+            return;
+        }
+
+        this.isTestEmailSending.set(true);
+        this.dashboardService
+            .sendTestEmail()
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.isTestEmailSending.set(false)),
+            )
+            .subscribe({
+                next: () => this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.TEST_EMAIL_SENT')),
+                error: () => this.toastService.error(this.translateService.instant('DASHBOARD.ACTIONS.TEST_EMAIL_ERROR')),
+            });
     }
 
     public async openAppearanceDialog(): Promise<void> {

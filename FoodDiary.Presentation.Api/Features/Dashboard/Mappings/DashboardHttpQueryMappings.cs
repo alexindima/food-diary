@@ -1,4 +1,5 @@
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 
@@ -11,5 +12,9 @@ public static class DashboardHttpQueryMappings {
 
     public static GetDailyAdviceQuery ToQuery(this GetDailyAdviceHttpQuery query, Guid userId) {
         return new GetDailyAdviceQuery(userId, query.Date, query.Locale);
+    }
+
+    public static SendDashboardTestEmailCommand ToTestEmailCommand(this Guid userId) {
+        return new SendDashboardTestEmailCommand(userId);
     }
 }

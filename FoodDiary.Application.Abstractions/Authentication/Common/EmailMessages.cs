@@ -11,3 +11,7 @@ public sealed record PasswordResetMessage(
     string UserId,
     string Token,
     string? Language);
+
+public sealed record TestEmailMessage(
+    string ToEmail,
+    string? Language);
