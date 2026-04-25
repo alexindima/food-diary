@@ -4,6 +4,8 @@ using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Application.Admin.Queries.GetAdminLessons;
+using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
+using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
 using FoodDiary.Application.Admin.Queries.GetAdminUsers;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
@@ -28,5 +30,13 @@ public static class AdminHttpQueryMappings {
 
     public static GetAdminContentReportsQuery ToQuery(this GetAdminContentReportsHttpQuery query) {
         return new GetAdminContentReportsQuery(query.Status, query.Page, query.Limit);
+    }
+
+    public static GetAdminMailInboxMessagesQuery ToQuery(this GetAdminMailInboxMessagesHttpQuery query) {
+        return new GetAdminMailInboxMessagesQuery(query.Limit);
+    }
+
+    public static GetAdminMailInboxMessageDetailsQuery ToMailInboxMessageDetailsQuery(this Guid id) {
+        return new GetAdminMailInboxMessageDetailsQuery(id);
     }
 }

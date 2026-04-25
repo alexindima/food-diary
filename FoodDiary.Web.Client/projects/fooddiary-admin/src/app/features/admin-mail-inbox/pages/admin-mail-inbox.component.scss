@@ -1,0 +1,131 @@
+.admin-mail-inbox {
+    display: grid;
+    gap: 1rem;
+}
+
+.toolbar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.mail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.mail-list,
+.mail-details {
+    min-width: 0;
+}
+
+.mail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mail-table th,
+.mail-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: top;
+}
+
+.mail-table__row {
+    cursor: pointer;
+}
+
+.mail-table__row--active,
+.mail-table__row:hover {
+    background: #f3f4f6;
+}
+
+.mail-details {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.mail-details__header {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.mail-details__subject {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.mail-details__meta {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.mail-details__status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.mail-fields {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.mail-fields div {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.mail-fields dt {
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.mail-fields dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.body-switcher {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.mail-body {
+    min-height: 16rem;
+    max-height: 32rem;
+    margin: 0;
+    padding: 1rem;
+    overflow: auto;
+    border-radius: 0.5rem;
+    background: #111827;
+    color: #f9fafb;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 56rem) {
+
+    .mail-layout {
+        grid-template-columns: 1fr;
+    }
+}

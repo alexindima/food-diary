@@ -71,6 +71,9 @@ using Amazon.S3;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Events;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.Infrastructure.Services.MailInbox;
+using FoodDiary.MailInbox.Client.Extensions;
+using FoodDiary.MailInbox.Client.Options;
 using FoodDiary.MailRelay.Client.Extensions;
 using FoodDiary.MailRelay.Client.Options;
 using FoodDiary.Application.Common.Abstractions.Events;
@@ -266,6 +269,12 @@ public static class DependencyInjection {
             options.ApiKey = section["ApiKey"] ?? string.Empty;
             options.Timeout = TimeSpan.FromSeconds(15);
         });
+        services.AddMailInboxClient(options => {
+            var section = configuration.GetSection(MailInboxClientOptions.SectionName);
+            options.BaseUrl = section["BaseUrl"] ?? string.Empty;
+            options.Timeout = TimeSpan.FromSeconds(15);
+        });
+        services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
         services.AddSingleton<RelayEmailTransport>();
         services.AddSingleton<IEmailTransport>(static sp => sp.GetRequiredService<RelayEmailTransport>());
         services.AddSingleton<IEmailSender, EmailSender>();

@@ -107,6 +107,30 @@ public static class AdminHttpResponseMappings {
         return response.ToPagedHttpResponse(ToHttpResponse);
     }
 
+    public static AdminMailInboxMessageSummaryHttpResponse ToHttpResponse(this AdminMailInboxMessageSummaryModel model) {
+        return new AdminMailInboxMessageSummaryHttpResponse(
+            model.Id,
+            model.FromAddress,
+            model.ToRecipients,
+            model.Subject,
+            model.Status,
+            model.ReceivedAtUtc);
+    }
+
+    public static AdminMailInboxMessageDetailsHttpResponse ToHttpResponse(this AdminMailInboxMessageDetailsModel model) {
+        return new AdminMailInboxMessageDetailsHttpResponse(
+            model.Id,
+            model.MessageId,
+            model.FromAddress,
+            model.ToRecipients,
+            model.Subject,
+            model.TextBody,
+            model.HtmlBody,
+            model.RawMime,
+            model.Status,
+            model.ReceivedAtUtc);
+    }
+
     private static AdminAiUsageDailyHttpResponse ToHttpResponse(this AdminAiUsageDailyModel model) {
         return new AdminAiUsageDailyHttpResponse(
             model.Date,

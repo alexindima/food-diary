@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\FoodDiary.MailInbox.Client\FoodDiary.MailInbox.Client.csproj" />
     <ProjectReference Include="..\FoodDiary.MailRelay.Client\FoodDiary.MailRelay.Client.csproj" />
   </ItemGroup>
 

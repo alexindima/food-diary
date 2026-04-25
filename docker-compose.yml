@@ -138,6 +138,7 @@ services:
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
       MailRelayClient__BaseUrl: http://mail-relay:5088
+      MailInboxClient__BaseUrl: http://mail-inbox:5098
     env_file:
       - .env
     healthcheck:

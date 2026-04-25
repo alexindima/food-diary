@@ -1,0 +1,100 @@
+<div class="admin-mail-inbox">
+    <div class="toolbar">
+        <fd-ui-input type="number" [ngModel]="limit()" (ngModelChange)="updateLimit($event)" placeholder="Limit" />
+        <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
+    </div>
+
+    <div class="mail-layout">
+        <section class="mail-list" aria-label="Inbound mail messages">
+            @if (isLoading()) {
+                <p>Loading messages...</p>
+            } @else {
+                <table class="mail-table">
+                    <thead>
+                        <tr>
+                            <th>Received</th>
+                            <th>From</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (message of messages(); track message.id) {
+                            <tr
+                                class="mail-table__row"
+                                [class.mail-table__row--active]="selectedMessage()?.id === message.id"
+                                (click)="selectMessage(message)"
+                            >
+                                <td>{{ message.receivedAtUtc | date: 'short' }}</td>
+                                <td>{{ message.fromAddress || '-' }}</td>
+                                <td>{{ message.subject || '(no subject)' }}</td>
+                                <td>{{ message.status }}</td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="4">No inbound messages found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </section>
+
+        <section class="mail-details" aria-label="Inbound mail message details">
+            @if (isDetailsLoading()) {
+                <p>Loading message...</p>
+            } @else if (selectedMessage(); as message) {
+                <div class="mail-details__header">
+                    <div>
+                        <div class="mail-details__subject">{{ message.subject || '(no subject)' }}</div>
+                        <div class="mail-details__meta">{{ message.receivedAtUtc | date: 'medium' }}</div>
+                    </div>
+                    <span class="mail-details__status">{{ message.status }}</span>
+                </div>
+
+                <dl class="mail-fields">
+                    <div>
+                        <dt>From</dt>
+                        <dd>{{ message.fromAddress || '-' }}</dd>
+                    </div>
+                    <div>
+                        <dt>To</dt>
+                        <dd>{{ formatRecipients(message.toRecipients) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Message ID</dt>
+                        <dd>{{ message.messageId || '-' }}</dd>
+                    </div>
+                </dl>
+
+                <div class="body-switcher" role="group" aria-label="Message body view">
+                    <fd-ui-button
+                        type="button"
+                        [variant]="selectedBodyMode() === 'text' ? 'primary' : 'secondary'"
+                        (click)="setBodyMode('text')"
+                    >
+                        Text
+                    </fd-ui-button>
+                    <fd-ui-button
+                        type="button"
+                        [variant]="selectedBodyMode() === 'html' ? 'primary' : 'secondary'"
+                        (click)="setBodyMode('html')"
+                    >
+                        HTML
+                    </fd-ui-button>
+                    <fd-ui-button
+                        type="button"
+                        [variant]="selectedBodyMode() === 'raw' ? 'primary' : 'secondary'"
+                        (click)="setBodyMode('raw')"
+                    >
+                        Raw
+                    </fd-ui-button>
+                </div>
+
+                <pre class="mail-body">{{ selectedBody() || 'No body content.' }}</pre>
+            } @else {
+                <p>Select a message to view details.</p>
+            }
+        </section>
+    </div>
+</div>
