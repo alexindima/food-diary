@@ -63,6 +63,10 @@ public sealed class DirectMxRelayDeliveryTransport(
         using var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
         using var client = new SmtpClient();
 
+        if (!string.IsNullOrWhiteSpace(_options.LocalDomain)) {
+            client.LocalDomain = _options.LocalDomain;
+        }
+
         await client.ConnectAsync(mxHost, _options.Port, secureSocketOptions, linkedToken.Token);
         await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token);
         await client.DisconnectAsync(true, linkedToken.Token);
