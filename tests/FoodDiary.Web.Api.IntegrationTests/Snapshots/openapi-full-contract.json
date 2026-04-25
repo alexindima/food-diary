@@ -148,6 +148,38 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/mail-inbox/messages",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/mail-inbox/messages/{id}",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/moderation",
       "Operations": [
         {
