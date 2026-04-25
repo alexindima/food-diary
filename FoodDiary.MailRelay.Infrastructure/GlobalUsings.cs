@@ -1,0 +1,13 @@
+global using FoodDiary.MailRelay.Application.Abstractions;
+global using FoodDiary.MailRelay.Application.DeliveryEvents.Models;
+global using FoodDiary.MailRelay.Application.Emails.Models;
+global using FoodDiary.MailRelay.Application.Emails.Services;
+global using FoodDiary.MailRelay.Application.Options;
+global using FoodDiary.MailRelay.Application.Queue.Models;
+global using FoodDiary.MailRelay.Application.Telemetry;
+global using FoodDiary.MailRelay.Infrastructure.Options;
+global using FoodDiary.MailRelay.Infrastructure.Services;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Services;
+using FoodDiary.MailRelay.Application.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;

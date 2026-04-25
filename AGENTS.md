@@ -14,6 +14,11 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Contracts: `FoodDiary.Contracts/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
+- Mail relay application layer: `FoodDiary.MailRelay.Application/AGENTS.md`
+- Mail relay domain layer: `FoodDiary.MailRelay.Domain/AGENTS.md`
+- Mail relay infrastructure layer: `FoodDiary.MailRelay.Infrastructure/AGENTS.md`
+- Mail relay presentation layer: `FoodDiary.MailRelay.Presentation/AGENTS.md`
+- Mail relay Web API host: `FoodDiary.MailRelay.WebApi/AGENTS.md`
 - Telegram bot: `FoodDiary.Telegram.Bot/AGENTS.md`
 
 ## Cross-Repo Rules

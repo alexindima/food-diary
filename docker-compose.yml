@@ -89,7 +89,7 @@ services:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: FoodDiary.MailRelay/Dockerfile
+      dockerfile: FoodDiary.MailRelay.WebApi/Dockerfile
     restart: unless-stopped
     ports:
       - "${MAIL_RELAY_PORT:-5088}:5088"

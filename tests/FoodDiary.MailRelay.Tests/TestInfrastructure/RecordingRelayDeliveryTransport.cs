@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
-using FoodDiary.MailRelay.Services;
+using FoodDiary.MailRelay.Application.Abstractions;
+using FoodDiary.MailRelay.Application.Emails.Models;
 
 namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
 

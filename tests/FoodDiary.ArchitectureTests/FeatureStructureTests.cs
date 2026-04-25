@@ -47,6 +47,11 @@ public class FeatureStructureTests {
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
     [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
     [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
+    [InlineData("FoodDiary.MailRelay.Application", "FoodDiary.MailRelay.Application")]
+    [InlineData("FoodDiary.MailRelay.Domain", "FoodDiary.MailRelay.Domain")]
+    [InlineData("FoodDiary.MailRelay.Infrastructure", "FoodDiary.MailRelay.Infrastructure")]
+    [InlineData("FoodDiary.MailRelay.Presentation", "FoodDiary.MailRelay.Presentation")]
+    [InlineData("FoodDiary.MailRelay.WebApi", "FoodDiary.MailRelay.WebApi")]
     [InlineData("FoodDiary.Presentation.Api", "FoodDiary.Presentation.Api")]
     [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
     [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
@@ -69,6 +74,7 @@ public class FeatureStructureTests {
                 // AssemblyInfo files may contain only assembly-level attributes.
                 var fileName = Path.GetFileName(sourceFile);
                 if (string.Equals(fileName, "Program.cs", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(fileName, "GlobalUsings.cs", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(fileName, "AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }

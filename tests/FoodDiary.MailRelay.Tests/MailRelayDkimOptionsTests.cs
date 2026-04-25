@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Options;
+using FoodDiary.MailRelay.Infrastructure.Options;
 
 namespace FoodDiary.MailRelay.Tests;
 

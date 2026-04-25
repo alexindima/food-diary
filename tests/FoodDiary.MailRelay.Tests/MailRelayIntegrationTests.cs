@@ -1,6 +1,10 @@
 using System.Diagnostics.Metrics;
 using System.Net.Http.Json;
-using FoodDiary.MailRelay.Services;
+using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
+using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
+using FoodDiary.MailRelay.Application.DeliveryEvents.Models;
+using FoodDiary.MailRelay.Application.Emails.Models;
+using FoodDiary.MailRelay.Application.Telemetry;
 using FoodDiary.MailRelay.Tests.TestInfrastructure;
 
 namespace FoodDiary.MailRelay.Tests;
@@ -139,7 +143,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
     [Fact]
     public void AwsSesSnsEventMapper_WhenPermanentBounce_ReturnsHardBounceEvents() {
-        var payload = new AwsSesSnsWebhookRequest(
+        var payload = new AwsSesSnsWebhookHttpRequest(
             "Notification",
             """
             {
@@ -157,7 +161,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             }
             """);
 
-        var mapped = AwsSesSnsEventMapper.TryMap(payload, out var events, out var error);
+        var mapped = payload.TryMapToDeliveryEvents(out var events, out var error);
 
         Assert.True(mapped);
         Assert.Null(error);
@@ -169,14 +173,14 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
     [Fact]
     public void MailgunEventMapper_WhenComplaintEvent_ReturnsComplaint() {
-        var payload = new MailgunWebhookRequest(new MailgunEventData(
+        var payload = new MailgunWebhookHttpRequest(new MailgunEventDataHttpModel(
             "complained",
             "user@example.com",
             "mailgun-1",
             null,
             "spam-complaint"));
 
-        var mapped = MailgunEventMapper.TryMap(payload, out var deliveryEvent, out var error);
+        var mapped = payload.TryMapToDeliveryEvent(out var deliveryEvent, out var error);
 
         Assert.True(mapped);
         Assert.Null(error);

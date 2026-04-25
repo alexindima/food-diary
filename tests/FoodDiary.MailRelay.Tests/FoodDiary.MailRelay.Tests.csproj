@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FoodDiary.MailRelay\FoodDiary.MailRelay.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.MailRelay.WebApi\FoodDiary.MailRelay.WebApi.csproj" />
   </ItemGroup>
 
 </Project>
