@@ -8,6 +8,7 @@ public sealed class MailInboxArchitectureTests {
         var references = GetProjectReferences("FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailInbox.Application", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.Client", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Presentation", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.WebApi", references);
@@ -18,6 +19,18 @@ public sealed class MailInboxArchitectureTests {
         var references = GetProjectReferences("FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj");
 
         Assert.Contains("FoodDiary.MailInbox.Domain", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.Client", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.Infrastructure", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.Presentation", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.WebApi", references);
+    }
+
+    [Fact]
+    public void MailInboxClientProject_DoesNotReferenceMailInboxLayers() {
+        var references = GetProjectReferences("FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj");
+
+        Assert.DoesNotContain("FoodDiary.MailInbox.Application", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.Domain", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Presentation", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.WebApi", references);
@@ -38,6 +51,7 @@ public sealed class MailInboxArchitectureTests {
 
         Assert.Contains("FoodDiary.MailInbox.Application", references);
         Assert.Contains("FoodDiary.MailInbox.Infrastructure", references);
+        Assert.DoesNotContain("FoodDiary.MailInbox.Client", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Presentation", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.WebApi", references);
     }

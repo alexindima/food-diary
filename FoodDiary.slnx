@@ -18,6 +18,7 @@
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
   <Folder Name="/MailInbox/">
     <Project Path="FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
+    <Project Path="FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
     <Project Path="FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj" />
     <Project Path="FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj" />
     <Project Path="FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj" />
