@@ -53,6 +53,23 @@ services:
       - full
       - backend
 
+  mailrelay-db-init:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailrelay-initializer:${MAIL_RELAY_INITIALIZER_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: FoodDiary.MailRelay.Initializer/Dockerfile
+    command: ["dotnet", "FoodDiary.MailRelay.Initializer.dll", "update"]
+    env_file:
+      - .env
+    environment:
+      ConnectionStrings__DefaultConnection: Host=mailrelay-postgres;Port=5432;Database=${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay};Username=${MAIL_RELAY_POSTGRES_USER:-postgres};Password=${MAIL_RELAY_POSTGRES_PASSWORD:-change-me-local-password}
+    depends_on:
+      mailrelay-postgres:
+        condition: service_healthy
+    profiles:
+      - full
+      - backend
+
   rabbitmq:
     image: rabbitmq:4-management
     restart: unless-stopped
@@ -126,8 +143,8 @@ services:
       retries: 6
       start_period: 10s
     depends_on:
-      mailrelay-postgres:
-        condition: service_healthy
+      mailrelay-db-init:
+        condition: service_completed_successfully
       rabbitmq:
         condition: service_healthy
     profiles:

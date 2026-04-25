@@ -75,16 +75,27 @@ MailRelay should use its own PostgreSQL database. The local default is `fooddiar
 
 - `rabbitmq` runs as a separate infrastructure container
 - `mailrelay-postgres` runs as the relay's separate PostgreSQL container
+- `mailrelay-db-init` runs `FoodDiary.MailRelay.Initializer` to create or update the relay schema before the app starts
 - `mail-relay` runs as a separate application container built from `FoodDiary.MailRelay.WebApi/Dockerfile`
 - `api` calls `mail-relay` through `MailRelayClient__BaseUrl`
-- production deploy must build and push the `mail-relay` image and start `rabbitmq`, then `mail-relay`, then `api`
+- production deploy must build and push the `mailrelay-initializer` and `mail-relay` images, run `mailrelay-db-init`, then start `rabbitmq`, `mail-relay`, and `api`
 
 ## Build And Run
 
 ```powershell
 dotnet build FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj
 dotnet run --project FoodDiary.MailRelay.WebApi
+dotnet run --project FoodDiary.MailRelay.Initializer -- status
+dotnet run --project FoodDiary.MailRelay.Initializer -- update
 ```
+
+For local development, keep the database connection string in WebApi user secrets:
+
+```powershell
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=fooddiary_mailrelay;Username=postgres;Password=..." --project FoodDiary.MailRelay.WebApi
+```
+
+The project launch profile sets `Development`, so `dotnet run --project FoodDiary.MailRelay.WebApi` reads user secrets. If running the built `.exe` directly from `bin`, set `ASPNETCORE_ENVIRONMENT=Development` or pass the connection string through environment variables.
 
 ## Direct-To-MX
 

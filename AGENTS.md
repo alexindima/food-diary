@@ -18,6 +18,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Mail relay client package: `FoodDiary.MailRelay.Client/AGENTS.md`
 - Mail relay domain layer: `FoodDiary.MailRelay.Domain/AGENTS.md`
 - Mail relay infrastructure layer: `FoodDiary.MailRelay.Infrastructure/AGENTS.md`
+- Mail relay initializer: `FoodDiary.MailRelay.Initializer/AGENTS.md`
 - Mail relay presentation layer: `FoodDiary.MailRelay.Presentation/AGENTS.md`
 - Mail relay Web API host: `FoodDiary.MailRelay.WebApi/AGENTS.md`
 - Telegram bot: `FoodDiary.Telegram.Bot/AGENTS.md`

@@ -46,6 +46,17 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
+    public void MailRelayInitializerProject_ReferencesApplicationAndInfrastructureOnlyAmongMailRelayLayers() {
+        var references = GetProjectReferences("FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj");
+
+        Assert.Contains("FoodDiary.MailRelay.Application", references);
+        Assert.Contains("FoodDiary.MailRelay.Infrastructure", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.Presentation", references);
+        Assert.DoesNotContain("FoodDiary.MailRelay.WebApi", references);
+    }
+
+    [Fact]
     public void MailRelayPresentationProject_ReferencesApplicationAndClientButNotInfrastructureOrWebApi() {
         var references = GetProjectReferences("FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj");
 
@@ -255,6 +266,7 @@ public sealed class MailRelayArchitectureTests {
             "FoodDiary.MailRelay.Client",
             "FoodDiary.MailRelay.Domain",
             "FoodDiary.MailRelay.Infrastructure",
+            "FoodDiary.MailRelay.Initializer",
             "FoodDiary.MailRelay.Presentation",
             "FoodDiary.MailRelay.WebApi",
         };
@@ -344,6 +356,9 @@ public sealed class MailRelayArchitectureTests {
         Assert.Contains("mailrelay-postgres-data:", compose, StringComparison.Ordinal);
         Assert.Contains("Host=mailrelay-postgres", compose, StringComparison.Ordinal);
         Assert.Contains("MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay", compose, StringComparison.Ordinal);
+        Assert.Contains("mailrelay-db-init:", compose, StringComparison.Ordinal);
+        Assert.Contains("FoodDiary.MailRelay.Initializer/Dockerfile", compose, StringComparison.Ordinal);
+        Assert.Contains("service_completed_successfully", compose, StringComparison.Ordinal);
     }
 
     private static HashSet<string> GetProjectReferences(string relativeProjectPath) {

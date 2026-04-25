@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FoodDiary.MailRelay.Initializer": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -4,6 +4,12 @@ using FoodDiary.MailRelay.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#if DEBUG
+if (!builder.Environment.IsDevelopment()) {
+    builder.Configuration.AddUserSecrets<Program>(optional: true);
+}
+#endif
+
 builder.Services
     .AddMailRelayOptions(builder.Configuration)
     .AddMailRelayApplication()

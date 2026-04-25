@@ -169,7 +169,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: FoodDiary.MailRelay/Dockerfile
+          file: FoodDiary.MailRelay.WebApi/Dockerfile
           push: true
           provenance: false
           tags: |
@@ -183,6 +183,27 @@ jobs:
           {
             echo "FAILED_AREA=deploy"
             echo "FAILED_TARGET=Build and push Mail Relay"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
+      - name: Build and push Mail Relay Initializer
+        id: build_mailrelay_initializer
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: FoodDiary.MailRelay.Initializer/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:latest
+            ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:sha-${{ github.sha }}
+
+      - name: Record failure step
+        if: always() && steps.build_mailrelay_initializer.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Mail Relay Initializer"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
       - name: Build and push Client
@@ -262,7 +283,8 @@ jobs:
           cd /opt/fooddiary
 
           cp /etc/fooddiary/fooddiary.env .env
-          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nJOB_MANAGER_IMAGE_TAG=%s\nMAIL_RELAY_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nJOB_MANAGER_IMAGE_TAG=%s\nMAIL_RELAY_IMAGE_TAG=%s\nMAIL_RELAY_INITIALIZER_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+            "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
@@ -276,11 +298,13 @@ jobs:
           export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export JOB_MANAGER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export MAIL_RELAY_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export MAIL_RELAY_INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
 
           docker compose --profile backend --profile full pull
 
           docker compose --profile backend run -T --rm db-init update
+          docker compose --profile backend run -T --rm mailrelay-db-init update
 
           docker compose --profile backend up -d rabbitmq
           docker compose --profile backend up -d --force-recreate --no-deps mail-relay

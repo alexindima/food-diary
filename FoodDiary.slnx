@@ -19,6 +19,7 @@
     <Project Path="FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
     <Project Path="FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
     <Project Path="FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj" />
+    <Project Path="FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj" />
     <Project Path="FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj" />
     <Project Path="FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj" />
     <Project Path="FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj" />
