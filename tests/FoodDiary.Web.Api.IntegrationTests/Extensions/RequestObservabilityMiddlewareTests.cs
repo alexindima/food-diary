@@ -17,7 +17,11 @@ public sealed class RequestObservabilityMiddlewareTests {
             ShouldListenTo = source => source.Name == ApiTelemetry.TelemetryName,
             Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
-            ActivityStarted = activity => capturedActivity = activity,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), "/telemetry/activity", StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
         };
         ActivitySource.AddActivityListener(listener);
 
@@ -80,7 +84,11 @@ public sealed class RequestObservabilityMiddlewareTests {
             ShouldListenTo = source => source.Name == ApiTelemetry.TelemetryName,
             Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
-            ActivityStarted = activity => capturedActivity = activity,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), "/api/v1/auth/*", StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
         };
         ActivitySource.AddActivityListener(listener);
 
