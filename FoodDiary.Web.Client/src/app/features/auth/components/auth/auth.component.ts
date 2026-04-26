@@ -9,6 +9,7 @@ import {
     inject,
     signal,
     effect,
+    afterNextRender,
 } from '@angular/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -69,6 +70,7 @@ export class AuthComponent {
     public readonly initialMode = input<'login' | 'register'>('login');
     public readonly initialReturnUrl = input<string | null>(null);
     public readonly initialAdminReturnUrl = input<string | null>(null);
+    private readonly loginFormElement = viewChild<ElementRef<HTMLFormElement>>('loginFormElement');
     private readonly googleLoginButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
     private readonly googleRegisterButton = viewChild<ElementRef<HTMLElement>>('googleRegisterButton');
 
@@ -98,7 +100,10 @@ export class AuthComponent {
     public isPasswordResetting = signal<boolean>(false);
     public passwordResetSent = signal<boolean>(false);
     public passwordResetCooldownSeconds = signal<number>(0);
+    public loginAutofillDetected = signal<boolean>(false);
     private passwordResetCooldownTimerId: number | null = null;
+    private loginAutofillCheckTimerIds: number[] = [];
+    private hasLoginNativeInteraction = false;
     public authBenefits: string[] = ['AUTH.INFO.HIGHLIGHTS.SYNC', 'AUTH.INFO.HIGHLIGHTS.INSIGHTS', 'AUTH.INFO.HIGHLIGHTS.LIBRARY'];
     public readonly authTabs: FdUiTab[] = [
         { value: 'login', labelKey: 'AUTH.LOGIN.TITLE' },
@@ -132,6 +137,7 @@ export class AuthComponent {
         this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
             this.markDirtyControlsTouched(this.loginForm);
+            this.updateLoginAutofillState();
             this.cdr.markForCheck();
         });
         this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -169,6 +175,7 @@ export class AuthComponent {
 
             void this.completeAuthenticatedNavigation();
         });
+        afterNextRender(() => this.startLoginAutofillDetection());
         void this.initializeGoogle();
     }
 
@@ -198,13 +205,19 @@ export class AuthComponent {
         });
         this.showPasswordReset.set(false);
         this.passwordResetSent.set(false);
+        this.hasLoginNativeInteraction = false;
+        this.loginAutofillDetected.set(false);
         if (this.useRouting() && this.router) {
             await this.router.navigate(['/auth', mode]);
         }
     }
 
     public async onLoginSubmit(): Promise<void> {
+        this.syncLoginNativeValues();
+
         if (!this.loginForm.valid || this.isSubmitting()) {
+            this.loginForm.markAllAsTouched();
+            this.cdr.markForCheck();
             return;
         }
 
@@ -222,6 +235,16 @@ export class AuthComponent {
                 this.handleLoginError(error.error?.error);
             },
         });
+    }
+
+    public isLoginSubmitDisabled(): boolean {
+        return this.isSubmitting() || (this.loginForm.invalid && !this.loginAutofillDetected());
+    }
+
+    public onLoginNativeInput(): void {
+        this.hasLoginNativeInteraction = true;
+        this.syncLoginNativeValues();
+        this.updateLoginAutofillState();
     }
 
     public onRestoreSubmit(): void {
@@ -499,6 +522,76 @@ export class AuthComponent {
     private clearGlobalError(): void {
         this.globalError.set(null);
         this.showRestoreAction.set(false);
+    }
+
+    private syncLoginNativeValues(): void {
+        const form = this.loginFormElement()?.nativeElement;
+
+        if (!form) {
+            return;
+        }
+
+        const emailInput = form.querySelector<HTMLInputElement>('input[autocomplete="username"]');
+        const passwordInput = form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+
+        this.loginForm.patchValue(
+            {
+                email: emailInput?.value ?? this.loginForm.controls.email.value,
+                password: passwordInput?.value ?? this.loginForm.controls.password.value,
+            },
+            { emitEvent: true },
+        );
+    }
+
+    private startLoginAutofillDetection(): void {
+        this.updateLoginAutofillState();
+        this.loginAutofillCheckTimerIds = [100, 300, 700, 1500, 3000, 5000].map(delay =>
+            window.setTimeout(() => this.updateLoginAutofillState(), delay),
+        );
+
+        this.destroyRef.onDestroy(() => {
+            this.loginAutofillCheckTimerIds.forEach(timerId => window.clearTimeout(timerId));
+            this.loginAutofillCheckTimerIds = [];
+        });
+    }
+
+    private updateLoginAutofillState(): void {
+        const form = this.loginFormElement()?.nativeElement;
+        const hasAutofill = this.hasCompleteLoginAutofill(form);
+
+        if (this.loginAutofillDetected() === hasAutofill) {
+            return;
+        }
+
+        this.loginAutofillDetected.set(hasAutofill);
+        this.cdr.markForCheck();
+    }
+
+    private hasCompleteLoginAutofill(form: HTMLFormElement | undefined): boolean {
+        if (!form) {
+            return false;
+        }
+
+        const email = form.querySelector<HTMLInputElement>('input[autocomplete="username"]')?.value ?? '';
+        const password = form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]')?.value ?? '';
+
+        if (email && password) {
+            return true;
+        }
+
+        if (this.hasLoginNativeInteraction) {
+            return false;
+        }
+
+        if (email || password) {
+            return false;
+        }
+
+        try {
+            return form.querySelectorAll('input:-webkit-autofill').length >= 2;
+        } catch {
+            return false;
+        }
     }
 
     public getControlError(control: AbstractControl | null): string | null {

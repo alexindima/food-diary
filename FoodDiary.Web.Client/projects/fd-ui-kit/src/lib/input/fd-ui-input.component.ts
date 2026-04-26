@@ -1,5 +1,8 @@
 ﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DestroyRef, ElementRef, afterNextRender, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AutofillMonitor } from '@angular/cdk/text-field';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
@@ -24,6 +27,9 @@ export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
 })
 export class FdUiInputComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly autofillMonitor = inject(AutofillMonitor);
+    private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
     public readonly label = input<string>();
@@ -49,6 +55,19 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
+    private autofillSyncTimers: Array<ReturnType<typeof setTimeout>> = [];
+
+    public constructor() {
+        afterNextRender(() => {
+            this.monitorAutofill();
+            this.syncNativeValue();
+            this.autofillSyncTimers = [100, 500, 1000, 2500, 5000].map(delay => setTimeout(() => this.syncNativeValue(), delay));
+        });
+
+        this.destroyRef.onDestroy(() => {
+            this.autofillSyncTimers.forEach(timer => clearTimeout(timer));
+        });
+    }
 
     protected get sizeClass(): string {
         return `fd-ui-input--size-${this.size()}`;
@@ -96,7 +115,16 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     protected onFocus(): void {
+        this.syncNativeValue();
         this.isFocused = true;
+    }
+
+    protected onAnimationStart(event: AnimationEvent, value: string): void {
+        if (event.animationName !== 'fd-ui-input-autofill-start') {
+            return;
+        }
+
+        this.syncValue(value);
     }
 
     protected get shouldFloatLabel(): boolean {
@@ -128,5 +156,45 @@ export class FdUiInputComponent implements ControlValueAccessor {
         }
 
         control.focus();
+    }
+
+    private syncNativeValue(): void {
+        const nativeValue = this.control()?.nativeElement.value;
+
+        if (nativeValue === undefined) {
+            return;
+        }
+
+        this.syncValue(nativeValue);
+    }
+
+    private syncValue(value: string): void {
+        if (value === String(this.internalValue ?? '')) {
+            return;
+        }
+
+        this.internalValue = value;
+
+        if (!this.disabled) {
+            this.onChange(value);
+        }
+
+        this.cdr.markForCheck();
+    }
+
+    private monitorAutofill(): void {
+        const control = this.control();
+
+        if (!control) {
+            return;
+        }
+
+        this.autofillMonitor
+            .monitor(control)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.syncNativeValue();
+                setTimeout(() => this.syncNativeValue());
+            });
     }
 }

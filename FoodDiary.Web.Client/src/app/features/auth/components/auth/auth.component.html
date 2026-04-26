@@ -65,8 +65,10 @@
                 </form>
             } @else {
                 <form
+                    #loginFormElement
                     [formGroup]="loginForm"
                     (ngSubmit)="onLoginSubmit()"
+                    (input)="onLoginNativeInput()"
                     class="auth__form"
                     [attr.aria-busy]="isSubmitting() || isRestoring()"
                 >
@@ -77,7 +79,7 @@
                             type="email"
                             [label]="'AUTH.LOGIN.EMAIL' | translate"
                             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
-                            autocomplete="email"
+                            autocomplete="username"
                             [error]="getControlError(loginForm.controls.email)"
                         />
                     </div>
@@ -106,7 +108,7 @@
                             appearance="brand-action"
                             size="lg"
                             variant="primary"
-                            [disabled]="loginForm.invalid || isSubmitting()"
+                            [disabled]="isLoginSubmitDisabled()"
                             [loading]="isSubmitting()"
                             [fullWidth]="true"
                         >

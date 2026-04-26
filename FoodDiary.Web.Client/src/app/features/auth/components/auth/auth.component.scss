@@ -9,13 +9,14 @@
 
     &__tabs {
         --fd-tabs-height: 34px;
-        --fd-tabs-item-padding-inline: 0;
+        --fd-tabs-item-padding-inline: 28px;
         --fd-tabs-color: var(--fd-color-text-muted);
-        --fd-tabs-color-hover: var(--fd-color-primary-700);
-        --fd-tabs-color-active: var(--fd-color-primary-700);
+        --fd-tabs-color-hover: color-mix(in srgb, var(--fd-color-primary-300) 72%, var(--fd-color-white));
+        --fd-tabs-color-active: var(--fd-color-primary-600);
         --fd-tabs-active-border-color: var(--fd-color-primary-600);
         --fd-tabs-border-color: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
-        --fd-tabs-label-opacity: 0.82;
+        --fd-tabs-label-opacity: 0.72;
+        --fd-tabs-label-opacity-active: 1;
         margin-bottom: variables.$gap-xs;
     }
 

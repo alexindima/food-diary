@@ -161,6 +161,19 @@ describe('FdUiInputComponent', () => {
         expect(wrapper!.classList).toContain('fd-ui-input--floating');
     });
 
+    it('should float label when native input has autofilled value before focus', () => {
+        fixture.componentRef.setInput('label', 'Email');
+        fixture.detectChanges();
+
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
+        input.value = 'autofilled@example.com';
+        input.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        const wrapper = el.querySelector('.fd-ui-input');
+        expect(wrapper!.classList).toContain('fd-ui-input--floating');
+    });
+
     it('should show placeholder only when focused and empty', () => {
         fixture.componentRef.setInput('placeholder', 'Enter text');
         fixture.detectChanges();
@@ -231,6 +244,15 @@ describe('FdUiInputComponent', () => {
             hostFixture.detectChanges();
 
             expect(hostComponent.ctrl.value).toBe('typed');
+        });
+
+        it('should sync native autofilled value to FormControl on focus', () => {
+            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
+            input.value = 'autofilled@example.com';
+            input.dispatchEvent(new Event('focus'));
+            hostFixture.detectChanges();
+
+            expect(hostComponent.ctrl.value).toBe('autofilled@example.com');
         });
 
         it('should mark control as touched on blur', () => {

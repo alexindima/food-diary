@@ -38,6 +38,7 @@
             [attr.step]="step() ?? null"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
             [attr.aria-invalid]="error() ? 'true' : null"
+            (animationstart)="onAnimationStart($event, control.value)"
             (input)="onInput($any($event.target).value)"
             (focus)="onFocus()"
             (blur)="onBlur()"
