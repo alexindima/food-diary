@@ -21,8 +21,8 @@ public sealed class MailInboxMailboxFilter(IOptions<MailInboxSmtpOptions> option
 
     public override Task<bool> CanDeliverToAsync(
         ISessionContext context,
-        IMailbox from,
         IMailbox to,
+        IMailbox from,
         CancellationToken cancellationToken) {
         var address = to.AsAddress().Trim().ToLowerInvariant();
         return Task.FromResult(_allowedRecipients.Contains(address));

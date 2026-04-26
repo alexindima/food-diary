@@ -14,8 +14,8 @@ public sealed class MailInboxMailboxFilterTests {
 
         var canDeliver = await filter.CanDeliverToAsync(
             context: null!,
-            from: new Mailbox("sender", "example.com"),
             to: new Mailbox("admin", "fooddiary.club"),
+            from: new Mailbox("sender", "example.com"),
             cancellationToken: CancellationToken.None);
 
         Assert.True(canDeliver);
@@ -29,8 +29,8 @@ public sealed class MailInboxMailboxFilterTests {
 
         var canDeliver = await filter.CanDeliverToAsync(
             context: null!,
-            from: new Mailbox("sender", "example.com"),
             to: new Mailbox("unknown", "fooddiary.club"),
+            from: new Mailbox("sender", "example.com"),
             cancellationToken: CancellationToken.None);
 
         Assert.False(canDeliver);
