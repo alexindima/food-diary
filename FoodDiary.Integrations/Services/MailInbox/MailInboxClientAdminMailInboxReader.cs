@@ -1,5 +1,5 @@
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Models;
 

@@ -1,10 +1,10 @@
-using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using static FoodDiary.Application.Common.Abstractions.Result.Errors;
+using static FoodDiary.Application.Abstractions.Common.Abstractions.Result.Errors;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.SetPassword;
 

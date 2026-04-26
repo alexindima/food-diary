@@ -1,10 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Usda.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Usda.Mappings;
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;

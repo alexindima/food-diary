@@ -1,6 +1,6 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.FavoriteProducts.Common;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
@@ -9,7 +9,7 @@ using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
-using FoodDiary.Application.RecentItems.Common;
+using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;

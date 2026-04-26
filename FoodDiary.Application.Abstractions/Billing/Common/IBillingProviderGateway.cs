@@ -1,7 +1,7 @@
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
-namespace FoodDiary.Application.Billing.Common;
+namespace FoodDiary.Application.Abstractions.Billing.Common;
 
 public interface IBillingProviderGateway {
     string Provider { get; }

@@ -146,7 +146,7 @@ public sealed class S3ImageStorageServiceTests {
             Task.FromException(exception);
     }
 
-    private sealed class StubDateTimeProvider : FoodDiary.Application.Common.Interfaces.Services.IDateTimeProvider {
+    private sealed class StubDateTimeProvider : FoodDiary.Application.Abstractions.Common.Interfaces.Services.IDateTimeProvider {
         public DateTime UtcNow { get; } = new(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
     }
 }

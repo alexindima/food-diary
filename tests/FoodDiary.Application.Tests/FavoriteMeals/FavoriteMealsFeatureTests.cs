@@ -1,8 +1,8 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
-using FoodDiary.Application.FavoriteMeals.Common;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;

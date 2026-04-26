@@ -1,9 +1,9 @@
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Email.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Application.Dietologist.Services;
 

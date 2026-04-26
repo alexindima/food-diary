@@ -1,13 +1,13 @@
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using User = FoodDiary.Domain.Entities.Users.User;
+using FoodDiary.Application.Abstractions.Billing.Models;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 

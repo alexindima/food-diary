@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Billing.Common;
+namespace FoodDiary.Application.Abstractions.Billing.Common;
 
 public interface IBillingProviderGatewayAccessor {
     IBillingProviderGateway GetActiveProvider();

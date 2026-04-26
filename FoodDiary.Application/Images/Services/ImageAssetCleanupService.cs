@@ -1,4 +1,4 @@
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 

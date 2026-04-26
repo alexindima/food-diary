@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Abstractions.Products.Common;
 
 public interface IProductLookupService {
     Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(

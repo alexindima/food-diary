@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
-using FoodDiary.Application.Authentication.Abstractions;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Caching.Distributed;
 

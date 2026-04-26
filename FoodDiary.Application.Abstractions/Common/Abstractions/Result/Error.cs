@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Common.Abstractions.Result;
+namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 public sealed record Error {
     public static readonly Error None = new(string.Empty, string.Empty);

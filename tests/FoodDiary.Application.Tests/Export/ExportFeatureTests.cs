@@ -1,8 +1,8 @@
-using FoodDiary.Application.Export.Common;
+using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;

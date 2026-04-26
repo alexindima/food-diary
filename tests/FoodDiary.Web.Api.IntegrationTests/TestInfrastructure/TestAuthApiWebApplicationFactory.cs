@@ -1,5 +1,4 @@
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

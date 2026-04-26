@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Common;
+namespace FoodDiary.Application.Abstractions.Images.Common;
 
 public interface IImageAssetRepository {
     Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default);

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Authentication.Mappings;
 

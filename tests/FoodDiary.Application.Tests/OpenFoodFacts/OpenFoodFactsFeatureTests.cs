@@ -1,5 +1,5 @@
-using FoodDiary.Application.OpenFoodFacts.Common;
-using FoodDiary.Application.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
 

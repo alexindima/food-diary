@@ -1,9 +1,9 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Services;
-using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Fasting.Common;
-using FoodDiary.Application.WaistEntries.Common;
-using FoodDiary.Application.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;

@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Hydration.Common;
+namespace FoodDiary.Application.Abstractions.Hydration.Common;
 
 public interface IHydrationEntryRepository {
     Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default);

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Authentication.Abstractions;
+namespace FoodDiary.Application.Abstractions.Authentication.Abstractions;
 
 public sealed record GoogleIdentityPayload(
     string Email,

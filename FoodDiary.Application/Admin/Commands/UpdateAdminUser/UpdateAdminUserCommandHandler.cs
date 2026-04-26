@@ -1,9 +1,9 @@
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

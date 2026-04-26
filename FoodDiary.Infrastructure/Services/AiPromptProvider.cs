@@ -1,4 +1,4 @@
-using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;

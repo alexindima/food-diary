@@ -1,5 +1,5 @@
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
 

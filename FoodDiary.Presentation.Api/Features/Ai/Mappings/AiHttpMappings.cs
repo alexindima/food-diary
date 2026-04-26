@@ -1,7 +1,7 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Commands.ParseFoodText;
-using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;

@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
 public interface IRecipeRepository {
     Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default);

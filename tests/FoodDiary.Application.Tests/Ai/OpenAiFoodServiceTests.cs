@@ -1,13 +1,13 @@
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Services;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Admin.Models;
 
 namespace FoodDiary.Application.Tests.Ai;
 

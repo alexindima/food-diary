@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public static class NotificationPayloads {
     public static string Empty() => NotificationPayloadSerializer.Serialize(new EmptyNotificationPayload());

@@ -1,8 +1,8 @@
 using System.Net.Mail;
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
-using FoodDiary.Application.Email.Common;
+using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 

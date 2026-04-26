@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Application.Cycles.Common;
+using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;

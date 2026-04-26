@@ -1,4 +1,4 @@
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Presentation.Api.Features.Usda.Mappings;
 using FoodDiary.Presentation.Api.Features.Usda.Requests;
 

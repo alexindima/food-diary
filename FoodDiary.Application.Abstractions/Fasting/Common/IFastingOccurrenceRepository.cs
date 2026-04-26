@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Fasting.Common;
+namespace FoodDiary.Application.Abstractions.Fasting.Common;
 
 public interface IFastingOccurrenceRepository {
     Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default);

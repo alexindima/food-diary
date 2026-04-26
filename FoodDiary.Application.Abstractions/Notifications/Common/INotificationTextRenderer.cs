@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public interface INotificationTextRenderer {
     NotificationText Render(string type, string? locale = null, params object[] arguments);

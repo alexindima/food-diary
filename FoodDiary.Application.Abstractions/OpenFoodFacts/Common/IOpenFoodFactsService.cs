@@ -1,6 +1,6 @@
-using FoodDiary.Application.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 
-namespace FoodDiary.Application.OpenFoodFacts.Common;
+namespace FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 
 public interface IOpenFoodFactsService {
     Task<OpenFoodFactsProductModel?> GetByBarcodeAsync(

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Email.Common;
+namespace FoodDiary.Application.Abstractions.Email.Common;
 
 public sealed class EmailOptions {
     public const string SectionName = "Email";

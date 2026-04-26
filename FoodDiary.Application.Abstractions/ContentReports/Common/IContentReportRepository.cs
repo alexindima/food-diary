@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ContentReports.Common;
+namespace FoodDiary.Application.Abstractions.ContentReports.Common;
 
 public interface IContentReportRepository {
     Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default);

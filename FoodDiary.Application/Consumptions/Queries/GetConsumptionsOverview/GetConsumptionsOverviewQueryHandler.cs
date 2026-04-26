@@ -1,13 +1,13 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.FavoriteMeals.Mappings;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 

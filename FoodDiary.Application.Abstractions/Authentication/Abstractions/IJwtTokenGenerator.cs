@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Authentication.Abstractions;
+namespace FoodDiary.Application.Abstractions.Authentication.Abstractions;
 
 public interface IJwtTokenGenerator {
     string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles);

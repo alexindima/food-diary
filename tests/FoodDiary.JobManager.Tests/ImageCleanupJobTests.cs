@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

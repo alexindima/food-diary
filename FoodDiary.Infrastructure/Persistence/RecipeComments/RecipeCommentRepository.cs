@@ -1,4 +1,4 @@
-using FoodDiary.Application.RecipeComments.Common;
+using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

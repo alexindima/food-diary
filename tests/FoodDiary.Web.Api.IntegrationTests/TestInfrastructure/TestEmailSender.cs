@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

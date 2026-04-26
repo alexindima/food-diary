@@ -1,4 +1,4 @@
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

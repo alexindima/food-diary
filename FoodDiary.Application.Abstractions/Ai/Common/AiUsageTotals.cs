@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Ai.Common;
+namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public sealed record AiUsageTotals(
     long InputTokens,

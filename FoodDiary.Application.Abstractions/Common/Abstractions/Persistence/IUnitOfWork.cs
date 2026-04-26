@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Common.Abstractions.Persistence;
+namespace FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
 public interface IUnitOfWork {
     bool HasPendingChanges { get; }

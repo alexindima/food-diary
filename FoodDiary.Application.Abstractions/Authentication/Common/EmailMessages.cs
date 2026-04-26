@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Authentication.Common;
+namespace FoodDiary.Application.Abstractions.Authentication.Common;
 
 public sealed record EmailVerificationMessage(
     string ToEmail,

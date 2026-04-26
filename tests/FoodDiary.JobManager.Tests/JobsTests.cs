@@ -1,13 +1,13 @@
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Images.Common;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.JobManager.Services;
 using Hangfire;
 using Hangfire.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
+using FoodDiary.Application.Abstractions.Users.Common;
 
 namespace FoodDiary.JobManager.Tests;
 

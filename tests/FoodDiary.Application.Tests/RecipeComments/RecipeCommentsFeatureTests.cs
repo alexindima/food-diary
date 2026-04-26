@@ -1,9 +1,9 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
-using FoodDiary.Application.RecipeComments.Common;
+using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 

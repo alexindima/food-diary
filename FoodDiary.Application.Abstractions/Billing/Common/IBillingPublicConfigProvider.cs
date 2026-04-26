@@ -1,6 +1,6 @@
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Application.Abstractions.Billing.Models;
 
-namespace FoodDiary.Application.Billing.Common;
+namespace FoodDiary.Application.Abstractions.Billing.Common;
 
 public interface IBillingPublicConfigProvider {
     BillingPublicConfigModel GetPublicConfig();

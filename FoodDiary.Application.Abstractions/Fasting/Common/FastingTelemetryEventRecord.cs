@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Fasting.Common;
+namespace FoodDiary.Application.Abstractions.Fasting.Common;
 
 public sealed record FastingTelemetryEventRecord(
     string Name,

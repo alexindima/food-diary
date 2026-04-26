@@ -1,9 +1,9 @@
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
-using FoodDiary.Application.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;

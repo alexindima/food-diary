@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
 using Microsoft.Extensions.Caching.Distributed;

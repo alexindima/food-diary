@@ -1,8 +1,8 @@
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Ai.Common;
+namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IOpenAiFoodService {
     Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(

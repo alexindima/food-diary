@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Common.Abstractions.Result;
+namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 public static class Errors {
     public static class Product {

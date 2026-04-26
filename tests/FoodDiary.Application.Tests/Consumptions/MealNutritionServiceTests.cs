@@ -1,11 +1,11 @@
 using FoodDiary.Application.Consumptions.Services;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 
 namespace FoodDiary.Application.Consumptions.Services;
 

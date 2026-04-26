@@ -1,10 +1,10 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
-using FoodDiary.Application.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;

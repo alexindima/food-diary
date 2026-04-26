@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Abstractions.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Infrastructure.Persistence;
 

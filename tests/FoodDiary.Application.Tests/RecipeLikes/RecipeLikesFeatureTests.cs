@@ -1,6 +1,6 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
-using FoodDiary.Application.RecipeLikes.Common;
+using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;

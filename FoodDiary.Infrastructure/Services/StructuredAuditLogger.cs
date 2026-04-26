@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Abstractions.Audit;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 

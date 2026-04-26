@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;

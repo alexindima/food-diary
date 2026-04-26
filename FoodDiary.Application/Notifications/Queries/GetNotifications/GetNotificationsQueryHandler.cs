@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;

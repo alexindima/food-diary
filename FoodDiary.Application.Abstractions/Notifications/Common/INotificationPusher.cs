@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public interface INotificationPusher {
     Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default);

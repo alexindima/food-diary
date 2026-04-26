@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Usda.Models;
+namespace FoodDiary.Application.Abstractions.Usda.Models;
 
 public sealed record UsdaFoodPortionModel(
     int Id,

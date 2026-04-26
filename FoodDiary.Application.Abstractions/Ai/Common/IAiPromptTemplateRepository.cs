@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Ai.Common;
+namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IAiPromptTemplateRepository {
     Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default);

@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Models;
+namespace FoodDiary.Application.Abstractions.Admin.Models;
 
 public sealed record AiUsageSummary(
     int TotalTokens,

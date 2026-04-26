@@ -1,8 +1,8 @@
 using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Hydration.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Application.Hydration.Validators;

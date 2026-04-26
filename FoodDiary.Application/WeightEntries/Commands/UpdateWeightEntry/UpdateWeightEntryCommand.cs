@@ -1,5 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.WeightEntries.Models;
 
 namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;

@@ -1,6 +1,6 @@
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 
-namespace FoodDiary.Application.Usda.Common;
+namespace FoodDiary.Application.Abstractions.Usda.Common;
 
 public interface IUsdaFoodSearchService {
     Task<IReadOnlyList<UsdaFoodModel>> SearchBrandedAsync(

@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Common;
+namespace FoodDiary.Application.Abstractions.Images.Common;
 
 public sealed record PresignedUpload(
     string UploadUrl,

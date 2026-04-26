@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;

@@ -1,5 +1,5 @@
 using FluentValidation;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FluentValidation.Results;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;

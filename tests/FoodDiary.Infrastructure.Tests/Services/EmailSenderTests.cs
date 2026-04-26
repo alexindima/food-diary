@@ -1,9 +1,9 @@
 using System.Diagnostics.Metrics;
 using System.Net.Mail;
-using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Email.Common;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 

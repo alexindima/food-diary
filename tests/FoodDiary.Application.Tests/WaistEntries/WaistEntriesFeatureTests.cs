@@ -1,8 +1,8 @@
 using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Domain.Entities.Tracking;

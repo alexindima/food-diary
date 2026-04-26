@@ -2,17 +2,17 @@ using System.Net.Mail;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
-using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Common.Abstractions.Audit;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Email.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -370,14 +370,14 @@ public class AdminFeatureTests {
         public Task AddAsync(FoodDiary.Domain.Entities.Ai.AiUsage usage, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<FoodDiary.Application.Admin.Models.AiUsageSummary> GetSummaryAsync(
+        public Task<FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary> GetSummaryAsync(
             DateTime fromUtc,
             DateTime toUtc,
             CancellationToken cancellationToken = default) {
             LastFromUtc = fromUtc;
             LastToUtc = toUtc;
 
-            return Task.FromResult(new FoodDiary.Application.Admin.Models.AiUsageSummary(
+            return Task.FromResult(new FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary(
                 0,
                 0,
                 0,

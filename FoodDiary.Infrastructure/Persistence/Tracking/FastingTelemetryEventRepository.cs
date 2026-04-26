@@ -1,4 +1,4 @@
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using Microsoft.EntityFrameworkCore;
 

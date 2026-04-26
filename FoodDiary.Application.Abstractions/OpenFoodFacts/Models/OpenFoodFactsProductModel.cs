@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.OpenFoodFacts.Models;
+namespace FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 
 public sealed record OpenFoodFactsProductModel(
     string Barcode,

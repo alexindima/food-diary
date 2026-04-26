@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Email.Common;
+using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;

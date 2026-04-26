@@ -1,4 +1,4 @@
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Usda.Mappings;

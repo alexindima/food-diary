@@ -1,8 +1,8 @@
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using Hangfire;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using FoodDiary.Application.Abstractions.Users.Common;
 
 namespace FoodDiary.JobManager.Services;
 

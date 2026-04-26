@@ -1,4 +1,4 @@
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

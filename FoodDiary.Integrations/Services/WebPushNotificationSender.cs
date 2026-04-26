@@ -1,6 +1,6 @@
 using System.Text.Json;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;

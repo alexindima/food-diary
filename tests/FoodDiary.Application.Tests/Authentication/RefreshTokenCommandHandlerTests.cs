@@ -1,10 +1,11 @@
-using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Resources;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 
 namespace FoodDiary.Resources.Notifications;
 

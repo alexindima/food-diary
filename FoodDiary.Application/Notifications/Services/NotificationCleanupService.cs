@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 
 namespace FoodDiary.Application.Notifications.Services;
 

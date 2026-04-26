@@ -1,4 +1,4 @@
-using FoodDiary.Application.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

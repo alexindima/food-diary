@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 

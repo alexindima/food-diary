@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Authentication.Commands.Register;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 

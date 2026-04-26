@@ -1,4 +1,4 @@
-using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Infrastructure.Services;
 

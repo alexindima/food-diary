@@ -1,4 +1,4 @@
-using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
 using FoodDiary.Presentation.Api.Responses;

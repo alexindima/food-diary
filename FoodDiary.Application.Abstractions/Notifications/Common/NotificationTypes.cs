@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public static class NotificationTypes {
     public const string NewRecommendation = "NewRecommendation";

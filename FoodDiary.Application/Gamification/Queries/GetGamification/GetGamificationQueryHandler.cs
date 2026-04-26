@@ -1,11 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Gamification.Queries.GetGamification;

@@ -1,11 +1,10 @@
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Images.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.RecentItems.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -15,7 +14,7 @@ using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
-using FoodDiary.Application.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Products;
@@ -26,6 +25,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 

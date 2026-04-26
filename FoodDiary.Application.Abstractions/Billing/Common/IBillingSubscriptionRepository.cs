@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Billing.Common;
+namespace FoodDiary.Application.Abstractions.Billing.Common;
 
 public interface IBillingSubscriptionRepository {
     Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default);

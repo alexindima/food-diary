@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public static class NotificationPayloadSerializer {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);

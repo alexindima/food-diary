@@ -1,5 +1,5 @@
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

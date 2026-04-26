@@ -1,5 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using MediatR;
 
 namespace FoodDiary.Application.Common.Behaviors;

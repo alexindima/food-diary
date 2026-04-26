@@ -1,8 +1,8 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Usda.Common;
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

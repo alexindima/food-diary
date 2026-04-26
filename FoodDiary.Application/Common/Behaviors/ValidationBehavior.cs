@@ -1,5 +1,5 @@
 using FluentValidation;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using MediatR;
 
 namespace FoodDiary.Application.Common.Behaviors;

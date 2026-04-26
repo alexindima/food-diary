@@ -1,6 +1,6 @@
 using FoodDiary.Application;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;

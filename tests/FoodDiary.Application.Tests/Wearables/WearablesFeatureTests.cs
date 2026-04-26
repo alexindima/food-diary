@@ -1,7 +1,7 @@
 using FoodDiary.Application.Wearables.Commands.ConnectWearable;
 using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Application.Wearables.Models;
+using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Usda.Common;
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Usda.Models;
 
 namespace FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 

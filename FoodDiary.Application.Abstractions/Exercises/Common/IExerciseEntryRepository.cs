@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Exercises.Common;
+namespace FoodDiary.Application.Abstractions.Exercises.Common;
 
 public interface IExerciseEntryRepository {
     Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default);

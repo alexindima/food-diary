@@ -1,4 +1,4 @@
-using FoodDiary.Application.Usda.Common;
+using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Domain.Entities.Usda;
 using Microsoft.EntityFrameworkCore;
 

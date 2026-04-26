@@ -1,8 +1,9 @@
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Admin.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 

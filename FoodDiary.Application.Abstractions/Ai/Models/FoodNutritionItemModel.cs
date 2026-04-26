@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Ai.Models;
+namespace FoodDiary.Application.Abstractions.Ai.Models;
 
 public sealed record FoodNutritionItemModel(
     string Name,

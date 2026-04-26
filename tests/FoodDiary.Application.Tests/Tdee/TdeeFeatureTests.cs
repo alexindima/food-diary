@@ -1,9 +1,9 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
-using FoodDiary.Application.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;

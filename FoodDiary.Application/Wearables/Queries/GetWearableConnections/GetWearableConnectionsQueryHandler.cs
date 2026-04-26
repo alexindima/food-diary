@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Application.Wearables.Models;
+using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 

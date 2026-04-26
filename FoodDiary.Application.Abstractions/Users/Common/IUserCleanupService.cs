@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Application.Abstractions.Users.Common;
 
 public interface IUserCleanupService {
     Task<int> CleanupDeletedUsersAsync(

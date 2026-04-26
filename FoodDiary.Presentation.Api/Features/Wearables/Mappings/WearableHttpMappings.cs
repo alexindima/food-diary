@@ -1,7 +1,7 @@
 using FoodDiary.Application.Wearables.Commands.ConnectWearable;
 using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
 using FoodDiary.Application.Wearables.Commands.SyncWearableData;
-using FoodDiary.Application.Wearables.Models;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;

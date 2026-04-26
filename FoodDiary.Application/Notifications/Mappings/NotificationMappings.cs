@@ -1,4 +1,4 @@
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 

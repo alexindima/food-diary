@@ -1,6 +1,5 @@
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
@@ -11,7 +10,6 @@ using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
-using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.EventHandlers;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
@@ -22,7 +20,7 @@ using FoodDiary.Application.Dietologist.Queries.GetMyClients;
 using FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
 using FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
@@ -32,6 +30,8 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 

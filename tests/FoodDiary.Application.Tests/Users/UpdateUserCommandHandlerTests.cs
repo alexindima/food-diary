@@ -1,6 +1,6 @@
 using System.Text.Json;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Entities.Users;

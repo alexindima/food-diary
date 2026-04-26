@@ -1,5 +1,5 @@
 using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
-using FoodDiary.Application.ContentReports.Common;
+using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

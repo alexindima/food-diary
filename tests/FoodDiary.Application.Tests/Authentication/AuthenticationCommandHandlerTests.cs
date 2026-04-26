@@ -1,4 +1,4 @@
-using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
@@ -7,14 +7,16 @@ using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Common.Abstractions.Audit;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -251,14 +253,14 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     private sealed class StubTelegramAuthValidator : ITelegramAuthValidator {
-        public FoodDiary.Application.Common.Abstractions.Result.Result<TelegramInitData> ValidateInitData(string initData) =>
+        public FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<TelegramInitData> ValidateInitData(string initData) =>
             throw new NotSupportedException();
     }
 
     private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload) : IGoogleTokenValidator {
-        public Task<FoodDiary.Application.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
+        public Task<FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
             string credential,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(FoodDiary.Application.Common.Abstractions.Result.Result.Success(payload));
+            Task.FromResult(FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(payload));
     }
 }

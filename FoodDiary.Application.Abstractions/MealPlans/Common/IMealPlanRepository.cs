@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlans.Common;
+namespace FoodDiary.Application.Abstractions.MealPlans.Common;
 
 public interface IMealPlanRepository {
     Task<MealPlan> AddAsync(MealPlan plan, CancellationToken cancellationToken = default);

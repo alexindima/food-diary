@@ -1,6 +1,6 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Abstractions.Admin.Models;
 
-namespace FoodDiary.Application.Admin.Common;
+namespace FoodDiary.Application.Abstractions.Admin.Common;
 
 public interface IAdminMailInboxReader {
     Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(

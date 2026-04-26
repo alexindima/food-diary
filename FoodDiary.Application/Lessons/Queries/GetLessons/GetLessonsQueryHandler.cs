@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Lessons.Common;
+using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Lessons.Mappings;
 using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Domain.Enums;

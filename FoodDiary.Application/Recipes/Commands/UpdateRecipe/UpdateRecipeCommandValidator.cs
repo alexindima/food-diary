@@ -1,6 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
 using FoodDiary.Domain.Entities.Recipes;

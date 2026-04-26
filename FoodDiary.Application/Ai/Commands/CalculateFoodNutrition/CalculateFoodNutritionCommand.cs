@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Ai.Models;
 
 namespace FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 

@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

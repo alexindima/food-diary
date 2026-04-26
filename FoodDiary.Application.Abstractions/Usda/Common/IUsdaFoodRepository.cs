@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Usda;
 
-namespace FoodDiary.Application.Usda.Common;
+namespace FoodDiary.Application.Abstractions.Usda.Common;
 
 public interface IUsdaFoodRepository {
     Task<IReadOnlyList<UsdaFood>> SearchAsync(

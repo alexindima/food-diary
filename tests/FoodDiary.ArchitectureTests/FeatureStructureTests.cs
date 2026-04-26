@@ -43,7 +43,7 @@ public class FeatureStructureTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Application.Abstractions", "FoodDiary.Application")]
+    [InlineData("FoodDiary.Application.Abstractions", "FoodDiary.Application.Abstractions")]
     [InlineData("FoodDiary.Application", "FoodDiary.Application")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
     [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]

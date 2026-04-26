@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 
 namespace FoodDiary.Presentation.Api.Features.Notifications.Requests;
 

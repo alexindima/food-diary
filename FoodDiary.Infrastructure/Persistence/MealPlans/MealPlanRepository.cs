@@ -1,4 +1,4 @@
-using FoodDiary.Application.MealPlans.Common;
+using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

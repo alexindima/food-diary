@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Cycles.Common;
+namespace FoodDiary.Application.Abstractions.Cycles.Common;
 
 public interface ICycleRepository {
     Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default);

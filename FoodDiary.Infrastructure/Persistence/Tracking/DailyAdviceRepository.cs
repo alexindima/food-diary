@@ -1,4 +1,4 @@
-using FoodDiary.Application.DailyAdvices.Common;
+using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 

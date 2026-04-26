@@ -1,4 +1,4 @@
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Presentation.Api.Hubs;
 using Microsoft.AspNetCore.SignalR;
 

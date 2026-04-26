@@ -1,4 +1,4 @@
-using FoodDiary.Application.Wearables.Models;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Presentation.Api.Features.Wearables.Mappings;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 

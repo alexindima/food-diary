@@ -1,7 +1,7 @@
 using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
-using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;

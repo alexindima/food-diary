@@ -1,10 +1,10 @@
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
-using FoodDiary.Application.Common.Abstractions.Audit;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;

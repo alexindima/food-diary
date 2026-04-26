@@ -1,7 +1,7 @@
 using System.Text;
 using FoodDiary.Application;
 using FoodDiary.Integrations;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Domain.Entities.Ai;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;

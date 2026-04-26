@@ -1,23 +1,24 @@
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Fasting.Services;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Services;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Services;
 using FluentValidation;
 using System.Reflection;
+using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application;
 

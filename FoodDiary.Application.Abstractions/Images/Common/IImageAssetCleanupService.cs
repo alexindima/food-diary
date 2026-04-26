@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Common;
+namespace FoodDiary.Application.Abstractions.Images.Common;
 
 public interface IImageAssetCleanupService {
     Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default);

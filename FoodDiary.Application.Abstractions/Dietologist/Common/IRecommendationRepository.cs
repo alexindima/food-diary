@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Application.Abstractions.Dietologist.Common;
 
 public interface IRecommendationRepository {
     Task<IReadOnlyList<Recommendation>> GetByClientAsync(

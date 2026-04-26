@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeLikes.Common;
+namespace FoodDiary.Application.Abstractions.RecipeLikes.Common;
 
 public interface IRecipeLikeRepository {
     Task<RecipeLike?> GetByUserAndRecipeAsync(

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Billing.Models;
+using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Billing.Mappings;

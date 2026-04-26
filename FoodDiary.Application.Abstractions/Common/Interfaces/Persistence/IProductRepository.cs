@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
 public interface IProductRepository {
     Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default);

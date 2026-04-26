@@ -2,8 +2,9 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Email.Common;
+using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 

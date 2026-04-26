@@ -1,5 +1,5 @@
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;

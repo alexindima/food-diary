@@ -1,7 +1,7 @@
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using FoodDiary.Application.Email.Common;
+using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Models;
 

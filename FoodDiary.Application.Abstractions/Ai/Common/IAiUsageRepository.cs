@@ -1,8 +1,8 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Ai.Common;
+namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IAiUsageRepository {
     Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default);

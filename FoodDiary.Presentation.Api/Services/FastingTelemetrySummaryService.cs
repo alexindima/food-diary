@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Services;

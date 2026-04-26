@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.MealPlans.Common;
-using FoodDiary.Application.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.Shopping;

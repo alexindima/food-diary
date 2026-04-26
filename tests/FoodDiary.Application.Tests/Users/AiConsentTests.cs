@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Commands.AcceptAiConsent;
 using FoodDiary.Application.Users.Commands.RevokeAiConsent;
 using FoodDiary.Domain.Entities.Users;

@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeComments.Common;
+namespace FoodDiary.Application.Abstractions.RecipeComments.Common;
 
 public interface IRecipeCommentRepository {
     Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default);

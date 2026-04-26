@@ -1,15 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Services;
-using FoodDiary.Application.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 
 namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 

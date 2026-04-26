@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.OpenFoodFacts.Common;
-using FoodDiary.Application.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

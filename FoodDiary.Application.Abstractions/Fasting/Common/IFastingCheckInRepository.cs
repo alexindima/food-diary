@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Fasting.Common;
+namespace FoodDiary.Application.Abstractions.Fasting.Common;
 
 public interface IFastingCheckInRepository {
     Task AddAsync(FastingCheckIn checkIn, CancellationToken cancellationToken = default);

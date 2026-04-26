@@ -1,7 +1,7 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 using FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
-using FoodDiary.Application.Usda.Common;
+using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Enums;

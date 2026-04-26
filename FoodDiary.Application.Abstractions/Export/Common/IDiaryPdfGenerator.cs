@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Meals;
 
-namespace FoodDiary.Application.Export.Common;
+namespace FoodDiary.Application.Abstractions.Export.Common;
 
 public interface IDiaryPdfGenerator {
     byte[] Generate(IReadOnlyList<Meal> meals, DateTime dateFrom, DateTime dateTo);

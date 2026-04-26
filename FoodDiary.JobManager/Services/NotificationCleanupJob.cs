@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

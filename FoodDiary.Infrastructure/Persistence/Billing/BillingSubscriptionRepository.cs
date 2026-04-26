@@ -1,4 +1,4 @@
-using FoodDiary.Application.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

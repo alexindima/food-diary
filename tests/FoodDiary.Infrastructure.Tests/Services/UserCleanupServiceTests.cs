@@ -1,6 +1,6 @@
 using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Tests.Services;

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

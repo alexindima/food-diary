@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Lessons.Common;
+namespace FoodDiary.Application.Abstractions.Lessons.Common;
 
 public interface INutritionLessonRepository {
     Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(

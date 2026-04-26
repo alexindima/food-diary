@@ -1,4 +1,4 @@
-using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using FoodDiary.Application.Abstractions.Users.Common;
 
 namespace FoodDiary.JobManager.Tests;
 

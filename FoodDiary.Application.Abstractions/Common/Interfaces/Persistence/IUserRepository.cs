@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
 public interface IUserRepository {
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);

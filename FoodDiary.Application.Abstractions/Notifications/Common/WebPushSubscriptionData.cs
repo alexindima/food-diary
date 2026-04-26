@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public sealed record WebPushSubscriptionData(
     string Endpoint,

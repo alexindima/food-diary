@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Application.Abstractions.Dietologist.Common;
 
 public interface IDietologistInvitationRepository {
     Task<DietologistInvitation?> GetByIdAsync(

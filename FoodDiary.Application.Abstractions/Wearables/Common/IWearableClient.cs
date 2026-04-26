@@ -1,7 +1,7 @@
-using FoodDiary.Application.Wearables.Models;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Wearables.Common;
+namespace FoodDiary.Application.Abstractions.Wearables.Common;
 
 public interface IWearableClient {
     WearableProvider Provider { get; }

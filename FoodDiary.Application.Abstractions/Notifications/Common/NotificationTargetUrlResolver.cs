@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Application.Abstractions.Notifications.Common;
 
 public static class NotificationTargetUrlResolver {
     public static string? Resolve(string notificationType, string? referenceId = null) {

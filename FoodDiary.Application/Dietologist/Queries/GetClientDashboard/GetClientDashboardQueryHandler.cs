@@ -1,8 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 

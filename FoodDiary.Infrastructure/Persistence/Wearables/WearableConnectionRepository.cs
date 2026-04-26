@@ -1,4 +1,4 @@
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

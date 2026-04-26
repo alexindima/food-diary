@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteMeals.Common;
+namespace FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 
 public interface IFavoriteMealRepository {
     Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default);

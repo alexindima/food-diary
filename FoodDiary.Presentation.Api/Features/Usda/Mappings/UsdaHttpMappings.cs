@@ -1,6 +1,6 @@
 using FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 using FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
-using FoodDiary.Application.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;

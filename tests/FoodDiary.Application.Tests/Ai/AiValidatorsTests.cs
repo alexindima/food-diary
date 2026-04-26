@@ -1,12 +1,12 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Ai.Models;
-using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
-using FoodDiary.Application.Images.Common;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -239,7 +239,7 @@ public class AiValidatorsTests {
         public Task AddAsync(FoodDiary.Domain.Entities.Ai.AiUsage usage, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<FoodDiary.Application.Admin.Models.AiUsageSummary> GetSummaryAsync(
+        public Task<FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary> GetSummaryAsync(
             DateTime fromUtc,
             DateTime toUtc,
             CancellationToken cancellationToken = default) =>

@@ -1,5 +1,5 @@
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;

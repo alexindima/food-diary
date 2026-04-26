@@ -1,4 +1,4 @@
-using FoodDiary.Application.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;

@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Common;
+namespace FoodDiary.Application.Abstractions.Wearables.Common;
 
 public interface IWearableConnectionRepository {
     Task<WearableConnection?> GetAsync(
