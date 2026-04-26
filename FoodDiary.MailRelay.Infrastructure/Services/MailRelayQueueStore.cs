@@ -534,9 +534,9 @@ public sealed class MailRelayQueueStore(
                 reader.GetString(0),
                 reader.GetString(1),
                 reader.GetString(2),
-                reader.GetFieldValue<DateTimeOffset>(3),
-                reader.GetFieldValue<DateTimeOffset>(4),
-                reader.IsDBNull(5) ? null : reader.GetFieldValue<DateTimeOffset>(5)));
+                GetDateTimeOffset(reader, 3),
+                GetDateTimeOffset(reader, 4),
+                reader.IsDBNull(5) ? null : GetDateTimeOffset(reader, 5)));
         }
 
         return entries;
@@ -624,7 +624,7 @@ public sealed class MailRelayQueueStore(
         command.Parameters.AddWithValue("providerMessageId", (object?)request.ProviderMessageId ?? DBNull.Value);
         command.Parameters.AddWithValue("reason", (object?)request.Reason ?? DBNull.Value);
         command.Parameters.AddWithValue("occurredAtUtc", occurredAtUtc);
-        var createdAtUtc = (DateTimeOffset)(await command.ExecuteScalarAsync(cancellationToken)
+        var createdAtUtc = ToDateTimeOffset(await command.ExecuteScalarAsync(cancellationToken)
                                             ?? throw new InvalidOperationException("Delivery event insert did not return created_at_utc."));
 
         return new MailRelayDeliveryEventEntry(
@@ -672,8 +672,8 @@ public sealed class MailRelayQueueStore(
                 reader.IsDBNull(4) ? null : reader.GetString(4),
                 reader.IsDBNull(5) ? null : reader.GetString(5),
                 reader.IsDBNull(6) ? null : reader.GetString(6),
-                reader.GetFieldValue<DateTimeOffset>(7),
-                reader.GetFieldValue<DateTimeOffset>(8)));
+                GetDateTimeOffset(reader, 7),
+                GetDateTimeOffset(reader, 8)));
         }
 
         return result;
@@ -789,10 +789,10 @@ public sealed class MailRelayQueueStore(
             reader.IsDBNull(3) ? null : reader.GetString(3),
             reader.GetInt32(4),
             reader.GetInt32(5),
-            reader.GetFieldValue<DateTimeOffset>(6),
-            reader.GetFieldValue<DateTimeOffset>(7),
-            reader.IsDBNull(8) ? null : reader.GetFieldValue<DateTimeOffset>(8),
-            reader.IsDBNull(9) ? null : reader.GetFieldValue<DateTimeOffset>(9),
+            GetDateTimeOffset(reader, 6),
+            GetDateTimeOffset(reader, 7),
+            reader.IsDBNull(8) ? null : GetDateTimeOffset(reader, 8),
+            reader.IsDBNull(9) ? null : GetDateTimeOffset(reader, 9),
             reader.IsDBNull(10) ? null : reader.GetString(10),
             suppressedRecipients);
     }
@@ -837,6 +837,16 @@ public sealed class MailRelayQueueStore(
     private static string Truncate(string value, int maxLength) {
         return value.Length <= maxLength ? value : value[..maxLength];
     }
+
+    private static DateTimeOffset GetDateTimeOffset(NpgsqlDataReader reader, int ordinal) =>
+        ToDateTimeOffset(reader.GetValue(ordinal));
+
+    private static DateTimeOffset ToDateTimeOffset(object value) =>
+        value switch {
+            DateTimeOffset dateTimeOffset => dateTimeOffset.ToUniversalTime(),
+            DateTime dateTime => new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)),
+            _ => throw new InvalidOperationException($"Unexpected timestamp value type: {value.GetType().FullName}.")
+        };
 
     private static string? NormalizeEmail(string? email) {
         return string.IsNullOrWhiteSpace(email) ? null : email.Trim().ToLowerInvariant();
