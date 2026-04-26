@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
 import { LocalizationService } from './localization.service';
 import { QuickMealService } from '../features/meals/lib/quick-meal.service';
-import { LoginRequest, RegisterRequest } from '../features/auth/models/auth.data';
+import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../features/auth/models/auth.data';
 import { environment } from '../../environments/environment';
 
 function createFakeJwt(payload: Record<string, unknown>): string {
@@ -245,6 +245,12 @@ describe('AuthService', () => {
 
             const req = httpMock.expectOne(`${authBaseUrl}/register`);
             expect(req.request.method).toBe('POST');
+            expect(req.request.body).toEqual({
+                email: 'new@example.com',
+                password: 'password123',
+                language: 'ru',
+                clientOrigin: window.location.origin,
+            });
             req.flush(authResponse);
         });
 
@@ -266,6 +272,31 @@ describe('AuthService', () => {
 
             expect(sessionStorage.getItem('authToken')).toBe(fakeToken);
             expect(localStorage.getItem('authToken')).toBeNull();
+        });
+    });
+
+    describe('requestPasswordReset', () => {
+        it('should POST client origin with password reset request', () => {
+            service.requestPasswordReset(new PasswordResetRequest({ email: 'reset@example.com' })).subscribe();
+
+            const req = httpMock.expectOne(`${authBaseUrl}/password-reset/request`);
+            expect(req.request.method).toBe('POST');
+            expect(req.request.body).toEqual({
+                email: 'reset@example.com',
+                clientOrigin: window.location.origin,
+            });
+            req.flush(null);
+        });
+    });
+
+    describe('resendEmailVerification', () => {
+        it('should POST client origin with resend request', () => {
+            service.resendEmailVerification().subscribe();
+
+            const req = httpMock.expectOne(`${authBaseUrl}/verify-email/resend`);
+            expect(req.request.method).toBe('POST');
+            expect(req.request.body).toEqual({ clientOrigin: window.location.origin });
+            req.flush(null);
         });
     });
 

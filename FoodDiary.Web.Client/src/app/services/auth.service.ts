@@ -119,7 +119,7 @@ export class AuthService extends ApiService {
     }
 
     public register(data: RegisterRequest): Observable<AuthResponse> {
-        return this.post<AuthResponse>('register', data).pipe(
+        return this.post<AuthResponse>('register', { ...data, clientOrigin: this.getClientOrigin() }).pipe(
             tap(response => {
                 this.onLogin(response, false);
             }),
@@ -139,7 +139,7 @@ export class AuthService extends ApiService {
     }
 
     public resendEmailVerification(): Observable<boolean> {
-        return this.post<boolean>('verify-email/resend', {}).pipe(
+        return this.post<boolean>('verify-email/resend', { clientOrigin: this.getClientOrigin() }).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Resend email verification error', error)),
         );
     }
@@ -163,7 +163,7 @@ export class AuthService extends ApiService {
     }
 
     public requestPasswordReset(data: PasswordResetRequest): Observable<boolean> {
-        return this.post<boolean>('password-reset/request', data).pipe(
+        return this.post<boolean>('password-reset/request', { ...data, clientOrigin: this.getClientOrigin() }).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Password reset request error', error)),
         );
     }
@@ -336,6 +336,10 @@ export class AuthService extends ApiService {
         }
 
         return this.jwtDecoder.extractRoles(token).includes(role);
+    }
+
+    private getClientOrigin(): string | undefined {
+        return typeof window === 'undefined' ? undefined : window.location.origin;
     }
 }
 

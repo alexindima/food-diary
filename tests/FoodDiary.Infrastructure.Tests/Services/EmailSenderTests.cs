@@ -55,9 +55,52 @@ public sealed class EmailSenderTests {
         Assert.Equal(nameof(InvalidOperationException), errorType);
     }
 
-    private static EmailSender CreateSender(IEmailTransport transport) {
-        return new EmailSender(
+    [Fact]
+    public async Task SendPasswordResetAsync_WithAllowedClientOrigin_UsesThatOriginInLink() {
+        var transport = new RecordingEmailTransport();
+        var sender = CreateSender(
+            transport,
             new EmailOptions {
+                FromAddress = "noreply@example.com",
+                FromName = "FoodDiary",
+                FrontendBaseUrl = "https://fooddiary.club",
+                AllowedFrontendBaseUrls = ["https://fooddiary.club", "https://дневникеды.рф"],
+                VerificationPath = "/verify-email",
+                PasswordResetPath = "/reset-password"
+            });
+
+        await sender.SendPasswordResetAsync(
+            new PasswordResetMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "ru", "https://xn--b1adbcbrouc8l.xn--p1ai"),
+            CancellationToken.None);
+
+        Assert.Contains("https://дневникеды.рф/reset-password?", transport.Body);
+    }
+
+    [Fact]
+    public async Task SendEmailVerificationAsync_WithUntrustedClientOrigin_FallsBackToDefaultFrontendBaseUrl() {
+        var transport = new RecordingEmailTransport();
+        var sender = CreateSender(
+            transport,
+            new EmailOptions {
+                FromAddress = "noreply@example.com",
+                FromName = "FoodDiary",
+                FrontendBaseUrl = "https://fooddiary.club",
+                AllowedFrontendBaseUrls = ["https://fooddiary.club", "https://дневникеды.рф"],
+                VerificationPath = "/verify-email",
+                PasswordResetPath = "/reset-password"
+            });
+
+        await sender.SendEmailVerificationAsync(
+            new EmailVerificationMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "en", "https://evil.example.com"),
+            CancellationToken.None);
+
+        Assert.Contains("https://fooddiary.club/verify-email?", transport.Body);
+        Assert.DoesNotContain("evil.example.com", transport.Body);
+    }
+
+    private static EmailSender CreateSender(IEmailTransport transport, EmailOptions? options = null) {
+        return new EmailSender(
+            options ?? new EmailOptions {
                 FromAddress = "noreply@example.com",
                 FromName = "FoodDiary",
                 FrontendBaseUrl = "https://app.example.com",
@@ -105,7 +148,12 @@ public sealed class EmailSenderTests {
     }
 
     private sealed class RecordingEmailTransport : IEmailTransport {
-        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) => Task.CompletedTask;
+        public string Body { get; private set; } = string.Empty;
+
+        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
+            Body = message.Body;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class ThrowingEmailTransport(Exception exception) : IEmailTransport {

@@ -36,6 +36,27 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddInfrastructure_WithInvalidAllowedEmailBaseUrl_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Email:FrontendBaseUrl"] = "https://fooddiary.club",
+            ["Email:AllowedFrontendBaseUrls:0"] = "not-a-url"
+        });
+
+        services.AddInfrastructure(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
+        Assert.Contains("AllowedFrontendBaseUrls", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void AddIntegrations_WithInvalidMailRelayClientBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
         var configuration = CreateConfiguration(new Dictionary<string, string?> {

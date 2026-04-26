@@ -80,6 +80,6 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
-    public Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId) =>
-        HandleObservedNoContent(userId.ToResendVerificationCommand(), _logger, "auth.verify-email.resend", userId);
+    public Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId, [FromBody] ResendEmailVerificationHttpRequest? request = null) =>
+        HandleObservedNoContent(userId.ToResendVerificationCommand(request?.ClientOrigin), _logger, "auth.verify-email.resend", userId);
 }

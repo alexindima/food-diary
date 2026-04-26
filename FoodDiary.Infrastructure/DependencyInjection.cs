@@ -120,8 +120,10 @@ public static class DependencyInjection {
             .ValidateOnStart();
         services.AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(EmailOptions.SectionName))
-            .Validate(static options => string.IsNullOrWhiteSpace(options.FrontendBaseUrl) || Uri.IsWellFormedUriString(options.FrontendBaseUrl, UriKind.Absolute),
-                "Email:FrontendBaseUrl must be an absolute URL when provided.")
+            .Validate(EmailOptions.HasValidFrontendBaseUrl,
+                "Email:FrontendBaseUrl must be an absolute HTTP(S) URL when provided.")
+            .Validate(EmailOptions.HasValidAllowedFrontendBaseUrls,
+                "Email:AllowedFrontendBaseUrls entries must be absolute HTTP(S) URLs.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.VerificationPath),
                 "Email:VerificationPath is required.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.PasswordResetPath),

@@ -273,7 +273,7 @@
       "Operations": [
         {
           "Method": "post",
-          "HasRequestBody": false,
+          "HasRequestBody": true,
           "ResponseCodes": [
             "204",
             "401",

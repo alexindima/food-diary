@@ -35,7 +35,7 @@ public sealed class EmailSender(
             templateKey: "email_verification",
             locale: locale,
             toEmail: message.ToEmail,
-            buildLink: () => BuildLink(_options.VerificationPath, message.UserId, message.Token),
+            buildLink: () => BuildLink(_options.VerificationPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
                 Subject: locale == "ru" ? EmailVerificationSubjectRu : "Confirm your email",
                 Html: locale == "ru"
@@ -71,7 +71,7 @@ public sealed class EmailSender(
             templateKey: "password_reset",
             locale: locale,
             toEmail: message.ToEmail,
-            buildLink: () => BuildLink(_options.PasswordResetPath, message.UserId, message.Token),
+            buildLink: () => BuildLink(_options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
                 Subject: locale == "ru" ? PasswordResetSubjectRu : "Reset your password",
                 Html: locale == "ru"
@@ -127,14 +127,53 @@ public sealed class EmailSender(
         }
     }
 
-    private string BuildLink(string path, string userId, string token) {
-        if (string.IsNullOrWhiteSpace(_options.FrontendBaseUrl)) {
+    private string BuildLink(string path, string userId, string token, string? clientOrigin) {
+        var resolvedBaseUrl = ResolveFrontendBaseUrl(clientOrigin);
+        if (string.IsNullOrWhiteSpace(resolvedBaseUrl)) {
             throw new InvalidOperationException("Email FrontendBaseUrl is not configured.");
         }
 
-        var baseUrl = _options.FrontendBaseUrl.TrimEnd('/');
+        var baseUrl = resolvedBaseUrl.TrimEnd('/');
         var safePath = path.StartsWith('/') ? path : "/" + path;
         return $"{baseUrl}{safePath}?userId={Uri.EscapeDataString(userId)}&token={Uri.EscapeDataString(token)}";
+    }
+
+    private string ResolveFrontendBaseUrl(string? clientOrigin) {
+        var requestedOrigin = NormalizeOrigin(clientOrigin);
+        if (requestedOrigin is null) {
+            return _options.FrontendBaseUrl;
+        }
+
+        foreach (var allowedBaseUrl in GetAllowedFrontendBaseUrls()) {
+            if (NormalizeOrigin(allowedBaseUrl) == requestedOrigin) {
+                return allowedBaseUrl.TrimEnd('/');
+            }
+        }
+
+        return _options.FrontendBaseUrl;
+    }
+
+    private IEnumerable<string> GetAllowedFrontendBaseUrls() {
+        if (!string.IsNullOrWhiteSpace(_options.FrontendBaseUrl)) {
+            yield return _options.FrontendBaseUrl;
+        }
+
+        foreach (var value in _options.AllowedFrontendBaseUrls) {
+            if (!string.IsNullOrWhiteSpace(value)) {
+                yield return value;
+            }
+        }
+    }
+
+    private static string? NormalizeOrigin(string? value) {
+        if (string.IsNullOrWhiteSpace(value) ||
+            !Uri.TryCreate(value.Trim(), UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)) {
+            return null;
+        }
+
+        var port = uri.IsDefaultPort ? string.Empty : $":{uri.Port}";
+        return $"{uri.Scheme}://{uri.IdnHost.ToLowerInvariant()}{port}";
     }
 
     private static string NormalizeLanguage(string? value) {

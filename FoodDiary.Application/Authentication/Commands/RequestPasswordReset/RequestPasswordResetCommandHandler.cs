@@ -46,7 +46,7 @@ public sealed class RequestPasswordResetCommandHandler(
 
         try {
             await emailSender.SendPasswordResetAsync(
-                new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token, user.Language),
+                new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token, user.Language, command.ClientOrigin),
                 cancellationToken);
             logger.LogInformation("Password reset email dispatch completed.");
         } catch (Exception ex) {

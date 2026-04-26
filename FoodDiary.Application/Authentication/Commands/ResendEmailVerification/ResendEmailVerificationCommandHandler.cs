@@ -68,7 +68,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
 
         try {
             await _emailSender.SendEmailVerificationAsync(
-                new EmailVerificationMessage(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language),
+                new EmailVerificationMessage(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin),
                 cancellationToken);
         } catch (Exception ex) {
             _logger.LogError(ex, "Email verification dispatch failed.");

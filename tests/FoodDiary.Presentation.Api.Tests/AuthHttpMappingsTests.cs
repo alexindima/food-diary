@@ -9,13 +9,15 @@ public sealed class AuthHttpMappingsTests {
         var request = new RegisterHttpRequest(
             Email: "alex@example.com",
             Password: "P@ssw0rd!",
-            Language: "ru");
+            Language: "ru",
+            ClientOrigin: "https://дневникеды.рф");
 
         var command = request.ToCommand();
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal(request.Password, command.Password);
         Assert.Equal(request.Language, command.Language);
+        Assert.Equal(request.ClientOrigin, command.ClientOrigin);
     }
 
     [Fact]
@@ -64,5 +66,17 @@ public sealed class AuthHttpMappingsTests {
         Assert.Equal(request.UserId, command.UserId);
         Assert.Equal(request.Token, command.Token);
         Assert.Equal(request.NewPassword, command.NewPassword);
+    }
+
+    [Fact]
+    public void RequestPasswordResetRequest_ToCommand_MapsClientOrigin() {
+        var request = new RequestPasswordResetHttpRequest(
+            Email: "alex@example.com",
+            ClientOrigin: "https://fooddiary.club");
+
+        var command = request.ToCommand();
+
+        Assert.Equal(request.Email, command.Email);
+        Assert.Equal(request.ClientOrigin, command.ClientOrigin);
     }
 }

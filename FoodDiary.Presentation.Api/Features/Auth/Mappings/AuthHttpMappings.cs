@@ -22,7 +22,8 @@ public static class AuthHttpMappings {
         return new RegisterCommand(
             Email: request.Email,
             Password: request.Password,
-            Language: request.Language);
+            Language: request.Language,
+            ClientOrigin: request.ClientOrigin);
     }
 
     public static RestoreAccountCommand ToCommand(this RestoreAccountHttpRequest request) {
@@ -63,8 +64,10 @@ public static class AuthHttpMappings {
         return new AdminSsoExchangeCommand(Code: request.Code);
     }
 
-    public static ResendEmailVerificationCommand ToResendVerificationCommand(this Guid userId) {
-        return new ResendEmailVerificationCommand(UserId: userId);
+    public static ResendEmailVerificationCommand ToResendVerificationCommand(this Guid userId, string? clientOrigin = null) {
+        return new ResendEmailVerificationCommand(
+            UserId: userId,
+            ClientOrigin: clientOrigin);
     }
 
     public static AdminSsoStartCommand ToAdminSsoStartCommand(this Guid userId) {
@@ -78,7 +81,9 @@ public static class AuthHttpMappings {
     }
 
     public static RequestPasswordResetCommand ToCommand(this RequestPasswordResetHttpRequest request) {
-        return new RequestPasswordResetCommand(Email: request.Email);
+        return new RequestPasswordResetCommand(
+            Email: request.Email,
+            ClientOrigin: request.ClientOrigin);
     }
 
     public static ConfirmPasswordResetCommand ToCommand(this ConfirmPasswordResetHttpRequest request) {

@@ -47,7 +47,7 @@ public class RegisterCommandHandler(
 
         try {
             await emailSender.SendEmailVerificationAsync(
-                new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
+                new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language, command.ClientOrigin),
                 cancellationToken);
         } catch (Exception ex) {
             logger.LogWarning(ex, "Email verification dispatch failed during registration for {Email}", command.Email);

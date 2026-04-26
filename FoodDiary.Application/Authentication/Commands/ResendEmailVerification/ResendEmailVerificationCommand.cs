@@ -3,4 +3,4 @@ using FoodDiary.Application.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 
-public record ResendEmailVerificationCommand(Guid UserId) : ICommand<Result>;
+public record ResendEmailVerificationCommand(Guid UserId, string? ClientOrigin = null) : ICommand<Result>;
