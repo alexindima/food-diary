@@ -12,8 +12,8 @@ services:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d fooddiary"]
-      interval: 5s
-      timeout: 3s
+      interval: 180s
+      timeout: 10s
       retries: 5
 
   db-init:
@@ -46,8 +46,8 @@ services:
       - mailrelay-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${MAIL_RELAY_POSTGRES_USER:-postgres} -d ${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay}"]
-      interval: 5s
-      timeout: 3s
+      interval: 180s
+      timeout: 10s
       retries: 5
     profiles:
       - full
@@ -83,8 +83,8 @@ services:
       - mailinbox-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${MAIL_INBOX_POSTGRES_USER:-postgres} -d ${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox}"]
-      interval: 5s
-      timeout: 3s
+      interval: 180s
+      timeout: 10s
       retries: 5
     profiles:
       - mail-inbox
@@ -117,9 +117,10 @@ services:
       RABBITMQ_DEFAULT_VHOST: ${MailRelayBroker__VirtualHost:-/}
     healthcheck:
       test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
-      interval: 10s
-      timeout: 5s
+      interval: 180s
+      timeout: 20s
       retries: 10
+      start_period: 60s
     profiles:
       - full
       - backend
@@ -143,10 +144,10 @@ services:
       - .env
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/health/ready >/dev/null || exit 1"]
-      interval: 10s
-      timeout: 5s
+      interval: 180s
+      timeout: 10s
       retries: 6
-      start_period: 20s
+      start_period: 30s
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -174,10 +175,10 @@ services:
       - .env
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5088/health/ready >/dev/null || exit 1"]
-      interval: 10s
-      timeout: 5s
+      interval: 180s
+      timeout: 10s
       retries: 6
-      start_period: 10s
+      start_period: 30s
     depends_on:
       mailrelay-db-init:
         condition: service_completed_successfully
@@ -203,10 +204,10 @@ services:
       - .env
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1"]
-      interval: 10s
-      timeout: 5s
+      interval: 180s
+      timeout: 10s
       retries: 6
-      start_period: 10s
+      start_period: 30s
     depends_on:
       mailinbox-db-init:
         condition: service_completed_successfully
