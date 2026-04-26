@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AdminEmailTemplate, AdminEmailTemplateUpsertRequest } from '../models/admin-email-template.data';
+import { AdminEmailTemplate, AdminEmailTemplateTestRequest, AdminEmailTemplateUpsertRequest } from '../models/admin-email-template.data';
 
 @Injectable({ providedIn: 'root' })
 export class AdminEmailTemplatesService {
@@ -15,5 +15,9 @@ export class AdminEmailTemplatesService {
 
     public upsert(key: string, locale: string, request: AdminEmailTemplateUpsertRequest): Observable<AdminEmailTemplate> {
         return this.http.put<AdminEmailTemplate>(`${this.baseUrl}/${key}/${locale}`, request);
+    }
+
+    public sendTest(request: AdminEmailTemplateTestRequest): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/test`, request);
     }
 }

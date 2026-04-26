@@ -89,12 +89,4 @@ describe('DashboardService', () => {
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush({});
     });
-
-    it('should send test email', () => {
-        service.sendTestEmail().subscribe();
-
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/test-email`);
-        expect(req.request.method).toBe('POST');
-        req.flush(null);
-    });
 });

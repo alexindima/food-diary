@@ -9,6 +9,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
 import { AdminEmailTemplate } from '../models/admin-email-template.data';
 
@@ -24,7 +26,16 @@ type TemplateForm = {
 @Component({
     selector: 'fd-admin-email-template-edit-dialog',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FdUiInputComponent, FdUiTextareaComponent, FdUiCheckboxComponent, FdUiButtonComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FdUiInputComponent,
+        FdUiTextareaComponent,
+        FdUiCheckboxComponent,
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+    ],
     templateUrl: './admin-email-template-edit-dialog.component.html',
     styleUrl: './admin-email-template-edit-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,11 +49,18 @@ export class AdminEmailTemplateEditDialogComponent {
 
     public readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
     public readonly isSaving = signal(false);
+    public readonly isSendingTest = signal(false);
+    public readonly testSendStatus = signal<'idle' | 'sent' | 'failed'>('idle');
     public readonly previewMode = signal<'html' | 'text'>('html');
     public readonly previewHtml = signal<SafeHtml>('' as SafeHtml);
     public readonly previewText = signal('');
     public readonly previewBrand = signal('FoodDiary');
-    public readonly previewLink = signal('https://fooddiary.club/verify-email?userId=demo&token=demo');
+    public readonly previewClientName = signal('Alex Johnson');
+    public readonly previewLink = signal(this.getDefaultPreviewLink(this.data.key));
+    public readonly testEmailControl = new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+    });
     public readonly form = new FormGroup<TemplateForm>({
         key: new FormControl(this.data.key, { nonNullable: true, validators: [Validators.required] }),
         locale: new FormControl(this.data.locale, { nonNullable: true, validators: [Validators.required] }),
@@ -97,19 +115,63 @@ export class AdminEmailTemplateEditDialogComponent {
         this.previewMode.set(mode);
     }
 
+    public onSendTest(): void {
+        this.testSendStatus.set('idle');
+        if (this.form.invalid || this.testEmailControl.invalid || this.isSendingTest()) {
+            this.form.markAllAsTouched();
+            this.testEmailControl.markAsTouched();
+            return;
+        }
+
+        this.isSendingTest.set(true);
+        this.service
+            .sendTest({
+                toEmail: this.testEmailControl.value.trim(),
+                key: this.form.controls.key.value.trim(),
+                subject: this.form.controls.subject.value,
+                htmlBody: this.form.controls.htmlBody.value,
+                textBody: this.form.controls.textBody.value,
+            })
+            .subscribe({
+                next: () => {
+                    this.isSendingTest.set(false);
+                    this.testSendStatus.set('sent');
+                },
+                error: () => {
+                    this.isSendingTest.set(false);
+                    this.testSendStatus.set('failed');
+                },
+            });
+    }
+
     private updatePreview(): void {
         const subject = this.form.controls.subject.value ?? '';
         const htmlBody = this.form.controls.htmlBody.value ?? '';
         const textBody = this.form.controls.textBody.value ?? '';
         const brand = this.previewBrand();
         const link = this.previewLink();
+        const clientName = this.previewClientName();
 
-        const html = this.applyTokens(htmlBody || `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`, link, brand);
+        const html = this.applyTokens(
+            htmlBody || `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
+            link,
+            brand,
+            clientName,
+        );
         this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
-        this.previewText.set(this.applyTokens(textBody || subject, link, brand));
+        this.previewText.set(this.applyTokens(textBody || subject, link, brand, clientName));
     }
 
-    private applyTokens(value: string, link: string, brand: string): string {
-        return value.replace(/{{\s*link\s*}}/gi, link).replace(/{{\s*brand\s*}}/gi, brand);
+    private applyTokens(value: string, link: string, brand: string, clientName: string): string {
+        return value
+            .replace(/{{\s*link\s*}}/gi, link)
+            .replace(/{{\s*brand\s*}}/gi, brand)
+            .replace(/{{\s*clientName\s*}}/gi, clientName);
+    }
+
+    private getDefaultPreviewLink(key: string): string {
+        return key === 'dietologist_invitation'
+            ? 'https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo'
+            : 'https://fooddiary.club/verify-email?userId=demo&token=demo';
     }
 }

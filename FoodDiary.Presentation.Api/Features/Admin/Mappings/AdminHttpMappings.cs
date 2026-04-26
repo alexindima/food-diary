@@ -2,6 +2,7 @@ using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
+using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
@@ -22,6 +23,15 @@ public static class AdminHttpMappings {
             HtmlBody: request.HtmlBody,
             TextBody: request.TextBody,
             IsActive: request.IsActive);
+    }
+
+    public static SendAdminEmailTemplateTestCommand ToCommand(this AdminEmailTemplateTestHttpRequest request) {
+        return new SendAdminEmailTemplateTestCommand(
+            ToEmail: request.ToEmail,
+            Key: request.Key,
+            Subject: request.Subject,
+            HtmlBody: request.HtmlBody,
+            TextBody: request.TextBody);
     }
 
     public static UpsertAdminAiPromptCommand ToCommand(

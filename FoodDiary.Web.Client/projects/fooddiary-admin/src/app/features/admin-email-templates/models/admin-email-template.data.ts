@@ -16,3 +16,11 @@ export type AdminEmailTemplateUpsertRequest = {
     textBody: string;
     isActive: boolean;
 };
+
+export type AdminEmailTemplateTestRequest = {
+    toEmail: string;
+    key: string;
+    subject: string;
+    htmlBody: string;
+    textBody: string;
+};

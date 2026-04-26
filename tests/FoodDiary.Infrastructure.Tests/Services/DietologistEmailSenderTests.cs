@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Email.Common;
@@ -97,9 +98,31 @@ public sealed class DietologistEmailSenderTests {
         Assert.Contains("Invitation", transport.LastSubject);
     }
 
+    [Fact]
+    public async Task SendDietologistInvitationAsync_WithStoredTemplate_UsesTemplateTokens() {
+        var transport = new RecordingEmailTransport();
+        var templateProvider = new StubEmailTemplateProvider(new EmailTemplateContent(
+            "Invite {{clientName}} to {{brand}}",
+            "<p>{{clientName}}</p><a href=\"{{link}}\">{{brand}}</a>",
+            "{{clientName}} {{link}} {{brand}}"));
+        var sender = CreateSender(transport, templateProvider: templateProvider);
+        var message = new DietologistInvitationMessage(
+            "diet@example.com", Guid.NewGuid(), "token", "John", "Doe", "en");
+
+        await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
+
+        Assert.Equal("dietologist_invitation", templateProvider.LastKey);
+        Assert.Equal("en", templateProvider.LastLocale);
+        Assert.Equal("Invite John Doe to FoodDiary", transport.LastSubject);
+        Assert.Contains("John Doe", transport.LastHtmlBody);
+        Assert.Contains("dietologist/accept", transport.LastHtmlBody);
+    }
+
     private static DietologistEmailSender CreateSender(
-        IEmailTransport transport, EmailOptions? options = null) =>
-        new(options ?? DefaultOptions, transport);
+        IEmailTransport transport,
+        EmailOptions? options = null,
+        IEmailTemplateProvider? templateProvider = null) =>
+        new(options ?? DefaultOptions, templateProvider ?? new StubEmailTemplateProvider(), transport);
 
     private static DietologistInvitationMessage CreateMessage(
         string toEmail, string language = "en") =>
@@ -117,6 +140,20 @@ public sealed class DietologistEmailSenderTests {
             LastSubject = message.Subject;
             LastHtmlBody = message.Body;
             return Task.CompletedTask;
+        }
+    }
+
+    private sealed class StubEmailTemplateProvider(EmailTemplateContent? template = null) : IEmailTemplateProvider {
+        public string LastKey { get; private set; } = string.Empty;
+        public string LastLocale { get; private set; } = string.Empty;
+
+        public Task<EmailTemplateContent?> GetActiveTemplateAsync(
+            string key,
+            string locale,
+            CancellationToken cancellationToken = default) {
+            LastKey = key;
+            LastLocale = locale;
+            return Task.FromResult(template);
         }
     }
 }

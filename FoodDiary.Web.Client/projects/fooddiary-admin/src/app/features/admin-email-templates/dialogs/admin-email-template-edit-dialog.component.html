@@ -1,24 +1,94 @@
-<div class="email-template-edit-dialog" [formGroup]="form">
-    <fd-ui-input formControlName="key" label="Key" />
-    <fd-ui-input formControlName="locale" label="Locale" />
-    <fd-ui-input formControlName="subject" label="Subject" />
-    <fd-ui-textarea formControlName="htmlBody" label="HTML body" />
-    <fd-ui-textarea formControlName="textBody" label="Text body" />
-    <fd-ui-checkbox formControlName="isActive">Active</fd-ui-checkbox>
+<fd-ui-dialog
+    [title]="isNew ? 'Create email template' : 'Edit email template'"
+    subtitle="Manage localized subjects, bodies, and the rendered preview."
+    size="xl"
+    bodyScrollInset="edge"
+>
+    <form class="email-template-edit-dialog" [formGroup]="form" (ngSubmit)="onSave()">
+        <section class="template-meta" aria-label="Template metadata">
+            <fd-ui-input formControlName="key" label="Key" />
+            <fd-ui-input formControlName="locale" label="Locale" />
+            <fd-ui-checkbox formControlName="isActive">Active</fd-ui-checkbox>
+        </section>
 
-    <div class="preview-mode">
-        <fd-ui-button type="button" variant="secondary" (click)="setPreviewMode('html')">HTML</fd-ui-button>
-        <fd-ui-button type="button" variant="secondary" (click)="setPreviewMode('text')">Text</fd-ui-button>
-    </div>
+        <div class="template-workspace">
+            <section class="template-editor" aria-label="Template editor">
+                <fd-ui-input formControlName="subject" label="Subject" />
 
-    @if (previewMode() === 'html') {
-        <div class="preview" [innerHTML]="previewHtml()"></div>
-    } @else {
-        <pre class="preview preview--text">{{ previewText() }}</pre>
-    }
+                <div class="editor-grid">
+                    <fd-ui-textarea formControlName="htmlBody" label="HTML body" [rows]="18" />
+                    <fd-ui-textarea formControlName="textBody" label="Text body" [rows]="18" />
+                </div>
+            </section>
 
-    <div class="actions">
+            <aside class="template-preview" aria-label="Template preview">
+                <div class="preview-header">
+                    <div>
+                        <h3 class="preview-title">Preview</h3>
+                        <p class="preview-subtitle">Tokens use sample values.</p>
+                    </div>
+
+                    <div class="preview-mode" role="group" aria-label="Preview mode">
+                        <fd-ui-button
+                            type="button"
+                            [variant]="previewMode() === 'html' ? 'primary' : 'secondary'"
+                            (click)="setPreviewMode('html')"
+                        >
+                            HTML
+                        </fd-ui-button>
+                        <fd-ui-button
+                            type="button"
+                            [variant]="previewMode() === 'text' ? 'primary' : 'secondary'"
+                            (click)="setPreviewMode('text')"
+                        >
+                            Text
+                        </fd-ui-button>
+                    </div>
+                </div>
+
+                <dl class="token-list">
+                    <div>
+                        <dt>{{ '{{brand}}' }}</dt>
+                        <dd>{{ previewBrand() }}</dd>
+                    </div>
+                    <div>
+                        <dt>{{ '{{clientName}}' }}</dt>
+                        <dd>{{ previewClientName() }}</dd>
+                    </div>
+                    <div>
+                        <dt>{{ '{{link}}' }}</dt>
+                        <dd>{{ previewLink() }}</dd>
+                    </div>
+                </dl>
+
+                <div class="test-send">
+                    <fd-ui-input [formControl]="testEmailControl" label="Send test to" />
+                    <fd-ui-button
+                        type="button"
+                        variant="secondary"
+                        [disabled]="form.invalid || testEmailControl.invalid || isSendingTest()"
+                        (click)="onSendTest()"
+                    >
+                        {{ isSendingTest() ? 'Sending...' : 'Send test' }}
+                    </fd-ui-button>
+                    @if (testSendStatus() === 'sent') {
+                        <p class="test-send__status test-send__status--sent">Test email sent.</p>
+                    } @else if (testSendStatus() === 'failed') {
+                        <p class="test-send__status test-send__status--failed">Failed to send test email.</p>
+                    }
+                </div>
+
+                @if (previewMode() === 'html') {
+                    <div class="preview preview--html" [innerHTML]="previewHtml()"></div>
+                } @else {
+                    <pre class="preview preview--text">{{ previewText() }}</pre>
+                }
+            </aside>
+        </div>
+    </form>
+
+    <div fdUiDialogFooter class="actions">
         <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
         <fd-ui-button type="button" [disabled]="form.invalid || isSaving()" (click)="onSave()">Save</fd-ui-button>
     </div>
-</div>
+</fd-ui-dialog>

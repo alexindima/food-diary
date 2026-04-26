@@ -59,8 +59,4 @@ export class DashboardService extends ApiService {
             catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
-
-    public sendTestEmail(): Observable<void> {
-        return this.post<void>('test-email', {});
-    }
 }

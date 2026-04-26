@@ -47,8 +47,8 @@ export class AdminEmailTemplatesComponent {
     public openEdit(template: AdminEmailTemplate): void {
         this.dialogService
             .open(AdminEmailTemplateEditDialogComponent, {
-                size: 'lg',
-                panelClass: ['fd-admin-email-template-dialog', 'fd-admin-email-template-dialog--fullscreen'],
+                preset: 'fullscreen',
+                panelClass: 'fd-admin-email-template-dialog',
                 data: template,
             })
             .afterClosed()
@@ -75,8 +75,8 @@ export class AdminEmailTemplatesComponent {
 
         this.dialogService
             .open(AdminEmailTemplateEditDialogComponent, {
-                size: 'lg',
-                panelClass: ['fd-admin-email-template-dialog', 'fd-admin-email-template-dialog--fullscreen'],
+                preset: 'fullscreen',
+                panelClass: 'fd-admin-email-template-dialog',
                 data: dialogData,
             })
             .afterClosed()

@@ -1,3 +1,5 @@
+using System.Net.Mail;
+using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Common;
@@ -6,6 +8,7 @@ using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Email.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -241,6 +244,34 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task SendAdminEmailTemplateTestHandler_SendsCurrentTemplateToRequestedRecipient() {
+        var transport = new RecordingEmailTransport();
+        var handler = new SendAdminEmailTemplateTestCommandHandler(
+            new EmailOptions {
+                FromAddress = "noreply@example.com",
+                FromName = "FoodDiary"
+            },
+            transport);
+
+        var result = await handler.Handle(
+            new SendAdminEmailTemplateTestCommand(
+                ToEmail: "admin@example.com",
+                Key: "dietologist_invitation",
+                Subject: "Hello {{clientName}}",
+                HtmlBody: "<a href=\"{{link}}\">{{brand}}</a>",
+                TextBody: "{{clientName}} on {{brand}}: {{link}}"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("admin@example.com", transport.ToEmail);
+        Assert.Equal("Hello Alex Johnson", transport.Subject);
+        Assert.Equal("<a href=\"https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo\">FoodDiary</a>", transport.Body);
+        Assert.Contains(
+            "Alex Johnson on FoodDiary: https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo",
+            transport.AlternateViewBodies);
+    }
+
+    [Fact]
     public async Task GetAdminAiUsageSummaryQueryValidator_WithInvalidRange_Fails() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
 
@@ -366,6 +397,24 @@ public class AdminFeatureTests {
 
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
+    }
+
+    private sealed class RecordingEmailTransport : IEmailTransport {
+        public string? ToEmail { get; private set; }
+        public string? Subject { get; private set; }
+        public string? Body { get; private set; }
+        public List<string> AlternateViewBodies { get; } = [];
+
+        public async Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
+            ToEmail = message.To.Single().Address;
+            Subject = message.Subject;
+            Body = message.Body;
+
+            foreach (var view in message.AlternateViews) {
+                using var reader = new StreamReader(view.ContentStream);
+                AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken));
+            }
+        }
     }
 
     private sealed class InMemoryEmailTemplateRepository : IEmailTemplateRepository {

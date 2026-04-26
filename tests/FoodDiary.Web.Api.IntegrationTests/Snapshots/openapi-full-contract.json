@@ -78,6 +78,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/email-templates/test",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/email-templates/{key}/{locale}",
       "Operations": [
         {

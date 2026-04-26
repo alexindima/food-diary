@@ -1,6 +1,7 @@
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Email.Common;
 
@@ -8,32 +9,32 @@ namespace FoodDiary.Application.Dietologist.Services;
 
 public sealed class DietologistEmailSender(
     EmailOptions options,
+    IEmailTemplateProvider templateProvider,
     IEmailTransport emailTransport) : IDietologistEmailSender {
+    private const string TemplateKey = "dietologist_invitation";
+
     private readonly EmailOptions _options = options;
 
     public async Task SendDietologistInvitationAsync(
         DietologistInvitationMessage message,
         CancellationToken cancellationToken = default) {
         var link = BuildInvitationLink(message.InvitationId, message.Token);
-        var isRu = NormalizeLanguage(message.Language) == "ru";
+        var locale = NormalizeLanguage(message.Language);
+        var isRu = locale == "ru";
         var clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
-
-        var subject = isRu
-            ? "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435 \u0441\u0442\u0430\u0442\u044c \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c"
-            : "Invitation to become a dietologist";
-        var intro = isRu
-            ? $"{clientName} \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0430\u0435\u0442 \u0432\u0430\u0441 \u0441\u0442\u0430\u0442\u044c \u0438\u0445 \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c \u0432 FoodDiary. \u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u043a\u043d\u043e\u043f\u043a\u0443 \u043d\u0438\u0436\u0435, \u0447\u0442\u043e\u0431\u044b \u043f\u0440\u0438\u043d\u044f\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435."
-            : $"{clientName} has invited you to become their dietologist on FoodDiary. Click the button below to accept the invitation.";
-        var ctaLabel = isRu
-            ? "\u041f\u0440\u0438\u043d\u044f\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435"
-            : "Accept Invitation";
-        var footer = isRu
-            ? "\u0415\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u043e\u0436\u0438\u0434\u0430\u043b\u0438 \u044d\u0442\u043e \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435, \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u0440\u043e\u0438\u0433\u043d\u043e\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u0438\u0441\u044c\u043c\u043e."
-            : "If you did not expect this invitation, you can ignore this email.";
-
         var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
-        var htmlBody = BuildTemplate(subject, intro, ctaLabel, link, footer, brand);
-        var textBody = $"{intro}\n\n{ctaLabel}: {link}\n\n{footer}";
+        var template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken);
+        var fallback = CreateFallbackContent(isRu, clientName, link, brand);
+
+        var subject = template is null
+            ? fallback.Subject
+            : ApplyTemplateTokens(template.Subject, link, brand, clientName);
+        var htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
+            ? fallback.Html
+            : ApplyTemplateTokens(template.HtmlBody, link, brand, clientName);
+        var textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
+            ? fallback.Text
+            : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
 
         await SendAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken);
     }
@@ -59,6 +60,37 @@ public sealed class DietologistEmailSender(
 
         var lower = value.Trim().ToLowerInvariant();
         return lower.StartsWith("ru") ? "ru" : "en";
+    }
+
+    private static (string Subject, string Html, string Text) CreateFallbackContent(
+        bool isRu,
+        string clientName,
+        string link,
+        string brand) {
+        var subject = isRu
+            ? "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435 \u0441\u0442\u0430\u0442\u044c \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c"
+            : "Invitation to become a dietologist";
+        var intro = isRu
+            ? $"{clientName} \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0430\u0435\u0442 \u0432\u0430\u0441 \u0441\u0442\u0430\u0442\u044c \u0438\u0445 \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c \u0432 FoodDiary. \u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u043a\u043d\u043e\u043f\u043a\u0443 \u043d\u0438\u0436\u0435, \u0447\u0442\u043e\u0431\u044b \u043f\u0440\u0438\u043d\u044f\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435."
+            : $"{clientName} has invited you to become their dietologist on FoodDiary. Click the button below to accept the invitation.";
+        var ctaLabel = isRu
+            ? "\u041f\u0440\u0438\u043d\u044f\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435"
+            : "Accept Invitation";
+        var footer = isRu
+            ? "\u0415\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u043e\u0436\u0438\u0434\u0430\u043b\u0438 \u044d\u0442\u043e \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435, \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u0440\u043e\u0438\u0433\u043d\u043e\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u0438\u0441\u044c\u043c\u043e."
+            : "If you did not expect this invitation, you can ignore this email.";
+
+        return (
+            subject,
+            BuildTemplate(subject, intro, ctaLabel, link, footer, brand),
+            $"{intro}\n\n{ctaLabel}: {link}\n\n{footer}");
+    }
+
+    private static string ApplyTemplateTokens(string value, string link, string brand, string clientName) {
+        return value
+            .Replace("{{link}}", link, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{brand}}", brand, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{clientName}}", clientName, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer, string brand) =>

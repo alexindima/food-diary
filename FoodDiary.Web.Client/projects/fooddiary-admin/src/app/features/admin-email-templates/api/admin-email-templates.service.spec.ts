@@ -76,4 +76,21 @@ describe('AdminEmailTemplatesService', () => {
             updatedOnUtc: null,
         });
     });
+
+    it('should send template test email', () => {
+        const payload = {
+            toEmail: 'admin@example.com',
+            key: 'email_verification',
+            subject: 'Verify email',
+            htmlBody: '<p>Hello</p>',
+            textBody: 'Hello',
+        } as const;
+
+        service.sendTest(payload).subscribe();
+
+        const req = httpMock.expectOne(`${baseUrl}/test`);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual(payload);
+        req.flush(null);
+    });
 });

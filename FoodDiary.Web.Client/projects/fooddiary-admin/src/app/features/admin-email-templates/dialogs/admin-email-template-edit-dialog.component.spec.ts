@@ -9,7 +9,7 @@ import { AdminEmailTemplatesService } from '../api/admin-email-templates.service
 describe('AdminEmailTemplateEditDialogComponent', () => {
     let component: AdminEmailTemplateEditDialogComponent;
     let fixture: ComponentFixture<AdminEmailTemplateEditDialogComponent>;
-    let service: { upsert: ReturnType<typeof vi.fn> };
+    let service: { upsert: ReturnType<typeof vi.fn>; sendTest: ReturnType<typeof vi.fn> };
     let dialogRef: { close: ReturnType<typeof vi.fn> };
 
     const template = {
@@ -25,9 +25,10 @@ describe('AdminEmailTemplateEditDialogComponent', () => {
     };
 
     beforeEach(async () => {
-        service = { upsert: vi.fn() };
+        service = { upsert: vi.fn(), sendTest: vi.fn() };
         dialogRef = { close: vi.fn() };
         service.upsert.mockReturnValue(of(template));
+        service.sendTest.mockReturnValue(of(undefined));
 
         await TestBed.configureTestingModule({
             imports: [AdminEmailTemplateEditDialogComponent],
@@ -89,5 +90,31 @@ describe('AdminEmailTemplateEditDialogComponent', () => {
         component.onSave();
 
         expect(component.isSaving()).toBe(false);
+    });
+
+    it('should send current form values as a test email', () => {
+        component.testEmailControl.setValue('admin@example.com');
+        component.form.controls.subject.setValue('Updated subject');
+
+        component.onSendTest();
+
+        expect(service.sendTest).toHaveBeenCalledWith({
+            toEmail: 'admin@example.com',
+            key: 'email_verification',
+            subject: 'Updated subject',
+            htmlBody: '<a href="{{link}}">Verify</a>',
+            textBody: 'Verify {{brand}}: {{link}}',
+        });
+        expect(component.testSendStatus()).toBe('sent');
+    });
+
+    it('should show failed status when test email send fails', () => {
+        service.sendTest.mockReturnValueOnce(throwError(() => new Error('send failed')));
+        component.testEmailControl.setValue('admin@example.com');
+
+        component.onSendTest();
+
+        expect(component.isSendingTest()).toBe(false);
+        expect(component.testSendStatus()).toBe('failed');
     });
 });

@@ -526,6 +526,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/admin/users",
             "/api/v{version}/admin/users/{id}",
             "/api/v{version}/admin/email-templates",
+            "/api/v{version}/admin/email-templates/test",
             "/api/v{version}/admin/email-templates/{key}/{locale}",
             "/api/v{version}/admin/ai-usage/summary"
         };

@@ -28,5 +28,10 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
         string locale,
         [FromBody] AdminEmailTemplateUpsertHttpRequest request) =>
         HandleOk(request.ToCommand(key, locale), static value => value.ToHttpResponse());
-}
 
+    [HttpPost("test")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> SendTest([FromBody] AdminEmailTemplateTestHttpRequest request) =>
+        HandleNoContent(request.ToCommand());
+}
