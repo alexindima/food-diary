@@ -6,6 +6,7 @@ COPY Directory.Build.props Directory.Packages.props FoodDiary.slnx ./
 COPY FoodDiary.Domain/*.csproj FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstractions/
 COPY FoodDiary.Application/*.csproj FoodDiary.Application/
+COPY FoodDiary.MailInbox.Client/*.csproj FoodDiary.MailInbox.Client/
 COPY FoodDiary.MailRelay.Client/*.csproj FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Presentation.Api/*.csproj FoodDiary.Presentation.Api/
@@ -17,6 +18,7 @@ RUN dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj
 COPY FoodDiary.Domain/ FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
 COPY FoodDiary.Application/ FoodDiary.Application/
+COPY FoodDiary.MailInbox.Client/ FoodDiary.MailInbox.Client/
 COPY FoodDiary.MailRelay.Client/ FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Presentation.Api/ FoodDiary.Presentation.Api/
