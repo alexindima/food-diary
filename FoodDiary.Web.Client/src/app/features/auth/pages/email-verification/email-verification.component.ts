@@ -73,14 +73,9 @@ export class EmailVerificationComponent {
             .verifyEmail(userId, token)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: success => {
+                next: () => {
                     this.isBusy.set(false);
-                    if (success) {
-                        this.state.set('success');
-                        return;
-                    }
-                    this.state.set('error');
-                    this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_GENERIC'));
+                    this.state.set('success');
                 },
                 error: () => {
                     this.isBusy.set(false);

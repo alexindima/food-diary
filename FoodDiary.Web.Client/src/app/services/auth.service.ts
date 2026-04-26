@@ -127,19 +127,17 @@ export class AuthService extends ApiService {
         );
     }
 
-    public verifyEmail(userId: string, token: string): Observable<boolean> {
-        return this.post<boolean>('verify-email', { userId, token }).pipe(
-            tap(success => {
-                if (success) {
-                    this.setEmailConfirmed(true);
-                }
+    public verifyEmail(userId: string, token: string): Observable<void> {
+        return this.post<void>('verify-email', { userId, token }).pipe(
+            tap(() => {
+                this.setEmailConfirmed(true);
             }),
             catchError((error: HttpErrorResponse) => rethrowApiError('Verify email error', error)),
         );
     }
 
-    public resendEmailVerification(): Observable<boolean> {
-        return this.post<boolean>('verify-email/resend', { clientOrigin: this.getClientOrigin() }).pipe(
+    public resendEmailVerification(): Observable<void> {
+        return this.post<void>('verify-email/resend', { clientOrigin: this.getClientOrigin() }).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Resend email verification error', error)),
         );
     }
@@ -162,8 +160,8 @@ export class AuthService extends ApiService {
         );
     }
 
-    public requestPasswordReset(data: PasswordResetRequest): Observable<boolean> {
-        return this.post<boolean>('password-reset/request', { ...data, clientOrigin: this.getClientOrigin() }).pipe(
+    public requestPasswordReset(data: PasswordResetRequest): Observable<void> {
+        return this.post<void>('password-reset/request', { ...data, clientOrigin: this.getClientOrigin() }).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Password reset request error', error)),
         );
     }

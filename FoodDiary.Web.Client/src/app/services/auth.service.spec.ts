@@ -699,14 +699,14 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/verify-email`);
             expect(req.request.method).toBe('POST');
             expect(req.request.body).toEqual({ userId: 'user-1', token: 'verify-token' });
-            req.flush(true);
+            req.flush(null, { status: 204, statusText: 'No Content' });
         });
 
         it('should update emailConfirmed on success', () => {
             service.verifyEmail('user-1', 'token').subscribe();
 
             const req = httpMock.expectOne(`${authBaseUrl}/verify-email`);
-            req.flush(true);
+            req.flush(null, { status: 204, statusText: 'No Content' });
 
             expect(service.isEmailConfirmed()).toBe(true);
         });
