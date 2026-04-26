@@ -96,7 +96,7 @@ jobs:
             safe_name="${safe_name//\\/_}"
             log_file="${RUNNER_TEMP}/ci-test-logs/${safe_name}.log"
             set +e
-            dotnet test "$project" --configuration Release --no-restore 2>&1 | tee "$log_file"
+            dotnet test "$project" --configuration Release --no-restore --no-build 2>&1 | tee "$log_file"
             status=${PIPESTATUS[0]}
             set -e
             if [ "$status" -ne 0 ]; then

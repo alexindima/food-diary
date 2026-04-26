@@ -10,6 +10,11 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     private string? _skipReason;
 
     public async Task InitializeAsync() {
+        if (!DockerAvailability.IsAvailable(out var reason)) {
+            _skipReason = reason;
+            return;
+        }
+
         try {
             _container = new PostgreSqlBuilder("postgres:17-alpine")
                 .WithDatabase("fooddiary_tests")

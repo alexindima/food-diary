@@ -1,3 +1,4 @@
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
@@ -51,10 +52,12 @@ public sealed class TestAuthApiWebApplicationFactory : WebApplicationFactory<Pro
             services.RemoveAll<FoodDiaryDbContext>();
             services.RemoveAll<IDbContextOptionsConfiguration<FoodDiaryDbContext>>();
             services.RemoveAll<IImageStorageService>();
+            services.RemoveAll<IPasswordHasher>();
 
             services.AddDbContext<FoodDiaryDbContext>(options =>
                 options.UseInMemoryDatabase(_databaseName, _databaseRoot));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
+            services.AddSingleton<IPasswordHasher, TestPasswordHasher>();
         });
 
         builder.ConfigureTestServices(services => {

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -50,10 +51,12 @@ public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program> {
             services.RemoveAll<FoodDiaryDbContext>();
             services.RemoveAll<IDbContextOptionsConfiguration<FoodDiaryDbContext>>();
             services.RemoveAll<IImageStorageService>();
+            services.RemoveAll<IPasswordHasher>();
 
             services.AddDbContext<FoodDiaryDbContext>(options =>
                 options.UseInMemoryDatabase(_databaseName, _databaseRoot));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
+            services.AddSingleton<IPasswordHasher, TestPasswordHasher>();
 
             var applicationPartManager = services
                 .Single(service => service.ServiceType == typeof(ApplicationPartManager))

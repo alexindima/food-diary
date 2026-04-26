@@ -13,25 +13,31 @@ public sealed class RequiresDockerFactAttribute : FactAttribute {
 }
 
 internal static class DockerAvailability {
+    private static readonly Lazy<DockerAvailabilityResult> CachedResult = new(CheckAvailability);
+
     public static bool IsAvailable(out string? reason) {
+        var result = CachedResult.Value;
+        reason = result.Reason;
+        return result.IsAvailable;
+    }
+
+    private static DockerAvailabilityResult CheckAvailability() {
         try {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 using var pipe = new NamedPipeClientStream(".", "docker_engine", PipeDirection.InOut, PipeOptions.None);
                 pipe.Connect(200);
-                reason = null;
-                return true;
+                return new DockerAvailabilityResult(true, null);
             }
 
             if (File.Exists("/var/run/docker.sock")) {
-                reason = null;
-                return true;
+                return new DockerAvailabilityResult(true, null);
             }
 
-            reason = "Docker is not available on this machine.";
-            return false;
+            return new DockerAvailabilityResult(false, "Docker is not available on this machine.");
         } catch (Exception ex) {
-            reason = $"Docker is not available on this machine: {ex.Message}";
-            return false;
+            return new DockerAvailabilityResult(false, $"Docker is not available on this machine: {ex.Message}");
         }
     }
+
+    private sealed record DockerAvailabilityResult(bool IsAvailable, string? Reason);
 }

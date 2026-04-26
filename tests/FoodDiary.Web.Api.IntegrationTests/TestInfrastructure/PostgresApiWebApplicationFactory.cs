@@ -22,6 +22,10 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
     public TestEmailSender EmailSender => _testEmailSender;
 
     public async Task InitializeAsync() {
+        if (!DockerAvailability.IsAvailable(out _)) {
+            return;
+        }
+
         _container = new PostgreSqlBuilder("postgres:17-alpine")
             .WithDatabase("fooddiary_api_tests")
             .WithUsername("postgres")
@@ -75,12 +79,14 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
             services.RemoveAll<IImageStorageService>();
             services.RemoveAll<IEmailSender>();
             services.RemoveAll<TestEmailSender>();
+            services.RemoveAll<IPasswordHasher>();
 
             services.AddDbContext<FoodDiaryDbContext>(options =>
                 options.UseNpgsql(GetRequiredConnectionString()));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
             services.AddSingleton(_testEmailSender);
             services.AddSingleton<IEmailSender>(_testEmailSender);
+            services.AddSingleton<IPasswordHasher, TestPasswordHasher>();
         });
     }
 

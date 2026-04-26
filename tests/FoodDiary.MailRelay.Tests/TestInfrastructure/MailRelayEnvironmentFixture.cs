@@ -22,6 +22,11 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
         ?? throw new InvalidOperationException("RabbitMQ container is not available."));
 
     public async Task InitializeAsync() {
+        if (!DockerAvailability.IsAvailable(out var reason)) {
+            _skipReason = reason;
+            return;
+        }
+
         try {
             _postgres = new PostgreSqlBuilder("postgres:17-alpine")
                 .WithDatabase("mailrelay_tests")

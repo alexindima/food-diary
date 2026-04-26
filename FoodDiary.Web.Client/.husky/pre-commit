@@ -81,17 +81,17 @@ fi
 
 if [ "$HAS_CS" -gt 0 ]; then
   echo "=== Running backend tests ==="
-  dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore || exit 1
-  dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore || exit 1
-  dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore || exit 1
-  dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore || exit 1
+  dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
 else
   echo "=== Skipping backend tests (no .cs files changed) ==="
 fi
 
 if [ "$HAS_API_CONTRACT" -gt 0 ]; then
   echo "=== Running API contract integration tests ==="
-  dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
+  dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --no-build --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
 else
   echo "=== Skipping API contract integration tests (no API contract files changed) ==="
 fi
