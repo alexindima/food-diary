@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -22,6 +23,9 @@ export class EmailVerificationPendingComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly realtimeService = inject(EmailVerificationRealtimeService);
+    private readonly route = inject(ActivatedRoute);
+    private readonly shouldAutoResend = this.route.snapshot.queryParamMap.get('autoResend') === 'true';
+    private autoResendAttempted = false;
 
     public readonly email = signal<string | null>(null);
     public readonly statusMessage = signal<string | null>(null);
@@ -61,8 +65,14 @@ export class EmailVerificationPendingComponent {
     }
 
     public onResendEmail(): void {
+        this.sendVerificationEmail(false);
+    }
+
+    private sendVerificationEmail(isAutomatic: boolean): void {
         this.isSending.set(true);
-        this.statusMessage.set(null);
+        if (!isAutomatic) {
+            this.statusMessage.set(null);
+        }
         this.authService
             .resendEmailVerification()
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -74,9 +84,21 @@ export class EmailVerificationPendingComponent {
                 },
                 error: () => {
                     this.isSending.set(false);
+                    if (isAutomatic) {
+                        return;
+                    }
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESEND_ERROR'));
                 },
             });
+    }
+
+    private tryAutoResendEmail(): void {
+        if (!this.shouldAutoResend || this.autoResendAttempted || this.resendCooldownSeconds() > 0) {
+            return;
+        }
+
+        this.autoResendAttempted = true;
+        this.sendVerificationEmail(true);
     }
 
     private startResendCooldown(seconds = 60): void {
@@ -110,6 +132,7 @@ export class EmailVerificationPendingComponent {
                     void this.navigationService.navigateToHome();
                 } else {
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.INITIAL'));
+                    this.tryAutoResendEmail();
                 }
             });
     }

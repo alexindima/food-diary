@@ -52,6 +52,16 @@ describe('NavigationService', () => {
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth', 'register'], { queryParams: {} });
     });
 
+    it('should navigate to email verification pending without auto resend', async () => {
+        await service.navigateToEmailVerificationPending();
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/verify-pending'], { queryParams: {} });
+    });
+
+    it('should navigate to email verification pending with auto resend', async () => {
+        await service.navigateToEmailVerificationPending({ autoResend: true });
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/verify-pending'], { queryParams: { autoResend: 'true' } });
+    });
+
     it('should navigate to product edit with id', async () => {
         await service.navigateToProductEdit('abc-123');
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/products/abc-123/edit']);

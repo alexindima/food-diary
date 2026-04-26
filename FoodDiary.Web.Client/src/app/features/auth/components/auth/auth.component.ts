@@ -416,6 +416,11 @@ export class AuthComponent {
     }
 
     private async completeAuthenticatedNavigation(): Promise<void> {
+        if (!this.authService.isEmailConfirmed()) {
+            await this.navigationService.navigateToEmailVerificationPending({ autoResend: true });
+            return;
+        }
+
         const adminRedirectUrl = await this.tryBuildAdminRedirectUrl();
         if (adminRedirectUrl) {
             window.location.assign(adminRedirectUrl);

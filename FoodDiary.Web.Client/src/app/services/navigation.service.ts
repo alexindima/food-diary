@@ -21,8 +21,9 @@ export class NavigationService {
         await this.router.navigate(['/auth', mode], { queryParams });
     }
 
-    public async navigateToEmailVerificationPending(): Promise<void> {
-        await this.router.navigate(['/verify-pending']);
+    public async navigateToEmailVerificationPending(options?: { autoResend?: boolean }): Promise<void> {
+        const queryParams = options?.autoResend ? { autoResend: 'true' } : {};
+        await this.router.navigate(['/verify-pending'], { queryParams });
     }
 
     public async navigateToReturnUrl(returnUrl: string | null): Promise<void> {
