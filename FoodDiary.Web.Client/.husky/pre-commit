@@ -84,7 +84,11 @@ if [ "$HAS_CS" -gt 0 ]; then
   dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
   dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
   dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj --no-restore --no-build || exit 1
   dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
+  dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj --no-restore --no-build || exit 1
 else
   echo "=== Skipping backend tests (no .cs files changed) ==="
 fi
