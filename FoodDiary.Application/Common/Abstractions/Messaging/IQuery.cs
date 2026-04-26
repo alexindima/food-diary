@@ -1,4 +1,4 @@
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Abstractions.Messaging;
 

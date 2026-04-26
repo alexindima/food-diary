@@ -4,7 +4,7 @@ using FoodDiary.Presentation.Api.Features.Statistics.Requests;
 using FoodDiary.Presentation.Api.Features.Statistics.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;

@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Dashboard;

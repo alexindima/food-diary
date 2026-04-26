@@ -5,7 +5,7 @@ using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

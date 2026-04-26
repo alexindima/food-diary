@@ -1,7 +1,7 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

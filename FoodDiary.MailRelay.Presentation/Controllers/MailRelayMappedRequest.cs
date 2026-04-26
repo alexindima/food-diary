@@ -1,5 +1,5 @@
 using FoodDiary.MailRelay.Application.Common.Result;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.MailRelay.Presentation.Controllers;
 

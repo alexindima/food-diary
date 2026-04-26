@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Events;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Dietologist.EventHandlers;
 

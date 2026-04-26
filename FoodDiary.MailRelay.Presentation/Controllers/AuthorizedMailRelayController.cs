@@ -1,5 +1,5 @@
 using FoodDiary.MailRelay.Presentation.Filters;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.MailRelay.Presentation.Controllers;

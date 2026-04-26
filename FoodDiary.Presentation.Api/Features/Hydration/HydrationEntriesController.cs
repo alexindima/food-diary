@@ -4,7 +4,7 @@ using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

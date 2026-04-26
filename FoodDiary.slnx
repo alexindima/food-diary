@@ -6,6 +6,7 @@
     <Project Path="tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj" />
     <Project Path="tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj" />
     <Project Path="tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj" />
+    <Project Path="tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj" />
     <Project Path="tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj" />
     <Project Path="tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj" />
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
@@ -17,6 +18,9 @@
   <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   <Project Path="FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
+  <Folder Name="/Shared/">
+    <Project Path="Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+  </Folder>
   <Folder Name="/MailInbox/">
     <Project Path="FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
     <Project Path="FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />

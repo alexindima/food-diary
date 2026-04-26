@@ -5,7 +5,7 @@ using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

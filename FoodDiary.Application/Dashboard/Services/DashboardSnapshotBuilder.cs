@@ -17,7 +17,7 @@ using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.ValueObjects.Ids;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Dashboard.Services;

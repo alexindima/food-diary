@@ -3,7 +3,7 @@ using FoodDiary.Presentation.Api.Features.Billing.Mappings;
 using FoodDiary.Presentation.Api.Features.Billing.Requests;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

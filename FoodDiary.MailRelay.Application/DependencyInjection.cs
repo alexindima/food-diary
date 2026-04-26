@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.MailRelay.Application.Common.Behaviors;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -9,7 +10,7 @@ public static class DependencyInjection {
     public static IServiceCollection AddMailRelayApplication(this IServiceCollection services) {
         var assembly = Assembly.GetExecutingAssembly();
 
-        services.AddMediatR(cfg => {
+        services.AddFoodDiaryMediator(cfg => {
             cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(MailRelayLoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(MailRelayValidationBehavior<,>));

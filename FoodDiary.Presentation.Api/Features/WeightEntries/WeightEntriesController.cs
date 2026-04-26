@@ -3,7 +3,7 @@ using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

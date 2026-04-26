@@ -6,7 +6,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Integrations;
 using FoodDiary.MailRelay.Client.Options;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,7 +1,7 @@
 using FoodDiary.MailRelay.Presentation.Controllers;
 using FoodDiary.MailRelay.Presentation.Features.Health.Mappings;
 using FoodDiary.MailRelay.Presentation.Features.Health.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

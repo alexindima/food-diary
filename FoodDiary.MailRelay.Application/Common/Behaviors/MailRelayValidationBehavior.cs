@@ -1,5 +1,5 @@
 using FluentValidation;
-using MediatR;
+using FoodDiary.Mediator;
 using MailRelayResult = FoodDiary.MailRelay.Application.Common.Result.Result;
 
 namespace FoodDiary.MailRelay.Application.Common.Behaviors;

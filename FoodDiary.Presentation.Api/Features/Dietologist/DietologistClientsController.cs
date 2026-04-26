@@ -8,7 +8,7 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

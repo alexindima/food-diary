@@ -2,7 +2,7 @@ using FoodDiary.MailInbox.Application.Messages.Queries;
 using FoodDiary.MailInbox.Presentation.Controllers;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

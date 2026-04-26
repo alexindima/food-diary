@@ -1,5 +1,5 @@
 using FoodDiary.MailInbox.Application.Common.Result;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.MailInbox.Application.Health;
 

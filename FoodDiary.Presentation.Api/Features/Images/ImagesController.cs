@@ -5,7 +5,7 @@ using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

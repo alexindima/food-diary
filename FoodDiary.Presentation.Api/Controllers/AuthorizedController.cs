@@ -1,4 +1,4 @@
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDiary.Presentation.Api.Controllers;

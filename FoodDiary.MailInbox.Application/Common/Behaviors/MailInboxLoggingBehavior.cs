@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
 using MailInboxResult = FoodDiary.MailInbox.Application.Common.Result.Result;
 

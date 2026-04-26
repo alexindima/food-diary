@@ -3,7 +3,7 @@ using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

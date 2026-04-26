@@ -7,7 +7,7 @@ using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Application.Queue.Models;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.MailRelay.Tests;

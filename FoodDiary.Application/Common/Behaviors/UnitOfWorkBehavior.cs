@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Behaviors;
 

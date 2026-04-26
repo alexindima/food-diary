@@ -1,6 +1,6 @@
 using FoodDiary.MailInbox.Application.Common.Result;
 using FoodDiary.MailInbox.Presentation.Extensions;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.MailInbox.Presentation.Controllers;

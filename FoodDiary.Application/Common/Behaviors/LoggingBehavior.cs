@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Common.Behaviors;

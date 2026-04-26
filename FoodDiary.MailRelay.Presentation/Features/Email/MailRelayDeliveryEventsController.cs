@@ -3,7 +3,7 @@ using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Presentation.Features.Email.Responses;
 using FoodDiary.MailRelay.Presentation.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

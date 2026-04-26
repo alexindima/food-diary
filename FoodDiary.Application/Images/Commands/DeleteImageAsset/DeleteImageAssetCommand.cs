@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 

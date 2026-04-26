@@ -3,7 +3,7 @@ using FoodDiary.Presentation.Api.Features.Goals.Mappings;
 using FoodDiary.Presentation.Api.Features.Goals.Requests;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

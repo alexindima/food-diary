@@ -3,7 +3,7 @@ using FoodDiary.Presentation.Api.Features.FavoriteProducts.Mappings;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

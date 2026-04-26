@@ -19,6 +19,7 @@ using FoodDiary.Application.Notifications.Services;
 using FluentValidation;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application;
 
@@ -26,7 +27,7 @@ public static class DependencyInjection {
     public static IServiceCollection AddApplication(this IServiceCollection services) {
         var assembly = Assembly.GetExecutingAssembly();
 
-        services.AddMediatR(cfg => {
+        services.AddFoodDiaryMediator(cfg => {
             cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));

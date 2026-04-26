@@ -12,7 +12,6 @@
     <!-- Application -->
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-    <PackageVersion Include="MediatR" Version="13.1.0" />
 
     <!-- Authentication & Identity -->
     <PackageVersion Include="BCrypt.Net-Next" Version="4.0.3" />
@@ -31,6 +30,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.6" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.6" />

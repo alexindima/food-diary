@@ -5,7 +5,7 @@ using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 

@@ -1,6 +1,6 @@
 using FoodDiary.MailInbox.Application.Common.Result;
 using FoodDiary.MailInbox.Application.Messages.Models;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.MailInbox.Application.Messages.Commands;
 

@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -9,7 +10,7 @@ public static class DependencyInjection {
     public static IServiceCollection AddMailInboxApplication(this IServiceCollection services) {
         var assembly = Assembly.GetExecutingAssembly();
 
-        services.AddMediatR(configuration => {
+        services.AddFoodDiaryMediator(configuration => {
             configuration.RegisterServicesFromAssembly(assembly);
             configuration.AddOpenBehavior(typeof(MailInboxLoggingBehavior<,>));
             configuration.AddOpenBehavior(typeof(MailInboxValidationBehavior<,>));

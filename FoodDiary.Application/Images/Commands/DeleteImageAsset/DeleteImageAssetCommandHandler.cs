@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 

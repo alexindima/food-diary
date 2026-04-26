@@ -28,7 +28,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;

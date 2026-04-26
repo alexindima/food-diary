@@ -85,7 +85,7 @@ public static class DependencyInjection {
             .ValidateOnStart();
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-        services.AddScoped<IDomainEventPublisher, MediatRDomainEventPublisher>();
+        services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) => {
             var databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;

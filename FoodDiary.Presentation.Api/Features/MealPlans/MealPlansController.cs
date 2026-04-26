@@ -3,7 +3,7 @@ using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
 using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
 using ShoppingListResponseMappings = FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings.ShoppingListHttpResponseMappings;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

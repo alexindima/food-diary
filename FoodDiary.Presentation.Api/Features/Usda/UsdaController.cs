@@ -2,7 +2,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Usda.Mappings;
 using FoodDiary.Presentation.Api.Features.Usda.Requests;
 using FoodDiary.Presentation.Api.Features.Usda.Responses;
-using MediatR;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

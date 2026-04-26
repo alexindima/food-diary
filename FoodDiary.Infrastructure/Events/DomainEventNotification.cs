@@ -1,5 +1,5 @@
 using FoodDiary.Domain.Common;
-using MediatR;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Infrastructure.Events;
 
