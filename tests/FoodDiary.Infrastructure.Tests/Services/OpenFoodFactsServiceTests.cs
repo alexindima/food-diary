@@ -1,6 +1,6 @@
 using System.Net;
-using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;

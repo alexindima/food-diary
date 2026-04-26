@@ -1,6 +1,6 @@
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Options;
+using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;

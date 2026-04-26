@@ -1,11 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Images.Services;
@@ -35,6 +40,9 @@ public static class DependencyInjection {
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
+        services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
+        services.AddSingleton<IEmailSender, EmailSender>();
+        services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddScoped<BillingAccessService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();

@@ -47,6 +47,7 @@ public class FeatureStructureTests {
     [InlineData("FoodDiary.Application", "FoodDiary.Application")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
     [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
+    [InlineData("FoodDiary.Integrations", "FoodDiary.Integrations")]
     [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
     [InlineData("FoodDiary.MailInbox.Application", "FoodDiary.MailInbox.Application")]
     [InlineData("FoodDiary.MailInbox.Client", "FoodDiary.MailInbox.Client")]

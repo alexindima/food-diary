@@ -1,8 +1,10 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Email.Common;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.Integrations;
 using FoodDiary.MailRelay.Client.Options;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +31,12 @@ public sealed class DependencyInjectionTests {
         services.AddInfrastructure(configuration);
         using var provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Infrastructure.Options.EmailOptions>>().Value);
+        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
         Assert.Contains("FrontendBaseUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
-    public void AddInfrastructure_WithInvalidMailRelayClientBaseUrl_FailsOptionsValidation() {
+    public void AddIntegrations_WithInvalidMailRelayClientBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
         var configuration = CreateConfiguration(new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
@@ -46,7 +48,7 @@ public sealed class DependencyInjectionTests {
             ["MailRelayClient:BaseUrl"] = "not-a-url"
         });
 
-        services.AddInfrastructure(configuration);
+        services.AddIntegrations(configuration);
         using var provider = services.BuildServiceProvider();
 
         var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value);
@@ -54,7 +56,7 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
-    public void AddInfrastructure_WithInvalidS3ServiceUrl_FailsOptionsValidation() {
+    public void AddIntegrations_WithInvalidS3ServiceUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
         var configuration = CreateConfiguration(new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
@@ -66,10 +68,10 @@ public sealed class DependencyInjectionTests {
             ["S3:ServiceUrl"] = "invalid-url"
         });
 
-        services.AddInfrastructure(configuration);
+        services.AddIntegrations(configuration);
         using var provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Infrastructure.Options.S3Options>>().Value);
+        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Integrations.Options.S3Options>>().Value);
         Assert.Contains("ServiceUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 

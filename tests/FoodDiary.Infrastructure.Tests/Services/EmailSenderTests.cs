@@ -1,14 +1,14 @@
 using System.Diagnostics.Metrics;
 using System.Net.Mail;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Email.Common;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Services;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
 public sealed class EmailSenderTests {
-    private const string InfrastructureMeterName = "FoodDiary.Infrastructure";
+    private const string EmailMeterName = "FoodDiary.Application.Email";
 
     [Fact]
     public async Task SendEmailVerificationAsync_WhenTransportSucceeds_RecordsSuccessMetric() {
@@ -57,13 +57,13 @@ public sealed class EmailSenderTests {
 
     private static EmailSender CreateSender(IEmailTransport transport) {
         return new EmailSender(
-            Microsoft.Extensions.Options.Options.Create(new EmailOptions {
+            new EmailOptions {
                 FromAddress = "noreply@example.com",
                 FromName = "FoodDiary",
                 FrontendBaseUrl = "https://app.example.com",
                 VerificationPath = "/verify-email",
                 PasswordResetPath = "/reset-password"
-            }),
+            },
             new StubEmailTemplateProvider(),
             transport);
     }
@@ -72,7 +72,7 @@ public sealed class EmailSenderTests {
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>> onDispatch) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != InfrastructureMeterName) {
+            if (instrument.Meter.Name != EmailMeterName) {
                 return;
             }
 

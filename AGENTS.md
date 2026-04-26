@@ -13,6 +13,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Domain layer: `FoodDiary.Domain/AGENTS.md`
 - Contracts: `FoodDiary.Contracts/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
+- Integrations layer: `FoodDiary.Integrations/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
 - Mail relay application layer: `FoodDiary.MailRelay.Application/AGENTS.md`
 - Mail relay client package: `FoodDiary.MailRelay.Client/AGENTS.md`

@@ -1,7 +1,7 @@
 using System.Net.Mail;
 using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Application.Dietologist.Services;
+using FoodDiary.Application.Email.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
@@ -43,7 +43,7 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("Приглашение", transport.LastSubject);
+        Assert.Contains("\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435", transport.LastSubject);
     }
 
     [Fact]
@@ -66,11 +66,11 @@ public sealed class DietologistEmailSenderTests {
         var transport = new RecordingEmailTransport();
         var sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
-            "diet@example.com", Guid.NewGuid(), "token", "Алексей", "Иванов", "ru");
+            "diet@example.com", Guid.NewGuid(), "token", "\u0410\u043b\u0435\u043a\u0441\u0435\u0439", "\u0418\u0432\u0430\u043d\u043e\u0432", "ru");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("Алексей Иванов", transport.LastHtmlBody);
+        Assert.Contains("\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u0418\u0432\u0430\u043d\u043e\u0432", transport.LastHtmlBody);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class DietologistEmailSenderTests {
 
     private static DietologistEmailSender CreateSender(
         IEmailTransport transport, EmailOptions? options = null) =>
-        new(Microsoft.Extensions.Options.Options.Create(options ?? DefaultOptions), transport);
+        new(options ?? DefaultOptions, transport);
 
     private static DietologistInvitationMessage CreateMessage(
         string toEmail, string language = "en") =>

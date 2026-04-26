@@ -51,6 +51,31 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void IntegrationsProject_ReferencesApplicationAbstractionsAndExternalClients_ButNotInfrastructure() {
+        var references = GetProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
+
+        Assert.Contains("FoodDiary.Application.Abstractions", references);
+        Assert.Contains("FoodDiary.Domain", references);
+        Assert.Contains("FoodDiary.MailInbox.Client", references);
+        Assert.Contains("FoodDiary.MailRelay.Client", references);
+        Assert.DoesNotContain("FoodDiary.Application", references);
+        Assert.DoesNotContain("FoodDiary.Infrastructure", references);
+        Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
+    }
+
+    [Fact]
+    public void InfrastructureProject_DoesNotReferenceExternalProviderPackages() {
+        var packages = GetPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
+
+        Assert.DoesNotContain("AWSSDK.S3", packages);
+        Assert.DoesNotContain("Stripe.net", packages);
+        Assert.DoesNotContain("WebPush", packages);
+        Assert.DoesNotContain("Microsoft.AspNetCore.WebUtilities", packages);
+        Assert.DoesNotContain("Microsoft.IdentityModel.Protocols.OpenIdConnect", packages);
+    }
+
+    [Fact]
     public void PresentationApiProject_ReferencesApplication_ButNotInfrastructure() {
         var references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
@@ -96,6 +121,7 @@ public class LayeringTests {
 
         Assert.Contains("FoodDiary.Application", references);
         Assert.Contains("FoodDiary.Infrastructure", references);
+        Assert.Contains("FoodDiary.Integrations", references);
         Assert.Contains("FoodDiary.Presentation.Api", references);
         Assert.Contains("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
@@ -144,6 +170,18 @@ public class LayeringTests {
             .ToHashSet(StringComparer.Ordinal);
 
         return references;
+    }
+
+    private static HashSet<string> GetPackageReferences(string relativeProjectPath) {
+        var root = GetRepositoryRoot();
+        var projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
+        var document = XDocument.Load(projectPath);
+
+        return document.Descendants("PackageReference")
+            .Select(node => node.Attribute("Include")?.Value)
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value!)
+            .ToHashSet(StringComparer.Ordinal);
     }
 
     private static string GetRepositoryRoot() {

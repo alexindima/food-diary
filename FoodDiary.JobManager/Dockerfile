@@ -9,6 +9,7 @@ COPY FoodDiary.Application/*.csproj FoodDiary.Application/
 COPY FoodDiary.MailInbox.Client/*.csproj FoodDiary.MailInbox.Client/
 COPY FoodDiary.MailRelay.Client/*.csproj FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
+COPY FoodDiary.Integrations/*.csproj FoodDiary.Integrations/
 COPY FoodDiary.Resources/*.csproj FoodDiary.Resources/
 COPY FoodDiary.JobManager/*.csproj FoodDiary.JobManager/
 
@@ -20,6 +21,7 @@ COPY FoodDiary.Application/ FoodDiary.Application/
 COPY FoodDiary.MailInbox.Client/ FoodDiary.MailInbox.Client/
 COPY FoodDiary.MailRelay.Client/ FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
+COPY FoodDiary.Integrations/ FoodDiary.Integrations/
 COPY FoodDiary.Resources/ FoodDiary.Resources/
 COPY FoodDiary.JobManager/ FoodDiary.JobManager/
 

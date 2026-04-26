@@ -4,9 +4,9 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging.Abstractions;
-using WebPushOptions = FoodDiary.Infrastructure.Options.WebPushOptions;
+using WebPushOptions = FoodDiary.Integrations.Options.WebPushOptions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 

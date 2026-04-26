@@ -1,5 +1,6 @@
 using FoodDiary.Application;
 using FoodDiary.Infrastructure;
+using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -8,6 +9,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddIntegrations(builder.Configuration);
 
 builder.Services.AddOptions<ImageCleanupOptions>()
     .Bind(builder.Configuration.GetSection(ImageCleanupOptions.SectionName))

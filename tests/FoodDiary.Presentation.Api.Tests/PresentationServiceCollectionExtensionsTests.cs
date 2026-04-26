@@ -1,4 +1,6 @@
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
@@ -66,6 +68,9 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         var builder = WebApplication.CreateBuilder();
         builder.Services.AddCors(options => options.AddPolicy("TestCors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
         builder.Services.AddAuthorization();
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddScoped<IFastingTelemetryEventRepository, StubFastingTelemetryEventRepository>();
+        builder.Services.AddSingleton<IDateTimeProvider, StubDateTimeProvider>();
         builder.Services.AddPresentationApi();
 
         var app = builder.Build();
@@ -79,5 +84,17 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
         Assert.Contains(endpoints, endpoint => endpoint.RoutePattern.RawText == "/hubs/email-verification");
         Assert.Contains(endpoints, endpoint => endpoint.RoutePattern.RawText == "/hubs/email-verification/negotiate");
+    }
+
+    private sealed class StubFastingTelemetryEventRepository : IFastingTelemetryEventRepository {
+        public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+
+        public Task<IReadOnlyList<FastingTelemetryEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FastingTelemetryEventRecord>>([]);
+    }
+
+    private sealed class StubDateTimeProvider : IDateTimeProvider {
+        public DateTime UtcNow => new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 }

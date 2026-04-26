@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application\FoodDiary.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\FoodDiary.Resources\FoodDiary.Resources.csproj" />
   </ItemGroup>

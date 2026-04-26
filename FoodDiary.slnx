@@ -15,6 +15,7 @@
   <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
   <Project Path="FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
   <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+  <Project Path="FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
   <Folder Name="/MailInbox/">
     <Project Path="FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />

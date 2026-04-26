@@ -1,13 +1,12 @@
 using System.Diagnostics.Metrics;
-using Amazon.S3.Model;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Services;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
 public sealed class S3ImageStorageServiceTests {
-    private const string InfrastructureMeterName = "FoodDiary.Infrastructure";
+    private const string IntegrationsMeterName = "FoodDiary.Integrations";
 
     [Fact]
     public async Task CreatePresignedUploadAsync_WhenInputIsValid_RecordsSuccessMetric() {
@@ -97,7 +96,7 @@ public sealed class S3ImageStorageServiceTests {
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>> onOperation) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != InfrastructureMeterName) {
+            if (instrument.Meter.Name != IntegrationsMeterName) {
                 return;
             }
 
@@ -125,17 +124,25 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     private sealed class StubObjectStorageClient : IObjectStorageClient {
-        public string GetPreSignedUrl(GetPreSignedUrlRequest request) =>
-            $"https://storage.example.com/{request.BucketName}/{request.Key}";
+        public string GetPreSignedUploadUrl(
+            string bucketName,
+            string key,
+            string contentType,
+            DateTime expiresAt) =>
+            $"https://storage.example.com/{bucketName}/{key}";
 
-        public Task DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancellationToken) =>
+        public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.CompletedTask;
     }
 
     private sealed class ThrowingObjectStorageClient(Exception exception) : IObjectStorageClient {
-        public string GetPreSignedUrl(GetPreSignedUrlRequest request) => throw exception;
+        public string GetPreSignedUploadUrl(
+            string bucketName,
+            string key,
+            string contentType,
+            DateTime expiresAt) => throw exception;
 
-        public Task DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancellationToken) =>
+        public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromException(exception);
     }
 

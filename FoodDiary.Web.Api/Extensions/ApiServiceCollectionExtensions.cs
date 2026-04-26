@@ -1,5 +1,6 @@
 using System.Text;
 using FoodDiary.Application;
+using FoodDiary.Integrations;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Options;
@@ -28,6 +29,7 @@ public static class ApiServiceCollectionExtensions {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration) {
         services.AddApplication();
         services.AddInfrastructure(configuration);
+        services.AddIntegrations(configuration);
         services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
         services.AddDistributedMemoryCache();
         services
@@ -77,12 +79,6 @@ public static class ApiServiceCollectionExtensions {
             .BindConfiguration(FastingNotificationOptions.SectionName)
             .Validate(FastingNotificationOptions.HasValidConfiguration,
                 "FastingNotifications:PollIntervalSeconds must be greater than zero when enabled.")
-            .ValidateOnStart();
-        services
-            .AddOptions<GoogleAuthOptions>()
-            .BindConfiguration(GoogleAuthOptions.SectionName)
-            .Validate(GoogleAuthOptions.HasValidClientId,
-                "GoogleAuth:ClientId must be empty or a non-whitespace value.")
             .ValidateOnStart();
         services
             .AddOptions<ApiBuildInfoOptions>()
@@ -211,7 +207,10 @@ public static class ApiServiceCollectionExtensions {
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
                 .AddMeter(ApiTelemetry.TelemetryName)
                 .AddMeter(PresentationApiTelemetry.TelemetryName)
+                .AddMeter("FoodDiary.Application.Ai")
+                .AddMeter("FoodDiary.Application.Email")
                 .AddMeter("FoodDiary.Infrastructure")
+                .AddMeter("FoodDiary.Integrations")
                 .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
                 .Build();
         });
