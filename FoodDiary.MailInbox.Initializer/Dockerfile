@@ -3,6 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
 
 COPY Directory.Build.props Directory.Packages.props FoodDiary.slnx ./
+COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY FoodDiary.MailInbox.Domain/*.csproj FoodDiary.MailInbox.Domain/
 COPY FoodDiary.MailInbox.Application/*.csproj FoodDiary.MailInbox.Application/
 COPY FoodDiary.MailInbox.Infrastructure/*.csproj FoodDiary.MailInbox.Infrastructure/
@@ -10,6 +11,7 @@ COPY FoodDiary.MailInbox.Initializer/*.csproj FoodDiary.MailInbox.Initializer/
 
 RUN dotnet restore FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj
 
+COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
 COPY FoodDiary.MailInbox.Domain/ FoodDiary.MailInbox.Domain/
 COPY FoodDiary.MailInbox.Application/ FoodDiary.MailInbox.Application/
 COPY FoodDiary.MailInbox.Infrastructure/ FoodDiary.MailInbox.Infrastructure/
