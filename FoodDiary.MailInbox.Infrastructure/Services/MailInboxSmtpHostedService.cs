@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmtpServer;
 using SmtpServer.ComponentModel;
+using SmtpServer.Storage;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
 
@@ -27,8 +28,8 @@ public sealed class MailInboxSmtpHostedService(
             .Build();
 
         var serviceProvider = new ServiceProvider();
-        serviceProvider.Add(messageStore);
-        serviceProvider.Add(mailboxFilter);
+        serviceProvider.Add(new DelegatingMessageStoreFactory(_ => messageStore));
+        serviceProvider.Add(new DelegatingMailboxFilterFactory(_ => mailboxFilter));
 
         var server = new SmtpServer.SmtpServer(serverOptions, serviceProvider);
         logger.LogInformation(
