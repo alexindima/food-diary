@@ -40,7 +40,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.6" />
 
     <!-- Infrastructure -->
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.21.2" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.22.1" />
     <PackageVersion Include="DnsClient" Version="1.8.0" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.6" />
     <PackageVersion Include="MailKit" Version="4.16.0" />
