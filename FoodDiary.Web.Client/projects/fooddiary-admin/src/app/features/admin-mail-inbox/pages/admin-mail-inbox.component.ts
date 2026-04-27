@@ -24,7 +24,16 @@ export class AdminMailInboxComponent {
     public readonly isLoading = signal(false);
     public readonly isDetailsLoading = signal(false);
     public readonly limit = signal(50);
+    public readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
     public readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
+    public readonly filteredMessages = computed(() => {
+        const category = this.categoryFilter();
+        if (category === 'all') {
+            return this.messages();
+        }
+
+        return this.messages().filter(message => message.category === category);
+    });
     public readonly selectedBody = computed(() => {
         const message = this.selectedMessage();
         if (!message) {
@@ -40,6 +49,14 @@ export class AdminMailInboxComponent {
         }
 
         return message.textBody || '';
+    });
+    public readonly dmarcTotalMessages = computed(() => {
+        const report = this.selectedMessage()?.dmarcReport;
+        return report?.records.reduce((total, record) => total + record.count, 0) ?? 0;
+    });
+    public readonly dmarcProblemRecords = computed(() => {
+        const report = this.selectedMessage()?.dmarcReport;
+        return report?.records.filter(record => record.dkim !== 'pass' || record.spf !== 'pass').length ?? 0;
     });
 
     public constructor() {
@@ -94,7 +111,20 @@ export class AdminMailInboxComponent {
         this.selectedBodyMode.set(mode);
     }
 
+    public setCategoryFilter(value: string): void {
+        if (value === 'dmarc-report' || value === 'general') {
+            this.categoryFilter.set(value);
+            return;
+        }
+
+        this.categoryFilter.set('all');
+    }
+
     public formatRecipients(recipients: string[]): string {
         return recipients.length > 0 ? recipients.join(', ') : '-';
+    }
+
+    public formatCategory(category: string): string {
+        return category === 'dmarc-report' ? 'DMARC' : 'Mail';
     }
 }

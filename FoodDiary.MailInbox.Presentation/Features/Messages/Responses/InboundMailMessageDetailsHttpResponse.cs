@@ -9,5 +9,7 @@ public sealed record InboundMailMessageDetailsHttpResponse(
     string? TextBody,
     string? HtmlBody,
     string RawMime,
+    string Category,
+    DmarcReportHttpResponse? DmarcReport,
     string Status,
     DateTimeOffset ReceivedAtUtc);

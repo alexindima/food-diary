@@ -1,5 +1,13 @@
 <div class="admin-mail-inbox">
     <div class="toolbar">
+        <label class="toolbar__field">
+            <span>Type</span>
+            <select [ngModel]="categoryFilter()" (ngModelChange)="setCategoryFilter($event)">
+                <option value="all">All</option>
+                <option value="dmarc-report">DMARC reports</option>
+                <option value="general">Other mail</option>
+            </select>
+        </label>
         <fd-ui-input type="number" [ngModel]="limit()" (ngModelChange)="updateLimit($event)" placeholder="Limit" />
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
@@ -13,26 +21,32 @@
                     <thead>
                         <tr>
                             <th>Received</th>
+                            <th>Type</th>
                             <th>From</th>
                             <th>Subject</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @for (message of messages(); track message.id) {
+                        @for (message of filteredMessages(); track message.id) {
                             <tr
                                 class="mail-table__row"
                                 [class.mail-table__row--active]="selectedMessage()?.id === message.id"
                                 (click)="selectMessage(message)"
                             >
                                 <td>{{ message.receivedAtUtc | date: 'short' }}</td>
+                                <td>
+                                    <span class="mail-badge" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
+                                        {{ formatCategory(message.category) }}
+                                    </span>
+                                </td>
                                 <td>{{ message.fromAddress || '-' }}</td>
                                 <td>{{ message.subject || '(no subject)' }}</td>
                                 <td>{{ message.status }}</td>
                             </tr>
                         } @empty {
                             <tr>
-                                <td colspan="4">No inbound messages found.</td>
+                                <td colspan="5">No inbound messages found.</td>
                             </tr>
                         }
                     </tbody>
@@ -49,7 +63,12 @@
                         <div class="mail-details__subject">{{ message.subject || '(no subject)' }}</div>
                         <div class="mail-details__meta">{{ message.receivedAtUtc | date: 'medium' }}</div>
                     </div>
-                    <span class="mail-details__status">{{ message.status }}</span>
+                    <div class="mail-details__badges">
+                        <span class="mail-badge" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
+                            {{ formatCategory(message.category) }}
+                        </span>
+                        <span class="mail-details__status">{{ message.status }}</span>
+                    </div>
                 </div>
 
                 <dl class="mail-fields">
@@ -66,6 +85,56 @@
                         <dd>{{ message.messageId || '-' }}</dd>
                     </div>
                 </dl>
+
+                @if (message.dmarcReport; as report) {
+                    <section class="dmarc-report" aria-label="DMARC report summary">
+                        <div class="dmarc-report__header">
+                            <div>
+                                <h3>DMARC report</h3>
+                                <p>
+                                    {{ report.domain || '-' }} | {{ report.organizationName || '-' }} |
+                                    {{ report.dateRangeStartUtc | date: 'mediumDate' }} -
+                                    {{ report.dateRangeEndUtc | date: 'mediumDate' }}
+                                </p>
+                            </div>
+                            <div class="dmarc-report__stats">
+                                <span>{{ dmarcTotalMessages() }} messages</span>
+                                <span>{{ dmarcProblemRecords() }} issues</span>
+                            </div>
+                        </div>
+
+                        <div class="dmarc-report__table-wrap">
+                            <table class="dmarc-report__table">
+                                <thead>
+                                    <tr>
+                                        <th>Source IP</th>
+                                        <th>Count</th>
+                                        <th>Disposition</th>
+                                        <th>DKIM</th>
+                                        <th>SPF</th>
+                                        <th>Header from</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (record of report.records; track record.sourceIp + '-' + $index) {
+                                        <tr>
+                                            <td>{{ record.sourceIp || '-' }}</td>
+                                            <td>{{ record.count }}</td>
+                                            <td>{{ record.disposition || '-' }}</td>
+                                            <td>{{ record.dkim || record.dkimResult || '-' }}</td>
+                                            <td>{{ record.spf || record.spfResult || '-' }}</td>
+                                            <td>{{ record.headerFrom || '-' }}</td>
+                                        </tr>
+                                    } @empty {
+                                        <tr>
+                                            <td colspan="6">No DMARC records found.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                }
 
                 <div class="body-switcher" role="group" aria-label="Message body view">
                     <fd-ui-button

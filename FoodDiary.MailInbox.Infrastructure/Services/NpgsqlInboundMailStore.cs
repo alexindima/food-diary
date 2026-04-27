@@ -6,7 +6,9 @@ using Npgsql;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
 
-public sealed class NpgsqlInboundMailStore(NpgsqlDataSource dataSource) : IInboundMailStore, IMailInboxSchemaInitializer {
+public sealed class NpgsqlInboundMailStore(
+    NpgsqlDataSource dataSource,
+    DmarcReportParser dmarcReportParser) : IInboundMailStore, IMailInboxSchemaInitializer {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
@@ -90,11 +92,14 @@ public sealed class NpgsqlInboundMailStore(NpgsqlDataSource dataSource) : IInbou
 
         var messages = new List<InboundMailMessageSummary>();
         while (await reader.ReadAsync(cancellationToken)) {
+            var recipients = DeserializeRecipients(reader.GetString(2));
+            var subject = reader.GetNullableString(3);
             messages.Add(new InboundMailMessageSummary(
                 reader.GetGuid(0),
                 reader.GetNullableString(1),
-                DeserializeRecipients(reader.GetString(2)),
-                reader.GetNullableString(3),
+                recipients,
+                subject,
+                GetCategory(recipients, subject),
                 reader.GetString(4),
                 reader.GetFieldValue<DateTimeOffset>(5)));
         }
@@ -117,20 +122,37 @@ public sealed class NpgsqlInboundMailStore(NpgsqlDataSource dataSource) : IInbou
             return null;
         }
 
+        var recipients = DeserializeRecipients(reader.GetString(3));
+        var subject = reader.GetNullableString(4);
+        var rawMime = reader.GetString(7);
+        var dmarcReport = dmarcReportParser.TryParse(rawMime);
+
         return new InboundMailMessageDetails(
             reader.GetGuid(0),
             reader.GetNullableString(1),
             reader.GetNullableString(2),
-            DeserializeRecipients(reader.GetString(3)),
-            reader.GetNullableString(4),
+            recipients,
+            subject,
             reader.GetNullableString(5),
             reader.GetNullableString(6),
-            reader.GetString(7),
+            rawMime,
+            dmarcReport is null ? GetCategory(recipients, subject) : InboundMailMessageCategories.DmarcReport,
+            dmarcReport,
             reader.GetString(8),
             reader.GetFieldValue<DateTimeOffset>(9));
     }
 
     private static IReadOnlyList<string> DeserializeRecipients(string value) {
         return JsonSerializer.Deserialize<string[]>(value, JsonOptions) ?? [];
+    }
+
+    private static string GetCategory(IReadOnlyList<string> recipients, string? subject) {
+        if (recipients.Any(static recipient => recipient.Equals("dmarc@fooddiary.club", StringComparison.OrdinalIgnoreCase)) ||
+            subject?.Contains("DMARC", StringComparison.OrdinalIgnoreCase) == true ||
+            subject?.Contains("Report Domain:", StringComparison.OrdinalIgnoreCase) == true) {
+            return InboundMailMessageCategories.DmarcReport;
+        }
+
+        return InboundMailMessageCategories.General;
     }
 }

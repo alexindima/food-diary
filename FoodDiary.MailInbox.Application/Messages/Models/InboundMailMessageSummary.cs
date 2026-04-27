@@ -5,5 +5,6 @@ public sealed record InboundMailMessageSummary(
     string? FromAddress,
     IReadOnlyList<string> ToRecipients,
     string? Subject,
+    string Category,
     string Status,
     DateTimeOffset ReceivedAtUtc);

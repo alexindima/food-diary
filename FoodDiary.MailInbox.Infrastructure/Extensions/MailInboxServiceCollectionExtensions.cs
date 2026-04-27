@@ -23,6 +23,7 @@ public static class MailInboxServiceCollectionExtensions {
         });
 
         services.AddSingleton<NpgsqlInboundMailStore>();
+        services.AddSingleton<DmarcReportParser>();
         services.AddSingleton<IInboundMailStore>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxSchemaInitializer>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxReadinessChecker, NpgsqlMailInboxReadinessChecker>();

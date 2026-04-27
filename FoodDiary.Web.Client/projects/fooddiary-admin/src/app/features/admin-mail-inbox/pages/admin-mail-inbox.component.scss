@@ -8,6 +8,25 @@
     gap: 0.75rem;
     align-items: center;
     justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.toolbar__field {
+    display: grid;
+    gap: 0.25rem;
+    color: #4b5563;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.toolbar__field select {
+    min-height: 2.5rem;
+    padding: 0 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #111827;
+    font: inherit;
 }
 
 .mail-layout {
@@ -79,6 +98,32 @@
     font-weight: 700;
 }
 
+.mail-details__badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.mail-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.mail-badge--dmarc {
+    background: #ecfdf5;
+    color: #047857;
+}
+
 .mail-fields {
     display: grid;
     gap: 0.75rem;
@@ -106,6 +151,67 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+}
+
+.dmarc-report {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #d1fae5;
+    border-radius: 0.5rem;
+    background: #f0fdf4;
+}
+
+.dmarc-report__header {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.dmarc-report__header h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+}
+
+.dmarc-report__header p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.dmarc-report__stats {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    color: #065f46;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.dmarc-report__table-wrap {
+    overflow-x: auto;
+}
+
+.dmarc-report__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.dmarc-report__table th,
+.dmarc-report__table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #d1fae5;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dmarc-report__table th {
+    color: #065f46;
+    font-size: 0.75rem;
+    text-transform: uppercase;
 }
 
 .mail-body {
