@@ -45,6 +45,7 @@ if (string.IsNullOrWhiteSpace(connectionString)) {
 }
 
 builder.Services.AddSingleton(_ => new NpgsqlDataSourceBuilder(connectionString).Build());
+builder.Services.AddSingleton<DmarcReportParser>();
 builder.Services.AddSingleton<NpgsqlInboundMailStore>();
 builder.Services.AddSingleton<IMailInboxSchemaInitializer>(sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
 
