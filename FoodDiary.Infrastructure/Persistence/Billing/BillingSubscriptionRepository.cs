@@ -31,6 +31,36 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
                 cancellationToken);
     }
 
+    public Task<BillingSubscription?> GetByExternalPaymentMethodIdAsync(
+        string provider,
+        string externalPaymentMethodId,
+        CancellationToken cancellationToken = default) {
+        return context.BillingSubscriptions
+            .FirstOrDefaultAsync(
+                subscription => subscription.Provider == provider && subscription.ExternalPaymentMethodId == externalPaymentMethodId,
+                cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<BillingSubscription>> GetDueForRenewalAsync(
+        string provider,
+        DateTime dueAtUtc,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        return await context.BillingSubscriptions
+            .Where(subscription =>
+                subscription.Provider == provider &&
+                !subscription.CancelAtPeriodEnd &&
+                subscription.ExternalPaymentMethodId != null &&
+                subscription.NextBillingAttemptUtc != null &&
+                subscription.NextBillingAttemptUtc <= dueAtUtc &&
+                (subscription.Status == "active" ||
+                    subscription.Status == "trialing" ||
+                    subscription.Status == "past_due"))
+            .OrderBy(subscription => subscription.NextBillingAttemptUtc)
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<BillingSubscription> AddAsync(
         BillingSubscription subscription,
         CancellationToken cancellationToken = default) {

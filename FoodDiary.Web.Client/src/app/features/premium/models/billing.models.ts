@@ -1,4 +1,5 @@
 export type BillingPlan = 'monthly' | 'yearly';
+export type BillingProvider = 'Paddle' | 'YooKassa' | 'Stripe' | string;
 
 export interface BillingOverview {
     isPremium: boolean;
@@ -9,6 +10,7 @@ export interface BillingOverview {
     manageBillingAvailable: boolean;
     provider: string;
     paddleClientToken: string | null;
+    availableProviders: BillingProvider[];
 }
 
 export interface CheckoutSessionResponse {

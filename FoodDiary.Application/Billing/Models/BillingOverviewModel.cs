@@ -8,4 +8,5 @@ public sealed record BillingOverviewModel(
     bool CancelAtPeriodEnd,
     bool ManageBillingAvailable,
     string Provider,
-    string? PaddleClientToken);
+    string? PaddleClientToken,
+    IReadOnlyList<string> AvailableProviders);

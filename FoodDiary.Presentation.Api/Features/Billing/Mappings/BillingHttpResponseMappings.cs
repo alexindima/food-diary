@@ -14,7 +14,8 @@ public static class BillingHttpResponseMappings {
             model.CancelAtPeriodEnd,
             model.ManageBillingAvailable,
             model.Provider,
-            model.PaddleClientToken);
+            model.PaddleClientToken,
+            model.AvailableProviders);
 
     public static CheckoutSessionHttpResponse ToHttpResponse(this BillingCheckoutSessionModel model) =>
         new(model.SessionId, model.Url, model.Plan);

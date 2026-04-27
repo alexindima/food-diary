@@ -10,6 +10,7 @@ public sealed class BillingSubscription : Entity<Guid> {
     public string Provider { get; private set; } = string.Empty;
     public string ExternalCustomerId { get; private set; } = string.Empty;
     public string? ExternalSubscriptionId { get; private set; }
+    public string? ExternalPaymentMethodId { get; private set; }
     public string? ExternalPriceId { get; private set; }
     public string? Plan { get; private set; }
     public string Status { get; private set; } = PendingCheckoutStatus;
@@ -19,6 +20,8 @@ public sealed class BillingSubscription : Entity<Guid> {
     public DateTime? CanceledAtUtc { get; private set; }
     public DateTime? TrialStartUtc { get; private set; }
     public DateTime? TrialEndUtc { get; private set; }
+    public DateTime? NextBillingAttemptUtc { get; private set; }
+    public string? ProviderMetadataJson { get; private set; }
     public string? LastWebhookEventId { get; private set; }
     public DateTime? LastSyncedAtUtc { get; private set; }
 
@@ -63,6 +66,7 @@ public sealed class BillingSubscription : Entity<Guid> {
     public void ApplyProviderSnapshot(
         string provider,
         string? externalSubscriptionId,
+        string? externalPaymentMethodId,
         string? externalPriceId,
         string? plan,
         string status,
@@ -73,9 +77,11 @@ public sealed class BillingSubscription : Entity<Guid> {
         DateTime? trialStartUtc,
         DateTime? trialEndUtc,
         string webhookEventId,
-        DateTime syncedAtUtc) {
+        DateTime syncedAtUtc,
+        string? providerMetadataJson = null) {
         Provider = NormalizeProvider(provider);
         ExternalSubscriptionId = NormalizeOptional(externalSubscriptionId);
+        ExternalPaymentMethodId = NormalizeOptional(externalPaymentMethodId);
         ExternalPriceId = NormalizeOptional(externalPriceId);
         Plan = NormalizeOptional(plan);
         Status = NormalizeRequired(status, nameof(status));
@@ -85,6 +91,8 @@ public sealed class BillingSubscription : Entity<Guid> {
         CanceledAtUtc = NormalizeOptionalUtc(canceledAtUtc, nameof(canceledAtUtc));
         TrialStartUtc = NormalizeOptionalUtc(trialStartUtc, nameof(trialStartUtc));
         TrialEndUtc = NormalizeOptionalUtc(trialEndUtc, nameof(trialEndUtc));
+        NextBillingAttemptUtc = ResolveNextBillingAttemptUtc(Status, CancelAtPeriodEnd, CurrentPeriodEndUtc);
+        ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
         LastWebhookEventId = NormalizeRequired(webhookEventId, nameof(webhookEventId));
         LastSyncedAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
         SetModified(LastSyncedAtUtc.Value);
@@ -96,9 +104,15 @@ public sealed class BillingSubscription : Entity<Guid> {
             throw new ArgumentException("Unsupported billing provider.", nameof(provider));
         }
 
-        return string.Equals(normalized, BillingProviderNames.Paddle, StringComparison.OrdinalIgnoreCase)
-            ? BillingProviderNames.Paddle
-            : BillingProviderNames.Stripe;
+        if (string.Equals(normalized, BillingProviderNames.Paddle, StringComparison.OrdinalIgnoreCase)) {
+            return BillingProviderNames.Paddle;
+        }
+
+        if (string.Equals(normalized, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase)) {
+            return BillingProviderNames.YooKassa;
+        }
+
+        return BillingProviderNames.Stripe;
     }
 
     private static string NormalizeRequired(string value, string paramName) {
@@ -127,5 +141,21 @@ public sealed class BillingSubscription : Entity<Guid> {
         return value.HasValue
             ? NormalizeRequiredUtc(value.Value, paramName)
             : null;
+    }
+
+    private static DateTime? ResolveNextBillingAttemptUtc(
+        string status,
+        bool cancelAtPeriodEnd,
+        DateTime? currentPeriodEndUtc) {
+        if (cancelAtPeriodEnd || !currentPeriodEndUtc.HasValue) {
+            return null;
+        }
+
+        return status.Trim().ToLowerInvariant() switch {
+            "active" => currentPeriodEndUtc,
+            "trialing" => currentPeriodEndUtc,
+            "past_due" => currentPeriodEndUtc,
+            _ => null,
+        };
     }
 }

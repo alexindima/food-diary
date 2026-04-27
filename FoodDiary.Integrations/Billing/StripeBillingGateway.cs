@@ -22,6 +22,10 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
     public async Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken = default) {
+        if (!IsConfiguredForCheckout()) {
+            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+        }
+
         StripeConfiguration.ApiKey = _options.SecretKey;
 
         var customerId = request.ExistingCustomerId;
@@ -76,6 +80,10 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
     public async Task<Result<BillingPortalSessionModel>> CreatePortalSessionAsync(
         BillingPortalSessionRequestModel request,
         CancellationToken cancellationToken = default) {
+        if (!IsConfiguredForCheckout()) {
+            return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+        }
+
         StripeConfiguration.ApiKey = _options.SecretKey;
 
         var portalSessionService = new BillingPortalSessionService();
@@ -93,6 +101,10 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         string payload,
         string signatureHeader,
         CancellationToken cancellationToken = default) {
+        if (!IsConfiguredForWebhook()) {
+            return Result.Failure<BillingWebhookEventModel?>(Errors.Billing.ProviderNotConfigured(Provider));
+        }
+
         if (string.IsNullOrWhiteSpace(payload)) {
             return Result.Failure<BillingWebhookEventModel?>(Errors.Validation.Required(nameof(payload)));
         }
@@ -147,6 +159,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             stripeEvent.Type,
             subscription.CustomerId,
             subscription.Id,
+            null,
             firstItem?.Price?.Id,
             plan,
             subscription.Status,
@@ -156,6 +169,9 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             subscription.CanceledAt,
             subscription.TrialStart,
             subscription.TrialEnd,
+            null,
+            null,
+            null,
             ParseUserId(ReadMetadata(metadata, "user_id")));
     }
 
@@ -182,6 +198,18 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
 
         return null;
     }
+
+    private bool IsConfiguredForCheckout() =>
+        !string.IsNullOrWhiteSpace(_options.SecretKey) &&
+        !string.IsNullOrWhiteSpace(_options.PremiumMonthlyPriceId) &&
+        !string.IsNullOrWhiteSpace(_options.PremiumYearlyPriceId) &&
+        Uri.IsWellFormedUriString(_options.SuccessUrl, UriKind.Absolute) &&
+        Uri.IsWellFormedUriString(_options.CancelUrl, UriKind.Absolute) &&
+        Uri.IsWellFormedUriString(_options.PortalReturnUrl, UriKind.Absolute);
+
+    private bool IsConfiguredForWebhook() =>
+        !string.IsNullOrWhiteSpace(_options.SecretKey) &&
+        !string.IsNullOrWhiteSpace(_options.WebhookSecret);
 
     private static string? ReadMetadata(IReadOnlyDictionary<string, string>? metadata, string key) {
         if (metadata is null || !metadata.TryGetValue(key, out var value) || string.IsNullOrWhiteSpace(value)) {

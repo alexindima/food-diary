@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Entities.Billing;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
@@ -9,5 +10,10 @@ public sealed class CreateCheckoutSessionCommandValidator : AbstractValidator<Cr
                                  || string.Equals(plan, "yearly", StringComparison.OrdinalIgnoreCase))
             .WithErrorCode("Billing.InvalidPlan")
             .WithMessage("Plan must be either 'monthly' or 'yearly'.");
+
+        RuleFor(x => x.Provider)
+            .Must(static provider => string.IsNullOrWhiteSpace(provider) || BillingProviderNames.IsSupported(provider))
+            .WithErrorCode("Billing.InvalidProvider")
+            .WithMessage("Provider must be a supported billing provider.");
     }
 }

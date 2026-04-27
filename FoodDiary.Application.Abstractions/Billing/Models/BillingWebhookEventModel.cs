@@ -5,6 +5,7 @@ public sealed record BillingWebhookEventModel(
     string EventType,
     string ExternalCustomerId,
     string? ExternalSubscriptionId,
+    string? ExternalPaymentMethodId,
     string? ExternalPriceId,
     string? Plan,
     string Status,
@@ -14,4 +15,7 @@ public sealed record BillingWebhookEventModel(
     DateTime? CanceledAtUtc,
     DateTime? TrialStartUtc,
     DateTime? TrialEndUtc,
+    decimal? Amount,
+    string? Currency,
+    string? ProviderMetadataJson,
     Guid? UserId);

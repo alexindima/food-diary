@@ -81,7 +81,7 @@
             }
 
             <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-                {{ (showManageBilling() ? 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT') | translate }}
+                {{ overviewHintKey() | translate }}
             </p>
         }
     </fd-ui-card>
@@ -103,14 +103,31 @@
                         </h3>
                         <p class="premium-access-page__text fd-ui-body">{{ 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION' | translate }}</p>
                     </div>
-                    <fd-ui-button
-                        fullWidth
-                        [loading]="isPlanLoading('monthly')"
-                        [disabled]="checkoutLoadingPlan() !== null"
-                        (click)="startCheckout('monthly')"
-                    >
-                        {{ 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION' | translate }}
-                    </fd-ui-button>
+                    @if (showProviderChoices()) {
+                        <div class="premium-access-page__provider-actions">
+                            @for (provider of availableProviders(); track provider) {
+                                <fd-ui-button
+                                    variant="secondary"
+                                    fill="outline"
+                                    fullWidth
+                                    [loading]="isPlanLoading('monthly')"
+                                    [disabled]="checkoutLoadingPlan() !== null"
+                                    (click)="startCheckout('monthly', provider)"
+                                >
+                                    {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: getProviderLabel(provider) } }}
+                                </fd-ui-button>
+                            }
+                        </div>
+                    } @else {
+                        <fd-ui-button
+                            fullWidth
+                            [loading]="isPlanLoading('monthly')"
+                            [disabled]="checkoutLoadingPlan() !== null"
+                            (click)="startCheckout('monthly')"
+                        >
+                            {{ 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION' | translate }}
+                        </fd-ui-button>
+                    }
                 </article>
 
                 <article class="premium-access-page__plan premium-access-page__plan--featured">
@@ -123,14 +140,31 @@
                         </h3>
                         <p class="premium-access-page__text fd-ui-body">{{ 'PREMIUM_PAGE.PLANS.YEARLY.DESCRIPTION' | translate }}</p>
                     </div>
-                    <fd-ui-button
-                        fullWidth
-                        [loading]="isPlanLoading('yearly')"
-                        [disabled]="checkoutLoadingPlan() !== null"
-                        (click)="startCheckout('yearly')"
-                    >
-                        {{ 'PREMIUM_PAGE.PLANS.YEARLY.ACTION' | translate }}
-                    </fd-ui-button>
+                    @if (showProviderChoices()) {
+                        <div class="premium-access-page__provider-actions">
+                            @for (provider of availableProviders(); track provider) {
+                                <fd-ui-button
+                                    variant="secondary"
+                                    fill="outline"
+                                    fullWidth
+                                    [loading]="isPlanLoading('yearly')"
+                                    [disabled]="checkoutLoadingPlan() !== null"
+                                    (click)="startCheckout('yearly', provider)"
+                                >
+                                    {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: getProviderLabel(provider) } }}
+                                </fd-ui-button>
+                            }
+                        </div>
+                    } @else {
+                        <fd-ui-button
+                            fullWidth
+                            [loading]="isPlanLoading('yearly')"
+                            [disabled]="checkoutLoadingPlan() !== null"
+                            (click)="startCheckout('yearly')"
+                        >
+                            {{ 'PREMIUM_PAGE.PLANS.YEARLY.ACTION' | translate }}
+                        </fd-ui-button>
+                    }
                 </article>
             </div>
         </fd-ui-card>

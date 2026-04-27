@@ -8,7 +8,7 @@ namespace FoodDiary.Presentation.Api.Features.Billing.Mappings;
 
 public static class BillingHttpMappings {
     public static CreateCheckoutSessionCommand ToCommand(this CreateCheckoutSessionHttpRequest request, Guid userId) =>
-        new(userId, request.Plan);
+        new(userId, request.Plan, request.Provider);
 
     public static CreatePortalSessionCommand ToPortalSessionCommand(this Guid userId) => new(userId);
 

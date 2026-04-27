@@ -77,6 +77,8 @@ public static class DependencyInjection {
                 "Stripe configuration is incomplete.");
         services.AddOptions<PaddleOptions>()
             .Bind(configuration.GetSection(PaddleOptions.SectionName));
+        services.AddOptions<YooKassaOptions>()
+            .Bind(configuration.GetSection(YooKassaOptions.SectionName));
         services.AddOptions<WebPushOptions>()
             .Bind(configuration.GetSection(WebPushOptions.SectionName))
             .Validate(WebPushOptions.HasValidConfiguration,
@@ -124,6 +126,11 @@ public static class DependencyInjection {
             client.Timeout = TimeSpan.FromSeconds(30);
         });
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
+        services.AddHttpClient<YooKassaBillingGateway>(client => {
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+        services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
+        services.AddScoped<IBillingRecurringProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();
         services.AddScoped<IWebPushNotificationSender, WebPushNotificationSender>();
         services.AddScoped<IWebPushConfigurationProvider, WebPushNotificationSender>();

@@ -287,6 +287,7 @@ public sealed class JobsTests {
             recurringJobManager,
             verifier,
             Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
             Options.Create(new NotificationCleanupOptions {
                 TransientTypes = ["Test"],
                 Cron = "15 4 * * *",
@@ -298,6 +299,7 @@ public sealed class JobsTests {
                 new FixedDateTimeProvider(DateTime.UtcNow),
                 new JobExecutionStateTracker(),
                 NullLogger<ImageCleanupJob>.Instance),
+            CreateBillingRenewalJob(),
             new NotificationCleanupJob(
                 new RecordingNotificationCleanupService([0]),
                 Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"] }),
@@ -314,10 +316,20 @@ public sealed class JobsTests {
         await service.StartAsync(CancellationToken.None);
 
         Assert.Equal(
-            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.NotificationsCleanup, RecurringJobIds.UsersCleanup],
+            [
+                RecurringJobIds.ImageAssetsCleanup,
+                RecurringJobIds.BillingRenewal,
+                RecurringJobIds.NotificationsCleanup,
+                RecurringJobIds.UsersCleanup
+            ],
             recurringJobManager.JobIds);
         Assert.Equal(
-            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.NotificationsCleanup, RecurringJobIds.UsersCleanup],
+            [
+                RecurringJobIds.ImageAssetsCleanup,
+                RecurringJobIds.NotificationsCleanup,
+                RecurringJobIds.UsersCleanup,
+                RecurringJobIds.BillingRenewal
+            ],
             verifier.ExpectedJobIds);
     }
 
@@ -329,6 +341,7 @@ public sealed class JobsTests {
             recurringJobManager,
             verifier,
             Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
             Options.Create(new NotificationCleanupOptions {
                 TransientTypes = ["Test"],
                 Cron = "15 4 * * *",
@@ -340,6 +353,7 @@ public sealed class JobsTests {
                 new FixedDateTimeProvider(DateTime.UtcNow),
                 new JobExecutionStateTracker(),
                 NullLogger<ImageCleanupJob>.Instance),
+            CreateBillingRenewalJob(),
             new NotificationCleanupJob(
                 new RecordingNotificationCleanupService([0]),
                 Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"] }),
@@ -359,17 +373,28 @@ public sealed class JobsTests {
     [Fact]
     public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
         var imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
+        var billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
         var notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
         var userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
 
         Assert.NotNull(imageMethod);
+        Assert.NotNull(billingRenewalMethod);
         Assert.NotNull(notificationMethod);
         Assert.NotNull(userMethod);
 
         AssertExecutionPolicy(imageMethod!);
+        AssertExecutionPolicy(billingRenewalMethod!);
         AssertExecutionPolicy(notificationMethod!);
         AssertExecutionPolicy(userMethod!);
     }
+
+    private static BillingRenewalJob CreateBillingRenewalJob() =>
+        new(
+            null!,
+            Options.Create(new BillingRenewalOptions()),
+            new FixedDateTimeProvider(DateTime.UtcNow),
+            new JobExecutionStateTracker(),
+            NullLogger<BillingRenewalJob>.Instance);
 
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;

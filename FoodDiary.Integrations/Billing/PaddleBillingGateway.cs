@@ -155,6 +155,7 @@ public sealed class PaddleBillingGateway(
                 eventType,
                 customerId,
                 subscriptionId,
+                null,
                 externalPriceId,
                 ResolvePlan(externalPriceId) ?? GetString(customData, "plan"),
                 GetString(data, "status") ?? string.Empty,
@@ -164,6 +165,9 @@ public sealed class PaddleBillingGateway(
                 ParseDateTime(data, "canceled_at"),
                 ParseDateTime(trialDates, "starts_at"),
                 ParseDateTime(trialDates, "ends_at") ?? ParseDateTime(data, "next_billed_at"),
+                null,
+                null,
+                null,
                 ParseUserId(customData));
 
             return Task.FromResult(Result.Success<BillingWebhookEventModel?>(model));

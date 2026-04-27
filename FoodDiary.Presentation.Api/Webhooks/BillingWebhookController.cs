@@ -14,6 +14,7 @@ namespace FoodDiary.Presentation.Api.Webhooks;
 [Route("api/v{version:apiVersion}/billing/webhooks/{provider}")]
 public sealed class BillingWebhookController(ISender mediator) : BaseApiController(mediator) {
     private const string PaddleProvider = "Paddle";
+    private const string YooKassaProvider = "YooKassa";
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -24,9 +25,19 @@ public sealed class BillingWebhookController(ISender mediator) : BaseApiControll
         var payload = await reader.ReadToEndAsync();
         Request.Body.Position = 0;
 
-        var signatureHeader = string.Equals(provider, PaddleProvider, StringComparison.OrdinalIgnoreCase)
-            ? Request.Headers["Paddle-Signature"].ToString()
-            : Request.Headers["Stripe-Signature"].ToString();
+        var signatureHeader = ResolveSignatureHeader(provider);
         return await HandleNoContent(provider.ToWebhookCommand(payload, signatureHeader));
+    }
+
+    private string ResolveSignatureHeader(string provider) {
+        if (string.Equals(provider, PaddleProvider, StringComparison.OrdinalIgnoreCase)) {
+            return Request.Headers["Paddle-Signature"].ToString();
+        }
+
+        if (string.Equals(provider, YooKassaProvider, StringComparison.OrdinalIgnoreCase)) {
+            return string.Empty;
+        }
+
+        return Request.Headers["Stripe-Signature"].ToString();
     }
 }

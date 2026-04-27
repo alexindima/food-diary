@@ -4,5 +4,5 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
-public sealed record CreateCheckoutSessionCommand(Guid? UserId, string Plan)
+public sealed record CreateCheckoutSessionCommand(Guid? UserId, string Plan, string? Provider)
     : ICommand<Result<BillingCheckoutSessionModel>>, IUserRequest;

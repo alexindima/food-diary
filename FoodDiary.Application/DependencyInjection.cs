@@ -46,6 +46,7 @@ public static class DependencyInjection {
         services.AddSingleton<IEmailSender, EmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddScoped<BillingAccessService>();
+        services.AddScoped<BillingRenewalService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
 

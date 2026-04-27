@@ -16,7 +16,7 @@ import { AuthService } from '../../../services/auth.service';
 import { environment } from '../../../../environments/environment';
 import { PremiumBillingService } from '../api/premium-billing.service';
 import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
-import { BillingOverview, BillingPlan } from '../models/billing.models';
+import { BillingOverview, BillingPlan, BillingProvider } from '../models/billing.models';
 
 @Component({
     selector: 'fd-premium-access-page',
@@ -58,13 +58,27 @@ export class PremiumAccessPageComponent {
     public readonly canManageBilling = computed(() => this.overview()?.manageBillingAvailable ?? false);
     public readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
     public readonly showManageBilling = computed(() => this.canManageBilling() && this.isPremium());
-    public readonly showPlans = computed(() => !this.isLoading() && !this.isPremium());
+    public readonly availableProviders = computed(() => {
+        const overview = this.overview();
+        const providers = overview?.availableProviders?.filter(provider => !!provider?.trim()) ?? [];
+        return providers;
+    });
+    public readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
+    public readonly showPlans = computed(() => !this.isLoading() && !this.isPremium() && this.checkoutAvailable());
+    public readonly showProviderChoices = computed(() => this.availableProviders().length > 1);
+    public readonly overviewHintKey = computed(() => {
+        if (this.showManageBilling()) {
+            return 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT';
+        }
+
+        return this.checkoutAvailable() ? 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_UNAVAILABLE_HINT';
+    });
 
     public constructor() {
         void this.initializePage();
     }
 
-    public async startCheckout(plan: BillingPlan): Promise<void> {
+    public async startCheckout(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
         if (!this.isBrowser) {
             return;
         }
@@ -73,7 +87,7 @@ export class PremiumAccessPageComponent {
         this.checkoutLoadingPlan.set(plan);
 
         try {
-            const session = await firstValueFrom(this.billingService.createCheckoutSession(plan));
+            const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, provider));
             if (!session.url) {
                 throw new Error('Checkout URL is missing.');
             }
@@ -141,6 +155,19 @@ export class PremiumAccessPageComponent {
 
     public isPlanLoading(plan: BillingPlan): boolean {
         return this.checkoutLoadingPlan() === plan;
+    }
+
+    public getProviderLabel(provider: BillingProvider): string {
+        switch (provider.toLowerCase()) {
+            case 'yookassa':
+                return 'YooKassa';
+            case 'paddle':
+                return 'Paddle';
+            case 'stripe':
+                return 'Stripe';
+            default:
+                return provider;
+        }
     }
 
     private async initializePage(): Promise<void> {

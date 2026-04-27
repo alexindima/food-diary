@@ -3682,7 +3682,8 @@
             "RENEWS_ON": "Renews on",
             "ENDS_ON": "Access ends on",
             "MANAGE_HINT": "Open the billing portal to update payment details, cancel renewal, or switch plans.",
-            "CHECKOUT_HINT": "Choose a plan below to start Premium with Stripe Checkout.",
+            "CHECKOUT_HINT": "Choose a plan below to start Premium through the payment form.",
+            "CHECKOUT_UNAVAILABLE_HINT": "Premium checkout is temporarily unavailable.",
             "MANAGE_ACTION": "Manage subscription"
         },
         "STATUS": {
@@ -3696,7 +3697,8 @@
         },
         "PLANS": {
             "TITLE": "Choose a plan",
-            "SUBTITLE": "Both plans unlock the same Premium features. Billing and renewals are handled by Stripe.",
+            "SUBTITLE": "Both plans unlock the same Premium features. Billing and renewals are handled by the payment provider.",
+            "PAY_WITH": "Pay with {{provider}}",
             "MONTHLY": {
                 "TITLE": "Monthly",
                 "DESCRIPTION": "Flexible month-to-month access for trying Premium without a long commitment.",

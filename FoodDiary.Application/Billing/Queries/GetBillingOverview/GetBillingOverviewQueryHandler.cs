@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -38,8 +39,11 @@ public sealed class GetBillingOverviewQueryHandler(
             subscription?.Plan,
             subscription?.CurrentPeriodEndUtc,
             subscription?.CancelAtPeriodEnd ?? false,
-            !string.IsNullOrWhiteSpace(subscription?.ExternalCustomerId),
+            subscription is not null &&
+                !string.Equals(subscription.Provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrWhiteSpace(subscription.ExternalCustomerId),
             publicConfig.Provider,
-            publicConfig.PaddleClientToken));
+            publicConfig.PaddleClientToken,
+            publicConfig.AvailableProviders));
     }
 }

@@ -5,7 +5,7 @@ import { catchError, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { ApiService } from '../../../services/api.service';
-import { BillingOverview, BillingPlan, CheckoutSessionResponse, PortalSessionResponse } from '../models/billing.models';
+import { BillingOverview, BillingPlan, BillingProvider, CheckoutSessionResponse, PortalSessionResponse } from '../models/billing.models';
 
 @Injectable({
     providedIn: 'root',
@@ -19,8 +19,9 @@ export class PremiumBillingService extends ApiService {
         );
     }
 
-    public createCheckoutSession(plan: BillingPlan): Observable<CheckoutSessionResponse> {
-        return this.post<CheckoutSessionResponse>('checkout-session', { plan }).pipe(
+    public createCheckoutSession(plan: BillingPlan, provider?: BillingProvider): Observable<CheckoutSessionResponse> {
+        const payload = provider ? { plan, provider } : { plan };
+        return this.post<CheckoutSessionResponse>('checkout-session', payload).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Create checkout session error', error)),
         );
     }
