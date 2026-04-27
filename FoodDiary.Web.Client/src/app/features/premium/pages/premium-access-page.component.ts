@@ -144,8 +144,8 @@ export class PremiumAccessPageComponent {
 
     private async initializePage(): Promise<void> {
         await this.handleCheckoutReturnState();
-        await this.handlePaddleTransactionCheckout();
         await this.loadOverview();
+        await this.handlePaddleTransactionCheckout();
     }
 
     private async handleCheckoutReturnState(): Promise<void> {
