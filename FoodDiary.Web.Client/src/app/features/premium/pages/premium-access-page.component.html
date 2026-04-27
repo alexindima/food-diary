@@ -44,7 +44,7 @@
                 </p>
             </div>
 
-            @if (canManageBilling()) {
+            @if (showManageBilling()) {
                 <fd-ui-button
                     variant="secondary"
                     fill="outline"
@@ -63,9 +63,11 @@
             </p>
         } @else if (overview(); as overview) {
             <div class="premium-access-page__badges">
-                <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
-                    {{ getPlanLabelKey(overview.plan) | translate }}
-                </span>
+                @if (isPremium() && overview.plan) {
+                    <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
+                        {{ getPlanLabelKey(overview.plan) | translate }}
+                    </span>
+                }
                 <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
                     {{ getStatusLabelKey(overview.subscriptionStatus) | translate }}
                 </span>
@@ -79,7 +81,7 @@
             }
 
             <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-                {{ (canManageBilling() ? 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT') | translate }}
+                {{ (showManageBilling() ? 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT') | translate }}
             </p>
         }
     </fd-ui-card>

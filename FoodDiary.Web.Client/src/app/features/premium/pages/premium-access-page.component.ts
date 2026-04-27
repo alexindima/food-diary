@@ -56,8 +56,9 @@ export class PremiumAccessPageComponent {
     public readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
 
     public readonly canManageBilling = computed(() => this.overview()?.manageBillingAvailable ?? false);
-    public readonly showPlans = computed(() => !this.isLoading() && !this.canManageBilling());
     public readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
+    public readonly showManageBilling = computed(() => this.canManageBilling() && this.isPremium());
+    public readonly showPlans = computed(() => !this.isLoading() && !this.isPremium());
 
     public constructor() {
         void this.initializePage();
