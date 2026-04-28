@@ -3,7 +3,11 @@ using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
@@ -17,6 +21,122 @@ using FoodDiary.Application.Abstractions.Email.Common;
 namespace FoodDiary.Application.Tests.Admin;
 
 public class AdminFeatureTests {
+    [Fact]
+    public async Task GetAdminBillingPaymentsHandler_NormalizesFiltersAndReturnsPagedPayments() {
+        var repository = new RecordingAdminBillingRepository();
+        var payment = new AdminBillingPaymentReadModel(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            "buyer@example.com",
+            Guid.NewGuid(),
+            "Paddle",
+            "pay_123",
+            "cus_123",
+            "sub_123",
+            "pm_123",
+            "price_monthly",
+            "monthly",
+            "paid",
+            "webhook",
+            7.99m,
+            "USD",
+            DateTime.UtcNow.AddMonths(-1),
+            DateTime.UtcNow,
+            "evt_123",
+            "{\"ok\":true}",
+            DateTime.UtcNow,
+            null);
+        repository.PaymentsResponse = ([payment], 41);
+        var handler = new GetAdminBillingPaymentsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetAdminBillingPaymentsQuery(
+                Page: 0,
+                Limit: 999,
+                Provider: " Paddle ",
+                Status: " paid ",
+                Kind: " webhook ",
+                Search: " buyer@example.com ",
+                FromUtc: new DateTime(2026, 4, 1),
+                ToUtc: new DateTime(2026, 4, 30, 23, 59, 0, DateTimeKind.Utc)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(payment, Assert.Single(result.Value.Data));
+        Assert.Equal(1, result.Value.Page);
+        Assert.Equal(20, result.Value.Limit);
+        Assert.Equal(3, result.Value.TotalPages);
+        Assert.Equal("Paddle", repository.LastPaymentsFilter?.Provider);
+        Assert.Equal("paid", repository.LastPaymentsFilter?.Status);
+        Assert.Equal("webhook", repository.LastPaymentsFilter?.Kind);
+        Assert.Equal("buyer@example.com", repository.LastPaymentsFilter?.Search);
+        Assert.Equal(DateTimeKind.Utc, repository.LastPaymentsFilter?.FromUtc?.Kind);
+    }
+
+    [Fact]
+    public async Task GetAdminBillingSubscriptionsHandler_UsesSubscriptionRepositoryPath() {
+        var repository = new RecordingAdminBillingRepository();
+        var subscription = new AdminBillingSubscriptionReadModel(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            "premium@example.com",
+            "YooKassa",
+            "customer_123",
+            "payment_123",
+            "pm_123",
+            "price_yearly",
+            "yearly",
+            "active",
+            DateTime.UtcNow.AddYears(-1),
+            DateTime.UtcNow,
+            false,
+            DateTime.UtcNow,
+            "evt_123",
+            DateTime.UtcNow,
+            DateTime.UtcNow,
+            null);
+        repository.SubscriptionsResponse = ([subscription], 1);
+        var handler = new GetAdminBillingSubscriptionsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetAdminBillingSubscriptionsQuery(1, 20, "YooKassa", "active", null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(subscription, Assert.Single(result.Value.Data));
+        Assert.Equal("YooKassa", repository.LastSubscriptionsFilter?.Provider);
+        Assert.Equal("active", repository.LastSubscriptionsFilter?.Status);
+    }
+
+    [Fact]
+    public async Task GetAdminBillingWebhookEventsHandler_UsesWebhookRepositoryPath() {
+        var repository = new RecordingAdminBillingRepository();
+        var webhookEvent = new AdminBillingWebhookEventReadModel(
+            Guid.NewGuid(),
+            "Paddle",
+            "evt_123",
+            "transaction.completed",
+            "pay_123",
+            "processed",
+            DateTime.UtcNow,
+            "{\"event_id\":\"evt_123\"}",
+            null,
+            DateTime.UtcNow,
+            null);
+        repository.WebhookEventsResponse = ([webhookEvent], 1);
+        var handler = new GetAdminBillingWebhookEventsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetAdminBillingWebhookEventsQuery(1, 20, "Paddle", "processed", "evt_123", null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(webhookEvent, Assert.Single(result.Value.Data));
+        Assert.Equal("Paddle", repository.LastWebhookEventsFilter?.Provider);
+        Assert.Equal("processed", repository.LastWebhookEventsFilter?.Status);
+        Assert.Equal("evt_123", repository.LastWebhookEventsFilter?.Search);
+    }
+
     [Fact]
     public async Task UpdateAdminUserValidator_WithInvalidRole_Fails() {
         var validator = new UpdateAdminUserCommandValidator();
@@ -442,5 +562,36 @@ public class AdminFeatureTests {
             string locale,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<EmailTemplate?>(null);
+    }
+
+    private sealed class RecordingAdminBillingRepository : IAdminBillingRepository {
+        public AdminBillingListFilter? LastSubscriptionsFilter { get; private set; }
+        public AdminBillingListFilter? LastPaymentsFilter { get; private set; }
+        public AdminBillingListFilter? LastWebhookEventsFilter { get; private set; }
+
+        public (IReadOnlyList<AdminBillingSubscriptionReadModel> Items, int TotalItems) SubscriptionsResponse { get; set; } = ([], 0);
+        public (IReadOnlyList<AdminBillingPaymentReadModel> Items, int TotalItems) PaymentsResponse { get; set; } = ([], 0);
+        public (IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems) WebhookEventsResponse { get; set; } = ([], 0);
+
+        public Task<(IReadOnlyList<AdminBillingSubscriptionReadModel> Items, int TotalItems)> GetSubscriptionsAsync(
+            AdminBillingListFilter filter,
+            CancellationToken cancellationToken = default) {
+            LastSubscriptionsFilter = filter;
+            return Task.FromResult(SubscriptionsResponse);
+        }
+
+        public Task<(IReadOnlyList<AdminBillingPaymentReadModel> Items, int TotalItems)> GetPaymentsAsync(
+            AdminBillingListFilter filter,
+            CancellationToken cancellationToken = default) {
+            LastPaymentsFilter = filter;
+            return Task.FromResult(PaymentsResponse);
+        }
+
+        public Task<(IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems)> GetWebhookEventsAsync(
+            AdminBillingListFilter filter,
+            CancellationToken cancellationToken = default) {
+            LastWebhookEventsFilter = filter;
+            return Task.FromResult(WebhookEventsResponse);
+        }
     }
 }

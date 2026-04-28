@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
@@ -249,6 +250,52 @@ public sealed class BillingFeatureTests {
         Assert.Equal(0, result.Failed);
     }
 
+    [Fact]
+    public async Task GetBillingOverview_WithExistingSubscription_ReturnsBillingTimelineAndRenewalState() {
+        var premiumRole = Role.Create(RoleNames.Premium);
+        var user = User.Create("premium@example.com", "hash");
+        user.ReplaceRoles([premiumRole]);
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.YooKassa,
+            "customer_789",
+            "price_yearly",
+            "yearly");
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.YooKassa,
+            "pay_789",
+            "pm_789",
+            "price_yearly",
+            "yearly",
+            "active",
+            Now,
+            Now.AddYears(1),
+            false,
+            Now.AddYears(1),
+            null,
+            null,
+            "evt_789",
+            Now,
+            "{\"provider\":\"yookassa\"}");
+        var handler = new GetBillingOverviewQueryHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingPublicConfigProvider());
+
+        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(result.Value.IsPremium);
+        Assert.Equal(BillingProviderNames.YooKassa, result.Value.SubscriptionProvider);
+        Assert.Equal("yearly", result.Value.Plan);
+        Assert.Equal("active", result.Value.SubscriptionStatus);
+        Assert.Equal(Now, result.Value.CurrentPeriodStartUtc);
+        Assert.Equal(Now.AddYears(1), result.Value.CurrentPeriodEndUtc);
+        Assert.Equal(Now.AddYears(1), result.Value.NextBillingAttemptUtc);
+        Assert.True(result.Value.RenewalEnabled);
+        Assert.False(result.Value.ManageBillingAvailable);
+    }
+
     private static ProcessBillingWebhookCommandHandler CreateWebhookHandler(
         IBillingProviderGateway gateway,
         FakeUserRepository userRepository,
@@ -415,6 +462,11 @@ public sealed class BillingFeatureTests {
             Events.Add(webhookEvent);
             return Task.FromResult(webhookEvent);
         }
+    }
+
+    private sealed class FakeBillingPublicConfigProvider : IBillingPublicConfigProvider {
+        public BillingPublicConfigModel GetPublicConfig() =>
+            new(BillingProviderNames.Paddle, "test_client_token", [BillingProviderNames.Paddle, BillingProviderNames.YooKassa]);
     }
 
     private sealed class FakeBillingProviderGatewayAccessor(

@@ -1,0 +1,214 @@
+<div class="admin-billing">
+    <header class="admin-billing__header">
+        <div>
+            <h1>Billing</h1>
+            <p>Subscriptions, payments, renewal attempts and webhook events.</p>
+        </div>
+        <fd-ui-button type="button" variant="secondary" (click)="load()"> Refresh </fd-ui-button>
+    </header>
+
+    <div class="admin-billing__tabs">
+        <button type="button" [class.active]="activeTab() === 'subscriptions'" (click)="setTab('subscriptions')">Subscriptions</button>
+        <button type="button" [class.active]="activeTab() === 'payments'" (click)="setTab('payments')">Payments</button>
+        <button type="button" [class.active]="activeTab() === 'webhook-events'" (click)="setTab('webhook-events')">Webhooks</button>
+    </div>
+
+    <section class="admin-billing__filters">
+        <fd-ui-input [ngModel]="search()" (ngModelChange)="search.set($event)" placeholder="Search email or external id" />
+        <fd-ui-input [ngModel]="provider()" (ngModelChange)="provider.set($event)" placeholder="Provider" />
+        <fd-ui-input [ngModel]="status()" (ngModelChange)="status.set($event)" placeholder="Status" />
+        @if (activeTab() === 'payments') {
+            <fd-ui-input [ngModel]="kind()" (ngModelChange)="kind.set($event)" placeholder="Kind" />
+        }
+        <label>
+            <span>From</span>
+            <input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
+        </label>
+        <label>
+            <span>To</span>
+            <input type="date" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
+        </label>
+        <fd-ui-button type="button" (click)="applyFilters()"> Apply </fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" (click)="resetFilters()"> Reset </fd-ui-button>
+    </section>
+
+    @if (isLoading()) {
+        <p>Loading billing records...</p>
+    } @else {
+        <div class="admin-billing__summary">Total records: {{ totalItems() }}</div>
+
+        @if (activeTab() === 'subscriptions') {
+            <table class="admin-billing__table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Provider</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Period</th>
+                        <th>Next charge</th>
+                        <th>External ids</th>
+                        <th>Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (subscription of subscriptions(); track subscription.id) {
+                        <tr>
+                            <td>
+                                <strong>{{ subscription.userEmail }}</strong>
+                                <span>{{ subscription.userId }}</span>
+                            </td>
+                            <td>{{ subscription.provider }}</td>
+                            <td>{{ subscription.plan || '-' }}</td>
+                            <td>
+                                <span class="admin-billing__badge">{{ subscription.status }}</span>
+                                @if (subscription.cancelAtPeriodEnd) {
+                                    <span class="admin-billing__badge admin-billing__badge--warn">canceling</span>
+                                }
+                            </td>
+                            <td>
+                                <span>{{ subscription.currentPeriodStartUtc | date: 'shortDate' }}</span>
+                                <span>{{ subscription.currentPeriodEndUtc | date: 'shortDate' }}</span>
+                            </td>
+                            <td>{{ subscription.nextBillingAttemptUtc ? (subscription.nextBillingAttemptUtc | date: 'short') : '-' }}</td>
+                            <td>
+                                <span>Customer: {{ shortId(subscription.externalCustomerId) }}</span>
+                                <span>Sub: {{ shortId(subscription.externalSubscriptionId) }}</span>
+                                <span>PM: {{ shortId(subscription.externalPaymentMethodId) }}</span>
+                            </td>
+                            <td>
+                                {{
+                                    subscription.lastSyncedAtUtc || subscription.modifiedOnUtc || subscription.createdOnUtc | date: 'short'
+                                }}
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="8">No subscriptions found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        @if (activeTab() === 'payments') {
+            <table class="admin-billing__table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Provider</th>
+                        <th>Kind</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                        <th>External ids</th>
+                        <th>Metadata</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (payment of payments(); track payment.id) {
+                        <tr>
+                            <td>{{ payment.createdOnUtc | date: 'short' }}</td>
+                            <td>
+                                <strong>{{ payment.userEmail }}</strong>
+                                <span>{{ payment.userId }}</span>
+                            </td>
+                            <td>{{ payment.provider }}</td>
+                            <td>{{ payment.kind }}</td>
+                            <td>
+                                <span class="admin-billing__badge">{{ payment.status }}</span>
+                            </td>
+                            <td>{{ formatMoney(payment.amount, payment.currency) }}</td>
+                            <td>
+                                <span>Payment: {{ shortId(payment.externalPaymentId) }}</span>
+                                <span>Customer: {{ shortId(payment.externalCustomerId) }}</span>
+                                <span>Webhook: {{ shortId(payment.webhookEventId) }}</span>
+                            </td>
+                            <td>
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    [disabled]="!payment.providerMetadataJson"
+                                    (click)="showMetadata(payment.providerMetadataJson)"
+                                >
+                                    View
+                                </fd-ui-button>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="8">No payments found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        @if (activeTab() === 'webhook-events') {
+            <table class="admin-billing__table">
+                <thead>
+                    <tr>
+                        <th>Processed</th>
+                        <th>Provider</th>
+                        <th>Event</th>
+                        <th>Status</th>
+                        <th>External object</th>
+                        <th>Error</th>
+                        <th>Payload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (event of webhookEvents(); track event.id) {
+                        <tr>
+                            <td>{{ event.processedAtUtc | date: 'short' }}</td>
+                            <td>{{ event.provider }}</td>
+                            <td>
+                                <strong>{{ event.eventType }}</strong>
+                                <span>{{ shortId(event.eventId) }}</span>
+                            </td>
+                            <td>
+                                <span class="admin-billing__badge">{{ event.status }}</span>
+                            </td>
+                            <td>{{ shortId(event.externalObjectId) }}</td>
+                            <td>{{ event.errorMessage || '-' }}</td>
+                            <td>
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    [disabled]="!event.payloadJson"
+                                    (click)="showMetadata(event.payloadJson)"
+                                >
+                                    View
+                                </fd-ui-button>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="7">No webhook events found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <div class="admin-billing__pagination">
+            <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
+                Previous
+            </fd-ui-button>
+            <span>Page {{ page() }} of {{ totalPages() }}</span>
+            <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">
+                Next
+            </fd-ui-button>
+        </div>
+    }
+
+    @if (selectedMetadata(); as metadata) {
+        <aside class="admin-billing__metadata">
+            <div class="admin-billing__metadata-header">
+                <strong>Provider metadata</strong>
+                <button type="button" (click)="selectedMetadata.set(null)">Close</button>
+            </div>
+            <pre>{{ metadata }}</pre>
+        </aside>
+    }
+</div>

@@ -9,7 +9,7 @@
     padding-bottom: 24px;
 
     &__header {
-
+        // stylelint-disable-next-line rule-empty-line-before
         .fd-page-header {
             align-items: flex-start;
         }
@@ -84,6 +84,14 @@
                 145deg,
                 color-mix(in srgb, var(--fd-color-primary-500) 18%, var(--fd-color-surface-raised)),
                 color-mix(in srgb, var(--fd-color-primary-400) 8%, var(--fd-color-surface-raised))
+            );
+        }
+
+        &--billing {
+            background: linear-gradient(
+                145deg,
+                color-mix(in srgb, var(--fd-color-emerald-500) 16%, var(--fd-color-white)),
+                color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-white))
             );
         }
 
@@ -203,6 +211,71 @@
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: variables.$gap-l;
         align-items: start;
+    }
+
+    &__billing-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__billing-primary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    &__billing-plan {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--fd-color-text);
+    }
+
+    &__billing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    &__billing-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px 14px;
+        border-radius: var(--fd-radius-button);
+        background: var(--fd-color-surface-raised);
+        border: 1px solid var(--fd-color-border);
+        min-width: 0;
+
+        strong {
+            color: var(--fd-color-text);
+            font-size: 0.98rem;
+        }
+    }
+
+    &__billing-label {
+        color: var(--fd-color-text-muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    &__billing-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    &__billing-state,
+    &__billing-note {
+        color: var(--fd-color-text-muted);
+        line-height: 1.4;
+    }
+
+    &__billing-state--error {
+        color: var(--fd-color-danger);
     }
 
     &__notifications {
@@ -511,7 +584,7 @@
     }
 
     @media #{variables.$media-mobile} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__gender-options {
             gap: 8px;
         }
@@ -555,10 +628,5 @@
             justify-content: space-between;
             width: 100%;
         }
-
     }
 }
-
-
-
-

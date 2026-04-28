@@ -32,13 +32,19 @@ public sealed class GetBillingOverviewQueryHandler(
         var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
         var isPremium = user!.HasRole(RoleNames.Premium);
         var publicConfig = billingPublicConfigProvider.GetPublicConfig();
+        var renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
+            !subscription.CancelAtPeriodEnd;
 
         return Result.Success(new BillingOverviewModel(
             isPremium,
             subscription?.Status,
             subscription?.Plan,
+            subscription?.Provider,
+            subscription?.CurrentPeriodStartUtc,
             subscription?.CurrentPeriodEndUtc,
+            subscription?.NextBillingAttemptUtc,
             subscription?.CancelAtPeriodEnd ?? false,
+            renewalEnabled,
             subscription is not null &&
                 !string.Equals(subscription.Provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) &&
                 !string.IsNullOrWhiteSpace(subscription.ExternalCustomerId),

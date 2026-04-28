@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
 import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.routes';
 import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
@@ -20,6 +21,10 @@ export const routes: Routes = [
     {
         path: 'ai-usage',
         children: adminAiUsageRoutes,
+    },
+    {
+        path: 'billing',
+        children: adminBillingRoutes,
     },
     {
         path: 'email-templates',

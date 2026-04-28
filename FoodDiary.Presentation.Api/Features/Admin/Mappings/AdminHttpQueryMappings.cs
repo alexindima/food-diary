@@ -1,4 +1,7 @@
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
@@ -26,6 +29,40 @@ public static class AdminHttpQueryMappings {
 
     public static GetAdminAiUsageSummaryQuery ToQuery(this GetAdminAiUsageSummaryHttpQuery query) {
         return new GetAdminAiUsageSummaryQuery(query.From, query.To);
+    }
+
+    public static GetAdminBillingSubscriptionsQuery ToSubscriptionsQuery(this GetAdminBillingHttpQuery query) {
+        return new GetAdminBillingSubscriptionsQuery(
+            query.Page,
+            query.Limit,
+            query.Provider,
+            query.Status,
+            query.Search,
+            query.FromUtc,
+            query.ToUtc);
+    }
+
+    public static GetAdminBillingPaymentsQuery ToPaymentsQuery(this GetAdminBillingHttpQuery query) {
+        return new GetAdminBillingPaymentsQuery(
+            query.Page,
+            query.Limit,
+            query.Provider,
+            query.Status,
+            query.Kind,
+            query.Search,
+            query.FromUtc,
+            query.ToUtc);
+    }
+
+    public static GetAdminBillingWebhookEventsQuery ToWebhookEventsQuery(this GetAdminBillingHttpQuery query) {
+        return new GetAdminBillingWebhookEventsQuery(
+            query.Page,
+            query.Limit,
+            query.Provider,
+            query.Status,
+            query.Search,
+            query.FromUtc,
+            query.ToUtc);
     }
 
     public static GetAdminContentReportsQuery ToQuery(this GetAdminContentReportsHttpQuery query) {

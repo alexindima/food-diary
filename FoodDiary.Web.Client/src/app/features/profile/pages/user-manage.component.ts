@@ -1,3 +1,4 @@
+import { DatePipe, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -7,6 +8,7 @@ import {
     effect,
     FactoryProvider,
     inject,
+    PLATFORM_ID,
     signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +40,8 @@ import { NotificationService, WebPushSubscriptionItem } from '../../../services/
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
 import { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
+import { PremiumBillingService } from '../../premium/api/premium-billing.service';
+import { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
 import {
     FASTING_REMINDER_PRESETS,
     FastingReminderPreset,
@@ -80,6 +84,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiFormErrorComponent,
         FdUiStatusBadgeComponent,
         FdUiSwitchComponent,
+        DatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -104,9 +109,13 @@ export class UserManageComponent {
     private readonly notificationService = inject(NotificationService);
     private readonly pushNotifications = inject(PushNotificationService);
     private readonly dietologistService = inject(DietologistService);
+    private readonly billingService = inject(PremiumBillingService);
     private readonly toastService = inject(FdUiToastService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private lastUserData: Partial<UserFormValues> | null = null;
     private lastNotificationSyncVersion = -1;
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
@@ -128,6 +137,10 @@ export class UserManageComponent {
     public readonly dietologistError = signal<string | null>(null);
     public readonly isLoadingDietologist = signal(false);
     public readonly isSavingDietologist = signal(false);
+    public readonly billingOverview = signal<BillingOverview | null>(null);
+    public readonly isLoadingBilling = signal(false);
+    public readonly isOpeningBillingPortal = signal(false);
+    public readonly billingError = signal<string | null>(null);
     public readonly isDeleting = this.facade.isDeleting;
     public readonly isSavingProfile = this.facade.isSavingProfile;
     public readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
@@ -142,6 +155,8 @@ export class UserManageComponent {
             this.isSchedulingTestNotification() ||
             this.isSavingDietologist() ||
             this.isLoadingDietologist() ||
+            this.isLoadingBilling() ||
+            this.isOpeningBillingPortal() ||
             this.isLoadingConnectedDevices() ||
             !!this.removingConnectedDeviceEndpoint(),
     );
@@ -163,6 +178,30 @@ export class UserManageComponent {
     public readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
     public readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
     public readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
+    public readonly billingStatusLabelKey = computed(() =>
+        this.getBillingStatusLabelKey(this.billingOverview()?.subscriptionStatus ?? null),
+    );
+    public readonly billingPlanLabelKey = computed(() => this.getBillingPlanLabelKey(this.billingOverview()?.plan ?? null));
+    public readonly billingProviderLabel = computed(() => {
+        const overview = this.billingOverview();
+        return this.getBillingProviderLabel(overview?.subscriptionProvider ?? overview?.provider ?? null);
+    });
+    public readonly billingRenewalLabelKey = computed(() => {
+        const overview = this.billingOverview();
+        if (!overview || !overview.isPremium) {
+            return 'USER_MANAGE.BILLING_RENEWAL_FREE';
+        }
+
+        if (overview.cancelAtPeriodEnd) {
+            return 'USER_MANAGE.BILLING_RENEWAL_CANCELING';
+        }
+
+        if (overview.renewalEnabled) {
+            return 'USER_MANAGE.BILLING_RENEWAL_ENABLED';
+        }
+
+        return 'USER_MANAGE.BILLING_RENEWAL_MANUAL';
+    });
     public readonly pushNotificationsAccountStatusKey = computed(() =>
         this.pushNotificationsEnabled()
             ? 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED'
@@ -305,6 +344,7 @@ export class UserManageComponent {
         this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.dietologistError.set(null));
 
         this.facade.initialize();
+        this.loadBillingOverview();
     }
 
     public async onSubmit(): Promise<void> {
@@ -808,6 +848,41 @@ export class UserManageComponent {
         return null;
     }
 
+    public reloadBillingOverview(): void {
+        this.loadBillingOverview();
+    }
+
+    public openPremiumPage(): void {
+        void this.router.navigate(['/premium']);
+    }
+
+    public openBillingPortal(): void {
+        if (!this.isBrowser || this.isOpeningBillingPortal()) {
+            return;
+        }
+
+        this.billingError.set(null);
+        this.isOpeningBillingPortal.set(true);
+        this.billingService
+            .createPortalSession()
+            .pipe(finalize(() => this.isOpeningBillingPortal.set(false)))
+            .subscribe({
+                next: session => {
+                    if (!session.url) {
+                        this.billingError.set('USER_MANAGE.BILLING_PORTAL_ERROR');
+                        this.toastService.error(this.translateService.instant('USER_MANAGE.BILLING_PORTAL_ERROR'));
+                        return;
+                    }
+
+                    this.document.location.href = session.url;
+                },
+                error: () => {
+                    this.billingError.set('USER_MANAGE.BILLING_PORTAL_ERROR');
+                    this.toastService.error(this.translateService.instant('USER_MANAGE.BILLING_PORTAL_ERROR'));
+                },
+            });
+    }
+
     private applyUserData(userData: Partial<UserFormValues>): void {
         this.userForm.patchValue(userData, { emitEvent: false });
         this.userForm.markAsPristine();
@@ -844,6 +919,66 @@ export class UserManageComponent {
                     this.setDietologistError('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
                 },
             });
+    }
+
+    private loadBillingOverview(): void {
+        this.isLoadingBilling.set(true);
+        this.billingError.set(null);
+        this.billingService
+            .getOverview()
+            .pipe(finalize(() => this.isLoadingBilling.set(false)))
+            .subscribe({
+                next: overview => {
+                    this.billingOverview.set(overview);
+                },
+                error: () => {
+                    this.billingError.set('USER_MANAGE.BILLING_LOAD_ERROR');
+                },
+            });
+    }
+
+    private getBillingPlanLabelKey(plan: BillingPlan | null): string {
+        if (!this.billingOverview()?.isPremium) {
+            return 'USER_MANAGE.BILLING_PLAN_FREE';
+        }
+
+        return plan === 'yearly' ? 'USER_MANAGE.BILLING_PLAN_PREMIUM_YEARLY' : 'USER_MANAGE.BILLING_PLAN_PREMIUM_MONTHLY';
+    }
+
+    private getBillingStatusLabelKey(status: string | null): string {
+        switch (status) {
+            case 'active':
+                return 'USER_MANAGE.BILLING_STATUS_ACTIVE';
+            case 'trialing':
+                return 'USER_MANAGE.BILLING_STATUS_TRIALING';
+            case 'past_due':
+                return 'USER_MANAGE.BILLING_STATUS_PAST_DUE';
+            case 'canceled':
+                return 'USER_MANAGE.BILLING_STATUS_CANCELED';
+            case 'unpaid':
+                return 'USER_MANAGE.BILLING_STATUS_UNPAID';
+            case 'incomplete':
+                return 'USER_MANAGE.BILLING_STATUS_INCOMPLETE';
+            default:
+                return 'USER_MANAGE.BILLING_STATUS_FREE';
+        }
+    }
+
+    private getBillingProviderLabel(provider: BillingProvider | null): string {
+        if (!provider?.trim()) {
+            return this.translateService.instant('USER_MANAGE.BILLING_PROVIDER_NONE');
+        }
+
+        switch (provider.toLowerCase()) {
+            case 'yookassa':
+                return 'YooKassa';
+            case 'paddle':
+                return 'Paddle';
+            case 'stripe':
+                return 'Stripe';
+            default:
+                return provider;
+        }
     }
 
     private syncDietologistFormFromRelationship(relationship: DietologistRelationship | null): void {
