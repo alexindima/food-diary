@@ -2,14 +2,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: var(--fd-space-pagination-gap, 8px);
     flex-wrap: wrap;
 }
 
 .fd-ui-pagination__button {
     min-width: 36px;
     height: 36px;
-    padding: 0 12px;
+    padding: var(--fd-space-pagination-button-padding, 0 12px);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 30%, transparent);
     border-radius: var(--fd-radius-button, 12px);
     background: var(--fd-color-surface-raised);

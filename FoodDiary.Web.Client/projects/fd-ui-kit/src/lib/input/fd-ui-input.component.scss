@@ -16,7 +16,7 @@
 .fd-ui-input {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-control-gap, 6px);
 }
 
 .fd-ui-input__label {
@@ -39,7 +39,7 @@
         top 0.15s ease,
         font-size 0.15s ease;
     background: var(--fd-color-surface-raised);
-    padding: 0 4px;
+    padding: 0 var(--fd-space-field-label-padding-x, 4px);
     border-radius: var(--fd-radius-field-label, 999px);
     pointer-events: none;
 }
@@ -57,7 +57,7 @@
     background: var(--fd-input-control-background);
     display: flex;
     align-items: center;
-    padding: 0 44px 0 12px;
+    padding: 0 44px 0 var(--fd-space-control-padding-x, 12px);
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -181,8 +181,8 @@
 }
 
 .fd-ui-input--floating .fd-ui-input__control-wrap {
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding-top: var(--fd-space-control-floating-padding-top, 8px);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom, 2px);
 }
 
 .fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) .fd-ui-input__label {
@@ -192,8 +192,8 @@
 }
 
 .fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) {
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding-top: var(--fd-space-control-floating-padding-top, 8px);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom, 2px);
 }
 
 .fd-ui-input__error {

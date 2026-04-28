@@ -1,5 +1,5 @@
 .fd-ui-surface {
-    --fd-surface-padding: 14px 16px;
+    --fd-surface-padding: var(--fd-space-surface-padding, 14px 16px);
     --fd-surface-radius: var(--fd-radius-card);
     --fd-surface-bg: var(--fd-color-surface);
     --fd-surface-border: var(--fd-color-border);
@@ -14,14 +14,14 @@
 }
 
 .fd-ui-surface--primary {
-    --fd-surface-padding: 16px 18px;
+    --fd-surface-padding: var(--fd-space-surface-emphasis-padding, 16px 18px);
     --fd-surface-radius: var(--fd-radius-panel);
     --fd-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 14%, var(--fd-color-surface-raised));
     --fd-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 22%, var(--fd-color-border));
 }
 
 .fd-ui-surface--warning {
-    --fd-surface-padding: 16px 18px;
+    --fd-surface-padding: var(--fd-space-surface-emphasis-padding, 16px 18px);
     --fd-surface-radius: var(--fd-radius-panel);
     --fd-surface-bg: color-mix(in srgb, var(--fd-color-yellow-300) 16%, var(--fd-color-surface-raised));
     --fd-surface-border: color-mix(in srgb, var(--fd-color-yellow-300) 26%, var(--fd-color-border));

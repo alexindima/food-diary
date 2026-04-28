@@ -460,6 +460,259 @@ $fd-theme-design-tokens: (
     @return $value;
 }
 
+@function fd-ui-style-spacing-token($style, $name) {
+    $style-map: (
+        classic: (
+            control-gap: 6px,
+            control-padding-x: 12px,
+            control-floating-padding-top: 8px,
+            control-floating-padding-bottom: 2px,
+            field-label-padding-x: 4px,
+            control-segment-padding-x: 14px,
+            textarea-padding: 16px 12px 12px,
+            card-gap: fd-token(spacing, md),
+            card-padding-x: fd-token(spacing, lg),
+            card-padding-y: fd-token(spacing, sm),
+            card-content-gap: fd-token(spacing, md),
+            card-header-gap: fd-token(spacing, sm),
+            card-relaxed-gap: 28px,
+            card-profile-gap: 18px,
+            card-profile-padding: 20px 22px 24px,
+            card-profile-padding-mobile: 16px,
+            actions-gap: 12px,
+            page-section-gap: clamp(24px, 4vw, 40px),
+            page-body-bottom-padding: clamp(12px, 2vw, 20px),
+            page-header-gap: clamp(10px, 2vw, 16px),
+            page-header-actions-gap: 12px,
+            page-header-mobile-column-gap: 10px,
+            page-header-mobile-row-gap: 4px,
+            menu-gap: 2px,
+            menu-padding: 6px,
+            menu-item-gap: 10px,
+            menu-item-padding: 10px 12px,
+            menu-item-min-height: 38px,
+            menu-divider-margin: 8px 0,
+            surface-padding: 14px 16px,
+            surface-emphasis-padding: 16px 18px,
+            stat-tile-padding: 16px,
+            stat-tile-gap: 8px,
+            stat-tile-compact-padding: 12px 14px,
+            stat-tile-compact-gap: 4px,
+            progress-item-padding: 8px,
+            progress-item-header-gap: 8px,
+            pill-gap: 6px,
+            pill-compact-gap: 4px,
+            dialog-padding: 1.25rem,
+            dialog-padding-sm: 1rem,
+            dialog-padding-lg: 1.5rem,
+            dialog-header-gap: 0.75rem,
+            dialog-heading-gap: 0.375rem,
+            dialog-header-padding-bottom: 0.75rem,
+            dialog-header-margin-bottom: 1rem,
+            dialog-footer-gap: 0.75rem,
+            dialog-footer-padding-top: 0.75rem,
+            dialog-footer-margin-top: 0.75rem,
+            dialog-fullscreen-padding: 24px,
+            empty-state-gap: 8px,
+            empty-state-padding: 32px 16px,
+            empty-state-compact-padding: 16px,
+            empty-state-content-gap: 6px,
+            section-state-padding: 24px,
+            section-state-compact-padding: 16px,
+            section-state-gap: 12px,
+            inline-alert-padding: 16px 18px,
+            inline-alert-notice-padding: 14px 16px,
+            inline-alert-gap: 14px,
+            inline-alert-content-gap: 6px,
+            inline-alert-actions-gap: 10px,
+            toast-viewport-gap: 12px,
+            toast-content-gap: 12px,
+            toast-content-padding: 12px 48px 12px 16px,
+            toast-content-padding-compact: 12px 44px 12px 14px,
+            checkbox-gap: 6px,
+            checkbox-label-gap: 10px,
+            checkbox-hint-margin-left: 28px,
+            radio-group-gap: fd-token(spacing, sm),
+            radio-gap: fd-token(spacing, xs),
+            radio-padding: fd-token(spacing, xs) fd-token(spacing, sm),
+            switch-gap: 8px,
+            switch-track-padding: 3px,
+            tabs-wrap-gap: 6px,
+            tabs-item-padding-inline: 24px,
+            tabs-wrap-item-padding-inline: 12px,
+            segmented-toggle-gap: 4px,
+            segmented-toggle-padding: 4px,
+            segmented-toggle-item-padding: 8px 16px,
+            pagination-gap: 8px,
+            pagination-button-padding: 0 12px,
+            chip-select-gap: 8px,
+            chip-select-item-padding: 0 16px,
+            status-badge-padding: 4px 10px,
+            form-error-margin: 4px 0 0,
+            nutrient-input-gap: 10px,
+            nutrient-input-padding: 16px 18px,
+            nutrient-input-padding-lg: 22px,
+            nutrient-input-padding-sm: 12px 14px,
+            nutrient-input-label-gap: 8px,
+            nutrient-input-value-gap: 6px,
+            satiety-scale-gap: 8px,
+            satiety-scale-list-gap: 8px,
+            satiety-scale-grid-gap: 12px,
+            satiety-scale-option-gap: 12px,
+            satiety-scale-option-padding: 12px 16px,
+            satiety-scale-text-gap: 4px,
+            emoji-picker-gap: 8px,
+            emoji-picker-gap-sm: 6px,
+            emoji-picker-option-padding: 8px,
+            emoji-picker-option-padding-sm: 6px,
+            emoji-picker-option-gap: 8px,
+            emoji-picker-text-gap: 2px,
+            image-preview-padding: 28px,
+            image-preview-padding-mobile: 16px,
+            image-preview-figure-gap: 18px,
+            calendar-gap: 0.75rem,
+            calendar-padding: 0.75rem,
+            calendar-header-gap: 0.5rem,
+            calendar-grid-gap: 0.25rem,
+            entity-card-gap: fd-token(spacing, md),
+            entity-card-content-gap: fd-token(spacing, sm),
+            entity-card-header-gap: fd-token(spacing, sm),
+            entity-card-title-gap: 2px,
+        ),
+        modern: (
+            control-gap: 4px,
+            control-padding-x: 10px,
+            control-floating-padding-top: 7px,
+            control-floating-padding-bottom: 1px,
+            field-label-padding-x: 3px,
+            control-segment-padding-x: 12px,
+            textarea-padding: 14px 10px 10px,
+            card-gap: fd-token(spacing, sm),
+            card-padding-x: fd-token(spacing, md),
+            card-padding-y: fd-token(spacing, sm),
+            card-content-gap: fd-token(spacing, sm),
+            card-header-gap: fd-token(spacing, xs),
+            card-relaxed-gap: 20px,
+            card-profile-gap: 14px,
+            card-profile-padding: 16px 18px 20px,
+            card-profile-padding-mobile: 14px,
+            actions-gap: 10px,
+            page-section-gap: clamp(16px, 3vw, 28px),
+            page-body-bottom-padding: clamp(8px, 1.5vw, 16px),
+            page-header-gap: clamp(8px, 1.6vw, 12px),
+            page-header-actions-gap: 10px,
+            page-header-mobile-column-gap: 8px,
+            page-header-mobile-row-gap: 3px,
+            menu-gap: 2px,
+            menu-padding: 4px,
+            menu-item-gap: 8px,
+            menu-item-padding: 8px 10px,
+            menu-item-min-height: 34px,
+            menu-divider-margin: 6px 0,
+            surface-padding: 12px 14px,
+            surface-emphasis-padding: 14px 16px,
+            stat-tile-padding: 14px,
+            stat-tile-gap: 6px,
+            stat-tile-compact-padding: 10px 12px,
+            stat-tile-compact-gap: 3px,
+            progress-item-padding: 6px,
+            progress-item-header-gap: 6px,
+            pill-gap: 5px,
+            pill-compact-gap: 3px,
+            dialog-padding: 1rem,
+            dialog-padding-sm: 0.875rem,
+            dialog-padding-lg: 1.25rem,
+            dialog-header-gap: 0.625rem,
+            dialog-heading-gap: 0.25rem,
+            dialog-header-padding-bottom: 0.625rem,
+            dialog-header-margin-bottom: 0.75rem,
+            dialog-footer-gap: 0.625rem,
+            dialog-footer-padding-top: 0.625rem,
+            dialog-footer-margin-top: 0.625rem,
+            dialog-fullscreen-padding: 18px,
+            empty-state-gap: 6px,
+            empty-state-padding: 24px 14px,
+            empty-state-compact-padding: 14px,
+            empty-state-content-gap: 4px,
+            section-state-padding: 18px,
+            section-state-compact-padding: 14px,
+            section-state-gap: 10px,
+            inline-alert-padding: 14px 16px,
+            inline-alert-notice-padding: 12px 14px,
+            inline-alert-gap: 12px,
+            inline-alert-content-gap: 4px,
+            inline-alert-actions-gap: 8px,
+            toast-viewport-gap: 10px,
+            toast-content-gap: 10px,
+            toast-content-padding: 10px 44px 10px 14px,
+            toast-content-padding-compact: 10px 40px 10px 12px,
+            checkbox-gap: 4px,
+            checkbox-label-gap: 8px,
+            checkbox-hint-margin-left: 26px,
+            radio-group-gap: fd-token(spacing, xs),
+            radio-gap: 6px,
+            radio-padding: 6px 10px,
+            switch-gap: 6px,
+            switch-track-padding: 2px,
+            tabs-wrap-gap: 4px,
+            tabs-item-padding-inline: 20px,
+            tabs-wrap-item-padding-inline: 10px,
+            segmented-toggle-gap: 3px,
+            segmented-toggle-padding: 3px,
+            segmented-toggle-item-padding: 7px 12px,
+            pagination-gap: 6px,
+            pagination-button-padding: 0 10px,
+            chip-select-gap: 6px,
+            chip-select-item-padding: 0 12px,
+            status-badge-padding: 3px 8px,
+            form-error-margin: 3px 0 0,
+            nutrient-input-gap: 8px,
+            nutrient-input-padding: 14px 16px,
+            nutrient-input-padding-lg: 18px,
+            nutrient-input-padding-sm: 10px 12px,
+            nutrient-input-label-gap: 6px,
+            nutrient-input-value-gap: 4px,
+            satiety-scale-gap: 6px,
+            satiety-scale-list-gap: 6px,
+            satiety-scale-grid-gap: 10px,
+            satiety-scale-option-gap: 10px,
+            satiety-scale-option-padding: 10px 12px,
+            satiety-scale-text-gap: 3px,
+            emoji-picker-gap: 6px,
+            emoji-picker-gap-sm: 4px,
+            emoji-picker-option-padding: 6px,
+            emoji-picker-option-padding-sm: 4px,
+            emoji-picker-option-gap: 6px,
+            emoji-picker-text-gap: 2px,
+            image-preview-padding: 22px,
+            image-preview-padding-mobile: 12px,
+            image-preview-figure-gap: 14px,
+            calendar-gap: 0.625rem,
+            calendar-padding: 0.625rem,
+            calendar-header-gap: 0.375rem,
+            calendar-grid-gap: 0.2rem,
+            entity-card-gap: fd-token(spacing, sm),
+            entity-card-content-gap: fd-token(spacing, xs),
+            entity-card-header-gap: fd-token(spacing, xs),
+            entity-card-title-gap: 2px,
+        ),
+    );
+
+    $tokens: map.get($style-map, $style);
+
+    @if $tokens == null {
+        @error 'Unknown UI style: #{$style}';
+    }
+
+    $value: map.get($tokens, $name);
+
+    @if $value == null {
+        @error 'Unknown UI style spacing token "#{$name}" for style "#{$style}"';
+    }
+
+    @return $value;
+}
+
 @mixin fd-emit-css-variables($theme, $selector) {
     #{$selector} {
         --fd-color-primary: #{fd-theme-token($theme, colors, primary)};
@@ -664,5 +917,126 @@ $fd-theme-design-tokens: (
         --fd-radius-switch: #{fd-ui-style-radius-token($style, switch)};
         --fd-radius-field-label: #{fd-ui-style-radius-token($style, field-label)};
         --fd-radius-menu-item: #{fd-ui-style-radius-token($style, menu-item)};
+
+        --fd-space-control-gap: #{fd-ui-style-spacing-token($style, control-gap)};
+        --fd-space-control-padding-x: #{fd-ui-style-spacing-token($style, control-padding-x)};
+        --fd-space-control-floating-padding-top: #{fd-ui-style-spacing-token($style, control-floating-padding-top)};
+        --fd-space-control-floating-padding-bottom: #{fd-ui-style-spacing-token($style, control-floating-padding-bottom)};
+        --fd-space-field-label-padding-x: #{fd-ui-style-spacing-token($style, field-label-padding-x)};
+        --fd-space-control-segment-padding-x: #{fd-ui-style-spacing-token($style, control-segment-padding-x)};
+        --fd-space-textarea-padding: #{fd-ui-style-spacing-token($style, textarea-padding)};
+        --fd-space-card-gap: #{fd-ui-style-spacing-token($style, card-gap)};
+        --fd-space-card-padding-x: #{fd-ui-style-spacing-token($style, card-padding-x)};
+        --fd-space-card-padding-y: #{fd-ui-style-spacing-token($style, card-padding-y)};
+        --fd-space-card-content-gap: #{fd-ui-style-spacing-token($style, card-content-gap)};
+        --fd-space-card-header-gap: #{fd-ui-style-spacing-token($style, card-header-gap)};
+        --fd-space-card-relaxed-gap: #{fd-ui-style-spacing-token($style, card-relaxed-gap)};
+        --fd-space-card-profile-gap: #{fd-ui-style-spacing-token($style, card-profile-gap)};
+        --fd-space-card-profile-padding: #{fd-ui-style-spacing-token($style, card-profile-padding)};
+        --fd-space-card-profile-padding-mobile: #{fd-ui-style-spacing-token($style, card-profile-padding-mobile)};
+        --fd-space-actions-gap: #{fd-ui-style-spacing-token($style, actions-gap)};
+        --fd-space-page-section-gap: #{fd-ui-style-spacing-token($style, page-section-gap)};
+        --fd-space-page-body-bottom-padding: #{fd-ui-style-spacing-token($style, page-body-bottom-padding)};
+        --fd-space-page-header-gap: #{fd-ui-style-spacing-token($style, page-header-gap)};
+        --fd-space-page-header-actions-gap: #{fd-ui-style-spacing-token($style, page-header-actions-gap)};
+        --fd-space-page-header-mobile-column-gap: #{fd-ui-style-spacing-token($style, page-header-mobile-column-gap)};
+        --fd-space-page-header-mobile-row-gap: #{fd-ui-style-spacing-token($style, page-header-mobile-row-gap)};
+        --fd-space-menu-gap: #{fd-ui-style-spacing-token($style, menu-gap)};
+        --fd-space-menu-padding: #{fd-ui-style-spacing-token($style, menu-padding)};
+        --fd-space-menu-item-gap: #{fd-ui-style-spacing-token($style, menu-item-gap)};
+        --fd-space-menu-item-padding: #{fd-ui-style-spacing-token($style, menu-item-padding)};
+        --fd-space-menu-item-min-height: #{fd-ui-style-spacing-token($style, menu-item-min-height)};
+        --fd-space-menu-divider-margin: #{fd-ui-style-spacing-token($style, menu-divider-margin)};
+        --fd-space-surface-padding: #{fd-ui-style-spacing-token($style, surface-padding)};
+        --fd-space-surface-emphasis-padding: #{fd-ui-style-spacing-token($style, surface-emphasis-padding)};
+        --fd-space-stat-tile-padding: #{fd-ui-style-spacing-token($style, stat-tile-padding)};
+        --fd-space-stat-tile-gap: #{fd-ui-style-spacing-token($style, stat-tile-gap)};
+        --fd-space-stat-tile-compact-padding: #{fd-ui-style-spacing-token($style, stat-tile-compact-padding)};
+        --fd-space-stat-tile-compact-gap: #{fd-ui-style-spacing-token($style, stat-tile-compact-gap)};
+        --fd-space-progress-item-padding: #{fd-ui-style-spacing-token($style, progress-item-padding)};
+        --fd-space-progress-item-header-gap: #{fd-ui-style-spacing-token($style, progress-item-header-gap)};
+        --fd-space-pill-gap: #{fd-ui-style-spacing-token($style, pill-gap)};
+        --fd-space-pill-compact-gap: #{fd-ui-style-spacing-token($style, pill-compact-gap)};
+        --fd-space-dialog-padding: #{fd-ui-style-spacing-token($style, dialog-padding)};
+        --fd-space-dialog-padding-sm: #{fd-ui-style-spacing-token($style, dialog-padding-sm)};
+        --fd-space-dialog-padding-lg: #{fd-ui-style-spacing-token($style, dialog-padding-lg)};
+        --fd-space-dialog-header-gap: #{fd-ui-style-spacing-token($style, dialog-header-gap)};
+        --fd-space-dialog-heading-gap: #{fd-ui-style-spacing-token($style, dialog-heading-gap)};
+        --fd-space-dialog-header-padding-bottom: #{fd-ui-style-spacing-token($style, dialog-header-padding-bottom)};
+        --fd-space-dialog-header-margin-bottom: #{fd-ui-style-spacing-token($style, dialog-header-margin-bottom)};
+        --fd-space-dialog-footer-gap: #{fd-ui-style-spacing-token($style, dialog-footer-gap)};
+        --fd-space-dialog-footer-padding-top: #{fd-ui-style-spacing-token($style, dialog-footer-padding-top)};
+        --fd-space-dialog-footer-margin-top: #{fd-ui-style-spacing-token($style, dialog-footer-margin-top)};
+        --fd-space-dialog-fullscreen-padding: #{fd-ui-style-spacing-token($style, dialog-fullscreen-padding)};
+        --fd-space-empty-state-gap: #{fd-ui-style-spacing-token($style, empty-state-gap)};
+        --fd-space-empty-state-padding: #{fd-ui-style-spacing-token($style, empty-state-padding)};
+        --fd-space-empty-state-compact-padding: #{fd-ui-style-spacing-token($style, empty-state-compact-padding)};
+        --fd-space-empty-state-content-gap: #{fd-ui-style-spacing-token($style, empty-state-content-gap)};
+        --fd-space-section-state-padding: #{fd-ui-style-spacing-token($style, section-state-padding)};
+        --fd-space-section-state-compact-padding: #{fd-ui-style-spacing-token($style, section-state-compact-padding)};
+        --fd-space-section-state-gap: #{fd-ui-style-spacing-token($style, section-state-gap)};
+        --fd-space-inline-alert-padding: #{fd-ui-style-spacing-token($style, inline-alert-padding)};
+        --fd-space-inline-alert-notice-padding: #{fd-ui-style-spacing-token($style, inline-alert-notice-padding)};
+        --fd-space-inline-alert-gap: #{fd-ui-style-spacing-token($style, inline-alert-gap)};
+        --fd-space-inline-alert-content-gap: #{fd-ui-style-spacing-token($style, inline-alert-content-gap)};
+        --fd-space-inline-alert-actions-gap: #{fd-ui-style-spacing-token($style, inline-alert-actions-gap)};
+        --fd-space-toast-viewport-gap: #{fd-ui-style-spacing-token($style, toast-viewport-gap)};
+        --fd-space-toast-content-gap: #{fd-ui-style-spacing-token($style, toast-content-gap)};
+        --fd-space-toast-content-padding: #{fd-ui-style-spacing-token($style, toast-content-padding)};
+        --fd-space-toast-content-padding-compact: #{fd-ui-style-spacing-token($style, toast-content-padding-compact)};
+        --fd-space-checkbox-gap: #{fd-ui-style-spacing-token($style, checkbox-gap)};
+        --fd-space-checkbox-label-gap: #{fd-ui-style-spacing-token($style, checkbox-label-gap)};
+        --fd-space-checkbox-hint-margin-left: #{fd-ui-style-spacing-token($style, checkbox-hint-margin-left)};
+        --fd-space-radio-group-gap: #{fd-ui-style-spacing-token($style, radio-group-gap)};
+        --fd-space-radio-gap: #{fd-ui-style-spacing-token($style, radio-gap)};
+        --fd-space-radio-padding: #{fd-ui-style-spacing-token($style, radio-padding)};
+        --fd-space-switch-gap: #{fd-ui-style-spacing-token($style, switch-gap)};
+        --fd-space-switch-track-padding: #{fd-ui-style-spacing-token($style, switch-track-padding)};
+        --fd-space-tabs-wrap-gap: #{fd-ui-style-spacing-token($style, tabs-wrap-gap)};
+        --fd-space-tabs-item-padding-inline: #{fd-ui-style-spacing-token($style, tabs-item-padding-inline)};
+        --fd-space-tabs-wrap-item-padding-inline: #{fd-ui-style-spacing-token($style, tabs-wrap-item-padding-inline)};
+        --fd-space-segmented-toggle-gap: #{fd-ui-style-spacing-token($style, segmented-toggle-gap)};
+        --fd-space-segmented-toggle-padding: #{fd-ui-style-spacing-token($style, segmented-toggle-padding)};
+        --fd-space-segmented-toggle-item-padding: #{fd-ui-style-spacing-token($style, segmented-toggle-item-padding)};
+        --fd-space-pagination-gap: #{fd-ui-style-spacing-token($style, pagination-gap)};
+        --fd-space-pagination-button-padding: #{fd-ui-style-spacing-token($style, pagination-button-padding)};
+        --fd-space-chip-select-gap: #{fd-ui-style-spacing-token($style, chip-select-gap)};
+        --fd-space-chip-select-item-padding: #{fd-ui-style-spacing-token($style, chip-select-item-padding)};
+        --fd-space-status-badge-padding: #{fd-ui-style-spacing-token($style, status-badge-padding)};
+        --fd-space-form-error-margin: #{fd-ui-style-spacing-token($style, form-error-margin)};
+        --fd-space-nutrient-input-gap: #{fd-ui-style-spacing-token($style, nutrient-input-gap)};
+        --fd-space-nutrient-input-padding: #{fd-ui-style-spacing-token($style, nutrient-input-padding)};
+        --fd-space-nutrient-input-padding-lg: #{fd-ui-style-spacing-token($style, nutrient-input-padding-lg)};
+        --fd-space-nutrient-input-padding-sm: #{fd-ui-style-spacing-token($style, nutrient-input-padding-sm)};
+        --fd-space-nutrient-input-label-gap: #{fd-ui-style-spacing-token($style, nutrient-input-label-gap)};
+        --fd-space-nutrient-input-value-gap: #{fd-ui-style-spacing-token($style, nutrient-input-value-gap)};
+        --fd-space-satiety-scale-gap: #{fd-ui-style-spacing-token($style, satiety-scale-gap)};
+        --fd-space-satiety-scale-list-gap: #{fd-ui-style-spacing-token($style, satiety-scale-list-gap)};
+        --fd-space-satiety-scale-grid-gap: #{fd-ui-style-spacing-token($style, satiety-scale-grid-gap)};
+        --fd-space-satiety-scale-option-gap: #{fd-ui-style-spacing-token($style, satiety-scale-option-gap)};
+        --fd-space-satiety-scale-option-padding: #{fd-ui-style-spacing-token($style, satiety-scale-option-padding)};
+        --fd-space-satiety-scale-text-gap: #{fd-ui-style-spacing-token($style, satiety-scale-text-gap)};
+        --fd-space-emoji-picker-gap: #{fd-ui-style-spacing-token($style, emoji-picker-gap)};
+        --fd-space-emoji-picker-gap-sm: #{fd-ui-style-spacing-token($style, emoji-picker-gap-sm)};
+        --fd-space-emoji-picker-option-padding: #{fd-ui-style-spacing-token($style, emoji-picker-option-padding)};
+        --fd-space-emoji-picker-option-padding-sm: #{fd-ui-style-spacing-token($style, emoji-picker-option-padding-sm)};
+        --fd-space-emoji-picker-option-gap: #{fd-ui-style-spacing-token($style, emoji-picker-option-gap)};
+        --fd-space-emoji-picker-text-gap: #{fd-ui-style-spacing-token($style, emoji-picker-text-gap)};
+        --fd-space-image-preview-padding: #{fd-ui-style-spacing-token($style, image-preview-padding)};
+        --fd-space-image-preview-padding-mobile: #{fd-ui-style-spacing-token($style, image-preview-padding-mobile)};
+        --fd-space-image-preview-figure-gap: #{fd-ui-style-spacing-token($style, image-preview-figure-gap)};
+        --fd-space-calendar-gap: #{fd-ui-style-spacing-token($style, calendar-gap)};
+        --fd-space-calendar-padding: #{fd-ui-style-spacing-token($style, calendar-padding)};
+        --fd-space-calendar-header-gap: #{fd-ui-style-spacing-token($style, calendar-header-gap)};
+        --fd-space-calendar-grid-gap: #{fd-ui-style-spacing-token($style, calendar-grid-gap)};
+        --fd-space-entity-card-gap: #{fd-ui-style-spacing-token($style, entity-card-gap)};
+        --fd-space-entity-card-content-gap: #{fd-ui-style-spacing-token($style, entity-card-content-gap)};
+        --fd-space-entity-card-header-gap: #{fd-ui-style-spacing-token($style, entity-card-header-gap)};
+        --fd-space-entity-card-title-gap: #{fd-ui-style-spacing-token($style, entity-card-title-gap)};
+
+        --fd-layout-page-section-spacing: var(--fd-space-page-section-gap);
+        --fd-page-body-gap: var(--fd-space-page-section-gap);
+        --fd-page-header-gap: var(--fd-space-page-header-gap);
+        --fd-page-actions-gap: var(--fd-space-page-header-actions-gap);
     }
 }

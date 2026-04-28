@@ -1,5 +1,5 @@
 .fd-ui-form-error__text {
-    margin: 4px 0 0;
+    margin: var(--fd-space-form-error-margin, 4px 0 0);
     font-size: var(--fd-text-helper-size);
     line-height: var(--fd-text-helper-line-height);
     font-weight: var(--fd-text-helper-weight);

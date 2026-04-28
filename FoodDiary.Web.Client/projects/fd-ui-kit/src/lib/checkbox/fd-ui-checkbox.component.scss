@@ -11,13 +11,13 @@
     --fd-checkbox-label-color: var(--fd-color-text, var(--fd-color-gray-900-static));
     display: inline-flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-checkbox-gap, 6px);
 }
 
 .fd-ui-checkbox__label {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--fd-space-checkbox-label-gap, 10px);
     cursor: pointer;
     position: relative;
 }
@@ -84,6 +84,6 @@
 }
 
 .fd-ui-checkbox__hint {
-    margin-left: 28px;
+    margin-left: var(--fd-space-checkbox-hint-margin-left, 28px);
     color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
 }

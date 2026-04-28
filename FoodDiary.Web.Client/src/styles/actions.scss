@@ -1,5 +1,5 @@
 .fd-ui-actions {
-    --fd-actions-gap: 12px;
+    --fd-actions-gap: var(--fd-space-actions-gap, 12px);
     display: flex;
     align-items: center;
     gap: var(--fd-actions-gap);

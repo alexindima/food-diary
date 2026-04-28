@@ -11,7 +11,7 @@
     --fd-time-label-bg: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-control-gap, 6px);
 }
 
 .fd-ui-time-input--size-sm {
@@ -46,7 +46,7 @@
         top 0.15s ease,
         font-size 0.15s ease;
     background: var(--fd-time-label-bg);
-    padding: 0 4px;
+    padding: 0 var(--fd-space-field-label-padding-x, 4px);
     border-radius: var(--fd-radius-field-label, 999px);
     pointer-events: none;
 }
@@ -82,7 +82,7 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 14px;
+    padding: 0 var(--fd-space-control-segment-padding-x, 14px);
     width: 100%;
 }
 

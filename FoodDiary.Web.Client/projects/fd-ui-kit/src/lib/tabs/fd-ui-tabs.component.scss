@@ -19,7 +19,7 @@
     min-width: 0;
     min-height: var(--fd-tabs-height, 40px);
     height: var(--fd-tabs-height, 40px);
-    padding-inline: var(--fd-tabs-item-padding-inline, 24px);
+    padding-inline: var(--fd-tabs-item-padding-inline, var(--fd-space-tabs-item-padding-inline, 24px));
     border: none;
     border-bottom: 3px solid transparent;
     background: transparent;
@@ -60,9 +60,9 @@
 }
 
 .fd-ui-tabs--appearance-wrap-compact {
-    --fd-tabs-gap: 6px;
+    --fd-tabs-gap: var(--fd-space-tabs-wrap-gap, 6px);
     --fd-tabs-flex-wrap: wrap;
-    --fd-tabs-item-padding-inline: 12px;
+    --fd-tabs-item-padding-inline: var(--fd-space-tabs-wrap-item-padding-inline, 12px);
     --fd-tabs-label-white-space: normal;
     --fd-tabs-label-line-height: 1.1;
 }

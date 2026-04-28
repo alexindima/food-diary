@@ -5,7 +5,7 @@
 .fd-ui-radio-group {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-spacing-sm, 12px);
+    gap: var(--fd-space-radio-group-gap, var(--fd-spacing-sm, 12px));
 }
 
 .fd-ui-radio-group__label {
@@ -23,7 +23,7 @@
 .fd-ui-radio-group__control {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-spacing-sm, 12px);
+    gap: var(--fd-space-radio-group-gap, var(--fd-spacing-sm, 12px));
 }
 
 .fd-ui-radio-group--horizontal .fd-ui-radio-group__control {
@@ -44,8 +44,8 @@
 .fd-ui-radio {
     display: inline-flex;
     align-items: flex-start;
-    gap: var(--fd-spacing-xs, 8px);
-    padding: var(--fd-spacing-xs, 8px) var(--fd-spacing-sm, 12px);
+    gap: var(--fd-space-radio-gap, var(--fd-spacing-xs, 8px));
+    padding: var(--fd-space-radio-padding, var(--fd-spacing-xs, 8px) var(--fd-spacing-sm, 12px));
     border: 1px solid var(--fd-color-border);
     border-radius: var(--fd-radius-md, 8px);
     background-color: var(--fd-color-surface);

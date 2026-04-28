@@ -3,10 +3,10 @@
 }
 
 .fd-ui-emoji-picker {
-    --fd-emoji-picker-gap: 8px;
+    --fd-emoji-picker-gap: var(--fd-space-emoji-picker-gap, 8px);
     --fd-emoji-picker-option-width: 56px;
     --fd-emoji-picker-option-height: 56px;
-    --fd-emoji-picker-option-padding: 8px;
+    --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding, 8px);
     --fd-emoji-picker-option-radius: var(--fd-radius-card, var(--fd-radius-xl));
     --fd-emoji-picker-option-bg-default: color-mix(in srgb, var(--fd-color-surface-raised) 96%, transparent);
     --fd-emoji-picker-option-bg-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-surface-raised));
@@ -31,8 +31,8 @@
 .fd-ui-emoji-picker--size-sm {
     --fd-emoji-picker-option-width: 48px;
     --fd-emoji-picker-option-height: 48px;
-    --fd-emoji-picker-option-padding: 6px;
-    --fd-emoji-picker-gap: 6px;
+    --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding-sm, 6px);
+    --fd-emoji-picker-gap: var(--fd-space-emoji-picker-gap-sm, 6px);
 }
 
 .fd-ui-emoji-picker--with-labels .fd-ui-emoji-picker__option,
@@ -56,7 +56,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--fd-space-emoji-picker-option-gap, 8px);
     cursor: pointer;
     transition:
         background 0.18s ease,
@@ -111,7 +111,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: var(--fd-space-emoji-picker-text-gap, 2px);
 }
 
 .fd-ui-emoji-picker__label {

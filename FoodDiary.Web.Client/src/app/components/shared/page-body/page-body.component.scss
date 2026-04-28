@@ -2,7 +2,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--fd-layout-page-section-spacing, 24px);
+    gap: var(--fd-layout-page-section-spacing, var(--fd-space-page-section-gap, 24px));
     box-sizing: border-box;
-    padding-bottom: clamp(12px, 2vw, 20px);
+    padding-bottom: var(--fd-space-page-body-bottom-padding, clamp(12px, 2vw, 20px));
 }

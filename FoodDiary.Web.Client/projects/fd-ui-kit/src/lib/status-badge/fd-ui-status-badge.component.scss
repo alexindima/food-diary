@@ -2,7 +2,7 @@
     display: inline-flex;
     align-items: center;
     max-width: 100%;
-    padding: 4px 10px;
+    padding: var(--fd-space-status-badge-padding, 4px 10px);
     border-radius: 999px;
     border: 1px solid var(--fd-color-border);
     box-sizing: border-box;

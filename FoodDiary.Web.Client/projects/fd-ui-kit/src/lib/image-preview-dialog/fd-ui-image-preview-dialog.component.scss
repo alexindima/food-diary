@@ -38,7 +38,7 @@
     width: 100%;
     display: grid;
     place-items: center;
-    padding: 28px;
+    padding: var(--fd-space-image-preview-padding, 28px);
     cursor: zoom-out;
     position: relative;
     background: var(--fd-color-dialog-surface);
@@ -80,7 +80,7 @@
     max-width: 100%;
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
-    gap: 18px;
+    gap: var(--fd-space-image-preview-figure-gap, 18px);
     align-items: center;
     justify-items: center;
     cursor: default;
@@ -110,7 +110,7 @@
 @media (max-width: 640px) {
 
     .fd-ui-image-preview-dialog__viewport {
-        padding: 16px;
+        padding: var(--fd-space-image-preview-padding-mobile, 16px);
     }
 
     .fd-ui-image-preview-dialog__close {

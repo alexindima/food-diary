@@ -11,7 +11,7 @@
     right: 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-toast-viewport-gap, 12px);
     pointer-events: none;
 
     &--top {
@@ -75,8 +75,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 12px 48px 12px 16px;
+    gap: var(--fd-space-toast-content-gap, 12px);
+    padding: var(--fd-space-toast-content-padding, 12px 48px 12px 16px);
     min-height: 56px;
 }
 
@@ -168,7 +168,7 @@
 @media (max-width: 480px) {
 
     .fd-ui-toast-host__content {
-        padding: 12px 44px 12px 14px;
+        padding: var(--fd-space-toast-content-padding-compact, 12px 44px 12px 14px);
     }
 }
 

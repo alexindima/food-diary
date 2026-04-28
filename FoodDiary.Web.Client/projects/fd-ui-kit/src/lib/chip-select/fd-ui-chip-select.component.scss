@@ -5,12 +5,12 @@
 .fd-ui-chip-select {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--fd-space-chip-select-gap, 8px);
 }
 
 .fd-ui-chip-select__item {
     min-height: var(--fd-chip-select-item-height, 38px);
-    padding: 0 16px;
+    padding: var(--fd-space-chip-select-item-padding, 0 16px);
     border: 1px solid var(--fd-chip-select-border, var(--fd-color-slate-200));
     border-radius: 999px;
     background: var(--fd-chip-select-background, var(--fd-color-white));

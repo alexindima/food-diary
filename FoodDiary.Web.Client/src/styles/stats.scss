@@ -1,7 +1,7 @@
 .fd-ui-stat-tile {
-    --fd-stat-tile-padding: 16px;
+    --fd-stat-tile-padding: var(--fd-space-stat-tile-padding, 16px);
     --fd-stat-tile-radius: var(--fd-radius-card);
-    --fd-stat-tile-gap: 8px;
+    --fd-stat-tile-gap: var(--fd-space-stat-tile-gap, 8px);
     --fd-stat-tile-border: 1px solid var(--fd-color-border);
     --fd-stat-tile-background: linear-gradient(
         180deg,
@@ -21,8 +21,8 @@
 }
 
 .fd-ui-stat-tile--compact {
-    --fd-stat-tile-padding: 12px 14px;
-    --fd-stat-tile-gap: 4px;
+    --fd-stat-tile-padding: var(--fd-space-stat-tile-compact-padding, 12px 14px);
+    --fd-stat-tile-gap: var(--fd-space-stat-tile-compact-gap, 4px);
     --fd-stat-tile-shadow: none;
 }
 

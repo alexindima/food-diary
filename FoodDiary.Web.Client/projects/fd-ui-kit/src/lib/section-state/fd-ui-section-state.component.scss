@@ -9,19 +9,19 @@
     width: 100%;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: var(--fd-space-section-state-padding, 24px);
     text-align: center;
 }
 
 :host(.fd-ui-section-state--compact) .fd-ui-section-state__surface {
     min-height: var(--fd-section-state-compact-min-height, 128px);
-    padding: 16px;
+    padding: var(--fd-space-section-state-compact-padding, 16px);
 }
 
 .fd-ui-section-state__surface--loading,
 .fd-ui-section-state__surface--error {
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-section-state-gap, 12px);
 }
 
 .fd-ui-section-state__loading-label,

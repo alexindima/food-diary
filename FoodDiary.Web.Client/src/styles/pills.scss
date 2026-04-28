@@ -7,7 +7,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: var(--fd-space-pill-gap, 6px);
     min-height: var(--fd-pill-min-height);
     width: fit-content;
     padding-inline: var(--fd-pill-padding-inline);
@@ -20,7 +20,7 @@
 .fd-ui-pill--compact {
     --fd-pill-min-height: 24px;
     --fd-pill-padding-inline: 8px;
-    gap: 4px;
+    gap: var(--fd-space-pill-compact-gap, 4px);
 }
 
 .fd-ui-pill--muted {

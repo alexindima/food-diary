@@ -4,8 +4,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 8px;
-    padding: 32px 16px;
+    gap: var(--fd-space-empty-state-gap, 8px);
+    padding: var(--fd-space-empty-state-padding, 32px 16px);
     box-sizing: border-box;
 }
 
@@ -13,7 +13,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     text-align: left;
-    padding: 16px;
+    padding: var(--fd-space-empty-state-compact-padding, 16px);
     border-radius: var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, transparent);
     border: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent);
@@ -43,7 +43,7 @@
 .fd-ui-empty-state__content {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-empty-state-content-gap, 6px);
     max-width: 420px;
 }
 

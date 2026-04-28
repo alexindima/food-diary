@@ -6,7 +6,7 @@
 
     &__body {
         display: flex;
-        gap: var(--fd-spacing-md);
+        gap: var(--fd-space-entity-card-gap, var(--fd-spacing-md));
     }
 
     &__media {
@@ -30,20 +30,20 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: var(--fd-spacing-sm);
+        gap: var(--fd-space-entity-card-content-gap, var(--fd-spacing-sm));
     }
 
     &__header {
         display: flex;
         align-items: center;
-        gap: var(--fd-spacing-sm);
+        gap: var(--fd-space-entity-card-header-gap, var(--fd-spacing-sm));
         justify-content: space-between;
     }
 
     &__title-block {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: var(--fd-space-entity-card-title-gap, 2px);
         flex: 1;
         min-width: 0;
     }
@@ -62,7 +62,7 @@
         margin-left: auto;
         display: flex;
         align-items: center;
-        gap: var(--fd-spacing-sm);
+        gap: var(--fd-space-entity-card-header-gap, var(--fd-spacing-sm));
     }
 }
 
@@ -92,7 +92,7 @@
     .fd-ui-entity-card__header {
         flex-direction: column;
         align-items: flex-start;
-        gap: var(--fd-spacing-xs);
+        gap: var(--fd-space-entity-card-header-gap, var(--fd-spacing-xs));
     }
 
     .fd-ui-entity-card__header-extra {

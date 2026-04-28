@@ -75,7 +75,7 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--fd-page-header-gap, 16px);
+    gap: var(--fd-page-header-gap, var(--fd-space-page-header-gap, 16px));
     min-height: var(--fd-page-header-height, auto);
 }
 
@@ -90,6 +90,6 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: var(--fd-page-actions-gap, 12px);
+    gap: var(--fd-page-actions-gap, var(--fd-space-page-header-actions-gap, 12px));
     min-width: 240px;
 }

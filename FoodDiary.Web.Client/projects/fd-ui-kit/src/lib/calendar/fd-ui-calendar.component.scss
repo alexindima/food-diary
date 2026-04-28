@@ -4,9 +4,9 @@
 
 .fd-ui-calendar {
     display: grid;
-    gap: 0.75rem;
+    gap: var(--fd-space-calendar-gap, 0.75rem);
     min-width: 18rem;
-    padding: 0.75rem;
+    padding: var(--fd-space-calendar-padding, 0.75rem);
     border: 1px solid var(--fd-color-border-strong);
     border-radius: var(--fd-radius-panel, var(--fd-radius-xl));
     background: var(--fd-color-surface-raised);
@@ -17,7 +17,7 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--fd-space-calendar-header-gap, 0.5rem);
 }
 
 .fd-ui-calendar__title {
@@ -33,7 +33,7 @@
 .fd-ui-calendar__week {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 0.25rem;
+    gap: var(--fd-space-calendar-grid-gap, 0.25rem);
 }
 
 .fd-ui-calendar__weekday {
@@ -51,7 +51,7 @@
 
 .fd-ui-calendar__grid {
     display: grid;
-    gap: 0.25rem;
+    gap: var(--fd-space-calendar-grid-gap, 0.25rem);
 }
 
 .fd-ui-calendar__day {

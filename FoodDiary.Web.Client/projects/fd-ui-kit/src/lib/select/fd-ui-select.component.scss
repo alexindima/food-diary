@@ -5,7 +5,7 @@
 .fd-ui-select {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-control-gap, 6px);
 }
 
 .fd-ui-select__label {
@@ -28,7 +28,7 @@
         top 0.15s ease,
         font-size 0.15s ease;
     background: var(--fd-color-surface-raised);
-    padding: 0 4px;
+    padding: 0 var(--fd-space-field-label-padding-x, 4px);
     border-radius: var(--fd-radius-field-label, var(--fd-radius-pill));
     pointer-events: none;
 }
@@ -46,7 +46,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    padding: 0 44px 0 12px;
+    padding: 0 44px 0 var(--fd-space-control-padding-x, 12px);
     cursor: pointer;
     transition:
         border-color 0.15s ease,
@@ -125,8 +125,8 @@
 }
 
 .fd-ui-select--floating .fd-ui-select__control-wrap {
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding-top: var(--fd-space-control-floating-padding-top, 8px);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom, 2px);
 }
 
 .fd-ui-select__error {
@@ -145,8 +145,8 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    padding: 6px;
+    gap: var(--fd-space-menu-gap, 2px);
+    padding: var(--fd-space-menu-padding, 6px);
     border-radius: var(--fd-radius-menu, 14px);
     background: var(--fd-color-surface-raised);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -164,9 +164,9 @@
     font: inherit;
     cursor: pointer;
     border-radius: var(--fd-radius-menu-item, 10px);
-    min-height: 38px;
+    min-height: var(--fd-space-menu-item-min-height, 38px);
     line-height: var(--fd-text-body-sm-line-height);
-    padding: 10px 12px;
+    padding: var(--fd-space-menu-item-padding, 10px 12px);
 }
 
 .fd-ui-select__menu-item:hover,
