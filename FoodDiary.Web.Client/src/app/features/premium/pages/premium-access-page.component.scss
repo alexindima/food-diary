@@ -112,7 +112,7 @@
     display: grid;
     gap: var(--fd-space-card-header-gap);
     margin: 0;
-    padding-left: 18px;
+    padding-left: var(--fd-space-md);
     color: var(--fd-color-text);
 }
 

@@ -1,13 +1,13 @@
 @use 'variables' as variables;
 
 .custom-group-wrapper {
-    padding-top: variables.$gap-xs;
+    padding-top: var(--fd-space-xs);
 }
 
 .custom-group {
     border: 2px solid var(--fd-color-border);
     border-radius: variables.$border-radius-m;
-    padding: variables.$gap-l;
+    padding: var(--fd-space-lg);
     position: relative;
     background-color: var(--custom-group-background, transparent);
 }
@@ -18,7 +18,7 @@
     background: var(--fd-color-white);
     border: 2px solid var(--fd-color-border);
     border-radius: variables.$border-radius-s;
-    padding: 0 variables.$gap-xs;
+    padding: 0 var(--fd-space-xs);
     line-height: 20px;
     color: var(--fd-color-text);
 }
@@ -44,7 +44,7 @@
     --fd-button-min-width: 20px;
     --fd-button-height: 20px;
     --fd-button-height-explicit: 20px;
-    --fd-button-padding-x: #{variables.$gap-xs};
+    --fd-button-padding-x: var(--fd-space-xs);
     --fd-button-border-radius: #{variables.$border-radius-s};
     --fd-button-font-size: 10px;
     --fd-button-font-weight: 700;

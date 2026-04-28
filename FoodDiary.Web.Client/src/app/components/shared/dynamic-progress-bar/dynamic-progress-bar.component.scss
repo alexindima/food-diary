@@ -10,7 +10,7 @@
     --fd-progress-radius: 10px;
     --fd-progress-track-background: var(--fd-color-slate-200);
     height: 25px;
-    margin: 20px 0;
+    margin: var(--fd-space-lg) 0;
 }
 
 .dynamic-progress-bar-line {

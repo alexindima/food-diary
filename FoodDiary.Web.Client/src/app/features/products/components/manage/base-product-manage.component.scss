@@ -34,14 +34,14 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
-        padding: variables.$gap-l var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
+        gap: var(--fd-space-lg);
+        padding: var(--fd-space-lg) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: variables.$gap-xl;
+        gap: var(--fd-space-xl);
         align-items: stretch;
 
         @media #{variables.$media-desktop} {
@@ -56,7 +56,7 @@
     &__column {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xl;
+        gap: var(--fd-space-xl);
     }
 
     &__card {
@@ -73,10 +73,10 @@
 
     &__sticky-stack {
         position: sticky;
-        top: calc(variables.$gap-xl + 8px);
+        top: calc(var(--fd-space-xl) + 8px);
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
 
         @media #{variables.$media-mobile} {
             position: static;
@@ -97,11 +97,13 @@
     &__hero {
         --fd-product-input-height: 48px;
         --fd-product-input-subscript: 18px;
-        --fd-product-image-size: calc((var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + #{variables.$gap-l * 2});
+        --fd-product-image-size: calc(
+            (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
+        );
         display: grid;
         grid-template-columns: var(--fd-product-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-items: stretch;
     }
 
@@ -124,13 +126,13 @@
     &__hero-field {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__basic-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
 
         @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
@@ -140,7 +142,7 @@
     &__field {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
 
         &--full {
             grid-column: 1 / -1;
@@ -150,7 +152,7 @@
     &__serving-row {
         display: flex;
         flex-wrap: wrap;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
     }
 
     &__serving-part {
@@ -158,13 +160,13 @@
         min-width: 200px;
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__nutrients-row {
         display: flex;
         flex-wrap: wrap;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
 
         &--two .product-manage__nutrient {
             flex: 1 1 200px;
@@ -178,14 +180,14 @@
     &__nutrient {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
         flex: 1 1 180px;
     }
 
     &__nutrition {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
     }
 
     &__nutrition-toggle {
@@ -197,8 +199,8 @@
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
-        gap: variables.$gap-m;
-        padding: 12px 14px;
+        gap: var(--fd-space-md);
+        padding: var(--fd-space-sm) 14px;
         border-radius: 16px;
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
         background: color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent);
@@ -207,7 +209,7 @@
     &__ai-text {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__ai-title {
@@ -220,7 +222,7 @@
 
     &__footer-actions {
         display: flex;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         align-items: center;
         width: 100%;
     }
@@ -243,7 +245,7 @@
     @media #{variables.$media-tablet} {
 
         &__form {
-            padding: 10px 12px 12px;
+            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
         }
 
         &__cancel-button {
@@ -277,7 +279,7 @@
     }
 
     &__dialog {
-        padding: variables.$gap-l;
+        padding: var(--fd-space-lg);
         text-align: center;
 
         &-title {
@@ -286,13 +288,13 @@
             font-weight: var(--fd-text-metric-lg-weight, 800);
             letter-spacing: -0.02em;
             color: var(--fd-color-text);
-            margin: 0 0 variables.$gap-l;
+            margin: 0 0 var(--fd-space-lg);
         }
 
         &-buttons {
             display: flex;
             flex-direction: column;
-            gap: variables.$gap-xl;
+            gap: var(--fd-space-xl);
         }
     }
 }

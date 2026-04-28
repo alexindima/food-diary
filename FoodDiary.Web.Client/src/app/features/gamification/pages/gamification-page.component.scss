@@ -85,7 +85,7 @@
         flex-direction: column;
         align-items: center;
         gap: var(--fd-space-card-header-gap);
-        padding: 8px 0;
+        padding: var(--fd-space-xs) 0;
     }
 
     &__score-ring {

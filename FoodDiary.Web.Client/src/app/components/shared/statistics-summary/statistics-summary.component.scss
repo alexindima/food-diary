@@ -72,7 +72,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-card-header-gap);
-    padding-top: 8px;
+    padding-top: var(--fd-space-xs);
     border-top: 1px solid color-mix(in srgb, var(--fd-color-border) 78%, transparent);
 }
 

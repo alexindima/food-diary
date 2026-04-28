@@ -8,7 +8,7 @@
     border-radius: var(--fd-radius-card, 20px);
     background: linear-gradient(145deg, var(--fd-color-blue-500), color-mix(in srgb, var(--fd-color-sky-500) 72%, var(--fd-color-white)));
     color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-sky-500));
-    padding: 18px 18px 20px;
+    padding: var(--fd-space-card-profile-gap) var(--fd-space-card-profile-gap) var(--fd-space-lg);
     box-shadow: 0 14px 34px color-mix(in srgb, var(--fd-color-primary-900) 25%, transparent);
 
     &--loading {
@@ -19,13 +19,13 @@
     &__content {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__value {
         display: flex;
         align-items: baseline;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 
     &__liters {
@@ -39,7 +39,7 @@
     &__progress {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__progress-track {

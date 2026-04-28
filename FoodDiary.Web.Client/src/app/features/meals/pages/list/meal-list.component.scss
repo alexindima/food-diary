@@ -4,14 +4,14 @@
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
-    --fd-layout-page-section-spacing: variables.$gap-m;
+    --fd-layout-page-section-spacing: var(--fd-space-md);
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
 
     &__header .fd-page-header__actions {
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         width: auto;
         margin-left: auto;
         justify-content: flex-end;
@@ -20,7 +20,7 @@
     &__mobile-toolbar {
         display: none;
         align-items: center;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
         flex-wrap: nowrap;
     }
 
@@ -28,7 +28,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__ai-placeholder {
@@ -39,9 +39,9 @@
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        gap: 6px;
-        margin-top: -6px;
-        margin-bottom: 6px;
+        gap: var(--fd-space-xxs);
+        margin-top: calc(0px - var(--fd-space-xxs));
+        margin-bottom: var(--fd-space-xxs);
         flex-wrap: wrap;
     }
 
@@ -51,7 +51,7 @@
         color: var(--fd-color-slate-400);
         line-height: 1;
         align-self: center;
-        padding-left: 6px;
+        padding-left: var(--fd-space-xxs);
     }
 
     &__manual-add-button {
@@ -81,7 +81,7 @@
 
     &__loader {
         display: block;
-        margin: variables.$gap-l auto;
+        margin: var(--fd-space-lg) auto;
     }
 
     &__no-results {
@@ -89,11 +89,11 @@
         font-weight: bold;
         color: var(--fd-color-text-muted);
         text-align: center;
-        margin-top: variables.$gap-l;
+        margin-top: var(--fd-space-lg);
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
 
         &-icon {
             font-size: 2em;
@@ -103,7 +103,7 @@
 
     &__empty-state {
         @extend .consumption-list__no-results;
-        padding: 24px;
+        padding: var(--fd-space-lg);
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         border-radius: 20px;
         background: linear-gradient(
@@ -127,31 +127,31 @@
     }
 
     &__pagination {
-        margin-top: variables.$gap-l;
+        margin-top: var(--fd-space-lg);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
     }
 
     &__groups {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
     }
 
     &__day {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__day-header {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__day-label {
@@ -173,7 +173,7 @@
         --fd-layout-page-vertical-padding: 0;
 
         &__header {
-            padding: 10px 12px 8px;
+            padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
             background: var(--fd-color-slate-50);
@@ -188,22 +188,22 @@
         }
 
         &__groups {
-            gap: 12px;
+            gap: var(--fd-space-sm);
         }
 
         &__manual-add {
-            padding-left: 12px;
-            padding-right: 12px;
+            padding-left: var(--fd-space-sm);
+            padding-right: var(--fd-space-sm);
             align-items: center;
             margin-top: -4px;
         }
 
         &__day {
-            gap: 8px;
+            gap: var(--fd-space-xs);
         }
 
         &__day-header {
-            padding: 0 16px;
+            padding: 0 var(--fd-space-md);
         }
 
         &__day-label {
@@ -224,36 +224,36 @@
         &__no-results,
         &__loader,
         &__pagination {
-            padding-left: 16px;
-            padding-right: 16px;
+            padding-left: var(--fd-space-md);
+            padding-right: var(--fd-space-md);
         }
     }
 
     @media #{variables.$media-desktop-sm} {
 
         &__header-actions {
-            gap: variables.$gap-xs;
+            gap: var(--fd-space-xs);
         }
     }
 
     &__favorites {
         display: block;
-        margin-bottom: 18px;
+        margin-bottom: var(--fd-space-card-profile-gap);
     }
 
     &__favorites-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 8px;
-        padding: 0 12px 12px;
+        gap: var(--fd-space-xs);
+        padding: 0 var(--fd-space-sm) var(--fd-space-sm);
     }
 
     &__favorite-card {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        padding: 10px 12px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: 14px;
         background: var(--fd-color-surface-raised);
         border: 1px solid var(--fd-color-border-strong);
@@ -281,7 +281,7 @@
 
     &__favorite-actions {
         display: flex;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__favorite-btn {

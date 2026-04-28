@@ -7,10 +7,10 @@
 .meal-plan-detail {
 
     &__header {
-        margin: 24px 0;
+        margin: var(--fd-space-lg) 0;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__badge {
@@ -34,14 +34,14 @@
 
     &__actions {
         display: flex;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         flex-wrap: wrap;
     }
 
     &__days {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: var(--fd-space-lg);
     }
 }
 
@@ -57,15 +57,15 @@
     &__meals {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 }
 
 .meal-plan-meal {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 14px 18px;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-surface-emphasis-padding);
     border-radius: 16px;
     background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
     box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -87,7 +87,7 @@
 
     &__nutrition {
         display: flex;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         font-size: 0.85rem;
         font-weight: 600;
         color: var(--fd-color-text-muted);
@@ -99,7 +99,7 @@
     .meal-plan-meal {
         flex-direction: column;
         align-items: flex-start;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 
     .meal-plan-meal__nutrition {

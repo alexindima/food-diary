@@ -1,9 +1,9 @@
 .explore-controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: var(--fd-space-sm);
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--fd-space-lg);
 }
 
 .explore-search {
@@ -13,14 +13,14 @@
 
 .explore-sort {
     display: flex;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .explore-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
+    gap: var(--fd-space-md);
+    margin-bottom: var(--fd-space-lg);
 }
 
 .explore-loader {

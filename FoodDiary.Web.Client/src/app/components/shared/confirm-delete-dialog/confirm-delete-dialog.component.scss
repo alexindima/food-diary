@@ -6,6 +6,6 @@
     }
 
     &__footer {
-        --fd-actions-gap: 12px;
+        --fd-actions-gap: var(--fd-space-sm);
     }
 }

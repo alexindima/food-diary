@@ -3,11 +3,11 @@
 .dashboard-notification-settings-dialog {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--fd-space-md);
 }
 
 .dashboard-notification-settings-dialog__intro {
-    padding: 16px;
+    padding: var(--fd-space-md);
     border-radius: var(--fd-radius-panel);
     background:
         radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent), transparent 42%),
@@ -27,8 +27,8 @@
 .dashboard-notification-settings-dialog__section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 16px;
+    gap: var(--fd-space-sm);
+    padding: var(--fd-space-md);
     border-radius: var(--fd-radius-panel);
     background: linear-gradient(
         180deg,
@@ -41,7 +41,7 @@
 .dashboard-notification-settings-dialog__section-header {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--fd-space-xxs);
 }
 
 .dashboard-notification-settings-dialog__section-title,
@@ -56,15 +56,15 @@
 .dashboard-notification-settings-dialog__list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .dashboard-notification-settings-dialog__item {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
-    padding: 16px;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-md);
     border-radius: var(--fd-radius-card);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 16%, transparent);
     background: linear-gradient(
@@ -89,7 +89,7 @@
     flex: 1 1 auto;
     min-width: 0;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .dashboard-notification-settings-dialog__label {
@@ -102,7 +102,7 @@
 .dashboard-notification-settings-dialog__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .dashboard-notification-settings-dialog__badge {

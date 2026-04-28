@@ -1,15 +1,15 @@
 .report-form {
-    padding: 16px 0;
+    padding: var(--fd-space-md) 0;
 }
 
 .report-label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: var(--fd-space-xs);
 }
 
 .report-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
-    padding-top: 8px;
+    gap: var(--fd-space-xs);
+    padding-top: var(--fd-space-xs);
 }

@@ -19,7 +19,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-    gap: 32px;
+    gap: var(--fd-space-xl);
     margin: 0 auto;
     position: relative;
     min-height: 100%;
@@ -28,7 +28,7 @@ $color-text-secondary: var(--fd-color-text-muted);
 
     &__column {
         display: grid;
-        gap: 24px;
+        gap: var(--fd-space-lg);
         align-content: start;
         min-width: 0;
         grid-column: 1;
@@ -48,12 +48,12 @@ $color-text-secondary: var(--fd-color-text-muted);
 
     &__fasting-overlay {
         position: absolute;
-        inset: 16px;
+        inset: var(--fd-space-md);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        gap: 6px;
-        padding: 18px;
+        gap: var(--fd-space-xxs);
+        padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-panel, 18px);
         background: linear-gradient(
             180deg,
@@ -81,7 +81,7 @@ $color-text-secondary: var(--fd-color-text-muted);
 
     &__row {
         display: grid;
-        gap: 24px;
+        gap: var(--fd-space-lg);
 
         &--pair {
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -206,7 +206,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     &__empty {
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
         border-radius: var(--fd-radius-panel, 16px);
-        padding: 24px;
+        padding: var(--fd-space-lg);
         text-align: center;
         color: $color-text-secondary;
     }
@@ -228,7 +228,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         @media #{variables.$media-mobile} {
             flex-direction: column;
             align-items: flex-start;
-            gap: variables.$gap-xs;
+            gap: var(--fd-space-xs);
         }
 
         & > * {
@@ -303,7 +303,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     @media #{variables.$media-mobile} {
 
         &__header {
-            padding: 10px 12px 8px;
+            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-xs);
             margin: 0;
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
             background: var(--fd-page-header-mobile-background);
@@ -313,8 +313,8 @@ $color-text-secondary: var(--fd-color-text-muted);
                 'title actions'
                 'subtitle subtitle';
             align-items: center;
-            column-gap: 10px;
-            row-gap: 4px;
+            column-gap: var(--fd-space-xs);
+            row-gap: var(--fd-space-xxs);
         }
 
         &__title-block {
@@ -334,7 +334,7 @@ $color-text-secondary: var(--fd-color-text-muted);
             margin-left: 0;
             width: auto;
             flex-wrap: nowrap;
-            gap: 6px;
+            gap: var(--fd-space-xxs);
             justify-content: flex-end;
             min-width: 0;
         }
@@ -353,12 +353,12 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &__quick-add {
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: var(--fd-space-xs);
+            margin-bottom: var(--fd-space-lg);
         }
 
         &__manual-add {
-            gap: 8px;
+            gap: var(--fd-space-xs);
             padding-left: 2px;
         }
 

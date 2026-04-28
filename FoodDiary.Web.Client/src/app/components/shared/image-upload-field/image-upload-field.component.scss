@@ -1,7 +1,7 @@
 .image-upload-field {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--fd-space-xs);
     padding: 0;
     border-radius: var(--fd-radius-card);
     background: transparent;
@@ -40,8 +40,8 @@
     &__placeholder {
         display: grid;
         width: 100%;
-        gap: 6px;
-        padding: 28px 24px;
+        gap: var(--fd-space-xxs);
+        padding: var(--fd-space-xl) var(--fd-space-lg);
         color: var(--fd-color-slate-900);
         text-align: center;
     }
@@ -99,7 +99,7 @@
     &__actions {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         flex-wrap: wrap;
     }
 
@@ -170,8 +170,8 @@
     &__label-block {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        margin-bottom: 6px;
+        gap: var(--fd-space-xxs);
+        margin-bottom: var(--fd-space-xxs);
     }
 
     &__label-title {
@@ -191,7 +191,7 @@
         z-index: 1000;
         display: grid;
         place-items: center;
-        padding: 16px;
+        padding: var(--fd-space-md);
         background: color-mix(in srgb, var(--fd-color-slate-900) 55%, transparent);
     }
 
@@ -199,8 +199,8 @@
         display: flex;
         flex-direction: column;
         width: min(720px, 100%);
-        gap: 16px;
-        padding: 18px;
+        gap: var(--fd-space-md);
+        padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-dialog);
         background: var(--fd-color-white);
         box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 22%, transparent);
@@ -209,7 +209,7 @@
     &__cropper-header {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__cropper-title {
@@ -252,7 +252,7 @@
     &__cropper-actions {
         display: flex;
         justify-content: flex-end;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         flex-wrap: wrap;
     }
 
@@ -266,8 +266,8 @@
         }
 
         .image-upload-field__placeholder {
-            gap: 8px;
-            padding: 20px 12px;
+            gap: var(--fd-space-xs);
+            padding: var(--fd-space-lg) var(--fd-space-sm);
         }
 
         .image-upload-field__icon {

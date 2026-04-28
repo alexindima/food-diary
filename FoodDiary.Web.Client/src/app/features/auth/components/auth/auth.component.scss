@@ -4,7 +4,7 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
     width: min(100%, 520px);
 
     &__tabs {
@@ -17,11 +17,11 @@
         --fd-tabs-border-color: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
         --fd-tabs-label-opacity: 0.72;
         --fd-tabs-label-opacity-active: 1;
-        margin-bottom: variables.$gap-xs;
+        margin-bottom: var(--fd-space-xs);
     }
 
     &__subtitle {
-        margin: 8px 0 variables.$gap-m;
+        margin: var(--fd-space-xs) 0 var(--fd-space-md);
         text-align: center;
         color: var(--fd-color-text-muted);
     }
@@ -29,25 +29,25 @@
     &__content {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__form {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__field {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__actions {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__link {
@@ -96,9 +96,9 @@
     &__divider {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
-        margin: variables.$gap-s 0;
+        margin: var(--fd-space-sm) 0;
 
         &::before,
         &::after {
@@ -112,7 +112,7 @@
     &__social {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__google-button {

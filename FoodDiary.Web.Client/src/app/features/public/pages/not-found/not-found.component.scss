@@ -17,7 +17,7 @@
 
 .not-found__icon {
     color: var(--fd-color-danger);
-    margin-bottom: 20px;
+    margin-bottom: var(--fd-space-lg);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -25,25 +25,25 @@
 
 .not-found__title {
     color: var(--fd-color-danger);
-    margin-bottom: 20px;
+    margin-bottom: var(--fd-space-lg);
     --fd-page-title-size: clamp(2rem, 4vw, 2.5rem);
     --fd-page-title-line-height: 1.1;
 }
 
 .not-found__description {
     color: var(--fd-color-text-muted);
-    margin-bottom: 20px;
+    margin-bottom: var(--fd-space-lg);
 }
 
 .not-found__actions {
     display: flex;
     gap: variables.$gap-m;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: var(--fd-space-lg);
 }
 
 .not-found__button {
-    padding: 10px 20px;
+    padding: var(--fd-space-xs) var(--fd-space-lg);
     border: none;
     border-radius: variables.$border-radius-s;
     cursor: pointer;

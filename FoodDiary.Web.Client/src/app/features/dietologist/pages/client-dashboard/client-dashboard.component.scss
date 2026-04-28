@@ -1,17 +1,17 @@
 .client-dashboard {
-    padding: 24px;
+    padding: var(--fd-space-lg);
     max-width: 800px;
     margin: 0 auto;
 
     &__header {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        margin-bottom: 24px;
+        gap: var(--fd-space-xs);
+        margin-bottom: var(--fd-space-lg);
     }
 
     &__title {
-        margin: 8px 0 0;
+        margin: var(--fd-space-xs) 0 0;
     }
 
     &__email {
@@ -21,7 +21,7 @@
     &__profile-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__chip {
@@ -33,11 +33,11 @@
     &__sections {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__section {
-        padding: 16px;
+        padding: var(--fd-space-md);
 
         h2 {
             margin: 0 0 8px;
@@ -51,6 +51,6 @@
 
     &__no-data {
         text-align: center;
-        padding: 32px;
+        padding: var(--fd-space-xl);
     }
 }

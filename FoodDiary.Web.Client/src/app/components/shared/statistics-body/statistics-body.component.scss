@@ -7,7 +7,7 @@
 .stats-body-card {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--fd-space-md);
     width: 100%;
 }
 

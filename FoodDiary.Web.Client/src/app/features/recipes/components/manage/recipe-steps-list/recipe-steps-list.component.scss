@@ -9,24 +9,24 @@
     &__block {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__section {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__steps {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__title {
         color: var(--fd-color-text-muted);
-        margin-bottom: variables.$gap-xs;
+        margin-bottom: var(--fd-space-xs);
     }
 
     &__add-step {

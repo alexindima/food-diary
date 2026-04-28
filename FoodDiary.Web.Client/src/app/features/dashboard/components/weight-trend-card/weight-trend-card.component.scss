@@ -11,7 +11,7 @@
     width: 100%;
     min-width: 0;
     border-radius: var(--fd-radius-card, 22px);
-    padding: 18px 18px 14px;
+    padding: var(--fd-space-card-profile-gap) var(--fd-space-card-profile-gap) var(--fd-space-stat-tile-padding);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     background: var(--wt-surface);
@@ -24,7 +24,7 @@
     }
 
     &__header {
-        margin-bottom: 10px;
+        margin-bottom: var(--fd-space-xs);
         min-width: 0;
     }
 
@@ -33,7 +33,7 @@
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text);
         --fd-pill-min-height: 30px;
-        margin-bottom: 10px;
+        margin-bottom: var(--fd-space-xs);
 
         &--positive {
             --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-color-surface-raised));
@@ -49,8 +49,8 @@
     &__value-row {
         display: flex;
         align-items: baseline;
-        gap: 8px;
-        margin-bottom: 8px;
+        gap: var(--fd-space-xs);
+        margin-bottom: var(--fd-space-xs);
         min-width: 0;
     }
 
@@ -64,16 +64,16 @@
 
     &__chart {
         height: 40px;
-        margin: 4px -10px 6px;
+        margin: var(--fd-space-xxs) calc(0px - var(--fd-space-xs)) var(--fd-space-xxs);
     }
 
     &__empty {
-        margin: 8px 0 4px;
+        margin: var(--fd-space-xs) 0 var(--fd-space-xxs);
         color: var(--fd-color-text-muted);
     }
 
     &__footer {
-        margin-top: 6px;
+        margin-top: var(--fd-space-xxs);
         color: var(--fd-color-text-muted);
     }
 }

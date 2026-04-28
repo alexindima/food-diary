@@ -1,16 +1,16 @@
 .check-in {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--fd-space-md);
 
     &__trends {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__trend {
-        padding: 14px;
+        padding: var(--fd-space-stat-tile-padding);
         border: 1px solid var(--fd-color-border);
         background:
             linear-gradient(
@@ -24,7 +24,7 @@
     &__trend-row {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__trend-info {
@@ -43,7 +43,7 @@
     &__grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__card {
@@ -53,14 +53,14 @@
     &__stats {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__stat-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 0;
+        padding: var(--fd-space-xs) 0;
         border-bottom: 1px solid var(--fd-color-border);
 
         span {
@@ -79,13 +79,13 @@
     &__suggestions {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__suggestion {
         display: flex;
         align-items: flex-start;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         color: var(--fd-color-text);
     }
 
@@ -100,7 +100,7 @@
     &__empty,
     &__loader {
         margin: 0;
-        padding: 12px 4px;
+        padding: var(--fd-space-sm) var(--fd-space-xxs);
         color: var(--fd-color-text-muted);
     }
 }

@@ -5,8 +5,8 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding-bottom: 24px;
+    gap: var(--fd-space-md);
+    padding-bottom: var(--fd-space-lg);
 
     &__header {
         // stylelint-disable-next-line rule-empty-line-before
@@ -18,19 +18,19 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
     }
 
     &__stack {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
     }
 
     &__card {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
         padding: 0;
         border-radius: var(--fd-radius-card);
         background: transparent;
@@ -41,7 +41,7 @@
     &__card-header {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__card-icon {
@@ -107,7 +107,7 @@
     &__card-text {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__card-title {
@@ -125,12 +125,12 @@
     &__status-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        padding-top: 4px;
+        gap: var(--fd-space-xs);
+        padding-top: var(--fd-space-xxs);
     }
 
     &__section-status {
-        padding-top: 4px;
+        padding-top: var(--fd-space-xxs);
         font-size: 0.88rem;
         line-height: 1.35;
         color: var(--fd-color-text-muted);
@@ -139,7 +139,7 @@
     &__account {
         display: grid;
         grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
-        gap: 20px;
+        gap: var(--fd-space-lg);
         align-items: stretch;
 
         @media #{variables.$media-tablet} {
@@ -151,7 +151,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         padding: 0;
         border-radius: 0;
         background: transparent;
@@ -175,7 +175,7 @@
     &__account-fields {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-self: start;
         padding: 0;
     }
@@ -194,7 +194,7 @@
     &__account-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-items: start;
     }
 
@@ -209,21 +209,21 @@
     &__body {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-items: start;
     }
 
     &__billing-summary {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__billing-primary {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         flex-wrap: wrap;
     }
 
@@ -236,14 +236,14 @@
     &__billing-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__billing-item {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        padding: 12px 14px;
+        gap: var(--fd-space-xxs);
+        padding: var(--fd-space-sm) 14px;
         border-radius: var(--fd-radius-button);
         background: var(--fd-color-surface-raised);
         border: 1px solid var(--fd-color-border);
@@ -265,7 +265,7 @@
     &__billing-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__billing-state,
@@ -281,30 +281,30 @@
     &__notifications {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: var(--fd-space-card-profile-gap);
     }
 
     &__notifications-category-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__notifications-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
 
         &--nested {
-            --fd-surface-padding: 14px 16px;
+            --fd-surface-padding: var(--fd-space-surface-padding);
         }
     }
 
     &__notifications-copy {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         min-width: 0;
     }
 
@@ -317,7 +317,7 @@
     &__notifications-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__notifications-badge {
@@ -348,7 +348,7 @@
     &__notifications-reminders {
         display: grid;
         grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(140px, 180px)) auto;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         align-items: end;
         width: 100%;
     }
@@ -356,7 +356,7 @@
     &__notifications-reminder-presets {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         min-width: 0;
     }
 
@@ -371,40 +371,40 @@
     &__notifications-reminder-presets-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__notifications-devices {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        padding-top: 4px;
+        gap: var(--fd-space-sm);
+        padding-top: var(--fd-space-xxs);
     }
 
     &__notifications-devices-header {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__notifications-device-list {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__notifications-device-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__error {
         color: var(--fd-color-danger);
         font-size: 0.95rem;
         text-align: center;
-        margin-top: 4px;
+        margin-top: var(--fd-space-xxs);
 
         &--dietologist {
             text-align: left;
@@ -414,7 +414,7 @@
     &__dietologist {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__dietologist-summary {
@@ -422,7 +422,7 @@
         align-items: flex-start;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__dietologist-copy,
@@ -437,16 +437,16 @@
     &__dietologist-copy,
     &__dietologist-permissions-header,
     &__dietologist-info-list {
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__dietologist-permissions,
     &__dietologist-permission-list {
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__dietologist-permissions {
-        padding-top: 4px;
+        padding-top: var(--fd-space-xxs);
     }
 
     &__dietologist-label {
@@ -473,14 +473,14 @@
 
         &--summary {
             max-width: 520px;
-            padding-top: 8px;
+            padding-top: var(--fd-space-xs);
         }
     }
 
     &__dietologist-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__dietologist-summary-actions {
@@ -497,7 +497,7 @@
     &__dietologist-summary-form {
         display: grid;
         grid-template-columns: minmax(260px, 1fr) auto;
-        gap: 16px;
+        gap: var(--fd-space-md);
         align-items: end;
         width: 100%;
     }
@@ -515,17 +515,17 @@
     &__privacy {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--fd-space-md);
     }
 
     &__privacy-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--fd-space-sm);
 
         &--danger {
-            padding-top: 4px;
+            padding-top: var(--fd-space-xxs);
         }
     }
 
@@ -547,7 +547,7 @@
     }
 
     &__privacy-status {
-        margin-top: 4px;
+        margin-top: var(--fd-space-xxs);
     }
 
     &__privacy-badge {
@@ -586,7 +586,7 @@
     @media #{variables.$media-mobile} {
         // stylelint-disable-next-line rule-empty-line-before
         &__gender-options {
-            gap: 8px;
+            gap: var(--fd-space-xs);
         }
 
         &__notifications-item {

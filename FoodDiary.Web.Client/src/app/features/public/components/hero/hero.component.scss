@@ -88,7 +88,7 @@
         gap: variables.$gap-s;
         flex-wrap: wrap;
         align-items: center;
-        margin-top: 4px;
+        margin-top: var(--fd-space-xxs);
     }
 
     &__cta {
@@ -99,7 +99,7 @@
         margin: 0;
         width: fit-content;
         max-width: 100%;
-        padding: 12px 16px;
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
         background: color-mix(in srgb, var(--fd-color-slate-900) 68%, var(--fd-color-slate-700));
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 24%, transparent);
@@ -155,7 +155,7 @@
         backdrop-filter: blur(18px);
         color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
         display: grid;
-        gap: 16px;
+        gap: var(--fd-space-md);
         animation: landingFadeUp 900ms ease-out both;
 
         &::before {
@@ -194,7 +194,7 @@
         align-items: center;
         justify-content: center;
         min-height: 38px;
-        padding: 8px 14px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent);
@@ -213,7 +213,7 @@
 
     &__feature-section {
         display: grid;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__feature-section-title {
@@ -227,7 +227,7 @@
     &__feature-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__feature-chip {
@@ -250,8 +250,8 @@
         display: flex;
         margin-top: auto;
         flex-direction: column;
-        gap: 6px;
-        padding: 14px 16px;
+        gap: var(--fd-space-xxs);
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: 20px;
         background: color-mix(in srgb, var(--fd-color-white) 12%, transparent);
         color: color-mix(in srgb, var(--fd-color-white) 95%, var(--fd-color-teal-500));
@@ -269,7 +269,7 @@
     }
 
     @media #{variables.$media-tablet} {
-        --fd-layout-page-horizontal-padding: 16px;
+        --fd-layout-page-horizontal-padding: var(--fd-space-md);
 
         &__top {
             padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
@@ -338,7 +338,7 @@
         }
 
         &__feature-note {
-            padding: 14px 16px;
+            padding: var(--fd-space-sm) var(--fd-space-md);
         }
     }
 

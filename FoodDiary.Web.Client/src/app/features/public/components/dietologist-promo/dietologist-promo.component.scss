@@ -57,7 +57,7 @@
         display: grid;
         grid-template-columns: 40px minmax(0, 1fr);
         gap: variables.$gap-s;
-        padding: 14px 16px;
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
         background: var(--fd-landing-surface-strong);
         border: 1px solid var(--fd-landing-border-soft);
@@ -85,7 +85,7 @@
     }
 
     &__step-text {
-        margin: 6px 0 0;
+        margin: var(--fd-space-xxs) 0 0;
         color: var(--fd-color-text-muted);
         line-height: 1.55;
     }
@@ -123,7 +123,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 12px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-white) 14%, transparent);
         color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
@@ -151,7 +151,7 @@
     &__permission-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__permission-chip,
@@ -159,7 +159,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 10px 12px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: 14px;
         background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         color: var(--fd-color-slate-50);

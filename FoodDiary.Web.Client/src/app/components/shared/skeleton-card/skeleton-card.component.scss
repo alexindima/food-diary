@@ -8,18 +8,18 @@
         color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50) 8%),
         color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
     );
-    padding: variables.$gap-m;
+    padding: var(--fd-space-md);
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-xs;
+    gap: var(--fd-space-xs);
     box-shadow: 0 4px 8px color-mix(in srgb, var(--fd-color-shadow) 45%, transparent);
 }
 
 .fd-skeleton-card__content {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-xxs;
-    margin-top: variables.$gap-xs;
+    gap: var(--fd-space-xxs);
+    margin-top: var(--fd-space-xs);
 }
 
 

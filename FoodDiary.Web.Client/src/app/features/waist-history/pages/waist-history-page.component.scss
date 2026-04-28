@@ -121,7 +121,7 @@
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: var(--fd-space-card-header-gap);
         align-items: center;
-        padding: 8px 0;
+        padding: var(--fd-space-xs) 0;
         border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
 
         &:last-child {

@@ -6,8 +6,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: variables.$gap-xxl variables.$gap-m;
-    gap: variables.$gap-xs;
+    padding: var(--fd-space-xxl) var(--fd-space-md);
+    gap: var(--fd-space-xs);
 }
 
 .fd-error-state__icon {
@@ -15,7 +15,7 @@
     width: 48px;
     height: 48px;
     color: var(--fd-color-text-muted);
-    margin-bottom: variables.$gap-xs;
+    margin-bottom: var(--fd-space-xs);
 }
 
 .fd-error-state__title {
@@ -25,5 +25,5 @@
 .fd-error-state__message {
     color: var(--fd-color-text-muted);
     max-width: 320px;
-    margin-bottom: variables.$gap-xs;
+    margin-bottom: var(--fd-space-xs);
 }

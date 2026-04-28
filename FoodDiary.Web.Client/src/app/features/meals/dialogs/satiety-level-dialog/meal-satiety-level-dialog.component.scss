@@ -1,9 +1,9 @@
 :host {
-    --fd-satiety-scale-list-gap: 6px;
+    --fd-satiety-scale-list-gap: var(--fd-space-xxs);
     --fd-satiety-scale-vertical-list-columns: 1fr;
     --fd-satiety-scale-vertical-list-max-width: 100%;
     --fd-satiety-scale-vertical-list-align-items: stretch;
-    --fd-satiety-scale-vertical-option-padding: 6px 10px;
+    --fd-satiety-scale-vertical-option-padding: var(--fd-space-xxs) var(--fd-space-xs);
     --fd-satiety-scale-vertical-option-max-width: none;
     --fd-satiety-scale-vertical-option-min-height: auto;
 }

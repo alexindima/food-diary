@@ -4,14 +4,14 @@
     --b2: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     margin: 0 auto;
     box-sizing: border-box;
-    --fd-layout-page-section-spacing: variables.$gap-m;
+    --fd-layout-page-section-spacing: var(--fd-space-md);
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
 
     &__header .fd-page-header__actions {
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         width: auto;
         margin-left: auto;
         justify-content: flex-end;
@@ -20,7 +20,7 @@
     &__mobile-toolbar {
         display: none;
         align-items: center;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
         flex-wrap: nowrap;
     }
 
@@ -28,7 +28,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__search-form {
@@ -76,17 +76,17 @@
 
     &__loader {
         display: block;
-        margin: variables.$gap-l auto;
+        margin: var(--fd-space-lg) auto;
     }
 
     &__no-results {
         color: var(--fd-color-text-muted);
         text-align: center;
-        margin-top: variables.$gap-l;
+        margin-top: var(--fd-space-lg);
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
 
         &-icon {
             font-size: 2em;
@@ -96,7 +96,7 @@
 
     &__empty-state {
         @extend .product-list__no-results;
-        padding: 24px;
+        padding: var(--fd-space-lg);
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         border-radius: 20px;
         background: linear-gradient(
@@ -115,27 +115,27 @@
     }
 
     &__pagination {
-        margin-top: variables.$gap-l;
+        margin-top: var(--fd-space-lg);
     }
 
     &__favorites {
         display: block;
-        margin-bottom: 18px;
+        margin-bottom: var(--fd-space-card-profile-gap);
     }
 
     &__favorites-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 8px;
-        padding: 0 12px 12px;
+        gap: var(--fd-space-xs);
+        padding: 0 var(--fd-space-sm) var(--fd-space-sm);
     }
 
     &__favorite-card {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        padding: 10px 12px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: 14px;
         background: var(--fd-color-surface-raised);
         border: 1px solid var(--fd-color-border-strong);
@@ -163,13 +163,13 @@
         color: var(--fd-color-text-muted);
         margin-top: 2px;
         display: flex;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         flex-wrap: wrap;
     }
 
     &__favorite-actions {
         display: flex;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__favorite-btn {
@@ -204,19 +204,19 @@
     &__groups {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
     }
 
     &__section {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__section-header {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__section-label {
@@ -234,7 +234,7 @@
     &__section-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
         align-items: start;
 
         fd-product-card {
@@ -245,14 +245,14 @@
     &__off-grid {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__off-card {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px;
+        gap: var(--fd-space-sm);
+        padding: var(--fd-space-sm);
         border-radius: 12px;
         background: color-mix(in srgb, var(--fd-color-slate-50) 95%, transparent);
         border: 1px solid var(--b2);
@@ -318,7 +318,7 @@
         --fd-layout-page-vertical-padding: 0;
 
         &__header {
-            padding: 10px 12px 8px;
+            padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
             background: var(--fd-color-slate-50);
@@ -334,20 +334,20 @@
 
         &__search-form--mobile {
             min-width: 100%;
-            padding: 10px 12px 12px;
+            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
             width: 100%;
         }
 
         &__groups {
-            gap: 12px;
+            gap: var(--fd-space-sm);
         }
 
         &__section {
-            gap: 8px;
+            gap: var(--fd-space-xs);
         }
 
         &__section-header {
-            padding: 0 16px;
+            padding: 0 var(--fd-space-md);
         }
 
         &__section-grid {
@@ -364,15 +364,15 @@
         &__no-results,
         &__loader,
         &__pagination {
-            padding-left: 16px;
-            padding-right: 16px;
+            padding-left: var(--fd-space-md);
+            padding-right: var(--fd-space-md);
         }
     }
 
     @media #{variables.$media-desktop-sm} {
 
         &__header-actions {
-            gap: variables.$gap-xs;
+            gap: var(--fd-space-xs);
         }
 
         &__filter-button {

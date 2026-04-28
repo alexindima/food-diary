@@ -1,5 +1,5 @@
 .connections {
-    padding: 16px;
+    padding: var(--fd-space-md);
 }
 
 .title {
@@ -9,8 +9,8 @@
 .provider-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 0;
+    gap: var(--fd-space-sm);
+    padding: var(--fd-space-sm) 0;
     border-bottom: 1px solid var(--fd-divider, rgba(0, 0, 0, 0.08));
 
     &:last-child {

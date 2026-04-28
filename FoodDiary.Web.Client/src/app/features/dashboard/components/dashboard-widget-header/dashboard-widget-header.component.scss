@@ -5,7 +5,7 @@
 .dashboard-widget-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--fd-space-xs);
     min-width: 0;
 
     &__icon {
@@ -43,7 +43,7 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         min-width: 0;
     }
 

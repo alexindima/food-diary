@@ -7,7 +7,7 @@
 .lessons-list {
 
     &__header {
-        margin-bottom: 24px;
+        margin-bottom: var(--fd-space-lg);
     }
 
     &__title {
@@ -18,14 +18,14 @@
 
     &__subtitle {
         color: var(--fd-color-text-muted);
-        margin: 4px 0 0;
+        margin: var(--fd-space-xxs) 0 0;
     }
 
     &__progress {
-        margin-top: 12px;
+        margin-top: var(--fd-space-sm);
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__progress-bar {
@@ -53,21 +53,21 @@
     &__filters {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 24px;
+        gap: var(--fd-space-xs);
+        margin-bottom: var(--fd-space-lg);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
+        gap: var(--fd-space-lg);
     }
 
     &__empty {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         padding: 48px 0;
         color: var(--fd-color-text-muted);
         font-weight: 600;
@@ -76,7 +76,7 @@
 
 .lesson-card {
     border-radius: var(--fd-radius-card);
-    padding: 20px;
+    padding: var(--fd-space-lg);
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-500) 6%),
@@ -87,7 +87,7 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--fd-space-xs);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
@@ -138,7 +138,7 @@
 
     &__meta {
         display: flex;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         font-size: 0.8rem;
         font-weight: 600;
         color: var(--fd-color-text-muted);

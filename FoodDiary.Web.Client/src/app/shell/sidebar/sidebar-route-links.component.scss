@@ -20,9 +20,9 @@
 .sidebar__link {
     display: grid;
     grid-template-columns: 24px 1fr;
-    gap: 10px;
+    gap: var(--fd-space-xs);
     align-items: center;
-    padding: 10px 12px;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-menu-item, 12px);
 }
 
@@ -63,7 +63,7 @@
 }
 
 .sidebar__link.sidebar__link--secondary {
-    padding: 8px 10px;
+    padding: var(--fd-space-xs);
 }
 
 .sidebar__link.sidebar__link--secondary fd-ui-icon {
@@ -73,8 +73,8 @@
 .sidebar-mobile__sheet-link {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
+    gap: var(--fd-space-xs);
+    padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-menu-item, 12px);
     background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
     color: var(--fd-color-text-strong, var(--fd-color-slate-900));

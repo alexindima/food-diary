@@ -26,14 +26,14 @@
     --dashboard-style-modern-line-soft: var(--fd-color-amber-200);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--fd-space-lg);
 }
 
 .dashboard-appearance-dialog__intro {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 16px;
+    gap: var(--fd-space-xs);
+    padding: var(--fd-space-md);
     border-radius: var(--dashboard-appearance-shell-radius);
     background:
         radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent), transparent 42%),
@@ -53,8 +53,8 @@
 .dashboard-appearance-dialog__section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 16px;
+    gap: var(--fd-space-sm);
+    padding: var(--fd-space-md);
     border-radius: var(--dashboard-appearance-shell-radius);
     background: linear-gradient(
         180deg,
@@ -67,7 +67,7 @@
 .dashboard-appearance-dialog__section-header {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--fd-space-xxs);
 }
 
 .dashboard-appearance-dialog__section-title,
@@ -82,7 +82,7 @@
 .dashboard-appearance-dialog__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .dashboard-appearance-dialog__grid--styles {
@@ -101,8 +101,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding: 14px;
+    gap: var(--fd-space-xs);
+    padding: var(--fd-space-stat-tile-padding);
     text-align: left;
     cursor: pointer;
     transition:
@@ -200,9 +200,9 @@
     aspect-ratio: 16 / 5;
     min-height: 56px;
     border-radius: var(--dashboard-style-preview-surface-radius);
-    padding: 12px;
+    padding: var(--fd-space-sm);
     align-content: center;
-    gap: 6px;
+    gap: var(--fd-space-xxs);
     box-shadow:
         inset 0 1px 0 color-mix(in srgb, var(--fd-color-dialog-surface) 30%, transparent),
         inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);

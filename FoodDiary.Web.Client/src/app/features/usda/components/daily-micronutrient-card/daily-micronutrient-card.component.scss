@@ -1,12 +1,12 @@
 .card {
-    padding: 16px;
+    padding: var(--fd-space-md);
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: var(--fd-space-md);
 }
 
 .card-title {
@@ -23,11 +23,11 @@
 .nutrients-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .nutrient-item {
-    --fd-progress-item-padding: 8px;
+    --fd-progress-item-padding: var(--fd-space-progress-item-padding);
     --fd-progress-item-radius: 8px;
     --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
 }
@@ -43,7 +43,7 @@
 
 .dv-text {
     font-weight: var(--fd-text-stat-value-weight, 600);
-    margin-left: 4px;
+    margin-left: var(--fd-space-xxs);
 }
 
 .dv-low {
@@ -82,7 +82,7 @@
 
 .empty-state {
     text-align: center;
-    padding: 16px;
+    padding: var(--fd-space-md);
 }
 
 @media (max-width: 480px) {

@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 32px 16px;
+    padding: var(--fd-space-xl) var(--fd-space-md);
 }
 
 .dietologist-invitation__card {
@@ -22,7 +22,7 @@
 
 .dietologist-invitation__actions {
     display: flex;
-    gap: 12px;
+    gap: var(--fd-space-sm);
     flex-wrap: wrap;
 }
 

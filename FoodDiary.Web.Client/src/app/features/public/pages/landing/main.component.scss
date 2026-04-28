@@ -103,7 +103,7 @@
 
     &__eyebrow {
         display: inline-flex;
-        padding: 6px 12px;
+        padding: var(--fd-space-xxs) var(--fd-space-sm);
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
         color: var(--fd-color-primary-600);
@@ -286,7 +286,7 @@
     &__question {
         list-style: none;
         cursor: pointer;
-        padding: 18px 22px;
+        padding: var(--fd-space-md) var(--fd-space-lg);
         @include landing.marketing-title(1.02rem, 1.35, -0.01em, var(--fd-color-text), 800);
         display: flex;
         align-items: center;
@@ -344,7 +344,7 @@
         display: flex;
         align-items: center;
         min-height: 56px;
-        padding: 14px 16px;
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: 16px;
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);

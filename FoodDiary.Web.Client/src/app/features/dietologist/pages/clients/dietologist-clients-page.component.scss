@@ -1,5 +1,5 @@
 .dietologist-clients {
-    padding: 24px;
+    padding: var(--fd-space-lg);
     max-width: 800px;
     margin: 0 auto;
 
@@ -14,7 +14,7 @@
     &__list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__card {
@@ -25,14 +25,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 16px;
-        gap: 16px;
+        padding: var(--fd-space-md);
+        gap: var(--fd-space-md);
     }
 
     &__info {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         min-width: 0;
         flex: 1;
     }
@@ -65,7 +65,7 @@
     &__meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__chip {

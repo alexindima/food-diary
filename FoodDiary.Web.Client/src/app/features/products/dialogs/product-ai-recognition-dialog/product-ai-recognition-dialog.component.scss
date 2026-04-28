@@ -4,7 +4,7 @@
     --product-ai-surface: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-l;
+    gap: var(--fd-space-lg);
 }
 
 .product-ai-dialog__upload {
@@ -109,13 +109,13 @@
 .product-ai-dialog__summary {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 }
 
 .product-ai-dialog__items {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
 }
 
 .product-ai-dialog__items-label {
@@ -125,7 +125,7 @@
 .product-ai-dialog__items-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .product-ai-dialog__item-chip {
@@ -140,13 +140,13 @@
 
 .product-ai-dialog__form-grid {
     display: grid;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 }
 
 .product-ai-dialog__nutrition-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 
     @media #{variables.$media-mobile} {
         grid-template-columns: 1fr;
@@ -154,7 +154,7 @@
 }
 
 .product-ai-dialog__footer {
-    --fd-actions-gap: #{variables.$gap-m};
+    --fd-actions-gap: var(--fd-space-md);
 }
 
 

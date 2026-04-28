@@ -1,11 +1,11 @@
 .calorie-goal-dialog__footer {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 8px;
+    gap: var(--fd-space-sm);
+    margin-top: var(--fd-space-xs);
 }
 
 .calorie-goal-dialog__hint {
-    margin: 8px 0 0;
+    margin: var(--fd-space-xs) 0 0;
     color: var(--fd-color-text-muted);
 }

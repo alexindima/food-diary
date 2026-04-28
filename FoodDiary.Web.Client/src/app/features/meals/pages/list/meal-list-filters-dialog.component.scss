@@ -2,13 +2,13 @@
 
     &__date-range {
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: var(--fd-space-xs);
     }
 
     &__footer {
         display: flex;
         justify-content: flex-end;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         flex-wrap: wrap;
     }
 }

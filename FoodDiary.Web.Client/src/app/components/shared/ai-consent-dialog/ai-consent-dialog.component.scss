@@ -12,7 +12,7 @@
     }
 
     &__text h3 {
-        margin: 16px 0 8px;
+        margin: var(--fd-space-md) 0 var(--fd-space-xs);
         font-size: var(--fd-text-card-title-size);
         line-height: var(--fd-text-card-title-line-height);
         font-weight: var(--fd-text-card-title-weight);
@@ -25,18 +25,18 @@
 
     &__text ul {
         margin: 0 0 12px;
-        padding-left: 20px;
+        padding-left: var(--fd-space-lg);
     }
 
     &__text li {
-        margin-bottom: 6px;
+        margin-bottom: var(--fd-space-xxs);
     }
 
     &__checkbox {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
-        margin-top: 16px;
+        gap: var(--fd-space-xs);
+        margin-top: var(--fd-space-md);
         cursor: pointer;
         color: var(--fd-color-text);
 
@@ -53,7 +53,7 @@
     &__footer {
         display: flex;
         justify-content: flex-end;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 }
 

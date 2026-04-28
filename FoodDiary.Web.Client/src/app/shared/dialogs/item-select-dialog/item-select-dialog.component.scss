@@ -3,7 +3,7 @@
 .consumption-item-select {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
     max-height: 70vh;
 
     &__tabs {
@@ -17,7 +17,7 @@
     }
 
     &__footer {
-        --fd-actions-gap: #{variables.$gap-s};
-        padding-top: variables.$gap-s;
+        --fd-actions-gap: var(--fd-space-sm);
+        padding-top: var(--fd-space-sm);
     }
 }

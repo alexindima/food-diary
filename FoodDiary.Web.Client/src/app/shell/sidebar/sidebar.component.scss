@@ -7,8 +7,8 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 20px 16px 24px;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-lg) var(--fd-space-md) var(--fd-space-lg);
     background: linear-gradient(180deg, var(--fd-gradient-sidebar-start) 0%, var(--fd-gradient-sidebar-end) 100%);
     border-right: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
     box-shadow: 6px 0 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
@@ -16,8 +16,8 @@
     &__brand {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card, 14px);
         background: var(--fd-color-surface, var(--fd-color-white));
         box-shadow: 0 10px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
@@ -89,8 +89,8 @@
 
     &__nav {
         display: grid;
-        gap: 6px;
-        margin-top: 6px;
+        gap: var(--fd-space-xxs);
+        margin-top: var(--fd-space-xxs);
     }
 
     &__link {
@@ -102,9 +102,9 @@
         cursor: pointer;
         display: grid;
         grid-template-columns: 24px 1fr;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         align-items: center;
-        padding: 10px 12px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item, 12px);
         color: var(--fd-color-text-muted, var(--fd-color-slate-600));
         text-decoration: none;
@@ -148,7 +148,7 @@
     }
 
     &__section {
-        padding-top: 8px;
+        padding-top: var(--fd-space-xs);
         border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
     }
 
@@ -157,8 +157,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        padding: 8px 4px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-xxs);
         background: transparent;
         border: none;
         color: var(--fd-color-text-muted, var(--fd-color-slate-600));
@@ -181,17 +181,17 @@
     }
 
     &__nav--secondary {
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__nav--bottom {
-        margin-top: 4px;
-        padding-top: 4px;
+        margin-top: var(--fd-space-xxs);
+        padding-top: var(--fd-space-xxs);
         border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
     }
 
     &__link--secondary {
-        padding: 8px 10px;
+        padding: var(--fd-space-xs);
         font-weight: 600;
 
         fd-ui-icon {
@@ -204,13 +204,13 @@
     }
 
     &__premium {
-        padding: 14px 12px;
+        padding: var(--fd-space-stat-tile-padding) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel, 14px);
         background: linear-gradient(135deg, var(--fd-gradient-premium-start), var(--fd-gradient-premium-end));
         color: var(--fd-color-slate-200);
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
     }
 
@@ -230,16 +230,16 @@
     &__user-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 
     &__user {
         width: 100%;
         display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         align-items: center;
-        padding: 10px 12px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card, 12px);
         background: var(--fd-color-surface, var(--fd-color-white));
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
@@ -312,7 +312,7 @@
     }
 
     &__user-menu {
-        padding: 6px;
+        padding: var(--fd-space-xxs);
         border-radius: var(--fd-radius-panel, 12px);
         background: linear-gradient(
             180deg,
@@ -325,14 +325,14 @@
             0 10px 22px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         overflow: hidden;
     }
 
     &__theme-control {
         display: grid;
-        gap: 8px;
-        padding: 10px 12px 6px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-xxs);
     }
 
     &__theme-label {
@@ -352,8 +352,8 @@
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item, 10px);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         background: var(--fd-color-surface, var(--fd-color-white));
@@ -434,8 +434,8 @@
     right: 0;
     bottom: 0;
     display: none;
-    gap: 8px;
-    padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+    gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm) calc(var(--fd-space-xs) + env(safe-area-inset-bottom));
     background: var(--fd-color-surface, var(--fd-color-white));
     border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
     box-shadow: 0 -12px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
@@ -444,7 +444,7 @@
     &__progress {
         display: grid;
         gap: 5px;
-        padding: 8px 10px;
+        padding: var(--fd-space-xs);
         border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
@@ -454,7 +454,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__progress-title,
@@ -481,7 +481,7 @@
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__item {
@@ -494,8 +494,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 4px;
-        padding: 6px 4px;
+        gap: var(--fd-space-xxs);
+        padding: var(--fd-space-xxs);
         border-radius: 12px;
         text-decoration: none;
         transition:
@@ -566,11 +566,11 @@
         bottom: 126px;
         background: var(--fd-color-surface, var(--fd-color-white));
         border-radius: var(--fd-radius-dialog, 16px);
-        padding: 10px;
+        padding: var(--fd-space-xs);
         box-shadow: 0 16px 40px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
         display: grid;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
         z-index: 1190;
 
         &:focus-visible {
@@ -584,8 +584,8 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
+            gap: var(--fd-space-xs);
+            padding: var(--fd-space-xs) var(--fd-space-sm);
             border-radius: var(--fd-radius-menu-item, 12px);
             background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
             color: var(--fd-color-text-strong, var(--fd-color-slate-900));
@@ -596,8 +596,8 @@
 
         .sidebar-mobile__theme-control {
             display: grid;
-            gap: 8px;
-            padding: 8px 2px 4px;
+            gap: var(--fd-space-xs);
+            padding: var(--fd-space-xs) 2px var(--fd-space-xxs);
         }
 
         .sidebar-mobile__theme-label {

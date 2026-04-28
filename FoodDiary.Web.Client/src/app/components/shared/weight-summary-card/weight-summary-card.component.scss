@@ -26,7 +26,7 @@
 .weight-summary-card__content {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-xxs);
 }
 
 .weight-summary-card__value {

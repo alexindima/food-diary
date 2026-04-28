@@ -1,5 +1,5 @@
 .card {
-    padding: 16px;
+    padding: var(--fd-space-md);
 }
 
 .card-title {
@@ -9,11 +9,11 @@
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .metric-item {
-    --fd-stat-tile-padding: 12px 8px;
+    --fd-stat-tile-padding: var(--fd-space-stat-tile-compact-padding);
     --fd-stat-tile-gap: 2px;
     --fd-stat-tile-radius: 12px;
     --fd-stat-tile-border: 0;
@@ -37,5 +37,5 @@
 
 .empty-state {
     text-align: center;
-    padding: 16px;
+    padding: var(--fd-space-md);
 }

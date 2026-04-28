@@ -10,7 +10,7 @@
 }
 
 .unsaved-changes-dialog__footer {
-    --fd-actions-gap: 12px;
+    --fd-actions-gap: var(--fd-space-sm);
     padding: 0 1.25rem 1.25rem;
     width: 100%;
 }

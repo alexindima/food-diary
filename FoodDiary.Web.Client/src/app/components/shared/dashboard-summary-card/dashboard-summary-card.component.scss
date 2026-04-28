@@ -172,7 +172,7 @@
         transition:
             transform 0.25s ease,
             opacity 0.25s ease;
-        padding-left: 6px;
+        padding-left: var(--fd-space-xxs);
     }
 
     &__percent-value {

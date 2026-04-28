@@ -3,12 +3,12 @@
 .product-list-filters-dialog {
 
     &__visibility {
-        margin-bottom: 16px;
+        margin-bottom: var(--fd-space-md);
     }
 
     &__section {
         display: grid;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__section-title {
@@ -30,7 +30,7 @@
     &__footer {
         display: flex;
         justify-content: flex-end;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     @media #{variables.$media-mobile} {

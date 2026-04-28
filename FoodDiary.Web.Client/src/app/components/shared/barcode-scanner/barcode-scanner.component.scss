@@ -22,8 +22,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: variables.$gap-l;
-    gap: variables.$gap-m;
+    padding: var(--fd-space-lg);
+    gap: var(--fd-space-md);
     background: var(--fd-color-white);
     text-align: center;
 
@@ -39,7 +39,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: variables.$gap-l;
+    padding: var(--fd-space-lg);
     background: var(--fd-color-white);
 }
 

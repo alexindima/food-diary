@@ -7,7 +7,7 @@
     --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
 }
 
-@mixin preview-light-surface($padding: 14px 16px) {
+@mixin preview-light-surface($padding: var(--fd-space-sm) var(--fd-space-md)) {
     display: grid;
     gap: variables.$gap-s;
     padding: $padding;
@@ -140,7 +140,7 @@
     &__eyebrow {
         display: inline-flex;
         align-self: flex-start;
-        padding: 6px 12px;
+        padding: var(--fd-space-xxs) var(--fd-space-sm);
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
@@ -213,7 +213,7 @@
 
 .landing-preview__meals-note {
     @include preview-light-surface(14px 16px);
-    gap: 6px;
+    gap: var(--fd-space-xxs);
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-primary-100) 34%, var(--fd-color-white)) 0%,
@@ -309,7 +309,7 @@
         display: inline-flex;
         width: fit-content;
         max-width: 100%;
-        padding: 6px 12px;
+        padding: var(--fd-space-xxs) var(--fd-space-sm);
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         color: var(--fd-color-slate-50);
@@ -328,13 +328,13 @@
     &__draft-pills {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: var(--fd-space-xs);
 
         span {
             display: inline-flex;
             align-items: center;
             min-height: 38px;
-            padding: 8px 14px;
+            padding: var(--fd-space-xs) var(--fd-space-sm);
             border-radius: 999px;
             background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
             color: var(--fd-color-slate-50);
@@ -426,11 +426,11 @@
 @media #{variables.$media-tablet} {
 
     :host {
-        --fd-layout-page-horizontal-padding: 16px;
+        --fd-layout-page-horizontal-padding: var(--fd-space-md);
     }
 
     .landing-preview__showcase {
-        padding: 16px;
+        padding: var(--fd-space-md);
     }
 
     .landing-preview__showcase-grid {

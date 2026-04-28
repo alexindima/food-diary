@@ -6,7 +6,7 @@
 
 .tdee-card {
     border-radius: var(--fd-radius-card, 22px);
-    padding: 18px;
+    padding: var(--fd-space-card-profile-gap);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: linear-gradient(
         180deg,
@@ -17,7 +17,7 @@
     color: var(--fd-color-text);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-sm);
 
     &--loading {
         opacity: 0.75;
@@ -31,13 +31,13 @@
     &__content {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__main-value {
         display: flex;
         align-items: baseline;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 
     &__number {
@@ -79,7 +79,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 2px 0;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__meta-label {
@@ -93,8 +93,8 @@
     &__hint {
         display: flex;
         align-items: flex-start;
-        gap: 8px;
-        padding: 10px 12px;
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
@@ -113,8 +113,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 10px 12px;
+        gap: var(--fd-space-sm);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel, 12px);
         background: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
     }
@@ -127,7 +127,7 @@
     &__empty {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
         padding: 2px 0;
 

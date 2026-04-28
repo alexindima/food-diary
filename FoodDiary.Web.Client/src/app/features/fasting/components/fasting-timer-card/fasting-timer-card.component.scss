@@ -82,7 +82,7 @@
         padding: 0 var(--fd-space-card-padding-x);
 
         &--summary {
-            gap: 6px;
+            gap: var(--fd-space-xxs);
         }
     }
 
@@ -242,7 +242,7 @@
         }
 
         &__summary-header {
-            padding-top: 20px;
+            padding-top: var(--fd-space-lg);
             text-align: left;
         }
 

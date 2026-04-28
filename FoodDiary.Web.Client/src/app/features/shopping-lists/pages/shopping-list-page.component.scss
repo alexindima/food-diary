@@ -3,21 +3,21 @@
 .shopping-list {
     margin: 0 auto;
     box-sizing: border-box;
-    --fd-layout-page-section-spacing: variables.$gap-m;
+    --fd-layout-page-section-spacing: var(--fd-space-md);
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
 
     &__header .fd-page-header__actions {
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         width: 100%;
     }
 
     &__header-actions {
         display: grid;
         grid-template-columns: minmax(220px, 1fr) minmax(240px, 1.2fr) auto auto;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         width: 100%;
         align-items: end;
     }
@@ -25,7 +25,7 @@
     &__mobile-toolbar {
         display: none;
         align-items: center;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 
     &__mobile-manage {
@@ -39,7 +39,7 @@
 
     &__mobile-manage-actions {
         display: flex;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         flex-wrap: wrap;
     }
 
@@ -56,19 +56,19 @@
 
     &__loader {
         display: block;
-        margin: variables.$gap-l auto;
+        margin: var(--fd-space-lg) auto;
     }
 
     &__panel {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__add-form {
         display: grid;
         grid-template-columns: minmax(200px, 1.4fr) 110px 140px minmax(160px, 1fr) auto;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-items: end;
         background: linear-gradient(
             180deg,
@@ -77,7 +77,7 @@
         );
         border: 1px solid var(--fd-color-border);
         border-radius: var(--fd-radius-panel);
-        padding: variables.$gap-m;
+        padding: var(--fd-space-md);
         box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-shadow) 28%, transparent);
 
         fd-ui-input,
@@ -89,15 +89,15 @@
     &__items {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__item {
         display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-items: center;
-        padding: variables.$gap-s variables.$gap-m;
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
         background: linear-gradient(
             180deg,
@@ -117,7 +117,7 @@
     }
 
     &__checkbox {
-        margin-left: 4px;
+        margin-left: var(--fd-space-xxs);
     }
 
     &__item-body {
@@ -163,9 +163,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
-        padding: variables.$gap-xl 0;
+        padding: var(--fd-space-xl) 0;
     }
 
     &__empty-state {
@@ -176,7 +176,7 @@
             color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent),
             color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-50) 4%)
         );
-        padding: 28px 20px;
+        padding: var(--fd-space-xl) var(--fd-space-lg);
     }
 
     &__empty-title {
@@ -194,7 +194,7 @@
         --fd-layout-page-vertical-padding: 0;
 
         &__header {
-            padding: 10px 12px 8px;
+            padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
             background: var(--fd-color-slate-50);
@@ -211,8 +211,8 @@
         &__header-actions--mobile {
             display: grid;
             grid-template-columns: 1fr;
-            padding: 10px 12px 12px;
-            gap: 8px;
+            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
+            gap: var(--fd-space-xs);
         }
 
         &__add-form {
@@ -221,7 +221,7 @@
             border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
             box-shadow: none;
-            padding: 12px 16px;
+            padding: var(--fd-space-sm) var(--fd-space-md);
         }
 
         &__items {
@@ -237,7 +237,7 @@
             border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
             border-radius: 0;
             box-shadow: none;
-            padding: 10px 14px;
+            padding: var(--fd-space-xs) var(--fd-space-sm);
         }
 
         &__item:last-child {

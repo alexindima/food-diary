@@ -2,10 +2,10 @@
     border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
     border-radius: 14px;
     background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-color-white));
-    padding: 14px;
+    padding: var(--fd-space-stat-tile-padding);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 :host(.ai-input-bar__result-panel) .ai-photo-result {
@@ -67,8 +67,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 10px;
-    padding: 18px 24px;
+    gap: var(--fd-space-xs);
+    padding: var(--fd-space-card-profile-gap) var(--fd-space-lg);
     background:
         linear-gradient(
             135deg,
@@ -176,13 +176,13 @@
 .ai-photo-result__items-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .ai-photo-result__items-title {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--fd-space-xxs);
 }
 
 .ai-photo-result__action-btn {
@@ -211,14 +211,14 @@
 .ai-photo-result__table {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--fd-space-xxs);
 }
 
 .ai-photo-result__table-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 10px;
+    padding: var(--fd-space-xs) 10px;
     border-radius: 8px;
     background: var(--fd-color-white);
     border: 1px solid var(--fd-color-slate-200);
@@ -236,15 +236,15 @@
 .ai-photo-result__edit-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .ai-photo-result__edit-row {
     display: grid;
     grid-template-columns: 24px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 24px;
-    gap: 8px;
+    gap: var(--fd-space-xs);
     align-items: center;
-    padding: 6px 8px;
+    padding: var(--fd-space-xxs) var(--fd-space-xs);
     border-radius: 10px;
     border: 1px solid var(--fd-color-slate-200);
     background: var(--fd-color-white);
@@ -327,7 +327,7 @@
 }
 
 .ai-photo-result__nutrition {
-    padding: 10px 12px;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
     border: 1px solid var(--fd-color-slate-200);
     border-radius: 10px;
     background: var(--fd-color-white);
@@ -336,7 +336,7 @@
 .ai-photo-result__nutrition-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px 12px;
+    gap: var(--fd-space-xs) var(--fd-space-sm);
 }
 
 .ai-photo-result__nutrition-item {
@@ -355,7 +355,7 @@
 }
 
 .ai-photo-result__actions {
-    --fd-actions-gap: 12px;
+    --fd-actions-gap: var(--fd-space-sm);
     justify-content: space-between;
 }
 
@@ -390,7 +390,7 @@
     :deep(.fd-ui-button__label) {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 }
 
@@ -408,26 +408,26 @@
 .ai-photo-result__details--expanded {
     grid-template-rows: 1fr;
     opacity: 1;
-    margin-top: 4px;
+    margin-top: var(--fd-space-xxs);
 }
 
 .ai-photo-result__details-inner {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: var(--fd-space-card-profile-gap);
 }
 
 .ai-photo-result__details-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .ai-photo-result__detail-field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-xxs);
 }
 
 .ai-photo-result__detail-label {
@@ -450,7 +450,7 @@
 }
 
 .ai-photo-result__detail-textarea {
-    padding: 12px;
+    padding: var(--fd-space-sm);
     resize: vertical;
     min-height: 88px;
 }
@@ -458,13 +458,13 @@
 .ai-photo-result__satiety-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .ai-photo-result__satiety-field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--fd-space-xxs);
 }
 
 .ai-photo-result__satiety-label {
@@ -476,10 +476,10 @@
     --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
     border: 1px solid var(--fd-color-slate-200);
     border-radius: 14px;
-    padding: 12px;
+    padding: var(--fd-space-sm);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--fd-space-sm);
     text-align: left;
     cursor: pointer;
     background: color-mix(in srgb, var(--fd-color-white) 95%, transparent);

@@ -1,18 +1,18 @@
 @use 'variables' as variables;
 
 .micronutrient-card {
-    padding: 16px;
+    padding: var(--fd-space-md);
     border-radius: var(--fd-radius-card, 16px);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-sm);
 
     &__loading {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__skeleton {
@@ -27,7 +27,7 @@
     }
 
     &__empty {
-        padding-top: 4px;
+        padding-top: var(--fd-space-xxs);
     }
 
     &__empty-text {
@@ -37,14 +37,14 @@
     &__coverage {
         color: var(--fd-color-text-muted);
         background: color-mix(in srgb, var(--fd-color-slate-400) 8%, transparent);
-        padding: 4px 8px;
+        padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: 6px;
     }
 
     &__section {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
     }
 
     &__section-label {
@@ -67,7 +67,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__nutrient-name {
@@ -82,7 +82,7 @@
     &__nutrient-check {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         color: var(--fd-color-green-500);
         flex-shrink: 0;
 
@@ -108,16 +108,16 @@
 
     &__scores {
         display: flex;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
         flex-wrap: wrap;
-        padding-top: 4px;
+        padding-top: var(--fd-space-xxs);
         border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
     }
 
     &__score {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         padding: 3px 8px;
         border-radius: var(--fd-radius-panel, 8px);
         background: color-mix(in srgb, var(--fd-color-slate-400) 10%, transparent);

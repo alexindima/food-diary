@@ -8,7 +8,7 @@
 
 .auth-dialog__auth {
     display: block;
-    padding: 24px 20px 28px;
+    padding: var(--fd-space-lg) var(--fd-space-lg) var(--fd-space-xl);
 }
 
 @media #{variables.$media-compact} {

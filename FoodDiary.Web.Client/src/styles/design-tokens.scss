@@ -881,6 +881,14 @@ $fd-theme-design-tokens: (
         --fd-period-gap: #{fd-token(period-filter, gap)};
         --fd-page-body-gap: #{fd-token(page-body, gap)};
 
+        --fd-space-xxs: #{fd-token(spacing, xxs)};
+        --fd-space-xs: #{fd-token(spacing, xs)};
+        --fd-space-sm: #{fd-token(spacing, sm)};
+        --fd-space-md: #{fd-token(spacing, md)};
+        --fd-space-lg: #{fd-token(spacing, lg)};
+        --fd-space-xl: #{fd-token(spacing, xl)};
+        --fd-space-xxl: #{fd-token(spacing, xxl)};
+
         --fd-layout-header-height: #{fd-theme-token($theme, layout-header, height)};
         --fd-layout-header-background: #{fd-theme-token($theme, layout-header, background)};
         --fd-layout-header-text-color: #{fd-theme-token($theme, layout-header, text-color)};

@@ -3,7 +3,7 @@
 .summary-wrapper {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 }
 
 .charts-wrapper {
@@ -11,7 +11,7 @@
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 
     &.column-layout {
         flex-direction: column;
@@ -26,12 +26,12 @@
 }
 
 .fiber-highlight {
-    margin: 0 0 variables.$gap-m;
+    margin: 0 0 var(--fd-space-md);
     color: var(--fd-color-text);
 }
 
 .alcohol-highlight {
-    margin: 0 0 variables.$gap-m;
+    margin: 0 0 var(--fd-space-md);
     color: var(--fd-color-text-muted);
 }
 
@@ -41,7 +41,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-xs;
+    gap: var(--fd-space-xs);
 
     .nutrient {
         display: flex;
@@ -49,7 +49,7 @@
         color: var(--fd-color-text);
 
         .nutrient-color {
-            margin-right: variables.$gap-xs;
+            margin-right: var(--fd-space-xs);
             border-radius: variables.$border-radius-s;
             display: inline-block;
         }

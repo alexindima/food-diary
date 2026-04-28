@@ -27,14 +27,14 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
-        padding: variables.$gap-l var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
+        gap: var(--fd-space-lg);
+        padding: var(--fd-space-lg) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: variables.$gap-xl;
+        gap: var(--fd-space-xl);
         align-items: stretch;
         overflow: visible;
 
@@ -46,7 +46,7 @@
     &__column {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
     }
 
     &__column--secondary {
@@ -56,7 +56,7 @@
     &__basic-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
 
         @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
@@ -78,7 +78,7 @@
     &__field {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
 
         &--full {
             grid-column: 1 / -1;
@@ -118,7 +118,7 @@
 
         &--sticky {
             position: sticky;
-            top: variables.$gap-xl;
+            top: var(--fd-space-xl);
         }
     }
 
@@ -126,12 +126,12 @@
         --fd-consumption-input-height: 48px;
         --fd-consumption-input-subscript: 18px;
         --fd-consumption-image-size: calc(
-            (var(--fd-consumption-input-height) + var(--fd-consumption-input-subscript)) * 3 + #{variables.$gap-l * 2}
+            (var(--fd-consumption-input-height) + var(--fd-consumption-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
         );
         display: grid;
         grid-template-columns: var(--fd-consumption-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-items: stretch;
 
         @media #{variables.$media-mobile} {
@@ -166,14 +166,14 @@
     &__hero-fields {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
     }
 
     &__field-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: variables.$gap-l;
-        margin-bottom: variables.$gap-l;
+        gap: var(--fd-space-lg);
+        margin-bottom: var(--fd-space-lg);
 
         &:last-child {
             margin-bottom: 0;
@@ -187,15 +187,15 @@
     &__footer {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__sticky-stack {
         position: sticky;
-        top: calc(variables.$gap-xl + 8px);
+        top: calc(var(--fd-space-xl) + 8px);
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-self: flex-start;
         justify-self: stretch;
         width: 100%;
@@ -212,7 +212,7 @@
     &__footer-actions {
         display: grid;
         grid-template-columns: max-content minmax(0, 1fr);
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         align-items: center;
     }
 
@@ -230,7 +230,7 @@
     @media #{variables.$media-tablet} {
 
         &__form {
-            padding: 10px 12px 12px;
+            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
         }
 
         &__cancel-button {
@@ -249,30 +249,30 @@
     &__items-section {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__items-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
     }
 
     &__satiety-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__satiety-note {
-        margin: 0 0 variables.$gap-m;
+        margin: 0 0 var(--fd-space-md);
         color: var(--fd-color-text-muted);
     }
 
     &__satiety-field {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__satiety-picker-label {
@@ -284,10 +284,10 @@
         --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
         border: 1px solid var(--fd-color-border);
         border-radius: var(--fd-radius-card);
-        padding: variables.$gap-m;
+        padding: var(--fd-space-md);
         display: flex;
         align-items: center;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         text-align: left;
         cursor: pointer;
         background: linear-gradient(
@@ -342,7 +342,7 @@
     &__satiety-card-text {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xxs;
+        gap: var(--fd-space-xxs);
         position: relative;
         z-index: 1;
         flex: 1;
@@ -360,7 +360,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         flex-wrap: wrap;
     }
 
@@ -380,8 +380,8 @@
     &__ai-summary {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
-        padding: variables.$gap-m;
+        gap: var(--fd-space-md);
+        padding: var(--fd-space-md);
         border: 1px solid var(--fd-color-border);
         border-radius: var(--fd-radius-panel);
         background: linear-gradient(
@@ -395,22 +395,22 @@
     &__ai-summary-listing {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__ai-summary-header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: variables.$gap-s;
-        padding-bottom: variables.$gap-s;
+        gap: var(--fd-space-sm);
+        padding-bottom: var(--fd-space-sm);
         border-bottom: 1px solid var(--b3);
     }
 
     &__ai-summary-heading {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         flex: 1;
         min-width: 0;
     }
@@ -427,7 +427,7 @@
     &__ai-summary-stats {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         font-size: var(--fd-text-stat-value-size);
         line-height: var(--fd-text-stat-value-line-height);
         font-weight: var(--fd-text-stat-value-weight);
@@ -437,7 +437,7 @@
     &__ai-summary-calories {
         display: inline-flex;
         align-items: baseline;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
         color: var(--fd-color-text);
         font-weight: var(--fd-text-action-weight);
     }
@@ -450,7 +450,7 @@
     &__ai-summary-nutrients {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         color: var(--fd-color-text-muted);
         font-weight: var(--fd-font-weight-medium);
     }
@@ -458,7 +458,7 @@
     &__ai-summary-actions {
         display: inline-flex;
         align-items: center;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__ai-summary-action {
@@ -493,7 +493,7 @@
     &__ai-summary-body {
         display: flex;
         align-items: stretch;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__ai-summary-image {
@@ -518,14 +518,14 @@
     &__ai-summary-list {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
         flex: 1;
     }
 
     &__ai-summary-row {
         display: flex;
         justify-content: space-between;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         font-size: var(--fd-text-body-sm-size);
         line-height: var(--fd-text-body-sm-line-height);
         font-weight: var(--fd-text-body-sm-weight);
@@ -583,8 +583,8 @@
 .consumption-item-card {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
-    padding: variables.$gap-m 0;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-md) 0;
     border-bottom: 1px solid var(--b3);
 }
 
@@ -600,21 +600,21 @@
 .consumption-item {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 }
 
 .consumption-item-card__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: variables.$gap-m;
-    margin-bottom: variables.$gap-s;
+    gap: var(--fd-space-md);
+    margin-bottom: var(--fd-space-sm);
 }
 
 .consumption-item-card__title-wrapper {
     display: flex;
     align-items: center;
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
     flex: 1;
     min-width: 0;
 }
@@ -634,7 +634,7 @@
     line-height: var(--fd-text-caption-line-height);
     font-weight: var(--fd-text-caption-weight);
     color: var(--fd-color-text-muted);
-    padding: 0 variables.$gap-s;
+    padding: 0 var(--fd-space-sm);
     border-radius: var(--fd-radius-badge);
     background-color: color-mix(in srgb, var(--fd-color-text-muted) 10%, transparent);
 }
@@ -642,12 +642,12 @@
 .consumption-item__fields {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 }
 
 .consumption-item__row {
     display: flex;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
     align-items: flex-start;
     flex-wrap: wrap;
 }
@@ -665,7 +665,7 @@
 .consumption-item__field {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-xs;
+    gap: var(--fd-space-xs);
 
     &--source {
         flex: 2 1 240px;
@@ -683,16 +683,16 @@
 .consumption-item__actions {
     display: flex;
     justify-content: flex-end;
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
     flex-wrap: wrap;
 }
 
     .consumption-item__actions--stack {
     flex-direction: column;
     align-items: stretch;
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
     justify-content: flex-start;
-    margin-top: variables.$gap-s;
+    margin-top: var(--fd-space-sm);
 
         .consumption-item__add {
             width: 100%;
@@ -701,13 +701,13 @@
     }
 
 .consumption-item__error {
-    margin-top: variables.$gap-s;
+    margin-top: var(--fd-space-sm);
 }
 
 .consumption-manage__nutrition {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 }
 
 .consumption-manage__nutrition-toggle {
@@ -715,7 +715,7 @@
 }
 
 .consumption-manage__dialog {
-    padding: variables.$gap-l;
+    padding: var(--fd-space-lg);
     text-align: center;
 
     &-title {
@@ -723,13 +723,13 @@
         line-height: var(--fd-text-metric-lg-line-height);
         font-weight: var(--fd-text-metric-lg-weight);
         color: var(--fd-color-text);
-        margin: 0 0 variables.$gap-l;
+        margin: 0 0 var(--fd-space-lg);
     }
 
     &-buttons {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 }
 

@@ -50,7 +50,7 @@
         align-items: center;
         justify-content: space-between;
         gap: var(--fd-space-card-content-gap);
-        padding: 8px 0;
+        padding: var(--fd-space-xs) 0;
         width: 100%;
         flex-wrap: nowrap;
     }
@@ -89,7 +89,7 @@
     }
 
     &__placeholder {
-        margin-top: 8px;
+        margin-top: var(--fd-space-xs);
         padding: var(--fd-space-surface-padding);
         border-radius: 12px;
         background: var(--fd-color-slate-50);
@@ -99,7 +99,7 @@
     }
 
     &__motivation {
-        margin: 12px 0 0;
+        margin: var(--fd-space-sm) 0 0;
         color: var(--fd-color-gray-700, #374151);
     }
 
@@ -123,7 +123,7 @@
     &__meta-label {
         display: block;
         color: var(--fd-text-secondary, var(--fd-color-slate-500));
-        margin-bottom: 4px;
+        margin-bottom: var(--fd-space-xxs);
     }
 
     @media #{variables.$media-phablet} {

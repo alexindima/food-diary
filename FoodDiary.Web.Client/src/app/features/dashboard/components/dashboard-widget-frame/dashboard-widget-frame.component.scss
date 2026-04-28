@@ -5,14 +5,14 @@
 .dashboard-widget-frame {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: var(--fd-space-card-profile-gap);
     min-width: 0;
 
     &__header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         min-width: 0;
     }
 

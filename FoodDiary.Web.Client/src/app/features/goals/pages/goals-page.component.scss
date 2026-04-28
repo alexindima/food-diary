@@ -7,11 +7,11 @@
 .goals {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--fd-space-lg);
     margin: 0 auto;
 
     &__header {
-        margin-bottom: 4px;
+        margin-bottom: var(--fd-space-xxs);
     }
 
     &__status {
@@ -40,14 +40,14 @@
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        gap: 20px;
+        gap: var(--fd-space-lg);
         align-items: start;
     }
 
     &__column {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: var(--fd-space-lg);
         align-items: stretch;
         width: 100%;
     }
@@ -55,26 +55,26 @@
     &__main-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 20px;
+        gap: var(--fd-space-lg);
         align-items: start;
     }
 
     &__calorie-stack {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: var(--fd-space-lg);
     }
 
     &__macro-stack {
         display: grid;
         grid-template-rows: auto auto auto;
-        gap: 20px;
+        gap: var(--fd-space-lg);
     }
 
     &__body-targets-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
+        gap: var(--fd-space-lg);
         width: 100%;
     }
 
@@ -86,7 +86,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 18px;
+        gap: var(--fd-space-card-profile-gap);
         flex-wrap: wrap;
 
         &--column {
@@ -161,7 +161,7 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
         text-align: center;
         color: var(--fd-color-text-strong);
         z-index: 2;
@@ -183,7 +183,7 @@
         );
         color: var(--fd-color-text-strong);
         outline: none;
-        padding: 4px 8px;
+        padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: 12px;
         box-shadow:
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
@@ -250,8 +250,8 @@
     &__macro-group {
         display: flex;
         flex-direction: column;
-        gap: 28px;
-        padding: 14px 16px;
+        gap: var(--fd-space-xl);
+        padding: var(--fd-space-surface-padding);
         border-radius: 14px;
         background: linear-gradient(
             180deg,
@@ -283,38 +283,38 @@
     &__macro {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__macro--slider {
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__macro-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--fd-space-sm);
     }
 
     &__macro-label {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         color: var(--fd-color-text-strong);
     }
 
     &__macro-value-block {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: var(--fd-space-xxs);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%),
             color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
         );
         border-radius: 12px;
-        padding: 4px 8px;
+        padding: var(--fd-space-xxs) var(--fd-space-xs);
         box-shadow:
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
             inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 80%, transparent);
@@ -433,21 +433,21 @@
     &__target {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__target-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--fd-space-sm);
         flex-wrap: wrap;
     }
 
     &__target-value {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-xs);
     }
 
     &__target-number {
@@ -466,7 +466,7 @@
         background: transparent;
         color: var(--fd-color-slate-900);
         outline: none;
-        padding: 6px 10px;
+        padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: 14px;
         box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         transition: box-shadow 0.2s ease;
@@ -492,7 +492,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: var(--fd-space-xs);
         flex-wrap: wrap;
     }
 
@@ -529,7 +529,7 @@
 
         &__macro {
             grid-template-columns: minmax(0, 1fr);
-            gap: 8px;
+            gap: var(--fd-space-xs);
         }
 
         &__progress {
@@ -546,13 +546,13 @@
     }
 
     &__cycling-toggle {
-        margin-bottom: 8px;
+        margin-bottom: var(--fd-space-xs);
     }
 
     &__cycling-label {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         color: var(--fd-color-slate-700);
         cursor: pointer;
 
@@ -566,13 +566,13 @@
     &__cycling-days {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__cycling-day {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-xxs);
     }
 
     &__cycling-day-label {
@@ -581,7 +581,7 @@
 
     &__cycling-day-input {
         width: 100%;
-        padding: 8px 10px;
+        padding: var(--fd-space-xs) 10px;
         border: 1px solid var(--fd-color-slate-200);
         border-radius: 8px;
         color: var(--fd-color-slate-900);

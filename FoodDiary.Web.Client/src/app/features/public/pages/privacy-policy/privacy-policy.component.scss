@@ -38,11 +38,11 @@
 
     &__content ul {
         margin: 0 0 12px;
-        padding-left: 24px;
+        padding-left: var(--fd-space-lg);
     }
 
     &__content li {
-        margin-bottom: 6px;
+        margin-bottom: var(--fd-space-xxs);
     }
 
     &__content strong {
