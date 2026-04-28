@@ -19,7 +19,7 @@
     --fd-pill-bg: var(--product-ai-surface);
     --fd-pill-color: var(--fd-color-text-muted);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
-    box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+    box-shadow: var(--fd-shadow-lg);
     z-index: 2;
     text-transform: uppercase;
 }
@@ -27,7 +27,7 @@
 .product-ai-dialog__status--loading {
     --fd-pill-color: var(--fd-color-primary-900);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
-    box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+    box-shadow: var(--fd-shadow-accent);
 }
 
 .product-ai-dialog__scan-overlay {

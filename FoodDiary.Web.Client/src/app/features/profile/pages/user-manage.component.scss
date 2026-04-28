@@ -35,7 +35,7 @@
         border-radius: var(--fd-radius-card);
         background: transparent;
         border: none;
-        box-shadow: none;
+        box-shadow: var(--fd-shadow-none);
     }
 
     &__card-header {
@@ -156,7 +156,7 @@
         border-radius: 0;
         background: transparent;
         border: none;
-        box-shadow: none;
+        box-shadow: var(--fd-shadow-none);
     }
 
     &__avatar {
@@ -246,7 +246,7 @@
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-button);
         background: var(--fd-color-surface-raised);
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         min-width: 0;
 
         strong {

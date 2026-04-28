@@ -1,0 +1,51 @@
+.fd-border {
+    border: var(--fd-border-default);
+}
+
+.fd-border-subtle {
+    border: var(--fd-border-subtle);
+}
+
+.fd-border-muted {
+    border: var(--fd-border-muted);
+}
+
+.fd-border-strong {
+    border: var(--fd-border-strong);
+}
+
+.fd-border-inverse {
+    border: var(--fd-border-inverse);
+}
+
+.fd-border-dashed {
+    border: var(--fd-border-dashed);
+}
+
+.fd-border-none {
+    border: var(--fd-border-none);
+}
+
+.fd-shadow-none {
+    box-shadow: var(--fd-shadow-none);
+}
+
+.fd-shadow-xs {
+    box-shadow: var(--fd-shadow-xs);
+}
+
+.fd-shadow-sm {
+    box-shadow: var(--fd-shadow-sm);
+}
+
+.fd-shadow-md {
+    box-shadow: var(--fd-shadow-md);
+}
+
+.fd-shadow-lg {
+    box-shadow: var(--fd-shadow-lg);
+}
+
+.fd-shadow-xl {
+    box-shadow: var(--fd-shadow-xl);
+}

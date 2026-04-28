@@ -45,7 +45,7 @@
 .sidebar__link.is-active {
     background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
     color: var(--fd-color-on-brand);
-    box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
+    box-shadow: var(--fd-shadow-accent-strong);
 }
 
 .sidebar__link.is-pending:not(.is-active) {
@@ -78,7 +78,7 @@
     border-radius: var(--fd-radius-menu-item);
     background: var(--fd-color-surface-muted);
     color: var(--fd-color-text-strong);
-    border: 1px solid var(--fd-color-border);
+    border: var(--fd-border-default);
 }
 
 .sidebar-mobile__sheet-link.is-pending:not(.is-active) {

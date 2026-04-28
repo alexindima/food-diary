@@ -74,16 +74,16 @@
         background: color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent);
         cursor: pointer;
         text-align: left;
-        box-shadow: 0 4px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        box-shadow: var(--fd-shadow-md);
         transition:
             transform 0.25s ease,
             box-shadow 0.25s ease,
             border 0.25s ease;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+        border: var(--fd-border-subtle);
 
         &:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
+            box-shadow: var(--fd-shadow-lg);
         }
 
         &:disabled {
@@ -95,8 +95,8 @@
     &__option--selected {
         border-color: color-mix(in srgb, var(--fd-color-primary-500) 50%, transparent);
         box-shadow:
-            0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent),
-            0 0 24px color-mix(in srgb, var(--fd-color-primary-500) 35%, transparent);
+            var(--fd-shadow-accent-strong),
+            var(--fd-shadow-accent-glow);
     }
 
     &__indicator {

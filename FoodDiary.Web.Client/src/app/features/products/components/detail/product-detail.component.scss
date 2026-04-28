@@ -79,9 +79,9 @@
         --fd-button-text: var(--fd-color-slate-400);
         --fd-button-text-hover: var(--fd-color-amber-500);
         --fd-button-text-active: var(--fd-color-amber-500);
-        --fd-button-shadow-rest: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-rest: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.375rem;

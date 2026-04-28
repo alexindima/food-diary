@@ -202,7 +202,7 @@
         gap: var(--fd-space-md);
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+        border: var(--fd-border-muted);
         background: color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent);
     }
 

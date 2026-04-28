@@ -50,9 +50,9 @@
         align-items: center;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        border: var(--fd-border-subtle);
         background: var(--fd-color-surface-raised);
-        box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        box-shadow: var(--fd-shadow-sm);
         text-align: left;
         cursor: pointer;
     }

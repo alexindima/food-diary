@@ -20,7 +20,7 @@
     --fd-tabs-label-text-align: center;
     display: flex;
     width: 100%;
-    border-bottom: 1px solid var(--fd-tabs-border-color);
+    border-bottom: var(--fd-border-width) solid var(--fd-tabs-border-color);
     gap: var(--fd-tabs-gap);
     flex-wrap: var(--fd-tabs-flex-wrap);
 }

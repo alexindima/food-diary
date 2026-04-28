@@ -12,8 +12,8 @@
     padding: var(--fd-space-nutrient-input-padding);
     border-radius: var(--fd-radius-card);
     background: var(--fd-nutrient-tint);
-    box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent);
+    box-shadow: var(--fd-shadow-lg);
+    border: var(--fd-border-subtle);
     cursor: default;
 }
 
@@ -106,7 +106,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 
 .fd-ui-nutrient-input--disabled {
     opacity: 0.6;
-    box-shadow: none;
+    box-shadow: var(--fd-shadow-none);
 }
 
 .fd-ui-nutrient-input--readonly {
@@ -123,8 +123,8 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 
 .fd-ui-nutrient-input--outline {
     background: var(--fd-color-white);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
-    box-shadow: 0 10px 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+    border: var(--fd-border-muted);
+    box-shadow: var(--fd-shadow-md);
 
     .fd-ui-nutrient-input__control {
         text-align: left;

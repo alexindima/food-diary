@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 .consumption-manage {
-    --b3: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
     --fd-layout-page-background: var(--fd-color-background);
     margin: 0 auto;
     box-sizing: border-box;
@@ -282,7 +281,7 @@
 
     &__satiety-card {
         --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-md);
         display: flex;
@@ -295,7 +294,7 @@
             color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
             color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
         );
-        box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-text) 8%, transparent);
+        box-shadow: var(--fd-shadow-sm);
         position: relative;
         overflow: hidden;
         transition:
@@ -313,7 +312,7 @@
 
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 26px color-mix(in srgb, var(--fd-color-text) 14%, transparent);
+            box-shadow: var(--fd-shadow-lg);
         }
 
         fd-ui-icon {
@@ -382,14 +381,14 @@
         flex-direction: column;
         gap: var(--fd-space-md);
         padding: var(--fd-space-md);
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         border-radius: var(--fd-radius-panel);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
             color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
         );
-        box-shadow: 0 14px 30px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+        box-shadow: var(--fd-shadow-lg);
     }
 
     &__ai-summary-listing {
@@ -404,7 +403,7 @@
         justify-content: space-between;
         gap: var(--fd-space-sm);
         padding-bottom: var(--fd-space-sm);
-        border-bottom: 1px solid var(--b3);
+        border-bottom: var(--fd-border-muted);
     }
 
     &__ai-summary-heading {
@@ -476,9 +475,9 @@
         --fd-button-text-default: var(--fd-color-text-muted);
         --fd-button-text-hover: var(--fd-color-text);
         --fd-button-text-active: var(--fd-color-text);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.125rem;
@@ -563,9 +562,9 @@
         --fd-button-text-default: var(--fd-color-text-muted);
         --fd-button-text-hover: var(--fd-color-text);
         --fd-button-text-active: var(--fd-color-text);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-justify-content: flex-start;
@@ -585,7 +584,7 @@
     flex-direction: column;
     gap: var(--fd-space-md);
     padding: var(--fd-space-md) 0;
-    border-bottom: 1px solid var(--b3);
+    border-bottom: var(--fd-border-muted);
 }
 
 .consumption-item-card:first-child {

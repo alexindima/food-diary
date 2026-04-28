@@ -32,7 +32,7 @@
 }
 
 .meals-preview__empty {
-    border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
+    border: var(--fd-border-dashed);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-empty-state-padding);
     text-align: center;
@@ -45,7 +45,7 @@
     justify-content: space-between;
     gap: var(--fd-space-card-content-gap);
     padding: var(--fd-space-surface-padding);
-    border: 1px dashed color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
+    border: var(--fd-border-dashed);
     border-radius: var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-primary-600) 3%, transparent);
     color: var(--fd-color-text);
@@ -60,7 +60,7 @@
 
     &:hover {
         transform: translateY(-1px);
-        box-shadow: 0 12px 22px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+        box-shadow: var(--fd-shadow-accent);
         border-color: color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent);
         background: color-mix(in srgb, var(--fd-color-primary-600) 5%, transparent);
     }

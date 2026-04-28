@@ -11,10 +11,8 @@
     padding: var(--fd-space-segmented-toggle-padding);
     border-radius: var(--fd-radius-toggle);
     background: var(--fd-color-surface);
-    border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
-    box-shadow:
-        0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent),
-        0 2px 6px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+    border: var(--fd-border-muted);
+    box-shadow: var(--fd-shadow-lg);
 }
 
 .fd-ui-segmented-toggle--full-width {
@@ -58,15 +56,15 @@
     &.is-active {
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
         color: var(--fd-color-on-brand);
-        box-shadow: 0 10px 18px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
+        box-shadow: var(--fd-shadow-accent-strong);
     }
 }
 
 .fd-ui-segmented-toggle--appearance-soft {
     justify-content: space-between;
     background: color-mix(in srgb, var(--fd-color-slate-400) 14%, transparent);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 24%, transparent);
-    box-shadow: none;
+    border: var(--fd-border-muted);
+    box-shadow: var(--fd-shadow-none);
 }
 
 .fd-ui-segmented-toggle--appearance-soft .fd-ui-segmented-toggle__item {

@@ -112,7 +112,7 @@
         height: var(--fd-button-spinner-size);
         translate: -50% -50%;
         border-radius: 50%;
-        border: 2px solid color-mix(in srgb, currentColor 28%, transparent);
+        border: var(--fd-border-width-strong) solid color-mix(in srgb, currentColor 28%, transparent);
         border-top-color: currentColor;
         animation: fd-ui-button-spin 0.7s linear infinite;
     }
@@ -126,11 +126,11 @@
 
     &--outline,
     &--text {
-        box-shadow: none;
+        box-shadow: var(--fd-shadow-none);
 
         &:hover:not(:disabled),
         &:active:not(:disabled) {
-            box-shadow: none;
+            box-shadow: var(--fd-shadow-none);
         }
     }
 
@@ -153,8 +153,8 @@
     --fd-button-border-width: 0;
     --fd-button-shadow-default: 0 10px 26px rgb(var(--fd-color-primary-rgb) / 0.28);
     --fd-button-shadow-hover: 0 12px 30px rgb(var(--fd-color-primary-rgb) / 0.32);
-    --fd-button-shadow-active: none;
-    --fd-button-shadow-disabled: none;
+    --fd-button-shadow-active: var(--fd-shadow-none);
+    --fd-button-shadow-disabled: var(--fd-shadow-none);
 }
 
 .fd-ui-button--appearance-toolbar {
@@ -166,8 +166,8 @@
     --fd-button-border-radius: var(--fd-radius-button);
     --fd-button-border-default: var(--fd-color-border);
     --fd-button-background-default: var(--fd-color-surface-raised);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-focus-ring-shadow:
         0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
@@ -216,8 +216,8 @@
     --fd-button-border-hover: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
     --fd-button-border-active: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
     --fd-button-text-default: var(--fd-color-primary-600);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-label-display: none;
@@ -229,8 +229,8 @@
     --fd-button-border-default: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
     --fd-button-background-default: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
     --fd-button-text-default: var(--fd-color-text-muted);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-font-weight: var(--fd-text-action-weight);
 }
 
@@ -243,8 +243,8 @@
     --fd-button-border-width: 0;
     --fd-button-background-default: transparent;
     --fd-button-text-default: var(--fd-color-text);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-focus-ring-shadow:
         0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
@@ -278,7 +278,7 @@
     --fd-button-padding-x: var(--fd-space-sm);
     --fd-button-background-default: var(--fd-color-white);
     --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    --fd-button-shadow-default: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
 }
 
 .fd-ui-button--primary.fd-ui-button--outline,

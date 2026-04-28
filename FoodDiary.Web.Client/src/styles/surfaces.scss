@@ -2,10 +2,10 @@
     --fd-surface-padding: var(--fd-space-surface-padding);
     --fd-surface-radius: var(--fd-radius-card);
     --fd-surface-bg: var(--fd-color-surface);
-    --fd-surface-border: var(--fd-color-border);
+    --fd-surface-border: var(--fd-border-default);
     padding: var(--fd-surface-padding);
     border-radius: var(--fd-surface-radius);
-    border: 1px solid var(--fd-surface-border);
+    border: var(--fd-surface-border);
     background: var(--fd-surface-bg);
 }
 
@@ -17,18 +17,17 @@
     --fd-surface-padding: var(--fd-space-surface-emphasis-padding);
     --fd-surface-radius: var(--fd-radius-panel);
     --fd-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 14%, var(--fd-color-surface-raised));
-    --fd-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 22%, var(--fd-color-border));
+    --fd-surface-border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 22%, var(--fd-color-border));
 }
 
 .fd-ui-surface--warning {
     --fd-surface-padding: var(--fd-space-surface-emphasis-padding);
     --fd-surface-radius: var(--fd-radius-panel);
     --fd-surface-bg: color-mix(in srgb, var(--fd-color-yellow-300) 16%, var(--fd-color-surface-raised));
-    --fd-surface-border: color-mix(in srgb, var(--fd-color-yellow-300) 26%, var(--fd-color-border));
+    --fd-surface-border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-yellow-300) 26%, var(--fd-color-border));
 }
 
 .fd-ui-surface--dashed {
     --fd-surface-bg: color-mix(in srgb, var(--fd-color-surface-raised) 84%, transparent);
-    --fd-surface-border: color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent);
-    border-style: dashed;
+    --fd-surface-border: var(--fd-border-dashed);
 }

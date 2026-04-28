@@ -260,7 +260,7 @@
         );
         box-shadow:
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 70%, transparent),
-            0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+            var(--fd-shadow-sm);
 
         &--fiber {
             background: linear-gradient(
@@ -582,7 +582,7 @@
     &__cycling-day-input {
         width: 100%;
         padding: var(--fd-space-xs) var(--fd-space-sm);
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         border-radius: var(--fd-radius-md);
         color: var(--fd-color-slate-900);
         background: var(--fd-color-slate-50);

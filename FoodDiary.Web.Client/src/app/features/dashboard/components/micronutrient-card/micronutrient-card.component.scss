@@ -3,7 +3,7 @@
 .micronutrient-card {
     padding: var(--fd-space-md);
     border-radius: var(--fd-radius-card);
-    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
+    border: var(--fd-border-strong);
     background: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
@@ -111,7 +111,7 @@
         gap: var(--fd-space-xxs);
         flex-wrap: wrap;
         padding-top: var(--fd-space-xxs);
-        border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+        border-top: var(--fd-border-muted);
     }
 
     &__score {

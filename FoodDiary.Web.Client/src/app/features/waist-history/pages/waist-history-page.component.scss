@@ -122,7 +122,7 @@
         gap: var(--fd-space-card-header-gap);
         align-items: center;
         padding: var(--fd-space-xs) 0;
-        border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        border-bottom: var(--fd-border-subtle);
 
         &:last-child {
             border-bottom: none;

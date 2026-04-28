@@ -24,14 +24,14 @@
     --fd-pill-bg: var(--fd-color-dialog-surface);
     --fd-pill-color: var(--fd-color-primary-700);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
-    box-shadow: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+    box-shadow: var(--fd-shadow-lg);
     z-index: 2;
 }
 
 .photo-ai-dialog__status--loading {
     --fd-pill-color: var(--fd-color-primary-900);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
-    box-shadow: 0 12px 28px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+    box-shadow: var(--fd-shadow-accent);
 }
 
 .photo-ai-dialog__scan-overlay {
@@ -138,7 +138,7 @@
     gap: var(--fd-space-xs);
     padding: var(--fd-space-sm);
     border-radius: var(--photo-ai-card-radius);
-    border: 1px solid var(--photo-ai-border);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
     background: var(--photo-ai-surface);
 }
 
@@ -149,7 +149,7 @@
     align-items: center;
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--photo-ai-field-radius);
-    border: 1px solid var(--photo-ai-border);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
     background: var(--photo-ai-surface-muted);
 }
 
@@ -165,7 +165,7 @@
 .photo-ai-dialog__edit-select {
     height: 38px;
     border-radius: var(--fd-radius-input);
-    border: 1px solid var(--photo-ai-border);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
     padding: 0 var(--fd-space-sm);
     background: var(--fd-color-dialog-surface);
 }
@@ -189,9 +189,9 @@
     --fd-button-text-default: var(--fd-color-slate-400);
     --fd-button-text-hover: var(--fd-color-danger);
     --fd-button-text-active: var(--fd-color-danger);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: 1.125rem;
@@ -235,16 +235,16 @@
     --fd-button-text-default: var(--fd-color-slate-400);
     --fd-button-text-hover: var(--fd-color-slate-500);
     --fd-button-text-active: var(--fd-color-slate-500);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: 1.125rem;
 }
 
 .photo-ai-dialog__table {
-    border: 1px solid var(--photo-ai-border);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
     border-radius: var(--photo-ai-card-radius);
     overflow: hidden;
     background: var(--photo-ai-surface);
@@ -272,7 +272,7 @@
 .photo-ai-dialog__table-row {
     padding: var(--fd-space-sm) var(--fd-space-md);
     color: var(--fd-color-text);
-    border-top: 1px solid var(--photo-ai-border);
+    border-top: var(--fd-border-width) solid var(--photo-ai-border);
 }
 
 .photo-ai-dialog__table-row:first-child {
@@ -288,7 +288,7 @@
 .photo-ai-dialog__nutrition {
     margin-top: var(--fd-space-card-profile-gap);
     padding: var(--fd-space-surface-padding);
-    border: 1px solid var(--photo-ai-border);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
     border-radius: var(--photo-ai-card-radius);
     background: var(--photo-ai-surface);
     display: flex;
@@ -325,7 +325,7 @@
     margin-top: var(--fd-space-card-profile-gap);
     padding: var(--fd-space-sm) var(--fd-space-md);
     border-radius: var(--fd-radius-input);
-    border: 1px dashed color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-dialog-surface));
+    border: var(--fd-border-dashed);
     background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-dialog-surface));
     display: flex;
     align-items: center;

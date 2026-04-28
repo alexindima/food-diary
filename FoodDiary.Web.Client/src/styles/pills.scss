@@ -12,7 +12,7 @@
     width: fit-content;
     padding-inline: var(--fd-pill-padding-inline);
     border-radius: var(--fd-radius-pill);
-    border: 1px solid var(--fd-pill-border);
+    border: var(--fd-border-width) solid var(--fd-pill-border);
     background: var(--fd-pill-bg);
     color: var(--fd-pill-color);
 }

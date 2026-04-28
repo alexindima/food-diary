@@ -137,7 +137,7 @@
     }
 
     &__drag-placeholder {
-        border: 2px dashed color-mix(in srgb, var(--fd-color-text-muted) 40%, transparent);
+        border: var(--fd-border-width-strong) dashed var(--fd-color-text-muted);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-md);
         text-align: center;

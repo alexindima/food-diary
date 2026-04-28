@@ -82,8 +82,8 @@
         color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-500) 6%),
         color-mix(in srgb, var(--fd-color-surface) 97%, transparent)
     );
-    border: 1px solid var(--fd-color-border);
-    box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
+    border: var(--fd-border-default);
+    box-shadow: var(--fd-shadow-lg);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -92,7 +92,7 @@
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-black) 18%, transparent);
+        box-shadow: var(--fd-shadow-xl);
     }
 
     &--read {

@@ -46,7 +46,7 @@
     align-items: flex-start;
     gap: var(--fd-space-radio-gap);
     padding: var(--fd-space-radio-padding);
-    border: 1px solid var(--fd-color-border);
+    border: var(--fd-border-default);
     border-radius: var(--fd-radius-md);
     background-color: var(--fd-color-surface);
     width: 100%;
@@ -72,7 +72,7 @@
     height: 18px;
     margin-top: calc(var(--fd-space-xxs) / 4);
     border-radius: var(--fd-radius-pill);
-    border: 2px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
+    border: var(--fd-border-width-strong) solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     background: var(--fd-color-surface-raised);
     transition:
         border-color 140ms ease,
@@ -97,7 +97,7 @@
 }
 
 .fd-ui-radio__input:focus-visible + .fd-ui-radio__control {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+    box-shadow: var(--fd-shadow-focus);
 }
 
 .fd-ui-radio__text {

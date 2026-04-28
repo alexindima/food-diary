@@ -15,7 +15,7 @@
         overflow: hidden;
         cursor: pointer;
         padding: 0;
-        border: 2px dashed var(--fd-color-primary-200);
+        border: var(--fd-border-width-strong) dashed var(--fd-color-primary-200);
         border-radius: var(--fd-radius-card);
         background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
         color: var(--fd-color-slate-900);
@@ -24,7 +24,7 @@
         &--dragging {
             border-color: var(--fd-color-primary-600);
             background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
-            box-shadow: 0 10px 25px color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent);
+            box-shadow: var(--fd-shadow-accent);
         }
 
         &--uploading {
@@ -120,7 +120,7 @@
         overflow: hidden;
         border-radius: var(--fd-radius-button);
         background: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
-        box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
+        box-shadow: var(--fd-shadow-xl);
     }
 
     &__control-btn {
@@ -139,16 +139,16 @@
         --fd-button-text-default: var(--fd-color-slate-200);
         --fd-button-text-hover: var(--fd-color-white);
         --fd-button-text-active: var(--fd-color-white);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1rem;
     }
 
     &__control > &__control-btn:not(:last-child) {
-        border-right: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent);
+        border-right: var(--fd-border-inverse);
     }
 
     &__control-btn--danger {
@@ -203,7 +203,7 @@
         padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-dialog);
         background: var(--fd-color-white);
-        box-shadow: 0 18px 42px color-mix(in srgb, var(--fd-color-slate-900) 22%, transparent);
+        box-shadow: var(--fd-shadow-xl);
     }
 
     &__cropper-header {
@@ -227,7 +227,7 @@
         min-height: 320px;
         max-height: min(70vh, 520px);
         overflow: hidden;
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
     }

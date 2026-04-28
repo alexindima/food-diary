@@ -6,7 +6,7 @@
 .fd-ui-hint {
     --fd-hint-background: var(--fd-color-surface-raised);
     --fd-hint-text: var(--fd-color-text);
-    --fd-hint-border: var(--fd-color-border);
+    --fd-hint-border: var(--fd-border-default);
     --fd-hint-shadow: var(--fd-shadow-sm);
     --fd-hint-radius: var(--fd-radius-panel);
     --fd-hint-max-width: 280px;
@@ -16,7 +16,7 @@
     background: var(--fd-hint-background);
     color: var(--fd-hint-text);
     box-shadow: var(--fd-hint-shadow);
-    border: 1px solid var(--fd-hint-border);
+    border: var(--fd-hint-border);
     font-size: var(--fd-text-caption-size);
     line-height: var(--fd-text-caption-line-height);
     font-weight: var(--fd-text-caption-weight);

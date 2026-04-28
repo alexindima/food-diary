@@ -36,7 +36,7 @@
         margin-top: 0;
         padding: var(--fd-space-inline-alert-notice-padding);
         border-radius: var(--fd-radius-card);
-        border: 1px solid var(--fd-color-nutrition-error-border);
+        border: var(--fd-border-width) solid var(--fd-color-nutrition-error-border);
         background: var(--fd-color-nutrition-error-bg);
         color: var(--fd-color-nutrition-error-text);
         display: grid;
@@ -50,7 +50,7 @@
 
     &__warning {
         border-radius: var(--fd-radius-card);
-        border: 1px solid var(--fd-color-nutrition-warning-border);
+        border: var(--fd-border-width) solid var(--fd-color-nutrition-warning-border);
         background: var(--fd-color-nutrition-warning-bg);
         color: var(--fd-color-nutrition-warning-text);
         padding: var(--fd-space-inline-alert-notice-padding);

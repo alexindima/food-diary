@@ -2,19 +2,26 @@
 
 .fd-skip-nav {
     position: absolute;
-    top: -40px;
-    left: 0;
+    top: var(--fd-space-xs);
+    left: var(--fd-space-xs);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
     background: var(--fd-color-primary-600);
     color: var(--fd-color-white);
     padding: var(--fd-space-surface-padding);
     z-index: 10000;
-    transition: top 0.2s;
     text-decoration: none;
     font-weight: 500;
-    border-radius: 0 0 4px 0;
+    border-radius: var(--fd-radius-button);
 
-    &:focus {
-        top: 0;
+    &:focus-visible {
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
     }
 }
 

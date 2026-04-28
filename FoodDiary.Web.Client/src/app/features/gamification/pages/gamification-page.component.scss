@@ -21,7 +21,7 @@
             color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--accent-color, var(--fd-color-primary-500)) 8%),
             color-mix(in srgb, var(--fd-color-surface) 96%, var(--accent-color, var(--fd-color-primary-500)) 4%)
         );
-        --fd-stat-tile-shadow: 0 12px 32px color-mix(in srgb, rgb(0 0 0) 24%, transparent);
+        --fd-stat-tile-shadow: var(--fd-shadow-lg);
     }
 
     &__stat:nth-child(1) {
@@ -146,7 +146,7 @@
         gap: var(--fd-space-card-header-gap);
         padding: var(--fd-space-surface-padding);
         border-radius: var(--fd-radius-card);
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         text-align: center;
         transition:
             transform 0.15s,
@@ -159,7 +159,7 @@
                 color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-yellow-500) 8%)
             );
             border-color: color-mix(in srgb, var(--fd-color-amber-500) 55%, var(--fd-color-border));
-            box-shadow: 0 8px 20px color-mix(in srgb, rgb(0 0 0) 18%, transparent);
+            box-shadow: var(--fd-shadow-md);
 
             .gamification__badge-icon {
                 color: var(--fd-color-amber-300);

@@ -3,7 +3,7 @@
     align-items: center;
     gap: var(--fd-space-control-gap);
     padding: var(--fd-space-surface-padding);
-    border: 1px solid var(--fd-color-border);
+    border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
     background: var(--fd-color-surface-raised);
     min-width: 0;
@@ -56,9 +56,9 @@
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-button);
         --fd-button-disabled-opacity: 0.4;
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.5rem;
@@ -115,9 +115,9 @@
         --fd-button-text-active: var(--fd-color-on-ai);
         --fd-button-text-disabled: var(--fd-color-on-ai);
         --fd-button-disabled-opacity: 0.4;
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.5rem;

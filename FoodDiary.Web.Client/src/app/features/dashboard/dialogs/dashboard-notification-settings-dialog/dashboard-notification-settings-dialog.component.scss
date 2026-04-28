@@ -16,7 +16,7 @@
             color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-dialog-surface)),
             var(--fd-color-surface)
         );
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 14%, transparent);
+    border: var(--fd-border-muted);
 }
 
 .dashboard-notification-settings-dialog__subtitle {
@@ -35,7 +35,7 @@
         color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-dialog-surface)),
         var(--fd-color-surface)
     );
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 14%, transparent);
+    border: var(--fd-border-muted);
 }
 
 .dashboard-notification-settings-dialog__section-header {
@@ -66,7 +66,7 @@
     gap: var(--fd-space-md);
     padding: var(--fd-space-md);
     border-radius: var(--fd-radius-card);
-    border: 1px solid color-mix(in srgb, var(--fd-color-slate-500) 16%, transparent);
+    border: var(--fd-border-muted);
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-dialog-surface)),

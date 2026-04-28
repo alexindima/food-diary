@@ -16,7 +16,7 @@
     padding: var(--fd-space-empty-state-compact-padding);
     border-radius: var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, transparent);
-    border: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent);
+    border: var(--fd-border-dashed);
 }
 
 .fd-ui-empty-state__icon-wrap {

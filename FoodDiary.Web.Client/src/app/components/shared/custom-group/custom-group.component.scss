@@ -5,7 +5,7 @@
 }
 
 .custom-group {
-    border: 2px solid var(--fd-color-border);
+    border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-md);
     padding: var(--fd-space-lg);
     position: relative;
@@ -16,7 +16,7 @@
     position: absolute;
     top: -11px;
     background: var(--fd-color-white);
-    border: 2px solid var(--fd-color-border);
+    border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0 var(--fd-space-xs);
     line-height: 20px;
@@ -28,7 +28,7 @@
     top: -11px;
     left: 10px;
     background: var(--fd-color-white);
-    border: 2px solid var(--fd-color-border);
+    border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0;
     width: 24px;
@@ -48,9 +48,9 @@
     --fd-button-border-radius: var(--fd-radius-xs);
     --fd-button-font-size: var(--fd-text-helper-size);
     --fd-button-font-weight: 700;
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
 }

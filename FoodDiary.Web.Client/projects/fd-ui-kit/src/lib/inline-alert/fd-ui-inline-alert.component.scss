@@ -17,7 +17,7 @@
     width: 100%;
     padding: var(--fd-inline-alert-padding);
     border-radius: var(--fd-inline-alert-radius);
-    border: 1px solid var(--fd-inline-alert-border);
+    border: var(--fd-border-width) solid var(--fd-inline-alert-border);
     background: var(--fd-inline-alert-bg);
     box-sizing: border-box;
 }

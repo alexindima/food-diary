@@ -4,7 +4,7 @@
     --fd-notice-surface-color: var(--fd-color-text);
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-panel);
-    border: 1px solid var(--fd-notice-surface-border);
+    border: var(--fd-border-width) solid var(--fd-notice-surface-border);
     background: var(--fd-notice-surface-bg);
     color: var(--fd-notice-surface-color);
 }

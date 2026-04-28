@@ -2,13 +2,13 @@
     --fd-stat-tile-padding: var(--fd-space-stat-tile-padding);
     --fd-stat-tile-radius: var(--fd-radius-card);
     --fd-stat-tile-gap: var(--fd-space-stat-tile-gap);
-    --fd-stat-tile-border: 1px solid var(--fd-color-border);
+    --fd-stat-tile-border: var(--fd-border-default);
     --fd-stat-tile-background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent),
         var(--fd-color-surface)
     );
-    --fd-stat-tile-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
+    --fd-stat-tile-shadow: var(--fd-shadow-lg);
     display: flex;
     flex-direction: column;
     gap: var(--fd-stat-tile-gap);
@@ -34,8 +34,8 @@
 .fd-ui-stat-tile--subtle {
     --fd-stat-tile-radius: 16px;
     --fd-stat-tile-background: color-mix(in srgb, var(--fd-color-white) 78%, transparent);
-    --fd-stat-tile-border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
-    --fd-stat-tile-shadow: none;
+    --fd-stat-tile-border: var(--fd-border-muted);
+    --fd-stat-tile-shadow: var(--fd-shadow-none);
 }
 
 .fd-ui-stat-tile__label,

@@ -41,7 +41,7 @@
     width: var(--fd-checkbox-control-size);
     height: var(--fd-checkbox-control-size);
     border-radius: var(--fd-checkbox-control-radius);
-    border: 1px solid var(--fd-checkbox-control-border-color);
+    border: var(--fd-border-width) solid var(--fd-checkbox-control-border-color);
     background: var(--fd-color-surface-raised);
     transition:
         border-color 140ms ease,
@@ -53,8 +53,8 @@
 .fd-ui-checkbox__checkmark {
     width: 10px;
     height: 6px;
-    border-left: 2px solid transparent;
-    border-bottom: 2px solid transparent;
+    border-left: var(--fd-border-width-strong) solid transparent;
+    border-bottom: var(--fd-border-width-strong) solid transparent;
     transform: rotate(-45deg) translateY(-1px);
     transition: border-color 140ms ease;
 }
@@ -80,7 +80,7 @@
 }
 
 .fd-ui-checkbox__input:focus-visible + .fd-ui-checkbox__control {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+    box-shadow: var(--fd-shadow-focus);
 }
 
 .fd-ui-checkbox__hint {

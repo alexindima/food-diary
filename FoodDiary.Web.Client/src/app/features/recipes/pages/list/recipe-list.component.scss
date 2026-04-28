@@ -7,7 +7,7 @@
     background: transparent;
     padding: 0;
     border-radius: 0;
-    box-shadow: none;
+    box-shadow: var(--fd-shadow-none);
 
     &__header .fd-page-header__actions {
         gap: var(--fd-space-sm);
@@ -35,7 +35,7 @@
         min-width: 220px;
         padding: 0;
         background: transparent;
-        box-shadow: none;
+        box-shadow: var(--fd-shadow-none);
     }
 
     &__mobile-search {
@@ -137,7 +137,7 @@
     &__empty-state {
         @extend .recipe-list__no-results;
         padding: var(--fd-space-lg);
-        border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+        border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);
         background: linear-gradient(
             180deg,
@@ -178,7 +178,7 @@
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
         background: var(--fd-color-surface-raised);
-        border: 1px solid var(--fd-color-border-strong);
+        border: var(--fd-border-strong);
     }
 
     &__favorite-info {
@@ -228,9 +228,9 @@
         --fd-button-text-default: var(--fd-color-text-muted);
         --fd-button-text-hover: var(--fd-color-primary-500);
         --fd-button-text-active: var(--fd-color-primary-500);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: var(--fd-text-card-title-size);
@@ -248,7 +248,7 @@
         &__header {
             padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
-            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
+            border-bottom: var(--fd-border-muted);
             background: var(--fd-color-slate-50);
         }
 
@@ -282,10 +282,10 @@
             gap: 0;
             margin: 0;
             background: var(--fd-color-white);
-            border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+            border-top: var(--fd-border-muted);
 
             fd-recipe-card {
-                border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+                border-bottom: var(--fd-border-muted);
             }
         }
 

@@ -41,7 +41,7 @@
         align-items: flex-start;
         padding: var(--fd-space-page-header-gap) var(--fd-layout-page-horizontal-padding) var(--fd-space-xs);
         margin: 0;
-        border-bottom: 1px solid var(--fd-page-header-mobile-border-color);
+        border-bottom: var(--fd-border-width) solid var(--fd-page-header-mobile-border-color);
         background: var(--fd-page-header-mobile-background);
         --fd-layout-page-background: var(--fd-page-header-mobile-background);
         --fd-page-title-size: 1.65rem;

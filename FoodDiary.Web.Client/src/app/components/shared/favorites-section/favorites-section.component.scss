@@ -3,7 +3,7 @@
     --fd-surface-radius: var(--fd-radius-card);
     background: var(--fd-color-surface);
     overflow: hidden;
-    box-shadow: 0 16px 40px color-mix(in srgb, var(--fd-color-shadow) 14%, transparent);
+    box-shadow: var(--fd-shadow-lg);
 }
 
 .fd-favorites-section__header {
@@ -45,7 +45,7 @@
     flex-direction: column;
     gap: var(--fd-space-sm);
     padding: var(--fd-space-sm);
-    border-top: 1px solid color-mix(in srgb, var(--fd-color-border) 55%, transparent);
+    border-top: var(--fd-border-subtle);
 }
 
 .fd-favorites-section__load-more {

@@ -91,7 +91,7 @@
     &__protocol-btn {
         padding: var(--fd-space-xs) var(--fd-space-md);
         border-radius: var(--fd-radius-pill);
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         background: var(--fd-color-white);
         color: var(--fd-color-slate-700);
         cursor: pointer;
@@ -172,9 +172,9 @@
 
     &__protocol-action {
         --fd-button-border-radius: var(--fd-radius-pill);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
     }
@@ -216,7 +216,7 @@
         width: 100%;
         min-width: 0;
         padding: var(--fd-space-surface-padding);
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         border-radius: var(--fd-radius-panel);
         background: linear-gradient(
             180deg,
@@ -332,7 +332,7 @@
         flex-direction: column;
         gap: var(--fd-space-xs);
         padding-top: var(--fd-space-xxs);
-        border-top: 1px solid var(--fd-color-slate-200);
+        border-top: var(--fd-border-muted);
     }
 
     &__checkin-timeline-title {
@@ -350,7 +350,7 @@
         flex-direction: column;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-sm) var(--fd-space-md);
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         border-radius: var(--fd-radius-card);
         background: var(--fd-color-slate-50);
     }
@@ -388,7 +388,7 @@
     &__textarea {
         width: 100%;
         min-height: 108px;
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-300) 60%, var(--fd-color-white));
+        border: var(--fd-border-muted);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-sm) var(--fd-space-md);
         font: inherit;
@@ -549,9 +549,9 @@
     &__insight {
         padding: var(--fd-space-sm);
         border-radius: var(--fd-radius-lg);
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         background: var(--fd-color-white);
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+        box-shadow: var(--fd-shadow-xs);
     }
 
     &__insight-title {
@@ -582,9 +582,9 @@
 
     &__history-item {
         padding: var(--fd-space-sm);
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent), var(--fd-color-surface));
-        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-black) 14%, transparent);
+        box-shadow: var(--fd-shadow-md);
     }
 
     &__history-header {
@@ -656,7 +656,7 @@
         gap: var(--fd-space-xxs);
         margin-top: var(--fd-space-xs);
         padding-top: var(--fd-space-xs);
-        border-top: 1px solid var(--fd-color-border);
+        border-top: var(--fd-border-default);
     }
 
     &__history-toggle-row {
@@ -698,9 +698,9 @@
         --fd-button-secondary-text-default: var(--fd-color-purple-700);
         --fd-button-secondary-text-hover: var(--fd-color-purple-700);
         --fd-button-secondary-text-active: var(--fd-color-purple-700);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
 
@@ -715,7 +715,7 @@
         margin-top: var(--fd-space-xs);
         padding-top: var(--fd-space-xs);
         padding-left: var(--fd-space-md);
-        border-top: 1px solid var(--fd-color-border);
+        border-top: var(--fd-border-default);
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-xs);
@@ -746,7 +746,7 @@
         padding: var(--fd-space-xs) 0;
 
         &:not(:last-child) {
-            border-bottom: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
+            border-bottom: var(--fd-border-dashed);
         }
     }
 

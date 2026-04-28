@@ -7,10 +7,10 @@
     gap: var(--fd-space-calendar-gap);
     min-width: 18rem;
     padding: var(--fd-space-calendar-padding);
-    border: 1px solid var(--fd-color-border-strong);
+    border: var(--fd-border-strong);
     border-radius: var(--fd-radius-panel);
     background: var(--fd-color-surface-raised);
-    box-shadow: 0 24px 60px color-mix(in srgb, var(--fd-color-shadow) 45%, transparent);
+    box-shadow: var(--fd-shadow-xl);
 }
 
 .fd-ui-calendar__header {
@@ -80,7 +80,7 @@
     &:focus-visible {
         outline: none;
         border-color: var(--fd-color-primary-500);
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-500) 22%, transparent);
+        box-shadow: var(--fd-shadow-focus);
     }
 
     &:disabled {

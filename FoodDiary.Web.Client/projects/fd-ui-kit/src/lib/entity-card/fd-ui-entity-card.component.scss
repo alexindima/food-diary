@@ -76,7 +76,7 @@
 
     &:hover {
         transform: translateY(-4px) scale(1.01);
-        box-shadow: 0 10px 25px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+        box-shadow: var(--fd-shadow-lg);
     }
 }
 

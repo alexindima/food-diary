@@ -79,9 +79,9 @@
     &__day {
         padding: var(--fd-space-surface-padding);
         border-radius: var(--fd-radius-lg);
-        border: 1px solid var(--fd-color-slate-200);
+        border: var(--fd-border-muted);
         background: var(--fd-color-white);
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+        box-shadow: var(--fd-shadow-xs);
     }
 
     &__day-header {

@@ -12,8 +12,8 @@
     min-width: 0;
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-card-profile-gap) var(--fd-space-card-profile-gap) var(--fd-space-stat-tile-padding);
-    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
-    box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
+    border: var(--fd-border-strong);
+    box-shadow: var(--fd-shadow-lg);
     background: var(--wt-surface);
     color: var(--fd-color-text);
     overflow: hidden;

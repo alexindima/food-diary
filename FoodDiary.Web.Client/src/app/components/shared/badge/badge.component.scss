@@ -13,7 +13,7 @@
     border-radius: var(--fd-radius-pill);
     background-color: var(--fd-badge-bg);
     color: var(--fd-badge-fg);
-    border: 1px solid var(--fd-badge-border);
+    border: var(--fd-border-width) solid var(--fd-badge-border);
 
     &__icon {
         font-size: 1rem;

@@ -103,7 +103,7 @@
             background: var(--fd-color-surface-raised);
             border-radius: var(--fd-radius-card);
             padding: var(--fd-space-md);
-            box-shadow: 0 16px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+            box-shadow: var(--fd-shadow-lg);
         }
 
         .dashboard__block--fasting > .dashboard__card {
@@ -155,9 +155,9 @@
         --fd-button-text-default: var(--fd-color-primary-600);
         --fd-button-text-hover: var(--fd-color-primary-700);
         --fd-button-text-active: var(--fd-color-primary-700);
-        --fd-button-shadow-default: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.125rem;

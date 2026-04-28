@@ -11,7 +11,7 @@
     align-items: center;
     gap: var(--fd-space-sm);
     padding: var(--fd-space-sm) 0;
-    border-bottom: 1px solid var(--fd-color-border);
+    border-bottom: var(--fd-border-default);
 
     &:last-child {
         border-bottom: none;

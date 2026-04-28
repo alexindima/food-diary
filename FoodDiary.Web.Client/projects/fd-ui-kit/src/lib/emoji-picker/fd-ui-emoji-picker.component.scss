@@ -50,7 +50,7 @@
     height: var(--fd-emoji-picker-option-height);
     min-height: var(--fd-emoji-picker-option-height);
     padding: var(--fd-emoji-picker-option-padding);
-    border: 1px solid var(--fd-emoji-picker-option-border-default);
+    border: var(--fd-border-width) solid var(--fd-emoji-picker-option-border-default);
     border-radius: var(--fd-emoji-picker-option-radius);
     background: var(--fd-emoji-picker-option-bg-default);
     box-shadow: var(--fd-emoji-picker-option-shadow-default);
@@ -80,7 +80,7 @@
     &:disabled {
         opacity: 0.55;
         cursor: not-allowed;
-        box-shadow: none;
+        box-shadow: var(--fd-shadow-none);
         transform: none;
     }
 

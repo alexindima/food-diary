@@ -76,9 +76,28 @@ $fd-typography-tokens: (
 );
 
 $fd-elevation-tokens: (
+    none: none,
     xs: 0 1px 2px rgba(24, 39, 75, 0.08),
     sm: 0 2px 6px rgba(24, 39, 75, 0.12),
     md: 0 4px 12px rgba(24, 39, 75, 0.15),
+    lg: 0 14px 32px color-mix(in srgb, var(--fd-color-shadow) 18%, transparent),
+    xl: 0 24px 56px color-mix(in srgb, var(--fd-color-shadow) 22%, transparent),
+    focus: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent),
+    accent: 0 10px 24px color-mix(in srgb, var(--fd-shadow-accent-color) 18%, transparent),
+    accent-strong: 0 12px 30px color-mix(in srgb, var(--fd-shadow-accent-color) 24%, transparent),
+    accent-glow: 0 0 24px color-mix(in srgb, var(--fd-shadow-accent-color) 35%, transparent),
+);
+
+$fd-border-tokens: (
+    none: 0,
+    width: 1px,
+    width-strong: 2px,
+    default: 1px solid var(--fd-color-border),
+    strong: 1px solid var(--fd-color-border-strong),
+    subtle: 1px solid color-mix(in srgb, var(--fd-color-border) 62%, transparent),
+    muted: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent),
+    inverse: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent),
+    dashed: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent),
 );
 
 $fd-static-color-tokens: (
@@ -148,6 +167,7 @@ $fd-static-design-tokens: (
     spacing: $fd-spacing-tokens,
     typography: $fd-typography-tokens,
     elevation: $fd-elevation-tokens,
+    border: $fd-border-tokens,
     period-filter: $fd-period-filter-tokens,
     page-body: $fd-page-body-tokens,
     layout-shell: $fd-layout-shell-tokens,
@@ -893,6 +913,24 @@ $fd-theme-design-tokens: (
         --fd-shadow-xs: #{fd-token(elevation, xs)};
         --fd-shadow-sm: #{fd-token(elevation, sm)};
         --fd-shadow-md: #{fd-token(elevation, md)};
+        --fd-shadow-lg: #{fd-token(elevation, lg)};
+        --fd-shadow-xl: #{fd-token(elevation, xl)};
+        --fd-shadow-focus: #{fd-token(elevation, focus)};
+        --fd-shadow-accent-color: var(--fd-color-primary-600);
+        --fd-shadow-accent: #{fd-token(elevation, accent)};
+        --fd-shadow-accent-strong: #{fd-token(elevation, accent-strong)};
+        --fd-shadow-accent-glow: #{fd-token(elevation, accent-glow)};
+        --fd-shadow-none: #{fd-token(elevation, none)};
+
+        --fd-border-none: #{fd-token(border, none)};
+        --fd-border-width: #{fd-token(border, width)};
+        --fd-border-width-strong: #{fd-token(border, width-strong)};
+        --fd-border-default: #{fd-token(border, default)};
+        --fd-border-strong: #{fd-token(border, strong)};
+        --fd-border-subtle: #{fd-token(border, subtle)};
+        --fd-border-muted: #{fd-token(border, muted)};
+        --fd-border-inverse: #{fd-token(border, inverse)};
+        --fd-border-dashed: #{fd-token(border, dashed)};
 
         --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
         --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};

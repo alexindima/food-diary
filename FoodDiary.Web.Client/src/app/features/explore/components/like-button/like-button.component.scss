@@ -11,9 +11,9 @@
     --fd-button-text-default: var(--fd-color-text-muted);
     --fd-button-text-hover: var(--fd-color-danger);
     --fd-button-text-active: var(--fd-color-danger);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-font-size: var(--fd-text-caption-size);

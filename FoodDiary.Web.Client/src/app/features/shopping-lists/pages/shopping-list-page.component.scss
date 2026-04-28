@@ -7,7 +7,7 @@
     background: transparent;
     padding: 0;
     border-radius: 0;
-    box-shadow: none;
+    box-shadow: var(--fd-shadow-none);
 
     &__header .fd-page-header__actions {
         gap: var(--fd-space-sm);
@@ -75,10 +75,10 @@
             color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50) 8%),
             color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
         );
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-md);
-        box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-shadow) 28%, transparent);
+        box-shadow: var(--fd-shadow-lg);
 
         fd-ui-input,
         fd-ui-select {
@@ -104,8 +104,8 @@
             color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-50) 6%),
             color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-100) 4%)
         );
-        border: 1px solid var(--fd-color-border);
-        box-shadow: 0 10px 22px color-mix(in srgb, var(--fd-color-shadow) 20%, transparent);
+        border: var(--fd-border-default);
+        box-shadow: var(--fd-shadow-sm);
 
         &--checked {
             opacity: 0.6;
@@ -150,9 +150,9 @@
         --fd-button-text: var(--fd-color-text-muted);
         --fd-button-text-hover: var(--fd-color-red-600);
         --fd-button-text-active: var(--fd-color-red-600);
-        --fd-button-shadow-rest: none;
-        --fd-button-shadow-hover: none;
-        --fd-button-shadow-active: none;
+        --fd-button-shadow-rest: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.125rem;
@@ -169,7 +169,7 @@
     }
 
     &__empty-state {
-        border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+        border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);
         background: linear-gradient(
             180deg,
@@ -196,7 +196,7 @@
         &__header {
             padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
-            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 22%, transparent);
+            border-bottom: var(--fd-border-muted);
             background: var(--fd-color-slate-50);
         }
 
@@ -218,25 +218,25 @@
         &__add-form {
             grid-template-columns: 1fr;
             border-radius: 0;
-            border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
-            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
-            box-shadow: none;
+            border-top: var(--fd-border-muted);
+            border-bottom: var(--fd-border-muted);
+            box-shadow: var(--fd-shadow-none);
             padding: var(--fd-space-sm) var(--fd-space-md);
         }
 
         &__items {
             gap: 0;
-            border-top: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
-            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+            border-top: var(--fd-border-muted);
+            border-bottom: var(--fd-border-muted);
             background: var(--fd-color-surface);
         }
 
         &__item {
             grid-template-columns: auto 1fr auto;
             border: none;
-            border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
+            border-bottom: var(--fd-border-muted);
             border-radius: 0;
-            box-shadow: none;
+            box-shadow: var(--fd-shadow-none);
             padding: var(--fd-space-xs) var(--fd-space-sm);
         }
 

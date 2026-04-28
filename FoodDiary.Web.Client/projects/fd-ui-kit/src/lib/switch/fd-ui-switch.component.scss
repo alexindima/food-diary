@@ -26,7 +26,7 @@
         height: 26px;
         border-radius: var(--fd-radius-switch);
         background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, var(--fd-color-border-strong));
-        border: 1px solid var(--fd-color-border);
+        border: var(--fd-border-default);
         padding: var(--fd-space-switch-track-padding);
         display: inline-flex;
         align-items: center;
@@ -41,7 +41,7 @@
         height: 20px;
         border-radius: var(--fd-radius-switch);
         background: var(--fd-color-surface);
-        box-shadow: 0 4px 10px color-mix(in srgb, var(--fd-color-black) 20%, transparent);
+        box-shadow: var(--fd-shadow-sm);
         transition: transform 0.2s ease;
     }
 
@@ -57,7 +57,7 @@
     &--checked &__track {
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
         border-color: color-mix(in srgb, var(--fd-color-primary-500) 36%, transparent);
-        box-shadow: 0 10px 18px color-mix(in srgb, var(--fd-color-primary-500) 22%, transparent);
+        box-shadow: var(--fd-shadow-lg);
     }
 
     &--checked &__thumb {

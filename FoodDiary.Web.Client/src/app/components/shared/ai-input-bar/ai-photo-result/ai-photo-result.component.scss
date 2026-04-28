@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .ai-photo-result {
-    border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
+    border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
     border-radius: var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-color-white));
     padding: var(--fd-space-stat-tile-padding);
@@ -38,9 +38,9 @@
     --fd-button-text-default: var(--fd-color-slate-400);
     --fd-button-text-hover: var(--fd-color-danger);
     --fd-button-text-active: var(--fd-color-danger);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: var(--fd-text-section-title-size);
@@ -101,7 +101,7 @@
     --fd-pill-bg: var(--fd-color-white);
     --fd-pill-color: var(--fd-color-primary-700);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
-    box-shadow: 0 8px 16px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    box-shadow: var(--fd-shadow-md);
     z-index: 2;
     text-transform: uppercase;
 }
@@ -202,9 +202,9 @@
     --fd-button-text-default: var(--fd-color-slate-400);
     --fd-button-text-hover: var(--fd-color-slate-500);
     --fd-button-text-active: var(--fd-color-slate-500);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: var(--fd-text-section-title-size);
@@ -223,7 +223,7 @@
     padding: var(--fd-space-xs);
     border-radius: var(--fd-radius-md);
     background: var(--fd-color-white);
-    border: 1px solid var(--fd-color-slate-200);
+    border: var(--fd-border-muted);
 }
 
 .ai-photo-result__item-name {
@@ -248,7 +248,7 @@
     align-items: center;
     padding: var(--fd-space-xxs) var(--fd-space-xs);
     border-radius: var(--fd-radius-button);
-    border: 1px solid var(--fd-color-slate-200);
+    border: var(--fd-border-muted);
     background: var(--fd-color-white);
 }
 
@@ -270,7 +270,7 @@
 .ai-photo-result__edit-select {
     height: 34px;
     border-radius: var(--fd-radius-md);
-    border: 1px solid var(--fd-color-slate-200);
+    border: var(--fd-border-muted);
     padding: 0 var(--fd-space-xs);
     font: inherit;
     background: var(--fd-color-white);
@@ -295,9 +295,9 @@
     --fd-button-text-default: var(--fd-color-slate-400);
     --fd-button-text-hover: var(--fd-color-danger);
     --fd-button-text-active: var(--fd-color-danger);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: var(--fd-text-section-title-size);
@@ -321,16 +321,16 @@
     --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
     --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-primary-50) 48%, var(--fd-color-white));
     --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-primary-50) 54%, var(--fd-color-white));
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
 }
 
 .ai-photo-result__nutrition {
     padding: var(--fd-space-xs) var(--fd-space-sm);
-    border: 1px solid var(--fd-color-slate-200);
+    border: var(--fd-border-muted);
     border-radius: var(--fd-radius-button);
     background: var(--fd-color-white);
 }
@@ -383,9 +383,9 @@
     --fd-button-secondary-text-default: var(--fd-color-slate-500);
     --fd-button-secondary-text-hover: var(--fd-color-slate-600);
     --fd-button-secondary-text-active: var(--fd-color-slate-600);
-    --fd-button-shadow-default: none;
-    --fd-button-shadow-hover: none;
-    --fd-button-shadow-active: none;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
 
@@ -439,7 +439,7 @@
 .ai-photo-result__detail-input,
 .ai-photo-result__detail-textarea {
     width: 100%;
-    border: 1px solid var(--fd-color-slate-200);
+    border: var(--fd-border-muted);
     border-radius: var(--fd-radius-lg);
     background: var(--fd-color-white);
     color: var(--fd-color-slate-900);
@@ -476,7 +476,7 @@
 
 .ai-photo-result__satiety-card {
     --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
-    border: 1px solid var(--fd-color-slate-200);
+    border: var(--fd-border-muted);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-sm);
     display: flex;
@@ -502,7 +502,7 @@
 
     &:hover {
         transform: translateY(-1px);
-        box-shadow: 0 10px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        box-shadow: var(--fd-shadow-lg);
     }
 
     fd-ui-icon {

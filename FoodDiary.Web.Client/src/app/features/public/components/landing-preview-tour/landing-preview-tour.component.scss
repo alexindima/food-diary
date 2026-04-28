@@ -45,7 +45,7 @@
             border-radius: 0;
             background: transparent;
             border: 0;
-            box-shadow: none;
+            box-shadow: var(--fd-shadow-none);
             animation: none;
 
             .landing-section__subtitle {
@@ -348,7 +348,7 @@
         margin-top: 0;
         background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         border-color: var(--fd-landing-dark-border);
-        box-shadow: none;
+        box-shadow: var(--fd-shadow-none);
     }
 
     .landing-section__title,

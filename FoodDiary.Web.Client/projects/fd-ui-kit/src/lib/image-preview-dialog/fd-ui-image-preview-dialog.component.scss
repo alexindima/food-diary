@@ -19,7 +19,7 @@
 .fd-ui-image-preview-dialog .fd-ui-dialog {
     padding: 0;
     background: var(--fd-color-dialog-surface);
-    box-shadow: none;
+    box-shadow: var(--fd-shadow-none);
     border: none;
     border-radius: var(--fd-image-preview-radius);
     max-height: var(--fd-image-preview-max-height);
@@ -95,7 +95,7 @@
     display: block;
     object-fit: contain;
     user-select: none;
-    box-shadow: 0 24px 60px var(--fd-color-dialog-shadow);
+    box-shadow: var(--fd-shadow-xl);
     border-radius: var(--fd-radius-card);
 }
 
