@@ -22,7 +22,7 @@ const meta: Meta<FdUiAccentSurfaceComponent> = {
                 [accentColor]="accentColor"
                 [active]="active"
                 [tinted]="tinted"
-                style="display: block; padding: 24px; border-radius: 8px; background: white;">
+                style="display: block; padding: var(--fd-space-lg); border-radius: var(--fd-radius-md); background: white;">
                 <p style="margin: 0;">Accent surface content</p>
             </fd-ui-accent-surface>
         `,
@@ -84,17 +84,17 @@ export const Inactive: Story = {
 export const AllSides: Story = {
     render: () => ({
         template: `
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 600px;">
-                <fd-ui-accent-surface accentSide="top" accentColor="#2563eb" [active]="true" style="display:block;padding:24px;border-radius:8px;background:white;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--fd-space-md); max-width: 600px;">
+                <fd-ui-accent-surface accentSide="top" accentColor="#2563eb" [active]="true" style="display:block;padding:var(--fd-space-lg);border-radius:var(--fd-radius-md);background:white;">
                     <p style="margin:0">Top accent</p>
                 </fd-ui-accent-surface>
-                <fd-ui-accent-surface accentSide="right" accentColor="#f5a623" [active]="true" style="display:block;padding:24px;border-radius:8px;background:white;">
+                <fd-ui-accent-surface accentSide="right" accentColor="#f5a623" [active]="true" style="display:block;padding:var(--fd-space-lg);border-radius:var(--fd-radius-md);background:white;">
                     <p style="margin:0">Right accent</p>
                 </fd-ui-accent-surface>
-                <fd-ui-accent-surface accentSide="bottom" accentColor="#50e3c2" [active]="true" style="display:block;padding:24px;border-radius:8px;background:white;">
+                <fd-ui-accent-surface accentSide="bottom" accentColor="#50e3c2" [active]="true" style="display:block;padding:var(--fd-space-lg);border-radius:var(--fd-radius-md);background:white;">
                     <p style="margin:0">Bottom accent</p>
                 </fd-ui-accent-surface>
-                <fd-ui-accent-surface accentSide="left" accentColor="#ff6b6b" [active]="true" style="display:block;padding:24px;border-radius:8px;background:white;">
+                <fd-ui-accent-surface accentSide="left" accentColor="#ff6b6b" [active]="true" style="display:block;padding:var(--fd-space-lg);border-radius:var(--fd-radius-md);background:white;">
                     <p style="margin:0">Left accent</p>
                 </fd-ui-accent-surface>
             </div>

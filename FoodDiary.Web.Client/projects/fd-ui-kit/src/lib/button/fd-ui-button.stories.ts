@@ -163,7 +163,7 @@ export const Disabled: Story = {
 export const AllVariants: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+            <div style="display: flex; gap: var(--fd-space-sm); flex-wrap: wrap; align-items: center;">
                 <fd-ui-button variant="primary" fill="solid">Primary</fd-ui-button>
                 <fd-ui-button variant="secondary" fill="solid">Secondary</fd-ui-button>
                 <fd-ui-button variant="danger" fill="solid">Danger</fd-ui-button>
@@ -178,7 +178,7 @@ export const AllVariants: Story = {
 export const AllSizes: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; gap: 12px; align-items: center;">
+            <div style="display: flex; gap: var(--fd-space-sm); align-items: center;">
                 <fd-ui-button variant="primary" size="xs">XS</fd-ui-button>
                 <fd-ui-button variant="primary" size="sm">SM</fd-ui-button>
                 <fd-ui-button variant="primary" size="md">MD</fd-ui-button>
@@ -191,7 +191,7 @@ export const AllSizes: Story = {
 export const AllFills: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; gap: 12px; align-items: center;">
+            <div style="display: flex; gap: var(--fd-space-sm); align-items: center;">
                 <fd-ui-button variant="primary" fill="solid">Solid</fd-ui-button>
                 <fd-ui-button variant="primary" fill="outline">Outline</fd-ui-button>
                 <fd-ui-button variant="primary" fill="text">Text</fd-ui-button>

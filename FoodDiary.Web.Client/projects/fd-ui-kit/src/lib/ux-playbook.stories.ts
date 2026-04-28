@@ -16,33 +16,33 @@ type PlaybookSection = {
                 height: 100vh;
                 overflow: auto;
                 box-sizing: border-box;
-                padding: 32px 32px 64px;
-                font-family: Inter, system-ui, sans-serif;
+                padding: var(--fd-space-xl) var(--fd-space-xl) calc(var(--fd-space-xl) * 2);
+                font-family: var(--fd-font-family-base);
                 color: #1f2937;
                 background: #f8fafc;
             "
         >
             <div style="max-width: 960px;">
-                <h1 style="margin: 0 0 16px; font-size: 28px;">{{ pageTitle() }}</h1>
-                <p style="margin: 0 0 24px; color: #4b5563; font-size: 15px; line-height: 1.6;">
+                <h1 style="margin: 0 0 var(--fd-space-md); font-size: var(--fd-text-metric-lg-size);">{{ pageTitle() }}</h1>
+                <p style="margin: 0 0 var(--fd-space-lg); color: #4b5563; font-size: var(--fd-text-body-sm-size); line-height: 1.6;">
                     {{ intro() }}
                 </p>
 
                 @for (section of sections(); track section.title) {
                     <section
                         style="
-                            margin-bottom: 24px;
-                            padding: 20px;
+                            margin-bottom: var(--fd-space-lg);
+                            padding: var(--fd-space-lg);
                             border: 1px solid #e5e7eb;
-                            border-radius: 16px;
+                            border-radius: var(--fd-radius-card);
                             background: #fff;
                         "
                     >
-                        <h2 style="margin: 0 0 12px; font-size: 20px;">{{ section.title }}</h2>
+                        <h2 style="margin: 0 0 var(--fd-space-sm); font-size: var(--fd-text-section-title-size);">{{ section.title }}</h2>
                         @if (section.description) {
-                            <p style="margin: 0 0 12px; color: #4b5563; line-height: 1.6;">{{ section.description }}</p>
+                            <p style="margin: 0 0 var(--fd-space-sm); color: #4b5563; line-height: 1.6;">{{ section.description }}</p>
                         }
-                        <ul style="margin: 0; padding-left: 20px; display: grid; gap: 8px; line-height: 1.6;">
+                        <ul style="margin: 0; padding-left: var(--fd-space-lg); display: grid; gap: var(--fd-space-xs); line-height: 1.6;">
                             @for (item of section.items; track item) {
                                 <li>{{ item }}</li>
                             }

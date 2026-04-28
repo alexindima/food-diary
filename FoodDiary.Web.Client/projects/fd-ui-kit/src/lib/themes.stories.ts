@@ -19,19 +19,19 @@ type ThemeHighlight = {
                 height: 100vh;
                 overflow: auto;
                 box-sizing: border-box;
-                padding: 32px 32px 64px;
+                padding: var(--fd-space-xl) var(--fd-space-xl) calc(var(--fd-space-xl) * 2);
                 font-family: var(--fd-font-family-base);
                 color: var(--fd-color-text);
                 background: var(--fd-layout-page-background);
             "
         >
             <div style="max-width: 1080px; margin: 0 auto;">
-                <h1 style="margin: 0 0 16px; font-size: 28px;">{{ pageTitle() }}</h1>
+                <h1 style="margin: 0 0 var(--fd-space-md); font-size: var(--fd-text-metric-lg-size);">{{ pageTitle() }}</h1>
                 <p
                     style="
-                        margin: 0 0 24px;
+                        margin: 0 0 var(--fd-space-lg);
                         color: var(--fd-color-text-muted);
-                        font-size: 15px;
+                        font-size: var(--fd-text-body-sm-size);
                         line-height: 1.6;
                     "
                 >
@@ -41,16 +41,16 @@ type ThemeHighlight = {
                 @if (notes().length > 0) {
                     <section
                         style="
-                            margin-bottom: 24px;
-                            padding: 20px;
+                            margin-bottom: var(--fd-space-lg);
+                            padding: var(--fd-space-lg);
                             border: 1px solid var(--fd-color-border-strong);
-                            border-radius: 18px;
+                            border-radius: var(--fd-radius-panel);
                             background: var(--fd-color-surface-raised);
                             box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-primary-700) 8%, transparent);
                         "
                     >
-                        <h2 style="margin: 0 0 12px; font-size: 20px;">How This Theme Feels</h2>
-                        <ul style="margin: 0; padding-left: 20px; display: grid; gap: 8px; line-height: 1.6;">
+                        <h2 style="margin: 0 0 var(--fd-space-sm); font-size: var(--fd-text-section-title-size);">How This Theme Feels</h2>
+                        <ul style="margin: 0; padding-left: var(--fd-space-lg); display: grid; gap: var(--fd-space-xs); line-height: 1.6;">
                             @for (note of notes(); track note) {
                                 <li>{{ note }}</li>
                             }
@@ -61,31 +61,31 @@ type ThemeHighlight = {
                 @if (highlights().length > 0) {
                     <section
                         style="
-                            margin-bottom: 24px;
-                            padding: 20px;
+                            margin-bottom: var(--fd-space-lg);
+                            padding: var(--fd-space-lg);
                             border: 1px solid var(--fd-color-border-strong);
-                            border-radius: 18px;
+                            border-radius: var(--fd-radius-panel);
                             background: var(--fd-color-surface-raised);
                         "
                     >
-                        <h2 style="margin: 0 0 12px; font-size: 20px;">Theme Highlights</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                        <h2 style="margin: 0 0 var(--fd-space-sm); font-size: var(--fd-text-section-title-size);">Theme Highlights</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--fd-space-sm);">
                             @for (highlight of highlights(); track highlight.label) {
                                 <div
                                     style="
-                                        padding: 14px;
-                                        border-radius: 14px;
+                                        padding: var(--fd-space-sm);
+                                        border-radius: var(--fd-radius-card);
                                         border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
                                         background: color-mix(in srgb, var(--fd-color-surface) 92%, transparent);
                                     "
                                 >
-                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="display: flex; align-items: center; gap: var(--fd-space-xs);">
                                         <div
                                             [style.background]="highlight.token"
                                             style="
                                                 width: 28px;
                                                 height: 28px;
-                                                border-radius: 999px;
+                                                border-radius: var(--fd-radius-pill);
                                                 border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
                                                 flex: none;
                                             "
@@ -94,9 +94,9 @@ type ThemeHighlight = {
                                             <div style="font-weight: 600;">{{ highlight.label }}</div>
                                             <div
                                                 style="
-                                                    font-size: 12px;
+                                                    font-size: var(--fd-text-helper-size);
                                                     color: var(--fd-color-text-muted);
-                                                    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+                                                    font-family: var(--fd-font-family-monospace);
                                                 "
                                             >
                                                 {{ highlight.token }}
@@ -111,10 +111,10 @@ type ThemeHighlight = {
 
                 <section
                     style="
-                        margin-bottom: 24px;
-                        padding: 24px;
+                        margin-bottom: var(--fd-space-lg);
+                        padding: var(--fd-space-lg);
                         border: 1px solid var(--fd-color-border-strong);
-                        border-radius: 24px;
+                        border-radius: var(--fd-radius-panel);
                         background:
                             radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), transparent 36%),
                             linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 55%, var(--fd-layout-page-background)) 0%, var(--fd-layout-page-background) 100%);
@@ -126,8 +126,8 @@ type ThemeHighlight = {
                             display: flex;
                             justify-content: space-between;
                             align-items: flex-start;
-                            gap: 16px;
-                            margin-bottom: 18px;
+                            gap: var(--fd-space-md);
+                            margin-bottom: var(--fd-space-md);
                             flex-wrap: wrap;
                         "
                     >
@@ -136,19 +136,19 @@ type ThemeHighlight = {
                                 style="
                                     display: inline-flex;
                                     align-items: center;
-                                    gap: 8px;
-                                    padding: 6px 10px;
-                                    border-radius: 999px;
+                                    gap: var(--fd-space-xs);
+                                    padding: var(--fd-space-xxs) var(--fd-space-xs);
+                                    border-radius: var(--fd-radius-pill);
                                     background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
                                     color: var(--fd-color-primary-700);
-                                    font-size: 13px;
+                                    font-size: var(--fd-text-caption-size);
                                     font-weight: 600;
-                                    margin-bottom: 12px;
+                                    margin-bottom: var(--fd-space-sm);
                                 "
                             >
                                 {{ badgeLabel() }}
                             </div>
-                            <h2 style="margin: 0 0 8px; font-size: 24px;">{{ previewTitle() }}</h2>
+                            <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-card-title-size);">{{ previewTitle() }}</h2>
                             <p
                                 style="
                                     margin: 0;
@@ -163,13 +163,17 @@ type ThemeHighlight = {
                         <div
                             style="
                                 min-width: 180px;
-                                padding: 14px 16px;
-                                border-radius: 18px;
+                                padding: var(--fd-space-sm) var(--fd-space-md);
+                                border-radius: var(--fd-radius-panel);
                                 border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
                                 background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50));
                             "
                         >
-                            <div style="font-size: 12px; color: var(--fd-color-text-muted); margin-bottom: 6px;">Active Setup</div>
+                            <div
+                                style="font-size: var(--fd-text-helper-size); color: var(--fd-color-text-muted); margin-bottom: var(--fd-space-xxs);"
+                            >
+                                Active Setup
+                            </div>
                             <div style="font-weight: 700;">Theme: {{ theme() }}</div>
                             <div style="font-weight: 700;">UI Style: {{ uiStyle() }}</div>
                         </div>
@@ -179,34 +183,36 @@ type ThemeHighlight = {
                         style="
                             display: grid;
                             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-                            gap: 16px;
+                            gap: var(--fd-space-md);
                         "
                     >
                         <div
                             style="
-                                padding: 18px;
-                                border-radius: 20px;
+                                padding: var(--fd-space-md);
+                                border-radius: var(--fd-radius-panel);
                                 border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
                                 background: var(--fd-color-surface-raised);
                             "
                         >
                             <div
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted); margin-bottom: 12px;"
+                                style="font-size: var(--fd-text-helper-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted); margin-bottom: var(--fd-space-sm);"
                             >
                                 Page Surface
                             </div>
-                            <div style="display: flex; gap: 10px; margin-bottom: 14px;">
-                                <div style="flex: 1; height: 72px; border-radius: 16px; background: var(--fd-color-surface-sunken);"></div>
+                            <div style="display: flex; gap: var(--fd-space-xs); margin-bottom: var(--fd-space-sm);">
+                                <div
+                                    style="flex: 1; height: 72px; border-radius: var(--fd-radius-card); background: var(--fd-color-surface-sunken);"
+                                ></div>
                                 <div
                                     style="
                                         width: 72px;
                                         height: 72px;
-                                        border-radius: 16px;
+                                        border-radius: var(--fd-radius-card);
                                         background: linear-gradient(135deg, var(--fd-color-primary-500), var(--fd-color-primary-300));
                                     "
                                 ></div>
                             </div>
-                            <div style="font-weight: 600; margin-bottom: 6px;">Dense information, clear hierarchy</div>
+                            <div style="font-weight: 600; margin-bottom: var(--fd-space-xxs);">Dense information, clear hierarchy</div>
                             <div style="color: var(--fd-color-text-muted); line-height: 1.6;">
                                 Good for app shells, analytics surfaces, settings pages, and daily-use flows.
                             </div>
@@ -214,18 +220,18 @@ type ThemeHighlight = {
 
                         <div
                             style="
-                                padding: 18px;
-                                border-radius: 20px;
+                                padding: var(--fd-space-md);
+                                border-radius: var(--fd-radius-panel);
                                 border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
                                 background: var(--fd-color-surface-raised);
                             "
                         >
                             <div
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted); margin-bottom: 12px;"
+                                style="font-size: var(--fd-text-helper-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted); margin-bottom: var(--fd-space-sm);"
                             >
                                 Component Preview
                             </div>
-                            <div style="display: grid; gap: 12px;">
+                            <div style="display: grid; gap: var(--fd-space-sm);">
                                 <button
                                     type="button"
                                     style="
@@ -234,7 +240,7 @@ type ThemeHighlight = {
                                         border-radius: var(--fd-radius-button);
                                         background: var(--fd-color-primary-600);
                                         color: var(--fd-color-on-brand);
-                                        padding: 12px 16px;
+                                        padding: var(--fd-space-sm) var(--fd-space-md);
                                         font: inherit;
                                         font-weight: 600;
                                         text-align: left;
@@ -244,8 +250,8 @@ type ThemeHighlight = {
                                     Primary action
                                 </button>
 
-                                <label style="display: grid; gap: 6px;">
-                                    <span style="font-size: 13px; font-weight: 600;">Input field</span>
+                                <label style="display: grid; gap: var(--fd-space-xxs);">
+                                    <span style="font-size: var(--fd-text-caption-size); font-weight: 600;">Input field</span>
                                     <input
                                         type="text"
                                         value="Preview value"
@@ -256,7 +262,7 @@ type ThemeHighlight = {
                                             border: 1px solid var(--fd-color-border-strong);
                                             background: var(--fd-color-surface);
                                             color: var(--fd-color-text);
-                                            padding: 12px 14px;
+                                            padding: var(--fd-space-sm) var(--fd-space-md);
                                             font: inherit;
                                         "
                                     />
@@ -264,8 +270,8 @@ type ThemeHighlight = {
 
                                 <div
                                     style="
-                                        padding: 14px;
-                                        border-radius: 16px;
+                                        padding: var(--fd-space-sm);
+                                        border-radius: var(--fd-radius-card);
                                         background: color-mix(in srgb, var(--fd-color-success) 12%, var(--fd-color-surface));
                                         border: 1px solid color-mix(in srgb, var(--fd-color-success) 28%, transparent);
                                         color: var(--fd-color-text);

@@ -134,7 +134,7 @@ export const Readonly: Story = {
 export const NutritionGroup: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; gap: var(--fd-space-sm); flex-wrap: wrap;">
                 <fd-ui-nutrient-input label="Calories" icon="local_fire_department" [ngModel]="2100" unitLabel="kcal" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>
                 <fd-ui-nutrient-input label="Proteins" icon="fitness_center" [ngModel]="85" unitLabel="g" tintColor="#4a90e2" textColor="#4a90e2"></fd-ui-nutrient-input>
                 <fd-ui-nutrient-input label="Fats" icon="water_drop" [ngModel]="70" unitLabel="g" tintColor="#f5a623" textColor="#f5a623"></fd-ui-nutrient-input>

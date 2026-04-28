@@ -100,7 +100,7 @@ export const WithActions: Story = {
 export const AllAppearances: Story = {
     render: () => ({
         template: `
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--fd-space-md);">
                 <fd-ui-card title="Default" appearance="default"><p style="margin:0;color:#666">Default appearance</p></fd-ui-card>
                 <fd-ui-card title="Product" appearance="product"><p style="margin:0;color:#666">Product appearance</p></fd-ui-card>
                 <fd-ui-card title="Recipe" appearance="recipe"><p style="margin:0;color:#666">Recipe appearance</p></fd-ui-card>

@@ -14,15 +14,15 @@ type TokenTableRow = { name: string; value: string };
                 height: 100vh;
                 overflow: auto;
                 box-sizing: border-box;
-                padding: 32px 32px 64px;
-                font-family: Inter, system-ui, sans-serif;
+                padding: var(--fd-space-xl) var(--fd-space-xl) calc(var(--fd-space-xl) * 2);
+                font-family: var(--fd-font-family-base);
                 color: #1f2937;
                 background: #f8fafc;
             "
         >
             <div style="max-width: 1080px;">
-                <h1 style="margin: 0 0 16px; font-size: 28px;">{{ pageTitle() }}</h1>
-                <p style="margin: 0 0 24px; color: #4b5563; font-size: 15px; line-height: 1.6;">
+                <h1 style="margin: 0 0 var(--fd-space-md); font-size: var(--fd-text-metric-lg-size);">{{ pageTitle() }}</h1>
+                <p style="margin: 0 0 var(--fd-space-lg); color: #4b5563; font-size: var(--fd-text-body-sm-size); line-height: 1.6;">
                     {{ intro() }}
                 </p>
 
@@ -30,25 +30,29 @@ type TokenTableRow = { name: string; value: string };
                     @for (group of swatchGroups(); track group.title) {
                         <section
                             style="
-                                margin-bottom: 24px;
-                                padding: 20px;
+                                margin-bottom: var(--fd-space-lg);
+                                padding: var(--fd-space-lg);
                                 border: 1px solid #e5e7eb;
-                                border-radius: 16px;
+                                border-radius: var(--fd-radius-card);
                                 background: #fff;
                             "
                         >
-                            <h2 style="margin: 0 0 8px; font-size: 20px;">{{ group.title }}</h2>
+                            <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-section-title-size);">{{ group.title }}</h2>
                             @if (group.description) {
-                                <p style="margin: 0 0 16px; color: #4b5563; line-height: 1.6;">{{ group.description }}</p>
+                                <p style="margin: 0 0 var(--fd-space-md); color: #4b5563; line-height: 1.6;">{{ group.description }}</p>
                             }
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <div style="display: flex; gap: var(--fd-space-xs); flex-wrap: wrap;">
                                 @for (swatch of group.items; track swatch.name) {
                                     <div style="text-align: center; min-width: 72px;">
                                         <div
                                             [style.background]="swatch.value"
-                                            style="height: 56px; border-radius: 10px; border: 1px solid #e5e7eb;"
+                                            style="height: 56px; border-radius: var(--fd-radius-lg); border: 1px solid #e5e7eb;"
                                         ></div>
-                                        <div style="font-size: 12px; margin-top: 6px; color: #4b5563;">{{ swatch.name }}</div>
+                                        <div
+                                            style="font-size: var(--fd-text-helper-size); margin-top: var(--fd-space-xxs); color: #4b5563;"
+                                        >
+                                            {{ swatch.name }}
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -59,22 +63,30 @@ type TokenTableRow = { name: string; value: string };
                 @if (tableRows().length > 0) {
                     <section
                         style="
-                            margin-bottom: 24px;
-                            padding: 20px;
+                            margin-bottom: var(--fd-space-lg);
+                            padding: var(--fd-space-lg);
                             border: 1px solid #e5e7eb;
-                            border-radius: 16px;
+                            border-radius: var(--fd-radius-card);
                             background: #fff;
                         "
                     >
-                        <h2 style="margin: 0 0 8px; font-size: 20px;">{{ tableTitle() }}</h2>
+                        <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-section-title-size);">{{ tableTitle() }}</h2>
                         @if (tableDescription()) {
-                            <p style="margin: 0 0 16px; color: #4b5563; line-height: 1.6;">{{ tableDescription() }}</p>
+                            <p style="margin: 0 0 var(--fd-space-md); color: #4b5563; line-height: 1.6;">{{ tableDescription() }}</p>
                         }
                         <table style="border-collapse: collapse; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th style="text-align: left; padding: 10px 8px; border-bottom: 2px solid #e5e7eb;">Token</th>
-                                    <th style="text-align: left; padding: 10px 8px; border-bottom: 2px solid #e5e7eb;">Value</th>
+                                    <th
+                                        style="text-align: left; padding: var(--fd-space-xs) var(--fd-space-xs); border-bottom: 2px solid #e5e7eb;"
+                                    >
+                                        Token
+                                    </th>
+                                    <th
+                                        style="text-align: left; padding: var(--fd-space-xs) var(--fd-space-xs); border-bottom: 2px solid #e5e7eb;"
+                                    >
+                                        Value
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,15 +94,17 @@ type TokenTableRow = { name: string; value: string };
                                     <tr>
                                         <td
                                             style="
-                                                padding: 10px 8px;
+                                                padding: var(--fd-space-xs) var(--fd-space-xs);
                                                 border-bottom: 1px solid #f1f5f9;
-                                                font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-                                                font-size: 13px;
+                                                font-family: var(--fd-font-family-monospace);
+                                                font-size: var(--fd-text-caption-size);
                                             "
                                         >
                                             {{ row.name }}
                                         </td>
-                                        <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9;">{{ row.value }}</td>
+                                        <td style="padding: var(--fd-space-xs) var(--fd-space-xs); border-bottom: 1px solid #f1f5f9;">
+                                            {{ row.value }}
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

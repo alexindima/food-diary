@@ -29,7 +29,7 @@ export const Default: Story = {
 export const AllTones: Story = {
     render: () => ({
         template: `
-            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <div style="display:flex; gap:var(--fd-space-sm); flex-wrap:wrap; align-items:center;">
                 <fd-ui-status-badge tone="muted">Syncing</fd-ui-status-badge>
                 <fd-ui-status-badge tone="success">Saved</fd-ui-status-badge>
                 <fd-ui-status-badge tone="warning">Unsaved changes</fd-ui-status-badge>

@@ -29,7 +29,7 @@ For dialog selection rules, presets, and sizing guidance, see Foundation/Dialogs
         template: `
             <fd-ui-dialog-shell [title]="title" [subtitle]="subtitle" [size]="size" [dismissible]="dismissible" [flush]="flush">
                 <p style="margin: 0; color: #666;">Dialog body content goes here. This demonstrates the dialog shell without the overlay.</p>
-                <div fdUiDialogFooter style="display: flex; gap: 8px; justify-content: flex-end;">
+                <div fdUiDialogFooter style="display: flex; gap: var(--fd-space-xs); justify-content: flex-end;">
                     <fd-ui-button variant="secondary" fill="outline">Cancel</fd-ui-button>
                     <fd-ui-button variant="primary">Confirm</fd-ui-button>
                 </div>
@@ -99,7 +99,7 @@ export const ConfirmDelete: Story = {
         template: `
             <fd-ui-dialog-shell title="Delete Product" size="sm" [dismissible]="true">
                 <p style="margin: 0; color: #666;">Are you sure you want to delete "Chicken Breast"? This action cannot be undone.</p>
-                <div fdUiDialogFooter style="display: flex; gap: 8px; justify-content: flex-end;">
+                <div fdUiDialogFooter style="display: flex; gap: var(--fd-space-xs); justify-content: flex-end;">
                     <fd-ui-button variant="secondary" fill="outline">Cancel</fd-ui-button>
                     <fd-ui-button variant="danger">Delete</fd-ui-button>
                 </div>
@@ -112,11 +112,11 @@ export const WithForm: Story = {
     render: () => ({
         template: `
             <fd-ui-dialog-shell title="Add Weight Entry" size="md" [dismissible]="true">
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: var(--fd-space-md);">
                     <fd-ui-date-input label="Date"></fd-ui-date-input>
                     <fd-ui-input label="Weight" placeholder="0.0" type="number" step="0.1"></fd-ui-input>
                 </div>
-                <div fdUiDialogFooter style="display: flex; gap: 8px; justify-content: flex-end;">
+                <div fdUiDialogFooter style="display: flex; gap: var(--fd-space-xs); justify-content: flex-end;">
                     <fd-ui-button variant="secondary" fill="outline">Cancel</fd-ui-button>
                     <fd-ui-button variant="primary">Save</fd-ui-button>
                 </div>
@@ -128,7 +128,7 @@ export const WithForm: Story = {
 export const AllSizes: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: var(--fd-space-lg);">
                 <fd-ui-dialog-shell title="Small Dialog" size="sm"><p style="margin:0;color:#666">Compact content</p></fd-ui-dialog-shell>
                 <fd-ui-dialog-shell title="Medium Dialog" size="md"><p style="margin:0;color:#666">Standard content area</p></fd-ui-dialog-shell>
                 <fd-ui-dialog-shell title="Large Dialog" size="lg"><p style="margin:0;color:#666">Spacious content area for complex forms</p></fd-ui-dialog-shell>
@@ -146,18 +146,18 @@ export const CustomHeader: Story = {
         },
         template: `
             <fd-ui-dialog-shell [dismissible]="true" size="lg">
-                <div fdUiDialogHeader style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
-                    <div style="display:flex;flex-direction:column;gap:8px;">
-                        <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0f766e;">Review Flow</span>
-                        <h2 style="margin:0;font-size:24px;line-height:1.2;">Import Nutrition Data</h2>
+                <div fdUiDialogHeader style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--fd-space-md);">
+                    <div style="display:flex;flex-direction:column;gap:var(--fd-space-xs);">
+                        <span style="font-size:var(--fd-text-helper-size);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0f766e;">Review Flow</span>
+                        <h2 style="margin:0;font-size:var(--fd-text-card-title-size);line-height:1.2;">Import Nutrition Data</h2>
                         <p style="margin:0;color:#64748b;line-height:1.5;">Resolve flagged rows before applying changes to products and recipes.</p>
                     </div>
-                    <div style="padding:8px 12px;border-radius:999px;background:#ecfeff;color:#155e75;font-size:12px;font-weight:600;">
+                    <div style="padding:var(--fd-space-xs) var(--fd-space-sm);border-radius:var(--fd-radius-pill);background:#ecfeff;color:#155e75;font-size:var(--fd-text-helper-size);font-weight:600;">
                         12 rows need review
                     </div>
                 </div>
                 <p style="margin: 0; color: #666;">Use a custom header when the dialog needs richer presentation than title plus subtitle.</p>
-                <div fdUiDialogFooter style="display: flex; gap: 8px; justify-content: flex-end;">
+                <div fdUiDialogFooter style="display: flex; gap: var(--fd-space-xs); justify-content: flex-end;">
                     <fd-ui-button variant="secondary" fill="outline">Cancel</fd-ui-button>
                     <fd-ui-button variant="primary">Continue</fd-ui-button>
                 </div>

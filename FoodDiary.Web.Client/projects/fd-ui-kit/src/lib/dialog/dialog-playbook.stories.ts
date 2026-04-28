@@ -15,8 +15,8 @@ type DialogPlaybookSection = {
             style="
                 min-height: 100vh;
                 box-sizing: border-box;
-                padding: 32px 32px 64px;
-                font-family: Inter, system-ui, sans-serif;
+                padding: var(--fd-space-xl) var(--fd-space-xl) calc(var(--fd-space-xl) * 2);
+                font-family: var(--fd-font-family-base);
                 color: #1f2937;
                 background:
                     radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 32%),
@@ -25,21 +25,21 @@ type DialogPlaybookSection = {
             "
         >
             <div style="max-width: 1040px;">
-                <h1 style="margin: 0 0 12px; font-size: 30px;">{{ pageTitle() }}</h1>
-                <p style="margin: 0 0 24px; color: #4b5563; font-size: 15px; line-height: 1.7;">
+                <h1 style="margin: 0 0 var(--fd-space-sm); font-size: var(--fd-text-metric-lg-size);">{{ pageTitle() }}</h1>
+                <p style="margin: 0 0 var(--fd-space-lg); color: #4b5563; font-size: var(--fd-text-body-sm-size); line-height: 1.7;">
                     {{ intro() }}
                 </p>
 
                 <section
                     style="
-                        margin-bottom: 24px;
-                        padding: 20px 22px;
+                        margin-bottom: var(--fd-space-lg);
+                        padding: var(--fd-space-md) var(--fd-space-lg);
                         border: 1px solid #dbeafe;
-                        border-radius: 18px;
+                        border-radius: var(--fd-radius-panel);
                         background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 246, 255, 0.92));
                     "
                 >
-                    <h2 style="margin: 0 0 10px; font-size: 20px;">Default Rule</h2>
+                    <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-section-title-size);">Default Rule</h2>
                     <p style="margin: 0; color: #334155; line-height: 1.7;">
                         Prefer semantic <code>preset</code> for normal product flows. Leave the dialog manual only when it needs custom
                         width, custom panel/backdrop classes, media-heavy layout, or a special interaction model.
@@ -49,19 +49,19 @@ type DialogPlaybookSection = {
                 @for (section of sections(); track section.title) {
                     <section
                         style="
-                            margin-bottom: 20px;
-                            padding: 20px 22px;
+                            margin-bottom: var(--fd-space-lg);
+                            padding: var(--fd-space-md) var(--fd-space-lg);
                             border: 1px solid #e5e7eb;
-                            border-radius: 18px;
+                            border-radius: var(--fd-radius-panel);
                             background: rgba(255, 255, 255, 0.96);
                             box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
                         "
                     >
-                        <h2 style="margin: 0 0 10px; font-size: 20px;">{{ section.title }}</h2>
+                        <h2 style="margin: 0 0 var(--fd-space-xs); font-size: var(--fd-text-section-title-size);">{{ section.title }}</h2>
                         @if (section.description) {
-                            <p style="margin: 0 0 12px; color: #4b5563; line-height: 1.7;">{{ section.description }}</p>
+                            <p style="margin: 0 0 var(--fd-space-sm); color: #4b5563; line-height: 1.7;">{{ section.description }}</p>
                         }
-                        <ul style="margin: 0; padding-left: 20px; display: grid; gap: 8px; line-height: 1.65;">
+                        <ul style="margin: 0; padding-left: var(--fd-space-lg); display: grid; gap: var(--fd-space-xs); line-height: 1.65;">
                             @for (item of section.items; track item) {
                                 <li>{{ item }}</li>
                             }

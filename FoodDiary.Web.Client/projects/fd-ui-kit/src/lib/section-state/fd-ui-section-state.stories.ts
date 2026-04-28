@@ -30,7 +30,7 @@ const meta: Meta<FdUiSectionStateComponent> = {
                     [errorMessage]="errorMessage"
                     [retryLabel]="retryLabel"
                 >
-                    <div style="padding: 24px; border: 1px dashed var(--fd-color-border); border-radius: 16px;">
+                    <div style="padding: var(--fd-space-lg); border: 1px dashed var(--fd-color-border); border-radius: var(--fd-radius-card);">
                         Real section content goes here.
                     </div>
                 </fd-ui-section-state>

@@ -135,7 +135,7 @@ export const WithFillColor: Story = {
 export const AllSizes: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+            <div style="display: flex; flex-direction: column; gap: var(--fd-space-md); max-width: 400px;">
                 <fd-ui-input label="Small" placeholder="sm" size="sm"></fd-ui-input>
                 <fd-ui-input label="Medium" placeholder="md" size="md"></fd-ui-input>
                 <fd-ui-input label="Large" placeholder="lg" size="lg"></fd-ui-input>

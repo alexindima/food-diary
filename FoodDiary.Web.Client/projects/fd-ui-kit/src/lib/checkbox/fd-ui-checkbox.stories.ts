@@ -39,7 +39,7 @@ export const Checked: Story = {
 export const Multiple: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; flex-direction: column; gap: var(--fd-space-xs);">
                 <fd-ui-checkbox label="Proteins" [ngModel]="true"></fd-ui-checkbox>
                 <fd-ui-checkbox label="Fats"></fd-ui-checkbox>
                 <fd-ui-checkbox label="Carbohydrates" [ngModel]="true"></fd-ui-checkbox>

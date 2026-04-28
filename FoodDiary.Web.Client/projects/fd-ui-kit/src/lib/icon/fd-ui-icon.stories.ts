@@ -26,7 +26,7 @@ export const Sizes: Story = {
     render: args => ({
         props: args,
         template: `
-            <div style="display:flex; gap:16px; align-items:center;">
+            <div style="display:flex; gap:var(--fd-space-md); align-items:center;">
                 <fd-ui-icon name="tune" size="sm"></fd-ui-icon>
                 <fd-ui-icon name="tune" size="md"></fd-ui-icon>
                 <fd-ui-icon name="tune" size="lg"></fd-ui-icon>

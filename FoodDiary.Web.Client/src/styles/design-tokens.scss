@@ -22,6 +22,7 @@ $fd-spacing-tokens: (
 
 $fd-typography-tokens: (
     font-family: '"Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    font-family-monospace: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     font-weight-regular: 400,
     font-weight-medium: 500,
     font-weight-bold: 600,
@@ -817,6 +818,7 @@ $fd-theme-design-tokens: (
         --fd-color-yellow-300: #{fd-token(colors, yellow-300)};
 
         --fd-font-family-base: #{fd-token(typography, font-family)};
+        --fd-font-family-monospace: #{fd-token(typography, font-family-monospace)};
         --fd-font-size-base: #{fd-token(typography, font-size-base)};
         --fd-line-height-base: #{fd-token(typography, line-height-base)};
         --fd-font-weight-regular: #{fd-token(typography, font-weight-regular)};

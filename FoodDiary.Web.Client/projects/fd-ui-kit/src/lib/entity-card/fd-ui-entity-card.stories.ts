@@ -57,15 +57,15 @@ export const WithFallback: Story = {
 export const MultipleCards: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; flex-direction: column; gap: 12px; max-width: 500px;">
+            <div style="display: flex; flex-direction: column; gap: var(--fd-space-sm); max-width: 500px;">
                 <fd-ui-entity-card title="Oatmeal" meta="150 kcal" appearance="product">
-                    <p style="margin: 0; font-size: 14px; color: #666;">P: 5g | F: 3g | C: 27g</p>
+                    <p style="margin: 0; font-size: var(--fd-text-caption-size); color: #666;">P: 5g | F: 3g | C: 27g</p>
                 </fd-ui-entity-card>
                 <fd-ui-entity-card title="Banana" meta="89 kcal" appearance="product">
-                    <p style="margin: 0; font-size: 14px; color: #666;">P: 1g | F: 0g | C: 23g</p>
+                    <p style="margin: 0; font-size: var(--fd-text-caption-size); color: #666;">P: 1g | F: 0g | C: 23g</p>
                 </fd-ui-entity-card>
                 <fd-ui-entity-card title="Greek Yogurt" meta="100 kcal" appearance="product">
-                    <p style="margin: 0; font-size: 14px; color: #666;">P: 17g | F: 1g | C: 6g</p>
+                    <p style="margin: 0; font-size: var(--fd-text-caption-size); color: #666;">P: 17g | F: 1g | C: 6g</p>
                 </fd-ui-entity-card>
             </div>
         `,

@@ -44,7 +44,7 @@ export const WithInput: Story = {
 export const MultipleErrors: Story = {
     render: () => ({
         template: `
-            <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+            <div style="display: flex; flex-direction: column; gap: var(--fd-space-md); max-width: 400px;">
                 <fd-ui-input label="Name" error="Name is required"></fd-ui-input>
                 <fd-ui-input label="Email" error="Invalid email format"></fd-ui-input>
                 <fd-ui-input label="Weight" type="number" error="Must be greater than 0"></fd-ui-input>
