@@ -46,6 +46,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
         HandleObservedOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse(), _logger, "auth.telegram.link", userId);
 

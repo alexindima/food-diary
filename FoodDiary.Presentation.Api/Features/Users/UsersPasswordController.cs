@@ -2,6 +2,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ public class UsersPasswordController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> ChangePassword([FromCurrentUser] Guid userId, [FromBody] ChangePasswordHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
 
@@ -22,6 +24,7 @@ public class UsersPasswordController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> SetPassword([FromCurrentUser] Guid userId, [FromBody] SetPasswordHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
 }

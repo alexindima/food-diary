@@ -174,6 +174,11 @@ public static class Errors {
             "Authentication.ImpersonationForbidden",
             "User cannot be impersonated.",
             kind: ErrorKind.Forbidden);
+
+        public static Error ImpersonationActionForbidden => new(
+            "Authentication.ImpersonationActionForbidden",
+            "This action is not allowed while impersonating a user.",
+            kind: ErrorKind.Forbidden);
     }
 
     public static class Validation {

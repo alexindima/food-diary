@@ -95,9 +95,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         };
 
         if (impersonation is not null) {
-            claims.Add(new Claim("fd_impersonation", "true"));
-            claims.Add(new Claim("fd_impersonated_by", impersonation.ActorUserId.Value.ToString()));
-            claims.Add(new Claim("fd_impersonation_reason", impersonation.Reason));
+            claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));
+            claims.Add(new Claim(JwtImpersonationClaimNames.ActorUserId, impersonation.ActorUserId.Value.ToString()));
+            claims.Add(new Claim(JwtImpersonationClaimNames.Reason, impersonation.Reason));
         }
 
         foreach (var role in roles) {

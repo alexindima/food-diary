@@ -142,6 +142,25 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task ChangePassword_WithImpersonatedUser_ReturnsForbiddenErrorContract() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.ImpersonationHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.ImpersonationActorUserIdHeader, Guid.NewGuid().ToString());
+
+        var response = await client.PatchAsJsonAsync(
+            "/api/v1/users/password",
+            new ChangePasswordHttpRequest("Password123!", "Password456!"));
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Authentication.ImpersonationActionForbidden", payload.Error);
+        Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
+    }
+
+    [Fact]
     public async Task GetProductById_WithMissingProduct_ReturnsNotFoundContract() {
         var client = apiFactory.CreateClient();
         var accessToken = await RegisterAndGetAccessTokenAsync(client);
