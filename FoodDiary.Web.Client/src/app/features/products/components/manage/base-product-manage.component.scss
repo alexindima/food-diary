@@ -203,7 +203,7 @@
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
         border: var(--fd-border-muted);
-        background: color-mix(in srgb, var(--fd-bg-surface-inset) 90%, transparent);
+        background: var(--fd-bg-surface-inset-translucent);
     }
 
     &__ai-text {

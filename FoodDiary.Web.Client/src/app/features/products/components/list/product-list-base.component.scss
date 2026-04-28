@@ -226,7 +226,7 @@
     &__section-line {
         flex: 1;
         height: 1px;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        background: var(--fd-bg-overlay-subtle);
         border-radius: var(--fd-radius-pill);
     }
 
@@ -253,7 +253,7 @@
         gap: var(--fd-space-sm);
         padding: var(--fd-space-sm);
         border-radius: var(--fd-radius-lg);
-        background: color-mix(in srgb, var(--fd-bg-surface-inset) 95%, transparent);
+        background: var(--fd-bg-surface-inset-translucent-solid);
         border: var(--fd-border-muted);
         cursor: pointer;
         transition: all 0.15s ease;
@@ -276,7 +276,7 @@
         width: 48px;
         height: 48px;
         border-radius: var(--fd-radius-md);
-        background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+        background: var(--fd-bg-muted-tint);
         display: flex;
         align-items: center;
         justify-content: center;

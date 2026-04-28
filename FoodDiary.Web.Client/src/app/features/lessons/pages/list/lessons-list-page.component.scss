@@ -32,7 +32,7 @@
         flex: 1;
         height: 8px;
         border-radius: var(--fd-radius-xs);
-        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        background: var(--fd-bg-overlay-subtle);
         overflow: hidden;
         max-width: 200px;
     }

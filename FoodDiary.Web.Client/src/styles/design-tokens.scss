@@ -800,6 +800,17 @@ $fd-theme-design-tokens: (
         --fd-bg-surface-elevated: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
         --fd-bg-surface-panel: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent);
         --fd-bg-surface-solid: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+        --fd-bg-surface-glass-minimal: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
+        --fd-bg-surface-glass-subtle: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
+        --fd-bg-surface-glass-medium: color-mix(in srgb, var(--fd-bg-surface-raised) 12%, transparent);
+        --fd-bg-surface-glass: color-mix(in srgb, var(--fd-bg-surface-raised) 14%, transparent);
+        --fd-bg-surface-glass-strong: color-mix(in srgb, var(--fd-bg-surface-raised) 24%, transparent);
+        --fd-bg-surface-translucent-soft: color-mix(in srgb, var(--fd-bg-surface-raised) 85%, transparent);
+        --fd-bg-surface-translucent: color-mix(in srgb, var(--fd-bg-surface-raised) 86%, transparent);
+        --fd-bg-surface-translucent-solid: color-mix(in srgb, var(--fd-bg-surface-raised) 95%, transparent);
+        --fd-bg-surface-inset-blend: color-mix(in srgb, var(--fd-bg-surface-inset) 70%, var(--fd-bg-surface-raised));
+        --fd-bg-surface-inset-translucent: color-mix(in srgb, var(--fd-bg-surface-inset) 90%, transparent);
+        --fd-bg-surface-inset-translucent-solid: color-mix(in srgb, var(--fd-bg-surface-inset) 95%, transparent);
         --fd-bg-surface-brand: linear-gradient(
             180deg,
             var(--fd-bg-surface-raised) 0%,
@@ -811,9 +822,15 @@ $fd-theme-design-tokens: (
         --fd-bg-dialog: var(--fd-color-dialog-surface);
         --fd-bg-dialog-muted: var(--fd-color-dialog-surface-muted);
         --fd-bg-overlay: var(--fd-color-dialog-overlay);
+        --fd-bg-overlay-subtle: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-bg-overlay-muted: color-mix(in srgb, var(--fd-color-slate-900) 28%, transparent);
+        --fd-bg-overlay-medium: color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
+        --fd-bg-overlay-strong: color-mix(in srgb, var(--fd-color-slate-900) 55%, transparent);
         --fd-bg-scrim-subtle: color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);
         --fd-bg-scrim: color-mix(in srgb, var(--fd-color-slate-900) 50%, transparent);
         --fd-bg-scrim-strong: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
+        --fd-bg-muted-tint: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+        --fd-bg-muted-tint-strong: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
         --fd-bg-primary: var(--fd-color-primary-600);
         --fd-bg-danger: var(--fd-color-danger);
         --fd-bg-brand: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));

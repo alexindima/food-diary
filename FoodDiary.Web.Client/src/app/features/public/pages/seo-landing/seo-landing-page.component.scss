@@ -93,7 +93,7 @@
         min-height: 40px;
         padding: 0 var(--fd-space-md);
         border-radius: var(--fd-radius-pill);
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 86%, transparent);
+        background: var(--fd-bg-surface-translucent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         color: var(--fd-color-slate-700);
         font-size: 0.92rem;

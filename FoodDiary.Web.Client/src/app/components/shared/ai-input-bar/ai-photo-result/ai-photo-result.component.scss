@@ -484,7 +484,7 @@
     gap: var(--fd-space-sm);
     text-align: left;
     cursor: pointer;
-    background: color-mix(in srgb, var(--fd-bg-surface-raised) 95%, transparent);
+    background: var(--fd-bg-surface-translucent-solid);
     position: relative;
     overflow: hidden;
     transition:
@@ -516,7 +516,7 @@
     width: 40px;
     height: 40px;
     border-radius: var(--fd-radius-pill);
-    background: color-mix(in srgb, var(--fd-bg-surface-raised) 86%, transparent);
+    background: var(--fd-bg-surface-translucent);
     display: flex;
     align-items: center;
     justify-content: center;

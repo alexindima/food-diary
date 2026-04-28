@@ -147,7 +147,7 @@
     height: 6px;
     border-radius: var(--fd-radius-pill);
     overflow: hidden;
-    background: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+    background: var(--fd-bg-muted-tint-strong);
 }
 
 .entity-card__quality-fill {

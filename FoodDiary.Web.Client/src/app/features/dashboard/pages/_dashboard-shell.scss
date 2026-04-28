@@ -176,7 +176,7 @@
         left: var(--fd-layout-sidebar-width);
         width: calc(100vw - var(--fd-layout-sidebar-width));
         height: 100vh;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 28%, transparent);
+        background: var(--fd-bg-overlay-muted);
         pointer-events: none;
         z-index: 1;
     }

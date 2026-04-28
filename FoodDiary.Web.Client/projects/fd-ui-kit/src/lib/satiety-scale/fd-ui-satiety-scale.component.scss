@@ -103,7 +103,7 @@
         width: 32px;
         height: 32px;
         border-radius: var(--fd-radius-pill);
-        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        background: var(--fd-bg-overlay-subtle);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -149,7 +149,7 @@
     }
 
     &__option--selected &__indicator {
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 85%, transparent);
+        background: var(--fd-bg-surface-translucent-soft);
         color: var(--fd-color-text);
     }
 

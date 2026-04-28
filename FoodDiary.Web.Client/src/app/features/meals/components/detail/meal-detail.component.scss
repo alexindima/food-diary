@@ -45,7 +45,7 @@
     &__quality-bar {
         --fd-progress-height: 8px;
         --fd-progress-radius: var(--fd-radius-pill);
-        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+        --fd-progress-track-background: var(--fd-bg-muted-tint-strong);
     }
 
     &__quality-fill {

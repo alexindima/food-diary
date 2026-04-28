@@ -43,7 +43,7 @@
     top: -5px;
     bottom: -5px;
     width: 2px;
-    background-color: color-mix(in srgb, var(--fd-color-slate-900) 35%, transparent);
+    background-color: var(--fd-bg-overlay-medium);
     transform: translateX(-50%);
     transition:
         left 0.3s ease,

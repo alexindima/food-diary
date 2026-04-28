@@ -131,8 +131,8 @@
         --fd-button-padding-x: 0;
         --fd-button-border-radius: 0;
         --fd-button-background-default: transparent;
-        --fd-button-background-hover: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
-        --fd-button-background-active: color-mix(in srgb, var(--fd-bg-surface-raised) 12%, transparent);
+        --fd-button-background-hover: var(--fd-bg-surface-glass-minimal);
+        --fd-button-background-active: var(--fd-bg-surface-glass-medium);
         --fd-button-border-default: transparent;
         --fd-button-border-hover: transparent;
         --fd-button-border-active: transparent;
@@ -192,7 +192,7 @@
         display: grid;
         place-items: center;
         padding: var(--fd-space-md);
-        background: color-mix(in srgb, var(--fd-color-slate-900) 55%, transparent);
+        background: var(--fd-bg-overlay-strong);
     }
 
     &__cropper {

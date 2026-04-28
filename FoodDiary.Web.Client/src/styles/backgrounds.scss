@@ -42,6 +42,50 @@
     background: var(--fd-bg-surface-solid);
 }
 
+.fd-bg-surface-glass-minimal {
+    background: var(--fd-bg-surface-glass-minimal);
+}
+
+.fd-bg-surface-glass-subtle {
+    background: var(--fd-bg-surface-glass-subtle);
+}
+
+.fd-bg-surface-glass-medium {
+    background: var(--fd-bg-surface-glass-medium);
+}
+
+.fd-bg-surface-glass {
+    background: var(--fd-bg-surface-glass);
+}
+
+.fd-bg-surface-glass-strong {
+    background: var(--fd-bg-surface-glass-strong);
+}
+
+.fd-bg-surface-translucent-soft {
+    background: var(--fd-bg-surface-translucent-soft);
+}
+
+.fd-bg-surface-translucent {
+    background: var(--fd-bg-surface-translucent);
+}
+
+.fd-bg-surface-translucent-solid {
+    background: var(--fd-bg-surface-translucent-solid);
+}
+
+.fd-bg-surface-inset-blend {
+    background: var(--fd-bg-surface-inset-blend);
+}
+
+.fd-bg-surface-inset-translucent {
+    background: var(--fd-bg-surface-inset-translucent);
+}
+
+.fd-bg-surface-inset-translucent-solid {
+    background: var(--fd-bg-surface-inset-translucent-solid);
+}
+
 .fd-bg-surface-brand {
     background: var(--fd-bg-surface-brand);
 }
@@ -62,8 +106,32 @@
     background: var(--fd-bg-overlay);
 }
 
+.fd-bg-overlay-subtle {
+    background: var(--fd-bg-overlay-subtle);
+}
+
+.fd-bg-overlay-muted {
+    background: var(--fd-bg-overlay-muted);
+}
+
+.fd-bg-overlay-medium {
+    background: var(--fd-bg-overlay-medium);
+}
+
+.fd-bg-overlay-strong {
+    background: var(--fd-bg-overlay-strong);
+}
+
 .fd-bg-scrim {
     background: var(--fd-bg-scrim);
+}
+
+.fd-bg-muted-tint {
+    background: var(--fd-bg-muted-tint);
+}
+
+.fd-bg-muted-tint-strong {
+    background: var(--fd-bg-muted-tint-strong);
 }
 
 .fd-bg-primary {

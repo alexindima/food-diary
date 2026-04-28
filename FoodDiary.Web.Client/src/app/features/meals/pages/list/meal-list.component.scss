@@ -164,7 +164,7 @@
     &__day-line {
         flex: 1;
         height: 1px;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        background: var(--fd-bg-overlay-subtle);
         border-radius: var(--fd-radius-pill);
     }
 

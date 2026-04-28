@@ -18,7 +18,7 @@
     &__skeleton {
         height: 12px;
         border-radius: var(--fd-radius-sm);
-        background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+        background: var(--fd-bg-muted-tint);
         animation: pulse 1.5s ease-in-out infinite;
 
         &--short {
@@ -96,7 +96,7 @@
     &__bar {
         height: 6px;
         border-radius: var(--fd-radius-sm);
-        background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+        background: var(--fd-bg-muted-tint);
         overflow: hidden;
     }
 
