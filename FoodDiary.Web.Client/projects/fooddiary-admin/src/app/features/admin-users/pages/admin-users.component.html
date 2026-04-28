@@ -38,10 +38,10 @@
                             <fd-ui-button
                                 type="button"
                                 variant="secondary"
-                                [disabled]="user.deletedAt || user.roles.includes('Admin') || impersonatingUserId() === user.id"
+                                [disabled]="user.deletedAt || user.roles.includes('Admin')"
                                 (click)="startImpersonation(user)"
                             >
-                                {{ impersonatingUserId() === user.id ? 'Starting...' : 'Impersonate' }}
+                                Impersonate
                             </fd-ui-button>
                         </td>
                     </tr>

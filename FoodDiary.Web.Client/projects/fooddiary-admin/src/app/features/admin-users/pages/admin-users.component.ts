@@ -6,7 +6,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
-import { AdminImpersonationSession, AdminUser, AdminUsersService } from '../api/admin-users.service';
+import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
+import { AdminImpersonationSession, AdminImpersonationStart, AdminUser, AdminUsersService } from '../api/admin-users.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -30,7 +31,6 @@ export class AdminUsersComponent {
     public readonly isLoading = signal(false);
     public readonly search = signal('');
     public readonly includeDeleted = signal(false);
-    public readonly impersonatingUserId = signal<string | null>(null);
     public readonly sessions = signal<AdminImpersonationSession[]>([]);
     public readonly sessionsPage = signal(1);
     public readonly sessionsTotalPages = signal(1);
@@ -100,27 +100,21 @@ export class AdminUsersComponent {
     }
 
     public startImpersonation(user: AdminUser): void {
-        const reason = window.prompt(`Reason for impersonating ${user.email}`);
-        const normalizedReason = reason?.trim();
-        if (!normalizedReason) {
-            return;
-        }
+        this.dialogService
+            .open<AdminUserImpersonationDialogComponent, AdminUser, AdminImpersonationStart | null>(AdminUserImpersonationDialogComponent, {
+                size: 'sm',
+                data: user,
+            })
+            .afterClosed()
+            .subscribe(response => {
+                if (!response) {
+                    return;
+                }
 
-        this.impersonatingUserId.set(user.id);
-        this.usersService
-            .startImpersonation(user.id, normalizedReason)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.impersonatingUserId.set(null);
-                    this.loadSessions();
-                    const targetUrl = new URL('/dashboard', environment.mainAppUrl);
-                    targetUrl.searchParams.set('impersonationToken', response.accessToken);
-                    window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
-                },
-                error: () => {
-                    this.impersonatingUserId.set(null);
-                },
+                this.loadSessions();
+                const targetUrl = new URL('/dashboard', environment.mainAppUrl);
+                targetUrl.searchParams.set('impersonationToken', response.accessToken);
+                window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
             });
     }
 

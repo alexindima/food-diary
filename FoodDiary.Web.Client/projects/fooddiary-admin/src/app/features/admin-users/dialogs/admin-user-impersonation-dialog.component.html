@@ -1,0 +1,26 @@
+<fd-ui-dialog title="Start impersonation" size="sm">
+    <form class="admin-user-impersonation-dialog" [formGroup]="form" (ngSubmit)="submit()">
+        <p>Target user: {{ targetEmail }}</p>
+
+        <fd-ui-textarea
+            formControlName="reason"
+            label="Reason"
+            placeholder="Describe why support needs access..."
+            [rows]="4"
+            [maxLength]="500"
+            [required]="true"
+            [error]="reasonError"
+        />
+
+        @if (submitError()) {
+            <p class="admin-user-impersonation-dialog__error">{{ submitError() }}</p>
+        }
+    </form>
+
+    <div fdUiDialogFooter>
+        <fd-ui-button type="button" variant="secondary" [disabled]="isSubmitting()" (click)="close()">Cancel</fd-ui-button>
+        <fd-ui-button type="button" [disabled]="isSubmitting()" (click)="submit()">
+            {{ isSubmitting() ? 'Starting...' : 'Start' }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

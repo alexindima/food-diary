@@ -1,0 +1,11 @@
+.admin-user-impersonation-dialog {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-user-impersonation-dialog__error {
+    margin: 0;
+    color: var(--fd-color-danger);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+}

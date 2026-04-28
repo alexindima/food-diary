@@ -4,6 +4,7 @@ import { of, Subject } from 'rxjs';
 import { AdminUsersComponent } from './admin-users.component';
 import { AdminUsersService } from '../api/admin-users.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 
 describe('AdminUsersComponent', () => {
     let component: AdminUsersComponent;
@@ -164,5 +165,30 @@ describe('AdminUsersComponent', () => {
 
         expect(dialogService.open).toHaveBeenCalled();
         expect(usersService.getUsers).toHaveBeenCalledTimes(2);
+    });
+
+    it('should open impersonation dialog and start session from dialog result', () => {
+        const close$ = new Subject<{ accessToken: string; expiresAtUtc: string; reason: string } | null>();
+        const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+        dialogService.open.mockReturnValue({
+            afterClosed: () => close$.asObservable(),
+        });
+
+        component.startImpersonation(pagedUsers.items[0] as any);
+        close$.next({
+            accessToken: 'token',
+            expiresAtUtc: '2026-01-01T00:10:00Z',
+            reason: 'Support case investigation',
+        });
+        close$.complete();
+
+        expect(dialogService.open).toHaveBeenCalledWith(AdminUserImpersonationDialogComponent, {
+            size: 'sm',
+            data: pagedUsers.items[0],
+        });
+        expect(usersService.getImpersonationSessions).toHaveBeenCalledTimes(2);
+        expect(openSpy).toHaveBeenCalledWith('http://localhost:4200/dashboard?impersonationToken=token', '_blank', 'noopener,noreferrer');
+
+        openSpy.mockRestore();
     });
 });
