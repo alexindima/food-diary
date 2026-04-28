@@ -15,7 +15,9 @@ export class JwtDecoderService {
             const padLength = (4 - (normalized.length % 4 || 4)) % 4;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
-            return JSON.parse(decoded) as Record<string, unknown>;
+            const bytes = Uint8Array.from(decoded, character => character.charCodeAt(0));
+            const payload = new TextDecoder().decode(bytes);
+            return JSON.parse(payload) as Record<string, unknown>;
         } catch {
             return null;
         }

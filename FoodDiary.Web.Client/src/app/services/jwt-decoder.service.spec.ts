@@ -4,7 +4,9 @@ import { JwtDecoderService } from './jwt-decoder.service';
 
 function encodePayload(payload: Record<string, unknown>): string {
     const json = JSON.stringify(payload);
-    const base64 = btoa(json);
+    const bytes = new TextEncoder().encode(json);
+    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+    const base64 = btoa(binary);
     return `header.${base64}.signature`;
 }
 
@@ -34,8 +36,16 @@ describe('JwtDecoderService', () => {
         it('should handle URL-safe base64 characters', () => {
             const payload = { data: 'test+value/end' };
             const json = JSON.stringify(payload);
-            const urlSafe = btoa(json).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+            const bytes = new TextEncoder().encode(json);
+            const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+            const urlSafe = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
             const token = `header.${urlSafe}.sig`;
+            expect(service.decodePayload(token)).toEqual(payload);
+        });
+
+        it('should decode UTF-8 claim values', () => {
+            const payload = { fd_impersonation_reason: 'Проверка ошибки пользователя' };
+            const token = encodePayload(payload);
             expect(service.decodePayload(token)).toEqual(payload);
         });
     });
