@@ -14,7 +14,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: var(--fd-button-justify-content);
-    gap: 4px;
+    gap: var(--fd-button-gap);
     font-size: var(--fd-button-font-size);
     line-height: var(--fd-button-line-height);
     font-weight: var(--fd-button-font-weight);

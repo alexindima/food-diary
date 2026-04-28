@@ -34,7 +34,7 @@
 
 .fd-ui-section-state__error-icon {
     color: var(--fd-color-danger);
-    font-size: 2rem;
+    font-size: var(--fd-section-state-error-icon-size);
 }
 
 .fd-ui-section-state__error-title {

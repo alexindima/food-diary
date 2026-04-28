@@ -227,7 +227,7 @@
         }
     }
 
-    @media (min-width: 761px) {
+    @media #{variables.$media-tablet-up} {
 
         &__summary {
             width: 100%;

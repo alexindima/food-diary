@@ -31,6 +31,7 @@
 .fd-ui-emoji-picker--size-sm {
     --fd-emoji-picker-option-width: 48px;
     --fd-emoji-picker-option-height: 48px;
+    --fd-emoji-picker-emoji-size: var(--fd-emoji-picker-emoji-size-sm);
     --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding-sm);
     --fd-emoji-picker-gap: var(--fd-space-emoji-picker-gap-sm);
 }
@@ -99,12 +100,12 @@
 }
 
 .fd-ui-emoji-picker__emoji {
-    font-size: 1.7rem;
+    font-size: var(--fd-emoji-picker-emoji-size);
     line-height: 1;
 }
 
 .fd-ui-emoji-picker--size-sm .fd-ui-emoji-picker__emoji {
-    font-size: 1.4rem;
+    font-size: var(--fd-emoji-picker-emoji-size);
 }
 
 .fd-ui-emoji-picker__text {

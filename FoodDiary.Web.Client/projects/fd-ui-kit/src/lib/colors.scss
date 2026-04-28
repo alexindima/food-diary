@@ -360,6 +360,7 @@ html[data-theme='dark'] {
     --fd-button-font-size: var(--fd-text-action-size);
     --fd-button-line-height: var(--fd-text-action-line-height);
     --fd-button-font-weight: var(--fd-text-action-weight);
+    --fd-button-gap: var(--fd-space-xxs);
     --fd-button-width: auto;
     --fd-button-height-explicit: auto;
     --fd-button-position: static;
@@ -399,6 +400,9 @@ html[data-theme='dark'] {
     --fd-button-focus-ring-shadow:
         0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 86%, transparent),
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 64%, transparent);
+    --fd-emoji-picker-emoji-size: 1.7rem;
+    --fd-emoji-picker-emoji-size-sm: 1.4rem;
+    --fd-section-state-error-icon-size: 2rem;
 
     --fd-button-outline-background-default: transparent;
     --fd-button-outline-background-hover: var(--fd-color-primary-50);

@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .fd-period-filter {
     display: flex;
     flex-wrap: wrap;
@@ -15,7 +17,7 @@
         min-width: 240px;
     }
 
-    @media (min-width: 768px) {
+    @media #{variables.$media-tablet-up} {
         flex-wrap: nowrap;
     }
 }
