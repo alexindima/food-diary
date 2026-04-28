@@ -6,7 +6,9 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
-import { AdminUser, AdminUsersService } from '../api/admin-users.service';
+import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
+import { AdminImpersonationSession, AdminImpersonationStart, AdminUser, AdminUsersService } from '../api/admin-users.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'fd-admin-users',
@@ -29,9 +31,16 @@ export class AdminUsersComponent {
     public readonly isLoading = signal(false);
     public readonly search = signal('');
     public readonly includeDeleted = signal(false);
+    public readonly sessions = signal<AdminImpersonationSession[]>([]);
+    public readonly sessionsPage = signal(1);
+    public readonly sessionsTotalPages = signal(1);
+    public readonly sessionsTotalItems = signal(0);
+    public readonly sessionsSearch = signal('');
+    public readonly isSessionsLoading = signal(false);
 
     public constructor() {
         this.loadUsers();
+        this.loadSessions();
     }
 
     public loadUsers(): void {
@@ -88,5 +97,60 @@ export class AdminUsersComponent {
                     this.loadUsers();
                 }
             });
+    }
+
+    public startImpersonation(user: AdminUser): void {
+        this.dialogService
+            .open<AdminUserImpersonationDialogComponent, AdminUser, AdminImpersonationStart | null>(AdminUserImpersonationDialogComponent, {
+                size: 'sm',
+                data: user,
+            })
+            .afterClosed()
+            .subscribe(response => {
+                if (!response) {
+                    return;
+                }
+
+                this.loadSessions();
+                const targetUrl = new URL('/dashboard', environment.mainAppUrl);
+                targetUrl.searchParams.set('impersonationToken', response.accessToken);
+                window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
+            });
+    }
+
+    public loadSessions(): void {
+        this.isSessionsLoading.set(true);
+        this.usersService
+            .getImpersonationSessions(this.sessionsPage(), this.limit, this.sessionsSearch().trim() || null)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => {
+                    this.sessions.set(response.items);
+                    this.sessionsTotalPages.set(response.totalPages);
+                    this.sessionsTotalItems.set(response.totalItems);
+                    this.isSessionsLoading.set(false);
+                },
+                error: () => {
+                    this.sessions.set([]);
+                    this.sessionsTotalPages.set(1);
+                    this.sessionsTotalItems.set(0);
+                    this.isSessionsLoading.set(false);
+                },
+            });
+    }
+
+    public onSessionsSearchChange(value: string): void {
+        this.sessionsSearch.set(value);
+        this.sessionsPage.set(1);
+        this.loadSessions();
+    }
+
+    public goToSessionsPage(page: number): void {
+        if (page < 1 || page > this.sessionsTotalPages()) {
+            return;
+        }
+
+        this.sessionsPage.set(page);
+        this.loadSessions();
     }
 }

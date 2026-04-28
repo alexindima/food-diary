@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Billing.Mappings;
 using FoodDiary.Presentation.Api.Features.Billing.Requests;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<CheckoutSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> CreateCheckoutSession(
         [FromCurrentUser] Guid userId,
         [FromBody] CreateCheckoutSessionHttpRequest request) =>
@@ -32,6 +34,7 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [HttpPost("portal-session")]
     [ProducesResponseType<PortalSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> CreatePortalSession([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToPortalSessionCommand(), static value => value.ToHttpResponse());
 }

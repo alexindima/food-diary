@@ -48,6 +48,9 @@ export class AuthService extends ApiService {
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
     public readonly isPremium = computed(() => this.hasRole('Premium'));
     public readonly isDietologist = computed(() => this.hasRole('Dietologist'));
+    public readonly isImpersonating = computed(() => this.jwtDecoder.isImpersonation(this.authTokenSignal()));
+    public readonly impersonationActorId = computed(() => this.jwtDecoder.extractImpersonationActorId(this.authTokenSignal()));
+    public readonly impersonationReason = computed(() => this.jwtDecoder.extractImpersonationReason(this.authTokenSignal()));
     public readonly isAuthReady = this.authReadySignal.asReadonly();
 
     public initializeAuth(): void {
@@ -283,6 +286,7 @@ export class AuthService extends ApiService {
     }
 
     private async restoreSessionInternal(): Promise<void> {
+        this.captureImpersonationTokenFromQuery();
         this.initializeAuth();
         if (this.isAuthenticated()) {
             return;
@@ -338,6 +342,26 @@ export class AuthService extends ApiService {
 
     private getClientOrigin(): string | undefined {
         return typeof window === 'undefined' ? undefined : window.location.origin;
+    }
+
+    private captureImpersonationTokenFromQuery(): void {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        const url = new URL(window.location.href);
+        const token = url.searchParams.get('impersonationToken');
+        if (!token) {
+            return;
+        }
+
+        this.tokenStorage.clearAll();
+        this.tokenStorage.setToken(token, false);
+        this.authTokenSignal.set(token);
+
+        url.searchParams.delete('impersonationToken');
+        const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+        window.history.replaceState({}, '', nextUrl);
     }
 }
 

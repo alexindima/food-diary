@@ -15,7 +15,9 @@ export class JwtDecoderService {
             const padLength = (4 - (normalized.length % 4 || 4)) % 4;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
-            return JSON.parse(decoded) as Record<string, unknown>;
+            const bytes = Uint8Array.from(decoded, character => character.charCodeAt(0));
+            const payload = new TextDecoder().decode(bytes);
+            return JSON.parse(payload) as Record<string, unknown>;
         } catch {
             return null;
         }
@@ -60,6 +62,35 @@ export class JwtDecoderService {
         }
 
         return [];
+    }
+
+    public isImpersonation(token: string | null): boolean {
+        if (!token) {
+            return false;
+        }
+
+        const payload = this.decodePayload(token);
+        return payload?.['fd_impersonation'] === 'true';
+    }
+
+    public extractImpersonationActorId(token: string | null): string | null {
+        if (!token) {
+            return null;
+        }
+
+        const payload = this.decodePayload(token);
+        const value = payload?.['fd_impersonated_by'];
+        return typeof value === 'string' ? value : null;
+    }
+
+    public extractImpersonationReason(token: string | null): string | null {
+        if (!token) {
+            return null;
+        }
+
+        const payload = this.decodePayload(token);
+        const value = payload?.['fd_impersonation_reason'];
+        return typeof value === 'string' ? value : null;
     }
 
     public extractExpirationTimeMs(token: string | null): number | null {

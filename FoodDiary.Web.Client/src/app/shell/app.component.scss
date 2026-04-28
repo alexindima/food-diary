@@ -25,6 +25,7 @@
     min-height: 100dvh;
     background: var(--fd-layout-page-background);
     --fd-layout-sidebar-width: 260px;
+    --fd-impersonation-banner-height: 48px;
     overflow: hidden;
 
     &__sidebar {
@@ -72,6 +73,40 @@
     &__footer {
         flex: 0 0 auto;
     }
+}
+
+.fd-impersonation-banner {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: var(--fd-impersonation-banner-height);
+    padding: 8px 16px;
+    box-sizing: border-box;
+    background: #7f1d1d;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.12);
+}
+
+.fd-impersonation-banner__reason {
+    max-width: min(560px, 45vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+}
+
+.fd-impersonation-banner__button {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 6px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font: inherit;
+    cursor: pointer;
 }
 
 body.cdk-global-scrollblock .fd-root__sidebar,
@@ -140,6 +175,15 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 
     .fd-root__footer {
         display: none;
+    }
+
+    .fd-impersonation-banner {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .fd-impersonation-banner__reason {
+        max-width: 100%;
     }
 }
 

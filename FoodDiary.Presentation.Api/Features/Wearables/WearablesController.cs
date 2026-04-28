@@ -2,6 +2,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Wearables.Mappings;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Wearables.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ public class WearablesController(ISender mediator) : AuthorizedController(mediat
 
     [HttpPost("{provider}/connect")]
     [ProducesResponseType<WearableConnectionHttpResponse>(StatusCodes.Status200OK)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> Connect(
         [FromCurrentUser] Guid userId,
         string provider,
@@ -32,6 +34,7 @@ public class WearablesController(ISender mediator) : AuthorizedController(mediat
 
     [HttpDelete("{provider}/disconnect")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> Disconnect(
         [FromCurrentUser] Guid userId,
         string provider) =>

@@ -83,6 +83,17 @@ public class AuthenticationTokenServiceTests {
             return "access-token";
         }
 
+        public string GenerateAccessToken(
+            UserId userId,
+            string email,
+            IReadOnlyCollection<string> roles,
+            JwtImpersonationContext impersonation) {
+            LastAccessUserId = userId;
+            LastAccessEmail = email;
+            LastAccessRoles = roles.ToArray();
+            return "impersonation-access-token";
+        }
+
         public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) {
             return "refresh-token";
         }

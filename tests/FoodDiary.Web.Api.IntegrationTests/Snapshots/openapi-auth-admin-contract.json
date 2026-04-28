@@ -143,10 +143,43 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/users/impersonation-sessions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/users/{id}",
       "Operations": [
         {
           "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/users/{id}/impersonation",
+      "Operations": [
+        {
+          "Method": "post",
           "HasRequestBody": true,
           "ResponseCodes": [
             "200",

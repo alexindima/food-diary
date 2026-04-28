@@ -3,10 +3,12 @@ using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -54,6 +56,27 @@ public static class AdminHttpMappings {
             Language: request.Language,
             AiInputTokenLimit: request.AiInputTokenLimit,
             AiOutputTokenLimit: request.AiOutputTokenLimit);
+    }
+
+    public static StartAdminImpersonationCommand ToCommand(
+        this AdminImpersonationStartHttpRequest request,
+        Guid actorUserId,
+        Guid targetUserId,
+        string? actorIpAddress,
+        string? actorUserAgent) {
+        return new StartAdminImpersonationCommand(
+            ActorUserId: actorUserId,
+            TargetUserId: targetUserId,
+            Reason: request.Reason,
+            ActorIpAddress: actorIpAddress,
+            ActorUserAgent: actorUserAgent);
+    }
+
+    public static GetAdminImpersonationSessionsQuery ToQuery(this GetAdminImpersonationSessionsHttpQuery query) {
+        return new GetAdminImpersonationSessionsQuery(
+            Page: query.Page,
+            Limit: query.Limit,
+            Search: query.Search);
     }
 
     public static ReviewContentReportCommand ToReviewCommand(this AdminReportActionHttpRequest request, Guid reportId) {

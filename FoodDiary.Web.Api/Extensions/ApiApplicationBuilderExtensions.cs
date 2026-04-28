@@ -28,6 +28,7 @@ public static class ApiApplicationBuilderExtensions {
         app.UseAuthentication();
         app.UseRateLimiter();
         app.UseAuthorization();
+        app.UseMiddleware<ImpersonationAccessGuardMiddleware>();
         app.UseOutputCache();
 
         app.MapHealthChecks("/health/live", new HealthCheckOptions {

@@ -26,6 +26,28 @@ public static class AdminHttpResponseMappings {
         );
     }
 
+    public static AdminImpersonationStartHttpResponse ToHttpResponse(this AdminImpersonationStartModel model) {
+        return new AdminImpersonationStartHttpResponse(
+            model.AccessToken,
+            model.TargetUserId,
+            model.TargetEmail,
+            model.ActorUserId,
+            model.Reason);
+    }
+
+    public static AdminImpersonationSessionHttpResponse ToHttpResponse(this AdminImpersonationSessionReadModel model) {
+        return new AdminImpersonationSessionHttpResponse(
+            model.Id,
+            model.ActorUserId,
+            model.ActorEmail,
+            model.TargetUserId,
+            model.TargetEmail,
+            model.Reason,
+            model.ActorIpAddress,
+            model.ActorUserAgent,
+            model.StartedAtUtc);
+    }
+
     public static AdminAiPromptHttpResponse ToAiPromptHttpResponse(this AdminAiPromptModel model) {
         return new AdminAiPromptHttpResponse(
             model.Id,
@@ -93,6 +115,11 @@ public static class AdminHttpResponseMappings {
     }
 
     public static PagedHttpResponse<AdminUserHttpResponse> ToHttpResponse(this PagedResponse<AdminUserModel> response) {
+        return response.ToPagedHttpResponse(ToHttpResponse);
+    }
+
+    public static PagedHttpResponse<AdminImpersonationSessionHttpResponse> ToImpersonationSessionsHttpResponse(
+        this PagedResponse<AdminImpersonationSessionReadModel> response) {
         return response.ToPagedHttpResponse(ToHttpResponse);
     }
 
