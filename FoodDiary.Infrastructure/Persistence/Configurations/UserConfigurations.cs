@@ -1,6 +1,5 @@
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -36,8 +35,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         entity.Property(e => e.DeletedAt)
             .HasColumnType("timestamp with time zone");
         entity.Property(e => e.ActivityLevel)
-            .HasConversion<string>()
-            .HasDefaultValue(ActivityLevel.Moderate);
+            .HasConversion<string>();
         entity.Property(e => e.Language)
             .HasDefaultValue("en");
         entity.Property(e => e.Theme)
