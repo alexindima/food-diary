@@ -1,6 +1,6 @@
 .fd-ui-progress-item {
     --fd-progress-item-padding: var(--fd-space-progress-item-padding);
-    --fd-progress-item-radius: 8px;
+    --fd-progress-item-radius: var(--fd-radius-md);
     --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
     display: block;
     padding: var(--fd-progress-item-padding);
@@ -13,7 +13,7 @@
     justify-content: space-between;
     align-items: baseline;
     gap: var(--fd-space-progress-item-header-gap);
-    margin-bottom: 6px;
+    margin-bottom: var(--fd-space-xxs);
 }
 
 .fd-ui-progress-item__value {

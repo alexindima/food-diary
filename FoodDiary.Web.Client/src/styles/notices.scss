@@ -2,8 +2,8 @@
     --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-surface));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 24%, var(--fd-color-border));
     --fd-notice-surface-color: var(--fd-color-text);
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border-radius: var(--fd-radius-panel);
     border: 1px solid var(--fd-notice-surface-border);
     background: var(--fd-notice-surface-bg);
     color: var(--fd-notice-surface-color);

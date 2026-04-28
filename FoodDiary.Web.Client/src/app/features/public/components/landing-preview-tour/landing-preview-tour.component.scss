@@ -9,7 +9,7 @@
 
 @mixin preview-light-surface($padding: var(--fd-space-sm) var(--fd-space-md)) {
     display: grid;
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
     padding: $padding;
     border-radius: var(--fd-landing-radius-card);
     background: var(--fd-landing-surface-strong);
@@ -19,7 +19,7 @@
 
 @mixin preview-dark-inset-surface($padding: clamp(14px, 1.8vw, 18px)) {
     display: grid;
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
     padding: $padding;
     border-radius: var(--fd-landing-radius-card);
     background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
@@ -36,7 +36,7 @@
         @include landing.section-copy-shell;
 
         &--secondary {
-            margin-top: variables.$gap-l;
+            margin-top: var(--fd-space-lg);
             padding-top: clamp(18px, 2vw, 24px);
         }
 
@@ -99,13 +99,13 @@
     }
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(variables.$gap-l, 4vw, 44px);
+    gap: clamp(var(--fd-space-lg), 4vw, 44px);
     margin-top: 0;
 
     &__item {
         display: grid;
         grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
-        gap: clamp(variables.$gap-m, 3vw, 34px);
+        gap: clamp(var(--fd-space-md), 3vw, 34px);
         align-items: start;
         min-width: 0;
         padding: clamp(16px, 2vw, 22px);
@@ -132,7 +132,7 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
         padding: clamp(4px, 1vw, 10px);
         min-width: 0;
     }
@@ -188,7 +188,7 @@
 
 .landing-preview__showcase {
     display: grid;
-    gap: clamp(variables.$gap-m, 3vw, 28px);
+    gap: clamp(var(--fd-space-md), 3vw, 28px);
     padding: var(--fd-landing-surface-padding-lg);
     border-radius: var(--fd-landing-radius-panel);
     background: var(--fd-landing-surface);
@@ -200,7 +200,7 @@
 .landing-preview__showcase-grid {
     display: grid;
     grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
-    gap: clamp(variables.$gap-m, 3vw, 28px);
+    gap: clamp(var(--fd-space-md), 3vw, 28px);
     align-items: start;
 }
 
@@ -244,14 +244,14 @@
 
 .landing-preview__stack {
     display: grid;
-    gap: clamp(variables.$gap-l, 4vw, 44px);
-    margin-top: variables.$gap-m;
+    gap: clamp(var(--fd-space-lg), 4vw, 44px);
+    margin-top: var(--fd-space-md);
 }
 
 .landing-tour-block {
     margin-top: 0;
     display: grid;
-    gap: clamp(variables.$gap-m, 3vw, 34px);
+    gap: clamp(var(--fd-space-md), 3vw, 34px);
     align-items: start;
     min-width: 0;
     @include dark-panel.dark-panel(
@@ -268,7 +268,7 @@
 
     &__catalog {
         display: grid;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__catalog-copy {
@@ -288,14 +288,14 @@
     &__cards {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-items: stretch;
     }
 
     &__draft {
         display: grid;
         grid-template-columns: minmax(280px, 0.44fr) minmax(0, 0.56fr);
-        gap: clamp(variables.$gap-m, 3vw, 34px);
+        gap: clamp(var(--fd-space-md), 3vw, 34px);
         align-items: start;
     }
 
@@ -377,11 +377,11 @@
     margin-top: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 
     &__catalog {
         display: grid;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         align-content: start;
     }
 
@@ -398,7 +398,7 @@
     &__cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         justify-items: stretch;
     }
 

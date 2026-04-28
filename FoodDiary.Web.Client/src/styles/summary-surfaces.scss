@@ -1,6 +1,6 @@
 .fd-ui-summary-surface {
-    --fd-summary-surface-padding: 0.75rem 1rem;
-    --fd-summary-surface-gap: 0.35rem;
+    --fd-summary-surface-padding: var(--fd-space-sm) var(--fd-space-md);
+    --fd-summary-surface-gap: var(--fd-space-xxs);
     --fd-summary-surface-radius: var(--fd-radius-lg);
     --fd-summary-surface-background: var(--fd-color-primary-50);
     display: flex;
@@ -13,7 +13,7 @@
 }
 
 .fd-ui-summary-surface--quality {
-    --fd-summary-surface-gap: 0.6rem;
+    --fd-summary-surface-gap: var(--fd-space-xs);
 }
 
 .fd-ui-summary-surface__label {

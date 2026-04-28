@@ -11,12 +11,12 @@
 }
 
 .dietologist-invitation__description {
-    margin: 0 0 16px;
+    margin: 0 0 var(--fd-space-md);
     color: var(--fd-text-muted, var(--fd-color-gray-500-static));
 }
 
 .dietologist-invitation__meta {
-    margin: 0 0 16px;
+    margin: 0 0 var(--fd-space-md);
     color: var(--fd-color-slate-600);
 }
 

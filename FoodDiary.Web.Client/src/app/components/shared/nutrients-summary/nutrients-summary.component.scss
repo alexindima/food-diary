@@ -50,7 +50,7 @@
 
         .nutrient-color {
             margin-right: var(--fd-space-xs);
-            border-radius: variables.$border-radius-s;
+            border-radius: var(--fd-radius-xs);
             display: inline-block;
         }
     }

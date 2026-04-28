@@ -7,7 +7,7 @@
 .fd-ui-date-range-input {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: variables.$gap-s;
+    gap: var(--fd-space-sm);
     align-items: center;
 }
 

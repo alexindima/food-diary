@@ -29,7 +29,7 @@
 
     p {
         margin: 0;
-        font-size: variables.$font-size-main;
+        font-size: var(--fd-font-size-base);
         color: #a94442;
     }
 }

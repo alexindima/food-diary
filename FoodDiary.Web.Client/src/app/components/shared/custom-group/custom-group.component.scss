@@ -6,7 +6,7 @@
 
 .custom-group {
     border: 2px solid var(--fd-color-border);
-    border-radius: variables.$border-radius-m;
+    border-radius: var(--fd-radius-md);
     padding: var(--fd-space-lg);
     position: relative;
     background-color: var(--custom-group-background, transparent);
@@ -17,7 +17,7 @@
     top: -11px;
     background: var(--fd-color-white);
     border: 2px solid var(--fd-color-border);
-    border-radius: variables.$border-radius-s;
+    border-radius: var(--fd-radius-xs);
     padding: 0 var(--fd-space-xs);
     line-height: 20px;
     color: var(--fd-color-text);
@@ -29,7 +29,7 @@
     left: 10px;
     background: var(--fd-color-white);
     border: 2px solid var(--fd-color-border);
-    border-radius: variables.$border-radius-s;
+    border-radius: var(--fd-radius-xs);
     padding: 0;
     width: 24px;
     font-size: 16px;
@@ -45,7 +45,7 @@
     --fd-button-height: 20px;
     --fd-button-height-explicit: 20px;
     --fd-button-padding-x: var(--fd-space-xs);
-    --fd-button-border-radius: #{variables.$border-radius-s};
+    --fd-button-border-radius: var(--fd-radius-xs);
     --fd-button-font-size: 10px;
     --fd-button-font-weight: 700;
     --fd-button-shadow-default: none;

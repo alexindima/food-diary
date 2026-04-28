@@ -33,8 +33,12 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 ## SCSS
 - Import shared variables as:
   - `@use 'variables' as variables;`
-- Reference tokens with explicit namespace:
-  - `variables.$gap-m`
+- Use `variables` only for Sass-only media query aliases:
+  - `@media #{variables.$media-tablet}`
+- Use CSS design tokens for runtime styling:
+  - `var(--fd-space-md)`
+  - `var(--fd-radius-md)`
+  - `var(--fd-text-body-size)`
 - Do not use:
   - `@use 'variables' as *;`
 

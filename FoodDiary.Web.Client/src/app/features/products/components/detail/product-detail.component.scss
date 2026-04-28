@@ -3,22 +3,22 @@
 .product-detail {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--fd-space-lg);
 
     &__tabs {
-        margin: -0.5rem -0.25rem 0.75rem;
-        padding-bottom: 0.25rem;
+        margin: calc(0px - var(--fd-space-xs)) calc(0px - var(--fd-space-xxs)) var(--fd-space-sm);
+        padding-bottom: var(--fd-space-xxs);
     }
 
     &__summary {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 0.75rem;
-        margin-bottom: 0.5rem;
+        gap: var(--fd-space-sm);
+        margin-bottom: var(--fd-space-xs);
     }
 
     &__surface {
-        --fd-summary-surface-padding: 0.75rem 1rem;
+        --fd-summary-surface-padding: var(--fd-space-sm) var(--fd-space-md);
     }
 
     &__surface--summary {
@@ -28,21 +28,21 @@
     &__nutrients {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1rem;
+        gap: var(--fd-space-md);
         align-items: stretch;
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--fd-space-xs);
     }
 
     &__macro-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 0.85rem;
+        gap: var(--fd-space-sm);
     }
 
     &__charts {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 0.85rem;
+        gap: var(--fd-space-sm);
         justify-items: center;
     }
 
@@ -56,7 +56,7 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 0.75rem;
+        gap: var(--fd-space-sm);
     }
 
     &__actions {

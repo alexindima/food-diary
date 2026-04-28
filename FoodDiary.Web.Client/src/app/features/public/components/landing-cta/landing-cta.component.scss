@@ -23,7 +23,7 @@
 
     &__actions {
         display: flex;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         flex-wrap: wrap;
     }
 
@@ -42,12 +42,12 @@
             color-mix(in srgb, var(--fd-color-teal-500) 90%, transparent)
         );
         border-radius: 28px;
-        padding: clamp(variables.$gap-l, 3vw, 32px);
+        padding: clamp(var(--fd-space-lg), 3vw, 32px);
         border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         box-shadow: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         display: flex;
         justify-content: space-between;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         align-items: center;
         animation: landingFadeUp 780ms ease-out both;
 

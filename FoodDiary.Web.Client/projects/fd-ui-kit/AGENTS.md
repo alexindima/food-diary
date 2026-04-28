@@ -16,7 +16,8 @@ Rules for `FoodDiary.Web.Client/projects/fd-ui-kit/`.
 - Follow Angular strict typing conventions.
 - Prefer `input()` / `output()` helpers.
 - Keep styles token-driven; avoid hardcoded colors when design token exists.
-- Use `@use 'variables' as variables;` for shared SCSS tokens.
+- Use CSS design tokens for runtime styling, for example `var(--fd-space-md)` and `var(--fd-radius-md)`.
+- Use `@use 'variables' as variables;` only when a Sass-only helper such as a media query alias is needed.
 
 ## Change Policy
 - If same UI behavior is duplicated across app pages, move it into UI kit.

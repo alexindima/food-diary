@@ -1,20 +1,20 @@
 .privacy-policy {
     min-height: 100vh;
     background: var(--fd-color-slate-50);
-    padding: 40px 20px 80px;
+    padding: var(--fd-space-xxl) var(--fd-space-lg) calc(var(--fd-space-xxl) + var(--fd-space-xxl));
 
     &__container {
         max-width: 720px;
         margin: 0 auto;
         background: var(--fd-color-white);
         border-radius: 16px;
-        padding: 40px;
+        padding: var(--fd-space-xxl);
         box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
     }
 
     &__title {
         color: var(--fd-color-slate-900);
-        margin: 0 0 24px;
+        margin: 0 0 var(--fd-space-lg);
     }
 
     &__content {
@@ -33,11 +33,11 @@
     }
 
     &__content p {
-        margin: 0 0 12px;
+        margin: 0 0 var(--fd-space-sm);
     }
 
     &__content ul {
-        margin: 0 0 12px;
+        margin: 0 0 var(--fd-space-sm);
         padding-left: var(--fd-space-lg);
     }
 

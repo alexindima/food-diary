@@ -89,7 +89,7 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
 
         &--center {
             align-items: center;
@@ -97,7 +97,7 @@
         }
 
         &--secondary {
-            margin-top: variables.$gap-l;
+            margin-top: var(--fd-space-lg);
         }
     }
 
@@ -120,7 +120,7 @@
 
     &__actions {
         display: flex;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         flex-wrap: wrap;
     }
 
@@ -152,12 +152,12 @@
         max-width: 1180px;
         background: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
         border-radius: 16px;
-        padding: clamp(variables.$gap-m, 2.5vw, variables.$gap-xl);
+        padding: clamp(var(--fd-space-md), 2.5vw, var(--fd-space-lg));
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
         box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         display: flex;
         justify-content: space-between;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-items: center;
 
         @media #{variables.$media-tablet} {
@@ -170,15 +170,15 @@
 .landing-preview {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: variables.$gap-m;
-    margin-top: variables.$gap-m;
+    gap: var(--fd-space-md);
+    margin-top: var(--fd-space-md);
 }
 
 .landing-tour {
-    margin-top: variables.$gap-m;
+    margin-top: var(--fd-space-md);
     display: grid;
     grid-template-columns: 1.3fr 0.9fr;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
 
     @media #{variables.$media-desktop} {
         grid-template-columns: 1fr;
@@ -186,7 +186,7 @@
 
     &__catalog {
         display: grid;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-content: start;
     }
 
@@ -194,10 +194,10 @@
         background: var(--fd-color-white);
         border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
         border-radius: 14px;
-        padding: variables.$gap-m;
+        padding: var(--fd-space-md);
         box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         display: grid;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__group-title {
@@ -207,7 +207,7 @@
     &__cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__card {
@@ -219,10 +219,10 @@
         background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 15%, transparent);
         border-radius: 16px;
-        padding: variables.$gap-m;
+        padding: var(--fd-space-md);
         box-shadow: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         display: grid;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-content: start;
     }
 
@@ -234,18 +234,18 @@
 .landing-steps {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: variables.$gap-m;
-    margin-top: variables.$gap-m;
+    gap: var(--fd-space-md);
+    margin-top: var(--fd-space-md);
 
     &__item {
         background: var(--fd-color-white);
         border-radius: 14px;
-        padding: variables.$gap-m;
+        padding: var(--fd-space-md);
         border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
         box-shadow: 0 10px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-xs);
     }
 
     &__icon {
@@ -271,8 +271,8 @@
 
 .landing-faq {
     display: grid;
-    gap: variables.$gap-s;
-    margin-top: variables.$gap-m;
+    gap: var(--fd-space-sm);
+    margin-top: var(--fd-space-md);
 
     &__item {
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
@@ -291,7 +291,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
 
         &::-webkit-details-marker {
             display: none;
@@ -325,8 +325,8 @@
 
     &__guides {
         display: grid;
-        gap: variables.$gap-s;
-        margin-top: variables.$gap-m;
+        gap: var(--fd-space-sm);
+        margin-top: var(--fd-space-md);
     }
 
     &__guides-title {
@@ -337,7 +337,7 @@
     &__guides-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__guide-link {

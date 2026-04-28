@@ -20,7 +20,7 @@
         @include landing.section-inner;
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-        gap: clamp(variables.$gap-l, 3vw, variables.$gap-xxl);
+        gap: clamp(var(--fd-space-lg), 3vw, var(--fd-space-xxl));
         align-items: stretch;
     }
 
@@ -38,7 +38,7 @@
     }
 
     &__title {
-        margin: 14px 0 0;
+        margin: var(--fd-space-sm) 0 0;
         @include landing.marketing-title(clamp(28px, 3vw, 38px), 1.08, -0.02em, var(--fd-color-text));
     }
 
@@ -50,13 +50,13 @@
     &__steps {
         margin-top: clamp(18px, 2vw, 28px);
         display: grid;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__step {
         display: grid;
         grid-template-columns: 40px minmax(0, 1fr);
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
         background: var(--fd-landing-surface-strong);
@@ -94,7 +94,7 @@
         margin-top: clamp(18px, 2vw, 28px);
         display: flex;
         flex-wrap: wrap;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
     }
 
     &__card {
@@ -102,18 +102,18 @@
         padding: var(--fd-landing-surface-padding-lg);
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__card-header {
         display: flex;
         justify-content: space-between;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         align-items: flex-start;
     }
 
     &__card-label {
-        margin: 0 0 8px;
+        margin: 0 0 var(--fd-space-xs);
         color: color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent);
         text-transform: uppercase;
         @include landing.marketing-eyebrow(0.76rem, 0.08em);

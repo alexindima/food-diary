@@ -12,13 +12,13 @@
         @include landing.section-inner;
         display: flex;
         flex-direction: column;
-        gap: clamp(variables.$gap-m, 3vw, variables.$gap-xxl);
+        gap: clamp(var(--fd-space-md), 3vw, var(--fd-space-xxl));
     }
 
     &__header {
         display: grid;
         grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-items: start;
         animation: landingFadeUp 640ms ease-out both;
     }
@@ -26,7 +26,7 @@
     &__intro {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
     }
 
     &__eyebrow,
@@ -55,14 +55,14 @@
     }
 
     &__summary-title {
-        margin: 14px 0 0;
+        margin: var(--fd-space-sm) 0 0;
         color: var(--fd-color-text);
         font-weight: 700;
     }
 
     &__category-strip {
         display: flex;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         overflow-x: auto;
         padding-bottom: 4px;
         scrollbar-width: thin;
@@ -105,7 +105,7 @@
     &__panel {
         display: grid;
         grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
-        gap: variables.$gap-l;
+        gap: var(--fd-space-lg);
         align-items: start;
         background: color-mix(in srgb, var(--fd-color-white) 68%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
@@ -121,14 +121,14 @@
     }
 
     &__panel-title {
-        margin: 14px 0 0;
+        margin: var(--fd-space-sm) 0 0;
         @include landing.marketing-title(clamp(22px, 2.4vw, 30px), 1.08, -0.02em, var(--fd-color-text));
     }
 
     &__cards {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: variables.$gap-m;
+        gap: var(--fd-space-md);
         min-width: 0;
     }
 
@@ -143,7 +143,7 @@
         box-shadow: var(--fd-landing-shadow-soft);
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-sm);
         scroll-snap-align: start;
         animation: landingFadeUp 620ms ease-out both;
     }

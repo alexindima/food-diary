@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 40px;
+    padding: var(--fd-space-xxl);
     position: relative;
 }
 
@@ -37,7 +37,7 @@
 
 .not-found__actions {
     display: flex;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-md);
     justify-content: center;
     margin-top: var(--fd-space-lg);
 }
@@ -45,7 +45,7 @@
 .not-found__button {
     padding: var(--fd-space-xs) var(--fd-space-lg);
     border: none;
-    border-radius: variables.$border-radius-s;
+    border-radius: var(--fd-radius-xs);
     cursor: pointer;
     transition:
         background-color 0.2s,

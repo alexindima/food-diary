@@ -20,11 +20,11 @@
     }
 
     &__text p {
-        margin: 0 0 12px;
+        margin: 0 0 var(--fd-space-sm);
     }
 
     &__text ul {
-        margin: 0 0 12px;
+        margin: 0 0 var(--fd-space-sm);
         padding-left: var(--fd-space-lg);
     }
 

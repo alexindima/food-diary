@@ -3,7 +3,7 @@
 }
 
 .panel-title {
-    margin: 0 0 16px;
+    margin: 0 0 var(--fd-space-md);
 }
 
 .section {
@@ -12,7 +12,7 @@
 
 .section-title {
     color: var(--fd-color-text-muted);
-    margin: 0 0 8px;
+    margin: 0 0 var(--fd-space-xs);
 }
 
 .nutrient-row {
