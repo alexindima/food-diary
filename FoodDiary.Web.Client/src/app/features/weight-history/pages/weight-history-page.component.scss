@@ -4,7 +4,7 @@
 .weight-history-page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--fd-space-page-section-gap);
     margin: 0 auto;
 
     &__header {
@@ -22,7 +22,7 @@
     &__goal-body {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__goal-input {
@@ -31,14 +31,14 @@
 
     &__goal-actions {
         display: flex;
-        gap: 12px;
+        gap: var(--fd-space-actions-gap);
     }
 
     &__card--chart {
         min-height: 320px;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--fd-space-card-content-gap);
     }
 
     &__empty-chart {
@@ -55,17 +55,17 @@
     &__card--bmi {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-s;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__bmi-note {
-        margin: 0 0 (variables.$gap-xs);
+        margin: 0 0 var(--fd-space-card-header-gap);
         color: var(--fd-color-text-muted);
     }
 
     &__bmi-scale {
         position: relative;
-        margin-top: variables.$gap-xs;
+        margin-top: var(--fd-space-card-header-gap);
     }
 
     &__bmi-segments {
@@ -138,22 +138,22 @@
     &__bmi-top {
         display: flex;
         flex-direction: column;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__bmi-bottom {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__bmi-footer {
-        margin-top: variables.$gap-s;
+        margin-top: var(--fd-space-card-header-gap);
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: variables.$gap-xs;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__bmi-status {
@@ -190,7 +190,7 @@
     &__content {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
-        gap: 16px;
+        gap: var(--fd-space-card-content-gap);
 
         @media #{variables.$media-desktop-sm} {
             grid-template-columns: 1fr;
@@ -212,13 +212,13 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__form-row {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
         align-items: end;
 
         @media #{variables.$media-phablet} {
@@ -229,14 +229,14 @@
 
     &__form-actions {
         display: flex;
-        gap: 8px;
+        gap: var(--fd-space-actions-gap);
         flex-wrap: wrap;
     }
 
     &__entries {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-card-header-gap);
         max-height: 360px;
         overflow-y: auto;
     }
@@ -244,7 +244,7 @@
     &__entry {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 8px;
+        gap: var(--fd-space-card-header-gap);
         align-items: center;
         padding: 8px 0;
         border-bottom: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -264,7 +264,7 @@
 
     &__entry-actions {
         display: flex;
-        gap: 4px;
+        gap: var(--fd-space-actions-gap);
         justify-content: flex-end;
         flex-wrap: wrap;
     }
@@ -273,7 +273,7 @@
     &__empty {
         text-align: center;
         color: var(--fd-color-slate-400);
-        padding: 16px;
+        padding: var(--fd-space-section-state-compact-padding);
     }
 
     @media #{variables.$media-phablet} {

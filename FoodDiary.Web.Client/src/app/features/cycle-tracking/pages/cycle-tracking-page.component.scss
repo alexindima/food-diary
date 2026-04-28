@@ -1,7 +1,7 @@
 .cycle-tracking {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--fd-space-page-header-gap);
 
     &__header {
         margin-bottom: var(--fd-page-header-gap);
@@ -10,7 +10,7 @@
     &__grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 16px;
+        gap: var(--fd-space-card-content-gap);
     }
 
     &__grid--log {
@@ -24,13 +24,13 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__form-row {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
 
         &--wide {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -43,7 +43,7 @@
     }
 
     &__checkbox {
-        margin-top: 12px;
+        margin-top: var(--fd-space-card-header-gap);
     }
 
     &__actions {
@@ -54,12 +54,12 @@
     &__predictions {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__summary-item,
     &__prediction {
-        --fd-summary-surface-padding: 14px;
+        --fd-summary-surface-padding: var(--fd-space-surface-padding);
         --fd-summary-surface-radius: 14px;
         --fd-summary-surface-background: var(--fd-color-white);
     }
@@ -67,17 +67,17 @@
     &__symptom-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__days {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__day {
-        padding: 12px;
+        padding: var(--fd-space-surface-padding);
         border-radius: 12px;
         border: 1px solid var(--fd-color-slate-200);
         background: var(--fd-color-white);
@@ -88,8 +88,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 6px;
+        gap: var(--fd-space-card-header-gap);
+        margin-bottom: var(--fd-space-card-header-gap);
     }
 
     &__day-date {
@@ -110,9 +110,9 @@
     &__symptoms-row {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 8px;
+        gap: var(--fd-space-card-header-gap);
         color: var(--fd-color-slate-700);
-        margin-bottom: 6px;
+        margin-bottom: var(--fd-space-card-header-gap);
     }
 
     &__day-notes {
@@ -123,7 +123,7 @@
     &__empty,
     &__loader {
         margin: 0;
-        padding: 12px 4px;
+        padding: var(--fd-space-section-state-compact-padding);
         color: var(--fd-color-slate-500);
     }
 }

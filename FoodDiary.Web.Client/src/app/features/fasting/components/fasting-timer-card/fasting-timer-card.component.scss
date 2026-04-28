@@ -16,21 +16,21 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 20px;
-        padding: 16px 0;
+        gap: var(--fd-space-card-relaxed-gap);
+        padding: var(--fd-space-card-content-gap) 0;
         width: 100%;
 
         &--summary {
             display: grid;
             grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
             align-items: center;
-            gap: 24px;
-            padding: 12px 24px 22px;
+            gap: var(--fd-space-card-relaxed-gap);
+            padding: var(--fd-space-card-profile-padding);
         }
     }
 
     &__summary-header {
-        padding: 22px 24px 0;
+        padding: var(--fd-space-card-content-gap) var(--fd-space-card-padding-x) 0;
     }
 
     &__ring {
@@ -79,7 +79,7 @@
         justify-content: center;
         gap: 3px;
         text-align: center;
-        padding: 0 16px;
+        padding: 0 var(--fd-space-card-padding-x);
 
         &--summary {
             gap: 6px;
@@ -159,7 +159,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 14px;
+        gap: var(--fd-space-card-header-gap);
         min-width: 0;
         align-self: stretch;
         align-items: flex-start;
@@ -169,14 +169,14 @@
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
-        gap: 12px;
+        gap: var(--fd-space-card-header-gap);
         flex-direction: column;
     }
 
     &__summary-labels {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fd-space-card-header-gap);
         min-width: 0;
         justify-content: center;
     }
@@ -184,7 +184,7 @@
     &__summary-protocol-line {
         display: flex;
         align-items: baseline;
-        gap: 8px;
+        gap: var(--fd-space-card-header-gap);
         flex-wrap: wrap;
     }
 
@@ -207,14 +207,14 @@
     &__summary-meta {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__summary-stage,
     &__summary-next {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__controls-slot {

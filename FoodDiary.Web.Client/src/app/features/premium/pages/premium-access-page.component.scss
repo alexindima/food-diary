@@ -1,13 +1,13 @@
 .premium-access-page {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--fd-space-page-section-gap);
 }
 
 .premium-access-page__card {
-    padding: 24px;
+    padding: var(--fd-space-card-profile-padding);
     display: grid;
-    gap: 18px;
+    gap: var(--fd-space-card-profile-gap);
 }
 
 .premium-access-page__card--overview {
@@ -24,13 +24,13 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--fd-space-card-header-gap);
     flex-wrap: wrap;
 }
 
 .premium-access-page__section-copy {
     display: grid;
-    gap: 8px;
+    gap: var(--fd-space-card-header-gap);
     min-width: 0;
 }
 
@@ -51,7 +51,7 @@
 .premium-access-page__badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: var(--fd-space-pill-gap);
 }
 
 .premium-access-page__badge {
@@ -67,13 +67,13 @@
 .premium-access-page__plans {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--fd-space-card-content-gap);
 }
 
 .premium-access-page__plan {
     display: grid;
-    gap: 18px;
-    padding: 18px;
+    gap: var(--fd-space-card-profile-gap);
+    padding: var(--fd-space-card-profile-padding);
     border-radius: 20px;
     border: 1px solid var(--fd-color-border);
     background: color-mix(in srgb, var(--fd-color-surface-elevated) 82%, rgb(255 255 255));
@@ -91,7 +91,7 @@
 
 .premium-access-page__plan-copy {
     display: grid;
-    gap: 8px;
+    gap: var(--fd-space-card-header-gap);
 }
 
 .premium-access-page__plan-kicker {
@@ -105,12 +105,12 @@
 
 .premium-access-page__provider-actions {
     display: grid;
-    gap: 10px;
+    gap: var(--fd-space-actions-gap);
 }
 
 .premium-access-page__benefits {
     display: grid;
-    gap: 10px;
+    gap: var(--fd-space-card-header-gap);
     margin: 0;
     padding-left: 18px;
     color: var(--fd-color-text);
@@ -141,6 +141,6 @@
 @media (max-width: 640px) {
 
     .premium-access-page__card {
-        padding: 20px;
+        padding: var(--fd-space-card-profile-padding-mobile);
     }
 }

@@ -9,7 +9,7 @@
 .statistics {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--fd-space-page-section-gap);
     margin: 0 auto;
 
     &__body {
@@ -32,7 +32,7 @@
     &__header-actions {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-page-header-actions-gap);
     }
 
     &__icon-button {
@@ -54,13 +54,13 @@
         &--body {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: var(--fd-space-card-content-gap);
         }
     }
 
     &__skeleton-grid {
         display: grid;
-        gap: 16px;
+        gap: var(--fd-space-card-content-gap);
     }
 
     &__skeleton {
