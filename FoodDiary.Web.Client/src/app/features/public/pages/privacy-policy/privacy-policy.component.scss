@@ -1,12 +1,12 @@
 .privacy-policy {
     min-height: 100vh;
-    background: var(--fd-color-slate-50);
+    background: var(--fd-bg-surface-inset);
     padding: var(--fd-space-xxl) var(--fd-space-lg) calc(var(--fd-space-xxl) + var(--fd-space-xxl));
 
     &__container {
         max-width: 720px;
         margin: 0 auto;
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-xxl);
         box-shadow: var(--fd-shadow-xs);

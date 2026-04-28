@@ -93,7 +93,7 @@
         min-height: 40px;
         padding: 0 var(--fd-space-md);
         border-radius: var(--fd-radius-pill);
-        background: color-mix(in srgb, var(--fd-color-white) 86%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 86%, transparent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         color: var(--fd-color-slate-700);
         font-size: 0.92rem;
@@ -175,7 +175,7 @@
     &__related-card {
         border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-lg);
-        background: color-mix(in srgb, var(--fd-color-white) 94%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
         box-shadow: var(--fd-shadow-lg);
     }
@@ -216,7 +216,7 @@
     &__faq-item {
         border-radius: var(--fd-radius-panel);
         overflow: hidden;
-        background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         box-shadow: var(--fd-shadow-md);
     }

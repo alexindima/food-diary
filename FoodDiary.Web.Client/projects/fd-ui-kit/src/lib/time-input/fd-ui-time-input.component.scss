@@ -8,7 +8,7 @@
     --fd-time-height: 40px;
     --fd-time-radius: var(--fd-radius-input);
     --fd-time-border: var(--fd-border-default);
-    --fd-time-label-bg: var(--fd-color-surface-raised);
+    --fd-time-label-bg: var(--fd-bg-surface-raised);
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-control-gap);
@@ -61,7 +61,7 @@
     box-sizing: border-box;
     border: var(--fd-time-border);
     border-radius: var(--fd-time-radius);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     display: flex;
     align-items: center;
     padding: 0;

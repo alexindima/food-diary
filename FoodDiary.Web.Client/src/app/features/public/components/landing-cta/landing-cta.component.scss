@@ -64,7 +64,7 @@
             height: 260px;
             right: -40px;
             top: -80px;
-            background: radial-gradient(circle, color-mix(in srgb, var(--fd-color-white) 18%, transparent), transparent 70%);
+            background: radial-gradient(circle, color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent), transparent 70%);
         }
 
         &::after {

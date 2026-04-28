@@ -9,7 +9,7 @@
     height: 100%;
     display: grid;
     place-items: center;
-    background: var(--fd-color-primary-50);
+    background: var(--fd-bg-brand-soft);
 
     img {
         width: 100%;
@@ -262,7 +262,7 @@
 @container (max-width: 760px) {
 
     .entity-card__thumb {
-        background: color-mix(in srgb, var(--fd-color-primary-100) 45%, var(--fd-color-white));
+        background: color-mix(in srgb, var(--fd-color-primary-100) 45%, var(--fd-bg-surface-raised));
     }
 
     .entity-card__content {

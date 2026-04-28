@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .consumption-manage {
-    --fd-layout-page-background: var(--fd-color-background);
+    --fd-bg-page: var(--fd-bg-body);
     margin: 0 auto;
     box-sizing: border-box;
     display: flex;
@@ -326,7 +326,7 @@
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        background: color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-white) 12%);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, var(--fd-bg-surface-raised) 12%);
         display: flex;
         align-items: center;
         justify-content: center;

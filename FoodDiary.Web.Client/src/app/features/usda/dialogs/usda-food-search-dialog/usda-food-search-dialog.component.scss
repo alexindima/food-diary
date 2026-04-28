@@ -18,11 +18,11 @@
     transition: background-color 0.15s;
 
     &:hover {
-        background-color: color-mix(in srgb, var(--fd-color-surface-raised) 88%, var(--fd-color-text) 4%);
+        background-color: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, var(--fd-color-text) 4%);
     }
 
     &.selected {
-        background-color: color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-surface-raised));
+        background-color: color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-bg-surface-raised));
     }
 }
 

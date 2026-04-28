@@ -149,7 +149,7 @@
     }
 
     &__option--selected &__indicator {
-        background: color-mix(in srgb, var(--fd-color-white) 85%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 85%, transparent);
         color: var(--fd-color-text);
     }
 

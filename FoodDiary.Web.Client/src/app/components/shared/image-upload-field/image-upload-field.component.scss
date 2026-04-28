@@ -17,7 +17,7 @@
         padding: 0;
         border: var(--fd-border-width-strong) dashed var(--fd-color-primary-200);
         border-radius: var(--fd-radius-card);
-        background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
+        background: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
         color: var(--fd-color-slate-900);
         transition: all 160ms ease;
 
@@ -131,8 +131,8 @@
         --fd-button-padding-x: 0;
         --fd-button-border-radius: 0;
         --fd-button-background-default: transparent;
-        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-        --fd-button-background-active: color-mix(in srgb, var(--fd-color-white) 12%, transparent);
+        --fd-button-background-hover: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
+        --fd-button-background-active: color-mix(in srgb, var(--fd-bg-surface-raised) 12%, transparent);
         --fd-button-border-default: transparent;
         --fd-button-border-hover: transparent;
         --fd-button-border-active: transparent;
@@ -202,7 +202,7 @@
         gap: var(--fd-space-md);
         padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-dialog);
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-xl);
     }
 
@@ -314,7 +314,7 @@
             inset: 0;
             object-fit: contain;
             border-radius: var(--fd-radius-panel);
-            background: var(--fd-color-slate-50);
+            background: var(--fd-bg-surface-inset);
         }
 
         .image-upload-field__control {

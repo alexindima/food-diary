@@ -12,7 +12,7 @@
     padding: var(--fd-space-card-padding-y) var(--fd-space-card-padding-x);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-card);
-    background: var(--fd-color-surface);
+    background: var(--fd-bg-surface);
     box-shadow: var(--fd-shadow-sm);
 
     &--subtle {
@@ -21,12 +21,12 @@
     }
 
     &--tone-editor {
-        background: var(--fd-color-surface-raised);
+        background: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-xl);
     }
 
     &--tone-editor-white {
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         border-color: color-mix(in srgb, var(--fd-color-border-strong) 42%, transparent);
         box-shadow: var(--fd-shadow-xl);
     }

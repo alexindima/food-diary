@@ -38,7 +38,7 @@
         transform 0.15s ease,
         top 0.15s ease,
         font-size 0.15s ease;
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     padding: 0 var(--fd-space-field-label-padding-x);
     border-radius: var(--fd-radius-field-label);
     pointer-events: none;
@@ -50,7 +50,7 @@
 }
 
 .fd-ui-input__control-wrap {
-    --fd-input-control-background: var(--fd-color-surface-raised);
+    --fd-input-control-background: var(--fd-bg-surface-raised);
     min-height: 40px;
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
@@ -209,21 +209,21 @@
 .fd-ui-input--appearance-auth .fd-ui-input__label {
     --fd-input-auth-label-color: var(--fd-color-slate-500);
     color: var(--fd-input-auth-label-color);
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
     top: 0;
     transform: translateY(-50%);
     font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap {
-    --fd-input-control-background: var(--fd-color-white);
+    --fd-input-control-background: var(--fd-bg-surface-raised);
     --fd-input-auth-text-color: var(--fd-color-slate-900);
     --fd-input-auth-muted-color: var(--fd-color-slate-500);
     --fd-input-control-color: var(--fd-input-auth-text-color);
     --fd-input-control-muted-color: var(--fd-input-auth-muted-color);
     border-color: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
     border-radius: var(--fd-radius-input);
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
     padding: var(--fd-space-control-auth-padding);
 }
 

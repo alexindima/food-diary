@@ -40,7 +40,7 @@
 
     &__mobile-search {
         display: none;
-        background: var(--fd-color-slate-50);
+        background: var(--fd-bg-surface-inset);
 
         &--open {
             display: block;
@@ -136,7 +136,7 @@
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-color-surface-raised);
+        background: var(--fd-bg-surface-raised);
         border: var(--fd-border-strong);
     }
 
@@ -253,7 +253,7 @@
         gap: var(--fd-space-sm);
         padding: var(--fd-space-sm);
         border-radius: var(--fd-radius-lg);
-        background: color-mix(in srgb, var(--fd-color-slate-50) 95%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-inset) 95%, transparent);
         border: var(--fd-border-muted);
         cursor: pointer;
         transition: all 0.15s ease;
@@ -320,7 +320,7 @@
             padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
             border-bottom: var(--fd-border-muted);
-            background: var(--fd-color-slate-50);
+            background: var(--fd-bg-surface-inset);
         }
 
         &__mobile-toolbar {
@@ -352,7 +352,7 @@
         &__section-grid {
             gap: 0;
             margin: 0;
-            background: var(--fd-color-white);
+            background: var(--fd-bg-surface-raised);
             border-top: var(--fd-border-muted);
 
             fd-product-card {

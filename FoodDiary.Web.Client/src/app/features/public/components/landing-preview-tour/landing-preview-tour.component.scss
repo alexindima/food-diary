@@ -22,7 +22,7 @@
     gap: var(--fd-space-sm);
     padding: $padding;
     border-radius: var(--fd-landing-radius-card);
-    background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
     border: var(--fd-border-width) solid var(--fd-landing-dark-border);
 }
 
@@ -110,7 +110,7 @@
         min-width: 0;
         padding: var(--fd-landing-surface-padding);
         border-radius: var(--fd-landing-radius-panel);
-        background: color-mix(in srgb, var(--fd-color-white) 62%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 62%, transparent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
         box-shadow: var(--fd-landing-shadow-medium);
         animation: landingFadeUp 760ms ease-out both;
@@ -237,7 +237,7 @@
     max-width: 100%;
     padding: var(--fd-space-xxs) var(--fd-space-xs);
     border-radius: var(--fd-radius-pill);
-    background: color-mix(in srgb, var(--fd-color-primary-100) 86%, var(--fd-color-white));
+    background: color-mix(in srgb, var(--fd-color-primary-100) 86%, var(--fd-bg-surface-raised));
     color: var(--fd-color-primary-700);
     @include landing.marketing-eyebrow(0.8rem, 0.03em);
 }
@@ -311,7 +311,7 @@
         max-width: 100%;
         padding: var(--fd-space-xxs) var(--fd-space-sm);
         border-radius: var(--fd-radius-pill);
-        background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
         color: var(--fd-color-slate-50);
         @include landing.marketing-eyebrow(0.84rem, 0.03em);
     }
@@ -336,7 +336,7 @@
             min-height: 38px;
             padding: var(--fd-space-xs) var(--fd-space-sm);
             border-radius: var(--fd-radius-pill);
-            background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
+            background: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
             color: var(--fd-color-slate-50);
             font-size: 0.92rem;
             font-weight: 700;
@@ -346,7 +346,7 @@
 
     .landing-section__copy--secondary {
         margin-top: 0;
-        background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
         border-color: var(--fd-landing-dark-border);
         box-shadow: var(--fd-shadow-none);
     }
@@ -358,7 +358,7 @@
     }
 
     .landing-section__eyebrow {
-        background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
     }
 
     .landing-section__subtitle {

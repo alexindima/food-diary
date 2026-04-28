@@ -22,7 +22,7 @@
     }
 
     &__surface--summary {
-        --fd-summary-surface-background: var(--fd-color-primary-50);
+        --fd-summary-surface-background: var(--fd-bg-brand-soft);
     }
 
     &__nutrients {
@@ -70,9 +70,9 @@
         --fd-button-height-explicit: 40px;
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-lg);
-        --fd-button-background: var(--fd-color-white);
-        --fd-button-background-hover: var(--fd-color-white);
-        --fd-button-background-active: var(--fd-color-white);
+        --fd-button-background: var(--fd-bg-surface-raised);
+        --fd-button-background-hover: var(--fd-bg-surface-raised);
+        --fd-button-background-active: var(--fd-bg-surface-raised);
         --fd-button-border-color: var(--fd-color-slate-200);
         --fd-button-border-color-hover: var(--fd-color-amber-500);
         --fd-button-border-color-active: var(--fd-color-amber-500);

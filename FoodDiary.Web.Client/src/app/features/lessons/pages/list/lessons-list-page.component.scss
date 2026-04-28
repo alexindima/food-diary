@@ -106,7 +106,7 @@
     }
 
     &__category {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-color-surface));
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-bg-surface));
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-purple-300);
     }

@@ -70,7 +70,7 @@
 }
 
 .not-found__button--secondary:hover {
-    background-color: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-white));
+    background-color: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-bg-surface-raised));
     transform: scale(1.05);
 }
 

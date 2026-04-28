@@ -3,7 +3,7 @@
 .ai-photo-result {
     border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
     border-radius: var(--fd-radius-card);
-    background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-color-white));
+    background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-bg-surface-raised));
     padding: var(--fd-space-stat-tile-padding);
     display: flex;
     flex-direction: column;
@@ -30,8 +30,8 @@
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-sm);
     --fd-button-background-default: transparent;
-    --fd-button-background-hover: color-mix(in srgb, var(--fd-color-danger) 16%, var(--fd-color-white));
-    --fd-button-background-active: color-mix(in srgb, var(--fd-color-danger) 20%, var(--fd-color-white));
+    --fd-button-background-hover: color-mix(in srgb, var(--fd-color-danger) 16%, var(--fd-bg-surface-raised));
+    --fd-button-background-active: color-mix(in srgb, var(--fd-color-danger) 20%, var(--fd-bg-surface-raised));
     --fd-button-border-default: transparent;
     --fd-button-border-hover: transparent;
     --fd-button-border-active: transparent;
@@ -98,7 +98,7 @@
     top: 8px;
     right: 8px;
     letter-spacing: 0.01em;
-    --fd-pill-bg: var(--fd-color-white);
+    --fd-pill-bg: var(--fd-bg-surface-raised);
     --fd-pill-color: var(--fd-color-primary-700);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     box-shadow: var(--fd-shadow-md);
@@ -222,7 +222,7 @@
     align-items: center;
     padding: var(--fd-space-xs);
     border-radius: var(--fd-radius-md);
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
     border: var(--fd-border-muted);
 }
 
@@ -249,7 +249,7 @@
     padding: var(--fd-space-xxs) var(--fd-space-xs);
     border-radius: var(--fd-radius-button);
     border: var(--fd-border-muted);
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
 }
 
 .ai-photo-result__edit-handle {
@@ -273,7 +273,7 @@
     border: var(--fd-border-muted);
     padding: 0 var(--fd-space-xs);
     font: inherit;
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
 }
 
 .ai-photo-result__edit-input--amount {
@@ -318,9 +318,9 @@
     --fd-button-secondary-border-default: color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
     --fd-button-secondary-border-hover: var(--fd-color-slate-400);
     --fd-button-secondary-border-active: var(--fd-color-slate-400);
-    --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
-    --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-primary-50) 48%, var(--fd-color-white));
-    --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-primary-50) 54%, var(--fd-color-white));
+    --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
+    --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-bg-brand-soft) 48%, var(--fd-bg-surface-raised));
+    --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-bg-brand-soft) 54%, var(--fd-bg-surface-raised));
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-shadow-active: var(--fd-shadow-none);
@@ -332,7 +332,7 @@
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border: var(--fd-border-muted);
     border-radius: var(--fd-radius-button);
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
 }
 
 .ai-photo-result__nutrition-grid {
@@ -441,7 +441,7 @@
     width: 100%;
     border: var(--fd-border-muted);
     border-radius: var(--fd-radius-lg);
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
     color: var(--fd-color-slate-900);
     font: inherit;
 }
@@ -484,7 +484,7 @@
     gap: var(--fd-space-sm);
     text-align: left;
     cursor: pointer;
-    background: color-mix(in srgb, var(--fd-color-white) 95%, transparent);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 95%, transparent);
     position: relative;
     overflow: hidden;
     transition:
@@ -516,7 +516,7 @@
     width: 40px;
     height: 40px;
     border-radius: var(--fd-radius-pill);
-    background: color-mix(in srgb, var(--fd-color-white) 86%, transparent);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 86%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;

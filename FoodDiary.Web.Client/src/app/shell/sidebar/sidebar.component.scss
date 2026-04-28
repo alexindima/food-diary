@@ -19,7 +19,7 @@
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-color-surface);
+        background: var(--fd-bg-surface);
         box-shadow: var(--fd-shadow-md);
     }
 
@@ -241,7 +241,7 @@
         align-items: center;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-color-surface);
+        background: var(--fd-bg-surface);
         border: var(--fd-border-default);
         box-shadow: var(--fd-shadow-sm);
         cursor: pointer;
@@ -356,7 +356,7 @@
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
-        background: var(--fd-color-surface);
+        background: var(--fd-bg-surface);
         color: var(--fd-color-text-strong);
         font-weight: 700;
         text-decoration: none;
@@ -408,10 +408,10 @@
         --fd-button-height-explicit: auto;
         --fd-button-padding-x: var(--fd-space-sm);
         --fd-button-justify-content: flex-start;
-        --fd-button-danger-outline-background-default: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
-        --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
-        --fd-button-danger-outline-background-active: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
-        --fd-button-danger-outline-background-disabled: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
+        --fd-button-danger-outline-background-default: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-bg-surface-raised));
+        --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-bg-surface-raised));
+        --fd-button-danger-outline-background-active: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-bg-surface-raised));
+        --fd-button-danger-outline-background-disabled: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-bg-surface-raised));
         --fd-button-danger-outline-border-default: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
         --fd-button-danger-outline-border-hover: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
         --fd-button-danger-outline-border-active: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
@@ -436,7 +436,7 @@
     display: none;
     gap: var(--fd-space-xs);
     padding: var(--fd-space-xs) var(--fd-space-sm) calc(var(--fd-space-xs) + env(safe-area-inset-bottom));
-    background: var(--fd-color-surface);
+    background: var(--fd-bg-surface);
     border-top: var(--fd-border-default);
     box-shadow: var(--fd-shadow-xl);
     z-index: 1200;
@@ -564,7 +564,7 @@
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         bottom: var(--fd-layout-shell-mobile-sheet-bottom);
-        background: var(--fd-color-surface);
+        background: var(--fd-bg-surface);
         border-radius: var(--fd-radius-dialog);
         padding: var(--fd-space-xs);
         box-shadow: var(--fd-shadow-xl);
@@ -587,7 +587,7 @@
             gap: var(--fd-space-xs);
             padding: var(--fd-space-xs) var(--fd-space-sm);
             border-radius: var(--fd-radius-menu-item);
-            background: var(--fd-color-surface-muted);
+            background: var(--fd-bg-surface-muted);
             color: var(--fd-color-text-strong);
             text-decoration: none;
             border: var(--fd-border-default);

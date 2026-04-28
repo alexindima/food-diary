@@ -17,7 +17,7 @@
     &__status {
         --fd-pill-min-height: 40px;
         --fd-pill-padding-inline: var(--fd-space-md);
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%);
+        --fd-pill-bg: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, var(--fd-bg-surface-raised) 6%);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text-muted);
         box-shadow:
@@ -225,7 +225,7 @@
         width: 32px;
         height: 32px;
         border-radius: var(--fd-radius-pill);
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         border: var(--fd-border-width-emphasis) solid var(--goals-accent);
         box-shadow: var(--fd-shadow-accent);
         transform: translate(-50%, -50%) rotate(calc(var(--goals-angle) - 90deg))
@@ -368,7 +368,7 @@
             width: var(--macro-thumb-size);
             height: var(--macro-thumb-size);
             border-radius: var(--fd-radius-pill);
-            background: var(--fd-color-white);
+            background: var(--fd-bg-surface-raised);
             border: var(--fd-border-width-strong) solid var(--macro-accent, var(--fd-color-primary-600));
             box-shadow: var(--fd-shadow-accent);
             transform: translate(-50%, -50%);
@@ -585,7 +585,7 @@
         border: var(--fd-border-muted);
         border-radius: var(--fd-radius-md);
         color: var(--fd-color-slate-900);
-        background: var(--fd-color-slate-50);
+        background: var(--fd-bg-surface-inset);
         outline: none;
         transition: border-color 0.15s;
 

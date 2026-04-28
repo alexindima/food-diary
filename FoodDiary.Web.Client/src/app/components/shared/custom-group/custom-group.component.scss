@@ -15,7 +15,7 @@
 .custom-group__title {
     position: absolute;
     top: -11px;
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0 var(--fd-space-xs);
@@ -27,7 +27,7 @@
     position: absolute;
     top: -11px;
     left: 10px;
-    background: var(--fd-color-white);
+    background: var(--fd-bg-surface-raised);
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0;

@@ -48,7 +48,7 @@
     padding: var(--fd-space-radio-padding);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-md);
-    background-color: var(--fd-color-surface);
+    background-color: var(--fd-bg-surface);
     width: 100%;
     cursor: pointer;
 }
@@ -73,7 +73,7 @@
     margin-top: calc(var(--fd-space-xxs) / 4);
     border-radius: var(--fd-radius-pill);
     border: var(--fd-border-width-strong) solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     transition:
         border-color 140ms ease,
         box-shadow 140ms ease;

@@ -61,7 +61,7 @@
     &__prediction {
         --fd-summary-surface-padding: var(--fd-space-surface-padding);
         --fd-summary-surface-radius: var(--fd-radius-card);
-        --fd-summary-surface-background: var(--fd-color-white);
+        --fd-summary-surface-background: var(--fd-bg-surface-raised);
     }
 
     &__symptom-grid {
@@ -80,7 +80,7 @@
         padding: var(--fd-space-surface-padding);
         border-radius: var(--fd-radius-lg);
         border: var(--fd-border-muted);
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-xs);
     }
 

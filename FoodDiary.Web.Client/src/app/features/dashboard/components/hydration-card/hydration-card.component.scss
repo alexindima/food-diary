@@ -6,7 +6,7 @@
     min-width: 0;
     overflow: hidden;
     border-radius: var(--fd-radius-card);
-    background: linear-gradient(145deg, var(--fd-color-blue-500), color-mix(in srgb, var(--fd-color-sky-500) 72%, var(--fd-color-white)));
+    background: linear-gradient(145deg, var(--fd-color-blue-500), color-mix(in srgb, var(--fd-color-sky-500) 72%, var(--fd-bg-surface-raised)));
     color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-sky-500));
     padding: var(--fd-space-card-profile-gap) var(--fd-space-card-profile-gap) var(--fd-space-lg);
     box-shadow: var(--fd-shadow-accent-strong);
@@ -46,7 +46,7 @@
         flex: 1;
         --fd-progress-height: 10px;
         --fd-progress-radius: var(--fd-radius-pill);
-        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-white) 28%, transparent);
+        --fd-progress-track-background: color-mix(in srgb, var(--fd-bg-surface-raised) 28%, transparent);
     }
 
     &__progress-fill {

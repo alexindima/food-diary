@@ -159,7 +159,7 @@
 
     &--steps {
         padding: var(--fd-landing-section-space-relaxed) 0;
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
     }
 
     &--cta {
@@ -174,7 +174,7 @@
 
     &--tour {
         padding: var(--fd-landing-section-space-relaxed) 0;
-        background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
+        background: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
     }
 
     &__inner--cta {
@@ -220,7 +220,7 @@
     }
 
     &__group {
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
@@ -267,7 +267,7 @@
     margin-top: var(--fd-space-md);
 
     &__item {
-        background: var(--fd-color-white);
+        background: var(--fd-bg-surface-raised);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
@@ -304,7 +304,7 @@
     margin-top: var(--fd-space-md);
 
     &__item {
-        background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
         border-radius: var(--fd-landing-radius-panel);
         box-shadow: var(--fd-landing-shadow-soft);
@@ -375,7 +375,7 @@
         min-height: 56px;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
-        background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         box-shadow: var(--fd-landing-shadow-soft);
         color: var(--fd-color-primary-700);

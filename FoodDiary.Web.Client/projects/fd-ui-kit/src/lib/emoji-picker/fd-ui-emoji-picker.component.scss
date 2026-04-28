@@ -8,9 +8,9 @@
     --fd-emoji-picker-option-height: 56px;
     --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding);
     --fd-emoji-picker-option-radius: var(--fd-radius-card);
-    --fd-emoji-picker-option-bg-default: color-mix(in srgb, var(--fd-color-surface-raised) 96%, transparent);
-    --fd-emoji-picker-option-bg-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-color-surface-raised));
-    --fd-emoji-picker-option-bg-selected: color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-surface-raised));
+    --fd-emoji-picker-option-bg-default: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+    --fd-emoji-picker-option-bg-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-bg-surface-raised));
+    --fd-emoji-picker-option-bg-selected: color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-bg-surface-raised));
     --fd-emoji-picker-option-border-default: color-mix(in srgb, var(--fd-color-border-strong) 38%, transparent);
     --fd-emoji-picker-option-border-hover: color-mix(in srgb, var(--fd-color-primary-400) 46%, transparent);
     --fd-emoji-picker-option-border-selected: color-mix(in srgb, var(--fd-color-primary-500) 68%, transparent);

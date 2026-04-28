@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 :host {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-sky-500) 7%, var(--fd-color-surface));
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-sky-500) 7%, var(--fd-bg-surface));
     --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-sky-500) 24%, var(--fd-color-border));
     --fd-inline-alert-accent: var(--fd-color-primary-500);
     --fd-inline-alert-title: var(--fd-color-text-strong);
@@ -35,7 +35,7 @@
     display: grid;
     place-items: center;
     border-radius: var(--fd-radius-button);
-    background: color-mix(in srgb, var(--fd-inline-alert-accent) 14%, var(--fd-color-surface-raised));
+    background: color-mix(in srgb, var(--fd-inline-alert-accent) 14%, var(--fd-bg-surface-raised));
     color: var(--fd-inline-alert-accent);
     flex: 0 0 auto;
 }
@@ -107,19 +107,19 @@
 }
 
 :host(.fd-ui-inline-alert--warning) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-orange-500) 8%, var(--fd-color-surface));
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-orange-500) 8%, var(--fd-bg-surface));
     --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-orange-500) 24%, var(--fd-color-border));
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-orange-400) 72%, var(--fd-color-text));
 }
 
 :host(.fd-ui-inline-alert--success) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-green-500) 8%, var(--fd-color-surface));
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-green-500) 8%, var(--fd-bg-surface));
     --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-green-500) 24%, var(--fd-color-border));
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-green-400) 74%, var(--fd-color-text));
 }
 
 :host(.fd-ui-inline-alert--danger) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-color-surface));
+    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-bg-surface));
     --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-danger) 24%, var(--fd-color-border));
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text));
 }

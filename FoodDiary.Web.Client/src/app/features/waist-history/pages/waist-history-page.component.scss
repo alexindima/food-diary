@@ -217,7 +217,7 @@
         height: 14px;
         border-radius: var(--fd-radius-pill);
         border: var(--fd-border-width-strong) solid var(--fd-color-slate-900);
-        background-color: var(--fd-color-white);
+        background-color: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-sm);
         transform: translateY(-50%);
     }
@@ -248,22 +248,22 @@
     }
 
     &__wht-status--under {
-        background-color: color-mix(in srgb, var(--fd-color-primary-100) 70%, var(--fd-color-white));
+        background-color: color-mix(in srgb, var(--fd-color-primary-100) 70%, var(--fd-bg-surface-raised));
         color: var(--fd-color-primary-700);
     }
 
     &__wht-status--normal {
-        background-color: color-mix(in srgb, var(--fd-color-green-500) 18%, var(--fd-color-white));
+        background-color: color-mix(in srgb, var(--fd-color-green-500) 18%, var(--fd-bg-surface-raised));
         color: var(--fd-color-emerald-700);
     }
 
     &__wht-status--elevated {
-        background-color: color-mix(in srgb, var(--fd-color-yellow-300) 55%, var(--fd-color-white));
+        background-color: color-mix(in srgb, var(--fd-color-yellow-300) 55%, var(--fd-bg-surface-raised));
         color: var(--fd-color-orange-700);
     }
 
     &__wht-status--high {
-        background-color: color-mix(in srgb, var(--fd-color-danger) 18%, var(--fd-color-white));
+        background-color: color-mix(in srgb, var(--fd-color-danger) 18%, var(--fd-bg-surface-raised));
         color: var(--fd-color-red-700);
     }
 

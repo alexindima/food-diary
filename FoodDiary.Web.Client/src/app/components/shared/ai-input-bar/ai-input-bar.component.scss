@@ -5,7 +5,7 @@
     padding: var(--fd-space-surface-padding);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     min-width: 0;
 
     &__hidden-upload {
@@ -62,10 +62,10 @@
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
         --fd-button-icon-size: 1.5rem;
-        --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-color-surface));
-        --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-ai) 18%, var(--fd-color-surface));
-        --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-ai) 22%, var(--fd-color-surface));
-        --fd-button-secondary-background-disabled: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-color-surface));
+        --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-bg-surface));
+        --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-ai) 18%, var(--fd-bg-surface));
+        --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-ai) 22%, var(--fd-bg-surface));
+        --fd-button-secondary-background-disabled: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-bg-surface));
         --fd-button-secondary-border-default: color-mix(in srgb, var(--fd-color-ai-strong) 26%, var(--fd-color-border));
         --fd-button-secondary-border-hover: color-mix(in srgb, var(--fd-color-ai-strong) 42%, var(--fd-color-border));
         --fd-button-secondary-border-active: color-mix(in srgb, var(--fd-color-ai-strong) 50%, var(--fd-color-border));
@@ -76,10 +76,10 @@
         --fd-button-secondary-text-disabled: var(--fd-color-ai-strong);
 
         &--mic-active {
-            --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-color-surface));
-            --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-danger) 32%, var(--fd-color-surface));
-            --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-color-surface));
-            --fd-button-secondary-background-disabled: color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-color-surface));
+            --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-bg-surface));
+            --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-danger) 32%, var(--fd-bg-surface));
+            --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-bg-surface));
+            --fd-button-secondary-background-disabled: color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-bg-surface));
             --fd-button-secondary-border-default: color-mix(in srgb, var(--fd-color-danger) 40%, var(--fd-color-border));
             --fd-button-secondary-border-hover: color-mix(in srgb, var(--fd-color-danger) 58%, var(--fd-color-border));
             --fd-button-secondary-border-active: color-mix(in srgb, var(--fd-color-danger) 64%, var(--fd-color-border));

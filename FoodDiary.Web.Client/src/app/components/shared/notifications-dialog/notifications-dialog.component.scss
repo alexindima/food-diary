@@ -65,7 +65,7 @@
     }
 
     &.is-read {
-        background: var(--fd-color-surface);
+        background: var(--fd-bg-surface);
         box-shadow: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-border-strong) 62%, transparent);
     }
 

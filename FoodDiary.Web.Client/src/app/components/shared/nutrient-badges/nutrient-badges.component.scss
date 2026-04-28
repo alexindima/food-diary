@@ -11,7 +11,7 @@
     align-items: center;
     flex-wrap: wrap;
     border-radius: var(--fd-radius-nutrient-bar);
-    background: var(--fd-color-surface);
+    background: var(--fd-bg-surface);
     color: var(--fd-color-text);
     width: fit-content;
     max-width: 100%;
@@ -78,7 +78,7 @@
         gap: 0;
         padding: var(--fd-space-status-badge-padding);
         border-radius: var(--fd-radius-nutrient-bar-compact);
-        background: var(--fd-color-surface);
+        background: var(--fd-bg-surface);
         display: inline-grid;
         grid-auto-flow: column;
         grid-auto-columns: minmax(0, 1fr);

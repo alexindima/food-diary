@@ -15,7 +15,7 @@
     text-align: left;
     padding: var(--fd-space-empty-state-compact-padding);
     border-radius: var(--fd-radius-card);
-    background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, transparent);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 84%, transparent);
     border: var(--fd-border-dashed);
 }
 
@@ -26,7 +26,7 @@
     place-items: center;
     border-radius: var(--fd-radius-pill);
     color: var(--fd-color-text-muted);
-    background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
 }
 
 :host(.fd-ui-empty-state--compact) .fd-ui-empty-state__icon-wrap {

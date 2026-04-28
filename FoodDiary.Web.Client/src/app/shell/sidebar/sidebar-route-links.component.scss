@@ -76,13 +76,13 @@
     gap: var(--fd-space-xs);
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-menu-item);
-    background: var(--fd-color-surface-muted);
+    background: var(--fd-bg-surface-muted);
     color: var(--fd-color-text-strong);
     border: var(--fd-border-default);
 }
 
 .sidebar-mobile__sheet-link.is-pending:not(.is-active) {
-    background: color-mix(in srgb, var(--fd-color-primary-600) 10%, var(--fd-color-surface-muted));
+    background: color-mix(in srgb, var(--fd-color-primary-600) 10%, var(--fd-bg-surface-muted));
     border-color: color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
     color: var(--fd-color-text-strong);
 }

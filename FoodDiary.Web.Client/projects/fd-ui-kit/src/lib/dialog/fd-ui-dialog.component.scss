@@ -29,7 +29,7 @@
 .fd-ui-dialog {
     display: flex;
     flex-direction: column;
-    background: var(--fd-color-dialog-surface);
+    background: var(--fd-bg-dialog);
     border-radius: var(--fd-radius-dialog);
     box-shadow: var(--fd-shadow-xl);
     border: var(--fd-border-strong);
@@ -102,7 +102,7 @@
 
 .fd-ui-dialog__close-button {
     border: none;
-    background: var(--fd-color-dialog-surface-muted);
+    background: var(--fd-bg-dialog-muted);
     border-radius: var(--fd-radius-pill);
     width: var(--fd-dialog-close-button-size);
     height: var(--fd-dialog-close-button-size);
@@ -117,7 +117,7 @@
         color 0.15s ease;
 
     &:hover {
-        background: var(--fd-color-primary-50);
+        background: var(--fd-bg-brand-soft);
         color: var(--fd-color-primary-500);
     }
 
@@ -212,7 +212,7 @@
     max-width: 100vw;
     max-height: 100vh;
     border-radius: 0;
-    background: var(--fd-color-dialog-surface);
+    background: var(--fd-bg-dialog);
     padding: var(--fd-space-dialog-fullscreen-padding);
     overflow: auto;
 }
@@ -243,7 +243,7 @@
 }
 
 .fd-ui-dialog-backdrop {
-    background: var(--fd-color-dialog-overlay);
+    background: var(--fd-bg-overlay);
     backdrop-filter: blur(4px);
 }
 
@@ -252,7 +252,7 @@
     border-radius: var(--fd-radius-dialog);
     box-shadow: var(--fd-shadow-xl);
     border: var(--fd-border-strong);
-    background: var(--fd-color-dialog-surface);
+    background: var(--fd-bg-dialog);
     max-height: var(--fd-dialog-max-height);
     transform: scale(0.97);
     opacity: 0;

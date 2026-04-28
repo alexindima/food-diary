@@ -18,7 +18,7 @@
 .coverage-badge {
     padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
     border-radius: var(--fd-radius-lg);
-    background: var(--fd-color-surface-muted);
+    background: var(--fd-bg-surface-muted);
     color: var(--fd-color-text-muted);
 }
 
@@ -31,7 +31,7 @@
 .nutrient-item {
     --fd-progress-item-padding: var(--fd-space-progress-item-padding);
     --fd-progress-item-radius: var(--fd-radius-md);
-    --fd-progress-item-background: var(--fd-color-surface-muted);
+    --fd-progress-item-background: var(--fd-bg-surface-muted);
 }
 
 .nutrient-header {
@@ -63,7 +63,7 @@
 .progress-bar {
     --fd-progress-height: 4px;
     --fd-progress-radius: calc(var(--fd-space-xxs) / 2);
-    --fd-progress-track-background: var(--fd-color-surface-muted);
+    --fd-progress-track-background: var(--fd-bg-surface-muted);
 }
 
 .progress-fill {

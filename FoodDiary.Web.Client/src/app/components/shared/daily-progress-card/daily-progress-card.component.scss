@@ -41,7 +41,7 @@
         margin: 0;
         padding: var(--fd-space-inline-alert-notice-padding);
         border-radius: var(--fd-radius-lg);
-        background: linear-gradient(135deg, var(--fd-color-slate-50), var(--fd-color-primary-50));
+        background: linear-gradient(135deg, var(--fd-bg-surface-inset), var(--fd-bg-brand-soft));
         color: var(--fd-color-text-muted);
     }
 
@@ -92,7 +92,7 @@
         margin-top: var(--fd-space-xs);
         padding: var(--fd-space-surface-padding);
         border-radius: var(--fd-radius-lg);
-        background: var(--fd-color-slate-50);
+        background: var(--fd-bg-surface-inset);
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-card-header-gap);

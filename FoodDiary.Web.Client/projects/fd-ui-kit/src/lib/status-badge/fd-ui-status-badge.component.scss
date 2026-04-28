@@ -7,7 +7,7 @@
     border: var(--fd-border-default);
     box-sizing: border-box;
     color: var(--fd-color-text-muted);
-    background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
 }
 
 .fd-ui-status-badge__label {
@@ -22,18 +22,18 @@
 
 :host(.fd-ui-status-badge--success) {
     color: var(--fd-color-emerald-300);
-    background: color-mix(in srgb, var(--fd-color-emerald-500) 16%, var(--fd-color-surface-raised));
+    background: color-mix(in srgb, var(--fd-color-emerald-500) 16%, var(--fd-bg-surface-raised));
     border-color: color-mix(in srgb, var(--fd-color-emerald-500) 28%, var(--fd-color-border));
 }
 
 :host(.fd-ui-status-badge--warning) {
     color: var(--fd-color-warning);
-    background: color-mix(in srgb, var(--fd-color-warning) 16%, var(--fd-color-surface-raised));
+    background: color-mix(in srgb, var(--fd-color-warning) 16%, var(--fd-bg-surface-raised));
     border-color: color-mix(in srgb, var(--fd-color-warning) 30%, var(--fd-color-border));
 }
 
 :host(.fd-ui-status-badge--danger) {
     color: var(--fd-color-danger);
-    background: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-color-surface-raised));
+    background: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
     border-color: color-mix(in srgb, var(--fd-color-danger) 24%, var(--fd-color-border));
 }

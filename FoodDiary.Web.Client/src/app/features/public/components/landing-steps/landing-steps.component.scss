@@ -49,7 +49,7 @@
     &__item {
         position: relative;
         overflow: hidden;
-        background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)) 100%);
+        background: linear-gradient(180deg, var(--fd-bg-surface-raised) 0%, color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised)) 100%);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-landing-surface-padding);
         border: var(--fd-border-width) solid var(--fd-landing-border-soft);

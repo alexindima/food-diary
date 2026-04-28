@@ -27,7 +27,7 @@
         transform 0.15s ease,
         top 0.15s ease,
         font-size 0.15s ease;
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     padding: 0 var(--fd-space-field-label-padding-x);
     border-radius: var(--fd-radius-field-label);
     pointer-events: none;
@@ -42,7 +42,7 @@
     min-height: 40px;
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     display: flex;
     align-items: center;
     position: relative;
@@ -148,7 +148,7 @@
     gap: var(--fd-space-menu-gap);
     padding: var(--fd-space-menu-padding);
     border-radius: var(--fd-radius-menu);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     border: var(--fd-border-subtle);
     box-shadow: var(--fd-shadow-xl);
 }

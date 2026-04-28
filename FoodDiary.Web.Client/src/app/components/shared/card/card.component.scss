@@ -5,7 +5,7 @@
     margin-bottom: var(--fd-space-md);
     border: var(--fd-border-subtle);
     border-radius: var(--fd-radius-md);
-    background-color: color-mix(in srgb, var(--fd-color-white) 90%, transparent);
+    background-color: color-mix(in srgb, var(--fd-bg-surface-raised) 90%, transparent);
     display: flex;
     flex-direction: column;
     box-shadow: var(--fd-shadow-md);

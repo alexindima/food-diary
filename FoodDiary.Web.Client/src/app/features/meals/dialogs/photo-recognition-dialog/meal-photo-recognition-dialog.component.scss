@@ -21,7 +21,7 @@
     top: 12px;
     right: 12px;
     letter-spacing: 0.01em;
-    --fd-pill-bg: var(--fd-color-dialog-surface);
+    --fd-pill-bg: var(--fd-bg-dialog);
     --fd-pill-color: var(--fd-color-primary-700);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     box-shadow: var(--fd-shadow-lg);
@@ -167,7 +167,7 @@
     border-radius: var(--fd-radius-input);
     border: var(--fd-border-width) solid var(--photo-ai-border);
     padding: 0 var(--fd-space-sm);
-    background: var(--fd-color-dialog-surface);
+    background: var(--fd-bg-dialog);
 }
 
 .photo-ai-dialog__edit-input--amount {
@@ -326,7 +326,7 @@
     padding: var(--fd-space-sm) var(--fd-space-md);
     border-radius: var(--fd-radius-input);
     border: var(--fd-border-dashed);
-    background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-dialog-surface));
+    background: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-dialog));
     display: flex;
     align-items: center;
     gap: var(--fd-space-sm);

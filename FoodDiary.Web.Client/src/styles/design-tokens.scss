@@ -793,6 +793,24 @@ $fd-theme-design-tokens: (
         --fd-color-primary-rgb: #{fd-theme-token($theme, colors, primary-rgb)};
         --fd-color-danger-rgb: #{fd-theme-token($theme, colors, danger-rgb)};
 
+        --fd-bg-page: #{fd-theme-token($theme, layout-page, background)};
+        --fd-bg-body: #{fd-theme-token($theme, layout-page, background)};
+        --fd-bg-surface: var(--fd-color-surface);
+        --fd-bg-surface-raised: var(--fd-color-surface-raised);
+        --fd-bg-surface-muted: var(--fd-color-surface-muted);
+        --fd-bg-surface-inset: var(--fd-color-slate-50);
+        --fd-bg-dialog: var(--fd-color-dialog-surface);
+        --fd-bg-dialog-muted: var(--fd-color-dialog-surface-muted);
+        --fd-bg-overlay: var(--fd-color-dialog-overlay);
+        --fd-bg-brand: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+        --fd-bg-brand-hover: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
+        --fd-bg-brand-soft: var(--fd-color-primary-50);
+        --fd-bg-accent-soft: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        --fd-bg-success-soft: color-mix(in srgb, var(--fd-color-success) 14%, var(--fd-bg-surface-raised));
+        --fd-bg-warning-soft: color-mix(in srgb, var(--fd-color-yellow-300) 16%, var(--fd-bg-surface-raised));
+        --fd-bg-danger-soft: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
+        --fd-bg-transparent: transparent;
+
         --fd-color-primary-50: #{fd-theme-token($theme, colors, primary-50)};
         --fd-color-primary-100: #{fd-theme-token($theme, colors, primary-100)};
         --fd-color-primary-200: #{fd-theme-token($theme, colors, primary-200)};

@@ -33,7 +33,7 @@
 
 .fd-ui-stat-tile--subtle {
     --fd-stat-tile-radius: 16px;
-    --fd-stat-tile-background: color-mix(in srgb, var(--fd-color-white) 78%, transparent);
+    --fd-stat-tile-background: color-mix(in srgb, var(--fd-bg-surface-raised) 78%, transparent);
     --fd-stat-tile-border: var(--fd-border-muted);
     --fd-stat-tile-shadow: var(--fd-shadow-none);
 }

@@ -256,7 +256,7 @@
         width: 100%;
         --fd-progress-height: 20px;
         --fd-progress-radius: var(--fd-radius-pill);
-        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-color-surface-raised));
+        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-bg-surface-raised));
         position: relative;
     }
 

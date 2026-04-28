@@ -1,5 +1,5 @@
 .fd-ui-notice-surface {
-    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-surface));
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-bg-surface));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 24%, var(--fd-color-border));
     --fd-notice-surface-color: var(--fd-color-text);
     padding: var(--fd-space-xs) var(--fd-space-sm);
@@ -10,7 +10,7 @@
 }
 
 .fd-ui-notice-surface--info {
-    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-surface));
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-bg-surface));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-primary-500) 24%, var(--fd-color-border));
     --fd-notice-surface-color: var(--fd-color-text);
 }
@@ -22,19 +22,19 @@
 }
 
 .fd-ui-notice-surface--warning {
-    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-amber-500) 11%, var(--fd-color-surface));
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-amber-500) 11%, var(--fd-bg-surface));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-amber-500) 30%, var(--fd-color-border));
     --fd-notice-surface-color: var(--fd-color-text);
 }
 
 .fd-ui-notice-surface--danger {
-    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-surface-raised));
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-bg-surface-raised));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-danger) 32%, transparent);
     --fd-notice-surface-color: var(--fd-color-red-700);
 }
 
 .fd-ui-notice-surface--success {
-    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-emerald-500) 14%, var(--fd-color-surface));
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-emerald-500) 14%, var(--fd-bg-surface));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-emerald-500) 28%, var(--fd-color-border));
     --fd-notice-surface-color: var(--fd-color-text);
 }

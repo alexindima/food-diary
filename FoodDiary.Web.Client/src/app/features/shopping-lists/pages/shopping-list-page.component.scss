@@ -30,7 +30,7 @@
 
     &__mobile-manage {
         display: none;
-        background: var(--fd-color-slate-50);
+        background: var(--fd-bg-surface-inset);
 
         &--open {
             display: block;
@@ -197,7 +197,7 @@
             padding: var(--fd-space-xs) var(--fd-space-sm);
             margin: 0;
             border-bottom: var(--fd-border-muted);
-            background: var(--fd-color-slate-50);
+            background: var(--fd-bg-surface-inset);
         }
 
         &__mobile-toolbar {
@@ -228,7 +228,7 @@
             gap: 0;
             border-top: var(--fd-border-muted);
             border-bottom: var(--fd-border-muted);
-            background: var(--fd-color-surface);
+            background: var(--fd-bg-surface);
         }
 
         &__item {

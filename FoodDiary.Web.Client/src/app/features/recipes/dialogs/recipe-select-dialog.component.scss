@@ -51,7 +51,7 @@
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
         border: var(--fd-border-subtle);
-        background: var(--fd-color-surface-raised);
+        background: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-sm);
         text-align: left;
         cursor: pointer;
@@ -64,7 +64,7 @@
         overflow: hidden;
         display: grid;
         place-items: center;
-        background: var(--fd-color-primary-50);
+        background: var(--fd-bg-brand-soft);
 
         img {
             width: 100%;

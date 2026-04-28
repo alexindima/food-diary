@@ -5,7 +5,7 @@
 .fd-ui-textarea {
     --fd-textarea-radius: var(--fd-radius-input);
     --fd-textarea-border: var(--fd-border-default);
-    --fd-textarea-label-bg: var(--fd-color-surface-raised);
+    --fd-textarea-label-bg: var(--fd-bg-surface-raised);
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-control-gap);
@@ -44,7 +44,7 @@
 .fd-ui-textarea__control-wrap {
     border: var(--fd-textarea-border);
     border-radius: var(--fd-textarea-radius);
-    background: var(--fd-color-surface-raised);
+    background: var(--fd-bg-surface-raised);
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,

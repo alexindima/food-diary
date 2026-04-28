@@ -129,7 +129,7 @@
         opacity 0.15s ease;
 
     &:hover {
-        background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
         opacity: 1;
     }
 }

@@ -5,7 +5,7 @@
 .fd-ui-dialog-shell .fd-ui-dialog {
     --fd-dialog-shell-shadow: 0 18px 45px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
     --fd-dialog-shell-border: var(--fd-border-width) solid var(--fd-color-dialog-border);
-    --fd-dialog-shell-background: var(--fd-color-dialog-surface);
+    --fd-dialog-shell-background: var(--fd-bg-dialog);
     --fd-dialog-panel-max-width: 640px;
     border-radius: var(--fd-radius-dialog);
     box-shadow: var(--fd-dialog-shell-shadow);

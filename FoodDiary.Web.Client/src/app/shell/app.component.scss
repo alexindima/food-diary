@@ -30,7 +30,7 @@
     grid-template-columns: var(--fd-layout-shell-sidebar-width) 1fr;
     height: 100dvh;
     min-height: 100dvh;
-    background: var(--fd-layout-page-background);
+    background: var(--fd-bg-page);
     --fd-layout-sidebar-width: var(--fd-layout-shell-sidebar-width);
     overflow: hidden;
 
@@ -54,7 +54,7 @@
         min-height: 0;
         padding: 0;
         overflow: hidden;
-        background: var(--fd-layout-page-background);
+        background: var(--fd-bg-page);
     }
 
     &__viewport {
@@ -67,7 +67,7 @@
         -webkit-overflow-scrolling: touch;
         padding-bottom: calc(var(--fd-space-lg) + env(safe-area-inset-bottom));
         box-sizing: border-box;
-        background: var(--fd-layout-page-background);
+        background: var(--fd-bg-page);
     }
 
     &__content {
