@@ -8,7 +8,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 describe('AdminUsersComponent', () => {
     let component: AdminUsersComponent;
     let fixture: ComponentFixture<AdminUsersComponent>;
-    let usersService: { getUsers: ReturnType<typeof vi.fn> };
+    let usersService: {
+        getUsers: ReturnType<typeof vi.fn>;
+        getImpersonationSessions: ReturnType<typeof vi.fn>;
+    };
     let dialogService: { open: ReturnType<typeof vi.fn> };
 
     const pagedUsers = {
@@ -29,11 +32,35 @@ describe('AdminUsersComponent', () => {
         totalItems: 21,
     };
 
+    const pagedSessions = {
+        items: [
+            {
+                id: 's1',
+                actorUserId: 'admin-1',
+                actorEmail: 'admin@example.com',
+                targetUserId: 'u1',
+                targetEmail: 'user@example.com',
+                reason: 'Support case',
+                actorIpAddress: '127.0.0.1',
+                actorUserAgent: 'Vitest',
+                startedAtUtc: '2026-01-01T00:00:00Z',
+            },
+        ],
+        page: 1,
+        limit: 20,
+        totalPages: 1,
+        totalItems: 1,
+    };
+
     beforeEach(async () => {
-        usersService = { getUsers: vi.fn() };
+        usersService = {
+            getUsers: vi.fn(),
+            getImpersonationSessions: vi.fn(),
+        };
         dialogService = { open: vi.fn() };
 
         usersService.getUsers.mockReturnValue(of(pagedUsers));
+        usersService.getImpersonationSessions.mockReturnValue(of(pagedSessions));
         dialogService.open.mockReturnValue({
             afterClosed: () => of(false),
         });
@@ -63,6 +90,14 @@ describe('AdminUsersComponent', () => {
         expect(component.isLoading()).toBe(false);
     });
 
+    it('should load impersonation sessions on init', () => {
+        expect(usersService.getImpersonationSessions).toHaveBeenCalledWith(1, 20, null);
+        expect(component.sessions()).toEqual(pagedSessions.items as any);
+        expect(component.sessionsTotalPages()).toBe(1);
+        expect(component.sessionsTotalItems()).toBe(1);
+        expect(component.isSessionsLoading()).toBe(false);
+    });
+
     it('should update search and reload from page 1', () => {
         component.onSearchChange('john');
 
@@ -88,6 +123,33 @@ describe('AdminUsersComponent', () => {
         component.goToPage(0);
         component.goToPage(99);
         expect(usersService.getUsers.mock.calls.length).toBe(callCount);
+    });
+
+    it('should update sessions search and reload from page 1', () => {
+        component.onSessionsSearchChange('admin@example.com');
+
+        expect(component.sessionsSearch()).toBe('admin@example.com');
+        expect(component.sessionsPage()).toBe(1);
+        expect(usersService.getImpersonationSessions).toHaveBeenLastCalledWith(1, 20, 'admin@example.com');
+    });
+
+    it('should change sessions page only within valid bounds', () => {
+        usersService.getImpersonationSessions.mockReturnValue(
+            of({
+                ...pagedSessions,
+                totalPages: 2,
+            }),
+        );
+        component.sessionsTotalPages.set(2);
+
+        component.goToSessionsPage(2);
+        expect(component.sessionsPage()).toBe(2);
+        expect(usersService.getImpersonationSessions).toHaveBeenLastCalledWith(2, 20, null);
+
+        const callCount = usersService.getImpersonationSessions.mock.calls.length;
+        component.goToSessionsPage(0);
+        component.goToSessionsPage(99);
+        expect(usersService.getImpersonationSessions.mock.calls.length).toBe(callCount);
     });
 
     it('should reload users after successful dialog close', () => {

@@ -143,6 +143,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/users/impersonation-sessions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/users/{id}",
       "Operations": [
         {

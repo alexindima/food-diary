@@ -13,6 +13,30 @@
     font-weight: 600;
 }
 
+.admin-users__section {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.admin-users__section-header {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.admin-users__section-header h2 {
+    margin: 0;
+    font-size: 1.125rem;
+}
+
+.admin-users__section-header p {
+    margin: 0.25rem 0 0;
+    color: #6b7280;
+}
+
 .users-table {
     width: 100%;
     border-collapse: collapse;
@@ -29,6 +53,13 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+}
+
+.users-table__reason {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .pagination {

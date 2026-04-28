@@ -8,6 +8,7 @@ using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -69,6 +70,13 @@ public static class AdminHttpMappings {
             Reason: request.Reason,
             ActorIpAddress: actorIpAddress,
             ActorUserAgent: actorUserAgent);
+    }
+
+    public static GetAdminImpersonationSessionsQuery ToQuery(this GetAdminImpersonationSessionsHttpQuery query) {
+        return new GetAdminImpersonationSessionsQuery(
+            Page: query.Page,
+            Limit: query.Limit,
+            Search: query.Search);
     }
 
     public static ReviewContentReportCommand ToReviewCommand(this AdminReportActionHttpRequest request, Guid reportId) {

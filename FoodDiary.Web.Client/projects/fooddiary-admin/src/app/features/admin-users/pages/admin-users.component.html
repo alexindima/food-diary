@@ -28,8 +28,8 @@
                 @for (user of users(); track user.id) {
                     <tr>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.username || '—' }}</td>
-                        <td>{{ user.roles.join(', ') || '—' }}</td>
+                        <td>{{ user.username || '-' }}</td>
+                        <td>{{ user.roles.join(', ') || '-' }}</td>
                         <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
                         <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
                         <td>{{ user.deletedAt ? 'Yes' : 'No' }}</td>
@@ -63,4 +63,67 @@
             </fd-ui-button>
         </div>
     }
+
+    <section class="admin-users__section">
+        <div class="admin-users__section-header">
+            <div>
+                <h2>Impersonation sessions</h2>
+                <p>Recent admin access sessions started on behalf of users.</p>
+            </div>
+            <fd-ui-input [ngModel]="sessionsSearch()" (ngModelChange)="onSessionsSearchChange($event)" placeholder="Search sessions" />
+        </div>
+
+        @if (isSessionsLoading()) {
+            <p>Loading sessions...</p>
+        } @else {
+            <div class="summary">Total sessions: {{ sessionsTotalItems() }}</div>
+
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Started</th>
+                        <th>Admin</th>
+                        <th>Target user</th>
+                        <th>Reason</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (session of sessions(); track session.id) {
+                        <tr>
+                            <td>{{ session.startedAtUtc | date: 'medium' }}</td>
+                            <td>{{ session.actorEmail }}</td>
+                            <td>{{ session.targetEmail }}</td>
+                            <td class="users-table__reason" [title]="session.reason">{{ session.reason }}</td>
+                            <td>{{ session.actorIpAddress || '-' }}</td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="5">No impersonation sessions found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    [disabled]="sessionsPage() <= 1"
+                    (click)="goToSessionsPage(sessionsPage() - 1)"
+                >
+                    Previous
+                </fd-ui-button>
+                <span>Page {{ sessionsPage() }} of {{ sessionsTotalPages() }}</span>
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    [disabled]="sessionsPage() >= sessionsTotalPages()"
+                    (click)="goToSessionsPage(sessionsPage() + 1)"
+                >
+                    Next
+                </fd-ui-button>
+            </div>
+        }
+    </section>
 </div>

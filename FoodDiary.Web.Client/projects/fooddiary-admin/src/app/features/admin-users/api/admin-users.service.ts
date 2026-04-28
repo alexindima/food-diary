@@ -33,6 +33,18 @@ export type AdminImpersonationStart = {
     reason: string;
 };
 
+export type AdminImpersonationSession = {
+    id: string;
+    actorUserId: string;
+    actorEmail: string;
+    targetUserId: string;
+    targetEmail: string;
+    reason: string;
+    actorIpAddress?: string | null;
+    actorUserAgent?: string | null;
+    startedAtUtc: string;
+};
+
 type ApiPagedResponse<T> = {
     data: T[];
     page: number;
@@ -78,5 +90,27 @@ export class AdminUsersService {
 
     public startImpersonation(userId: string, reason: string): Observable<AdminImpersonationStart> {
         return this.http.post<AdminImpersonationStart>(`${this.baseUrl}/${userId}/impersonation`, { reason });
+    }
+
+    public getImpersonationSessions(
+        page: number,
+        limit: number,
+        search?: string | null,
+    ): Observable<PagedResponse<AdminImpersonationSession>> {
+        let params = new HttpParams().set('page', page).set('limit', limit);
+
+        if (search) {
+            params = params.set('search', search);
+        }
+
+        return this.http.get<ApiPagedResponse<AdminImpersonationSession>>(`${this.baseUrl}/impersonation-sessions`, { params }).pipe(
+            map(response => ({
+                items: response.data,
+                page: response.page,
+                limit: response.limit,
+                totalPages: response.totalPages,
+                totalItems: response.totalItems,
+            })),
+        );
     }
 }
