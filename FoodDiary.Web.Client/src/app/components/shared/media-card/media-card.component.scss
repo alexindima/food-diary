@@ -54,7 +54,7 @@
 .fd-media-card--raised {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: var(--fd-space-lg);
-    padding: 0 20px 0 0;
+    padding: 0 var(--fd-space-lg) 0 0;
     border: 1px solid var(--fd-color-border);
     border-radius: var(--fd-radius-card);
     background: linear-gradient(
@@ -82,7 +82,7 @@
 .fd-media-card--plain {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: var(--fd-space-sm);
-    padding: 0 14px 0 0;
+    padding: 0 var(--fd-space-md) 0 0;
     border: none;
     border-radius: 0;
     background: transparent;
@@ -133,7 +133,7 @@
 
     .fd-media-card--raised {
         gap: var(--fd-space-sm);
-        padding: 0 14px 0 0;
+        padding: 0 var(--fd-space-md) 0 0;
         border: none;
         border-radius: 0;
         background: transparent;

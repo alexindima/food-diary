@@ -3,7 +3,7 @@
     --fd-pill-border: var(--fd-color-border);
     --fd-pill-color: var(--fd-color-text);
     --fd-pill-min-height: 28px;
-    --fd-pill-padding-inline: 10px;
+    --fd-pill-padding-inline: var(--fd-space-xs);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -11,7 +11,7 @@
     min-height: var(--fd-pill-min-height);
     width: fit-content;
     padding-inline: var(--fd-pill-padding-inline);
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     border: 1px solid var(--fd-pill-border);
     background: var(--fd-pill-bg);
     color: var(--fd-pill-color);
@@ -19,7 +19,7 @@
 
 .fd-ui-pill--compact {
     --fd-pill-min-height: 24px;
-    --fd-pill-padding-inline: 8px;
+    --fd-pill-padding-inline: var(--fd-space-xs);
     gap: var(--fd-space-pill-compact-gap);
 }
 

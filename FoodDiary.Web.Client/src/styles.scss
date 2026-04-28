@@ -53,7 +53,7 @@ body {
 @media #{variables.$media-tablet} {
 
     :root {
-        --fd-layout-page-top-padding: 0px;
+        --fd-layout-page-top-padding: 0;
     }
 
     html,
@@ -82,7 +82,7 @@ body {
 .fd-page-header__title-block {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--fd-space-xxs);
     min-width: 220px;
 }
 
