@@ -59,17 +59,17 @@
         }
 
         &--low {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-color-danger) 12%, transparent);
+            --fd-pill-bg: var(--fd-bg-status-danger);
             --fd-pill-color: var(--fd-color-danger);
         }
 
         &--medium {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-color-yellow-300) 20%, transparent);
+            --fd-pill-bg: var(--fd-bg-status-warning);
             --fd-pill-color: var(--fd-color-orange-700);
         }
 
         &--high {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 14%, transparent);
+            --fd-pill-bg: var(--fd-bg-status-success);
             --fd-pill-color: var(--fd-color-emerald-700);
         }
     }
@@ -96,7 +96,7 @@
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel);
-        background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
+        background: var(--fd-bg-category-sky);
         color: var(--fd-color-sky-700);
         line-height: 1.5;
 
@@ -116,7 +116,7 @@
         gap: var(--fd-space-sm);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel);
-        background: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
+        background: var(--fd-bg-status-success);
     }
 
     &__suggestion-text {

@@ -555,13 +555,13 @@
         --fd-pill-padding-inline: var(--fd-space-xs);
 
         &--active {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-color-emerald-500) 18%, var(--fd-bg-surface-raised));
+            --fd-pill-bg: var(--fd-bg-status-success);
             --fd-pill-border: transparent;
             --fd-pill-color: var(--fd-color-emerald-300);
         }
 
         &--inactive {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-bg-surface) 92%, transparent);
+            --fd-pill-bg: var(--fd-bg-status-muted);
             --fd-pill-border: transparent;
             --fd-pill-color: var(--fd-color-text-muted);
         }

@@ -5,7 +5,7 @@
 }
 
 .meal-plans-list {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &__header {
         margin-bottom: var(--fd-space-lg);
     }
@@ -54,7 +54,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-xs);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 
     &:hover {
         transform: translateY(-2px);
@@ -63,7 +65,7 @@
 
     &__badge {
         width: fit-content;
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
+        --fd-pill-bg: var(--fd-bg-category-orange);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-orange-700);
     }
@@ -96,12 +98,8 @@
     }
 
     &__curated {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
+        --fd-pill-bg: var(--fd-bg-status-success);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-green-500);
     }
 }
-
-
-
-

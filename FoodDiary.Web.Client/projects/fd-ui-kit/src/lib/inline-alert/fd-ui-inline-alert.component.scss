@@ -1,8 +1,8 @@
 @use 'variables' as variables;
 
 :host {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-sky-500) 7%, var(--fd-bg-surface));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-sky-500) 24%, var(--fd-color-border));
+    --fd-inline-alert-bg: var(--fd-bg-status-info);
+    --fd-inline-alert-border: var(--fd-color-border-status-info);
     --fd-inline-alert-accent: var(--fd-color-primary-500);
     --fd-inline-alert-title: var(--fd-color-text-strong);
     --fd-inline-alert-text: var(--fd-color-text-muted);
@@ -107,25 +107,25 @@
 }
 
 :host(.fd-ui-inline-alert--warning) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-orange-500) 8%, var(--fd-bg-surface));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-orange-500) 24%, var(--fd-color-border));
+    --fd-inline-alert-bg: var(--fd-bg-status-warning);
+    --fd-inline-alert-border: var(--fd-color-border-status-warning);
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-orange-400) 72%, var(--fd-color-text));
 }
 
 :host(.fd-ui-inline-alert--success) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-green-500) 8%, var(--fd-bg-surface));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-green-500) 24%, var(--fd-color-border));
+    --fd-inline-alert-bg: var(--fd-bg-status-success);
+    --fd-inline-alert-border: var(--fd-color-border-status-success);
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-green-400) 74%, var(--fd-color-text));
 }
 
 :host(.fd-ui-inline-alert--danger) {
-    --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-bg-surface));
-    --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-danger) 24%, var(--fd-color-border));
+    --fd-inline-alert-bg: var(--fd-bg-status-danger);
+    --fd-inline-alert-border: var(--fd-color-border-status-danger);
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text));
 }
 
 @media #{variables.$media-tablet} {
-
+    // stylelint-disable-next-line rule-empty-line-before
     :host {
         grid-template-columns: auto minmax(0, 1fr);
     }
@@ -136,5 +136,3 @@
         margin-top: calc(var(--fd-space-sm) / -2);
     }
 }
-
-

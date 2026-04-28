@@ -168,17 +168,17 @@
     }
 
     &__bmi-status--normal {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 18%, var(--fd-bg-surface-raised));
+        --fd-pill-bg: var(--fd-bg-status-success);
         --fd-pill-color: var(--fd-color-emerald-700);
     }
 
     &__bmi-status--over {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-yellow-300) 55%, var(--fd-bg-surface-raised));
+        --fd-pill-bg: var(--fd-bg-status-warning);
         --fd-pill-color: var(--fd-color-orange-700);
     }
 
     &__bmi-status--obese {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-danger) 18%, var(--fd-bg-surface-raised));
+        --fd-pill-bg: var(--fd-bg-status-danger);
         --fd-pill-color: var(--fd-color-red-700);
     }
 
@@ -277,7 +277,7 @@
     }
 
     @media #{variables.$media-phablet} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__entry {
             grid-template-columns: 1fr;
             text-align: left;

@@ -214,11 +214,7 @@ $fd-theme-design-tokens: (
             brand-end: #2563eb,
             brand-hover-start: #60b6ff,
             brand-hover-end: #2f6df2,
-            sidebar-start: color-mix(
-                    in srgb,
-                    var(--fd-color-primary-50) 35%,
-                    var(--fd-color-white)
-                ),
+            sidebar-start: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)),
             sidebar-end: #eef4ff,
             premium-start: #0f172a,
             premium-end: #1e293b,
@@ -804,7 +800,11 @@ $fd-theme-design-tokens: (
         --fd-bg-surface-elevated: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
         --fd-bg-surface-panel: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent);
         --fd-bg-surface-solid: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
-        --fd-bg-surface-brand: linear-gradient(180deg, var(--fd-bg-surface-raised) 0%, color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised)) 100%);
+        --fd-bg-surface-brand: linear-gradient(
+            180deg,
+            var(--fd-bg-surface-raised) 0%,
+            color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised)) 100%
+        );
         --fd-bg-border: var(--fd-color-border);
         --fd-bg-border-strong: var(--fd-color-border-strong);
         --fd-bg-track-muted: var(--fd-color-slate-200);
@@ -830,6 +830,16 @@ $fd-theme-design-tokens: (
         --fd-bg-success-soft: color-mix(in srgb, var(--fd-color-success) 14%, var(--fd-bg-surface-raised));
         --fd-bg-warning-soft: color-mix(in srgb, var(--fd-color-yellow-300) 16%, var(--fd-bg-surface-raised));
         --fd-bg-danger-soft: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
+        --fd-bg-status-muted: color-mix(in srgb, var(--fd-bg-surface) 88%, transparent);
+        --fd-bg-status-info: color-mix(in srgb, var(--fd-color-primary-500) 12%, var(--fd-bg-surface));
+        --fd-bg-status-success: color-mix(in srgb, var(--fd-color-emerald-500) 14%, var(--fd-bg-surface));
+        --fd-bg-status-warning: color-mix(in srgb, var(--fd-color-yellow-300) 18%, var(--fd-bg-surface));
+        --fd-bg-status-danger: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface));
+        --fd-bg-status-premium: color-mix(in srgb, var(--fd-gradient-premium-start) 14%, var(--fd-bg-surface));
+        --fd-bg-category-sky: color-mix(in srgb, var(--fd-color-sky-500) 14%, var(--fd-bg-surface));
+        --fd-bg-category-teal: color-mix(in srgb, var(--fd-color-teal-700) 12%, transparent);
+        --fd-bg-category-purple: color-mix(in srgb, var(--fd-color-purple-500) 14%, var(--fd-bg-surface));
+        --fd-bg-category-orange: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
         --fd-bg-transparent: transparent;
 
         --fd-color-primary-50: #{fd-theme-token($theme, colors, primary-50)};
@@ -972,6 +982,12 @@ $fd-theme-design-tokens: (
         --fd-border-muted: #{fd-token(border, muted)};
         --fd-border-inverse: #{fd-token(border, inverse)};
         --fd-border-dashed: #{fd-token(border, dashed)};
+        --fd-color-border-status-muted: var(--fd-color-border);
+        --fd-color-border-status-info: color-mix(in srgb, var(--fd-color-primary-500) 30%, var(--fd-color-border));
+        --fd-color-border-status-success: color-mix(in srgb, var(--fd-color-emerald-500) 28%, var(--fd-color-border));
+        --fd-color-border-status-warning: color-mix(in srgb, var(--fd-color-yellow-300) 32%, var(--fd-color-border));
+        --fd-color-border-status-danger: color-mix(in srgb, var(--fd-color-danger) 28%, var(--fd-color-border));
+        --fd-color-border-status-premium: color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
 
         --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
         --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};
@@ -1089,8 +1105,14 @@ $fd-theme-design-tokens: (
         --fd-space-dialog-footer-margin-top: #{fd-ui-style-spacing-token($style, dialog-footer-margin-top)};
         --fd-space-dialog-fullscreen-padding: #{fd-ui-style-spacing-token($style, dialog-fullscreen-padding)};
         --fd-space-dialog-detail-mobile-body-padding-block: #{fd-ui-style-spacing-token($style, dialog-detail-mobile-body-padding-block)};
-        --fd-space-dialog-detail-mobile-body-padding-inline-end: #{fd-ui-style-spacing-token($style, dialog-detail-mobile-body-padding-inline-end)};
-        --fd-space-dialog-detail-mobile-body-margin-inline-end: #{fd-ui-style-spacing-token($style, dialog-detail-mobile-body-margin-inline-end)};
+        --fd-space-dialog-detail-mobile-body-padding-inline-end: #{fd-ui-style-spacing-token(
+                $style,
+                dialog-detail-mobile-body-padding-inline-end
+            )};
+        --fd-space-dialog-detail-mobile-body-margin-inline-end: #{fd-ui-style-spacing-token(
+                $style,
+                dialog-detail-mobile-body-margin-inline-end
+            )};
         --fd-space-empty-state-gap: #{fd-ui-style-spacing-token($style, empty-state-gap)};
         --fd-space-empty-state-padding: #{fd-ui-style-spacing-token($style, empty-state-padding)};
         --fd-space-empty-state-compact-padding: #{fd-ui-style-spacing-token($style, empty-state-compact-padding)};

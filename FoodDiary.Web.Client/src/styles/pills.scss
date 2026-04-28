@@ -1,6 +1,6 @@
 .fd-ui-pill {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-bg-surface) 88%, transparent);
-    --fd-pill-border: var(--fd-color-border);
+    --fd-pill-bg: var(--fd-bg-status-muted);
+    --fd-pill-border: var(--fd-color-border-status-muted);
     --fd-pill-color: var(--fd-color-text);
     --fd-pill-min-height: 28px;
     --fd-pill-padding-inline: var(--fd-space-xs);
@@ -24,37 +24,37 @@
 }
 
 .fd-ui-pill--muted {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-bg-surface) 88%, transparent);
-    --fd-pill-border: var(--fd-color-border);
+    --fd-pill-bg: var(--fd-bg-status-muted);
+    --fd-pill-border: var(--fd-color-border-status-muted);
     --fd-pill-color: var(--fd-color-text-muted);
 }
 
 .fd-ui-pill--primary {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-color-primary-500) 12%, var(--fd-bg-surface));
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-primary-500) 30%, var(--fd-color-border));
+    --fd-pill-bg: var(--fd-bg-status-info);
+    --fd-pill-border: var(--fd-color-border-status-info);
     --fd-pill-color: var(--fd-color-primary-700);
 }
 
 .fd-ui-pill--success {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-color-emerald-500) 14%, var(--fd-bg-surface));
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-emerald-500) 28%, var(--fd-color-border));
+    --fd-pill-bg: var(--fd-bg-status-success);
+    --fd-pill-border: var(--fd-color-border-status-success);
     --fd-pill-color: var(--fd-color-emerald-300);
 }
 
 .fd-ui-pill--warning {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-color-yellow-300) 18%, var(--fd-bg-surface));
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-yellow-300) 32%, var(--fd-color-border));
+    --fd-pill-bg: var(--fd-bg-status-warning);
+    --fd-pill-border: var(--fd-color-border-status-warning);
     --fd-pill-color: var(--fd-color-text-strong);
 }
 
 .fd-ui-pill--danger {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface));
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-danger) 28%, var(--fd-color-border));
+    --fd-pill-bg: var(--fd-bg-status-danger);
+    --fd-pill-border: var(--fd-color-border-status-danger);
     --fd-pill-color: var(--fd-color-danger);
 }
 
 .fd-ui-pill--premium {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-gradient-premium-start) 14%, var(--fd-bg-surface));
-    --fd-pill-border: color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
+    --fd-pill-bg: var(--fd-bg-status-premium);
+    --fd-pill-border: var(--fd-color-border-status-premium);
     --fd-pill-color: var(--fd-color-text);
 }

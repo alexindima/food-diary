@@ -29,19 +29,19 @@
     }
 
     &__delta {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-primary-100) 62%, var(--fd-bg-surface-raised));
+        --fd-pill-bg: var(--fd-bg-status-info);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text);
         --fd-pill-min-height: 30px;
         margin-bottom: var(--fd-space-xs);
 
         &--positive {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 16%, var(--fd-bg-surface-raised));
+            --fd-pill-bg: var(--fd-bg-status-success);
             --fd-pill-color: var(--fd-color-emerald-700);
         }
 
         &--negative {
-            --fd-pill-bg: color-mix(in srgb, var(--fd-color-orange-500) 14%, var(--fd-bg-surface-raised));
+            --fd-pill-bg: var(--fd-bg-category-orange);
             --fd-pill-color: var(--fd-color-orange-700);
         }
     }

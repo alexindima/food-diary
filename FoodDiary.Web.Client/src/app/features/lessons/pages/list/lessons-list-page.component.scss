@@ -5,7 +5,7 @@
 }
 
 .lessons-list {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &__header {
         margin-bottom: var(--fd-space-lg);
     }
@@ -40,7 +40,11 @@
     &__progress-fill {
         height: 100%;
         border-radius: var(--fd-radius-xs);
-        background: linear-gradient(90deg, var(--fd-color-green-500), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-slate-900)));
+        background: linear-gradient(
+            90deg,
+            var(--fd-color-green-500),
+            color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-slate-900))
+        );
         transition: width 0.3s ease;
     }
 
@@ -88,7 +92,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-xs);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 
     &:hover {
         transform: translateY(-2px);
@@ -106,7 +112,7 @@
     }
 
     &__category {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-purple-500) 12%, var(--fd-bg-surface));
+        --fd-pill-bg: var(--fd-bg-category-purple);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-purple-300);
     }
@@ -144,7 +150,3 @@
         color: var(--fd-color-text-muted);
     }
 }
-
-
-
-

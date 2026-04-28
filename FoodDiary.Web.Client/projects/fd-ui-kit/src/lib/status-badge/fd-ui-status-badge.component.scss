@@ -22,18 +22,18 @@
 
 :host(.fd-ui-status-badge--success) {
     color: var(--fd-color-emerald-300);
-    background: color-mix(in srgb, var(--fd-color-emerald-500) 16%, var(--fd-bg-surface-raised));
-    border-color: color-mix(in srgb, var(--fd-color-emerald-500) 28%, var(--fd-color-border));
+    background: var(--fd-bg-status-success);
+    border-color: var(--fd-color-border-status-success);
 }
 
 :host(.fd-ui-status-badge--warning) {
     color: var(--fd-color-warning);
-    background: color-mix(in srgb, var(--fd-color-warning) 16%, var(--fd-bg-surface-raised));
-    border-color: color-mix(in srgb, var(--fd-color-warning) 30%, var(--fd-color-border));
+    background: var(--fd-bg-status-warning);
+    border-color: var(--fd-color-border-status-warning);
 }
 
 :host(.fd-ui-status-badge--danger) {
     color: var(--fd-color-danger);
-    background: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
-    border-color: color-mix(in srgb, var(--fd-color-danger) 24%, var(--fd-color-border));
+    background: var(--fd-bg-status-danger);
+    border-color: var(--fd-color-border-status-danger);
 }

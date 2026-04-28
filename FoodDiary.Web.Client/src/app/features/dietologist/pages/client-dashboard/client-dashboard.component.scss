@@ -25,7 +25,7 @@
     }
 
     &__chip {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-primary-100) 45%, var(--fd-bg-surface-raised));
+        --fd-pill-bg: var(--fd-bg-status-info);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-primary-700);
     }

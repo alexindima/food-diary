@@ -17,7 +17,7 @@
     &__status {
         --fd-pill-min-height: 40px;
         --fd-pill-padding-inline: var(--fd-space-md);
-        --fd-pill-bg: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, var(--fd-bg-surface-raised) 6%);
+        --fd-pill-bg: var(--fd-bg-surface-elevated);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text-muted);
         box-shadow:
@@ -501,7 +501,7 @@
     }
 
     &__delta {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-green-500) 12%, transparent);
+        --fd-pill-bg: var(--fd-bg-status-success);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-emerald-700);
 
@@ -511,7 +511,7 @@
     }
 
     @media #{variables.$media-desktop} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__main-grid {
             grid-template-columns: 1fr;
         }
@@ -526,7 +526,7 @@
     }
 
     @media #{variables.$media-phablet} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__macro {
             grid-template-columns: minmax(0, 1fr);
             gap: var(--fd-space-xs);

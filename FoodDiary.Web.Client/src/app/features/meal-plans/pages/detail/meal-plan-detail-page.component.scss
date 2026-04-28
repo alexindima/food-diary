@@ -5,7 +5,7 @@
 }
 
 .meal-plan-detail {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &__header {
         margin: var(--fd-space-lg) 0;
         display: flex;
@@ -15,7 +15,7 @@
 
     &__badge {
         width: fit-content;
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
+        --fd-pill-bg: var(--fd-bg-category-orange);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-orange-700);
     }
@@ -46,7 +46,7 @@
 }
 
 .meal-plan-day {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &__title {
         font-size: 1.1rem;
         font-weight: 700;
@@ -95,7 +95,7 @@
 }
 
 @media #{variables.$media-mobile} {
-
+    // stylelint-disable-next-line rule-empty-line-before
     .meal-plan-meal {
         flex-direction: column;
         align-items: flex-start;
@@ -106,7 +106,3 @@
         flex-wrap: wrap;
     }
 }
-
-
-
-

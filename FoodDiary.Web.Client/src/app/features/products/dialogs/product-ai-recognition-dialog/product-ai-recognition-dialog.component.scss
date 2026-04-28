@@ -36,11 +36,19 @@
     border-radius: var(--fd-radius-dialog);
     overflow: hidden;
     pointer-events: none;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent), color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent));
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent),
+        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
+    );
 }
 
 .product-ai-dialog__scan-overlay:has(.product-ai-dialog__scan-line--nutrition) {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-green-500) 8%, transparent), color-mix(in srgb, var(--fd-color-green-500) 0%, transparent));
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-green-500) 8%, transparent),
+        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
+    );
 }
 
 .product-ai-dialog__scan-line {
@@ -80,7 +88,7 @@
 }
 
 @keyframes product-ai-scan {
-
+    // stylelint-disable-next-line rule-empty-line-before
     0% {
         top: 12px;
         opacity: 0.6;
@@ -129,7 +137,7 @@
 }
 
 .product-ai-dialog__item-chip {
-    --fd-pill-bg: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
+    --fd-pill-bg: var(--fd-bg-status-info);
     --fd-pill-border: transparent;
     --fd-pill-color: var(--fd-color-primary-700);
 }
@@ -156,7 +164,3 @@
 .product-ai-dialog__footer {
     --fd-actions-gap: var(--fd-space-md);
 }
-
-
-
-

@@ -97,12 +97,12 @@
     }
 
     &__day-badge {
-        --fd-pill-bg: color-mix(in srgb, var(--fd-color-sky-500) 12%, transparent);
+        --fd-pill-bg: var(--fd-bg-category-sky);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-sky-700);
 
         &--period {
-            --fd-pill-bg: rgba(248, 113, 113, 0.18);
+            --fd-pill-bg: var(--fd-bg-status-danger);
             --fd-pill-color: var(--fd-color-red-700);
         }
     }
