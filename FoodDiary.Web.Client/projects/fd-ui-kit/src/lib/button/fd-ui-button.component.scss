@@ -141,9 +141,9 @@
 }
 
 .fd-ui-button--primary.fd-ui-button--solid {
-    --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    --fd-button-background-default: var(--fd-bg-brand);
     --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-    --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    --fd-button-background-active: var(--fd-bg-brand);
     --fd-button-background-disabled: var(--fd-color-gray-300);
     border: none;
     --fd-button-text-default: var(--fd-color-on-brand);
@@ -227,7 +227,7 @@
     --fd-button-width: 100%;
     --fd-button-border-style: dashed;
     --fd-button-border-default: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
-    --fd-button-background-default: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
+    --fd-button-background-default: var(--fd-bg-surface-elevated);
     --fd-button-text-default: var(--fd-color-text-muted);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);

@@ -580,7 +580,7 @@
 
     &__privacy-divider {
         height: 1px;
-        background: var(--fd-color-border);
+        background: var(--fd-bg-border);
     }
 
     @media #{variables.$media-mobile} {

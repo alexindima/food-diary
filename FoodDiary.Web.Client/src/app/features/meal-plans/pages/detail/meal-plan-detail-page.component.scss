@@ -67,7 +67,7 @@
     gap: var(--fd-space-md);
     padding: var(--fd-space-surface-emphasis-padding);
     border-radius: var(--fd-radius-card);
-    background: linear-gradient(180deg, var(--fd-bg-surface-raised) 0%, color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised)) 100%);
+    background: var(--fd-bg-surface-brand);
     box-shadow: var(--fd-shadow-sm);
 
     &__type {

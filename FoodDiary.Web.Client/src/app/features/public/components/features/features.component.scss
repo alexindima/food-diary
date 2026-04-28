@@ -4,7 +4,7 @@
 .features {
     padding: var(--fd-landing-section-space) 0 var(--fd-landing-section-space-compact);
     background:
-        radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent), transparent 32%),
+        radial-gradient(circle at top left, var(--fd-bg-brand-tint), transparent 32%),
         linear-gradient(180deg, var(--fd-color-slate-50) 0%, color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-white)) 100%);
     --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
 

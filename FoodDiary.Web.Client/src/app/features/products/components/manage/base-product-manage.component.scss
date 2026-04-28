@@ -4,7 +4,7 @@
     --fd-page-background-mid: #f1f5f9;
     --fd-page-background-end: #eef2f7;
     --fd-slate-border-24: color-mix(in srgb, var(--fd-color-slate-400) 24%, transparent);
-    --fd-layout-page-background: linear-gradient(180deg, var(--fd-bg-surface-inset) 0%, var(--fd-page-background-mid) 45%, var(--fd-page-background-end) 100%);
+    --fd-bg-page: linear-gradient(180deg, var(--fd-bg-surface-inset) 0%, var(--fd-page-background-mid) 45%, var(--fd-page-background-end) 100%);
     margin: 0 auto;
     box-sizing: border-box;
     display: flex;

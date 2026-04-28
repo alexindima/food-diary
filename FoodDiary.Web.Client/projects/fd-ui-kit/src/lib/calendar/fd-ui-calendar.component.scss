@@ -73,7 +73,7 @@
         color 160ms ease;
 
     &:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--fd-color-primary-600) 6%, transparent);
+        background: var(--fd-bg-brand-tint-subtle);
         border-color: color-mix(in srgb, var(--fd-color-border-strong) 55%, transparent);
     }
 
@@ -98,12 +98,12 @@
 }
 
 .fd-ui-calendar__day--selected {
-    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    background: var(--fd-bg-brand);
     border-color: transparent;
     color: var(--fd-color-on-brand);
 }
 
 .fd-ui-calendar__day--active:not(.fd-ui-calendar__day--selected) {
-    background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
+    background: var(--fd-bg-brand-tint-medium);
     border-color: color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
 }

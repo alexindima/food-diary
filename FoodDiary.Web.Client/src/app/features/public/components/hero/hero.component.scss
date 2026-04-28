@@ -24,7 +24,7 @@
         inset: auto -10% -18% auto;
         width: 420px;
         height: 420px;
-        background: radial-gradient(circle, color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent), transparent 68%);
+        background: radial-gradient(circle, var(--fd-bg-brand-tint-strong), transparent 68%);
         filter: blur(12px);
         pointer-events: none;
     }

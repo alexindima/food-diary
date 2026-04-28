@@ -54,7 +54,7 @@
     }
 
     &.is-active {
-        background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+        background: var(--fd-bg-brand);
         color: var(--fd-color-on-brand);
         box-shadow: var(--fd-shadow-accent-strong);
     }

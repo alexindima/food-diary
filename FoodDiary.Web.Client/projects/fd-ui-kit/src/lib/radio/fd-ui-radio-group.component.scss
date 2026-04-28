@@ -93,7 +93,7 @@
 }
 
 .fd-ui-radio__input:checked + .fd-ui-radio__control .fd-ui-radio__dot {
-    background: var(--fd-color-primary-600);
+    background: var(--fd-bg-primary);
 }
 
 .fd-ui-radio__input:focus-visible + .fd-ui-radio__control {

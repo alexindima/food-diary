@@ -7,7 +7,7 @@
     border: var(--fd-border-default);
     box-sizing: border-box;
     color: var(--fd-color-text-muted);
-    background: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
+    background: var(--fd-bg-surface-elevated);
 }
 
 .fd-ui-status-badge__label {

@@ -275,7 +275,7 @@
 }
 
 .fd-ui-dialog-backdrop--detail {
-    background: color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);
+    background: var(--fd-bg-scrim-subtle);
     opacity: 0;
     animation: detailBackdrop 180ms ease forwards;
     backdrop-filter: blur(2px);

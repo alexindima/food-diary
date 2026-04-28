@@ -304,7 +304,7 @@
     margin-top: var(--fd-space-md);
 
     &__item {
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+        background: var(--fd-bg-surface-solid);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
         border-radius: var(--fd-landing-radius-panel);
         box-shadow: var(--fd-landing-shadow-soft);
@@ -375,7 +375,7 @@
         min-height: 56px;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+        background: var(--fd-bg-surface-solid);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         box-shadow: var(--fd-landing-shadow-soft);
         color: var(--fd-color-primary-700);

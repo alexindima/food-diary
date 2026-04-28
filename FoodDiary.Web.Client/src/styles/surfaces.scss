@@ -10,7 +10,7 @@
 }
 
 .fd-ui-surface--raised {
-    --fd-surface-bg: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
+    --fd-surface-bg: var(--fd-bg-surface-elevated);
 }
 
 .fd-ui-surface--primary {
@@ -28,6 +28,6 @@
 }
 
 .fd-ui-surface--dashed {
-    --fd-surface-bg: color-mix(in srgb, var(--fd-bg-surface-raised) 84%, transparent);
+    --fd-surface-bg: var(--fd-bg-surface-soft);
     --fd-surface-border: var(--fd-border-dashed);
 }

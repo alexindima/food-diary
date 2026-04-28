@@ -1,6 +1,6 @@
 import { computed, Directive, input } from '@angular/core';
 
-const DEFAULT_BACKGROUND = 'var(--fd-layout-page-background)';
+const DEFAULT_BACKGROUND = 'var(--fd-bg-page)';
 const DEFAULT_PADDING = 'var(--fd-layout-page-vertical-padding) var(--fd-layout-page-horizontal-padding)';
 
 @Directive({

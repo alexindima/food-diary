@@ -22,6 +22,34 @@
     background: var(--fd-bg-surface-inset);
 }
 
+.fd-bg-surface-soft {
+    background: var(--fd-bg-surface-soft);
+}
+
+.fd-bg-surface-subtle {
+    background: var(--fd-bg-surface-subtle);
+}
+
+.fd-bg-surface-elevated {
+    background: var(--fd-bg-surface-elevated);
+}
+
+.fd-bg-surface-panel {
+    background: var(--fd-bg-surface-panel);
+}
+
+.fd-bg-surface-solid {
+    background: var(--fd-bg-surface-solid);
+}
+
+.fd-bg-surface-brand {
+    background: var(--fd-bg-surface-brand);
+}
+
+.fd-bg-track-muted {
+    background: var(--fd-bg-track-muted);
+}
+
 .fd-bg-dialog {
     background: var(--fd-bg-dialog);
 }
@@ -34,8 +62,24 @@
     background: var(--fd-bg-overlay);
 }
 
+.fd-bg-scrim {
+    background: var(--fd-bg-scrim);
+}
+
+.fd-bg-primary {
+    background: var(--fd-bg-primary);
+}
+
+.fd-bg-danger {
+    background: var(--fd-bg-danger);
+}
+
 .fd-bg-brand {
     background: var(--fd-bg-brand);
+}
+
+.fd-bg-brand-horizontal {
+    background: var(--fd-bg-brand-horizontal);
 }
 
 .fd-bg-brand-hover {
@@ -48,6 +92,14 @@
 
 .fd-bg-accent-soft {
     background: var(--fd-bg-accent-soft);
+}
+
+.fd-bg-sidebar {
+    background: var(--fd-bg-sidebar);
+}
+
+.fd-bg-premium {
+    background: var(--fd-bg-premium);
 }
 
 .fd-bg-success-soft {

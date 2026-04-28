@@ -23,7 +23,7 @@
 
         &--dragging {
             border-color: var(--fd-color-primary-600);
-            background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+            background: var(--fd-bg-brand-tint);
             box-shadow: var(--fd-shadow-accent);
         }
 
@@ -91,7 +91,7 @@
         inset: 0;
         display: grid;
         place-items: center;
-        background: color-mix(in srgb, var(--fd-color-slate-900) 50%, transparent);
+        background: var(--fd-bg-scrim);
         color: var(--fd-color-white);
         letter-spacing: 0.02em;
     }
@@ -119,7 +119,7 @@
         display: inline-flex;
         overflow: hidden;
         border-radius: var(--fd-radius-button);
-        background: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
+        background: var(--fd-bg-scrim-strong);
         box-shadow: var(--fd-shadow-xl);
     }
 

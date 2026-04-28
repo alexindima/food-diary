@@ -463,7 +463,7 @@
         gap: var(--fd-space-sm);
         --fd-surface-padding: var(--fd-space-stat-tile-padding);
         --fd-surface-radius: var(--fd-radius-panel);
-        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent), var(--fd-bg-surface));
+        background: linear-gradient(180deg, var(--fd-bg-surface-panel), var(--fd-bg-surface));
     }
 
     &__pattern-symptom {
@@ -583,7 +583,7 @@
     &__history-item {
         padding: var(--fd-space-sm);
         border: var(--fd-border-default);
-        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent), var(--fd-bg-surface));
+        background: linear-gradient(180deg, var(--fd-bg-surface-panel), var(--fd-bg-surface));
         box-shadow: var(--fd-shadow-md);
     }
 

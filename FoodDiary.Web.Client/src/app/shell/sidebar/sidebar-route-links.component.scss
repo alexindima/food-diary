@@ -32,7 +32,7 @@
 }
 
 .sidebar__link:hover {
-    background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+    background: var(--fd-bg-brand-tint);
     color: var(--fd-color-text-strong);
 }
 
@@ -43,15 +43,15 @@
 }
 
 .sidebar__link.is-active {
-    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+    background: var(--fd-bg-brand);
     color: var(--fd-color-on-brand);
     box-shadow: var(--fd-shadow-accent-strong);
 }
 
 .sidebar__link.is-pending:not(.is-active) {
-    background: color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
+    background: var(--fd-bg-brand-tint-strong);
     color: var(--fd-color-text-strong);
-    box-shadow: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
+    box-shadow: inset 0 0 0 var(--fd-border-width) var(--fd-bg-brand-tint-strong);
 }
 
 .sidebar__link.is-active fd-ui-icon {

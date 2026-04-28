@@ -33,7 +33,7 @@
 }
 
 .fd-ui-menu__item:hover {
-    background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
+    background: var(--fd-bg-brand-tint);
 }
 
 .fd-ui-menu__item:focus-visible {
@@ -51,5 +51,5 @@
 .fd-ui-menu__divider {
     height: 1px;
     margin: var(--fd-space-menu-divider-margin);
-    background-color: var(--fd-color-border);
+    background-color: var(--fd-bg-border);
 }

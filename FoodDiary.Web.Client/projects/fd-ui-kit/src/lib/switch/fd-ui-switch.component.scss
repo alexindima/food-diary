@@ -55,7 +55,7 @@
     }
 
     &--checked &__track {
-        background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
+        background: var(--fd-bg-brand);
         border-color: color-mix(in srgb, var(--fd-color-primary-500) 36%, transparent);
         box-shadow: var(--fd-shadow-lg);
     }

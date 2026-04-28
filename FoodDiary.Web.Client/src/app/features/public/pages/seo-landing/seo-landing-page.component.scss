@@ -175,7 +175,7 @@
     &__related-card {
         border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-lg);
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent);
+        background: var(--fd-bg-surface-panel);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
         box-shadow: var(--fd-shadow-lg);
     }
@@ -216,7 +216,7 @@
     &__faq-item {
         border-radius: var(--fd-radius-panel);
         overflow: hidden;
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+        background: var(--fd-bg-surface-solid);
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         box-shadow: var(--fd-shadow-md);
     }
