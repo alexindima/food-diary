@@ -22,7 +22,7 @@
     }
 
     &__surface--summary {
-        --fd-summary-surface-background: var(--fd-color-primary-50, var(--fd-color-primary-50));
+        --fd-summary-surface-background: var(--fd-color-primary-50);
     }
 
     &__surface--comment {
@@ -64,7 +64,7 @@
     }
 
     &__quality-value {
-        color: var(--fd-color-text, var(--fd-color-gray-900-static));
+        color: var(--fd-color-text);
         line-height: 1;
     }
 
@@ -100,11 +100,11 @@
         font-size: var(--fd-text-body-sm-size);
         line-height: var(--fd-text-body-sm-line-height);
         font-weight: var(--fd-text-body-sm-weight);
-        color: var(--fd-color-gray-900, var(--fd-color-gray-900-static));
+        color: var(--fd-color-slate-900);
     }
 
     &__text--muted {
-        color: var(--fd-color-gray-600, var(--fd-color-slate-600));
+        color: var(--fd-color-slate-600);
     }
 
     &__footer {

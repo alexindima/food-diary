@@ -1,7 +1,7 @@
 .fd-ui-progress-item {
     --fd-progress-item-padding: var(--fd-space-progress-item-padding);
     --fd-progress-item-radius: var(--fd-radius-md);
-    --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
+    --fd-progress-item-background: var(--fd-color-surface-muted);
     display: block;
     padding: var(--fd-progress-item-padding);
     border-radius: var(--fd-progress-item-radius);
@@ -23,7 +23,7 @@
 .fd-ui-progress-track {
     --fd-progress-height: 4px;
     --fd-progress-radius: 2px;
-    --fd-progress-track-background: var(--fd-surface-variant, var(--fd-color-slate-200));
+    --fd-progress-track-background: var(--fd-color-surface-muted);
     position: relative;
     display: block;
     width: 100%;

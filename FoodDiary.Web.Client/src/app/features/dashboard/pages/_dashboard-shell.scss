@@ -101,7 +101,7 @@
 
         .dashboard__block--meals {
             background: var(--fd-color-surface-raised);
-            border-radius: var(--fd-radius-card, 20px);
+            border-radius: var(--fd-radius-card);
             padding: var(--fd-space-md);
             box-shadow: 0 16px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         }
@@ -173,8 +173,8 @@
     &__edit-overlay {
         position: fixed;
         top: 0;
-        left: var(--fd-layout-sidebar-width, 0px);
-        width: calc(100vw - var(--fd-layout-sidebar-width, 0px));
+        left: var(--fd-layout-sidebar-width);
+        width: calc(100vw - var(--fd-layout-sidebar-width));
         height: 100vh;
         background: color-mix(in srgb, var(--fd-color-slate-900) 28%, transparent);
         pointer-events: none;

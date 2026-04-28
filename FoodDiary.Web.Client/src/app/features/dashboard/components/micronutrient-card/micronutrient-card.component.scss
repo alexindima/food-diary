@@ -2,7 +2,7 @@
 
 .micronutrient-card {
     padding: var(--fd-space-md);
-    border-radius: var(--fd-radius-card, 16px);
+    border-radius: var(--fd-radius-card);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: var(--fd-color-surface-raised);
     display: flex;
@@ -119,7 +119,7 @@
         align-items: center;
         gap: var(--fd-space-xxs);
         padding: 3px 8px;
-        border-radius: var(--fd-radius-panel, 8px);
+        border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-slate-400) 10%, transparent);
         color: var(--fd-color-text-muted);
 

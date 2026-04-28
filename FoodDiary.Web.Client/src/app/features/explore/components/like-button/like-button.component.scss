@@ -5,26 +5,26 @@
     --fd-button-height: 34px;
     --fd-button-height-explicit: 34px;
     --fd-button-padding-x: 14px;
-    --fd-button-border-default: var(--fd-border-color, var(--fd-color-slate-200));
-    --fd-button-border-hover: var(--fd-error, var(--fd-color-red-700));
-    --fd-button-border-active: var(--fd-error, var(--fd-color-red-700));
-    --fd-button-text-default: var(--fd-text-secondary);
-    --fd-button-text-hover: var(--fd-error, var(--fd-color-red-700));
-    --fd-button-text-active: var(--fd-error, var(--fd-color-red-700));
+    --fd-button-border-default: var(--fd-color-border);
+    --fd-button-border-hover: var(--fd-color-danger);
+    --fd-button-border-active: var(--fd-color-danger);
+    --fd-button-text-default: var(--fd-color-text-muted);
+    --fd-button-text-hover: var(--fd-color-danger);
+    --fd-button-text-active: var(--fd-color-danger);
     --fd-button-shadow-default: none;
     --fd-button-shadow-hover: none;
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-font-size: var(--fd-text-caption-size, 0.85rem);
+    --fd-button-font-size: var(--fd-text-caption-size);
 
     &--liked {
-        --fd-button-border-default: var(--fd-error, var(--fd-color-red-700));
-        --fd-button-border-hover: var(--fd-error, var(--fd-color-red-700));
-        --fd-button-border-active: var(--fd-error, var(--fd-color-red-700));
-        --fd-button-text-default: var(--fd-error, var(--fd-color-red-700));
-        --fd-button-text-hover: var(--fd-error, var(--fd-color-red-700));
-        --fd-button-text-active: var(--fd-error, var(--fd-color-red-700));
+        --fd-button-border-default: var(--fd-color-danger);
+        --fd-button-border-hover: var(--fd-color-danger);
+        --fd-button-border-active: var(--fd-color-danger);
+        --fd-button-text-default: var(--fd-color-danger);
+        --fd-button-text-hover: var(--fd-color-danger);
+        --fd-button-text-active: var(--fd-color-danger);
     }
 
     &:disabled {

@@ -38,7 +38,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         display: flex;
         position: relative;
         min-width: 0;
-        border-radius: var(--fd-radius-card, 22px);
+        border-radius: var(--fd-radius-card);
         outline: none;
 
         &:focus-visible {
@@ -54,7 +54,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         justify-content: flex-end;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-card-profile-gap);
-        border-radius: var(--fd-radius-panel, 18px);
+        border-radius: var(--fd-radius-panel);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-surface-muted) 22%, transparent),
@@ -169,7 +169,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         content: '';
         position: absolute;
         inset: 0;
-        border-radius: var(--fd-radius-card, 22px);
+        border-radius: var(--fd-radius-card);
         background-image: repeating-linear-gradient(
             -45deg,
             color-mix(in srgb, var(--fd-color-slate-500) 32%, transparent),
@@ -205,7 +205,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     &__loader,
     &__empty {
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
-        border-radius: var(--fd-radius-panel, 16px);
+        border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-lg);
         text-align: center;
         color: $color-text-secondary;
@@ -216,9 +216,9 @@ $color-text-secondary: var(--fd-color-text-muted);
     }
 
     .consumption-card__meta {
-        font-size: var(--fd-text-caption-size, 0.85rem);
-        line-height: var(--fd-text-caption-line-height, 1.35);
-        font-weight: var(--fd-text-caption-weight, 500);
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
+        font-weight: var(--fd-text-caption-weight);
         color: var(--fd-color-text-muted);
         display: flex;
         justify-content: space-between;

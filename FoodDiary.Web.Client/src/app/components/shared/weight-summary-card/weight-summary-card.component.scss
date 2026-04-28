@@ -34,18 +34,18 @@
 }
 
 .weight-summary-card__trend {
-    color: var(--fd-text-secondary);
+    color: var(--fd-color-text-muted);
 
     &.weight-summary-card__trend--positive {
-        color: var(--fd-color-success, #50e3c2);
+        color: var(--fd-color-success);
     }
 
     &.weight-summary-card__trend--negative {
-        color: var(--fd-color-warn, #ff6b6b);
+        color: var(--fd-color-warn);
     }
 
     &.weight-summary-card__trend--neutral {
-        color: var(--fd-text-secondary);
+        color: var(--fd-color-text-muted);
     }
 }
 

@@ -1,4 +1,4 @@
-@use 'variables';
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -11,7 +11,7 @@
         position: sticky;
         top: 0;
         z-index: 20;
-        background: var(--fd-layout-page-background, #f5f6fa);
+        background: var(--fd-layout-page-background);
     }
 
     :host(.fd-page-header--mobile-static) {

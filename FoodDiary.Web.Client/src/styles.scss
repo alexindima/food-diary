@@ -46,7 +46,7 @@ body {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
+    padding: var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
     background: var(--fd-layout-page-background);
 }
 
@@ -76,7 +76,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: var(--fd-page-header-gap);
-    min-height: var(--fd-page-header-height, auto);
+    min-height: var(--fd-page-header-height);
 }
 
 .fd-page-header__title-block {

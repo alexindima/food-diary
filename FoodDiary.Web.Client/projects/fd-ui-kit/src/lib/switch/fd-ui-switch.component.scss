@@ -1,6 +1,7 @@
 :host {
+    --fd-switch-align-self: auto;
     display: inline-flex;
-    align-self: var(--fd-switch-align-self, auto);
+    align-self: var(--fd-switch-align-self);
 }
 
 .fd-ui-switch {

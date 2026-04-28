@@ -48,7 +48,7 @@
 .meal-plan-card {
     border-radius: 22px;
     padding: var(--fd-space-lg);
-    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)) 100%);
     box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     cursor: pointer;
     display: flex;

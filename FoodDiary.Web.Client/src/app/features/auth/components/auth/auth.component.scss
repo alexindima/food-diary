@@ -59,9 +59,9 @@
         --fd-button-height-explicit: auto;
         --fd-button-padding-x: 0;
         --fd-button-border-radius: 0;
-        --fd-button-font-size: var(--fd-text-body-sm-size, 0.95rem);
-        --fd-button-line-height: var(--fd-text-body-sm-line-height, 1.45);
-        --fd-button-font-weight: var(--fd-font-weight-medium, 500);
+        --fd-button-font-size: var(--fd-text-body-sm-size);
+        --fd-button-line-height: var(--fd-text-body-sm-line-height);
+        --fd-button-font-weight: var(--fd-font-weight-medium);
         --fd-button-secondary-background-default: transparent;
         --fd-button-secondary-background-hover: transparent;
         --fd-button-secondary-background-active: transparent;

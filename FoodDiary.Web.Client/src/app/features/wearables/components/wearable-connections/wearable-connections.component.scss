@@ -11,7 +11,7 @@
     align-items: center;
     gap: var(--fd-space-sm);
     padding: var(--fd-space-sm) 0;
-    border-bottom: 1px solid var(--fd-divider, rgba(0, 0, 0, 0.08));
+    border-bottom: 1px solid var(--fd-color-border);
 
     &:last-child {
         border-bottom: none;
@@ -32,9 +32,9 @@
 }
 
 .provider-status {
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    color: var(--fd-color-text-muted);
 }
 
 .provider-status.connected {
-    color: var(--fd-success, #4caf50);
+    color: var(--fd-color-green-500);
 }

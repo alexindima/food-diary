@@ -9,11 +9,20 @@
     --fd-tabs-label-opacity: 0.6;
     --fd-tabs-label-opacity-active: 1;
     --fd-tabs-label-line-height: 1;
+    --fd-tabs-border-color: var(--fd-color-border-strong);
+    --fd-tabs-flex-wrap: nowrap;
+    --fd-tabs-item-padding-inline: var(--fd-space-tabs-item-padding-inline);
+    --fd-tabs-color: var(--fd-color-slate-900);
+    --fd-tabs-color-hover: var(--fd-color-primary-600);
+    --fd-tabs-color-active: var(--fd-color-primary-600);
+    --fd-tabs-active-border-color: var(--fd-color-primary-600);
+    --fd-tabs-label-white-space: nowrap;
+    --fd-tabs-label-text-align: center;
     display: flex;
     width: 100%;
-    border-bottom: 1px solid var(--fd-tabs-border-color, var(--fd-color-border-strong));
+    border-bottom: 1px solid var(--fd-tabs-border-color);
     gap: var(--fd-tabs-gap);
-    flex-wrap: var(--fd-tabs-flex-wrap, nowrap);
+    flex-wrap: var(--fd-tabs-flex-wrap);
 }
 
 .fd-ui-tabs__tab {
@@ -24,11 +33,11 @@
     min-width: 0;
     min-height: var(--fd-tabs-height);
     height: var(--fd-tabs-height);
-    padding-inline: var(--fd-tabs-item-padding-inline, var(--fd-space-tabs-item-padding-inline));
+    padding-inline: var(--fd-tabs-item-padding-inline);
     border: none;
     border-bottom: 3px solid transparent;
     background: transparent;
-    color: var(--fd-tabs-color, var(--fd-color-slate-900));
+    color: var(--fd-tabs-color);
     cursor: pointer;
     transition:
         color 140ms ease,
@@ -38,7 +47,7 @@
 }
 
 .fd-ui-tabs__tab:hover {
-    color: var(--fd-tabs-color-hover, var(--fd-color-primary-600));
+    color: var(--fd-tabs-color-hover);
 }
 
 .fd-ui-tabs__tab:focus-visible {
@@ -48,16 +57,16 @@
 }
 
 .fd-ui-tabs__tab--active {
-    color: var(--fd-tabs-color-active, var(--fd-color-primary-600));
-    border-bottom-color: var(--fd-tabs-active-border-color, var(--fd-color-primary-600));
+    color: var(--fd-tabs-color-active);
+    border-bottom-color: var(--fd-tabs-active-border-color);
 }
 
 .fd-ui-tabs__label {
     font-weight: var(--fd-text-action-weight);
     opacity: var(--fd-tabs-label-opacity);
-    white-space: var(--fd-tabs-label-white-space, nowrap);
+    white-space: var(--fd-tabs-label-white-space);
     line-height: var(--fd-tabs-label-line-height);
-    text-align: var(--fd-tabs-label-text-align, center);
+    text-align: var(--fd-tabs-label-text-align);
 }
 
 .fd-ui-tabs__tab--active .fd-ui-tabs__label {

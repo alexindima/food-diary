@@ -1,10 +1,10 @@
 @use 'variables' as variables;
 
 .dashboard-appearance-dialog {
-    --dashboard-appearance-shell-radius: var(--fd-radius-panel, 20px);
-    --dashboard-appearance-option-radius: var(--fd-radius-card, 18px);
-    --dashboard-appearance-preview-radius: var(--fd-radius-input, 14px);
-    --dashboard-appearance-preview-line-radius: var(--fd-radius-button, 999px);
+    --dashboard-appearance-shell-radius: var(--fd-radius-panel);
+    --dashboard-appearance-option-radius: var(--fd-radius-card);
+    --dashboard-appearance-preview-radius: var(--fd-radius-input);
+    --dashboard-appearance-preview-line-radius: var(--fd-radius-button);
     --dashboard-preview-ocean-start: var(--fd-color-primary-700);
     --dashboard-preview-ocean-mid: var(--fd-color-sky-400);
     --dashboard-preview-ocean-end: color-mix(in srgb, var(--fd-color-sky-200) 72%, var(--fd-color-dialog-surface));

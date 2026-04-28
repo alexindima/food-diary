@@ -10,7 +10,7 @@
     gap: var(--fd-space-md);
     padding: var(--fd-space-lg) var(--fd-space-md) var(--fd-space-lg);
     background: linear-gradient(180deg, var(--fd-gradient-sidebar-start) 0%, var(--fd-gradient-sidebar-end) 100%);
-    border-right: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
+    border-right: 1px solid var(--fd-color-border);
     box-shadow: 6px 0 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
 
     &__brand {
@@ -19,7 +19,7 @@
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-color-surface, var(--fd-color-white));
+        background: var(--fd-color-surface);
         box-shadow: 0 10px 30px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
     }
 
@@ -38,7 +38,7 @@
     }
 
     &__brand-title {
-        color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+        color: var(--fd-color-text-strong);
     }
 
     &__brand-plan {
@@ -83,7 +83,7 @@
         height: 10px;
         border-radius: 999px;
         background: var(--fd-color-danger);
-        border: 2px solid var(--fd-color-surface, var(--fd-color-white));
+        border: 2px solid var(--fd-color-surface);
         box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 80%, transparent);
     }
 
@@ -106,7 +106,7 @@
         align-items: center;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
-        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+        color: var(--fd-color-text-muted);
         text-decoration: none;
         font-weight: 600;
         transition:
@@ -120,16 +120,16 @@
 
         &:hover {
             background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
-            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+            color: var(--fd-color-text-strong);
         }
 
         &.is-active {
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-            color: var(--fd-color-on-brand, var(--fd-color-white));
+            color: var(--fd-color-on-brand);
             box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
 
             fd-ui-icon {
-                color: var(--fd-color-on-brand, var(--fd-color-white));
+                color: var(--fd-color-on-brand);
             }
         }
 
@@ -149,7 +149,7 @@
 
     &__section {
         padding-top: var(--fd-space-xs);
-        border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
+        border-top: 1px solid var(--fd-color-border);
     }
 
     &__section-header {
@@ -161,7 +161,7 @@
         padding: var(--fd-space-xs) var(--fd-space-xxs);
         background: transparent;
         border: none;
-        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+        color: var(--fd-color-text-muted);
         cursor: pointer;
         letter-spacing: 0.01em;
 
@@ -187,7 +187,7 @@
     &__nav--bottom {
         margin-top: var(--fd-space-xxs);
         padding-top: var(--fd-space-xxs);
-        border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
+        border-top: 1px solid var(--fd-color-border);
     }
 
     &__link--secondary {
@@ -241,8 +241,8 @@
         align-items: center;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-color-surface, var(--fd-color-white));
-        border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
+        background: var(--fd-color-surface);
+        border: 1px solid var(--fd-color-border);
         box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         cursor: pointer;
         text-align: left;
@@ -262,7 +262,7 @@
     }
 
     &__user-arrow {
-        color: var(--fd-color-gray-500, var(--fd-color-slate-500));
+        color: var(--fd-color-slate-500);
         transition: transform 0.2s ease;
 
         &.is-open {
@@ -284,7 +284,7 @@
         display: grid;
         place-items: center;
         background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-        color: var(--fd-color-on-brand, var(--fd-color-white));
+        color: var(--fd-color-on-brand);
 
         &--image {
             padding: 0;
@@ -301,14 +301,14 @@
     }
 
     &__user-name {
-        color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+        color: var(--fd-color-text-strong);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
     &__user-plan {
-        color: var(--fd-color-gray-400, var(--fd-color-slate-400));
+        color: var(--fd-color-slate-400);
     }
 
     &__user-menu {
@@ -341,7 +341,7 @@
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+        color: var(--fd-color-text-muted);
     }
 
     &__theme-toggle {
@@ -356,8 +356,8 @@
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
-        background: var(--fd-color-surface, var(--fd-color-white));
-        color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+        background: var(--fd-color-surface);
+        color: var(--fd-color-text-strong);
         font-weight: 700;
         text-decoration: none;
         transition:
@@ -383,12 +383,12 @@
 
         &.is-active {
             background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-            color: var(--fd-color-on-brand, var(--fd-color-white));
+            color: var(--fd-color-on-brand);
             border-color: transparent;
             box-shadow: none;
 
             fd-ui-icon {
-                color: var(--fd-color-on-brand, var(--fd-color-white));
+                color: var(--fd-color-on-brand);
             }
         }
 
@@ -436,8 +436,8 @@
     display: none;
     gap: var(--fd-space-xs);
     padding: var(--fd-space-xs) var(--fd-space-sm) calc(var(--fd-space-xs) + env(safe-area-inset-bottom));
-    background: var(--fd-color-surface, var(--fd-color-white));
-    border-top: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
+    background: var(--fd-color-surface);
+    border-top: 1px solid var(--fd-color-border);
     box-shadow: 0 -12px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
     z-index: 1200;
 
@@ -459,7 +459,7 @@
 
     &__progress-title,
     &__progress-value {
-        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+        color: var(--fd-color-text-muted);
         white-space: nowrap;
     }
 
@@ -489,7 +489,7 @@
         appearance: none;
         border: none;
         background: transparent;
-        color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+        color: var(--fd-color-text-muted);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -524,12 +524,12 @@
                 color-mix(in srgb, var(--fd-color-primary-600) 20%, transparent),
                 color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent)
             );
-            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+            color: var(--fd-color-text-strong);
         }
 
         &.is-pending:not(.is-active):not(.is-open) {
             background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
-            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+            color: var(--fd-color-text-strong);
             transform: scale(0.98);
         }
     }
@@ -564,11 +564,11 @@
         left: 12px;
         right: 12px;
         bottom: 126px;
-        background: var(--fd-color-surface, var(--fd-color-white));
+        background: var(--fd-color-surface);
         border-radius: var(--fd-radius-dialog);
         padding: var(--fd-space-xs);
         box-shadow: 0 16px 40px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
-        border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
+        border: 1px solid var(--fd-color-border);
         display: grid;
         gap: var(--fd-space-xxs);
         z-index: 1190;
@@ -587,10 +587,10 @@
             gap: var(--fd-space-xs);
             padding: var(--fd-space-xs) var(--fd-space-sm);
             border-radius: var(--fd-radius-menu-item);
-            background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
-            color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+            background: var(--fd-color-surface-muted);
+            color: var(--fd-color-text-strong);
             text-decoration: none;
-            border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
+            border: 1px solid var(--fd-color-border);
             font-weight: 600;
         }
 
@@ -606,7 +606,7 @@
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+            color: var(--fd-color-text-muted);
         }
 
         .sidebar-mobile__sheet-action {

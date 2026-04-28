@@ -18,8 +18,8 @@
 .coverage-badge {
     padding: 2px 8px;
     border-radius: 12px;
-    background: var(--fd-surface-variant, var(--fd-color-slate-200));
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    background: var(--fd-color-surface-muted);
+    color: var(--fd-color-text-muted);
 }
 
 .nutrients-grid {
@@ -31,7 +31,7 @@
 .nutrient-item {
     --fd-progress-item-padding: var(--fd-space-progress-item-padding);
     --fd-progress-item-radius: 8px;
-    --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
+    --fd-progress-item-background: var(--fd-color-surface-muted);
 }
 
 .nutrient-header {
@@ -40,30 +40,30 @@
 
 .nutrient-value,
 .empty-state {
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    color: var(--fd-color-text-muted);
 }
 
 .dv-text {
-    font-weight: var(--fd-text-stat-value-weight, 600);
+    font-weight: var(--fd-text-stat-value-weight);
     margin-left: var(--fd-space-xxs);
 }
 
 .dv-low {
-    color: var(--fd-error, var(--fd-color-danger));
+    color: var(--fd-color-danger);
 }
 
 .dv-mid {
-    color: var(--fd-warning, var(--fd-color-orange-500));
+    color: var(--fd-color-orange-500);
 }
 
 .dv-good {
-    color: var(--fd-success, var(--fd-color-green-500));
+    color: var(--fd-color-green-500);
 }
 
 .progress-bar {
     --fd-progress-height: 4px;
     --fd-progress-radius: 2px;
-    --fd-progress-track-background: var(--fd-surface-variant, var(--fd-color-slate-200));
+    --fd-progress-track-background: var(--fd-color-surface-muted);
 }
 
 .progress-fill {
@@ -71,15 +71,15 @@
 }
 
 .fill-low {
-    background-color: var(--fd-error, var(--fd-color-danger));
+    background-color: var(--fd-color-danger);
 }
 
 .fill-mid {
-    background-color: var(--fd-warning, var(--fd-color-orange-500));
+    background-color: var(--fd-color-orange-500);
 }
 
 .fill-good {
-    background-color: var(--fd-success, var(--fd-color-green-500));
+    background-color: var(--fd-color-green-500);
 }
 
 .empty-state {

@@ -1,6 +1,20 @@
 :host {
     display: block;
     --fd-chip-select-item-height: 38px;
+    --fd-chip-select-border: var(--fd-color-slate-200);
+    --fd-chip-select-background: var(--fd-color-white);
+    --fd-chip-select-text: var(--fd-color-slate-700);
+    --fd-chip-select-font-size: var(--fd-text-action-size);
+    --fd-chip-select-font-weight: var(--fd-text-action-weight);
+    --fd-chip-select-border-hover: var(--fd-color-purple-500);
+    --fd-chip-select-text-hover: var(--fd-color-purple-500);
+    --fd-chip-select-background-hover: var(--fd-color-white);
+    --fd-chip-select-focus-ring: var(--fd-color-purple-400);
+    --fd-chip-select-border-selected: var(--fd-color-purple-500);
+    --fd-chip-select-background-selected: var(--fd-color-purple-500);
+    --fd-chip-select-text-selected: var(--fd-color-white);
+    --fd-chip-select-border-selected-hover: var(--fd-color-purple-700);
+    --fd-chip-select-background-selected-hover: var(--fd-color-purple-700);
 }
 
 .fd-ui-chip-select {
@@ -12,13 +26,13 @@
 .fd-ui-chip-select__item {
     min-height: var(--fd-chip-select-item-height);
     padding: var(--fd-space-chip-select-item-padding);
-    border: 1px solid var(--fd-chip-select-border, var(--fd-color-slate-200));
+    border: 1px solid var(--fd-chip-select-border);
     border-radius: 999px;
-    background: var(--fd-chip-select-background, var(--fd-color-white));
-    color: var(--fd-chip-select-text, var(--fd-color-slate-700));
+    background: var(--fd-chip-select-background);
+    color: var(--fd-chip-select-text);
     font: inherit;
-    font-size: var(--fd-chip-select-font-size, var(--fd-text-action-size));
-    font-weight: var(--fd-chip-select-font-weight, var(--fd-text-action-weight));
+    font-size: var(--fd-chip-select-font-size);
+    font-weight: var(--fd-chip-select-font-weight);
     line-height: 1;
     cursor: pointer;
     transition:
@@ -29,13 +43,13 @@
         transform 0.18s ease;
 
     &:hover:not(:disabled) {
-        border-color: var(--fd-chip-select-border-hover, var(--fd-color-purple-500));
-        color: var(--fd-chip-select-text-hover, var(--fd-color-purple-500));
-        background: var(--fd-chip-select-background-hover, var(--fd-color-white));
+        border-color: var(--fd-chip-select-border-hover);
+        color: var(--fd-chip-select-text-hover);
+        background: var(--fd-chip-select-background-hover);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--fd-chip-select-focus-ring, var(--fd-color-purple-400));
+        outline: 2px solid var(--fd-chip-select-focus-ring);
         outline-offset: 2px;
     }
 
@@ -45,15 +59,15 @@
     }
 
     &.is-selected {
-        border-color: var(--fd-chip-select-border-selected, var(--fd-color-purple-500));
-        background: var(--fd-chip-select-background-selected, var(--fd-color-purple-500));
-        color: var(--fd-chip-select-text-selected, var(--fd-color-white));
+        border-color: var(--fd-chip-select-border-selected);
+        background: var(--fd-chip-select-background-selected);
+        color: var(--fd-chip-select-text-selected);
         box-shadow: 0 10px 18px color-mix(in srgb, var(--fd-color-purple-500) 22%, transparent);
 
         &:hover:not(:disabled) {
-            border-color: var(--fd-chip-select-border-selected-hover, var(--fd-color-purple-700));
-            background: var(--fd-chip-select-background-selected-hover, var(--fd-color-purple-700));
-            color: var(--fd-chip-select-text-selected, var(--fd-color-white));
+            border-color: var(--fd-chip-select-border-selected-hover);
+            background: var(--fd-chip-select-background-selected-hover);
+            color: var(--fd-chip-select-text-selected);
         }
     }
 }

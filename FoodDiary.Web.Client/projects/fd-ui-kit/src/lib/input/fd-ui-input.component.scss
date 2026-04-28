@@ -207,7 +207,8 @@
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__label {
-    color: var(--fd-input-auth-label-color, var(--fd-color-slate-500));
+    --fd-input-auth-label-color: var(--fd-color-slate-500);
+    color: var(--fd-input-auth-label-color);
     background: var(--fd-color-white);
     top: 0;
     transform: translateY(-50%);
@@ -216,8 +217,10 @@
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap {
     --fd-input-control-background: var(--fd-color-white);
-    --fd-input-control-color: var(--fd-input-auth-text-color, var(--fd-color-slate-900));
-    --fd-input-control-muted-color: var(--fd-input-auth-muted-color, var(--fd-color-slate-500));
+    --fd-input-auth-text-color: var(--fd-color-slate-900);
+    --fd-input-auth-muted-color: var(--fd-color-slate-500);
+    --fd-input-control-color: var(--fd-input-auth-text-color);
+    --fd-input-control-muted-color: var(--fd-input-auth-muted-color);
     border-color: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
     border-radius: var(--fd-radius-input);
     background: var(--fd-color-white);

@@ -5,7 +5,7 @@
 }
 
 .tdee-card {
-    border-radius: var(--fd-radius-card, 22px);
+    border-radius: var(--fd-radius-card);
     padding: var(--fd-space-card-profile-gap);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: linear-gradient(
@@ -95,7 +95,7 @@
         align-items: flex-start;
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-panel, 12px);
+        border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
         line-height: 1.5;
@@ -115,7 +115,7 @@
         justify-content: space-between;
         gap: var(--fd-space-sm);
         padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-panel, 12px);
+        border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-green-500) 10%, transparent);
     }
 

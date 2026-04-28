@@ -16,9 +16,9 @@
     --fd-landing-section-space-compact: clamp(20px, 2.4vw, 30px);
     --fd-landing-surface-padding: clamp(18px, 2vw, 24px);
     --fd-landing-surface-padding-lg: clamp(20px, 2.2vw, 28px);
-    --fd-landing-radius-panel: var(--fd-radius-panel, 24px);
-    --fd-landing-radius-card: var(--fd-radius-card, 20px);
-    --fd-landing-radius-chip: var(--fd-radius-chip, 999px);
+    --fd-landing-radius-panel: var(--fd-radius-panel);
+    --fd-landing-radius-card: var(--fd-radius-card);
+    --fd-landing-radius-chip: var(--fd-radius-chip);
     --fd-landing-border-soft: color-mix(in srgb, var(--fd-color-border) 78%, transparent);
     --fd-landing-border-strong: color-mix(in srgb, var(--fd-color-border-strong) 36%, transparent);
     --fd-landing-surface: color-mix(in srgb, var(--fd-color-surface-raised) 82%, transparent);
@@ -145,7 +145,7 @@
 
     &--tour {
         padding: clamp(28px, 3vw, 48px) 0;
-        background: color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white));
+        background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
     }
 
     &__inner--cta {

@@ -10,7 +10,7 @@
     background: transparent;
     text-align: left;
     cursor: pointer;
-    color: var(--fd-color-text-muted, var(--fd-color-slate-600));
+    color: var(--fd-color-text-muted);
     text-decoration: none;
     transition:
         background 0.2s ease,
@@ -33,7 +33,7 @@
 
 .sidebar__link:hover {
     background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
-    color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+    color: var(--fd-color-text-strong);
 }
 
 .sidebar__link:focus-visible,
@@ -44,22 +44,22 @@
 
 .sidebar__link.is-active {
     background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
-    color: var(--fd-color-on-brand, var(--fd-color-white));
+    color: var(--fd-color-on-brand);
     box-shadow: 0 10px 26px color-mix(in srgb, var(--fd-color-primary-600) 28%, transparent);
 }
 
 .sidebar__link.is-pending:not(.is-active) {
     background: color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
-    color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+    color: var(--fd-color-text-strong);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
 }
 
 .sidebar__link.is-active fd-ui-icon {
-    color: var(--fd-color-on-brand, var(--fd-color-white));
+    color: var(--fd-color-on-brand);
 }
 
 .sidebar__link.is-pending:not(.is-active) fd-ui-icon {
-    color: var(--fd-color-primary-700, var(--fd-color-primary-600));
+    color: var(--fd-color-primary-700);
 }
 
 .sidebar__link.sidebar__link--secondary {
@@ -76,13 +76,13 @@
     gap: var(--fd-space-xs);
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-menu-item);
-    background: var(--fd-color-surface-muted, var(--fd-color-slate-50));
-    color: var(--fd-color-text-strong, var(--fd-color-slate-900));
-    border: 1px solid var(--fd-color-border, color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent));
+    background: var(--fd-color-surface-muted);
+    color: var(--fd-color-text-strong);
+    border: 1px solid var(--fd-color-border);
 }
 
 .sidebar-mobile__sheet-link.is-pending:not(.is-active) {
-    background: color-mix(in srgb, var(--fd-color-primary-600) 10%, var(--fd-color-surface-muted, var(--fd-color-slate-50)));
+    background: color-mix(in srgb, var(--fd-color-primary-600) 10%, var(--fd-color-surface-muted));
     border-color: color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent);
-    color: var(--fd-color-text-strong, var(--fd-color-slate-900));
+    color: var(--fd-color-text-strong);
 }

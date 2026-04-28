@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .recipe-manage {
-    --fd-layout-page-background: var(--fd-layout-page-background-base, var(--fd-color-background));
+    --fd-layout-page-background: var(--fd-color-background);
     margin: 0 auto;
     display: flex;
     flex-direction: column;

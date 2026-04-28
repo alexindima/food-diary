@@ -19,7 +19,7 @@
     --fd-stat-tile-gap: var(--fd-space-xxs);
     --fd-stat-tile-radius: 12px;
     --fd-stat-tile-border: 0;
-    --fd-stat-tile-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
+    --fd-stat-tile-background: var(--fd-color-surface-muted);
     --fd-stat-tile-shadow: none;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .area-name {
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    color: var(--fd-color-text-muted);
 }
 
 .area-score-ring {
@@ -45,7 +45,7 @@
 
 .ring-bg {
     fill: none;
-    stroke: var(--fd-surface-variant, var(--fd-color-slate-200));
+    stroke: var(--fd-color-surface-muted);
     stroke-width: 3;
 }
 
@@ -57,23 +57,23 @@
 }
 
 .area-card--excellent .ring-fill {
-    stroke: var(--fd-success, var(--fd-color-green-500));
+    stroke: var(--fd-color-green-500);
 }
 
 .area-card--good .ring-fill {
-    stroke: var(--fd-primary, var(--fd-color-primary-600));
+    stroke: var(--fd-color-primary-600);
 }
 
 .area-card--fair .ring-fill {
-    stroke: var(--fd-warning, var(--fd-color-orange-500));
+    stroke: var(--fd-color-orange-500);
 }
 
 .area-card--low .ring-fill {
-    stroke: var(--fd-error, var(--fd-color-danger));
+    stroke: var(--fd-color-danger);
 }
 
 .area-card--unknown .ring-fill {
-    stroke: var(--fd-surface-variant, var(--fd-color-slate-200));
+    stroke: var(--fd-color-surface-muted);
 }
 
 .score-text {
@@ -85,23 +85,23 @@
 }
 
 .area-card--excellent .area-grade {
-    color: var(--fd-success, var(--fd-color-green-500));
+    color: var(--fd-color-green-500);
 }
 
 .area-card--good .area-grade {
-    color: var(--fd-primary, var(--fd-color-primary-600));
+    color: var(--fd-color-primary-600);
 }
 
 .area-card--fair .area-grade {
-    color: var(--fd-warning, var(--fd-color-orange-500));
+    color: var(--fd-color-orange-500);
 }
 
 .area-card--low .area-grade {
-    color: var(--fd-error, var(--fd-color-danger));
+    color: var(--fd-color-danger);
 }
 
 .area-card--unknown .area-grade {
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    color: var(--fd-color-text-muted);
 }
 
 @media #{variables.$media-phablet} {

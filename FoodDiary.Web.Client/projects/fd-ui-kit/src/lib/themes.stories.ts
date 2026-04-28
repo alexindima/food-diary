@@ -20,9 +20,9 @@ type ThemeHighlight = {
                 overflow: auto;
                 box-sizing: border-box;
                 padding: 32px 32px 64px;
-                font-family: var(--fd-font-family-base, Inter, system-ui, sans-serif);
-                color: var(--fd-color-text, #1f2937);
-                background: var(--fd-layout-page-background, #f8fafc);
+                font-family: var(--fd-font-family-base);
+                color: var(--fd-color-text);
+                background: var(--fd-layout-page-background);
             "
         >
             <div style="max-width: 1080px; margin: 0 auto;">
@@ -30,7 +30,7 @@ type ThemeHighlight = {
                 <p
                     style="
                         margin: 0 0 24px;
-                        color: var(--fd-color-text-muted, #4b5563);
+                        color: var(--fd-color-text-muted);
                         font-size: 15px;
                         line-height: 1.6;
                     "
@@ -43,10 +43,10 @@ type ThemeHighlight = {
                         style="
                             margin-bottom: 24px;
                             padding: 20px;
-                            border: 1px solid var(--fd-color-border-strong, #dbe3f0);
+                            border: 1px solid var(--fd-color-border-strong);
                             border-radius: 18px;
-                            background: var(--fd-color-surface-raised, #ffffff);
-                            box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-primary-700, #334155) 8%, transparent);
+                            background: var(--fd-color-surface-raised);
+                            box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-primary-700) 8%, transparent);
                         "
                     >
                         <h2 style="margin: 0 0 12px; font-size: 20px;">How This Theme Feels</h2>
@@ -63,9 +63,9 @@ type ThemeHighlight = {
                         style="
                             margin-bottom: 24px;
                             padding: 20px;
-                            border: 1px solid var(--fd-color-border-strong, #dbe3f0);
+                            border: 1px solid var(--fd-color-border-strong);
                             border-radius: 18px;
-                            background: var(--fd-color-surface-raised, #ffffff);
+                            background: var(--fd-color-surface-raised);
                         "
                     >
                         <h2 style="margin: 0 0 12px; font-size: 20px;">Theme Highlights</h2>
@@ -75,8 +75,8 @@ type ThemeHighlight = {
                                     style="
                                         padding: 14px;
                                         border-radius: 14px;
-                                        border: 1px solid color-mix(in srgb, var(--fd-color-border-strong, #dbe3f0) 72%, transparent);
-                                        background: color-mix(in srgb, var(--fd-color-surface, #fff) 92%, transparent);
+                                        border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
+                                        background: color-mix(in srgb, var(--fd-color-surface) 92%, transparent);
                                     "
                                 >
                                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -86,7 +86,7 @@ type ThemeHighlight = {
                                                 width: 28px;
                                                 height: 28px;
                                                 border-radius: 999px;
-                                                border: 1px solid color-mix(in srgb, var(--fd-color-border-strong, #dbe3f0) 72%, transparent);
+                                                border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
                                                 flex: none;
                                             "
                                         ></div>
@@ -95,7 +95,7 @@ type ThemeHighlight = {
                                             <div
                                                 style="
                                                     font-size: 12px;
-                                                    color: var(--fd-color-text-muted, #4b5563);
+                                                    color: var(--fd-color-text-muted);
                                                     font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
                                                 "
                                             >
@@ -113,12 +113,12 @@ type ThemeHighlight = {
                     style="
                         margin-bottom: 24px;
                         padding: 24px;
-                        border: 1px solid var(--fd-color-border-strong, #dbe3f0);
+                        border: 1px solid var(--fd-color-border-strong);
                         border-radius: 24px;
                         background:
-                            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500, #6366f1) 14%, transparent), transparent 36%),
-                            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50, #eef2ff) 55%, var(--fd-layout-page-background, #f8fafc)) 0%, var(--fd-layout-page-background, #f8fafc) 100%);
-                        box-shadow: 0 20px 44px color-mix(in srgb, var(--fd-color-primary-700, #334155) 10%, transparent);
+                            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), transparent 36%),
+                            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 55%, var(--fd-layout-page-background)) 0%, var(--fd-layout-page-background) 100%);
+                        box-shadow: 0 20px 44px color-mix(in srgb, var(--fd-color-primary-700) 10%, transparent);
                     "
                 >
                     <div
@@ -139,8 +139,8 @@ type ThemeHighlight = {
                                     gap: 8px;
                                     padding: 6px 10px;
                                     border-radius: 999px;
-                                    background: color-mix(in srgb, var(--fd-color-primary-500, #6366f1) 12%, transparent);
-                                    color: var(--fd-color-primary-700, #4338ca);
+                                    background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+                                    color: var(--fd-color-primary-700);
                                     font-size: 13px;
                                     font-weight: 600;
                                     margin-bottom: 12px;
@@ -153,7 +153,7 @@ type ThemeHighlight = {
                                 style="
                                     margin: 0;
                                     max-width: 640px;
-                                    color: var(--fd-color-text-muted, #4b5563);
+                                    color: var(--fd-color-text-muted);
                                     line-height: 1.6;
                                 "
                             >
@@ -165,11 +165,11 @@ type ThemeHighlight = {
                                 min-width: 180px;
                                 padding: 14px 16px;
                                 border-radius: 18px;
-                                border: 1px solid color-mix(in srgb, var(--fd-color-primary-500, #6366f1) 18%, transparent);
-                                background: color-mix(in srgb, var(--fd-color-surface-raised, #fff) 92%, var(--fd-color-primary-50, #eef2ff));
+                                border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
+                                background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50));
                             "
                         >
-                            <div style="font-size: 12px; color: var(--fd-color-text-muted, #4b5563); margin-bottom: 6px;">Active Setup</div>
+                            <div style="font-size: 12px; color: var(--fd-color-text-muted); margin-bottom: 6px;">Active Setup</div>
                             <div style="font-weight: 700;">Theme: {{ theme() }}</div>
                             <div style="font-weight: 700;">UI Style: {{ uiStyle() }}</div>
                         </div>
@@ -186,30 +186,28 @@ type ThemeHighlight = {
                             style="
                                 padding: 18px;
                                 border-radius: 20px;
-                                border: 1px solid color-mix(in srgb, var(--fd-color-border-strong, #dbe3f0) 78%, transparent);
-                                background: var(--fd-color-surface-raised, #ffffff);
+                                border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
+                                background: var(--fd-color-surface-raised);
                             "
                         >
                             <div
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted, #4b5563); margin-bottom: 12px;"
+                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted); margin-bottom: 12px;"
                             >
                                 Page Surface
                             </div>
                             <div style="display: flex; gap: 10px; margin-bottom: 14px;">
-                                <div
-                                    style="flex: 1; height: 72px; border-radius: 16px; background: var(--fd-color-surface-sunken, #eef2f7);"
-                                ></div>
+                                <div style="flex: 1; height: 72px; border-radius: 16px; background: var(--fd-color-surface-sunken);"></div>
                                 <div
                                     style="
                                         width: 72px;
                                         height: 72px;
                                         border-radius: 16px;
-                                        background: linear-gradient(135deg, var(--fd-color-primary-500, #6366f1), var(--fd-color-primary-300, #a5b4fc));
+                                        background: linear-gradient(135deg, var(--fd-color-primary-500), var(--fd-color-primary-300));
                                     "
                                 ></div>
                             </div>
                             <div style="font-weight: 600; margin-bottom: 6px;">Dense information, clear hierarchy</div>
-                            <div style="color: var(--fd-color-text-muted, #4b5563); line-height: 1.6;">
+                            <div style="color: var(--fd-color-text-muted); line-height: 1.6;">
                                 Good for app shells, analytics surfaces, settings pages, and daily-use flows.
                             </div>
                         </div>
@@ -218,12 +216,12 @@ type ThemeHighlight = {
                             style="
                                 padding: 18px;
                                 border-radius: 20px;
-                                border: 1px solid color-mix(in srgb, var(--fd-color-border-strong, #dbe3f0) 78%, transparent);
-                                background: var(--fd-color-surface-raised, #ffffff);
+                                border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
+                                background: var(--fd-color-surface-raised);
                             "
                         >
                             <div
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted, #4b5563); margin-bottom: 12px;"
+                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fd-color-text-muted); margin-bottom: 12px;"
                             >
                                 Component Preview
                             </div>
@@ -233,14 +231,14 @@ type ThemeHighlight = {
                                     style="
                                         appearance: none;
                                         border: none;
-                                        border-radius: var(--fd-button-radius-md, 14px);
-                                        background: var(--fd-button-primary-background-default, var(--fd-color-primary-600, #4f46e5));
-                                        color: var(--fd-button-primary-text-default, #ffffff);
+                                        border-radius: var(--fd-radius-button);
+                                        background: var(--fd-color-primary-600);
+                                        color: var(--fd-color-on-brand);
                                         padding: 12px 16px;
                                         font: inherit;
                                         font-weight: 600;
                                         text-align: left;
-                                        box-shadow: 0 14px 24px color-mix(in srgb, var(--fd-color-primary-700, #4338ca) 18%, transparent);
+                                        box-shadow: 0 14px 24px color-mix(in srgb, var(--fd-color-primary-700) 18%, transparent);
                                     "
                                 >
                                     Primary action
@@ -254,10 +252,10 @@ type ThemeHighlight = {
                                         readonly
                                         style="
                                             width: 100%;
-                                            border-radius: var(--fd-input-radius-md, 14px);
-                                            border: 1px solid var(--fd-color-border-strong, #dbe3f0);
-                                            background: var(--fd-color-surface, #ffffff);
-                                            color: var(--fd-color-text, #1f2937);
+                                            border-radius: var(--fd-radius-input);
+                                            border: 1px solid var(--fd-color-border-strong);
+                                            background: var(--fd-color-surface);
+                                            color: var(--fd-color-text);
                                             padding: 12px 14px;
                                             font: inherit;
                                         "
@@ -268,9 +266,9 @@ type ThemeHighlight = {
                                     style="
                                         padding: 14px;
                                         border-radius: 16px;
-                                        background: color-mix(in srgb, var(--fd-color-success, #22c55e) 12%, var(--fd-color-surface, #fff));
-                                        border: 1px solid color-mix(in srgb, var(--fd-color-success, #22c55e) 28%, transparent);
-                                        color: var(--fd-color-text, #1f2937);
+                                        background: color-mix(in srgb, var(--fd-color-success) 12%, var(--fd-color-surface));
+                                        border: 1px solid color-mix(in srgb, var(--fd-color-success) 28%, transparent);
+                                        color: var(--fd-color-text);
                                     "
                                 >
                                     Success / status surface

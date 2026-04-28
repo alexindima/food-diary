@@ -6,6 +6,7 @@
 
 .nutrient-badges {
     --fd-nutrient-badges-border: 1px solid var(--fd-color-border);
+    --fd-nutrient-badges-shadow: none;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -15,7 +16,7 @@
     width: fit-content;
     max-width: 100%;
     border: var(--fd-nutrient-badges-border);
-    box-shadow: var(--fd-nutrient-badges-shadow, none);
+    box-shadow: var(--fd-nutrient-badges-shadow);
 }
 
 .nutrient-badges__chip {

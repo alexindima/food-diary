@@ -12,7 +12,7 @@
 
 .email-verify-pending__description {
     margin: 0 0 var(--fd-space-md);
-    color: var(--fd-text-muted, var(--fd-color-gray-500-static));
+    color: var(--fd-color-text-muted);
 }
 
 .email-verify-pending__status {
@@ -27,7 +27,7 @@
 
 .email-verify-pending__cooldown {
     margin-top: var(--fd-space-sm);
-    color: var(--fd-text-muted, var(--fd-color-gray-500-static));
+    color: var(--fd-color-text-muted);
 }
 
 

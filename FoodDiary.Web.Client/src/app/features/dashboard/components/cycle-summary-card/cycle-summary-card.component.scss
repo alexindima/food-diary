@@ -5,7 +5,7 @@
 }
 
 .cycle-summary-card {
-    border-radius: var(--fd-radius-card, 22px);
+    border-radius: var(--fd-radius-card);
     padding: var(--fd-space-card-profile-gap);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: var(--fd-color-surface);

@@ -8,7 +8,7 @@
     overflow: hidden;
     background:
         radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-sky-500) 20%, transparent), transparent 32%),
-        radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--fd-color-emerald-500, var(--fd-color-green-500)) 16%, transparent), transparent 26%),
+        radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--fd-color-emerald-500) 16%, transparent), transparent 26%),
         linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-sky-500) 6%, var(--fd-color-white)) 0%,
@@ -47,7 +47,7 @@
     &__grid {
         max-width: var(--fd-landing-container-max-width);
         margin: 0 auto;
-        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        padding: 0 var(--fd-layout-page-horizontal-padding);
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(320px, 0.84fr);
         gap: clamp(var(--fd-space-lg), 4vw, 56px);
@@ -148,7 +148,7 @@
         min-height: 0;
         @include dark-panel.dark-panel(
             color-mix(in srgb, var(--fd-color-slate-900) 94%, transparent),
-            color-mix(in srgb, var(--fd-color-teal-700, var(--fd-color-teal-500)) 92%, var(--fd-color-slate-900))
+            color-mix(in srgb, var(--fd-color-teal-700) 92%, var(--fd-color-slate-900))
         );
         padding: var(--fd-landing-surface-padding);
         backdrop-filter: blur(18px);
@@ -271,7 +271,7 @@
         --fd-layout-page-horizontal-padding: var(--fd-space-md);
 
         &__top {
-            padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+            padding: 0 var(--fd-layout-page-horizontal-padding);
             justify-content: center;
         }
 

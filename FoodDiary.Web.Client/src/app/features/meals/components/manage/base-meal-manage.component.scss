@@ -2,7 +2,7 @@
 
 .consumption-manage {
     --b3: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
-    --fd-layout-page-background: var(--fd-layout-page-background-base, var(--fd-color-background));
+    --fd-layout-page-background: var(--fd-color-background);
     margin: 0 auto;
     box-sizing: border-box;
     display: flex;

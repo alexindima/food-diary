@@ -67,7 +67,7 @@
     gap: var(--fd-space-md);
     padding: var(--fd-space-surface-emphasis-padding);
     border-radius: 16px;
-    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50, var(--fd-color-primary-50)) 35%, var(--fd-color-white)) 100%);
+    background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)) 100%);
     box-shadow: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
 
     &__type {

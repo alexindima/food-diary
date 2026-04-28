@@ -17,7 +17,7 @@
     --fd-stat-tile-gap: 2px;
     --fd-stat-tile-radius: 12px;
     --fd-stat-tile-border: 0;
-    --fd-stat-tile-background: var(--fd-surface-variant, rgba(0, 0, 0, 0.02));
+    --fd-stat-tile-background: var(--fd-color-surface-muted);
 }
 
 .metric-icon {
@@ -32,7 +32,7 @@
 .metric-unit,
 .metric-label,
 .empty-state {
-    color: var(--fd-text-secondary, var(--fd-color-neutral-600));
+    color: var(--fd-color-text-muted);
 }
 
 .empty-state {
