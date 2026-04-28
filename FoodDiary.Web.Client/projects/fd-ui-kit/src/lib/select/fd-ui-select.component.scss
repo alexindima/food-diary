@@ -46,7 +46,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    padding: 0 44px 0 var(--fd-space-control-padding-x);
+    padding: 0 var(--fd-space-control-affix-padding-x) 0 var(--fd-space-control-padding-x);
     cursor: pointer;
     transition:
         border-color 0.15s ease,

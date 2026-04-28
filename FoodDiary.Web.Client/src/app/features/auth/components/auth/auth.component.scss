@@ -9,7 +9,7 @@
 
     &__tabs {
         --fd-tabs-height: 34px;
-        --fd-tabs-item-padding-inline: 28px;
+        --fd-tabs-item-padding-inline: calc(var(--fd-space-lg) + var(--fd-space-xxs));
         --fd-tabs-color: var(--fd-color-text-muted);
         --fd-tabs-color-hover: color-mix(in srgb, var(--fd-color-primary-300) 72%, var(--fd-color-white));
         --fd-tabs-color-active: var(--fd-color-primary-600);

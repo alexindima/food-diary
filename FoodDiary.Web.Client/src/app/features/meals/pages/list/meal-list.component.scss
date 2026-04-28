@@ -40,7 +40,7 @@
         flex-direction: row;
         align-items: flex-start;
         gap: var(--fd-space-xxs);
-        margin-top: calc(0px - var(--fd-space-xxs));
+        margin-top: calc(var(--fd-space-xxs) * -1);
         margin-bottom: var(--fd-space-xxs);
         flex-wrap: wrap;
     }
@@ -195,7 +195,7 @@
             padding-left: var(--fd-space-sm);
             padding-right: var(--fd-space-sm);
             align-items: center;
-            margin-top: calc(0px - var(--fd-space-xxs));
+            margin-top: calc(var(--fd-space-xxs) * -1);
         }
 
         &__day {

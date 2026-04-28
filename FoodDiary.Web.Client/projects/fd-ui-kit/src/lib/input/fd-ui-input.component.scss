@@ -57,7 +57,7 @@
     background: var(--fd-input-control-background);
     display: flex;
     align-items: center;
-    padding: 0 44px 0 var(--fd-space-control-padding-x);
+    padding: 0 var(--fd-space-control-affix-padding-x) 0 var(--fd-space-control-padding-x);
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -74,11 +74,11 @@
 }
 
 .fd-ui-input__control-wrap--with-prefix {
-    padding-left: 44px;
+    padding-left: var(--fd-space-control-affix-padding-x);
 }
 
 .fd-ui-input__control-wrap--date {
-    padding-right: 16px;
+    padding-right: var(--fd-space-control-date-padding-x);
 }
 
 .fd-ui-input__control-wrap--with-prefix .fd-ui-input__label {
@@ -224,18 +224,15 @@
     border-color: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
     border-radius: var(--fd-radius-input);
     background: var(--fd-color-white);
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding: var(--fd-space-control-auth-padding);
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap--with-prefix {
-    padding-left: 48px;
+    padding-left: var(--fd-space-control-auth-affix-padding-x);
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap--with-prefix .fd-ui-input__label {
-    left: 48px;
+    left: var(--fd-space-control-auth-affix-padding-x);
     max-width: calc(100% - 62px);
 }
 
@@ -283,8 +280,8 @@
 }
 
 .fd-ui-input--appearance-inline-edit .fd-ui-input__control-wrap {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: var(--fd-space-control-inline-edit-padding-x);
+    padding-right: var(--fd-space-control-inline-edit-padding-x);
 }
 
 .fd-ui-input--appearance-inline-edit .fd-ui-input__control {

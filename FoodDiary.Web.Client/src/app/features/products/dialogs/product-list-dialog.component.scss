@@ -50,7 +50,7 @@
         grid-template-columns: auto 1fr auto;
         gap: var(--fd-space-sm);
         align-items: center;
-        padding: var(--fd-space-sm) 14px;
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         background: var(--fd-color-surface-raised);

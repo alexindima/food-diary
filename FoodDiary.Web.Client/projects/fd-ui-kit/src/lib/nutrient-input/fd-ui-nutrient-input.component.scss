@@ -140,7 +140,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
     overflow: hidden;
     justify-content: center;
     margin: 0 auto;
-    padding: 0 4px;
+    padding: 0 var(--fd-space-xxs);
     box-sizing: border-box;
 }
 

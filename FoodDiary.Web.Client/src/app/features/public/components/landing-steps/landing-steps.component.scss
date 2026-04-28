@@ -90,7 +90,7 @@
     }
 
     &__cta {
-        margin-top: clamp(20px, 3vw, 32px);
+        margin-top: var(--fd-landing-cta-margin-top);
         display: flex;
         justify-content: space-between;
         gap: var(--fd-space-md);

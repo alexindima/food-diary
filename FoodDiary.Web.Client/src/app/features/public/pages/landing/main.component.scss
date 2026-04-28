@@ -11,11 +11,40 @@
     --tui-chart-categorical-01: var(--fd-color-chart-fats);
     --tui-chart-categorical-02: var(--fd-color-chart-carbs);
     --fd-landing-container-max-width: 1180px;
-    --fd-landing-inline-padding: clamp(12px, 4vw, 24px);
-    --fd-landing-section-space: clamp(34px, 4vw, 56px);
-    --fd-landing-section-space-compact: clamp(20px, 2.4vw, 30px);
-    --fd-landing-surface-padding: clamp(18px, 2vw, 24px);
-    --fd-landing-surface-padding-lg: clamp(20px, 2.2vw, 28px);
+    --fd-landing-inline-padding: clamp(var(--fd-space-sm), 4vw, var(--fd-space-lg));
+    --fd-landing-section-space: clamp(
+        calc(var(--fd-space-xxl) + var(--fd-space-xs)),
+        4vw,
+        calc(var(--fd-space-xxl) + var(--fd-space-md))
+    );
+    --fd-landing-section-space-relaxed: clamp(var(--fd-space-xxl), 3vw, calc(var(--fd-space-xxl) + var(--fd-space-xs)));
+    --fd-landing-section-space-compact: clamp(var(--fd-space-xl), 2.4vw, calc(var(--fd-space-xl) + calc(var(--fd-space-xs) / 2)));
+    --fd-landing-section-space-tight: clamp(
+        calc(var(--fd-space-sm) + calc(var(--fd-space-xxs) / 2)),
+        2vw,
+        calc(var(--fd-space-lg) - calc(var(--fd-space-xxs) / 2))
+    );
+    --fd-landing-section-space-cta-start: clamp(
+        calc(var(--fd-space-xxl) + calc(var(--fd-space-xxs) / 2)),
+        3vw,
+        calc(var(--fd-space-xxl) + var(--fd-space-xs) + calc(var(--fd-space-xxs) / 2))
+    );
+    --fd-landing-section-space-cta-end: clamp(
+        calc(var(--fd-space-xxl) + var(--fd-space-xs)),
+        4vw,
+        calc(var(--fd-space-xxl) + var(--fd-space-lg))
+    );
+    --fd-landing-surface-padding: clamp(calc(var(--fd-space-md) + calc(var(--fd-space-xxs) / 2)), 2vw, var(--fd-space-lg));
+    --fd-landing-surface-padding-lg: clamp(var(--fd-space-xl), 2.2vw, calc(var(--fd-space-lg) + var(--fd-space-xxs)));
+    --fd-landing-surface-padding-sm: clamp(
+        calc(var(--fd-space-sm) + calc(var(--fd-space-xxs) / 2)),
+        1.8vw,
+        calc(var(--fd-space-md) + calc(var(--fd-space-xxs) / 2))
+    );
+    --fd-landing-copy-padding: clamp(var(--fd-space-xxs), 1vw, calc(var(--fd-space-xs) + calc(var(--fd-space-xxs) / 2)));
+    --fd-landing-grid-gap: clamp(var(--fd-space-md), 3vw, calc(var(--fd-space-xxl) - calc(var(--fd-space-xs) / 2)));
+    --fd-landing-stack-gap: clamp(var(--fd-space-lg), 4vw, calc(var(--fd-space-xxl) + var(--fd-space-xxs)));
+    --fd-landing-cta-margin-top: clamp(var(--fd-space-xl), 3vw, var(--fd-space-xxl));
     --fd-landing-radius-panel: var(--fd-radius-panel);
     --fd-landing-radius-card: var(--fd-radius-card);
     --fd-landing-radius-chip: var(--fd-radius-chip);
@@ -125,26 +154,26 @@
     }
 
     &--preview {
-        padding: clamp(28px, 3vw, 48px) 0;
+        padding: var(--fd-landing-section-space-relaxed) 0;
     }
 
     &--steps {
-        padding: clamp(28px, 3vw, 48px) 0;
+        padding: var(--fd-landing-section-space-relaxed) 0;
         background: var(--fd-color-white);
     }
 
     &--cta {
-        padding: clamp(30px, 3vw, 50px) 0 clamp(36px, 4vw, 60px);
+        padding: var(--fd-landing-section-space-cta-start) 0 var(--fd-landing-section-space-cta-end);
     }
 
     &--faq {
-        padding: clamp(28px, 3vw, 48px) 0 clamp(40px, 4vw, 64px);
+        padding: var(--fd-landing-section-space-relaxed) 0 calc(var(--fd-landing-section-space) + var(--fd-space-xs));
         background:
             linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 42%, var(--fd-color-white)), var(--fd-color-white));
     }
 
     &--tour {
-        padding: clamp(28px, 3vw, 48px) 0;
+        padding: var(--fd-landing-section-space-relaxed) 0;
         background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white));
     }
 

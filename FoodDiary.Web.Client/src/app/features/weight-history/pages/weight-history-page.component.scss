@@ -158,7 +158,7 @@
 
     &__bmi-status {
         --fd-pill-min-height: 24px;
-        --fd-pill-padding-inline: 10px;
+        --fd-pill-padding-inline: var(--fd-space-xs);
         --fd-pill-border: transparent;
     }
 

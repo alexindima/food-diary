@@ -103,7 +103,7 @@
     display: flex;
     align-items: center;
     min-height: var(--fd-datetime-height);
-    padding: 0 40px 0 var(--fd-space-control-segment-padding-x);
+    padding: 0 var(--fd-space-control-segment-affix-padding-x) 0 var(--fd-space-control-segment-padding-x);
 }
 
 .fd-ui-datetime-input__segment--date {
@@ -132,11 +132,11 @@
 }
 
 .fd-ui-datetime-input__segment--date .fd-ui-date-input__segment {
-    padding: 0 40px 0 var(--fd-space-control-segment-padding-x);
+    padding: 0 var(--fd-space-control-segment-affix-padding-x) 0 var(--fd-space-control-segment-padding-x);
 }
 
 .fd-ui-datetime-input__segment:first-child {
-    padding-right: 40px;
+    padding-right: var(--fd-space-control-segment-affix-padding-x);
 }
 
 .fd-ui-datetime-input__divider {

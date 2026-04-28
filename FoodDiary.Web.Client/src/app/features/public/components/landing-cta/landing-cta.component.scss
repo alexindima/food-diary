@@ -28,7 +28,7 @@
     }
 
     &--cta {
-        padding: clamp(34px, 4vw, 60px) 0 clamp(42px, 5vw, 76px);
+        padding: var(--fd-landing-section-space) 0 calc(var(--fd-landing-section-space) + var(--fd-space-lg));
     }
 
     &__inner--cta {
@@ -42,7 +42,7 @@
             color-mix(in srgb, var(--fd-color-teal-500) 90%, transparent)
         );
         border-radius: var(--fd-landing-radius-panel);
-        padding: clamp(var(--fd-space-lg), 3vw, 32px);
+        padding: var(--fd-landing-surface-padding-lg);
         border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         box-shadow: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         display: flex;

@@ -406,7 +406,7 @@
         --fd-button-min-width: 0;
         --fd-button-height: auto;
         --fd-button-height-explicit: auto;
-        --fd-button-padding-x: 12px;
+        --fd-button-padding-x: var(--fd-space-sm);
         --fd-button-justify-content: flex-start;
         --fd-button-danger-outline-background-default: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-color-white));
         --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
@@ -616,7 +616,7 @@
             --fd-button-min-width: 0;
             --fd-button-height: auto;
             --fd-button-height-explicit: auto;
-            --fd-button-padding-x: 12px;
+            --fd-button-padding-x: var(--fd-space-sm);
             --fd-button-justify-content: flex-start;
             --fd-button-shadow-default: none;
             --fd-button-shadow-hover: none;
@@ -632,7 +632,7 @@
             --fd-button-min-width: 0;
             --fd-button-height: auto;
             --fd-button-height-explicit: auto;
-            --fd-button-padding-x: 12px;
+            --fd-button-padding-x: var(--fd-space-sm);
             --fd-button-justify-content: flex-start;
             --fd-button-shadow-default: none;
             --fd-button-shadow-hover: none;

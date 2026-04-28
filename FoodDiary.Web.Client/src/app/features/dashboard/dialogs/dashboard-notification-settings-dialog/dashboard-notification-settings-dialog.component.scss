@@ -118,7 +118,7 @@
 }
 
 .dashboard-notification-settings-dialog__device-note {
-    padding-top: 2px;
+    padding-top: calc(var(--fd-space-xxs) / 2);
 }
 
 .dashboard-notification-settings-dialog__error {

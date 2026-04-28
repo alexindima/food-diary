@@ -17,7 +17,7 @@
     box-shadow: var(--fd-landing-shadow-soft);
 }
 
-@mixin preview-dark-inset-surface($padding: clamp(14px, 1.8vw, 18px)) {
+@mixin preview-dark-inset-surface($padding: var(--fd-landing-surface-padding-sm)) {
     display: grid;
     gap: var(--fd-space-sm);
     padding: $padding;
@@ -37,7 +37,7 @@
 
         &--secondary {
             margin-top: var(--fd-space-lg);
-            padding-top: clamp(18px, 2vw, 24px);
+            padding-top: var(--fd-landing-surface-padding);
         }
 
         &--showcase {
@@ -79,7 +79,7 @@
 }
 
 .landing-section--preview.landing-section--tour {
-    padding: clamp(14px, 1.8vw, 22px) 0 var(--fd-landing-section-space-compact);
+    padding: var(--fd-landing-section-space-tight) 0 var(--fd-landing-section-space-compact);
 }
 
 .landing-preview {
@@ -99,16 +99,16 @@
     }
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(var(--fd-space-lg), 4vw, 44px);
+    gap: var(--fd-landing-stack-gap);
     margin-top: 0;
 
     &__item {
         display: grid;
         grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
-        gap: clamp(var(--fd-space-md), 3vw, 34px);
+        gap: var(--fd-landing-grid-gap);
         align-items: start;
         min-width: 0;
-        padding: clamp(16px, 2vw, 22px);
+        padding: var(--fd-landing-surface-padding);
         border-radius: var(--fd-landing-radius-panel);
         background: color-mix(in srgb, var(--fd-color-white) 62%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
@@ -133,7 +133,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-xs);
-        padding: clamp(4px, 1vw, 10px);
+        padding: var(--fd-landing-copy-padding);
         min-width: 0;
     }
 
@@ -188,7 +188,7 @@
 
 .landing-preview__showcase {
     display: grid;
-    gap: clamp(var(--fd-space-md), 3vw, 28px);
+    gap: var(--fd-landing-grid-gap);
     padding: var(--fd-landing-surface-padding-lg);
     border-radius: var(--fd-landing-radius-panel);
     background: var(--fd-landing-surface);
@@ -200,19 +200,19 @@
 .landing-preview__showcase-grid {
     display: grid;
     grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
-    gap: clamp(var(--fd-space-md), 3vw, 28px);
+    gap: var(--fd-landing-grid-gap);
     align-items: start;
 }
 
 .landing-preview__meals-card {
-    @include preview-light-surface(clamp(14px, 1.8vw, 18px));
-    padding: clamp(14px, 1.8vw, 18px);
+    @include preview-light-surface(var(--fd-landing-surface-padding-sm));
+    padding: var(--fd-landing-surface-padding-sm);
     border-radius: var(--fd-landing-radius-panel);
     min-width: 0;
 }
 
 .landing-preview__meals-note {
-    @include preview-light-surface(14px 16px);
+    @include preview-light-surface(var(--fd-landing-surface-padding-sm));
     gap: var(--fd-space-xxs);
     background: linear-gradient(
         180deg,
@@ -244,14 +244,14 @@
 
 .landing-preview__stack {
     display: grid;
-    gap: clamp(var(--fd-space-lg), 4vw, 44px);
+    gap: var(--fd-landing-stack-gap);
     margin-top: var(--fd-space-md);
 }
 
 .landing-tour-block {
     margin-top: 0;
     display: grid;
-    gap: clamp(var(--fd-space-md), 3vw, 34px);
+    gap: var(--fd-landing-grid-gap);
     align-items: start;
     min-width: 0;
     @include dark-panel.dark-panel(
@@ -295,12 +295,12 @@
     &__draft {
         display: grid;
         grid-template-columns: minmax(280px, 0.44fr) minmax(0, 0.56fr);
-        gap: clamp(var(--fd-space-md), 3vw, 34px);
+        gap: var(--fd-landing-grid-gap);
         align-items: start;
     }
 
     &__draft-copy {
-        @include preview-dark-inset-surface(clamp(18px, 2vw, 24px));
+        @include preview-dark-inset-surface(var(--fd-landing-surface-padding));
         gap: var(--fd-space-sm);
         align-content: start;
     }
@@ -386,7 +386,7 @@
     }
 
     &__group {
-        @include preview-dark-inset-surface(clamp(14px, 1.8vw, 18px));
+        @include preview-dark-inset-surface(var(--fd-landing-surface-padding-sm));
     }
 
     &__group-title {
@@ -408,7 +408,7 @@
 
     &__drawer {
         position: relative;
-        @include preview-dark-inset-surface(clamp(14px, 1.8vw, 18px));
+        @include preview-dark-inset-surface(var(--fd-landing-surface-padding-sm));
         align-content: start;
         width: 100%;
         margin: 0;

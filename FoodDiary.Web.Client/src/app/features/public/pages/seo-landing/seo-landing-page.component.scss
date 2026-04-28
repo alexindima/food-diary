@@ -8,7 +8,7 @@
     color: var(--fd-color-text);
 
     &__container {
-        width: min(1120px, calc(100% - 32px));
+        width: min(1120px, calc(100% - calc(var(--fd-space-md) * 2)));
         margin: 0 auto;
     }
 
@@ -149,7 +149,7 @@
     &__section--steps,
     &__section--faq,
     &__section--related {
-        padding-top: 36px;
+        padding-top: calc(var(--fd-space-xxl) + var(--fd-space-xs));
     }
 
     &__section--cta {

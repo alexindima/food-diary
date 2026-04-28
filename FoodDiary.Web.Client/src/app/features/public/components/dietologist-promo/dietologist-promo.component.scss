@@ -48,7 +48,7 @@
     }
 
     &__steps {
-        margin-top: clamp(18px, 2vw, 28px);
+        margin-top: var(--fd-landing-surface-padding-lg);
         display: grid;
         gap: var(--fd-space-sm);
     }
@@ -91,7 +91,7 @@
     }
 
     &__actions {
-        margin-top: clamp(18px, 2vw, 28px);
+        margin-top: var(--fd-landing-surface-padding-lg);
         display: flex;
         flex-wrap: wrap;
         gap: var(--fd-space-sm);

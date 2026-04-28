@@ -6,7 +6,7 @@
     gap: var(--fd-space-lg);
 
     &__tabs {
-        margin: calc(0px - var(--fd-space-xs)) calc(0px - var(--fd-space-xxs)) var(--fd-space-sm);
+        margin: calc(var(--fd-space-xs) * -1) calc(var(--fd-space-xxs) * -1) var(--fd-space-sm);
         padding-bottom: var(--fd-space-xxs);
     }
 

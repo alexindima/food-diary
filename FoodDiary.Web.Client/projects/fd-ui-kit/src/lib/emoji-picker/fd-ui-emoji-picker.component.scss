@@ -41,7 +41,7 @@
     width: auto;
     min-width: 90px;
     min-height: 72px;
-    padding-inline: 12px;
+    padding-inline: var(--fd-space-sm);
 }
 
 .fd-ui-emoji-picker__option {

@@ -220,7 +220,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--fd-space-xs) 10px;
+    padding: var(--fd-space-xs);
     border-radius: var(--fd-radius-md);
     background: var(--fd-color-white);
     border: 1px solid var(--fd-color-slate-200);
@@ -271,7 +271,7 @@
     height: 34px;
     border-radius: var(--fd-radius-md);
     border: 1px solid var(--fd-color-slate-200);
-    padding: 0 10px;
+    padding: 0 var(--fd-space-xs);
     font: inherit;
     background: var(--fd-color-white);
 }
@@ -309,7 +309,7 @@
     --fd-button-height: 36px;
     --fd-button-height-explicit: 36px;
     --fd-button-border-radius: var(--fd-radius-pill);
-    --fd-button-padding-x: 16px;
+    --fd-button-padding-x: var(--fd-space-md);
     --fd-button-font-size: var(--fd-text-caption-size);
     --fd-button-font-weight: var(--fd-text-action-weight);
     --fd-button-secondary-text-default: var(--fd-color-slate-500);
@@ -448,7 +448,7 @@
 
 .ai-photo-result__detail-input {
     height: 44px;
-    padding: 0 12px;
+    padding: 0 var(--fd-space-sm);
 }
 
 .ai-photo-result__detail-textarea {

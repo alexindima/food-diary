@@ -477,7 +477,14 @@ $fd-theme-design-tokens: (
             control-floating-padding-top: 8px,
             control-floating-padding-bottom: 2px,
             field-label-padding-x: 4px,
+            control-affix-padding-x: 44px,
+            control-date-padding-x: 16px,
+            control-auth-padding: 8px 16px 2px,
+            control-auth-affix-padding-x: 48px,
+            control-inline-edit-padding-x: 10px,
             control-segment-padding-x: 14px,
+            control-segment-affix-padding-x: 40px,
+            hint-padding: 9px 12px,
             textarea-padding: 16px 12px 12px,
             card-gap: fd-token(spacing, md),
             card-padding-x: fd-token(spacing, lg),
@@ -522,6 +529,9 @@ $fd-theme-design-tokens: (
             dialog-footer-padding-top: 0.75rem,
             dialog-footer-margin-top: 0.75rem,
             dialog-fullscreen-padding: 24px,
+            dialog-detail-mobile-body-padding-block: 28px 32px,
+            dialog-detail-mobile-body-padding-inline-end: 32px,
+            dialog-detail-mobile-body-margin-inline-end: -12px,
             empty-state-gap: 8px,
             empty-state-padding: 32px 16px,
             empty-state-compact-padding: 16px,
@@ -594,7 +604,14 @@ $fd-theme-design-tokens: (
             control-floating-padding-top: 7px,
             control-floating-padding-bottom: 1px,
             field-label-padding-x: 3px,
+            control-affix-padding-x: 44px,
+            control-date-padding-x: 16px,
+            control-auth-padding: 8px 16px 2px,
+            control-auth-affix-padding-x: 48px,
+            control-inline-edit-padding-x: 10px,
             control-segment-padding-x: 12px,
+            control-segment-affix-padding-x: 40px,
+            hint-padding: 9px 12px,
             textarea-padding: 14px 10px 10px,
             card-gap: fd-token(spacing, sm),
             card-padding-x: fd-token(spacing, md),
@@ -639,6 +656,9 @@ $fd-theme-design-tokens: (
             dialog-footer-padding-top: 0.625rem,
             dialog-footer-margin-top: 0.625rem,
             dialog-fullscreen-padding: 18px,
+            dialog-detail-mobile-body-padding-block: 24px 28px,
+            dialog-detail-mobile-body-padding-inline-end: 28px,
+            dialog-detail-mobile-body-margin-inline-end: -10px,
             empty-state-gap: 6px,
             empty-state-padding: 24px 14px,
             empty-state-compact-padding: 14px,
@@ -937,7 +957,14 @@ $fd-theme-design-tokens: (
         --fd-space-control-floating-padding-top: #{fd-ui-style-spacing-token($style, control-floating-padding-top)};
         --fd-space-control-floating-padding-bottom: #{fd-ui-style-spacing-token($style, control-floating-padding-bottom)};
         --fd-space-field-label-padding-x: #{fd-ui-style-spacing-token($style, field-label-padding-x)};
+        --fd-space-control-affix-padding-x: #{fd-ui-style-spacing-token($style, control-affix-padding-x)};
+        --fd-space-control-date-padding-x: #{fd-ui-style-spacing-token($style, control-date-padding-x)};
+        --fd-space-control-auth-padding: #{fd-ui-style-spacing-token($style, control-auth-padding)};
+        --fd-space-control-auth-affix-padding-x: #{fd-ui-style-spacing-token($style, control-auth-affix-padding-x)};
+        --fd-space-control-inline-edit-padding-x: #{fd-ui-style-spacing-token($style, control-inline-edit-padding-x)};
         --fd-space-control-segment-padding-x: #{fd-ui-style-spacing-token($style, control-segment-padding-x)};
+        --fd-space-control-segment-affix-padding-x: #{fd-ui-style-spacing-token($style, control-segment-affix-padding-x)};
+        --fd-space-hint-padding: #{fd-ui-style-spacing-token($style, hint-padding)};
         --fd-space-textarea-padding: #{fd-ui-style-spacing-token($style, textarea-padding)};
         --fd-space-card-gap: #{fd-ui-style-spacing-token($style, card-gap)};
         --fd-space-card-padding-x: #{fd-ui-style-spacing-token($style, card-padding-x)};
@@ -982,6 +1009,9 @@ $fd-theme-design-tokens: (
         --fd-space-dialog-footer-padding-top: #{fd-ui-style-spacing-token($style, dialog-footer-padding-top)};
         --fd-space-dialog-footer-margin-top: #{fd-ui-style-spacing-token($style, dialog-footer-margin-top)};
         --fd-space-dialog-fullscreen-padding: #{fd-ui-style-spacing-token($style, dialog-fullscreen-padding)};
+        --fd-space-dialog-detail-mobile-body-padding-block: #{fd-ui-style-spacing-token($style, dialog-detail-mobile-body-padding-block)};
+        --fd-space-dialog-detail-mobile-body-padding-inline-end: #{fd-ui-style-spacing-token($style, dialog-detail-mobile-body-padding-inline-end)};
+        --fd-space-dialog-detail-mobile-body-margin-inline-end: #{fd-ui-style-spacing-token($style, dialog-detail-mobile-body-margin-inline-end)};
         --fd-space-empty-state-gap: #{fd-ui-style-spacing-token($style, empty-state-gap)};
         --fd-space-empty-state-padding: #{fd-ui-style-spacing-token($style, empty-state-padding)};
         --fd-space-empty-state-compact-padding: #{fd-ui-style-spacing-token($style, empty-state-compact-padding)};

@@ -16,7 +16,7 @@
 
     &__status {
         --fd-pill-min-height: 40px;
-        --fd-pill-padding-inline: 14px;
+        --fd-pill-padding-inline: var(--fd-space-md);
         --fd-pill-bg: color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-white) 6%);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text-muted);
