@@ -1,6 +1,6 @@
 <a class="fd-skip-nav" href="#main-content">Skip to main content</a>
 <fd-ui-top-loader [visible]="isTopLoaderVisible()" />
-<div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()">
+<div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()" [class.fd-root--impersonating]="isImpersonating()">
     @if (isImpersonating()) {
         <div class="fd-impersonation-banner" role="status" aria-live="polite">
             <span>Impersonation mode</span>
