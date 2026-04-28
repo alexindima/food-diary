@@ -41,7 +41,7 @@
             color-mix(in srgb, var(--fd-color-primary-600) 94%, transparent) 55%,
             color-mix(in srgb, var(--fd-color-teal-500) 90%, transparent)
         );
-        border-radius: 28px;
+        border-radius: var(--fd-landing-radius-panel);
         padding: clamp(var(--fd-space-lg), 3vw, 32px);
         border: 1px solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         box-shadow: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
@@ -55,7 +55,7 @@
         &::after {
             content: '';
             position: absolute;
-            border-radius: 999px;
+            border-radius: var(--fd-radius-pill);
             pointer-events: none;
         }
 

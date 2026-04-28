@@ -123,7 +123,7 @@
     &__item-body {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: calc(var(--fd-space-xxs) / 2);
     }
 
     &__item-name {
@@ -140,7 +140,7 @@
         --fd-button-height: 32px;
         --fd-button-height-explicit: 32px;
         --fd-button-padding-x: 0;
-        --fd-button-border-radius: 999px;
+        --fd-button-border-radius: var(--fd-radius-pill);
         --fd-button-background: color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
         --fd-button-background-hover: rgba(239, 68, 68, 0.15);
         --fd-button-background-active: rgba(239, 68, 68, 0.2);
@@ -155,7 +155,7 @@
         --fd-button-shadow-active: none;
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 18px;
+        --fd-button-icon-size: 1.125rem;
     }
 
     &__empty,

@@ -24,7 +24,7 @@
     height: 48px;
     display: grid;
     place-items: center;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     color: var(--fd-color-text-muted);
     background: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
 }

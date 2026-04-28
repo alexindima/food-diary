@@ -109,7 +109,7 @@
         align-items: start;
         min-width: 0;
         padding: clamp(16px, 2vw, 22px);
-        border-radius: 30px;
+        border-radius: var(--fd-landing-radius-panel);
         background: color-mix(in srgb, var(--fd-color-white) 62%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
         box-shadow: 0 22px 52px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -141,7 +141,7 @@
         display: inline-flex;
         align-self: flex-start;
         padding: var(--fd-space-xxs) var(--fd-space-sm);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
         color: var(--fd-color-sky-700);
         @include landing.marketing-eyebrow(0.84rem, 0.03em);
@@ -235,8 +235,8 @@
     display: inline-flex;
     width: fit-content;
     max-width: 100%;
-    padding: 5px 10px;
-    border-radius: 999px;
+    padding: var(--fd-space-xxs) var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
     background: color-mix(in srgb, var(--fd-color-primary-100) 86%, var(--fd-color-white));
     color: var(--fd-color-primary-700);
     @include landing.marketing-eyebrow(0.8rem, 0.03em);
@@ -273,7 +273,7 @@
 
     &__catalog-copy {
         display: grid;
-        gap: 8px;
+        gap: var(--fd-space-xs);
     }
 
     &__catalog-title {
@@ -301,7 +301,7 @@
 
     &__draft-copy {
         @include preview-dark-inset-surface(clamp(18px, 2vw, 24px));
-        gap: 14px;
+        gap: var(--fd-space-sm);
         align-content: start;
     }
 
@@ -310,7 +310,7 @@
         width: fit-content;
         max-width: 100%;
         padding: var(--fd-space-xxs) var(--fd-space-sm);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         color: var(--fd-color-slate-50);
         @include landing.marketing-eyebrow(0.84rem, 0.03em);
@@ -335,7 +335,7 @@
             align-items: center;
             min-height: 38px;
             padding: var(--fd-space-xs) var(--fd-space-sm);
-            border-radius: 999px;
+            border-radius: var(--fd-radius-pill);
             background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
             color: var(--fd-color-slate-50);
             font-size: 0.92rem;

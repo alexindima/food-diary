@@ -61,7 +61,7 @@
 }
 
 .recipe-step-card__edit {
-    margin-left: 2px;
+    margin-left: calc(var(--fd-space-xxs) / 2);
     color: var(--fd-color-text-muted);
 }
 

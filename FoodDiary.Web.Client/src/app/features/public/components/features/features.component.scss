@@ -64,7 +64,7 @@
         display: flex;
         gap: var(--fd-space-sm);
         overflow-x: auto;
-        padding-bottom: 4px;
+        padding-bottom: var(--fd-space-xxs);
         scrollbar-width: thin;
         animation: landingFadeUp 760ms ease-out both;
     }
@@ -76,7 +76,7 @@
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         background: color-mix(in srgb, var(--fd-color-white) 78%, transparent);
         color: var(--fd-color-text);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         padding: var(--fd-space-sm) var(--fd-space-md);
         font: inherit;
         font-weight: 600;
@@ -151,7 +151,7 @@
     &__card-accent {
         width: 64px;
         height: 6px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: linear-gradient(90deg, var(--fd-color-primary-600) 0%, var(--fd-color-green-500) 100%);
     }
 
@@ -195,7 +195,7 @@
             grid-auto-columns: minmax(240px, 82vw);
             overflow-x: auto;
             scroll-snap-type: x proximity;
-            padding-bottom: 4px;
+            padding-bottom: var(--fd-space-xxs);
         }
 
         &__card {

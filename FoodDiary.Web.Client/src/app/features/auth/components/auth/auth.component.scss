@@ -52,7 +52,7 @@
 
     &__link {
         align-self: flex-start;
-        margin-top: -6px;
+        margin-top: calc(var(--fd-space-sm) / -2);
         --fd-button-width: auto;
         --fd-button-min-width: auto;
         --fd-button-height: auto;
@@ -139,7 +139,7 @@
 
 :host fd-ui-checkbox {
     --fd-checkbox-control-size: 18px;
-    --fd-checkbox-control-radius: 6px;
+    --fd-checkbox-control-radius: var(--fd-radius-sm);
     --fd-checkbox-control-border-color: color-mix(in srgb, var(--fd-color-border-strong) 100%, transparent);
     --fd-checkbox-control-checked-background: var(--fd-color-primary-600);
     --fd-checkbox-control-checked-border: var(--fd-color-primary-600);
@@ -151,7 +151,7 @@
 }
 
 :host .auth__terms .fd-ui-checkbox__control {
-    margin-top: 2px;
+    margin-top: calc(var(--fd-space-xxs) / 2);
 }
 
 

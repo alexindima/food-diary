@@ -4,7 +4,7 @@
 
 .fd-ui-checkbox {
     --fd-checkbox-control-size: 18px;
-    --fd-checkbox-control-radius: 4px;
+    --fd-checkbox-control-radius: var(--fd-radius-xs);
     --fd-checkbox-control-border-color: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     --fd-checkbox-control-checked-background: var(--fd-color-primary-600);
     --fd-checkbox-control-checked-border: var(--fd-color-primary-600);

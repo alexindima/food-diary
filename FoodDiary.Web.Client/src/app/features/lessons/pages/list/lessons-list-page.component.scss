@@ -31,7 +31,7 @@
     &__progress-bar {
         flex: 1;
         height: 8px;
-        border-radius: 4px;
+        border-radius: var(--fd-radius-xs);
         background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         overflow: hidden;
         max-width: 200px;
@@ -39,7 +39,7 @@
 
     &__progress-fill {
         height: 100%;
-        border-radius: 4px;
+        border-radius: var(--fd-radius-xs);
         background: linear-gradient(90deg, var(--fd-color-green-500), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-slate-900)));
         transition: width 0.3s ease;
     }
@@ -113,9 +113,9 @@
 
     &__check {
         color: var(--fd-color-green-500);
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
     }
 
     &__title {

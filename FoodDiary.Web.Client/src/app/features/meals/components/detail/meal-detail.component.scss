@@ -44,7 +44,7 @@
 
     &__quality-bar {
         --fd-progress-height: 8px;
-        --fd-progress-radius: 999px;
+        --fd-progress-radius: var(--fd-radius-pill);
         --fd-progress-track-background: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
     }
 
@@ -124,7 +124,7 @@
         --fd-button-height: 40px;
         --fd-button-height-explicit: 40px;
         --fd-button-padding-x: 0;
-        --fd-button-border-radius: 10px;
+        --fd-button-border-radius: var(--fd-radius-lg);
         --fd-button-background: var(--fd-color-white);
         --fd-button-background-hover: var(--fd-color-white);
         --fd-button-background-active: var(--fd-color-white);
@@ -139,7 +139,7 @@
         --fd-button-shadow-active: none;
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 22px;
+        --fd-button-icon-size: 1.375rem;
 
         &--active {
             --fd-button-border-color: var(--fd-color-amber-500);

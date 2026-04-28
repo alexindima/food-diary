@@ -27,7 +27,7 @@
     min-height: var(--fd-chip-select-item-height);
     padding: var(--fd-space-chip-select-item-padding);
     border: 1px solid var(--fd-chip-select-border);
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: var(--fd-chip-select-background);
     color: var(--fd-chip-select-text);
     font: inherit;

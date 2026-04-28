@@ -68,7 +68,7 @@
     &__step-index {
         width: 40px;
         height: 40px;
-        border-radius: 14px;
+        border-radius: var(--fd-landing-radius-card);
         background: linear-gradient(135deg, var(--fd-color-emerald-500) 0%, var(--fd-color-teal-500) 100%);
         color: var(--fd-color-white);
         display: inline-flex;
@@ -122,18 +122,18 @@
     &__status {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-white) 14%, transparent);
         color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
         font-size: 0.9rem;
         white-space: nowrap;
 
         fd-ui-icon {
-            width: 18px;
-            height: 18px;
-            font-size: 18px;
+            width: 1.125rem;
+            height: 1.125rem;
+            font-size: 1.125rem;
         }
     }
 
@@ -158,17 +158,17 @@
     &__note {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: 14px;
+        border-radius: var(--fd-landing-radius-card);
         background: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         color: var(--fd-color-slate-50);
         line-height: 1.45;
 
         fd-ui-icon {
-            width: 18px;
-            height: 18px;
-            font-size: 18px;
+            width: 1.125rem;
+            height: 1.125rem;
+            font-size: 1.125rem;
             color: color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-white));
             flex: 0 0 auto;
         }

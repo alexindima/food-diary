@@ -116,7 +116,7 @@
     flex-shrink: 0;
     width: 28px;
     height: 28px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     display: inline-flex;
     align-items: center;
     justify-content: center;

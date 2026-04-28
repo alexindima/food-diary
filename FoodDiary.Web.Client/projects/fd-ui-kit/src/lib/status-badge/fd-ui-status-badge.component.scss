@@ -3,7 +3,7 @@
     align-items: center;
     max-width: 100%;
     padding: var(--fd-space-status-badge-padding);
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     border: 1px solid var(--fd-color-border);
     box-sizing: border-box;
     color: var(--fd-color-text-muted);

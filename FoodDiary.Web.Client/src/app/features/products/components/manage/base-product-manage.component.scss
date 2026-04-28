@@ -200,8 +200,8 @@
         align-items: stretch;
         justify-content: flex-start;
         gap: var(--fd-space-md);
-        padding: var(--fd-space-sm) 14px;
-        border-radius: 16px;
+        padding: var(--fd-space-sm) var(--fd-space-md);
+        border-radius: var(--fd-radius-card);
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
         background: color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent);
     }

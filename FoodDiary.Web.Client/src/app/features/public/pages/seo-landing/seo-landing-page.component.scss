@@ -41,14 +41,14 @@
 
     &__hero-copy {
         display: grid;
-        gap: 18px;
+        gap: var(--fd-space-lg);
     }
 
     &__eyebrow {
         display: inline-flex;
         width: fit-content;
-        padding: 7px 13px;
-        border-radius: 999px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
         color: var(--fd-color-primary-700);
         font-size: 0.84rem;
@@ -91,8 +91,8 @@
         display: inline-flex;
         align-items: center;
         min-height: 40px;
-        padding: 0 14px;
-        border-radius: 999px;
+        padding: 0 var(--fd-space-md);
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-white) 86%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         color: var(--fd-color-slate-700);
@@ -102,13 +102,13 @@
     }
 
     &__hero-panel {
-        border-radius: 24px;
+        border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-lg);
         background: linear-gradient(160deg, color-mix(in srgb, var(--fd-color-slate-900) 94%, transparent), color-mix(in srgb, var(--fd-color-teal-700) 90%, var(--fd-color-slate-900)));
         color: var(--fd-color-slate-50);
         box-shadow: 0 24px 56px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         display: grid;
-        gap: 14px;
+        gap: var(--fd-space-sm);
     }
 
     &__panel-label {
@@ -173,7 +173,7 @@
     &__feature-card,
     &__step-card,
     &__related-card {
-        border-radius: 20px;
+        border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-lg);
         background: color-mix(in srgb, var(--fd-color-white) 94%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
@@ -199,7 +199,7 @@
         width: 38px;
         height: 38px;
         margin-bottom: var(--fd-space-sm);
-        border-radius: 12px;
+        border-radius: var(--fd-radius-lg);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -214,7 +214,7 @@
     }
 
     &__faq-item {
-        border-radius: 18px;
+        border-radius: var(--fd-radius-panel);
         overflow: hidden;
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
@@ -242,7 +242,7 @@
             width: 28px;
             height: 28px;
             flex: 0 0 auto;
-            border-radius: 999px;
+            border-radius: var(--fd-radius-pill);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -257,14 +257,14 @@
 
     &__faq-answer {
         margin: 0;
-        padding: 0 22px 20px;
+        padding: 0 var(--fd-space-lg) var(--fd-space-lg);
         color: var(--fd-color-text-muted);
         line-height: 1.68;
     }
 
     &__related-card {
         display: grid;
-        gap: 8px;
+        gap: var(--fd-space-xs);
         text-decoration: none;
         color: inherit;
         transition:

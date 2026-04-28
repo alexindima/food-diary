@@ -48,7 +48,7 @@
     left: 16px;
     right: 16px;
     height: 7px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: linear-gradient(
         90deg,
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),

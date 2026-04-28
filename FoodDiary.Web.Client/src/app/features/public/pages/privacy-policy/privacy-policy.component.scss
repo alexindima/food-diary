@@ -7,7 +7,7 @@
         max-width: 720px;
         margin: 0 auto;
         background: var(--fd-color-white);
-        border-radius: 16px;
+        border-radius: var(--fd-radius-card);
         padding: var(--fd-space-xxl);
         box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
     }
@@ -29,7 +29,7 @@
         line-height: var(--fd-text-section-title-line-height);
         font-weight: var(--fd-text-section-title-weight);
         color: var(--fd-color-slate-800);
-        margin: 28px 0 12px;
+        margin: var(--fd-space-xl) 0 var(--fd-space-sm);
     }
 
     &__content p {

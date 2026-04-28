@@ -17,7 +17,7 @@
 
 .fd-ui-radio-group__label span {
     color: var(--fd-color-warn);
-    margin-left: 2px;
+    margin-left: calc(var(--fd-space-xxs) / 2);
 }
 
 .fd-ui-radio-group__control {
@@ -70,8 +70,8 @@
     justify-content: center;
     width: 18px;
     height: 18px;
-    margin-top: 1px;
-    border-radius: 999px;
+    margin-top: calc(var(--fd-space-xxs) / 4);
+    border-radius: var(--fd-radius-pill);
     border: 2px solid color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     background: var(--fd-color-surface-raised);
     transition:
@@ -83,7 +83,7 @@
 .fd-ui-radio__dot {
     width: 8px;
     height: 8px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: transparent;
     transition: background-color 140ms ease;
 }

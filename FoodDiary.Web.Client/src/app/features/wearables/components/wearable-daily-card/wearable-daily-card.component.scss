@@ -14,14 +14,14 @@
 
 .metric-item {
     --fd-stat-tile-padding: var(--fd-space-stat-tile-compact-padding);
-    --fd-stat-tile-gap: 2px;
-    --fd-stat-tile-radius: 12px;
+    --fd-stat-tile-gap: calc(var(--fd-space-xxs) / 2);
+    --fd-stat-tile-radius: var(--fd-radius-lg);
     --fd-stat-tile-border: 0;
     --fd-stat-tile-background: var(--fd-color-surface-muted);
 }
 
 .metric-icon {
-    font-size: 24px;
+    font-size: 1.5rem;
 }
 
 .metric-value {

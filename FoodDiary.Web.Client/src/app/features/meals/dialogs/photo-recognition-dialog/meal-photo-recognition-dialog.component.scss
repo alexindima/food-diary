@@ -52,7 +52,7 @@
     left: 16px;
     right: 16px;
     height: 7px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: linear-gradient(
         90deg,
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
@@ -147,7 +147,7 @@
     grid-template-columns: 28px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 28px;
     gap: var(--fd-space-xs);
     align-items: center;
-    padding: var(--fd-space-xs) 10px;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--photo-ai-field-radius);
     border: 1px solid var(--photo-ai-border);
     background: var(--photo-ai-surface-muted);
@@ -166,7 +166,7 @@
     height: 38px;
     border-radius: var(--fd-radius-input);
     border: 1px solid var(--photo-ai-border);
-    padding: 0 12px;
+    padding: 0 var(--fd-space-sm);
     background: var(--fd-color-dialog-surface);
 }
 
@@ -194,14 +194,14 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 18px;
+    --fd-button-icon-size: 1.125rem;
 }
 
 .photo-ai-dialog__edit-add {
     margin-top: var(--fd-space-xs);
     --fd-button-height: 42px;
     --fd-button-height-explicit: 42px;
-    --fd-button-border-radius: 999px;
+    --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-text-default: var(--fd-color-slate-500);
     --fd-button-text-hover: var(--fd-color-slate-700);
     --fd-button-text-active: var(--fd-color-slate-700);
@@ -240,7 +240,7 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 18px;
+    --fd-button-icon-size: 1.125rem;
 }
 
 .photo-ai-dialog__table {
@@ -323,7 +323,7 @@
 
 .photo-ai-dialog__nutrition-loading {
     margin-top: var(--fd-space-card-profile-gap);
-    padding: var(--fd-space-sm) 14px;
+    padding: var(--fd-space-sm) var(--fd-space-md);
     border-radius: var(--fd-radius-input);
     border: 1px dashed color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-dialog-surface));
     background: color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-dialog-surface));
@@ -336,7 +336,7 @@
     position: relative;
     width: 160px;
     height: 6px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: color-mix(in srgb, var(--fd-color-blue-500) 15%, transparent);
     overflow: hidden;
 }
@@ -348,7 +348,7 @@
     left: -30%;
     width: 45%;
     height: 100%;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: linear-gradient(
         90deg,
         transparent,

@@ -14,6 +14,6 @@
 @media #{variables.$media-compact} {
 
     .auth-dialog__auth {
-        padding: 22px 16px 24px;
+        padding: calc(var(--fd-space-lg) - calc(var(--fd-space-xxs) / 2)) var(--fd-space-md) var(--fd-space-lg);
     }
 }

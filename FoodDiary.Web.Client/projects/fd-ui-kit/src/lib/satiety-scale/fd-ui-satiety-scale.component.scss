@@ -19,7 +19,7 @@
 
     &__required {
         color: var(--fd-color-danger);
-        margin-left: 4px;
+        margin-left: var(--fd-space-xxs);
     }
 
     &__hint {
@@ -102,7 +102,7 @@
     &__indicator {
         width: 32px;
         height: 32px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         display: flex;
         align-items: center;
@@ -145,7 +145,7 @@
     &__error {
         color: var(--fd-color-red-600);
         font-size: var(--fd-text-caption-size);
-        margin-top: 4px;
+        margin-top: var(--fd-space-xxs);
     }
 
     &__option--selected &__indicator {

@@ -60,7 +60,7 @@
     &__summary-item,
     &__prediction {
         --fd-summary-surface-padding: var(--fd-space-surface-padding);
-        --fd-summary-surface-radius: 14px;
+        --fd-summary-surface-radius: var(--fd-radius-card);
         --fd-summary-surface-background: var(--fd-color-white);
     }
 
@@ -78,7 +78,7 @@
 
     &__day {
         padding: var(--fd-space-surface-padding);
-        border-radius: 12px;
+        border-radius: var(--fd-radius-lg);
         border: 1px solid var(--fd-color-slate-200);
         background: var(--fd-color-white);
         box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);

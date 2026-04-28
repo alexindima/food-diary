@@ -1,10 +1,10 @@
 .like-button {
     --fd-button-host-width: auto;
     --fd-button-host-min-width: 0;
-    --fd-button-border-radius: 20px;
+    --fd-button-border-radius: var(--fd-radius-panel);
     --fd-button-height: 34px;
     --fd-button-height-explicit: 34px;
-    --fd-button-padding-x: 14px;
+    --fd-button-padding-x: var(--fd-space-md);
     --fd-button-border-default: var(--fd-color-border);
     --fd-button-border-hover: var(--fd-color-danger);
     --fd-button-border-active: var(--fd-color-danger);

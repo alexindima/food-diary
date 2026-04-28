@@ -104,7 +104,7 @@
     &__eyebrow {
         display: inline-flex;
         padding: var(--fd-space-xxs) var(--fd-space-sm);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
         color: var(--fd-color-primary-600);
         @include landing.marketing-eyebrow;
@@ -151,7 +151,7 @@
     &__inner--cta {
         max-width: 1180px;
         background: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
-        border-radius: 16px;
+        border-radius: var(--fd-landing-radius-card);
         padding: clamp(var(--fd-space-md), 2.5vw, var(--fd-space-lg));
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
         box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
@@ -193,7 +193,7 @@
     &__group {
         background: var(--fd-color-white);
         border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
-        border-radius: 14px;
+        border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
         box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         display: grid;
@@ -218,7 +218,7 @@
         position: relative;
         background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 15%, transparent);
-        border-radius: 16px;
+        border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
         box-shadow: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         display: grid;
@@ -239,7 +239,7 @@
 
     &__item {
         background: var(--fd-color-white);
-        border-radius: 14px;
+        border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
         border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
         box-shadow: 0 10px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -251,7 +251,7 @@
     &__icon {
         width: 36px;
         height: 36px;
-        border-radius: 12px;
+        border-radius: var(--fd-radius-lg);
         background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
         color: var(--fd-color-primary-600);
         display: inline-flex;
@@ -277,7 +277,7 @@
     &__item {
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
-        border-radius: 18px;
+        border-radius: var(--fd-landing-radius-panel);
         box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         padding: 0;
         overflow: hidden;
@@ -302,7 +302,7 @@
             flex: 0 0 auto;
             width: 28px;
             height: 28px;
-            border-radius: 999px;
+            border-radius: var(--fd-radius-pill);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -319,7 +319,7 @@
 
     &__answer {
         margin: 0;
-        padding: 0 22px 20px;
+        padding: 0 var(--fd-space-lg) var(--fd-space-lg);
         @include landing.marketing-body(1rem, 1.65, var(--fd-color-text-muted), 760px);
     }
 
@@ -345,7 +345,7 @@
         align-items: center;
         min-height: 56px;
         padding: var(--fd-space-sm) var(--fd-space-md);
-        border-radius: 16px;
+        border-radius: var(--fd-landing-radius-card);
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
         border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-slate-900) 7%, transparent);

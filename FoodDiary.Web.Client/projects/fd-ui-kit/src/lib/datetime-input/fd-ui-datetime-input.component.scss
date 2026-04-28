@@ -180,7 +180,7 @@
     color: var(--fd-color-danger);
     font-size: var(--fd-text-helper-size);
     line-height: var(--fd-text-helper-line-height);
-    margin-top: 2px;
+    margin-top: calc(var(--fd-space-xxs) / 2);
     max-width: 100%;
     white-space: normal;
     overflow-wrap: anywhere;

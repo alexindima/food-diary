@@ -543,7 +543,7 @@
     &__privacy-hint {
         font-size: 0.85rem;
         color: var(--fd-color-text-muted);
-        margin-top: 2px;
+        margin-top: calc(var(--fd-space-xxs) / 2);
     }
 
     &__privacy-status {

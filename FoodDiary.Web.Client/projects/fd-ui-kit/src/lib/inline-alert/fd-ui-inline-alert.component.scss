@@ -71,7 +71,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--fd-space-inline-alert-actions-gap);
-    margin-top: 4px;
+    margin-top: var(--fd-space-xxs);
 }
 
 .fd-ui-inline-alert__action,
@@ -133,7 +133,7 @@
     .fd-ui-inline-alert__dismiss {
         grid-column: 2;
         justify-self: end;
-        margin-top: -6px;
+        margin-top: calc(var(--fd-space-sm) / -2);
     }
 }
 

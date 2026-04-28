@@ -13,7 +13,7 @@
 
     &__media {
         aspect-ratio: 1 / 1;
-        margin-left: -12px;
+        margin-left: calc(var(--fd-space-sm) * -1);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
         position: relative;
