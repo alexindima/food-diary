@@ -22,7 +22,7 @@
     box-shadow: none;
     border: none;
     border-radius: var(--fd-image-preview-radius);
-    max-height: min(90vh, 980px);
+    max-height: var(--fd-image-preview-max-height);
 }
 
 .fd-ui-image-preview-dialog .fd-ui-dialog__header,
@@ -48,13 +48,13 @@
 
 .fd-ui-image-preview-dialog__close {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: var(--fd-image-preview-close-inset);
+    right: var(--fd-image-preview-close-inset);
     z-index: 2;
-    width: 48px;
-    height: 48px;
+    width: var(--fd-image-preview-close-size);
+    height: var(--fd-image-preview-close-size);
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     display: inline-grid;
     place-items: center;
     background: color-mix(in srgb, var(--fd-color-white) 14%, transparent);
@@ -66,7 +66,7 @@
         transform 0.2s ease;
 
     span {
-        font-size: 2rem;
+        font-size: var(--fd-image-preview-close-icon-size);
         line-height: 1;
         transform: translateY(-1px);
     }
@@ -90,8 +90,8 @@
 
 .fd-ui-image-preview-dialog__image {
     width: auto;
-    max-width: min(100%, 1120px);
-    max-height: min(72vh, 820px);
+    max-width: var(--fd-image-preview-max-width);
+    max-height: var(--fd-image-preview-image-max-height);
     display: block;
     object-fit: contain;
     user-select: none;
@@ -100,7 +100,7 @@
 }
 
 .fd-ui-image-preview-dialog__caption {
-    max-width: min(100%, 960px);
+    max-width: var(--fd-image-preview-caption-max-width);
     color: var(--fd-color-white);
     font-size: var(--fd-text-body-size);
     font-weight: var(--fd-text-card-title-weight);
@@ -116,14 +116,14 @@
     }
 
     .fd-ui-image-preview-dialog__close {
-        top: 12px;
-        right: 12px;
-        width: 44px;
-        height: 44px;
+        top: var(--fd-image-preview-close-inset-mobile);
+        right: var(--fd-image-preview-close-inset-mobile);
+        width: var(--fd-image-preview-close-size-mobile);
+        height: var(--fd-image-preview-close-size-mobile);
     }
 
     .fd-ui-image-preview-dialog__image {
-        max-height: min(68vh, 560px);
+        max-height: var(--fd-image-preview-image-max-height-mobile);
         border-radius: var(--fd-radius-card);
     }
 
