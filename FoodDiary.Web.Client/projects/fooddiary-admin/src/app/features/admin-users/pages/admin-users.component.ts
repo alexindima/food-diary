@@ -7,6 +7,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
 import { AdminUser, AdminUsersService } from '../api/admin-users.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'fd-admin-users',
@@ -29,6 +30,7 @@ export class AdminUsersComponent {
     public readonly isLoading = signal(false);
     public readonly search = signal('');
     public readonly includeDeleted = signal(false);
+    public readonly impersonatingUserId = signal<string | null>(null);
 
     public constructor() {
         this.loadUsers();
@@ -87,6 +89,30 @@ export class AdminUsersComponent {
                 if (updated) {
                     this.loadUsers();
                 }
+            });
+    }
+
+    public startImpersonation(user: AdminUser): void {
+        const reason = window.prompt(`Reason for impersonating ${user.email}`);
+        const normalizedReason = reason?.trim();
+        if (!normalizedReason) {
+            return;
+        }
+
+        this.impersonatingUserId.set(user.id);
+        this.usersService
+            .startImpersonation(user.id, normalizedReason)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => {
+                    this.impersonatingUserId.set(null);
+                    const targetUrl = new URL('/dashboard', environment.mainAppUrl);
+                    targetUrl.searchParams.set('impersonationToken', response.accessToken);
+                    window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
+                },
+                error: () => {
+                    this.impersonatingUserId.set(null);
+                },
             });
     }
 }

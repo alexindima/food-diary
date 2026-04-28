@@ -25,6 +25,12 @@
     text-align: left;
 }
 
+.users-table__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 .pagination {
     display: flex;
     gap: 0.75rem;

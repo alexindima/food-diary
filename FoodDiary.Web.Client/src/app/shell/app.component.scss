@@ -74,6 +74,43 @@
     }
 }
 
+.fd-impersonation-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 40px;
+    padding: 8px 16px;
+    background: #7f1d1d;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
+}
+
+.fd-impersonation-banner__reason {
+    max-width: min(560px, 45vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+}
+
+.fd-impersonation-banner__button {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 6px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font: inherit;
+    cursor: pointer;
+}
+
 body.cdk-global-scrollblock .fd-root__sidebar,
 html.cdk-global-scrollblock .fd-root__sidebar {
     position: fixed;

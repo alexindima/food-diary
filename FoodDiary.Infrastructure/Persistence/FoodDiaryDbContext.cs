@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Content;
@@ -46,6 +47,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();
+    public DbSet<AdminImpersonationSession> AdminImpersonationSessions => Set<AdminImpersonationSession>();
     public DbSet<AiPromptTemplate> AiPromptTemplates => Set<AiPromptTemplate>();
     public DbSet<BillingSubscription> BillingSubscriptions => Set<BillingSubscription>();
     public DbSet<BillingPayment> BillingPayments => Set<BillingPayment>();

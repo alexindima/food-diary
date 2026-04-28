@@ -169,6 +169,11 @@ public static class Errors {
             "Authentication.AdminSsoForbidden",
             "User is not allowed to access admin SSO.",
             kind: ErrorKind.Forbidden);
+
+        public static Error ImpersonationForbidden => new(
+            "Authentication.ImpersonationForbidden",
+            "User cannot be impersonated.",
+            kind: ErrorKind.Forbidden);
     }
 
     public static class Validation {

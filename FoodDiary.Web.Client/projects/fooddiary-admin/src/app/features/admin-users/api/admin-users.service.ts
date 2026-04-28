@@ -25,6 +25,14 @@ export type AdminUserUpdate = {
     language?: string | null;
 };
 
+export type AdminImpersonationStart = {
+    accessToken: string;
+    targetUserId: string;
+    targetEmail: string;
+    actorUserId: string;
+    reason: string;
+};
+
 type ApiPagedResponse<T> = {
     data: T[];
     page: number;
@@ -66,5 +74,9 @@ export class AdminUsersService {
 
     public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
         return this.http.patch<AdminUser>(`${this.baseUrl}/${userId}`, payload);
+    }
+
+    public startImpersonation(userId: string, reason: string): Observable<AdminImpersonationStart> {
+        return this.http.post<AdminImpersonationStart>(`${this.baseUrl}/${userId}/impersonation`, { reason });
     }
 }

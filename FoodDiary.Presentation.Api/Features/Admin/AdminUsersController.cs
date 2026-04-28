@@ -27,5 +27,20 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) =>
         HandleOk(request.ToCommand(id), static value => value.ToHttpResponse());
-}
 
+    [HttpPost("{id:guid}/impersonation")]
+    [ProducesResponseType<AdminImpersonationStartHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> StartImpersonation(
+        Guid id,
+        [FromCurrentUser] Guid actorUserId,
+        [FromBody] AdminImpersonationStartHttpRequest request) =>
+        HandleOk(
+            request.ToCommand(
+                actorUserId,
+                id,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                Request.Headers["User-Agent"].ToString()),
+            static value => value.ToHttpResponse());
+}

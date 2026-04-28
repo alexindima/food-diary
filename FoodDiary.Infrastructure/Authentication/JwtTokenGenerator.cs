@@ -44,10 +44,17 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     }
 
     public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
-        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes);
+        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, impersonation: null);
+
+    public string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        JwtImpersonationContext impersonation) =>
+        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, impersonation);
 
     public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
-        GenerateToken(userId, email, roles, _refreshTokenExpirationMinutes);
+        GenerateToken(userId, email, roles, _refreshTokenExpirationMinutes, impersonation: null);
 
     public (UserId userId, string email)? ValidateToken(string token) {
         try {
@@ -73,7 +80,12 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         }
     }
 
-    private string GenerateToken(UserId userId, string email, IReadOnlyCollection<string> roles, int expirationMinutes) {
+    private string GenerateToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        int expirationMinutes,
+        JwtImpersonationContext? impersonation) {
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim> {
@@ -81,6 +93,12 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        if (impersonation is not null) {
+            claims.Add(new Claim("fd_impersonation", "true"));
+            claims.Add(new Claim("fd_impersonated_by", impersonation.ActorUserId.Value.ToString()));
+            claims.Add(new Claim("fd_impersonation_reason", impersonation.Reason));
+        }
 
         foreach (var role in roles) {
             claims.Add(new Claim(ClaimTypes.Role, role));

@@ -62,6 +62,35 @@ export class JwtDecoderService {
         return [];
     }
 
+    public isImpersonation(token: string | null): boolean {
+        if (!token) {
+            return false;
+        }
+
+        const payload = this.decodePayload(token);
+        return payload?.['fd_impersonation'] === 'true';
+    }
+
+    public extractImpersonationActorId(token: string | null): string | null {
+        if (!token) {
+            return null;
+        }
+
+        const payload = this.decodePayload(token);
+        const value = payload?.['fd_impersonated_by'];
+        return typeof value === 'string' ? value : null;
+    }
+
+    public extractImpersonationReason(token: string | null): string | null {
+        if (!token) {
+            return null;
+        }
+
+        const payload = this.decodePayload(token);
+        const value = payload?.['fd_impersonation_reason'];
+        return typeof value === 'string' ? value : null;
+    }
+
     public extractExpirationTimeMs(token: string | null): number | null {
         if (!token) {
             return null;

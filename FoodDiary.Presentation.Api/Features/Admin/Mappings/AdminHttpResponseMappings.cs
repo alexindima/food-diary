@@ -26,6 +26,15 @@ public static class AdminHttpResponseMappings {
         );
     }
 
+    public static AdminImpersonationStartHttpResponse ToHttpResponse(this AdminImpersonationStartModel model) {
+        return new AdminImpersonationStartHttpResponse(
+            model.AccessToken,
+            model.TargetUserId,
+            model.TargetEmail,
+            model.ActorUserId,
+            model.Reason);
+    }
+
     public static AdminAiPromptHttpResponse ToAiPromptHttpResponse(this AdminAiPromptModel model) {
         return new AdminAiPromptHttpResponse(
             model.Id,

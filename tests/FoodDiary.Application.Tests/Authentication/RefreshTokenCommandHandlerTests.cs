@@ -103,6 +103,11 @@ public sealed class RefreshTokenCommandHandlerTests {
 
     private sealed class FakeJwtTokenGenerator(UserId userId, string email) : IJwtTokenGenerator {
         public string GenerateAccessToken(UserId generatedUserId, string generatedEmail, IReadOnlyCollection<string> roles) => "unused-access-token";
+        public string GenerateAccessToken(
+            UserId generatedUserId,
+            string generatedEmail,
+            IReadOnlyCollection<string> roles,
+            JwtImpersonationContext impersonation) => "unused-impersonation-access-token";
         public string GenerateRefreshToken(UserId generatedUserId, string generatedEmail, IReadOnlyCollection<string> roles) => "unused-refresh-token";
         public (UserId userId, string email)? ValidateToken(string token) =>
             string.Equals(token, "current-refresh-token", StringComparison.Ordinal) ? (userId, email) : null;

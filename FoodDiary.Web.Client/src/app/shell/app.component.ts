@@ -31,6 +31,8 @@ export class AppComponent {
     private readonly routeLoadingService = inject(RouteLoadingService);
 
     public isAuthenticated = this.authService.isAuthenticated;
+    public isImpersonating = this.authService.isImpersonating;
+    public impersonationReason = this.authService.impersonationReason;
     public readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
 
     public constructor() {
@@ -71,5 +73,9 @@ export class AppComponent {
             route = route.firstChild;
         }
         return route;
+    }
+
+    public stopImpersonation(): void {
+        void this.authService.onLogout(false);
     }
 }
