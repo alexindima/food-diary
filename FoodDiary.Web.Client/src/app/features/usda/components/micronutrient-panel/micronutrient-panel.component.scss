@@ -41,13 +41,13 @@
 .dv-bar-container {
     height: 6px;
     background: var(--fd-color-slate-200);
-    border-radius: 3px;
+    border-radius: var(--fd-radius-sm);
     overflow: hidden;
 }
 
 .dv-bar {
     height: 100%;
-    border-radius: 3px;
+    border-radius: var(--fd-radius-sm);
     transition: width 0.3s ease;
 }
 

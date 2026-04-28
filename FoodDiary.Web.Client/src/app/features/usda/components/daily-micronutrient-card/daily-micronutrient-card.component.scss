@@ -16,8 +16,8 @@
 }
 
 .coverage-badge {
-    padding: 2px 8px;
-    border-radius: 12px;
+    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    border-radius: var(--fd-radius-lg);
     background: var(--fd-color-surface-muted);
     color: var(--fd-color-text-muted);
 }
@@ -30,7 +30,7 @@
 
 .nutrient-item {
     --fd-progress-item-padding: var(--fd-space-progress-item-padding);
-    --fd-progress-item-radius: 8px;
+    --fd-progress-item-radius: var(--fd-radius-md);
     --fd-progress-item-background: var(--fd-color-surface-muted);
 }
 
@@ -62,7 +62,7 @@
 
 .progress-bar {
     --fd-progress-height: 4px;
-    --fd-progress-radius: 2px;
+    --fd-progress-radius: calc(var(--fd-space-xxs) / 2);
     --fd-progress-track-background: var(--fd-color-surface-muted);
 }
 

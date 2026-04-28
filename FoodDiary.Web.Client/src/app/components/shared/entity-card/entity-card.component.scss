@@ -340,7 +340,7 @@
         flex-direction: column;
         gap: var(--fd-space-entity-card-header-gap);
         min-width: clamp(52px, 7vw, 80px);
-        padding: 3px 0;
+        padding: calc(var(--fd-space-xxs) / 2) 0;
 
         &::before {
             left: -8px;

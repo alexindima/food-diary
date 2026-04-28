@@ -103,7 +103,7 @@
 .notifications-dialog__item-indicator {
     width: 0.625rem;
     height: 0.625rem;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: var(--fd-color-danger);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--fd-color-danger) 12%, transparent);
     flex-shrink: 0;

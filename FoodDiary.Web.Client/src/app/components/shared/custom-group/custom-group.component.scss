@@ -32,7 +32,7 @@
     border-radius: var(--fd-radius-xs);
     padding: 0;
     width: 24px;
-    font-size: 16px;
+    font-size: var(--fd-text-body-size);
     line-height: 20px;
 }
 
@@ -46,7 +46,7 @@
     --fd-button-height-explicit: 20px;
     --fd-button-padding-x: var(--fd-space-xs);
     --fd-button-border-radius: var(--fd-radius-xs);
-    --fd-button-font-size: 10px;
+    --fd-button-font-size: var(--fd-text-helper-size);
     --fd-button-font-weight: 700;
     --fd-button-shadow-default: none;
     --fd-button-shadow-hover: none;

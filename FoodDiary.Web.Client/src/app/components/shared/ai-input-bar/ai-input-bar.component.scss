@@ -61,7 +61,7 @@
         --fd-button-shadow-active: none;
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 24px;
+        --fd-button-icon-size: 1.5rem;
         --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-color-surface));
         --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-color-ai) 18%, var(--fd-color-surface));
         --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-color-ai) 22%, var(--fd-color-surface));
@@ -120,13 +120,13 @@
         --fd-button-shadow-active: none;
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 24px;
+        --fd-button-icon-size: 1.5rem;
     }
 }
 
 .ai-input-bar__result-panel {
     display: block;
-    margin-top: -1px;
+    margin-top: calc(var(--fd-space-xxs) / -4);
 }
 
 

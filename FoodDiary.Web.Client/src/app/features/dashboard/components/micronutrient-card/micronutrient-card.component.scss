@@ -17,7 +17,7 @@
 
     &__skeleton {
         height: 12px;
-        border-radius: 6px;
+        border-radius: var(--fd-radius-sm);
         background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
         animation: pulse 1.5s ease-in-out infinite;
 
@@ -38,7 +38,7 @@
         color: var(--fd-color-text-muted);
         background: color-mix(in srgb, var(--fd-color-slate-400) 8%, transparent);
         padding: var(--fd-space-xxs) var(--fd-space-xs);
-        border-radius: 6px;
+        border-radius: var(--fd-radius-sm);
     }
 
     &__section {
@@ -54,7 +54,7 @@
     &__nutrient {
         display: flex;
         flex-direction: column;
-        gap: 3px;
+        gap: calc(var(--fd-space-xxs) / 2);
 
         &--good {
             flex-direction: row;
@@ -87,22 +87,22 @@
         flex-shrink: 0;
 
         fd-ui-icon {
-            font-size: 14px;
-            width: 14px;
-            height: 14px;
+            font-size: 0.875rem;
+            width: 0.875rem;
+            height: 0.875rem;
         }
     }
 
     &__bar {
         height: 6px;
-        border-radius: 3px;
+        border-radius: var(--fd-radius-sm);
         background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
         overflow: hidden;
     }
 
     &__bar-fill {
         height: 100%;
-        border-radius: 3px;
+        border-radius: var(--fd-radius-sm);
         transition: width 0.3s ease;
     }
 
@@ -118,15 +118,15 @@
         display: inline-flex;
         align-items: center;
         gap: var(--fd-space-xxs);
-        padding: 3px 8px;
+        padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
         border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-slate-400) 10%, transparent);
         color: var(--fd-color-text-muted);
 
         fd-ui-icon {
-            font-size: 14px;
-            width: 14px;
-            height: 14px;
+            font-size: 0.875rem;
+            width: 0.875rem;
+            height: 0.875rem;
         }
 
         &[data-grade='excellent'],

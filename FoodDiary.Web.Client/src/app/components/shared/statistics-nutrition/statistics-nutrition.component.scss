@@ -28,7 +28,7 @@
 
 .stats-nutrition-card__chart-card {
     background: var(--fd-color-slate-50);
-    border-radius: 16px;
+    border-radius: var(--fd-radius-card);
     padding: var(--fd-space-md);
     display: flex;
     flex-direction: column;

@@ -33,7 +33,7 @@
 }
 
 .food-category {
-    margin-top: 2px;
+    margin-top: calc(var(--fd-space-xxs) / 2);
 }
 
 .loading,

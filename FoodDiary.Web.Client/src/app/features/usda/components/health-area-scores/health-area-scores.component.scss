@@ -17,14 +17,14 @@
 .area-card {
     --fd-stat-tile-padding: var(--fd-space-stat-tile-compact-padding);
     --fd-stat-tile-gap: var(--fd-space-xxs);
-    --fd-stat-tile-radius: 12px;
+    --fd-stat-tile-radius: var(--fd-radius-lg);
     --fd-stat-tile-border: 0;
     --fd-stat-tile-background: var(--fd-color-surface-muted);
     --fd-stat-tile-shadow: none;
 }
 
 .area-icon {
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 .area-name {

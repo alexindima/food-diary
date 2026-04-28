@@ -52,7 +52,7 @@
         height: auto;
         margin: 0 auto;
         color: var(--fd-color-primary-500);
-        font-size: 36px;
+        font-size: 2.25rem;
         line-height: 1;
     }
 
@@ -144,7 +144,7 @@
         --fd-button-shadow-active: none;
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 16px;
+        --fd-button-icon-size: 1rem;
     }
 
     &__control > &__control-btn:not(:last-child) {
@@ -271,7 +271,7 @@
         }
 
         .image-upload-field__icon {
-            font-size: 28px;
+            font-size: 1.75rem;
         }
 
         .image-upload-field__main-text {
@@ -306,14 +306,14 @@
         .image-upload-field__dropzone {
             min-height: clamp(210px, 32vh, 240px);
             height: clamp(210px, 32vh, 240px);
-            border-radius: 24px;
+            border-radius: var(--fd-radius-panel);
         }
 
         .image-upload-field__preview {
             position: absolute;
             inset: 0;
             object-fit: contain;
-            border-radius: 24px;
+            border-radius: var(--fd-radius-panel);
             background: var(--fd-color-slate-50);
         }
 
