@@ -71,7 +71,7 @@
     &__bmi-segments {
         display: flex;
         height: 18px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         overflow: hidden;
     }
 
@@ -117,13 +117,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 2px;
+        gap: calc(var(--fd-space-xxs) / 2);
     }
 
     &__bmi-pointer-dot {
         width: 14px;
         height: 14px;
-        border-radius: 50%;
+        border-radius: var(--fd-radius-pill);
         border: 2px solid var(--fd-color-slate-900);
         background-color: var(--fd-color-white);
         box-shadow: 0 3px 8px color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);

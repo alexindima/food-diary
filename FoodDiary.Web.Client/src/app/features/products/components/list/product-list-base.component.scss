@@ -98,7 +98,7 @@
         @extend .product-list__no-results;
         padding: var(--fd-space-lg);
         border: 1px dashed color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
-        border-radius: 20px;
+        border-radius: var(--fd-radius-card);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent),
@@ -136,7 +136,7 @@
         justify-content: space-between;
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: 14px;
+        border-radius: var(--fd-radius-card);
         background: var(--fd-color-surface-raised);
         border: 1px solid var(--fd-color-border-strong);
     }
@@ -161,7 +161,7 @@
 
     &__favorite-meta {
         color: var(--fd-color-text-muted);
-        margin-top: 2px;
+        margin-top: calc(var(--fd-space-xxs) / 2);
         display: flex;
         gap: var(--fd-space-xxs);
         flex-wrap: wrap;
@@ -178,7 +178,7 @@
         --fd-button-height: 32px;
         --fd-button-height-explicit: 32px;
         --fd-button-padding-x: 0;
-        --fd-button-border-radius: 8px;
+        --fd-button-border-radius: var(--fd-radius-md);
         --fd-button-background-default: transparent;
         --fd-button-background-hover: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         --fd-button-background-active: color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
@@ -193,7 +193,7 @@
         --fd-button-shadow-active: none;
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 20px;
+        --fd-button-icon-size: var(--fd-text-card-title-size);
     }
 
     &__favorite-btn--remove {
@@ -228,7 +228,7 @@
         flex: 1;
         height: 1px;
         background: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
     }
 
     &__section-grid {
@@ -253,7 +253,7 @@
         align-items: center;
         gap: var(--fd-space-sm);
         padding: var(--fd-space-sm);
-        border-radius: 12px;
+        border-radius: var(--fd-radius-lg);
         background: color-mix(in srgb, var(--fd-color-slate-50) 95%, transparent);
         border: 1px solid var(--b2);
         cursor: pointer;
@@ -268,7 +268,7 @@
     &__off-image {
         width: 48px;
         height: 48px;
-        border-radius: 8px;
+        border-radius: var(--fd-radius-md);
         object-fit: cover;
         flex-shrink: 0;
     }
@@ -276,7 +276,7 @@
     &__off-image-placeholder {
         width: 48px;
         height: 48px;
-        border-radius: 8px;
+        border-radius: var(--fd-radius-md);
         background: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
         display: flex;
         align-items: center;
