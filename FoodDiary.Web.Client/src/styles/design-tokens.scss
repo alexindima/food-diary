@@ -122,6 +122,13 @@ $fd-page-body-tokens: (
     gap: 16px,
 );
 
+$fd-layout-shell-tokens: (
+    sidebar-width: 260px,
+    impersonation-banner-height: 48px,
+    mobile-viewport-bottom-padding: 132px,
+    mobile-sheet-bottom: 126px,
+);
+
 $fd-page-header-base-tokens: (
     title-size: clamp(1.4rem, 3vw, 2rem),
     title-line-height: 1.2,
@@ -142,6 +149,7 @@ $fd-static-design-tokens: (
     elevation: $fd-elevation-tokens,
     period-filter: $fd-period-filter-tokens,
     page-body: $fd-page-body-tokens,
+    layout-shell: $fd-layout-shell-tokens,
 );
 
 $fd-theme-design-tokens: (
@@ -872,6 +880,10 @@ $fd-theme-design-tokens: (
         --fd-layout-page-section-spacing: #{fd-theme-token($theme, layout-page, section-spacing)};
         --fd-period-gap: #{fd-token(period-filter, gap)};
         --fd-page-body-gap: #{fd-token(page-body, gap)};
+        --fd-layout-shell-sidebar-width: #{fd-token(layout-shell, sidebar-width)};
+        --fd-layout-shell-impersonation-banner-height: #{fd-token(layout-shell, impersonation-banner-height)};
+        --fd-layout-shell-mobile-viewport-bottom-padding: #{fd-token(layout-shell, mobile-viewport-bottom-padding)};
+        --fd-layout-shell-mobile-sheet-bottom: #{fd-token(layout-shell, mobile-sheet-bottom)};
 
         --fd-space-xxs: #{fd-token(spacing, xxs)};
         --fd-space-xs: #{fd-token(spacing, xs)};

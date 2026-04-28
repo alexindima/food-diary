@@ -7,7 +7,7 @@
     min-width: 22px;
     height: 22px;
     padding: 0 7px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     display: inline-flex;
     align-items: center;
     justify-content: center;

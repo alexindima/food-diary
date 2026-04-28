@@ -361,6 +361,12 @@ export const DESIGN_TOKEN_CSS_VARIABLES = {
             horizontalPaddingLeft: '--fd-layout-header-horizontal-padding-left',
             horizontalPaddingRight: '--fd-layout-header-horizontal-padding-right',
         },
+        shell: {
+            sidebarWidth: '--fd-layout-shell-sidebar-width',
+            impersonationBannerHeight: '--fd-layout-shell-impersonation-banner-height',
+            mobileViewportBottomPadding: '--fd-layout-shell-mobile-viewport-bottom-padding',
+            mobileSheetBottom: '--fd-layout-shell-mobile-sheet-bottom',
+        },
     },
     button: {
         primary: {

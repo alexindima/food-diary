@@ -27,7 +27,7 @@
 }
 
 .sidebar__link fd-ui-icon {
-    font-size: 20px;
+    font-size: var(--fd-text-card-title-size);
     color: var(--fd-color-primary-600);
 }
 
@@ -67,7 +67,7 @@
 }
 
 .sidebar__link.sidebar__link--secondary fd-ui-icon {
-    font-size: 18px;
+    font-size: var(--fd-text-section-title-size);
 }
 
 .sidebar-mobile__sheet-link {

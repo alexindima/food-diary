@@ -20,12 +20,11 @@
 
 .fd-root {
     display: grid;
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: var(--fd-layout-shell-sidebar-width) 1fr;
     height: 100dvh;
     min-height: 100dvh;
     background: var(--fd-layout-page-background);
-    --fd-layout-sidebar-width: 260px;
-    --fd-impersonation-banner-height: 48px;
+    --fd-layout-sidebar-width: var(--fd-layout-shell-sidebar-width);
     overflow: hidden;
 
     &__sidebar {
@@ -59,7 +58,7 @@
         overflow-y: auto;
         overscroll-behavior-y: contain;
         -webkit-overflow-scrolling: touch;
-        padding-bottom: calc(24px + env(safe-area-inset-bottom));
+        padding-bottom: calc(var(--fd-space-lg) + env(safe-area-inset-bottom));
         box-sizing: border-box;
         background: var(--fd-layout-page-background);
     }
@@ -81,12 +80,12 @@
     align-items: center;
     justify-content: center;
     gap: var(--fd-space-inline-alert-actions-gap);
-    min-height: var(--fd-impersonation-banner-height);
+    min-height: var(--fd-layout-shell-impersonation-banner-height);
     padding: var(--fd-space-inline-alert-notice-padding);
     box-sizing: border-box;
     background: #7f1d1d;
     color: #ffffff;
-    font-size: 14px;
+    font-size: var(--fd-text-body-sm-size);
     font-weight: 600;
     box-shadow: 0 1px 0 rgba(15, 23, 42, 0.12);
 }
@@ -101,7 +100,7 @@
 
 .fd-impersonation-banner__button {
     border: 1px solid rgba(255, 255, 255, 0.72);
-    border-radius: 6px;
+    border-radius: var(--fd-radius-sm);
     padding: var(--fd-space-status-badge-padding);
     background: rgba(255, 255, 255, 0.12);
     color: #ffffff;
@@ -121,7 +120,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 
 .fd-root--no-sidebar {
     grid-template-columns: 1fr;
-    --fd-layout-sidebar-width: 0px;
+    --fd-layout-sidebar-width: 0;
 
     .fd-root__main {
         grid-column: 1 / -1;
@@ -141,7 +140,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
         display: block;
         height: auto;
         min-height: 100dvh;
-        --fd-layout-sidebar-width: 0px;
+        --fd-layout-sidebar-width: 0;
         overflow: visible;
     }
 
@@ -170,7 +169,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     .fd-root__viewport {
         overflow: visible;
         min-height: auto;
-        padding-bottom: calc(132px + env(safe-area-inset-bottom));
+        padding-bottom: calc(var(--fd-layout-shell-mobile-viewport-bottom-padding) + env(safe-area-inset-bottom));
     }
 
     .fd-root__footer {

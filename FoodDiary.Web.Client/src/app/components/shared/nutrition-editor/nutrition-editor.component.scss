@@ -21,7 +21,7 @@
 
     &__macro-bar {
         height: 16px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         overflow: hidden;
         display: flex;
         background: var(--fd-color-nutrition-macro-bar-bg);

@@ -81,7 +81,7 @@
         right: 7px;
         width: 10px;
         height: 10px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: var(--fd-color-danger);
         border: 2px solid var(--fd-color-surface);
         box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 80%, transparent);
@@ -114,7 +114,7 @@
             color 0.2s ease;
 
         fd-ui-icon {
-            font-size: 20px;
+            font-size: var(--fd-text-card-title-size);
             color: var(--fd-color-primary-600);
         }
 
@@ -168,7 +168,7 @@
         &:focus-visible {
             outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
             outline-offset: 2px;
-            border-radius: 10px;
+            border-radius: var(--fd-radius-button);
         }
 
         fd-ui-icon {
@@ -195,7 +195,7 @@
         font-weight: 600;
 
         fd-ui-icon {
-            font-size: 18px;
+            font-size: var(--fd-text-section-title-size);
         }
     }
 
@@ -273,7 +273,7 @@
     &__user-meta {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: calc(var(--fd-space-xxs) / 2);
         min-width: 0;
     }
 
@@ -366,7 +366,7 @@
             box-shadow 0.15s ease;
 
         fd-ui-icon {
-            font-size: 18px;
+            font-size: var(--fd-text-section-title-size);
             color: var(--fd-color-primary-600);
         }
 
@@ -443,7 +443,7 @@
 
     &__progress {
         display: grid;
-        gap: 5px;
+        gap: var(--fd-space-xxs);
         padding: var(--fd-space-xs);
         border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-primary-600) 8%, transparent);
@@ -468,8 +468,8 @@
     }
 
     &__progress-track {
-        --fd-progress-height: 5px;
-        --fd-progress-radius: 999px;
+        --fd-progress-height: calc(var(--fd-space-xxs) + 1px);
+        --fd-progress-radius: var(--fd-radius-pill);
         --fd-progress-track-background: color-mix(in srgb, var(--fd-color-slate-400) 26%, transparent);
     }
 
@@ -496,7 +496,7 @@
         justify-content: center;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-xxs);
-        border-radius: 12px;
+        border-radius: var(--fd-radius-lg);
         text-decoration: none;
         transition:
             background 0.2s ease,
@@ -504,7 +504,7 @@
             transform 0.2s ease;
 
         fd-ui-icon {
-            font-size: 22px;
+            font-size: var(--fd-text-card-title-size);
             color: var(--fd-color-primary-600);
         }
 
@@ -540,7 +540,7 @@
         right: calc(50% - 16px);
         width: 10px;
         height: 10px;
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: var(--fd-color-danger);
         border: 2px solid var(--fd-color-white);
         box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 85%, transparent);
@@ -561,9 +561,9 @@
 
     &__sheet {
         position: fixed;
-        left: 12px;
-        right: 12px;
-        bottom: 126px;
+        left: var(--fd-space-sm);
+        right: var(--fd-space-sm);
+        bottom: var(--fd-layout-shell-mobile-sheet-bottom);
         background: var(--fd-color-surface);
         border-radius: var(--fd-radius-dialog);
         padding: var(--fd-space-xs);
@@ -597,7 +597,7 @@
         .sidebar-mobile__theme-control {
             display: grid;
             gap: var(--fd-space-xs);
-            padding: var(--fd-space-xs) 2px var(--fd-space-xxs);
+            padding: var(--fd-space-xs) calc(var(--fd-space-xxs) / 2) var(--fd-space-xxs);
         }
 
         .sidebar-mobile__theme-label {

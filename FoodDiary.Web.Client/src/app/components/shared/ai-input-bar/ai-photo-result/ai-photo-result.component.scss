@@ -2,7 +2,7 @@
 
 .ai-photo-result {
     border: 1px solid color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
-    border-radius: 14px;
+    border-radius: var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-color-white));
     padding: var(--fd-space-stat-tile-padding);
     display: flex;
@@ -28,7 +28,7 @@
     --fd-button-height: 28px;
     --fd-button-height-explicit: 28px;
     --fd-button-padding-x: 0;
-    --fd-button-border-radius: 6px;
+    --fd-button-border-radius: var(--fd-radius-sm);
     --fd-button-background-default: transparent;
     --fd-button-background-hover: color-mix(in srgb, var(--fd-color-danger) 16%, var(--fd-color-white));
     --fd-button-background-active: color-mix(in srgb, var(--fd-color-danger) 20%, var(--fd-color-white));
@@ -43,12 +43,12 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 18px;
+    --fd-button-icon-size: var(--fd-text-section-title-size);
 }
 
 .ai-photo-result__preview-wrap {
     position: relative;
-    border-radius: 12px;
+    border-radius: var(--fd-radius-lg);
     overflow: hidden;
     max-height: 200px;
     background: var(--fd-color-slate-100);
@@ -61,7 +61,7 @@
     object-fit: contain;
     object-position: center;
     display: block;
-    border-radius: 12px;
+    border-radius: var(--fd-radius-lg);
 }
 
 .ai-photo-result__text-preview {
@@ -109,7 +109,7 @@
 .ai-photo-result__scan-overlay {
     position: absolute;
     inset: 0;
-    border-radius: 12px;
+    border-radius: var(--fd-radius-lg);
     overflow: hidden;
     pointer-events: none;
     background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent), color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent));
@@ -124,7 +124,7 @@
     left: 12px;
     right: 12px;
     height: 5px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: linear-gradient(
         90deg,
         color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
@@ -207,7 +207,7 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 18px;
+    --fd-button-icon-size: var(--fd-text-section-title-size);
 }
 
 .ai-photo-result__table {
@@ -221,7 +221,7 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--fd-space-xs) 10px;
-    border-radius: 8px;
+    border-radius: var(--fd-radius-md);
     background: var(--fd-color-white);
     border: 1px solid var(--fd-color-slate-200);
 }
@@ -247,7 +247,7 @@
     gap: var(--fd-space-xs);
     align-items: center;
     padding: var(--fd-space-xxs) var(--fd-space-xs);
-    border-radius: 10px;
+    border-radius: var(--fd-radius-button);
     border: 1px solid var(--fd-color-slate-200);
     background: var(--fd-color-white);
 }
@@ -260,16 +260,16 @@
     justify-content: center;
 
     fd-ui-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
+        font-size: var(--fd-text-section-title-size);
+        width: var(--fd-text-section-title-size);
+        height: var(--fd-text-section-title-size);
     }
 }
 
 .ai-photo-result__edit-input,
 .ai-photo-result__edit-select {
     height: 34px;
-    border-radius: 8px;
+    border-radius: var(--fd-radius-md);
     border: 1px solid var(--fd-color-slate-200);
     padding: 0 10px;
     font: inherit;
@@ -300,7 +300,7 @@
     --fd-button-shadow-active: none;
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 18px;
+    --fd-button-icon-size: var(--fd-text-section-title-size);
 }
 
 .ai-photo-result__edit-add {
@@ -308,7 +308,7 @@
     --fd-button-min-width: 100%;
     --fd-button-height: 36px;
     --fd-button-height-explicit: 36px;
-    --fd-button-border-radius: 999px;
+    --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-padding-x: 16px;
     --fd-button-font-size: var(--fd-text-caption-size);
     --fd-button-font-weight: var(--fd-text-action-weight);
@@ -331,7 +331,7 @@
 .ai-photo-result__nutrition {
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border: 1px solid var(--fd-color-slate-200);
-    border-radius: 10px;
+    border-radius: var(--fd-radius-button);
     background: var(--fd-color-white);
 }
 
@@ -344,7 +344,7 @@
 .ai-photo-result__nutrition-item {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: calc(var(--fd-space-xxs) / 2);
 }
 
 .ai-photo-result__nutrition-label {
@@ -440,7 +440,7 @@
 .ai-photo-result__detail-textarea {
     width: 100%;
     border: 1px solid var(--fd-color-slate-200);
-    border-radius: 12px;
+    border-radius: var(--fd-radius-lg);
     background: var(--fd-color-white);
     color: var(--fd-color-slate-900);
     font: inherit;
@@ -477,7 +477,7 @@
 .ai-photo-result__satiety-card {
     --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
     border: 1px solid var(--fd-color-slate-200);
-    border-radius: 14px;
+    border-radius: var(--fd-radius-card);
     padding: var(--fd-space-sm);
     display: flex;
     align-items: center;
@@ -515,7 +515,7 @@
 .ai-photo-result__satiety-indicator {
     width: 40px;
     height: 40px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     background: color-mix(in srgb, var(--fd-color-white) 86%, transparent);
     display: flex;
     align-items: center;
@@ -529,7 +529,7 @@
 .ai-photo-result__satiety-text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: calc(var(--fd-space-xxs) / 2);
     flex: 1;
     position: relative;
     z-index: 1;

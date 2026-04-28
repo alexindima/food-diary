@@ -63,8 +63,8 @@
     --fd-button-height: 24px;
     --fd-button-height-explicit: 24px;
     --fd-button-padding-x: 0;
-    --fd-button-icon-size: 18px;
-    --fd-button-border-radius: 999px;
+    --fd-button-icon-size: var(--fd-text-section-title-size);
+    --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-transform-hover: scale(1.05);
     --fd-button-transform-active: scale(1);
     --fd-button-disabled-opacity: 0.7;
@@ -94,9 +94,9 @@
 }
 
 .entity-card__visibility-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+    font-size: var(--fd-text-body-size);
+    width: var(--fd-text-body-size);
+    height: var(--fd-text-body-size);
     line-height: 1;
     color: var(--fd-color-text-muted);
     flex-shrink: 0;
@@ -145,7 +145,7 @@
 .entity-card__quality-bar {
     position: relative;
     height: 6px;
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
     overflow: hidden;
     background: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
 }
@@ -220,7 +220,7 @@
         width: 2px;
         height: calc(100% - 2px);
         transform: translateY(-50%);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent),
@@ -299,9 +299,9 @@
     }
 
     .entity-card__visibility-icon {
-        font-size: 14px;
-        width: 14px;
-        height: 14px;
+        font-size: var(--fd-text-helper-size);
+        width: var(--fd-text-helper-size);
+        height: var(--fd-text-helper-size);
     }
 
     .entity-card__title-muted,
