@@ -61,7 +61,7 @@
     justify-content: center;
     min-height: 2.25rem;
     padding: 0;
-    border: 1px solid transparent;
+    border: var(--fd-border-width) solid transparent;
     border-radius: var(--fd-radius-button);
     background: transparent;
     color: var(--fd-color-text);

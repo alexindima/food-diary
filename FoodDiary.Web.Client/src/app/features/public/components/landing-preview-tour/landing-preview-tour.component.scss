@@ -13,7 +13,7 @@
     padding: $padding;
     border-radius: var(--fd-landing-radius-card);
     background: var(--fd-landing-surface-strong);
-    border: 1px solid var(--fd-landing-border-soft);
+    border: var(--fd-border-width) solid var(--fd-landing-border-soft);
     box-shadow: var(--fd-landing-shadow-soft);
 }
 
@@ -23,7 +23,7 @@
     padding: $padding;
     border-radius: var(--fd-landing-radius-card);
     background: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
-    border: 1px solid var(--fd-landing-dark-border);
+    border: var(--fd-border-width) solid var(--fd-landing-dark-border);
 }
 
 .landing-section {
@@ -111,8 +111,8 @@
         padding: var(--fd-landing-surface-padding);
         border-radius: var(--fd-landing-radius-panel);
         background: color-mix(in srgb, var(--fd-color-white) 62%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
-        box-shadow: 0 22px 52px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
+        box-shadow: var(--fd-landing-shadow-medium);
         animation: landingFadeUp 760ms ease-out both;
     }
 
@@ -192,7 +192,7 @@
     padding: var(--fd-landing-surface-padding-lg);
     border-radius: var(--fd-landing-radius-panel);
     background: var(--fd-landing-surface);
-    border: 1px solid var(--fd-landing-border-soft);
+    border: var(--fd-border-width) solid var(--fd-landing-border-soft);
     box-shadow: var(--fd-landing-shadow-medium);
     animation: landingFadeUp 720ms ease-out both;
 }

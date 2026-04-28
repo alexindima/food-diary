@@ -182,8 +182,8 @@
         background: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
         border-radius: var(--fd-landing-radius-card);
         padding: clamp(var(--fd-space-md), 2.5vw, var(--fd-space-lg));
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
-        box-shadow: 0 18px 40px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
+        box-shadow: var(--fd-landing-shadow-medium);
         display: flex;
         justify-content: space-between;
         gap: var(--fd-space-sm);
@@ -221,10 +221,10 @@
 
     &__group {
         background: var(--fd-color-white);
-        border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
-        box-shadow: 0 12px 30px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        box-shadow: var(--fd-landing-shadow-soft);
         display: grid;
         gap: var(--fd-space-sm);
     }
@@ -246,10 +246,10 @@
     &__drawer {
         position: relative;
         background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 15%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 15%, transparent);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
-        box-shadow: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+        box-shadow: var(--fd-landing-shadow-medium);
         display: grid;
         gap: var(--fd-space-sm);
         align-content: start;
@@ -270,8 +270,8 @@
         background: var(--fd-color-white);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
-        border: 1px solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
-        box-shadow: 0 10px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
+        box-shadow: var(--fd-landing-shadow-soft);
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-xs);
@@ -305,9 +305,9 @@
 
     &__item {
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
         border-radius: var(--fd-landing-radius-panel);
-        box-shadow: 0 14px 32px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        box-shadow: var(--fd-landing-shadow-soft);
         padding: 0;
         overflow: hidden;
     }
@@ -376,8 +376,8 @@
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
         background: color-mix(in srgb, var(--fd-color-white) 96%, transparent);
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
-        box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-slate-900) 7%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        box-shadow: var(--fd-landing-shadow-soft);
         color: var(--fd-color-primary-700);
         font-weight: 800;
         text-decoration: none;

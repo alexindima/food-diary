@@ -9,7 +9,7 @@
         background: var(--fd-color-white);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-xxl);
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+        box-shadow: var(--fd-shadow-xs);
     }
 
     &__title {

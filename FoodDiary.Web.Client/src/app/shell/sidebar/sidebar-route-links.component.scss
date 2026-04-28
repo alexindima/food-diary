@@ -51,7 +51,7 @@
 .sidebar__link.is-pending:not(.is-active) {
     background: color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
     color: var(--fd-color-text-strong);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
+    box-shadow: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent);
 }
 
 .sidebar__link.is-active fd-ui-icon {

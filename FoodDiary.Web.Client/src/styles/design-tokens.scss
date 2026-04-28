@@ -92,6 +92,7 @@ $fd-border-tokens: (
     none: 0,
     width: 1px,
     width-strong: 2px,
+    width-emphasis: 3px,
     default: 1px solid var(--fd-color-border),
     strong: 1px solid var(--fd-color-border-strong),
     subtle: 1px solid color-mix(in srgb, var(--fd-color-border) 62%, transparent),
@@ -925,6 +926,7 @@ $fd-theme-design-tokens: (
         --fd-border-none: #{fd-token(border, none)};
         --fd-border-width: #{fd-token(border, width)};
         --fd-border-width-strong: #{fd-token(border, width-strong)};
+        --fd-border-width-emphasis: #{fd-token(border, width-emphasis)};
         --fd-border-default: #{fd-token(border, default)};
         --fd-border-strong: #{fd-token(border, strong)};
         --fd-border-subtle: #{fd-token(border, subtle)};

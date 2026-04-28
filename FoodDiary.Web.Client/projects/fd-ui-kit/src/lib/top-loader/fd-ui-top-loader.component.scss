@@ -26,7 +26,7 @@
         var(--fd-color-primary-500) 45%,
         var(--fd-color-primary-300) 100%
     );
-    box-shadow: 0 0 16px color-mix(in srgb, var(--fd-color-primary-500) 28%, transparent);
+    box-shadow: var(--fd-shadow-accent-glow);
     animation: fd-ui-top-loader-slide 1.05s ease-in-out infinite;
     transform-origin: left center;
     will-change: transform;

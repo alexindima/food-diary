@@ -94,7 +94,7 @@
     color: #ffffff;
     font-size: var(--fd-text-body-sm-size);
     font-weight: 600;
-    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.12);
+    box-shadow: var(--fd-shadow-xs);
 }
 
 .fd-impersonation-banner__reason {
@@ -106,7 +106,7 @@
 }
 
 .fd-impersonation-banner__button {
-    border: 1px solid rgba(255, 255, 255, 0.72);
+    border: var(--fd-border-width) solid rgba(255, 255, 255, 0.72);
     border-radius: var(--fd-radius-sm);
     padding: var(--fd-space-status-badge-padding);
     background: rgba(255, 255, 255, 0.12);

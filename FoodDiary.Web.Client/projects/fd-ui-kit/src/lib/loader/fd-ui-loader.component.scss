@@ -11,7 +11,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 3px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+    border: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     border-top-color: var(--fd-color-primary-600);
     animation: fd-ui-loader-spin 0.75s linear infinite;
 }

@@ -83,8 +83,8 @@
         height: 10px;
         border-radius: var(--fd-radius-pill);
         background: var(--fd-color-danger);
-        border: 2px solid var(--fd-color-surface);
-        box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 80%, transparent);
+        border: var(--fd-border-width-strong) solid var(--fd-color-surface);
+        box-shadow: 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-white) 80%, transparent);
     }
 
     &__nav {
@@ -355,7 +355,7 @@
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
-        border: 1px solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         background: var(--fd-color-surface);
         color: var(--fd-color-text-strong);
         font-weight: 700;
@@ -438,7 +438,7 @@
     padding: var(--fd-space-xs) var(--fd-space-sm) calc(var(--fd-space-xs) + env(safe-area-inset-bottom));
     background: var(--fd-color-surface);
     border-top: var(--fd-border-default);
-    box-shadow: 0 -12px 30px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+    box-shadow: var(--fd-shadow-xl);
     z-index: 1200;
 
     &__progress {
@@ -542,8 +542,8 @@
         height: 10px;
         border-radius: var(--fd-radius-pill);
         background: var(--fd-color-danger);
-        border: 2px solid var(--fd-color-white);
-        box-shadow: 0 0 0 2px color-mix(in srgb, var(--fd-color-white) 85%, transparent);
+        border: var(--fd-border-width-strong) solid var(--fd-color-white);
+        box-shadow: 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-white) 85%, transparent);
     }
 
     &__label {

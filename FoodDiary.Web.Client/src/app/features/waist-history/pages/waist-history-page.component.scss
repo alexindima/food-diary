@@ -216,9 +216,9 @@
         width: 14px;
         height: 14px;
         border-radius: var(--fd-radius-pill);
-        border: 2px solid var(--fd-color-slate-900);
+        border: var(--fd-border-width-strong) solid var(--fd-color-slate-900);
         background-color: var(--fd-color-white);
-        box-shadow: 0 3px 8px color-mix(in srgb, var(--fd-color-slate-900) 25%, transparent);
+        box-shadow: var(--fd-shadow-sm);
         transform: translateY(-50%);
     }
 

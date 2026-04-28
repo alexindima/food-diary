@@ -52,7 +52,7 @@
         background: linear-gradient(180deg, var(--fd-color-white) 0%, color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-white)) 100%);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-landing-surface-padding);
-        border: 1px solid var(--fd-landing-border-soft);
+        border: var(--fd-border-width) solid var(--fd-landing-border-soft);
         box-shadow: var(--fd-landing-shadow-soft);
         display: flex;
         flex-direction: column;
@@ -78,7 +78,7 @@
         align-items: center;
         justify-content: center;
         font-weight: 800;
-        box-shadow: 0 14px 28px rgba(37, 99, 235, 0.2);
+        box-shadow: var(--fd-shadow-accent);
     }
 
     &__title {
@@ -103,7 +103,7 @@
             color-mix(in srgb, var(--fd-color-primary-600) 94%, transparent) 55%,
             color-mix(in srgb, var(--fd-color-teal-500) 90%, transparent)
         );
-        border: 1px solid var(--fd-landing-dark-border);
+        border: var(--fd-border-width) solid var(--fd-landing-dark-border);
         box-shadow: var(--fd-landing-shadow-strong);
         animation: landingFadeUp 880ms ease-out both;
     }

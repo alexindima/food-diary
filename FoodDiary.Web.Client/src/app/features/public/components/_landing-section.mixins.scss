@@ -13,7 +13,7 @@
     padding: var(--fd-landing-surface-padding);
     border-radius: var(--fd-landing-radius-panel);
     background: var(--fd-landing-surface);
-    border: 1px solid var(--fd-landing-border-soft);
+    border: var(--fd-border-width) solid var(--fd-landing-border-soft);
     box-shadow: var(--fd-landing-shadow-medium);
     animation: landingFadeUp 700ms ease-out both;
 }

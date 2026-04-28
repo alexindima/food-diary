@@ -115,7 +115,7 @@
 }
 
 .fd-ui-select--has-error .fd-ui-select__control-wrap:focus-within {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-danger) 14%, transparent);
+    box-shadow: 0 0 0 var(--fd-border-width-emphasis) color-mix(in srgb, var(--fd-color-danger) 14%, transparent);
 }
 
 .fd-ui-select--floating .fd-ui-select__label {

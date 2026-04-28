@@ -35,7 +35,7 @@
     height: var(--fd-tabs-height);
     padding-inline: var(--fd-tabs-item-padding-inline);
     border: none;
-    border-bottom: 3px solid transparent;
+    border-bottom: var(--fd-border-width-emphasis) solid transparent;
     background: transparent;
     color: var(--fd-tabs-color);
     cursor: pointer;
