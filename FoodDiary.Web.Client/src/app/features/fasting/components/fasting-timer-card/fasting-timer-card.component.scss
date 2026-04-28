@@ -1,11 +1,10 @@
 @use 'variables' as variables;
 
 .fasting-timer-card {
-    --fd-radius-lg: 22px;
     height: 100%;
 
     > .fd-ui-card {
-        border-radius: 22px;
+        border-radius: var(--fd-radius-panel);
         overflow: hidden;
         box-shadow: var(--fd-shadow-sm);
         transform: none;
@@ -39,7 +38,7 @@
         position: relative;
         width: 220px;
         height: 220px;
-        border-radius: 50%;
+        border-radius: var(--fd-radius-pill);
         transition:
             box-shadow 0.35s ease,
             transform 0.35s ease;
@@ -79,7 +78,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 3px;
+        gap: calc(var(--fd-space-xxs) / 2);
         text-align: center;
         padding: 0 var(--fd-space-card-padding-x);
 

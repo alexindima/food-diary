@@ -90,7 +90,7 @@
 
     &__protocol-btn {
         padding: var(--fd-space-xs) var(--fd-space-md);
-        border-radius: 999px;
+        border-radius: var(--fd-radius-pill);
         border: 1px solid var(--fd-color-slate-200);
         background: var(--fd-color-white);
         color: var(--fd-color-slate-700);
@@ -171,7 +171,7 @@
     }
 
     &__protocol-action {
-        --fd-button-border-radius: 999px;
+        --fd-button-border-radius: var(--fd-radius-pill);
         --fd-button-shadow-default: none;
         --fd-button-shadow-hover: none;
         --fd-button-shadow-active: none;
@@ -217,7 +217,7 @@
         min-width: 0;
         padding: var(--fd-space-surface-padding);
         border: 1px solid var(--fd-color-slate-200);
-        border-radius: 18px;
+        border-radius: var(--fd-radius-panel);
         background: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-primary-50) 14%, var(--fd-color-white)) 0%,
@@ -349,9 +349,9 @@
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-xxs);
-        padding: var(--fd-space-sm) 14px;
+        padding: var(--fd-space-sm) var(--fd-space-md);
         border: 1px solid var(--fd-color-slate-200);
-        border-radius: 16px;
+        border-radius: var(--fd-radius-card);
         background: var(--fd-color-slate-50);
     }
 
@@ -389,8 +389,8 @@
         width: 100%;
         min-height: 108px;
         border: 1px solid color-mix(in srgb, var(--fd-color-slate-300) 60%, var(--fd-color-white));
-        border-radius: 14px;
-        padding: var(--fd-space-sm) 14px;
+        border-radius: var(--fd-radius-card);
+        padding: var(--fd-space-sm) var(--fd-space-md);
         font: inherit;
         color: var(--fd-color-slate-900);
         resize: vertical;
@@ -430,7 +430,7 @@
         margin-bottom: var(--fd-space-xxs);
 
         &--compact {
-            margin-bottom: 2px;
+            margin-bottom: calc(var(--fd-space-xxs) / 2);
         }
     }
 
@@ -470,7 +470,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-xxs);
-        padding: 2px 2px 0;
+        padding: calc(var(--fd-space-xxs) / 2) calc(var(--fd-space-xxs) / 2) 0;
     }
 
     &__personal-summary-text {
@@ -548,7 +548,7 @@
 
     &__insight {
         padding: var(--fd-space-sm);
-        border-radius: 12px;
+        border-radius: var(--fd-radius-lg);
         border: 1px solid var(--fd-color-slate-200);
         background: var(--fd-color-white);
         box-shadow: 0 4px 12px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
@@ -728,7 +728,7 @@
             top: 8px;
             bottom: 0;
             width: 2px;
-            border-radius: 999px;
+            border-radius: var(--fd-radius-pill);
             background: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
         }
     }
