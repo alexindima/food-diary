@@ -1,15 +1,6 @@
 <a class="fd-skip-nav" href="#main-content">Skip to main content</a>
 <fd-ui-top-loader [visible]="isTopLoaderVisible()" />
 <div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()" [class.fd-root--impersonating]="isImpersonating()">
-    @if (isImpersonating()) {
-        <div class="fd-impersonation-banner" role="status" aria-live="polite">
-            <span>Impersonation mode</span>
-            @if (impersonationReason()) {
-                <span class="fd-impersonation-banner__reason">{{ impersonationReason() }}</span>
-            }
-            <button type="button" class="fd-impersonation-banner__button" (click)="stopImpersonation()">Exit</button>
-        </div>
-    }
     @if (isAuthenticated()) {
         @defer (when isAuthenticated()) {
             <fd-sidebar class="fd-root__sidebar" />
@@ -19,6 +10,15 @@
         }
     }
     <div class="fd-root__main" id="main-content" tabindex="-1">
+        @if (isImpersonating()) {
+            <div class="fd-impersonation-banner" role="status" aria-live="polite">
+                <span>Impersonation mode</span>
+                @if (impersonationReason()) {
+                    <span class="fd-impersonation-banner__reason">{{ impersonationReason() }}</span>
+                }
+                <button type="button" class="fd-impersonation-banner__button" (click)="stopImpersonation()">Exit</button>
+            </div>
+        }
         <div class="fd-root__viewport">
             <router-outlet class="fd-root__content" />
         </div>
