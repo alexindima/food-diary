@@ -1,5 +1,5 @@
 /* Food Diary color tokens */
-$fd-color-primary-50: var(--fd-color-primary-50, #eef2ff);
+$fd-color-primary-50: var(--fd-color-primary-50);
 $fd-color-primary-100: #e0eaff;
 $fd-color-primary-200: #c2d4ff;
 $fd-color-primary-300: #9bb8ff;
@@ -82,7 +82,7 @@ $fd-color-chart-fiber: #9b51e0;
 
 $fd-color-dialog-surface: #ffffff;
 $fd-color-dialog-surface-muted: #f8faff;
-$fd-color-dialog-border: color-mix(in srgb, var(--fd-color-gray-900-static, #111827) 8%, transparent);
+$fd-color-dialog-border: color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent);
 $fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
 
 /* Button tokens derived from the palette */
@@ -312,9 +312,9 @@ html[data-theme='dark'] {
     --fd-color-danger-800: #{$fd-color-danger-800};
     --fd-color-danger-900: #{$fd-color-danger-900};
 
-    --fd-color-bg-page: var(--fd-color-background, #f5f7fb);
-    --fd-color-bg-card: var(--fd-color-surface, #ffffff);
-    --fd-color-bg-muted: var(--fd-color-surface-muted, #f8fafc);
+    --fd-color-bg-page: var(--fd-color-background);
+    --fd-color-bg-card: var(--fd-color-surface);
+    --fd-color-bg-muted: var(--fd-color-surface-muted);
 
     --fd-color-chart-calories: var(--fd-color-orange-500);
     --fd-color-chart-proteins: var(--fd-color-blue-500);
@@ -344,9 +344,9 @@ html[data-theme='dark'] {
     --fd-color-nutrition-warning-border: color-mix(in srgb, var(--fd-color-amber-500) 30%, transparent);
     --fd-color-nutrition-warning-bg: color-mix(in srgb, var(--fd-color-amber-500) 10%, var(--fd-color-white));
     --fd-color-nutrition-warning-text: var(--fd-color-orange-700);
-    --fd-color-dialog-surface: var(--fd-color-surface, #ffffff);
-    --fd-color-dialog-surface-muted: var(--fd-color-surface-muted, #f8fafc);
-    --fd-color-dialog-border: var(--fd-color-border, color-mix(in srgb, var(--fd-color-gray-900-static, #111827) 8%, transparent));
+    --fd-color-dialog-surface: var(--fd-color-surface);
+    --fd-color-dialog-surface-muted: var(--fd-color-surface-muted);
+    --fd-color-dialog-border: var(--fd-color-border);
     --fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
 
     --fd-color-warn-strong: var(--fd-color-orange-500);

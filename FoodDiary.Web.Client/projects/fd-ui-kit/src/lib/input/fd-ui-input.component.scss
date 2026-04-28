@@ -16,14 +16,14 @@
 .fd-ui-input {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-control-gap, 6px);
+    gap: var(--fd-space-control-gap);
 }
 
 .fd-ui-input__label {
     color: var(--fd-color-text-muted);
-    font-size: var(--fd-text-label-size, 1rem);
-    font-weight: var(--fd-text-label-weight, 600);
-    line-height: var(--fd-text-label-line-height, 1.2);
+    font-size: var(--fd-text-label-size);
+    font-weight: var(--fd-text-label-weight);
+    line-height: var(--fd-text-label-line-height);
     display: inline-flex;
     align-items: center;
     max-width: calc(100% - 28px);
@@ -39,8 +39,8 @@
         top 0.15s ease,
         font-size 0.15s ease;
     background: var(--fd-color-surface-raised);
-    padding: 0 var(--fd-space-field-label-padding-x, 4px);
-    border-radius: var(--fd-radius-field-label, 999px);
+    padding: 0 var(--fd-space-field-label-padding-x);
+    border-radius: var(--fd-radius-field-label);
     pointer-events: none;
 }
 
@@ -53,11 +53,11 @@
     --fd-input-control-background: var(--fd-color-surface-raised);
     min-height: 40px;
     border: 1px solid var(--fd-color-border);
-    border-radius: var(--fd-radius-input, 14px);
+    border-radius: var(--fd-radius-input);
     background: var(--fd-input-control-background);
     display: flex;
     align-items: center;
-    padding: 0 44px 0 var(--fd-space-control-padding-x, 12px);
+    padding: 0 44px 0 var(--fd-space-control-padding-x);
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -105,7 +105,7 @@
     color: var(--fd-color-text);
     font: inherit;
     font-size: var(--fd-text-body-size);
-    line-height: var(--fd-text-body-line-height, 1.45);
+    line-height: var(--fd-text-body-line-height);
     margin-top: 0;
 }
 
@@ -120,7 +120,7 @@
     font-family: inherit;
     font-size: var(--fd-text-body-size);
     font-weight: inherit;
-    line-height: var(--fd-text-body-line-height, 1.45);
+    line-height: var(--fd-text-body-line-height);
     border-radius: inherit;
     -webkit-box-shadow: 0 0 0 1000px var(--fd-input-control-background) inset;
     box-shadow: 0 0 0 1000px var(--fd-input-control-background) inset;
@@ -177,29 +177,29 @@
 .fd-ui-input--floating .fd-ui-input__label {
     top: 0;
     transform: translateY(-50%);
-    font-size: var(--fd-text-label-floating-size, 0.8rem);
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-input--floating .fd-ui-input__control-wrap {
-    padding-top: var(--fd-space-control-floating-padding-top, 8px);
-    padding-bottom: var(--fd-space-control-floating-padding-bottom, 2px);
+    padding-top: var(--fd-space-control-floating-padding-top);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom);
 }
 
 .fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) .fd-ui-input__label {
     top: 0;
     transform: translateY(-50%);
-    font-size: var(--fd-text-label-floating-size, 0.8rem);
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) {
-    padding-top: var(--fd-space-control-floating-padding-top, 8px);
-    padding-bottom: var(--fd-space-control-floating-padding-bottom, 2px);
+    padding-top: var(--fd-space-control-floating-padding-top);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom);
 }
 
 .fd-ui-input__error {
     color: var(--fd-color-danger);
-    font-size: var(--fd-text-helper-size, 0.75rem);
-    line-height: var(--fd-text-helper-line-height, 1.2);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
     margin-top: 2px;
     max-width: 100%;
     white-space: normal;
@@ -211,7 +211,7 @@
     background: var(--fd-color-white);
     top: 0;
     transform: translateY(-50%);
-    font-size: var(--fd-text-label-floating-size, 0.8rem);
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap {
@@ -219,7 +219,7 @@
     --fd-input-control-color: var(--fd-input-auth-text-color, var(--fd-color-slate-900));
     --fd-input-control-muted-color: var(--fd-input-auth-muted-color, var(--fd-color-slate-500));
     border-color: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
-    border-radius: var(--fd-radius-input, var(--fd-radius-lg));
+    border-radius: var(--fd-radius-input);
     background: var(--fd-color-white);
     padding-left: 16px;
     padding-right: 16px;
@@ -249,8 +249,8 @@
     color: var(--fd-input-control-color);
     font-family: inherit !important;
     font-size: var(--fd-text-body-size) !important;
-    font-weight: var(--fd-font-weight-regular, 400) !important;
-    line-height: var(--fd-text-body-line-height, 1.45) !important;
+    font-weight: var(--fd-font-weight-regular) !important;
+    line-height: var(--fd-text-body-line-height) !important;
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control:-webkit-autofill,
@@ -261,8 +261,8 @@
     caret-color: var(--fd-input-control-color);
     font-family: inherit !important;
     font-size: var(--fd-text-body-size) !important;
-    font-weight: var(--fd-font-weight-regular, 400) !important;
-    line-height: var(--fd-text-body-line-height, 1.45) !important;
+    font-weight: var(--fd-font-weight-regular) !important;
+    line-height: var(--fd-text-body-line-height) !important;
 }
 
 .fd-ui-input--appearance-auth .fd-ui-input__control::placeholder,
@@ -276,7 +276,7 @@
 }
 
 .fd-ui-input--appearance-search .fd-ui-input__control-wrap {
-    border-radius: var(--fd-radius-pill, 999px);
+    border-radius: var(--fd-radius-pill);
 }
 
 .fd-ui-input--appearance-inline-edit .fd-ui-input__control-wrap {

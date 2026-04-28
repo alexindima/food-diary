@@ -10,10 +10,10 @@
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: var(--fd-space-switch-gap, 8px);
+    gap: var(--fd-space-switch-gap);
     padding: 0;
     flex-shrink: 0;
-    color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    color: var(--fd-color-text);
 
     &--disabled {
         cursor: default;
@@ -23,10 +23,10 @@
     &__track {
         width: 44px;
         height: 26px;
-        border-radius: var(--fd-radius-switch, 999px);
+        border-radius: var(--fd-radius-switch);
         background: color-mix(in srgb, var(--fd-color-surface-raised) 84%, var(--fd-color-border-strong));
         border: 1px solid var(--fd-color-border);
-        padding: var(--fd-space-switch-track-padding, 3px);
+        padding: var(--fd-space-switch-track-padding);
         display: inline-flex;
         align-items: center;
         transition:
@@ -38,7 +38,7 @@
     &__thumb {
         width: 20px;
         height: 20px;
-        border-radius: var(--fd-radius-switch, 999px);
+        border-radius: var(--fd-radius-switch);
         background: var(--fd-color-surface);
         box-shadow: 0 4px 10px color-mix(in srgb, var(--fd-color-black) 20%, transparent);
         transition: transform 0.2s ease;

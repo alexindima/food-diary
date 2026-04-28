@@ -20,8 +20,8 @@
 .nutrient-badges__chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
+    gap: var(--fd-space-pill-gap);
+    padding: var(--fd-space-chip-select-item-padding);
     border-radius: 0;
     background: transparent;
     color: var(--chip-color, var(--fd-color-text));
@@ -74,7 +74,7 @@
 
     .nutrient-badges {
         gap: 0;
-        padding: 6px 8px;
+        padding: var(--fd-space-status-badge-padding);
         border-radius: var(--fd-radius-nutrient-bar-compact, var(--fd-radius-nutrient-bar, 16px));
         background: var(--fd-color-surface);
         display: inline-grid;
@@ -87,8 +87,8 @@
     .nutrient-badges__chip {
         flex-direction: column;
         justify-content: center;
-        gap: 4px;
-        padding: 6px 8px;
+        gap: var(--fd-space-pill-compact-gap);
+        padding: var(--fd-space-status-badge-padding);
         border-right: 1px solid color-mix(in srgb, var(--fd-color-border) 72%, transparent);
         min-width: 0;
     }

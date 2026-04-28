@@ -1,4 +1,4 @@
-@use 'variables';
+@use 'variables' as variables;
 
 .daily-progress-card {
     height: 100%;
@@ -6,14 +6,14 @@
     &__content {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--fd-space-card-content-gap);
     }
 
     &__headline {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 16px;
+        gap: var(--fd-space-card-header-gap);
         flex-wrap: wrap;
     }
 
@@ -30,7 +30,7 @@
     }
 
     &__badge {
-        padding: 6px 10px;
+        padding: var(--fd-space-status-badge-padding);
         border-radius: 999px;
         background: color-mix(in srgb, var(--fd-color-primary-600) 10%, transparent);
         color: var(--fd-color-primary-700);
@@ -39,7 +39,7 @@
 
     &__hint {
         margin: 0;
-        padding: 12px 14px;
+        padding: var(--fd-space-inline-alert-notice-padding);
         border-radius: 12px;
         background: linear-gradient(135deg, var(--fd-color-slate-50), var(--fd-color-primary-50));
         color: var(--fd-text-secondary, var(--fd-color-slate-500));
@@ -49,7 +49,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--fd-space-card-content-gap);
         padding: 8px 0;
         width: 100%;
         flex-wrap: nowrap;
@@ -69,7 +69,7 @@
     &__empty-text {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--fd-space-card-header-gap);
         min-width: 0;
     }
 
@@ -83,19 +83,19 @@
 
     &__actions {
         display: flex;
-        gap: 12px;
+        gap: var(--fd-space-actions-gap);
         flex-wrap: wrap;
         align-items: center;
     }
 
     &__placeholder {
         margin-top: 8px;
-        padding: 12px;
+        padding: var(--fd-space-surface-padding);
         border-radius: 12px;
         background: var(--fd-color-slate-50);
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__motivation {
@@ -117,7 +117,7 @@
     &__meta {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
+        gap: var(--fd-space-card-content-gap);
     }
 
     &__meta-label {
@@ -131,7 +131,7 @@
         &__empty {
             flex-wrap: wrap;
             justify-content: flex-start;
-            row-gap: 8px;
+            row-gap: var(--fd-space-card-header-gap);
         }
     }
 }

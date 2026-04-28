@@ -1,5 +1,5 @@
 .fd-ui-progress-item {
-    --fd-progress-item-padding: var(--fd-space-progress-item-padding, 8px);
+    --fd-progress-item-padding: var(--fd-space-progress-item-padding);
     --fd-progress-item-radius: 8px;
     --fd-progress-item-background: var(--fd-surface-variant, color-mix(in srgb, var(--fd-color-slate-900) 2%, transparent));
     display: block;
@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: var(--fd-space-progress-item-header-gap, 8px);
+    gap: var(--fd-space-progress-item-header-gap);
     margin-bottom: 6px;
 }
 

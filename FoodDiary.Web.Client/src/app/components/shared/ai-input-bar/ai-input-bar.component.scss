@@ -1,8 +1,8 @@
 .ai-input-bar {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
+    gap: var(--fd-space-control-gap);
+    padding: var(--fd-space-surface-padding);
     border: 1px solid var(--fd-color-border);
     border-radius: var(--fd-radius-input, 14px);
     background: var(--fd-color-surface-raised);

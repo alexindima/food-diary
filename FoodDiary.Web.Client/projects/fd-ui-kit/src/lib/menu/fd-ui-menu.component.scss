@@ -2,8 +2,8 @@
     min-width: 200px;
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-menu-gap, 2px);
-    padding: var(--fd-space-menu-padding, 6px);
+    gap: var(--fd-space-menu-gap);
+    padding: var(--fd-space-menu-padding);
     border-radius: var(--fd-radius-menu, 14px);
     background: var(--fd-color-surface-raised);
     border: 1px solid var(--fd-color-border);
@@ -17,12 +17,12 @@
 .fd-ui-menu__item {
     display: inline-flex;
     align-items: center;
-    gap: var(--fd-space-menu-item-gap, 10px);
+    gap: var(--fd-space-menu-item-gap);
     width: 100%;
-    min-height: var(--fd-space-menu-item-min-height, 38px);
-    padding: var(--fd-space-menu-item-padding, 10px 12px);
+    min-height: var(--fd-space-menu-item-min-height);
+    padding: var(--fd-space-menu-item-padding);
     border: none;
-    border-radius: var(--fd-radius-menu-item, 10px);
+    border-radius: var(--fd-radius-menu-item);
     background: transparent;
     color: var(--fd-color-text);
     font: inherit;
@@ -50,6 +50,6 @@
 
 .fd-ui-menu__divider {
     height: 1px;
-    margin: var(--fd-space-menu-divider-margin, 8px 0);
+    margin: var(--fd-space-menu-divider-margin);
     background-color: var(--fd-color-border);
 }

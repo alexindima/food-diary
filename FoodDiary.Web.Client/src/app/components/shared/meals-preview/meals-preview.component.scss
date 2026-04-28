@@ -3,7 +3,7 @@
 .meals-preview {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-card-content-gap);
 }
 
 .meals-preview__header {
@@ -11,7 +11,7 @@
     align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--fd-space-card-header-gap);
 }
 
 .meals-preview__title {
@@ -22,19 +22,19 @@
 .meals-preview__list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--fd-space-card-content-gap);
 }
 
 .meals-preview__placeholder-stack {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--fd-space-card-header-gap);
 }
 
 .meals-preview__empty {
     border: 1px dashed color-mix(in srgb, var(--fd-color-slate-900) 20%, transparent);
     border-radius: var(--fd-radius-card);
-    padding: 24px;
+    padding: var(--fd-space-empty-state-padding);
     text-align: center;
     color: var(--fd-color-text-muted);
 }
@@ -43,8 +43,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 14px 16px;
+    gap: var(--fd-space-card-content-gap);
+    padding: var(--fd-space-surface-padding);
     border: 1px dashed color-mix(in srgb, var(--fd-color-primary-600) 30%, transparent);
     border-radius: var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-primary-600) 3%, transparent);
@@ -82,14 +82,14 @@
 .meals-preview__placeholder-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--fd-space-actions-gap);
     flex: 0 0 auto;
 }
 
 .meals-preview__placeholder-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--fd-space-card-content-gap);
     min-width: 0;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .meals-preview__ai-panel {
-    padding: 0 16px 0 16px;
+    padding: 0 var(--fd-space-card-padding-x);
 }
 
 .meals-preview__meal-card {
@@ -137,11 +137,11 @@
 @media #{variables.$media-tablet} {
 
     .meals-preview__placeholder {
-        padding: 12px 14px;
+        padding: var(--fd-space-surface-padding);
     }
 
     .meals-preview__placeholder-actions {
-        gap: 6px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     .meals-preview__ai-panel {

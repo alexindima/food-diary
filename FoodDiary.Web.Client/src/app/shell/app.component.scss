@@ -6,7 +6,7 @@
     left: 0;
     background: var(--fd-color-primary-600, #4f46e5);
     color: var(--fd-color-white);
-    padding: 8px 16px;
+    padding: var(--fd-space-surface-padding);
     z-index: 10000;
     transition: top 0.2s;
     text-decoration: none;
@@ -80,9 +80,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: var(--fd-space-inline-alert-actions-gap);
     min-height: var(--fd-impersonation-banner-height);
-    padding: 8px 16px;
+    padding: var(--fd-space-inline-alert-notice-padding);
     box-sizing: border-box;
     background: #7f1d1d;
     color: #ffffff;
@@ -102,7 +102,7 @@
 .fd-impersonation-banner__button {
     border: 1px solid rgba(255, 255, 255, 0.72);
     border-radius: 6px;
-    padding: 4px 10px;
+    padding: var(--fd-space-status-badge-padding);
     background: rgba(255, 255, 255, 0.12);
     color: #ffffff;
     font: inherit;

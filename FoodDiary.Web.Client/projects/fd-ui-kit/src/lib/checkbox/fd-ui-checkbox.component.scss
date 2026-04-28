@@ -8,16 +8,16 @@
     --fd-checkbox-control-border-color: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
     --fd-checkbox-control-checked-background: var(--fd-color-primary-600);
     --fd-checkbox-control-checked-border: var(--fd-color-primary-600);
-    --fd-checkbox-label-color: var(--fd-color-text, var(--fd-color-gray-900-static));
+    --fd-checkbox-label-color: var(--fd-color-text);
     display: inline-flex;
     flex-direction: column;
-    gap: var(--fd-space-checkbox-gap, 6px);
+    gap: var(--fd-space-checkbox-gap);
 }
 
 .fd-ui-checkbox__label {
     display: inline-flex;
     align-items: center;
-    gap: var(--fd-space-checkbox-label-gap, 10px);
+    gap: var(--fd-space-checkbox-label-gap);
     cursor: pointer;
     position: relative;
 }
@@ -63,9 +63,9 @@
     display: inline-flex;
     align-items: center;
     min-height: var(--fd-checkbox-control-size);
-    font-size: var(--fd-text-body-sm-size, 0.95rem);
-    line-height: var(--fd-text-body-sm-line-height, 1.45);
-    font-weight: var(--fd-text-body-sm-weight, 400);
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-body-sm-weight);
     color: var(--fd-checkbox-label-color);
 }
 
@@ -84,6 +84,6 @@
 }
 
 .fd-ui-checkbox__hint {
-    margin-left: var(--fd-space-checkbox-hint-margin-left, 28px);
-    color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+    margin-left: var(--fd-space-checkbox-hint-margin-left);
+    color: var(--fd-color-text-muted);
 }

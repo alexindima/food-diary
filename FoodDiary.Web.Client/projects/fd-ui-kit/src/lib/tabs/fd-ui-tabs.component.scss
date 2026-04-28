@@ -6,7 +6,7 @@
 .fd-ui-tabs {
     display: flex;
     width: 100%;
-    border-bottom: 1px solid var(--fd-tabs-border-color, var(--fd-color-border-strong, rgba(15, 23, 42, 0.1)));
+    border-bottom: 1px solid var(--fd-tabs-border-color, var(--fd-color-border-strong));
     gap: var(--fd-tabs-gap, 0);
     flex-wrap: var(--fd-tabs-flex-wrap, nowrap);
 }
@@ -19,7 +19,7 @@
     min-width: 0;
     min-height: var(--fd-tabs-height, 40px);
     height: var(--fd-tabs-height, 40px);
-    padding-inline: var(--fd-tabs-item-padding-inline, var(--fd-space-tabs-item-padding-inline, 24px));
+    padding-inline: var(--fd-tabs-item-padding-inline, var(--fd-space-tabs-item-padding-inline));
     border: none;
     border-bottom: 3px solid transparent;
     background: transparent;
@@ -39,7 +39,7 @@
 .fd-ui-tabs__tab:focus-visible {
     outline: 2px solid var(--fd-color-primary-400);
     outline-offset: -2px;
-    border-radius: var(--fd-radius-button, var(--fd-radius-md)) var(--fd-radius-button, var(--fd-radius-md)) 0 0;
+    border-radius: var(--fd-radius-button) var(--fd-radius-button) 0 0;
 }
 
 .fd-ui-tabs__tab--active {
@@ -60,9 +60,9 @@
 }
 
 .fd-ui-tabs--appearance-wrap-compact {
-    --fd-tabs-gap: var(--fd-space-tabs-wrap-gap, 6px);
+    --fd-tabs-gap: var(--fd-space-tabs-wrap-gap);
     --fd-tabs-flex-wrap: wrap;
-    --fd-tabs-item-padding-inline: var(--fd-space-tabs-wrap-item-padding-inline, 12px);
+    --fd-tabs-item-padding-inline: var(--fd-space-tabs-wrap-item-padding-inline);
     --fd-tabs-label-white-space: normal;
     --fd-tabs-label-line-height: 1.1;
 }

@@ -3,7 +3,7 @@
 @mixin apply-dashboard-shell($color-text-secondary) {
 
     &__header {
-        margin-bottom: var(--fd-page-header-gap, 16px);
+        margin-bottom: var(--fd-page-header-gap);
         position: relative;
         display: flex;
         flex-wrap: wrap;

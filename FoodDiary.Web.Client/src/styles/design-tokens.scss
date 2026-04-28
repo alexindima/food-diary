@@ -168,8 +168,8 @@ $fd-theme-design-tokens: (
             on-ai: #f6f3ff,
             primary-rgb: 37 99 235,
             danger-rgb: 239 68 68,
-            primary-50: var(--fd-color-primary-50, #eef2ff),
-            primary-100: var(--fd-color-primary-100, #dbeafe),
+            primary-50: var(--fd-color-primary-50),
+            primary-100: var(--fd-color-primary-100),
             primary-200: #bfdbfe,
             primary-300: #93c5fd,
             primary-400: #60a5fa,
@@ -186,8 +186,8 @@ $fd-theme-design-tokens: (
             brand-hover-end: #2f6df2,
             sidebar-start: color-mix(
                     in srgb,
-                    var(--fd-color-primary-50, var(--fd-color-primary-50, #eef2ff)) 35%,
-                    var(--fd-color-white, #fff)
+                    var(--fd-color-primary-50) 35%,
+                    var(--fd-color-white)
                 ),
             sidebar-end: #eef4ff,
             premium-start: #0f172a,

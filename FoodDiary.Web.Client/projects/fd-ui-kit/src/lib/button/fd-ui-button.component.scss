@@ -15,7 +15,7 @@
     appearance: none;
     background: var(--fd-button-background-default);
     border: var(--fd-button-border-width, 1px) var(--fd-button-border-style, solid) var(--fd-button-border-default);
-    border-radius: var(--fd-button-border-radius, var(--fd-radius-button, var(--fd-radius-md, 8px)));
+    border-radius: var(--fd-button-border-radius, var(--fd-radius-button));
     color: var(--fd-button-text-default);
     cursor: pointer;
     display: inline-flex;
@@ -153,13 +153,13 @@
     --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
     --fd-button-background-disabled: var(--fd-color-gray-300, #cbd5e1);
     border: none;
-    --fd-button-text-default: var(--fd-color-on-brand, var(--fd-color-white));
-    --fd-button-text-hover: var(--fd-color-on-brand, var(--fd-color-white));
-    --fd-button-text-active: var(--fd-color-on-brand, var(--fd-color-white));
-    --fd-button-text-disabled: var(--fd-color-surface-muted, var(--fd-color-slate-50));
+    --fd-button-text-default: var(--fd-color-on-brand);
+    --fd-button-text-hover: var(--fd-color-on-brand);
+    --fd-button-text-active: var(--fd-color-on-brand);
+    --fd-button-text-disabled: var(--fd-color-surface-muted);
     --fd-button-border-width: 0;
-    --fd-button-shadow-default: 0 10px 26px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.28);
-    --fd-button-shadow-hover: 0 12px 30px rgb(var(--fd-color-primary-rgb, 37 99 235) / 0.32);
+    --fd-button-shadow-default: 0 10px 26px rgb(var(--fd-color-primary-rgb) / 0.28);
+    --fd-button-shadow-hover: 0 12px 30px rgb(var(--fd-color-primary-rgb) / 0.32);
     --fd-button-shadow-active: none;
     --fd-button-shadow-disabled: none;
 }
@@ -257,7 +257,7 @@
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    border-radius: var(--fd-radius-button, var(--fd-radius-lg));
+    border-radius: var(--fd-radius-button);
 }
 
 .fd-ui-button--appearance-brand-action {
@@ -270,18 +270,18 @@
     --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-ai-start), var(--fd-gradient-ai-end));
     --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-ai-hover-start), var(--fd-gradient-ai-hover-end));
     --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-ai-start), var(--fd-gradient-ai-end));
-    --fd-button-text-default: var(--fd-color-on-ai, var(--fd-color-white));
+    --fd-button-text-default: var(--fd-color-on-ai);
     --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-ai-strong) 24%, transparent);
     --fd-button-shadow-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-ai-strong) 28%, transparent);
 }
 
 .fd-ui-button--primary.fd-ui-button--solid:has(.fd-ui-button__label:empty) {
-    --fd-button-text-default: var(--fd-color-on-brand-muted, var(--fd-color-on-brand, var(--fd-color-white)));
+    --fd-button-text-default: var(--fd-color-on-brand-muted);
     color: var(--fd-button-text-default);
 }
 
 .fd-ui-button--appearance-chip {
-    --fd-button-border-radius: var(--fd-radius-chip, var(--fd-radius-button));
+    --fd-button-border-radius: var(--fd-radius-chip);
     --fd-button-padding-x: 12px;
     --fd-button-background-default: var(--fd-color-white);
     --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);

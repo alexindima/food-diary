@@ -1,4 +1,4 @@
-@use 'variables';
+@use 'variables' as variables;
 
 .fd-notice {
     --fd-notice-message: var(--fd-color-text-muted);
@@ -8,8 +8,8 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 14px;
-    padding: 14px 16px;
+    gap: var(--fd-space-inline-alert-gap);
+    padding: var(--fd-space-inline-alert-padding);
     border-radius: var(--fd-radius-panel);
     width: 100%;
     box-sizing: border-box;
@@ -18,7 +18,7 @@
 .fd-notice__main {
     display: flex;
     align-items: flex-start;
-    gap: 14px;
+    gap: var(--fd-space-inline-alert-gap);
     flex: 1 1 auto;
     min-width: 0;
 }
@@ -37,7 +37,7 @@
 .fd-notice__text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--fd-space-inline-alert-content-gap);
     min-width: 0;
     flex: 1 1 auto;
 }

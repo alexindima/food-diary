@@ -3,7 +3,7 @@
 .nutrition-editor {
     display: flex;
     flex-direction: column;
-    gap: variables.$gap-m;
+    gap: var(--fd-space-card-content-gap);
 
     &__input {
         width: 100%;
@@ -12,7 +12,7 @@
     &__grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: variables.$gap-s;
+        gap: var(--fd-space-card-header-gap);
 
         &--secondary {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -34,13 +34,13 @@
 
     &__errors {
         margin-top: 0;
-        padding: 8px 12px;
+        padding: var(--fd-space-inline-alert-notice-padding);
         border-radius: var(--fd-radius-card);
         border: 1px solid var(--fd-color-nutrition-error-border);
         background: var(--fd-color-nutrition-error-bg);
         color: var(--fd-color-nutrition-error-text);
         display: grid;
-        gap: 4px;
+        gap: var(--fd-space-inline-alert-content-gap);
     }
 
     &__hint {
@@ -53,7 +53,7 @@
         border: 1px solid var(--fd-color-nutrition-warning-border);
         background: var(--fd-color-nutrition-warning-bg);
         color: var(--fd-color-nutrition-warning-text);
-        padding: 12px 14px;
+        padding: var(--fd-space-inline-alert-notice-padding);
     }
 }
 

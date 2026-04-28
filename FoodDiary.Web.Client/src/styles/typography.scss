@@ -18,108 +18,108 @@
 
 .fd-ui-section-title {
     margin: 0;
-    font-size: var(--fd-text-section-title-size, 1.1rem);
-    line-height: var(--fd-text-section-title-line-height, 1.3);
-    font-weight: var(--fd-text-section-title-weight, 700);
+    font-size: var(--fd-text-section-title-size);
+    line-height: var(--fd-text-section-title-line-height);
+    font-weight: var(--fd-text-section-title-weight);
     color: var(--fd-color-text);
 }
 
 .fd-ui-card-title {
     margin: 0;
-    font-size: var(--fd-text-card-title-size, 1.05rem);
-    line-height: var(--fd-text-card-title-line-height, 1.3);
-    font-weight: var(--fd-text-card-title-weight, 700);
+    font-size: var(--fd-text-card-title-size);
+    line-height: var(--fd-text-card-title-line-height);
+    font-weight: var(--fd-text-card-title-weight);
     color: var(--fd-color-text-muted);
 }
 
 .fd-ui-meta-text {
-    font-size: var(--fd-text-card-meta-size, 0.85rem);
-    line-height: var(--fd-text-card-meta-line-height, 1.2);
-    font-weight: var(--fd-text-card-meta-weight, 600);
+    font-size: var(--fd-text-card-meta-size);
+    line-height: var(--fd-text-card-meta-line-height);
+    font-weight: var(--fd-text-card-meta-weight);
     color: var(--fd-color-text-muted);
 }
 
 .fd-ui-body-sm {
-    font-size: var(--fd-text-body-sm-size, 0.95rem);
-    line-height: var(--fd-text-body-sm-line-height, 1.45);
-    font-weight: var(--fd-text-body-sm-weight, 400);
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-body-sm-weight);
 }
 
 .fd-ui-body {
-    font-size: var(--fd-text-body-size, 1rem);
-    line-height: var(--fd-text-body-line-height, 1.6);
-    font-weight: var(--fd-text-body-weight, 500);
+    font-size: var(--fd-text-body-size);
+    line-height: var(--fd-text-body-line-height);
+    font-weight: var(--fd-text-body-weight);
 }
 
 .fd-ui-caption {
-    font-size: var(--fd-text-caption-size, 0.85rem);
-    line-height: var(--fd-text-caption-line-height, 1.35);
-    font-weight: var(--fd-text-caption-weight, 500);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+    font-weight: var(--fd-text-caption-weight);
 }
 
 .fd-ui-field-label {
-    font-size: var(--fd-text-label-size, 1rem);
-    line-height: var(--fd-text-label-line-height, 1.2);
-    font-weight: var(--fd-text-label-weight, 600);
+    font-size: var(--fd-text-label-size);
+    line-height: var(--fd-text-label-line-height);
+    font-weight: var(--fd-text-label-weight);
     color: var(--fd-color-text-muted);
 }
 
 .fd-ui-field-label--floating {
-    font-size: var(--fd-text-label-floating-size, 0.8rem);
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-helper-text {
-    font-size: var(--fd-text-helper-size, 0.75rem);
-    line-height: var(--fd-text-helper-line-height, 1.2);
-    font-weight: var(--fd-text-helper-weight, 400);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-helper-weight);
     color: var(--fd-color-text-muted);
 }
 
 .fd-ui-metric-lg {
-    font-size: var(--fd-text-metric-lg-size, 2.2rem);
-    line-height: var(--fd-text-metric-lg-line-height, 1.1);
-    font-weight: var(--fd-text-metric-lg-weight, 800);
+    font-size: var(--fd-text-metric-lg-size);
+    line-height: var(--fd-text-metric-lg-line-height);
+    font-weight: var(--fd-text-metric-lg-weight);
     letter-spacing: -0.02em;
     color: var(--fd-color-text);
 }
 
 .fd-ui-metric-hero {
-    font-size: var(--fd-text-metric-hero-size, 2.6rem);
-    line-height: var(--fd-text-metric-hero-line-height, 1);
-    font-weight: var(--fd-text-metric-hero-weight, 800);
-    letter-spacing: var(--fd-text-metric-hero-tracking, -0.03em);
+    font-size: var(--fd-text-metric-hero-size);
+    line-height: var(--fd-text-metric-hero-line-height);
+    font-weight: var(--fd-text-metric-hero-weight);
+    letter-spacing: var(--fd-text-metric-hero-tracking);
     color: var(--fd-color-text);
 }
 
 .fd-ui-metric-unit {
-    font-size: var(--fd-text-metric-unit-size, 1rem);
-    line-height: var(--fd-text-metric-unit-line-height, 1.2);
-    font-weight: var(--fd-text-metric-unit-weight, 600);
+    font-size: var(--fd-text-metric-unit-size);
+    line-height: var(--fd-text-metric-unit-line-height);
+    font-weight: var(--fd-text-metric-unit-weight);
 }
 
 .fd-ui-stat-label {
-    font-size: var(--fd-text-stat-label-size, 0.75rem);
-    line-height: var(--fd-text-stat-label-line-height, 1.2);
-    font-weight: var(--fd-text-stat-label-weight, 600);
-    letter-spacing: var(--fd-text-stat-label-tracking, 0.08em);
+    font-size: var(--fd-text-stat-label-size);
+    line-height: var(--fd-text-stat-label-line-height);
+    font-weight: var(--fd-text-stat-label-weight);
+    letter-spacing: var(--fd-text-stat-label-tracking);
     text-transform: uppercase;
 }
 
 .fd-ui-stat-value {
-    font-size: var(--fd-text-stat-value-size, 0.9rem);
-    line-height: var(--fd-text-stat-value-line-height, 1.2);
-    font-weight: var(--fd-text-stat-value-weight, 600);
+    font-size: var(--fd-text-stat-value-size);
+    line-height: var(--fd-text-stat-value-line-height);
+    font-weight: var(--fd-text-stat-value-weight);
 }
 
 .fd-ui-action-text {
-    font-size: var(--fd-text-action-size, 0.95rem);
-    line-height: var(--fd-text-action-line-height, 1.3);
-    font-weight: var(--fd-text-action-weight, 600);
+    font-size: var(--fd-text-action-size);
+    line-height: var(--fd-text-action-line-height);
+    font-weight: var(--fd-text-action-weight);
 }
 
 .fd-ui-overline {
-    font-size: var(--fd-text-helper-size, 0.75rem);
-    line-height: var(--fd-text-helper-line-height, 1.2);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -127,8 +127,8 @@
 }
 
 .fd-ui-error-text {
-    font-size: var(--fd-text-helper-size, 0.75rem);
-    line-height: var(--fd-text-helper-line-height, 1.2);
-    font-weight: var(--fd-text-helper-weight, 400);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-helper-weight);
     color: var(--fd-color-danger);
 }

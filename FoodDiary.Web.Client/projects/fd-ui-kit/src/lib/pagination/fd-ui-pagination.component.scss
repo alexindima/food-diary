@@ -2,16 +2,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--fd-space-pagination-gap, 8px);
+    gap: var(--fd-space-pagination-gap);
     flex-wrap: wrap;
 }
 
 .fd-ui-pagination__button {
     min-width: 36px;
     height: 36px;
-    padding: var(--fd-space-pagination-button-padding, 0 12px);
+    padding: var(--fd-space-pagination-button-padding);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-400) 30%, transparent);
-    border-radius: var(--fd-radius-button, 12px);
+    border-radius: var(--fd-radius-button);
     background: var(--fd-color-surface-raised);
     color: var(--fd-color-text);
     font: inherit;

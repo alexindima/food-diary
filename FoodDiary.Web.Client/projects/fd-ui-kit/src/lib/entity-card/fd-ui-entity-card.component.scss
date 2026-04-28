@@ -6,13 +6,13 @@
 
     &__body {
         display: flex;
-        gap: var(--fd-space-entity-card-gap, var(--fd-spacing-md));
+        gap: var(--fd-space-entity-card-gap);
     }
 
     &__media {
         aspect-ratio: 1 / 1;
         margin-left: -12px;
-        border-radius: var(--fd-radius-lg, 16px);
+        border-radius: var(--fd-radius-lg);
         overflow: hidden;
         position: relative;
         background-color: rgba(148, 163, 184, 0.25);
@@ -30,31 +30,31 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: var(--fd-space-entity-card-content-gap, var(--fd-spacing-sm));
+        gap: var(--fd-space-entity-card-content-gap);
     }
 
     &__header {
         display: flex;
         align-items: center;
-        gap: var(--fd-space-entity-card-header-gap, var(--fd-spacing-sm));
+        gap: var(--fd-space-entity-card-header-gap);
         justify-content: space-between;
     }
 
     &__title-block {
         display: flex;
         flex-direction: column;
-        gap: var(--fd-space-entity-card-title-gap, 2px);
+        gap: var(--fd-space-entity-card-title-gap);
         flex: 1;
         min-width: 0;
     }
 
     &__title {
         margin: 0;
-        color: var(--fd-color-text, var(--fd-color-gray-900-static));
+        color: var(--fd-color-text);
     }
 
     &__meta {
-        color: var(--fd-color-text-muted, var(--fd-color-gray-500-static));
+        color: var(--fd-color-text-muted);
         white-space: nowrap;
     }
 
@@ -62,7 +62,7 @@
         margin-left: auto;
         display: flex;
         align-items: center;
-        gap: var(--fd-space-entity-card-header-gap, var(--fd-spacing-sm));
+        gap: var(--fd-space-entity-card-header-gap);
     }
 }
 
@@ -92,7 +92,7 @@
     .fd-ui-entity-card__header {
         flex-direction: column;
         align-items: flex-start;
-        gap: var(--fd-space-entity-card-header-gap, var(--fd-spacing-xs));
+        gap: var(--fd-space-entity-card-header-gap);
     }
 
     .fd-ui-entity-card__header-extra {

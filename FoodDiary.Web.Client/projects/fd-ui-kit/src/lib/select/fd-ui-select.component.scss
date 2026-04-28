@@ -5,14 +5,14 @@
 .fd-ui-select {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-control-gap, 6px);
+    gap: var(--fd-space-control-gap);
 }
 
 .fd-ui-select__label {
     color: var(--fd-color-text-muted);
-    font-size: var(--fd-text-label-size, 1rem);
-    font-weight: var(--fd-text-label-weight, 600);
-    line-height: var(--fd-text-label-line-height, 1.2);
+    font-size: var(--fd-text-label-size);
+    font-weight: var(--fd-text-label-weight);
+    line-height: var(--fd-text-label-line-height);
     display: inline-flex;
     align-items: center;
     max-width: calc(100% - 28px);
@@ -28,8 +28,8 @@
         top 0.15s ease,
         font-size 0.15s ease;
     background: var(--fd-color-surface-raised);
-    padding: 0 var(--fd-space-field-label-padding-x, 4px);
-    border-radius: var(--fd-radius-field-label, var(--fd-radius-pill));
+    padding: 0 var(--fd-space-field-label-padding-x);
+    border-radius: var(--fd-radius-field-label);
     pointer-events: none;
 }
 
@@ -41,12 +41,12 @@
 .fd-ui-select__control-wrap {
     min-height: 40px;
     border: 1px solid var(--fd-color-border);
-    border-radius: var(--fd-radius-input, 14px);
+    border-radius: var(--fd-radius-input);
     background: var(--fd-color-surface-raised);
     display: flex;
     align-items: center;
     position: relative;
-    padding: 0 44px 0 var(--fd-space-control-padding-x, 12px);
+    padding: 0 44px 0 var(--fd-space-control-padding-x);
     cursor: pointer;
     transition:
         border-color 0.15s ease,
@@ -121,18 +121,18 @@
 .fd-ui-select--floating .fd-ui-select__label {
     top: 0;
     transform: translateY(-50%);
-    font-size: var(--fd-text-label-floating-size, 0.8rem);
+    font-size: var(--fd-text-label-floating-size);
 }
 
 .fd-ui-select--floating .fd-ui-select__control-wrap {
-    padding-top: var(--fd-space-control-floating-padding-top, 8px);
-    padding-bottom: var(--fd-space-control-floating-padding-bottom, 2px);
+    padding-top: var(--fd-space-control-floating-padding-top);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom);
 }
 
 .fd-ui-select__error {
     color: var(--fd-color-danger);
-    font-size: var(--fd-text-helper-size, 0.75rem);
-    line-height: var(--fd-text-helper-line-height, 1.2);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
     margin-top: 2px;
     max-width: 100%;
     white-space: normal;
@@ -145,8 +145,8 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-menu-gap, 2px);
-    padding: var(--fd-space-menu-padding, 6px);
+    gap: var(--fd-space-menu-gap);
+    padding: var(--fd-space-menu-padding);
     border-radius: var(--fd-radius-menu, 14px);
     background: var(--fd-color-surface-raised);
     border: 1px solid color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -163,10 +163,10 @@
     color: var(--fd-color-text);
     font: inherit;
     cursor: pointer;
-    border-radius: var(--fd-radius-menu-item, 10px);
-    min-height: var(--fd-space-menu-item-min-height, 38px);
+    border-radius: var(--fd-radius-menu-item);
+    min-height: var(--fd-space-menu-item-min-height);
     line-height: var(--fd-text-body-sm-line-height);
-    padding: var(--fd-space-menu-item-padding, 10px 12px);
+    padding: var(--fd-space-menu-item-padding);
 }
 
 .fd-ui-select__menu-item:hover,

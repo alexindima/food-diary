@@ -4,7 +4,7 @@
     gap: 16px;
 
     &__header {
-        margin-bottom: var(--fd-page-header-gap, 8px);
+        margin-bottom: var(--fd-page-header-gap);
     }
 
     &__grid {

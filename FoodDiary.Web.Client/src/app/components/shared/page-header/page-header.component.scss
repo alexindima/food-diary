@@ -26,14 +26,14 @@
     align-items: flex-end;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: var(--fd-space-page-header-actions-gap, 12px) var(--fd-space-page-header-gap, 16px);
+    gap: var(--fd-space-page-header-actions-gap) var(--fd-space-page-header-gap);
     width: 100%;
 }
 
 .fd-page-header__actions {
     display: flex;
     align-items: center;
-    gap: var(--fd-space-page-header-actions-gap, 12px);
+    gap: var(--fd-space-page-header-actions-gap);
     flex-wrap: wrap;
     width: 100%;
 }
@@ -71,8 +71,8 @@
             'subtitle subtitle'
             'extra extra';
         align-items: center;
-        column-gap: var(--fd-space-page-header-mobile-column-gap, 10px);
-        row-gap: var(--fd-space-page-header-mobile-row-gap, 4px);
+        column-gap: var(--fd-space-page-header-mobile-column-gap);
+        row-gap: var(--fd-space-page-header-mobile-row-gap);
         --fd-page-title-size: 1.65rem;
         --fd-page-title-line-height: 1.1;
         --fd-page-subtitle-size: var(--fd-text-caption-size, 0.8rem);
@@ -100,7 +100,7 @@
         justify-content: flex-end;
         align-self: center;
         flex-wrap: nowrap;
-        gap: var(--fd-space-control-gap, 6px);
+        gap: var(--fd-space-control-gap);
     }
 
     .fd-page-header__extra {

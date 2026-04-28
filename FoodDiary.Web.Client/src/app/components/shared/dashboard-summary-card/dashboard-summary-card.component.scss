@@ -8,7 +8,7 @@
 .dashboard-summary-card {
     --crc-surface: var(--fd-color-surface);
     border-radius: var(--fd-radius-card, 22px);
-    padding: 18px 18px 20px;
+    padding: var(--fd-space-card-profile-padding);
     border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 78%, transparent);
     background: var(--crc-surface);
     box-shadow: 0 18px 34px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
@@ -17,18 +17,18 @@
 
     fd-notice-banner {
         display: block;
-        margin-bottom: 16px;
+        margin-bottom: var(--fd-space-card-content-gap);
     }
 
     &__layout {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: var(--fd-space-card-content-gap);
         align-items: center;
 
         @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: var(--fd-space-card-relaxed-gap);
         }
     }
 
@@ -140,8 +140,8 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        gap: 6px;
-        padding: 12px;
+        gap: var(--fd-space-card-header-gap);
+        padding: var(--fd-space-surface-padding);
         color: var(--fd-color-text);
         transition:
             transform 0.2s ease,
@@ -167,7 +167,7 @@
     &__percent {
         display: flex;
         align-items: baseline;
-        gap: 4px;
+        gap: var(--fd-space-card-header-gap);
         color: var(--fd-color-text-strong);
         transition:
             transform 0.25s ease,
@@ -208,18 +208,18 @@
 
     &__legend {
         display: grid;
-        gap: 14px;
+        gap: var(--fd-space-card-content-gap);
     }
 
     &__bars {
         display: grid;
-        gap: 20px;
+        gap: var(--fd-space-card-relaxed-gap);
     }
 
     &__bar {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: var(--fd-space-card-header-gap);
         transition:
             transform 0.2s ease,
             filter 0.2s ease;
@@ -240,7 +240,7 @@
         justify-content: space-between;
         align-items: center;
         color: var(--fd-color-text);
-        gap: 8px;
+        gap: var(--fd-space-card-header-gap);
     }
 
     &__bar-label {
@@ -277,7 +277,7 @@
 
         &__layout {
             grid-template-columns: 1fr;
-            gap: 16px;
+            gap: var(--fd-space-card-content-gap);
             justify-items: center;
         }
 

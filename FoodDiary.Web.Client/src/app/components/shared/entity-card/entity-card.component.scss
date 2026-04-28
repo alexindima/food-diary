@@ -28,14 +28,14 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
-    gap: 10px;
+    gap: var(--fd-space-entity-card-content-gap);
     min-width: 0;
 }
 
 .entity-card__title-block {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--fd-space-entity-card-title-gap);
     min-width: 0;
 }
 
@@ -43,14 +43,14 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 16px;
+    gap: var(--fd-space-entity-card-header-gap);
     min-width: 0;
 }
 
 .entity-card__name-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--fd-space-entity-card-header-gap);
     min-width: 0;
     overflow: hidden;
 }
@@ -129,7 +129,7 @@
     display: inline-grid;
     grid-template-columns: auto 120px auto;
     align-items: center;
-    gap: 8px;
+    gap: var(--fd-space-entity-card-header-gap);
     min-width: 0;
     width: fit-content;
     max-width: 100%;
@@ -206,7 +206,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: var(--fd-space-entity-card-content-gap);
     justify-content: center;
     width: fit-content;
     min-width: clamp(52px, 7vw, 80px);
@@ -235,7 +235,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: var(--fd-space-entity-card-title-gap);
     color: var(--fd-color-text);
     white-space: nowrap;
     flex-shrink: 0;
@@ -266,18 +266,18 @@
     }
 
     .entity-card__content {
-        gap: 8px;
+        gap: var(--fd-space-entity-card-content-gap);
         align-items: center;
         justify-items: stretch;
     }
 
     .entity-card__title-block {
         align-items: flex-start;
-        gap: 2px;
+        gap: var(--fd-space-entity-card-title-gap);
     }
 
     .entity-card__name-row {
-        gap: 6px;
+        gap: var(--fd-space-entity-card-header-gap);
     }
 
     .entity-card__favorite-button {
@@ -338,7 +338,7 @@
     .entity-card__action-group {
         align-self: center;
         flex-direction: column;
-        gap: 6px;
+        gap: var(--fd-space-entity-card-header-gap);
         min-width: clamp(52px, 7vw, 80px);
         padding: 3px 0;
 
@@ -353,7 +353,7 @@
     .entity-card__calories-inline {
         flex-direction: column;
         align-items: center;
-        gap: 2px;
+        gap: var(--fd-space-entity-card-title-gap);
     }
 
     .entity-card__calories-value {

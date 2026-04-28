@@ -13,7 +13,7 @@
 .fd-manage-header__top-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--fd-space-page-header-gap);
 }
 
 .fd-manage-header__title {
@@ -28,7 +28,7 @@
     margin-left: auto;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--fd-space-page-header-actions-gap);
 }
 
 :host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {
@@ -39,7 +39,7 @@
 
     .fd-manage-header {
         align-items: flex-start;
-        padding: 10px 12px 8px;
+        padding: var(--fd-space-page-header-gap) var(--fd-layout-page-horizontal-padding, 12px) 8px;
         margin: 0;
         border-bottom: 1px solid var(--fd-page-header-mobile-border-color);
         background: var(--fd-page-header-mobile-background);
@@ -55,6 +55,6 @@
     }
 
     .fd-manage-header__subtitle {
-        margin-top: 4px;
+        margin-top: var(--fd-space-page-header-mobile-row-gap);
     }
 }

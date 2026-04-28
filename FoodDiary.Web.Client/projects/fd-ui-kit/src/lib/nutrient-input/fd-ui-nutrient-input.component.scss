@@ -7,8 +7,8 @@
     --fd-nutrient-text-color: rgba(15, 23, 42, 0.65);
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-nutrient-input-gap, 10px);
-    padding: var(--fd-space-nutrient-input-padding, 16px 18px);
+    gap: var(--fd-space-nutrient-input-gap);
+    padding: var(--fd-space-nutrient-input-padding);
     border-radius: var(--fd-radius-card);
     background: var(--fd-nutrient-tint);
     box-shadow: 0 14px 28px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
@@ -23,7 +23,7 @@
     color: var(--fd-nutrient-text-color);
     display: inline-flex;
     align-items: center;
-    gap: var(--fd-space-nutrient-input-label-gap, 8px);
+    gap: var(--fd-space-nutrient-input-label-gap);
     justify-content: center;
     width: 100%;
 }
@@ -82,7 +82,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--lg {
-    padding: var(--fd-space-nutrient-input-padding-lg, 22px);
+    padding: var(--fd-space-nutrient-input-padding-lg);
     border-radius: var(--fd-radius-panel);
 }
 
@@ -91,7 +91,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--sm {
-    padding: var(--fd-space-nutrient-input-padding-sm, 12px 14px);
+    padding: var(--fd-space-nutrient-input-padding-sm);
     border-radius: var(--fd-radius-button);
 }
 
@@ -133,7 +133,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 .fd-ui-nutrient-input__value-row {
     display: inline-flex;
     align-items: baseline;
-    gap: var(--fd-space-nutrient-input-value-gap, 6px);
+    gap: var(--fd-space-nutrient-input-value-gap);
     width: fit-content;
     max-width: 100%;
     overflow: hidden;

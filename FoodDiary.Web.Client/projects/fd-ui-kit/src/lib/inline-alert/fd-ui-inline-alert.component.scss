@@ -5,12 +5,12 @@
     --fd-inline-alert-title: var(--fd-color-text-strong);
     --fd-inline-alert-text: var(--fd-color-text-muted);
     --fd-inline-alert-radius: var(--fd-radius-panel);
-    --fd-inline-alert-padding: var(--fd-space-inline-alert-padding, 16px 18px);
+    --fd-inline-alert-padding: var(--fd-space-inline-alert-padding);
     --fd-inline-alert-icon-size: 40px;
     --fd-inline-alert-grid-columns: auto minmax(0, 1fr) auto;
     display: grid;
     grid-template-columns: var(--fd-inline-alert-grid-columns);
-    gap: var(--fd-space-inline-alert-gap, 14px);
+    gap: var(--fd-space-inline-alert-gap);
     align-items: start;
     width: 100%;
     padding: var(--fd-inline-alert-padding);
@@ -23,7 +23,7 @@
 :host-context(.fd-ui-inline-alert--notice),
 :host(.fd-ui-inline-alert--notice) {
     --fd-inline-alert-radius: var(--fd-radius-card);
-    --fd-inline-alert-padding: var(--fd-space-inline-alert-notice-padding, 14px 16px);
+    --fd-inline-alert-padding: var(--fd-space-inline-alert-notice-padding);
     --fd-inline-alert-icon-size: 32px;
 }
 
@@ -47,7 +47,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-inline-alert-content-gap, 6px);
+    gap: var(--fd-space-inline-alert-content-gap);
 }
 
 .fd-ui-inline-alert__title {
@@ -68,7 +68,7 @@
 .fd-ui-inline-alert__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--fd-space-inline-alert-actions-gap, 10px);
+    gap: var(--fd-space-inline-alert-actions-gap);
     margin-top: 4px;
 }
 

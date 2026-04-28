@@ -3,12 +3,12 @@
 }
 
 .fd-ui-textarea {
-    --fd-textarea-radius: var(--fd-radius-input, 14px);
+    --fd-textarea-radius: var(--fd-radius-input);
     --fd-textarea-border: var(--fd-color-border);
     --fd-textarea-label-bg: var(--fd-color-surface-raised);
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-control-gap, 6px);
+    gap: var(--fd-space-control-gap);
 }
 
 .fd-ui-textarea__label {
@@ -31,8 +31,8 @@
         top 0.15s ease,
         font-size 0.15s ease;
     background: var(--fd-textarea-label-bg);
-    padding: 0 var(--fd-space-field-label-padding-x, 4px);
-    border-radius: var(--fd-radius-field-label, 999px);
+    padding: 0 var(--fd-space-field-label-padding-x);
+    border-radius: var(--fd-radius-field-label);
     pointer-events: none;
 }
 
@@ -50,7 +50,7 @@
         box-shadow 0.15s ease,
         background-color 0.15s ease;
     position: relative;
-    padding: var(--fd-space-textarea-padding, 16px 12px 12px);
+    padding: var(--fd-space-textarea-padding);
 }
 
 .fd-ui-textarea__control-wrap:focus-within {

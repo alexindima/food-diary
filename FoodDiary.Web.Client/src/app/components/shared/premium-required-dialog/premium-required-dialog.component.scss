@@ -1,5 +1,5 @@
 .premium-required-dialog__message {
-    margin: 0 0 12px;
+    margin: 0 0 var(--fd-space-dialog-heading-gap);
     color: var(--fd-color-text);
 }
 
@@ -24,7 +24,7 @@
 .premium-required-dialog__footer {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
+    gap: var(--fd-space-dialog-footer-gap);
 }
 
 

@@ -28,9 +28,9 @@
 }
 
 .fd-ui-notice-surface--danger {
-    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-surface-raised, var(--fd-color-surface)));
+    --fd-notice-surface-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-surface-raised));
     --fd-notice-surface-border: color-mix(in srgb, var(--fd-color-danger) 32%, transparent);
-    --fd-notice-surface-color: var(--fd-color-red-700, var(--fd-color-danger));
+    --fd-notice-surface-color: var(--fd-color-red-700);
 }
 
 .fd-ui-notice-surface--success {
