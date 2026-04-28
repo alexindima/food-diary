@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     --fd-inline-alert-bg: color-mix(in srgb, var(--fd-color-sky-500) 7%, var(--fd-color-surface));
     --fd-inline-alert-border: color-mix(in srgb, var(--fd-color-sky-500) 24%, var(--fd-color-border));
@@ -122,7 +124,7 @@
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text));
 }
 
-@media (max-width: 767px) {
+@media #{variables.$media-tablet} {
 
     :host {
         grid-template-columns: auto minmax(0, 1fr);

@@ -1,8 +1,10 @@
 .fd-ui-top-loader {
+    --fd-ui-top-loader-height: 3px;
+    --fd-ui-top-loader-z-index: 11000;
     position: fixed;
     inset: 0 0 auto;
-    height: var(--fd-ui-top-loader-height, 3px);
-    z-index: var(--fd-ui-top-loader-z-index, 11000);
+    height: var(--fd-ui-top-loader-height);
+    z-index: var(--fd-ui-top-loader-z-index);
     opacity: 0;
     pointer-events: none;
     overflow: hidden;

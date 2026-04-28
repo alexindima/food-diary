@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .premium-access-page {
     display: flex;
     flex-direction: column;
@@ -131,14 +133,14 @@
     text-decoration: underline;
 }
 
-@media (max-width: 860px) {
+@media #{variables.$media-desktop-sm} {
 
     .premium-access-page__plans {
         grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .premium-access-page__card {
         padding: var(--fd-space-card-profile-padding-mobile);

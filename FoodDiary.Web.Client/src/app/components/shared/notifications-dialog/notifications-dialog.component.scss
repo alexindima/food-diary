@@ -32,16 +32,16 @@
 .notifications-dialog__list {
     display: grid;
     gap: var(--fd-space-sm);
-    padding-right: 1.25rem;
+    padding-right: var(--fd-space-lg);
 }
 
 .notifications-dialog__item {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.35rem;
+    gap: var(--fd-space-xxs);
     align-items: start;
-    padding: 0.875rem 1rem;
+    padding: var(--fd-space-inline-alert-notice-padding);
     border-radius: var(--fd-radius-card);
     border: 1px solid transparent;
     background:
@@ -70,7 +70,7 @@
     }
 
     &--without-icon {
-        gap: 0.35rem;
+        gap: var(--fd-space-xxs);
     }
 
     &--dietologist {
@@ -115,7 +115,7 @@
 
 .notifications-dialog__item-content {
     display: grid;
-    gap: 0.35rem;
+    gap: var(--fd-space-xxs);
     min-width: 0;
 }
 
@@ -130,13 +130,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.625rem;
+    gap: var(--fd-space-xs);
     flex-shrink: 0;
 }
 
 .notifications-dialog__item-head-main {
     display: grid;
-    gap: 0.35rem;
+    gap: var(--fd-space-xxs);
     min-width: 0;
 }
 
@@ -199,7 +199,7 @@
 }
 
 .notifications-dialog__item-cta {
-    margin-top: 0.25rem;
+    margin-top: var(--fd-space-xxs);
     width: fit-content;
     --fd-pill-min-height: 24px;
     --fd-pill-padding-inline: 0.6rem;
@@ -209,14 +209,14 @@
 }
 
 .notifications-dialog__footer {
-    padding: 0 1.25rem;
+    padding: 0 var(--fd-space-lg);
 }
 
 @media #{variables.$media-phablet} {
 
     .notifications-dialog__item-head {
         flex-direction: column;
-        gap: 0.3rem;
+        gap: var(--fd-space-xxs);
     }
 
     .notifications-dialog__item {

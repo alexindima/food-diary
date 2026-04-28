@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
 }
@@ -50,17 +52,17 @@
     }
 
     &--density-default {
-        padding-bottom: var(--fd-spacing-sm);
+        padding-bottom: var(--fd-space-sm);
     }
 
     &--density-relaxed {
         gap: var(--fd-space-card-relaxed-gap);
-        padding-bottom: var(--fd-spacing-lg);
+        padding-bottom: var(--fd-space-lg);
     }
 
     &--density-compact {
-        gap: var(--fd-spacing-sm);
-        padding-bottom: var(--fd-spacing-sm);
+        gap: var(--fd-space-sm);
+        padding-bottom: var(--fd-space-sm);
     }
 
     &--density-profile {
@@ -88,7 +90,7 @@
 
     &--header-align-center &__header {
         align-items: center;
-        margin-bottom: var(--fd-spacing-sm);
+        margin-bottom: var(--fd-space-sm);
     }
 
     &__title-row {
@@ -134,7 +136,7 @@
     }
 
     &--density-compact &__content {
-        gap: var(--fd-spacing-sm);
+        gap: var(--fd-space-sm);
     }
 }
 
@@ -185,7 +187,7 @@
     gap: var(--fd-space-card-content-gap);
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     .fd-ui-card--density-profile {
         padding: var(--fd-space-card-profile-padding-mobile);

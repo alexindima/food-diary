@@ -1,18 +1,18 @@
 .fd-page-title,
 .fd-ui-page-title {
     margin: 0;
-    font-size: var(--fd-page-title-size, 2rem);
-    line-height: var(--fd-page-title-line-height, 1.2);
-    font-weight: var(--fd-page-title-weight, 700);
+    font-size: var(--fd-page-title-size);
+    line-height: var(--fd-page-title-line-height);
+    font-weight: var(--fd-page-title-weight);
     color: var(--fd-color-text);
 }
 
 .fd-page-subtitle,
 .fd-ui-page-subtitle {
     margin: 0;
-    font-size: var(--fd-page-subtitle-size, 1rem);
-    line-height: var(--fd-page-subtitle-line-height, 1.5);
-    font-weight: var(--fd-page-subtitle-weight, 500);
+    font-size: var(--fd-page-subtitle-size);
+    line-height: var(--fd-page-subtitle-line-height);
+    font-weight: var(--fd-page-subtitle-weight);
     color: var(--fd-color-text-muted);
 }
 

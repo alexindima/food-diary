@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .fasting-timer-card {
     --fd-radius-lg: 22px;
     height: 100%;
@@ -233,7 +235,7 @@
         }
     }
 
-    @media (max-width: 760px) {
+    @media #{variables.$media-tablet} {
 
         &__content--summary {
             grid-template-columns: 1fr;

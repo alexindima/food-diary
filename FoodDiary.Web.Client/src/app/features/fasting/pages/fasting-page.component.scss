@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .fasting {
     display: flex;
     flex-direction: column;
@@ -475,7 +477,7 @@
         color: var(--fd-color-text-strong);
     }
 
-    @media (max-width: 767px) {
+    @media #{variables.$media-tablet} {
 
         &__personal-summary-header {
             align-items: flex-start;
@@ -782,7 +784,7 @@
         color: var(--fd-color-text-muted);
     }
 
-    @media (max-width: 767px) {
+    @media #{variables.$media-tablet} {
 
         &__session-actions-grid {
             grid-template-columns: minmax(0, 1fr);

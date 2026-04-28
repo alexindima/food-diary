@@ -75,8 +75,8 @@
         row-gap: var(--fd-space-page-header-mobile-row-gap);
         --fd-page-title-size: 1.65rem;
         --fd-page-title-line-height: 1.1;
-        --fd-page-subtitle-size: var(--fd-text-caption-size, 0.8rem);
-        --fd-page-subtitle-line-height: var(--fd-text-caption-line-height, 1.3);
+        --fd-page-subtitle-size: var(--fd-text-caption-size);
+        --fd-page-subtitle-line-height: var(--fd-text-caption-line-height);
     }
 
     .fd-page-header__title-block {

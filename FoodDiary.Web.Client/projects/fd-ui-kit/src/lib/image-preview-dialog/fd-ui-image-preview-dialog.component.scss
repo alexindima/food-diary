@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
 }
@@ -107,7 +109,7 @@
     text-shadow: 0 2px 12px var(--fd-color-dialog-text-shadow);
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .fd-ui-image-preview-dialog__viewport {
         padding: var(--fd-space-image-preview-padding-mobile);

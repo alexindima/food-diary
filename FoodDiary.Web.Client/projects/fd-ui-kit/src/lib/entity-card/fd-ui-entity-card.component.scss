@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
 }
@@ -78,7 +80,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .fd-ui-entity-card__body {
         flex-direction: column;

@@ -6,12 +6,12 @@
 }
 
 .unsaved-changes-dialog__body {
-    padding: 1.25rem;
+    padding: var(--fd-space-dialog-padding);
 }
 
 .unsaved-changes-dialog__footer {
     --fd-actions-gap: var(--fd-space-sm);
-    padding: 0 1.25rem 1.25rem;
+    padding: 0 var(--fd-space-dialog-padding) var(--fd-space-dialog-padding);
     width: 100%;
 }
 

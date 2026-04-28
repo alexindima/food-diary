@@ -808,14 +808,6 @@ $fd-theme-design-tokens: (
         --fd-color-rose-500: #{fd-token(colors, rose-500)};
         --fd-color-yellow-300: #{fd-token(colors, yellow-300)};
 
-        --fd-spacing-xxs: #{fd-token(spacing, xxs)};
-        --fd-spacing-xs: #{fd-token(spacing, xs)};
-        --fd-spacing-sm: #{fd-token(spacing, sm)};
-        --fd-spacing-md: #{fd-token(spacing, md)};
-        --fd-spacing-lg: #{fd-token(spacing, lg)};
-        --fd-spacing-xl: #{fd-token(spacing, xl)};
-        --fd-spacing-xxl: #{fd-token(spacing, xxl)};
-
         --fd-font-family-base: #{fd-token(typography, font-family)};
         --fd-font-size-base: #{fd-token(typography, font-size-base)};
         --fd-line-height-base: #{fd-token(typography, line-height-base)};

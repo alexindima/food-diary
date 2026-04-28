@@ -1,11 +1,13 @@
 :host {
     display: block;
     width: 100%;
+    --fd-section-state-min-height: 176px;
+    --fd-section-state-compact-min-height: 128px;
 }
 
 .fd-ui-section-state__surface {
     display: flex;
-    min-height: var(--fd-section-state-min-height, 176px);
+    min-height: var(--fd-section-state-min-height);
     width: 100%;
     align-items: center;
     justify-content: center;
@@ -14,7 +16,7 @@
 }
 
 :host(.fd-ui-section-state--compact) .fd-ui-section-state__surface {
-    min-height: var(--fd-section-state-compact-min-height, 128px);
+    min-height: var(--fd-section-state-compact-min-height);
     padding: var(--fd-space-section-state-compact-padding);
 }
 

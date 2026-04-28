@@ -1,4 +1,6 @@
 .satiety-scale {
+    --fd-satiety-scale-vertical-list-max-width: 420px;
+    --fd-satiety-scale-vertical-option-max-width: 420px;
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-satiety-scale-gap);
@@ -43,14 +45,14 @@
 
     &--vertical &__list {
         width: 100%;
-        max-width: var(--fd-satiety-scale-vertical-list-max-width, 420px);
+        max-width: var(--fd-satiety-scale-vertical-list-max-width);
         grid-template-columns: var(--fd-satiety-scale-vertical-list-columns, initial);
         align-items: var(--fd-satiety-scale-vertical-list-align-items, stretch);
     }
 
     &--vertical &__option {
         width: 100%;
-        max-width: var(--fd-satiety-scale-vertical-option-max-width, 420px);
+        max-width: var(--fd-satiety-scale-vertical-option-max-width);
         min-height: var(--fd-satiety-scale-vertical-option-min-height, auto);
         padding: var(--fd-satiety-scale-vertical-option-padding, var(--fd-space-satiety-scale-option-padding));
         --fd-accent-thickness: 4px;

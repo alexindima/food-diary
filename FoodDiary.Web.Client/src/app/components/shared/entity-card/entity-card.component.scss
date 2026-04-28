@@ -306,7 +306,7 @@
 
     .entity-card__title-muted,
     .entity-card__description {
-        font-size: var(--fd-text-helper-size, 0.75rem);
+        font-size: var(--fd-text-helper-size);
     }
 
     .entity-card__summary-row {
@@ -357,7 +357,7 @@
     }
 
     .entity-card__calories-value {
-        font-size: var(--fd-text-metric-unit-size, 1rem);
+        font-size: var(--fd-text-metric-unit-size);
     }
 
     .entity-card__calories-unit {

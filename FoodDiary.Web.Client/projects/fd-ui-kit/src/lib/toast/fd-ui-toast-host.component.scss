@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     position: fixed;
     inset: 0;
@@ -158,14 +160,14 @@
     }
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     .fd-ui-toast-host__viewport--bottom {
         bottom: calc(124px + env(safe-area-inset-bottom, 0px));
     }
 }
 
-@media (max-width: 480px) {
+@media #{variables.$media-mobile} {
 
     .fd-ui-toast-host__content {
         padding: var(--fd-space-toast-content-padding-compact);

@@ -56,7 +56,7 @@
     gap: var(--fd-space-lg);
     padding: 0 20px 0 0;
     border: 1px solid var(--fd-color-border);
-    border-radius: var(--fd-radius-card, 22px);
+    border-radius: var(--fd-radius-card);
     background: linear-gradient(
         180deg,
         var(--fd-color-surface-raised) 0%,
@@ -71,7 +71,7 @@
     .media-card__media {
         inline-size: clamp(96px, 14vw, 128px);
         min-inline-size: clamp(96px, 14vw, 128px);
-        border-radius: var(--fd-radius-card, 22px) 0 0 var(--fd-radius-card, 22px);
+        border-radius: var(--fd-radius-card) 0 0 var(--fd-radius-card);
     }
 
     .media-card__content {

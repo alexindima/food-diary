@@ -5,15 +5,16 @@
 }
 
 .nutrient-badges {
+    --fd-nutrient-badges-border: 1px solid var(--fd-color-border);
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    border-radius: var(--fd-radius-nutrient-bar, var(--fd-radius-chip, 999px));
+    border-radius: var(--fd-radius-nutrient-bar);
     background: var(--fd-color-surface);
     color: var(--fd-color-text);
     width: fit-content;
     max-width: 100%;
-    border: var(--fd-nutrient-badges-border, 1px solid var(--fd-color-border));
+    border: var(--fd-nutrient-badges-border);
     box-shadow: var(--fd-nutrient-badges-shadow, none);
 }
 
@@ -75,7 +76,7 @@
     .nutrient-badges {
         gap: 0;
         padding: var(--fd-space-status-badge-padding);
-        border-radius: var(--fd-radius-nutrient-bar-compact, var(--fd-radius-nutrient-bar, 16px));
+        border-radius: var(--fd-radius-nutrient-bar-compact);
         background: var(--fd-color-surface);
         display: inline-grid;
         grid-auto-flow: column;
@@ -104,8 +105,8 @@
     }
 
     .nutrient-badges__chip-value {
-        font-size: var(--fd-text-caption-size, 0.85rem);
-        line-height: var(--fd-text-caption-line-height, 1.35);
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
     }
 
     .nutrient-badges__unit {

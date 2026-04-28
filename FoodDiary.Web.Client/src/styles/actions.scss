@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .fd-ui-actions {
     --fd-actions-gap: var(--fd-space-actions-gap);
     display: flex;
@@ -25,7 +27,7 @@
     align-items: center;
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .fd-ui-actions--split {
         grid-template-columns: 1fr;

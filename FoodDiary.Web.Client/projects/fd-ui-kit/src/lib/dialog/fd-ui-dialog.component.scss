@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
     color: var(--fd-color-text);
@@ -308,7 +310,7 @@
     }
 }
 
-@media (max-width: 420px) {
+@media #{variables.$media-sm} {
 
     .cdk-overlay-pane.fd-ui-dialog-panel--edge-mobile {
         width: 100vw !important;
@@ -323,7 +325,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     .fd-ui-dialog-panel--detail .fd-ui-dialog__body {
         padding-block: 28px 32px;

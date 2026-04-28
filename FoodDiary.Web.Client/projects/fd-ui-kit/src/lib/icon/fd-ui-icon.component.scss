@@ -3,6 +3,7 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
+    --fd-icon-size: 1em;
     color: inherit;
     line-height: 1;
     vertical-align: middle;
@@ -14,7 +15,7 @@
     justify-content: center;
     width: 1em;
     height: 1em;
-    font-size: var(--fd-icon-size, 1em);
+    font-size: var(--fd-icon-size);
     line-height: 1;
     color: inherit;
     overflow: visible;

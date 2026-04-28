@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .seo-landing {
     min-height: 100vh;
     background:
@@ -16,7 +18,7 @@
         gap: var(--fd-space-lg);
         align-items: start;
 
-        @media (max-width: 900px) {
+        @media #{variables.$media-desktop-sm} {
             grid-template-columns: 1fr;
         }
     }
@@ -27,7 +29,7 @@
         align-items: center;
         gap: var(--fd-space-lg);
 
-        @media (max-width: 768px) {
+        @media #{variables.$media-tablet} {
             flex-direction: column;
             align-items: flex-start;
         }

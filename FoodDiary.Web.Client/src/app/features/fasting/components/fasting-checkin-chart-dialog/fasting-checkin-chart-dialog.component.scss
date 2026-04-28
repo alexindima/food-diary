@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .fasting-checkin-chart-dialog__body {
     padding: var(--fd-space-md) var(--fd-space-lg) var(--fd-space-lg);
 }
@@ -14,7 +16,7 @@
     max-width: 100%;
 }
 
-@media (max-width: 767px) {
+@media #{variables.$media-tablet} {
 
     .fasting-checkin-chart-dialog__body {
         padding: var(--fd-space-sm) var(--fd-space-sm) var(--fd-space-md);

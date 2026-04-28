@@ -175,9 +175,9 @@
     }
 
     &__label-title {
-        font-size: var(--fd-text-card-title-size, 1.05rem);
-        line-height: var(--fd-text-card-title-line-height, 1.3);
-        font-weight: var(--fd-text-card-title-weight, 700);
+        font-size: var(--fd-text-card-title-size);
+        line-height: var(--fd-text-card-title-line-height);
+        font-weight: var(--fd-text-card-title-weight);
         color: var(--fd-color-slate-900);
     }
 
@@ -275,29 +275,29 @@
         }
 
         .image-upload-field__main-text {
-            font-size: var(--fd-text-body-sm-size, 0.95rem);
-            line-height: var(--fd-text-body-sm-line-height, 1.45);
-            font-weight: var(--fd-text-body-sm-weight, 400);
+            font-size: var(--fd-text-body-sm-size);
+            line-height: var(--fd-text-body-sm-line-height);
+            font-weight: var(--fd-text-body-sm-weight);
         }
 
         .image-upload-field__sub-text--plain {
-            font-size: var(--fd-text-helper-size, 0.75rem);
-            line-height: var(--fd-text-helper-line-height, 1.2);
-            font-weight: var(--fd-text-helper-weight, 400);
+            font-size: var(--fd-text-helper-size);
+            line-height: var(--fd-text-helper-line-height);
+            font-weight: var(--fd-text-helper-weight);
         }
 
         .image-upload-field__sub-text {
             color: var(--fd-color-text-muted);
-            font-size: var(--fd-text-helper-size, 0.75rem);
-            line-height: var(--fd-text-helper-line-height, 1.2);
-            font-weight: var(--fd-text-helper-weight, 400);
+            font-size: var(--fd-text-helper-size);
+            line-height: var(--fd-text-helper-line-height);
+            font-weight: var(--fd-text-helper-weight);
         }
 
         .image-upload-field__hint {
             color: color-mix(in srgb, var(--fd-color-text-muted) 80%, transparent);
-            font-size: var(--fd-text-helper-size, 0.75rem);
-            line-height: var(--fd-text-helper-line-height, 1.2);
-            font-weight: var(--fd-text-helper-weight, 400);
+            font-size: var(--fd-text-helper-size);
+            line-height: var(--fd-text-helper-line-height);
+            font-weight: var(--fd-text-helper-weight);
         }
     }
 

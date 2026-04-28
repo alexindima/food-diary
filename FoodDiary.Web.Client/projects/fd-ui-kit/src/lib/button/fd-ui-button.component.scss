@@ -1,20 +1,30 @@
 :host {
+    --fd-button-host-min-width: 0;
     display: inline-flex;
     width: var(--fd-button-host-width, auto);
-    min-width: var(--fd-button-host-min-width, 0);
+    min-width: var(--fd-button-host-min-width);
 }
 
 .fd-ui-button {
     --fd-button-height: 40px;
     --fd-button-padding-x: 0.75rem;
     --fd-button-text-padding-x: 0.375rem;
+    --fd-button-icon-size: 1rem;
+    --fd-button-spinner-size: 1rem;
+    --fd-button-border-width: 1px;
+    --fd-button-border-style: solid;
+    --fd-button-letter-spacing: 0.02em;
+    --fd-button-min-width: 0;
+    --fd-button-margin: 0;
+    --fd-button-shadow-hover: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
+    --fd-button-disabled-opacity: 1;
     --fd-button-focus-ring-color: color-mix(in srgb, var(--fd-color-primary-400) 72%, var(--fd-color-white));
     --fd-button-focus-ring-shadow:
         0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 86%, transparent),
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 64%, transparent);
     appearance: none;
     background: var(--fd-button-background-default);
-    border: var(--fd-button-border-width, 1px) var(--fd-button-border-style, solid) var(--fd-button-border-default);
+    border: var(--fd-button-border-width) var(--fd-button-border-style) var(--fd-button-border-default);
     border-radius: var(--fd-button-border-radius, var(--fd-radius-button));
     color: var(--fd-button-text-default);
     cursor: pointer;
@@ -25,13 +35,13 @@
     font-size: var(--fd-button-font-size, var(--fd-text-action-size));
     line-height: var(--fd-button-line-height, var(--fd-text-action-line-height));
     font-weight: var(--fd-button-font-weight, var(--fd-text-action-weight));
-    letter-spacing: var(--fd-button-letter-spacing, 0.02em);
+    letter-spacing: var(--fd-button-letter-spacing);
     width: var(--fd-button-width, auto);
-    min-width: var(--fd-button-min-width, 0);
+    min-width: var(--fd-button-min-width);
     height: var(--fd-button-height-explicit, auto);
-    min-height: var(--fd-button-height, 40px);
-    margin: var(--fd-button-margin, 0);
-    padding: 0 var(--fd-button-padding-x, 1rem);
+    min-height: var(--fd-button-height);
+    margin: var(--fd-button-margin);
+    padding: 0 var(--fd-button-padding-x);
     position: var(--fd-button-position, static);
     z-index: var(--fd-button-z-index, auto);
     pointer-events: var(--fd-button-pointer-events, auto);
@@ -53,7 +63,7 @@
         background: var(--fd-button-background-hover, var(--fd-button-background-default));
         border-color: var(--fd-button-border-hover, var(--fd-button-border-default));
         color: var(--fd-button-text-hover, var(--fd-button-text-default));
-        box-shadow: var(--fd-button-shadow-hover, 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent));
+        box-shadow: var(--fd-button-shadow-hover);
         transform: var(--fd-button-transform-hover, translateY(-1px));
     }
 
@@ -78,7 +88,7 @@
         color: var(--fd-button-text-disabled, var(--fd-button-text-default));
         box-shadow: var(--fd-button-shadow-disabled, none);
         cursor: not-allowed;
-        opacity: var(--fd-button-disabled-opacity, 1);
+        opacity: var(--fd-button-disabled-opacity);
         transform: var(--fd-button-transform-disabled, none);
     }
 
@@ -92,9 +102,9 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: var(--fd-button-icon-size, 1rem);
-        width: var(--fd-button-icon-size, 1rem);
-        height: var(--fd-button-icon-size, 1rem);
+        font-size: var(--fd-button-icon-size);
+        width: var(--fd-button-icon-size);
+        height: var(--fd-button-icon-size);
     }
 
     &__content {
@@ -115,8 +125,8 @@
     &__spinner {
         position: absolute;
         inset: 50% auto auto 50%;
-        width: var(--fd-button-spinner-size, 1rem);
-        height: var(--fd-button-spinner-size, 1rem);
+        width: var(--fd-button-spinner-size);
+        height: var(--fd-button-spinner-size);
         translate: -50% -50%;
         border-radius: 50%;
         border: 2px solid color-mix(in srgb, currentColor 28%, transparent);
@@ -142,8 +152,8 @@
     }
 
     &--text {
-        padding: 0 var(--fd-button-text-padding-x, 0.5rem);
-        min-height: var(--fd-button-height, 40px);
+        padding: 0 var(--fd-button-text-padding-x);
+        min-height: var(--fd-button-height);
     }
 }
 

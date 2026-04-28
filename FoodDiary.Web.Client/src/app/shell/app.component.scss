@@ -114,7 +114,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: var(--fd-layout-sidebar-width, 260px);
+    width: var(--fd-layout-sidebar-width);
     height: 100vh;
     overflow-y: auto;
 }

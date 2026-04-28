@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 .health-scores {
     padding: var(--fd-space-md) 0;
 }
@@ -102,14 +104,14 @@
     color: var(--fd-text-secondary, var(--fd-color-neutral-600));
 }
 
-@media (max-width: 600px) {
+@media #{variables.$media-phablet} {
 
     .areas-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 380px) {
+@media #{variables.$media-sm} {
 
     .areas-grid {
         grid-template-columns: repeat(2, 1fr);

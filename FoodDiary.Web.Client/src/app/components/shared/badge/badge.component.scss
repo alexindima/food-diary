@@ -5,9 +5,9 @@
 .fd-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.15rem 0.55rem;
-    border-radius: var(--fd-radius-pill, 999px);
+    gap: var(--fd-space-xxs);
+    padding: var(--fd-space-status-badge-padding);
+    border-radius: var(--fd-radius-pill);
     background-color: var(--fd-badge-bg, color-mix(in srgb, var(--fd-color-slate-900) 4%, transparent));
     color: var(--fd-badge-fg, var(--fd-color-slate-900));
     border: 1px solid var(--fd-badge-border, color-mix(in srgb, var(--fd-color-slate-900) 7%, transparent));
