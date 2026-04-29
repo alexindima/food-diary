@@ -7,7 +7,6 @@
     }
 
     &__grid {
-        display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
 
         &--secondary {
@@ -19,7 +18,6 @@
         height: 16px;
         border-radius: var(--fd-radius-pill);
         overflow: hidden;
-        display: flex;
         background: var(--fd-color-nutrition-macro-bar-bg);
     }
 
@@ -35,7 +33,6 @@
         border: var(--fd-border-width) solid var(--fd-color-nutrition-error-border);
         background: var(--fd-color-nutrition-error-bg);
         color: var(--fd-color-nutrition-error-text);
-        display: grid;
     }
 
     &__hint {

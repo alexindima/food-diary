@@ -1,4 +1,4 @@
-﻿<div class="auth">
+﻿<div class="auth fd-stack fd-gap-md">
     <fd-ui-tabs class="auth__tabs" [tabs]="authTabs" [selectedValue]="authMode" (selectedValueChange)="handleTabChange($event)" />
 
     <p class="auth__subtitle fd-ui-body-sm">
@@ -9,16 +9,16 @@
         }
     </p>
 
-    <div class="auth__content">
+    <div class="auth__content fd-stack fd-gap-md">
         @if (authMode === 'login') {
             @if (showPasswordReset()) {
                 <form
                     [formGroup]="passwordResetForm"
                     (ngSubmit)="onPasswordResetSubmit()"
-                    class="auth__form"
+                    class="auth__form fd-stack fd-gap-md"
                     [attr.aria-busy]="isPasswordResetting()"
                 >
-                    <div class="auth__field">
+                    <div class="auth__field fd-stack fd-gap-xs">
                         <fd-ui-input
                             appearance="auth"
                             formControlName="email"
@@ -30,7 +30,7 @@
                         />
                     </div>
 
-                    <div class="auth__actions">
+                    <div class="auth__actions fd-stack fd-gap-sm">
                         <fd-ui-button
                             type="submit"
                             appearance="brand-action"
@@ -69,10 +69,10 @@
                     [formGroup]="loginForm"
                     (ngSubmit)="onLoginSubmit()"
                     (input)="onLoginNativeInput()"
-                    class="auth__form"
+                    class="auth__form fd-stack fd-gap-md"
                     [attr.aria-busy]="isSubmitting() || isRestoring()"
                 >
-                    <div class="auth__field">
+                    <div class="auth__field fd-stack fd-gap-xs">
                         <fd-ui-input
                             appearance="auth"
                             formControlName="email"
@@ -84,7 +84,7 @@
                         />
                     </div>
 
-                    <div class="auth__field">
+                    <div class="auth__field fd-stack fd-gap-xs">
                         <fd-ui-input
                             appearance="auth"
                             formControlName="password"
@@ -102,7 +102,7 @@
                         {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
                     </fd-ui-button>
 
-                    <div class="auth__actions">
+                    <div class="auth__actions fd-stack fd-gap-sm">
                         <fd-ui-button
                             type="submit"
                             appearance="brand-action"
@@ -131,11 +131,11 @@
                         }
                     </div>
 
-                    <div class="auth__divider">
+                    <div class="auth__divider fd-row fd-gap-xs">
                         <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
                     </div>
 
-                    <div class="auth__social">
+                    <div class="auth__social fd-stack fd-gap-xs">
                         <div #googleLoginButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}"></div>
                         @if (!googleReady()) {
                             <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
@@ -146,8 +146,13 @@
                 </form>
             }
         } @else {
-            <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form" [attr.aria-busy]="isSubmitting()">
-                <div class="auth__field">
+            <form
+                [formGroup]="registerForm"
+                (ngSubmit)="onRegisterSubmit()"
+                class="auth__form fd-stack fd-gap-md"
+                [attr.aria-busy]="isSubmitting()"
+            >
+                <div class="auth__field fd-stack fd-gap-xs">
                     <fd-ui-input
                         appearance="auth"
                         formControlName="email"
@@ -158,7 +163,7 @@
                         [error]="getControlError(registerForm.controls.email)"
                     />
                 </div>
-                <div class="auth__field">
+                <div class="auth__field fd-stack fd-gap-xs">
                     <fd-ui-input
                         appearance="auth"
                         formControlName="password"
@@ -169,7 +174,7 @@
                         [error]="getControlError(registerForm.controls.password)"
                     />
                 </div>
-                <div class="auth__field">
+                <div class="auth__field fd-stack fd-gap-xs">
                     <fd-ui-input
                         appearance="auth"
                         formControlName="confirmPassword"
@@ -188,7 +193,7 @@
                     ></span>
                 </fd-ui-checkbox>
 
-                <div class="auth__actions">
+                <div class="auth__actions fd-stack fd-gap-sm">
                     <fd-ui-button
                         type="submit"
                         appearance="brand-action"
@@ -203,11 +208,11 @@
                     <fd-ui-form-error [error]="globalError()" />
                 </div>
 
-                <div class="auth__divider">
+                <div class="auth__divider fd-row fd-gap-xs">
                     <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
                 </div>
 
-                <div class="auth__social">
+                <div class="auth__social fd-stack fd-gap-xs">
                     <div
                         #googleRegisterButton
                         class="auth__google-button"

@@ -36,13 +36,8 @@
     }
 
     &__manual-add {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: var(--fd-space-xxs);
         margin-top: calc(var(--fd-space-xxs) * -1);
         margin-bottom: var(--fd-space-xxs);
-        flex-wrap: wrap;
     }
 
     &__manual-add-label {
@@ -90,10 +85,6 @@
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: var(--fd-space-lg);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--fd-space-xs);
 
         &-icon {
             font-size: 2em;
@@ -127,27 +118,7 @@
     }
 
     &__grid {
-        display: grid;
         grid-template-columns: 1fr;
-        gap: var(--fd-space-card-profile-gap);
-    }
-
-    &__groups {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-profile-gap);
-    }
-
-    &__day {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
-    &__day-header {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
     }
 
     &__day-label {
@@ -238,17 +209,11 @@
     }
 
     &__favorites-grid {
-        display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: var(--fd-space-xs);
         padding: 0 var(--fd-space-sm) var(--fd-space-sm);
     }
 
     &__favorite-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-surface-raised);
@@ -273,11 +238,6 @@
         font-size: var(--fd-text-label-floating-size);
         color: var(--fd-color-text-muted);
         margin-top: calc(var(--fd-space-xxs) / 2);
-    }
-
-    &__favorite-actions {
-        display: flex;
-        gap: var(--fd-space-xxs);
     }
 
     &__favorite-btn {

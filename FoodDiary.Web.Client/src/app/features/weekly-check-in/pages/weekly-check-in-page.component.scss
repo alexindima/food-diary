@@ -1,36 +1,19 @@
 .check-in {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
 
     &__trends {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: var(--fd-space-xs);
     }
 
     &__trend {
         --fd-accent-color: var(--fd-color-primary-500);
         padding: var(--fd-space-stat-tile-padding);
         border: var(--fd-border-default);
-        background:
-            linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-accent-color) 8%),
-                color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-accent-color) 4%)
-            );
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-accent-color) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-accent-color) 4%)
+        );
         box-shadow: var(--fd-shadow-lg);
-    }
-
-    &__trend-row {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
-    }
-
-    &__trend-info {
-        display: flex;
-        flex-direction: column;
     }
 
     &__trend-label {
@@ -42,25 +25,14 @@
     }
 
     &__grid {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: var(--fd-space-md);
     }
 
     &__card {
         height: 100%;
     }
 
-    &__stats {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
     &__stat-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: var(--fd-space-xs) 0;
         border-bottom: var(--fd-border-default);
 
@@ -77,16 +49,7 @@
         }
     }
 
-    &__suggestions {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
     &__suggestion {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--fd-space-xs);
         color: var(--fd-color-text);
     }
 
@@ -105,5 +68,3 @@
         color: var(--fd-color-text-muted);
     }
 }
-
-

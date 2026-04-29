@@ -1,10 +1,10 @@
 ﻿<fd-ui-dialog [title]="recipe.name" size="lg">
     <fd-ui-tabs class="recipe-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
-    <div class="recipe-detail">
+    <div class="recipe-detail fd-stack fd-gap-lg">
         @switch (activeTab) {
             @case ('summary') {
-                <div class="recipe-detail__summary">
+                <div class="recipe-detail__summary fd-grid fd-gap-sm">
                     <fd-ui-accent-surface
                         class="recipe-detail__surface recipe-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
@@ -75,7 +75,7 @@
                         <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
                             'PRODUCT_CARD.QUALITY_SCORE' | translate
                         }}</span>
-                        <div class="recipe-detail__quality">
+                        <div class="recipe-detail__quality fd-grid fd-gap-sm fd-align-center">
                             <div class="recipe-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                                 <span
                                     class="recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--{{ qualityGrade }}"
@@ -106,8 +106,8 @@
                 }
             }
             @case ('nutrients') {
-                <div class="recipe-detail__nutrients">
-                    <div class="recipe-detail__macro-grid">
+                <div class="recipe-detail__nutrients fd-grid fd-gap-md">
+                    <div class="recipe-detail__macro-grid fd-grid fd-gap-sm">
                         @for (macro of macroBlocks; track macro.labelKey) {
                             <fd-ui-accent-surface
                                 class="recipe-detail__surface fd-ui-summary-surface"
@@ -125,8 +125,8 @@
                             </fd-ui-accent-surface>
                         }
                     </div>
-                    <div class="recipe-detail__charts">
-                        <div class="recipe-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                    <div class="recipe-detail__charts fd-grid fd-gap-sm">
+                        <div class="recipe-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
                             <canvas
                                 baseChart
                                 [style.width.px]="chartSize"
@@ -137,7 +137,7 @@
                                 [legend]="false"
                             ></canvas>
                         </div>
-                        <div class="recipe-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                        <div class="recipe-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
                             <canvas
                                 baseChart
                                 [style.width.px]="chartSize"
@@ -154,7 +154,7 @@
         }
     </div>
 
-    <div fdUiDialogFooter class="recipe-detail__footer">
+    <div fdUiDialogFooter class="recipe-detail__footer fd-stack fd-gap-sm">
         @if (warningMessage) {
             <span class="recipe-detail__warning fd-ui-stat-value">{{ warningMessage | translate }}</span>
         }

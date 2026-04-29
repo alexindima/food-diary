@@ -18,10 +18,7 @@
 }
 
 .sidebar__link {
-    display: grid;
     grid-template-columns: 24px 1fr;
-    gap: var(--fd-space-xs);
-    align-items: center;
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-menu-item);
 }
@@ -71,9 +68,6 @@
 }
 
 .sidebar-mobile__sheet-link {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-xs);
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-menu-item);
     background: var(--fd-bg-surface-muted);

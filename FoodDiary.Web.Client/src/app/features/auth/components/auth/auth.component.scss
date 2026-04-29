@@ -2,9 +2,6 @@
 
 .auth {
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
     width: min(100%, 520px);
 
     &__tabs {
@@ -24,30 +21,6 @@
         margin: var(--fd-space-xs) 0 var(--fd-space-md);
         text-align: center;
         color: var(--fd-color-text-muted);
-    }
-
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
-    }
-
-    &__form {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
-    }
-
-    &__field {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
-    &__actions {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
     }
 
     &__link {
@@ -94,9 +67,7 @@
     }
 
     &__divider {
-        display: flex;
         align-items: center;
-        gap: var(--fd-space-xs);
         color: var(--fd-color-text-muted);
         margin: var(--fd-space-sm) 0;
 
@@ -107,12 +78,6 @@
             height: 1px;
             background: color-mix(in srgb, var(--fd-color-border-strong) 82%, transparent);
         }
-    }
-
-    &__social {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
     }
 
     &__google-button {
@@ -153,5 +118,3 @@
 :host .auth__terms .fd-ui-checkbox__control {
     margin-top: calc(var(--fd-space-xxs) / 2);
 }
-
-

@@ -78,24 +78,6 @@
         margin: var(--fd-space-lg) auto;
     }
 
-    &__groups {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-profile-gap);
-    }
-
-    &__section {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
-    &__section-header {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
-    }
-
     &__section-label {
         color: var(--fd-color-text);
         white-space: nowrap;
@@ -109,10 +91,7 @@
     }
 
     &__section-grid {
-        display: grid;
         grid-template-columns: 1fr;
-        gap: var(--fd-space-card-profile-gap);
-        align-items: start;
 
         fd-recipe-card {
             width: 100%;
@@ -123,10 +102,6 @@
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: var(--fd-space-lg);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--fd-space-xs);
 
         &-icon {
             font-size: 2em;
@@ -160,17 +135,11 @@
     }
 
     &__favorites-grid {
-        display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: var(--fd-space-xs);
         padding: 0 var(--fd-space-sm) var(--fd-space-sm);
     }
 
     &__favorite-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-surface-raised);
@@ -198,14 +167,6 @@
     &__favorite-meta {
         color: var(--fd-color-text-muted);
         margin-top: calc(var(--fd-space-xxs) / 2);
-        display: flex;
-        gap: var(--fd-space-xxs);
-        flex-wrap: wrap;
-    }
-
-    &__favorite-actions {
-        display: flex;
-        gap: var(--fd-space-xxs);
     }
 
     &__favorite-btn {

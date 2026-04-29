@@ -1,8 +1,4 @@
 .explore-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--fd-space-sm);
-    align-items: center;
     margin-bottom: var(--fd-space-lg);
 }
 
@@ -11,28 +7,16 @@
     min-width: 200px;
 }
 
-.explore-sort {
-    display: flex;
-    gap: var(--fd-space-xs);
-}
-
 .explore-grid {
-    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--fd-space-md);
     margin-bottom: var(--fd-space-lg);
 }
 
 .explore-loader {
-    display: flex;
-    justify-content: center;
     padding: var(--fd-space-xxl) 0;
 }
 
 .explore-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: var(--fd-space-xxl) var(--fd-space-md);
     text-align: center;
     color: var(--fd-color-text-muted);

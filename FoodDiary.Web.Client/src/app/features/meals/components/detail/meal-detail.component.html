@@ -1,10 +1,10 @@
 ﻿<fd-ui-dialog [title]="'CONSUMPTION_DETAIL.TITLE' | translate" [subtitle]="formattedDate || undefined" size="lg">
     <fd-ui-tabs class="consumption-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
-    <div class="consumption-detail">
+    <div class="consumption-detail fd-stack fd-gap-lg">
         @switch (activeTab) {
             @case ('summary') {
-                <div class="consumption-detail__summary">
+                <div class="consumption-detail__summary fd-grid fd-gap-sm">
                     <fd-ui-accent-surface
                         class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
@@ -57,7 +57,7 @@
                         <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
                             'PRODUCT_CARD.QUALITY_SCORE' | translate
                         }}</span>
-                        <div class="consumption-detail__quality">
+                        <div class="consumption-detail__quality fd-grid fd-gap-sm fd-align-center">
                             <div class="consumption-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                                 <span
                                     class="consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--{{
@@ -93,8 +93,8 @@
                 }
             }
             @case ('nutrients') {
-                <div class="consumption-detail__nutrients">
-                    <div class="consumption-detail__macro-grid">
+                <div class="consumption-detail__nutrients fd-grid fd-gap-md">
+                    <div class="consumption-detail__macro-grid fd-grid fd-gap-sm">
                         @for (macro of macroBlocks; track macro.labelKey) {
                             <fd-ui-accent-surface
                                 class="consumption-detail__surface fd-ui-summary-surface"
@@ -112,8 +112,8 @@
                             </fd-ui-accent-surface>
                         }
                     </div>
-                    <div class="consumption-detail__charts">
-                        <div class="consumption-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                    <div class="consumption-detail__charts fd-grid fd-gap-sm">
+                        <div class="consumption-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
                             <canvas
                                 baseChart
                                 [style.width.px]="chartSize"
@@ -124,7 +124,7 @@
                                 [legend]="false"
                             ></canvas>
                         </div>
-                        <div class="consumption-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                        <div class="consumption-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
                             <canvas
                                 baseChart
                                 [style.width.px]="chartSize"
@@ -141,7 +141,7 @@
         }
     </div>
 
-    <div fdUiDialogFooter class="consumption-detail__footer">
+    <div fdUiDialogFooter class="consumption-detail__footer fd-stack fd-gap-sm">
         <div class="consumption-detail__actions fd-ui-actions fd-ui-actions--end">
             <fd-ui-button
                 class="consumption-detail__favorite-btn"

@@ -1,4 +1,4 @@
-﻿<div class="dashboard" #dashboardRoot fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
+﻿<div class="dashboard fd-stack fd-gap-xl" #dashboardRoot fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
     @if (layout.isEditingLayout()) {
         <div class="dashboard__edit-overlay"></div>
     }
@@ -115,7 +115,7 @@
                             (action)="layout.save()"
                         />
                     }
-                    <div class="dashboard__column">
+                    <div class="dashboard__column fd-grid fd-gap-lg">
                         @if (shouldRenderFastingWidget()) {
                             <div
                                 class="dashboard__block dashboard__block--fasting"
@@ -236,7 +236,7 @@
                         }
                     </div>
 
-                    <div class="dashboard__column dashboard__column--aside">
+                    <div class="dashboard__column dashboard__column--aside fd-grid fd-gap-lg">
                         @if (layout.shouldRenderBlock('hydration')) {
                             <div
                                 class="dashboard__block"

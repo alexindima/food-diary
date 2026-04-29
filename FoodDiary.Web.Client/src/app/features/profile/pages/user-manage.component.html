@@ -1,4 +1,4 @@
-<div class="user-manage" fdPageContainer>
+﻿<div class="user-manage fd-stack fd-gap-md" fdPageContainer>
     <fd-page-header
         class="user-manage__header"
         [title]="'USER_MANAGE.EDIT_TITLE' | translate"
@@ -6,25 +6,34 @@
     />
 
     <fd-page-body>
-        <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSurfaceBusy()">
-            <div class="user-manage__stack">
-                <fd-ui-card class="user-manage__card user-manage__card--account" tone="profile" density="profile">
-                    <div class="user-manage__card-header">
+        <form
+            class="user-manage__form fd-stack fd-gap-card-profile"
+            [formGroup]="userForm"
+            (ngSubmit)="onSubmit()"
+            [attr.aria-busy]="isSurfaceBusy()"
+        >
+            <div class="user-manage__stack fd-stack fd-gap-card-profile">
+                <fd-ui-card
+                    class="user-manage__card user-manage__card--account fd-stack fd-gap-card-profile"
+                    tone="profile"
+                    density="profile"
+                >
+                    <div class="user-manage__card-header fd-row fd-gap-sm">
                         <div class="user-manage__card-icon user-manage__card-icon--account"></div>
-                        <div class="user-manage__card-text">
+                        <div class="user-manage__card-text fd-stack fd-gap-xxs">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.ACCOUNT_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">
                                 {{ 'USER_MANAGE.ACCOUNT_DESC' | translate }}
                             </div>
-                            <div class="user-manage__status-row">
+                            <div class="user-manage__status-row fd-row fd-wrap fd-gap-xs">
                                 <fd-ui-status-badge [tone]="getProfileStatusTone()">
                                     {{ getProfileStatusKey() | translate }}
                                 </fd-ui-status-badge>
                             </div>
                         </div>
                     </div>
-                    <div class="user-manage__account">
-                        <div class="user-manage__avatar-block">
+                    <div class="user-manage__account fd-grid fd-gap-lg">
+                        <div class="user-manage__avatar-block fd-stack fd-gap-sm fd-align-center">
                             <div class="image-upload-field__label-block">
                                 <div class="image-upload-field__label-title">{{ 'USER_MANAGE.AVATAR' | translate }}</div>
                             </div>
@@ -144,10 +153,14 @@
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card class="user-manage__card user-manage__card--billing" tone="profile" density="profile">
-                    <div class="user-manage__card-header">
+                <fd-ui-card
+                    class="user-manage__card user-manage__card--billing fd-stack fd-gap-card-profile"
+                    tone="profile"
+                    density="profile"
+                >
+                    <div class="user-manage__card-header fd-row fd-gap-sm">
                         <div class="user-manage__card-icon user-manage__card-icon--billing"></div>
-                        <div class="user-manage__card-text">
+                        <div class="user-manage__card-text fd-stack fd-gap-xxs">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.BILLING_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.BILLING_DESC' | translate }}</div>
                         </div>
@@ -244,10 +257,10 @@
                     }
                 </fd-ui-card>
 
-                <fd-ui-card class="user-manage__card user-manage__card--body" tone="profile" density="profile">
-                    <div class="user-manage__card-header">
+                <fd-ui-card class="user-manage__card user-manage__card--body fd-stack fd-gap-card-profile" tone="profile" density="profile">
+                    <div class="user-manage__card-header fd-row fd-gap-sm">
                         <div class="user-manage__card-icon user-manage__card-icon--body"></div>
-                        <div class="user-manage__card-text">
+                        <div class="user-manage__card-text fd-stack fd-gap-xxs">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.BODY_SECTION' | translate }}</div>
                         </div>
                     </div>
@@ -269,10 +282,14 @@
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card class="user-manage__card user-manage__card--notifications" tone="profile" density="profile">
-                    <div class="user-manage__card-header">
+                <fd-ui-card
+                    class="user-manage__card user-manage__card--notifications fd-stack fd-gap-card-profile"
+                    tone="profile"
+                    density="profile"
+                >
+                    <div class="user-manage__card-header fd-row fd-gap-sm">
                         <div class="user-manage__card-icon user-manage__card-icon--notifications"></div>
-                        <div class="user-manage__card-text">
+                        <div class="user-manage__card-text fd-stack fd-gap-xxs">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</div>
                             @if (getNotificationsStatusKey(); as notificationsStatusKey) {
@@ -505,10 +522,14 @@
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card class="user-manage__card user-manage__card--dietologist" tone="profile" density="profile">
-                    <div class="user-manage__card-header">
+                <fd-ui-card
+                    class="user-manage__card user-manage__card--dietologist fd-stack fd-gap-card-profile"
+                    tone="profile"
+                    density="profile"
+                >
+                    <div class="user-manage__card-header fd-row fd-gap-sm">
                         <div class="user-manage__card-icon user-manage__card-icon--dietologist"></div>
-                        <div class="user-manage__card-text">
+                        <div class="user-manage__card-text fd-stack fd-gap-xxs">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.DIETOLOGIST_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.DIETOLOGIST_DESC' | translate }}</div>
                         </div>
@@ -783,10 +804,10 @@
                 </fd-ui-card>
             </div>
 
-            <fd-ui-card class="user-manage__card user-manage__card--privacy" tone="profile" density="profile">
-                <div class="user-manage__card-header">
+            <fd-ui-card class="user-manage__card user-manage__card--privacy fd-stack fd-gap-card-profile" tone="profile" density="profile">
+                <div class="user-manage__card-header fd-row fd-gap-sm">
                     <div class="user-manage__card-icon user-manage__card-icon--privacy"></div>
-                    <div class="user-manage__card-text">
+                    <div class="user-manage__card-text fd-stack fd-gap-xxs">
                         <div class="user-manage__card-title">{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</div>
                         <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</div>
                     </div>

@@ -10,7 +10,6 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
     selector: 'fd-user-manage-password-success-dialog',
     standalone: true,
     templateUrl: './password-success-dialog.component.html',
-    styleUrls: ['./password-success-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })

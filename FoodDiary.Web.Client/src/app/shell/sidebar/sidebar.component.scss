@@ -5,18 +5,12 @@
     top: 0;
     height: 100vh;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
     padding: var(--fd-space-lg) var(--fd-space-md) var(--fd-space-lg);
     background: var(--fd-bg-sidebar);
     border-right: var(--fd-border-default);
     box-shadow: var(--fd-shadow-shell-sidebar);
 
     &__brand {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-surface);
@@ -30,8 +24,6 @@
     }
 
     &__brand-text {
-        display: flex;
-        flex-direction: column;
         line-height: 1.2;
         min-width: 0;
         flex: 1 1 auto;
@@ -88,8 +80,6 @@
     }
 
     &__nav {
-        display: grid;
-        gap: var(--fd-space-xxs);
         margin-top: var(--fd-space-xxs);
     }
 
@@ -100,10 +90,7 @@
         background: transparent;
         text-align: left;
         cursor: pointer;
-        display: grid;
         grid-template-columns: 24px 1fr;
-        gap: var(--fd-space-xs);
-        align-items: center;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
         color: var(--fd-color-text-muted);
@@ -660,6 +647,3 @@
         display: none;
     }
 }
-
-
-

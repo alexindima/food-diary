@@ -1,15 +1,6 @@
 @use 'variables' as variables;
 
 .recipe-select {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
-
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 
     &__title {
         font-size: var(--fd-text-section-title-size);
@@ -37,17 +28,8 @@
         width: 100%;
     }
 
-    &__list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
     &__item {
-        display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: var(--fd-space-sm);
-        align-items: center;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
         border: var(--fd-border-subtle);
@@ -62,8 +44,6 @@
         height: var(--fd-size-control-touch);
         border-radius: var(--fd-radius-input);
         overflow: hidden;
-        display: grid;
-        place-items: center;
         background: var(--fd-bg-brand-soft);
 
         img {
@@ -103,8 +83,6 @@
     }
 
     &__footer {
-        display: flex;
-        justify-content: flex-end;
         padding-top: var(--fd-space-sm);
     }
 
@@ -115,8 +93,6 @@
     &__no-results {
         text-align: center;
         color: var(--fd-color-text-muted);
-        display: grid;
-        gap: var(--fd-space-xs);
         justify-items: center;
     }
 
@@ -125,7 +101,3 @@
         color: var(--fd-color-danger);
     }
 }
-
-
-
-

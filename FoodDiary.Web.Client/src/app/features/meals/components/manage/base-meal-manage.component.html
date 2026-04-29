@@ -1,4 +1,4 @@
-<div class="consumption-manage" fdPageContainer>
+﻿<div class="consumption-manage fd-stack" fdPageContainer>
     <fd-manage-header
         class="consumption-manage__header"
         [title]="consumption() ? ('CONSUMPTION_MANAGE.EDIT_TITLE' | translate) : ('CONSUMPTION_MANAGE.ADD_TITLE' | translate)"
@@ -7,9 +7,9 @@
         (back)="onCancel()"
     />
 
-    <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
-        <div class="consumption-manage__grid">
-            <div class="consumption-manage__column consumption-manage__column--primary">
+    <form class="consumption-manage__form fd-stack fd-gap-lg" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
+        <div class="consumption-manage__grid fd-grid fd-gap-xl">
+            <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
                 <fd-ui-card
                     class="consumption-manage__card"
                     tone="editor"
@@ -17,7 +17,7 @@
                     headerAlign="center"
                     [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate"
                 >
-                    <div class="consumption-manage__hero">
+                    <div class="consumption-manage__hero fd-grid fd-gap-lg">
                         <div class="consumption-manage__image">
                             <fd-image-upload-field
                                 appearance="compact"
@@ -25,9 +25,9 @@
                                 [description]="'CONSUMPTION_MANAGE.IMAGE_DESCRIPTION' | translate"
                             />
                         </div>
-                        <div class="consumption-manage__hero-fields">
-                            <div class="consumption-manage__field-row">
-                                <div class="consumption-manage__field">
+                        <div class="consumption-manage__hero-fields fd-stack fd-gap-lg">
+                            <div class="consumption-manage__field-row fd-grid fd-gap-lg">
+                                <div class="consumption-manage__field fd-stack fd-gap-xs">
                                     <fd-ui-date-input
                                         formControlName="date"
                                         size="lg"
@@ -36,7 +36,7 @@
                                         [error]="getControlError('date')"
                                     />
                                 </div>
-                                <div class="consumption-manage__field">
+                                <div class="consumption-manage__field fd-stack fd-gap-xs">
                                     <fd-ui-time-input
                                         formControlName="time"
                                         size="lg"
@@ -46,7 +46,7 @@
                                     />
                                 </div>
                             </div>
-                            <div class="consumption-manage__field">
+                            <div class="consumption-manage__field fd-stack fd-gap-xs">
                                 <fd-ui-select
                                     formControlName="mealType"
                                     size="lg"
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="consumption-manage__field consumption-manage__field--full">
+                    <div class="consumption-manage__field consumption-manage__field--full fd-stack fd-gap-xs">
                         <fd-ui-textarea
                             formControlName="comment"
                             size="lg"
@@ -79,27 +79,27 @@
                     <p class="consumption-manage__satiety-note fd-ui-body-sm">
                         {{ 'CONSUMPTION_MANAGE.SATIETY_SECTION_HINT' | translate }}
                     </p>
-                    <div class="consumption-manage__satiety-grid">
-                        <div class="consumption-manage__satiety-field">
+                    <div class="consumption-manage__satiety-grid fd-grid fd-gap-md">
+                        <div class="consumption-manage__satiety-field fd-stack fd-gap-xs">
                             <p class="consumption-manage__satiety-picker-label fd-ui-action-text">
                                 {{ 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' | translate }}
                             </p>
                             @let beforeMeta = getSatietyLevelMeta(consumptionForm.controls.preMealSatietyLevel.value);
                             <button
                                 type="button"
-                                class="consumption-manage__satiety-card"
+                                class="consumption-manage__satiety-card fd-row fd-gap-md"
                                 (click)="openSatietyDialog('preMealSatietyLevel')"
                                 [style.--satiety-gradient]="beforeMeta.gradient"
                                 [attr.aria-label]="getSatietyButtonAriaLabel('preMealSatietyLevel')"
                             >
-                                <div class="consumption-manage__satiety-card-indicator">
+                                <div class="consumption-manage__satiety-card-indicator fd-center">
                                     {{
                                         (consumptionForm.controls.preMealSatietyLevel.value ?? 0) > 0
                                             ? consumptionForm.controls.preMealSatietyLevel.value
                                             : '?'
                                     }}
                                 </div>
-                                <div class="consumption-manage__satiety-card-text">
+                                <div class="consumption-manage__satiety-card-text fd-stack fd-gap-xxs">
                                     <span class="consumption-manage__satiety-card-title fd-ui-action-text">
                                         {{ beforeMeta.label }}
                                     </span>
@@ -110,26 +110,26 @@
                                 <fd-ui-icon name="tune"></fd-ui-icon>
                             </button>
                         </div>
-                        <div class="consumption-manage__satiety-field">
+                        <div class="consumption-manage__satiety-field fd-stack fd-gap-xs">
                             <p class="consumption-manage__satiety-picker-label fd-ui-action-text">
                                 {{ 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL' | translate }}
                             </p>
                             @let afterMeta = getSatietyLevelMeta(consumptionForm.controls.postMealSatietyLevel.value);
                             <button
                                 type="button"
-                                class="consumption-manage__satiety-card"
+                                class="consumption-manage__satiety-card fd-row fd-gap-md"
                                 (click)="openSatietyDialog('postMealSatietyLevel')"
                                 [style.--satiety-gradient]="afterMeta.gradient"
                                 [attr.aria-label]="getSatietyButtonAriaLabel('postMealSatietyLevel')"
                             >
-                                <div class="consumption-manage__satiety-card-indicator">
+                                <div class="consumption-manage__satiety-card-indicator fd-center">
                                     {{
                                         (consumptionForm.controls.postMealSatietyLevel.value ?? 0) > 0
                                             ? consumptionForm.controls.postMealSatietyLevel.value
                                             : '?'
                                     }}
                                 </div>
-                                <div class="consumption-manage__satiety-card-text">
+                                <div class="consumption-manage__satiety-card-text fd-stack fd-gap-xxs">
                                     <span class="consumption-manage__satiety-card-title fd-ui-action-text">
                                         {{ afterMeta.label }}
                                     </span>
@@ -143,13 +143,13 @@
                     </div>
                 </fd-ui-card>
 
-                <div class="consumption-manage__items-section">
-                    <div class="consumption-manage__items-header">
+                <div class="consumption-manage__items-section fd-stack fd-gap-md">
+                    <div class="consumption-manage__items-header fd-row fd-wrap fd-justify-between fd-gap-md">
                         <h2 class="consumption-manage__section-title fd-ui-section-title">
                             {{ 'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate }}
                         </h2>
                     </div>
-                    <div class="consumption-manage__items-grid">
+                    <div class="consumption-manage__items-grid fd-grid fd-gap-lg">
                         <fd-meal-items-list
                             [formArray]="items"
                             [isEditMode]="!!consumption()"
@@ -169,7 +169,7 @@
                 </div>
             </div>
 
-            <div class="consumption-manage__column consumption-manage__column--secondary">
+            <div class="consumption-manage__column consumption-manage__column--secondary fd-stack fd-gap-lg">
                 <fd-meal-nutrition-sidebar
                     [consumptionForm]="consumptionForm"
                     [nutritionControlNames]="nutritionControlNames"

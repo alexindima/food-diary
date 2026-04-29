@@ -9,9 +9,7 @@
 }
 
 .areas-grid {
-    display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: var(--fd-space-sm);
 }
 
 .area-card {
@@ -79,9 +77,6 @@
 .score-text {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .area-card--excellent .area-grade {

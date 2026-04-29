@@ -38,7 +38,7 @@
                                 {{ 'STATISTICS.AVERAGE_CARD.CONSUMPTION' | translate }}
                             </span>
                         </div>
-                        <div class="stats-summary-card__average-details fd-gap-card-header">
+                        <div class="stats-summary-card__average-details fd-grid fd-gap-card-header">
                             <div class="stats-summary-card__average-item fd-stack fd-gap-card-header">
                                 <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                     {{ data.averageCard.steps | number: '1.0-0' }}
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="stats-summary-card__row stats-summary-card__row--macros fd-gap-card-header">
+                <div class="stats-summary-card__row stats-summary-card__row--macros fd-grid fd-gap-card-header">
                     @for (macro of data.macros; track macro.labelKey) {
                         <fd-ui-accent-surface
                             class="stats-summary-card__macro-card fd-ui-stat-tile"

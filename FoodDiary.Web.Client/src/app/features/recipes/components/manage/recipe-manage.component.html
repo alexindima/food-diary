@@ -1,4 +1,4 @@
-<div class="recipe-manage" fdPageContainer>
+<div class="recipe-manage fd-stack" fdPageContainer>
     <fd-manage-header
         class="recipe-manage__header"
         [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
@@ -7,15 +7,15 @@
         (back)="onCancel()"
     />
 
-    <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
+    <form class="recipe-manage__form fd-stack fd-gap-lg" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
         @if (globalError()) {
             <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
                 {{ globalError() }}
             </div>
         }
 
-        <div class="recipe-manage__grid">
-            <div class="recipe-manage__column recipe-manage__column--primary">
+        <div class="recipe-manage__grid fd-grid fd-gap-lg">
+            <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
                 <fd-recipe-basic-info [formGroup]="recipeForm" [visibilitySelectOptions]="visibilitySelectOptions" />
 
                 <fd-recipe-steps-list
@@ -29,8 +29,8 @@
                 />
             </div>
 
-            <div class="recipe-manage__column recipe-manage__column--secondary">
-                <div class="recipe-manage__sticky-stack">
+            <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">
+                <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
                     <fd-ui-card
                         class="recipe-manage__card recipe-manage__card--facts"
                         appearance="entry"
@@ -39,7 +39,7 @@
                         headerAlign="center"
                         [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
                     >
-                        <div class="recipe-manage__nutrition">
+                        <div class="recipe-manage__nutrition fd-stack fd-gap-md">
                             <fd-nutrition-editor
                                 [formGroup]="recipeForm"
                                 [controlNames]="nutritionControlNames"

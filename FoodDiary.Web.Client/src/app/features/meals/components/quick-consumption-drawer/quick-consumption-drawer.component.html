@@ -1,6 +1,11 @@
 @if (shouldRender()) {
-    <div class="quick-consumption" [class.quick-consumption--inline]="isInline()" role="region" [attr.aria-labelledby]="titleId">
-        <div class="quick-consumption__header">
+    <div
+        class="quick-consumption fd-grid fd-gap-sm"
+        [class.quick-consumption--inline]="isInline()"
+        role="region"
+        [attr.aria-labelledby]="titleId"
+    >
+        <div class="quick-consumption__header fd-row fd-justify-between fd-gap-xs">
             <div>
                 <div class="quick-consumption__title fd-ui-card-title" [id]="titleId">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
                 <div class="quick-consumption__subtitle fd-ui-action-text" aria-live="polite">
@@ -19,13 +24,13 @@
         </div>
 
         @if (hasItems()) {
-            <div class="quick-consumption__list">
+            <div class="quick-consumption__list fd-grid fd-gap-xs">
                 @for (item of items(); track item.key) {
-                    <div class="quick-consumption__item">
-                        <div class="quick-consumption__thumb">
+                    <div class="quick-consumption__item fd-grid fd-gap-xs fd-align-center">
+                        <div class="quick-consumption__thumb fd-place-center">
                             <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
                         </div>
-                        <div class="quick-consumption__info">
+                        <div class="quick-consumption__info fd-grid fd-gap-xxs">
                             <div class="quick-consumption__name fd-ui-action-text">
                                 {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
                             </div>
@@ -56,7 +61,7 @@
             <p class="quick-consumption__empty fd-ui-body-sm">{{ 'QUICK_CONSUMPTION.PREVIEW_EMPTY' | translate }}</p>
         }
 
-        <div class="quick-consumption__actions">
+        <div class="quick-consumption__actions fd-grid fd-gap-xs">
             <fd-ui-button
                 variant="secondary"
                 fill="outline"

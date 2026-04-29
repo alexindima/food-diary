@@ -1,6 +1,6 @@
-﻿<div class="recipe-select" #container>
+﻿<div class="recipe-select fd-stack fd-gap-md" #container>
     @if (!embedded()) {
-        <div class="recipe-select__header">
+        <div class="recipe-select__header fd-row fd-justify-between">
             <div>
                 <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
             </div>
@@ -37,10 +37,10 @@
         <fd-ui-loader class="recipe-select__loader" />
     } @else {
         @if (recipeData.items().length > 0) {
-            <div class="recipe-select__list">
+            <div class="recipe-select__list fd-stack fd-gap-sm">
                 @for (recipe of recipeData.items(); track recipe.id) {
-                    <button type="button" class="recipe-select__item" (click)="onRecipeClick(recipe)">
-                        <div class="recipe-select__thumb">
+                    <button type="button" class="recipe-select__item fd-grid fd-gap-sm fd-align-center" (click)="onRecipeClick(recipe)">
+                        <div class="recipe-select__thumb fd-place-center">
                             @if (resolveImage(recipe)) {
                                 <img [src]="resolveImage(recipe)" [alt]="recipe.name" />
                             } @else {
@@ -71,7 +71,7 @@
                 }
             </div>
         } @else {
-            <div class="recipe-select__no-results">
+            <div class="recipe-select__no-results fd-grid fd-gap-xs">
                 <fd-ui-icon class="recipe-select__no-results-icon" name="search_off" size="lg" />
                 {{ 'RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND' | translate }}
             </div>
@@ -89,7 +89,7 @@
     }
 
     @if (!embedded()) {
-        <div class="recipe-select__footer">
+        <div class="recipe-select__footer fd-row fd-justify-end">
             <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateRecipeClick()">
                 {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
             </fd-ui-button>

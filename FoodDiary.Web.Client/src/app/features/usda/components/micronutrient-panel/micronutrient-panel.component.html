@@ -5,7 +5,7 @@
         <div class="section">
             <h4 class="section-title fd-ui-overline">{{ 'MICRONUTRIENTS.VITAMINS' | translate }}</h4>
             @for (nutrient of vitamins(); track nutrient.nutrientId) {
-                <div class="nutrient-row">
+                <div class="nutrient-row fd-grid fd-gap-xs fd-align-center">
                     <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
                     <span class="nutrient-amount fd-ui-caption">{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span>
                     @if (nutrient.percentDailyValue !== null) {
@@ -29,7 +29,7 @@
         <div class="section">
             <h4 class="section-title fd-ui-overline">{{ 'MICRONUTRIENTS.MINERALS' | translate }}</h4>
             @for (nutrient of minerals(); track nutrient.nutrientId) {
-                <div class="nutrient-row">
+                <div class="nutrient-row fd-grid fd-gap-xs fd-align-center">
                     <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
                     <span class="nutrient-amount fd-ui-caption">{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span>
                     @if (nutrient.percentDailyValue !== null) {

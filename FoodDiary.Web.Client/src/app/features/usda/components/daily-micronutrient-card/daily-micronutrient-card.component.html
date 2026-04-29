@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header fd-row fd-justify-between">
         <h3 class="card-title fd-ui-card-title">{{ 'MICRONUTRIENTS.DAILY_TITLE' | translate }}</h3>
         @if (linkedCount() > 0) {
             <span class="coverage-badge fd-ui-overline">
@@ -11,7 +11,7 @@
     @if (keyNutrients().length === 0) {
         <p class="empty-state fd-ui-body-sm">{{ 'MICRONUTRIENTS.NO_DAILY_DATA' | translate }}</p>
     } @else {
-        <div class="nutrients-grid">
+        <div class="nutrients-grid fd-grid fd-gap-sm">
             @for (nutrient of keyNutrients(); track nutrient.nutrientId) {
                 <div class="nutrient-item fd-ui-progress-item">
                     <div class="nutrient-header fd-ui-progress-item__header">

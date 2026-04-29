@@ -1,9 +1,6 @@
 @use 'variables';
 
 .recipe-detail {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-lg);
 
     &__tabs {
         margin: calc(var(--fd-space-xs) * -1) calc(var(--fd-space-xxs) * -1) var(--fd-space-sm);
@@ -11,9 +8,7 @@
     }
 
     &__summary {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: var(--fd-space-sm);
         margin-bottom: var(--fd-space-xs);
     }
 
@@ -34,10 +29,8 @@
     }
 
     &__quality {
-        display: inline-grid;
         grid-template-columns: minmax(120px, 180px) auto;
-        align-items: center;
-        gap: var(--fd-space-sm);
+        display: inline-grid;
         width: fit-content;
         max-width: 100%;
     }
@@ -69,37 +62,22 @@
     }
 
     &__nutrients {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: var(--fd-space-md);
         align-items: stretch;
         margin-bottom: var(--fd-space-xs);
     }
 
     &__macro-grid {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: var(--fd-space-sm);
     }
 
     &__charts {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: var(--fd-space-sm);
         justify-items: center;
     }
 
-    &__chart {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
     &__footer {
-        display: flex;
-        flex-direction: column;
         align-items: stretch;
-        gap: var(--fd-space-sm);
     }
 
     &__actions {
@@ -158,6 +136,5 @@
         &__quality-bar {
             height: 7px;
         }
-
     }
 }

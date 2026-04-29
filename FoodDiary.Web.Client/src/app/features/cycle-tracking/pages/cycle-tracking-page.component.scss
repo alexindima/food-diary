@@ -1,16 +1,11 @@
 .cycle-tracking {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-page-header-gap);
 
     &__header {
         margin-bottom: var(--fd-page-header-gap);
     }
 
     &__grid {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: var(--fd-space-card-content-gap);
     }
 
     &__grid--log {
@@ -21,16 +16,8 @@
         height: 100%;
     }
 
-    &__form {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
-    }
-
     &__form-row {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: var(--fd-space-card-header-gap);
 
         &--wide {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -52,9 +39,7 @@
 
     &__summary,
     &__predictions {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: var(--fd-space-card-header-gap);
     }
 
     &__summary-item,
@@ -65,15 +50,7 @@
     }
 
     &__symptom-grid {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: var(--fd-space-card-header-gap);
-    }
-
-    &__days {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
     }
 
     &__day {
@@ -85,10 +62,6 @@
     }
 
     &__day-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: var(--fd-space-card-header-gap);
         margin-bottom: var(--fd-space-card-header-gap);
     }
 
@@ -108,9 +81,7 @@
     }
 
     &__symptoms-row {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: var(--fd-space-card-header-gap);
         color: var(--fd-color-slate-700);
         margin-bottom: var(--fd-space-card-header-gap);
     }

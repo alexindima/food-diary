@@ -1,6 +1,6 @@
 <div class="health-scores">
     <h3 class="title fd-ui-card-title">{{ 'HEALTH_SCORES.TITLE' | translate }}</h3>
-    <div class="areas-grid">
+    <div class="areas-grid fd-grid fd-gap-sm">
         @for (area of areas(); track area.key) {
             <div class="area-card fd-ui-stat-tile fd-ui-stat-tile--compact fd-ui-stat-tile--centered" [class]="'area-card--' + area.grade">
                 <span class="area-icon">{{ area.icon }}</span>
@@ -14,7 +14,7 @@
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         />
                     </svg>
-                    <span class="score-text fd-ui-stat-value">{{ area.score }}</span>
+                    <span class="score-text fd-center fd-ui-stat-value">{{ area.score }}</span>
                 </div>
                 <span class="area-grade fd-ui-stat-tile__meta fd-ui-overline">{{
                     'HEALTH_SCORES.GRADE_' + area.grade.toUpperCase() | translate

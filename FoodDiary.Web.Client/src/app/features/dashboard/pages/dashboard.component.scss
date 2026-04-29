@@ -16,10 +16,7 @@
 $color-text-secondary: var(--fd-color-text-muted);
 
 .dashboard {
-    display: flex;
-    flex-direction: column;
     flex: 1 1 auto;
-    gap: var(--fd-space-xl);
     margin: 0 auto;
     position: relative;
     min-height: 100%;
@@ -27,8 +24,6 @@ $color-text-secondary: var(--fd-color-text-muted);
     @include dashboard-shell.apply-dashboard-shell($color-text-secondary);
 
     &__column {
-        display: grid;
-        gap: var(--fd-space-lg);
         align-content: start;
         min-width: 0;
         grid-column: 1;

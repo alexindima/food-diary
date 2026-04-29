@@ -1,4 +1,4 @@
-<div class="weight-history-page" fdPageContainer>
+<div class="weight-history-page fd-stack fd-gap-page-header" fdPageContainer>
     <fd-page-header
         class="weight-history-page__header"
         [title]="'WEIGHT_HISTORY.TITLE' | translate"
@@ -55,7 +55,7 @@
             >
                 @if (bmiValue() !== null) {
                     @if (bmiStatusInfo(); as bmiInfo) {
-                        <div class="weight-history-page__bmi-top">
+                        <div class="weight-history-page__bmi-top fd-stack fd-gap-card-header">
                             <p class="weight-history-page__bmi-note fd-ui-caption">
                                 {{ 'WEIGHT_HISTORY.BMI_NOTE' | translate }}
                             </p>
@@ -78,8 +78,8 @@
                             </div>
                         </div>
 
-                        <div class="weight-history-page__bmi-bottom">
-                            <div class="weight-history-page__bmi-footer">
+                        <div class="weight-history-page__bmi-bottom fd-stack fd-gap-card-header">
+                            <div class="weight-history-page__bmi-footer fd-row fd-justify-between fd-wrap fd-gap-card-header">
                                 <div class="weight-history-page__bmi-value fd-ui-body-sm">
                                     {{ 'WEIGHT_HISTORY.BMI_CURRENT' | translate }}:
                                     <strong>{{ bmiValue() }}</strong>
@@ -106,13 +106,13 @@
             <div style="height: 200px"></div>
         }
 
-        <div class="weight-history-page__content weight-history-page__content--form">
+        <div class="weight-history-page__content weight-history-page__content--form fd-grid fd-gap-card-content">
             <fd-ui-card
                 class="weight-history-page__card weight-history-page__card--form"
                 [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate"
             >
-                <form class="weight-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
-                    <div class="weight-history-page__form-row">
+                <form class="weight-history-page__form fd-stack fd-gap-card-header" [formGroup]="form" (ngSubmit)="submit()">
+                    <div class="weight-history-page__form-row fd-grid fd-gap-card-header">
                         <fd-ui-date-input
                             class="weight-history-page__form-control"
                             formControlName="date"
@@ -130,7 +130,7 @@
                         />
                     </div>
 
-                    <div class="weight-history-page__form-actions">
+                    <div class="weight-history-page__form-actions fd-row fd-wrap fd-gap-actions">
                         <fd-ui-button [disabled]="isSaving()" [loading]="isSaving()" type="submit">
                             @if (isEditing()) {
                                 {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
@@ -151,7 +151,7 @@
                 class="weight-history-page__card weight-history-page__card--goal"
                 [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
             >
-                <div class="weight-history-page__goal-body">
+                <div class="weight-history-page__goal-body fd-stack fd-gap-card-header">
                     <fd-ui-input
                         class="weight-history-page__goal-input"
                         type="number"
@@ -161,7 +161,7 @@
                         (suffixButtonClicked)="desiredWeightControl.setValue('')"
                         [formControl]="desiredWeightControl"
                     />
-                    <div class="weight-history-page__goal-actions">
+                    <div class="weight-history-page__goal-actions fd-row fd-gap-actions">
                         <fd-ui-button
                             type="button"
                             (click)="saveDesiredWeight()"
@@ -176,7 +176,7 @@
         </div>
 
         @defer (on viewport) {
-            <div class="weight-history-page__content weight-history-page__content--full">
+            <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
                 <fd-ui-card
                     class="weight-history-page__card weight-history-page__card--entries"
                     [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate"
@@ -191,9 +191,9 @@
                                 {{ 'WEIGHT_HISTORY.NO_ENTRIES' | translate }}
                             </div>
                         } @else {
-                            <div class="weight-history-page__entries">
+                            <div class="weight-history-page__entries fd-stack fd-gap-card-header">
                                 @for (entry of entriesDescending(); track entry.id) {
-                                    <div class="weight-history-page__entry">
+                                    <div class="weight-history-page__entry fd-grid fd-gap-card-header fd-align-center">
                                         <div class="weight-history-page__entry-date fd-ui-stat-value">
                                             {{ entry.date | date: 'dd.MM.yyyy' }}
                                         </div>
@@ -201,7 +201,7 @@
                                             {{ entry.weight | number: '1.0-2' }}
                                             {{ 'DASHBOARD.KG' | translate }}
                                         </div>
-                                        <div class="weight-history-page__entry-actions">
+                                        <div class="weight-history-page__entry-actions fd-row fd-wrap fd-gap-actions fd-justify-end">
                                             <fd-ui-button
                                                 type="button"
                                                 fill="text"

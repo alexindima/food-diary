@@ -1,4 +1,4 @@
-<div class="cycle-tracking" fdPageContainer>
+<div class="cycle-tracking fd-stack fd-gap-page-header" fdPageContainer>
     <fd-page-header
         class="cycle-tracking__header"
         [title]="'CYCLE_TRACKING.TITLE' | translate"
@@ -6,10 +6,10 @@
     />
 
     <fd-page-body>
-        <div class="cycle-tracking__grid">
+        <div class="cycle-tracking__grid fd-grid fd-gap-card-content">
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate">
-                <form class="cycle-tracking__form" [formGroup]="startCycleForm" (ngSubmit)="startCycle()">
-                    <div class="cycle-tracking__form-row">
+                <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formGroup]="startCycleForm" (ngSubmit)="startCycle()">
+                    <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
                         <fd-ui-date-input
                             class="cycle-tracking__form-control"
                             formControlName="startDate"
@@ -41,7 +41,7 @@
                     <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
                 } @else {
                     @if (cycle(); as current) {
-                        <div class="cycle-tracking__summary">
+                        <div class="cycle-tracking__summary fd-grid fd-gap-card-header">
                             <fd-ui-accent-surface
                                 class="cycle-tracking__summary-item fd-ui-summary-surface"
                                 accentSide="top"
@@ -84,7 +84,7 @@
                         </div>
 
                         @if (predictions(); as prediction) {
-                            <div class="cycle-tracking__predictions">
+                            <div class="cycle-tracking__predictions fd-grid fd-gap-card-header">
                                 <fd-ui-accent-surface
                                     class="cycle-tracking__prediction fd-ui-summary-surface"
                                     accentSide="top"
@@ -133,13 +133,13 @@
             </fd-ui-card>
         </div>
 
-        <div class="cycle-tracking__grid cycle-tracking__grid--log">
+        <div class="cycle-tracking__grid cycle-tracking__grid--log fd-grid fd-gap-card-content">
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate">
                 @if (!cycle()) {
                     <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
                 } @else {
-                    <form class="cycle-tracking__form" [formGroup]="dayForm" (ngSubmit)="saveDay()">
-                        <div class="cycle-tracking__form-row cycle-tracking__form-row--wide">
+                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formGroup]="dayForm" (ngSubmit)="saveDay()">
+                        <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
                             <fd-ui-date-input
                                 class="cycle-tracking__form-control"
                                 formControlName="date"
@@ -150,7 +150,7 @@
                             </fd-ui-checkbox>
                         </div>
 
-                        <div class="cycle-tracking__symptom-grid">
+                        <div class="cycle-tracking__symptom-grid fd-grid fd-gap-card-header">
                             @for (field of symptomFields; track field.key) {
                                 <fd-ui-input
                                     class="cycle-tracking__form-control"
@@ -185,7 +185,7 @@
                     @if (days().length === 0) {
                         <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_DAYS' | translate }}</p>
                     } @else {
-                        <div class="cycle-tracking__days">
+                        <div class="cycle-tracking__days fd-stack fd-gap-card-header">
                             @for (day of days(); track day.id) {
                                 <fd-ui-accent-surface
                                     class="cycle-tracking__day"
@@ -197,7 +197,7 @@
                                     "
                                     [tinted]="true"
                                 >
-                                    <div class="cycle-tracking__day-header">
+                                    <div class="cycle-tracking__day-header fd-row fd-justify-between fd-gap-card-header">
                                         <div class="cycle-tracking__day-date fd-ui-stat-value">
                                             {{ day.date | date: 'd MMM, y' }}
                                         </div>
@@ -212,7 +212,7 @@
                                             }}
                                         </div>
                                     </div>
-                                    <div class="cycle-tracking__symptoms-row fd-ui-body-sm">
+                                    <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_PAIN' | translate }}: {{ day.symptoms.pain }}/9</span>
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_MOOD' | translate }}: {{ day.symptoms.mood }}/9</span>
                                         <span>{{ 'CYCLE_TRACKING.SYMPTOM_ENERGY' | translate }}: {{ day.symptoms.energy }}/9</span>

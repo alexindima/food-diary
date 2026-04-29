@@ -16,10 +16,7 @@
 }
 
 .nutrient-row {
-    display: grid;
     grid-template-columns: 1fr auto 80px auto;
-    align-items: center;
-    gap: var(--fd-space-xs);
     padding: var(--fd-space-xxs) 0;
 }
 
