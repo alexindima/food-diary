@@ -53,7 +53,7 @@
 }
 
 .preview-subtitle {
-    margin: 0.125rem 0 0;
+    margin: var(--fd-space-micro) 0 0;
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-helper-size);
     line-height: var(--fd-text-helper-line-height);

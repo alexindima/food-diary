@@ -10,7 +10,7 @@
 
     &__inner {
         @include landing.section-inner;
-        gap: clamp(var(--fd-space-md), 3vw, var(--fd-space-xxl));
+        gap: var(--fd-landing-grid-gap);
     }
 
     &__header {
@@ -31,7 +31,7 @@
     &__subtitle,
     &__panel-text,
     &__summary-text {
-        @include landing.marketing-body(1rem, 1.6, var(--fd-color-text-muted), null, 8px 0 0);
+        @include landing.marketing-body(1rem, 1.6, var(--fd-color-text-muted), null, var(--fd-space-xs) 0 0);
     }
 
     &__summary {

@@ -9,19 +9,19 @@
 
 .fd-ui-toast-host__viewport {
     position: fixed;
-    left: 16px;
-    right: 16px;
+    left: var(--fd-space-toast-viewport-inset);
+    right: var(--fd-space-toast-viewport-inset);
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-toast-viewport-gap);
     pointer-events: none;
 
     &--top {
-        top: 16px;
+        top: var(--fd-space-toast-viewport-inset);
     }
 
     &--bottom {
-        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(var(--fd-space-toast-viewport-inset) + env(safe-area-inset-bottom, 0px));
     }
 
     &--start {
@@ -106,7 +106,7 @@
 .fd-ui-toast-host__close {
     position: absolute;
     top: 50%;
-    right: 12px;
+    right: var(--fd-space-toast-close-inset);
     transform: translateY(-50%);
     appearance: none;
     border: none;
@@ -163,7 +163,7 @@
 @media #{variables.$media-tablet} {
 
     .fd-ui-toast-host__viewport--bottom {
-        bottom: calc(124px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(var(--fd-space-toast-viewport-bottom-tablet) + env(safe-area-inset-bottom, 0px));
     }
 }
 

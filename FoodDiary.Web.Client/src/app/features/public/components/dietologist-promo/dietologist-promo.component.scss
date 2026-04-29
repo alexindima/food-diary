@@ -20,7 +20,7 @@
         @include landing.section-inner;
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-        gap: clamp(var(--fd-space-lg), 3vw, var(--fd-space-xxl));
+        gap: var(--fd-landing-grid-gap);
         align-items: stretch;
     }
 
@@ -44,7 +44,7 @@
 
     &__subtitle,
     &__card-text {
-        @include landing.marketing-body(1rem, 1.65, var(--fd-color-text-muted), null, 12px 0 0);
+        @include landing.marketing-body(1rem, 1.65, var(--fd-color-text-muted), null, var(--fd-space-sm) 0 0);
     }
 
     &__steps {

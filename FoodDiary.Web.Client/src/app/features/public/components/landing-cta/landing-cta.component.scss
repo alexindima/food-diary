@@ -26,6 +26,12 @@
     }
 
     &__inner--cta {
+        --landing-cta-orb-primary-size: 260px;
+        --landing-cta-orb-primary-offset-inline: -40px;
+        --landing-cta-orb-primary-offset-block: -80px;
+        --landing-cta-orb-accent-size: 240px;
+        --landing-cta-orb-accent-offset-inline: -60px;
+        --landing-cta-orb-accent-offset-block: -110px;
         max-width: var(--fd-landing-container-max-width);
         position: relative;
         overflow: hidden;
@@ -45,18 +51,18 @@
         }
 
         &::before {
-            width: 260px;
-            height: 260px;
-            right: -40px;
-            top: -80px;
+            width: var(--landing-cta-orb-primary-size);
+            height: var(--landing-cta-orb-primary-size);
+            right: var(--landing-cta-orb-primary-offset-inline);
+            top: var(--landing-cta-orb-primary-offset-block);
             background: var(--fd-bg-landing-cta-orb);
         }
 
         &::after {
-            width: 240px;
-            height: 240px;
-            left: -60px;
-            bottom: -110px;
+            width: var(--landing-cta-orb-accent-size);
+            height: var(--landing-cta-orb-accent-size);
+            left: var(--landing-cta-orb-accent-offset-inline);
+            bottom: var(--landing-cta-orb-accent-offset-block);
             background: var(--fd-bg-landing-cta-orb-accent);
         }
 

@@ -21,7 +21,7 @@
     text-overflow: ellipsis;
     position: absolute;
     top: 50%;
-    left: 14px;
+    left: var(--fd-space-control-label-inset-inline);
     transform: translateY(-50%);
     transition:
         transform 0.15s ease,
@@ -90,7 +90,7 @@
 
 .fd-ui-select__suffix {
     position: absolute;
-    right: 8px;
+    right: var(--fd-space-control-suffix-inset-inline);
     top: 50%;
     transform: translateY(-50%);
     display: inline-flex;

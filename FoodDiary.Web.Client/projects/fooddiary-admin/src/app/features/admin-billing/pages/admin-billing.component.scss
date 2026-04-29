@@ -89,10 +89,10 @@
 
 .admin-billing__metadata {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
-    bottom: 1rem;
-    width: min(520px, calc(100vw - 2rem));
+    top: var(--fd-space-md);
+    right: var(--fd-space-md);
+    bottom: var(--fd-space-md);
+    width: min(520px, calc(100vw - calc(var(--fd-space-md) * 2)));
     display: grid;
     grid-template-rows: auto 1fr;
     border: var(--fd-border-strong);

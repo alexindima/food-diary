@@ -131,7 +131,7 @@
         max-width: var(--fd-landing-container-max-width);
         background: var(--fd-bg-landing-accent-card);
         border-radius: var(--fd-landing-radius-card);
-        padding: clamp(var(--fd-space-md), 2.5vw, var(--fd-space-lg));
+        padding: var(--fd-landing-surface-padding);
         border: var(--fd-border-width) solid var(--fd-color-border-primary-strong);
         box-shadow: var(--fd-landing-shadow-medium);
         display: flex;

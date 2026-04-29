@@ -23,8 +23,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     position: absolute;
-    top: 18px;
-    left: 14px;
+    top: var(--fd-space-textarea-label-inset-block);
+    left: var(--fd-space-control-label-inset-inline);
     transform: translateY(-50%);
     transition:
         transform 0.15s ease,

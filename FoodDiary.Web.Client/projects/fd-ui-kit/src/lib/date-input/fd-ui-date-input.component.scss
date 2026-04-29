@@ -39,7 +39,7 @@
     text-overflow: ellipsis;
     position: absolute;
     top: 50%;
-    left: 14px;
+    left: var(--fd-space-control-label-inset-inline);
     transform: translateY(-50%);
     transition:
         transform 0.15s ease,

@@ -1,6 +1,9 @@
 @use 'variables' as variables;
 
 .hydration-card {
+    --hydration-watermark-size: 180px;
+    --hydration-watermark-offset-inline: -26px;
+    --hydration-watermark-offset-block: -36px;
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -41,10 +44,10 @@
 
     &__watermark {
         position: absolute;
-        right: -26px;
-        bottom: -36px;
-        width: 180px;
-        height: 180px;
+        right: var(--hydration-watermark-offset-inline);
+        bottom: var(--hydration-watermark-offset-block);
+        width: var(--hydration-watermark-size);
+        height: var(--hydration-watermark-size);
         background:
             radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--fd-color-white) 35%, transparent), transparent 55%),
             radial-gradient(circle at 60% 60%, color-mix(in srgb, var(--fd-color-white) 25%, transparent), transparent 55%);
