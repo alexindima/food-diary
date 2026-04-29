@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
 import { Meal } from '../../../meals/models/meal.data';
 import { QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
 import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
@@ -117,7 +116,9 @@ export class LandingPreviewTourComponent {
         this.quickConsumptionService.addRecipe(recipe);
     }
 
-    public openAuthDialog(mode: 'login' | 'register'): void {
+    public async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
+        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
+
         this.fdDialogService.open(AuthDialogComponent, {
             preset: 'form',
             data: { mode },

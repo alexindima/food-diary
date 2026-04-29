@@ -10,6 +10,7 @@
         "ng": "ng",
         "build": "ng build",
         "build:prod": "ng build --configuration=production",
+        "build:audit": "ng build --configuration=audit",
         "build:staging": "ng build --configuration=staging",
         "build:admin": "ng build fooddiary-admin",
         "start": "ng serve --configuration=development",
@@ -34,7 +35,7 @@
         "test:e2e:admin:smoke": "npx playwright test -c playwright.admin.smoke.config.ts",
         "test:e2e:admin:smoke:ui": "npx playwright test -c playwright.admin.smoke.config.ts --ui",
         "audit:lighthouse:collect": "node scripts/run-lighthouse.mjs",
-        "audit:lighthouse": "npm run build:prod && npm run audit:lighthouse:collect",
+        "audit:lighthouse": "npm run build:audit && npm run audit:lighthouse:collect",
         "storybook": "ng run fd-ui-kit:storybook",
         "build:storybook": "ng run fd-ui-kit:build-storybook",
         "serve:ssr:food-diary-web-client": "node dist/server/server.mjs"

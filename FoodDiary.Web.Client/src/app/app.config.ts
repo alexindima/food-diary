@@ -1,4 +1,3 @@
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
     ApplicationConfig,
     ErrorHandler,
@@ -89,7 +88,6 @@ export const appConfig: ApplicationConfig = {
         provideAppInitializer(() => {
             inject(FrontendObservabilityService).initialize();
         }),
-        provideAnimationsAsync(),
         provideZonelessChangeDetection(),
         provideRouter(
             routes,

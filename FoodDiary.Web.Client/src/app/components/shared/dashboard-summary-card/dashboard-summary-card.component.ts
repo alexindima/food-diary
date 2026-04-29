@@ -26,6 +26,7 @@ export interface NutrientBar {
 })
 export class DashboardSummaryCardComponent {
     private static readonly COLOR_FALLBACK_RGB: [number, number, number] = [90, 169, 250];
+    private static readonly CSS_VAR_PATTERN = /^var\((--[^),\s]+)(?:,\s*([^)]+))?\)$/;
     public readonly goalAction = output<void>();
     public readonly dailyGoal = input<number>(0);
     public readonly dailyConsumed = input<number>(0);
@@ -71,6 +72,7 @@ export class DashboardSummaryCardComponent {
 
     private readonly animatedDailyPercent = signal(0);
     private readonly animatedWeeklyPercent = signal(0);
+    private readonly colorCache = new Map<string, [number, number, number]>();
 
     public readonly dailyDasharray = computed(() => this.buildDasharray(this.animatedDailyPercent(), this.outerRadius));
     public readonly weeklyDasharray = computed(() => this.buildDasharray(this.animatedWeeklyPercent(), this.innerRadius));
@@ -276,24 +278,49 @@ export class DashboardSummaryCardComponent {
     }
 
     private parseColor(value: string): [number, number, number] {
-        if (value.startsWith('#')) {
-            return this.hexToChannels(value);
+        const cached = this.colorCache.get(value);
+        if (cached) {
+            return cached;
         }
 
-        if (typeof document !== 'undefined') {
-            const sample = document.createElement('span');
-            sample.style.color = value;
-            sample.style.display = 'none';
-            document.body.appendChild(sample);
-            const resolved = getComputedStyle(sample).color;
-            document.body.removeChild(sample);
-            const channels = resolved.match(/\d+/g)?.slice(0, 3).map(Number);
-            if (channels?.length === 3) {
-                return [channels[0], channels[1], channels[2]];
+        let channels: [number, number, number] | null = null;
+
+        if (value.startsWith('#')) {
+            channels = this.hexToChannels(value);
+        } else {
+            const cssVariable = DashboardSummaryCardComponent.CSS_VAR_PATTERN.exec(value.trim());
+            if (cssVariable) {
+                channels = this.parseCssVariable(cssVariable[1], cssVariable[2]);
+            } else {
+                channels = this.parseRgbChannels(value);
             }
         }
 
-        return DashboardSummaryCardComponent.COLOR_FALLBACK_RGB;
+        const resolved = channels ?? DashboardSummaryCardComponent.COLOR_FALLBACK_RGB;
+        this.colorCache.set(value, resolved);
+        return resolved;
+    }
+
+    private parseCssVariable(variableName: string, fallback?: string): [number, number, number] | null {
+        if (typeof document === 'undefined') {
+            return fallback ? this.parseColor(fallback.trim()) : null;
+        }
+
+        const resolved = getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+        if (resolved) {
+            return this.parseColor(resolved);
+        }
+
+        return fallback ? this.parseColor(fallback.trim()) : null;
+    }
+
+    private parseRgbChannels(value: string): [number, number, number] | null {
+        const channels = value.match(/\d+/g)?.slice(0, 3).map(Number);
+        if (channels?.length === 3) {
+            return [channels[0], channels[1], channels[2]];
+        }
+
+        return null;
     }
 
     private mixWithWhite(color: string, ratio: number): string {

@@ -94,6 +94,34 @@
                             "outputHashing": "all",
                             "serviceWorker": "ngsw-config.json"
                         },
+                        "audit": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "1MB",
+                                    "maximumError": "1.5MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "18kB",
+                                    "maximumError": "19kB"
+                                }
+                            ],
+                            "outputHashing": "all",
+                            "sourceMap": {
+                                "scripts": true,
+                                "styles": true,
+                                "vendor": true,
+                                "hidden": false,
+                                "sourcesContent": true
+                            }
+                        },
                         "development": {
                             "fileReplacements": [
                                 {
