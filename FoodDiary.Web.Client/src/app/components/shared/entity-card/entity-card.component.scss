@@ -316,18 +316,18 @@
     .entity-card__nutrients-container {
 
         &--green {
-            --fd-nutrient-badges-border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
-            --fd-nutrient-badges-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-emerald-500) 28%, transparent);
+            --fd-nutrient-badges-border: var(--fd-border-width) solid var(--fd-color-border-nutrient-good);
+            --fd-nutrient-badges-shadow: var(--fd-shadow-nutrient-good);
         }
 
         &--yellow {
-            --fd-nutrient-badges-border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
-            --fd-nutrient-badges-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-yellow-300) 28%, transparent);
+            --fd-nutrient-badges-border: var(--fd-border-width) solid var(--fd-color-border-nutrient-warning);
+            --fd-nutrient-badges-shadow: var(--fd-shadow-nutrient-warning);
         }
 
         &--red {
-            --fd-nutrient-badges-border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);
-            --fd-nutrient-badges-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
+            --fd-nutrient-badges-border: var(--fd-border-width) solid var(--fd-color-border-nutrient-danger);
+            --fd-nutrient-badges-shadow: var(--fd-shadow-nutrient-danger);
         }
     }
 

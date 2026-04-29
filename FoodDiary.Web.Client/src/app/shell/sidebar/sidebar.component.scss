@@ -355,7 +355,7 @@
         gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
-        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+        border: var(--fd-border-width) solid var(--fd-color-border-primary-strong);
         background: var(--fd-bg-surface);
         color: var(--fd-color-text-strong);
         font-weight: var(--fd-text-section-title-weight);

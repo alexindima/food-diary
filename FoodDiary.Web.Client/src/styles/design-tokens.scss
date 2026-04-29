@@ -151,6 +151,29 @@ $fd-elevation-tokens: (
     ring-light: 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-white) 80%, transparent),
     ring-light-strong: 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-white) 85%, transparent),
     ring-danger: 0 0 0 calc(var(--fd-border-width-strong) * 2) var(--fd-bg-status-danger),
+    ring-inset-brand: inset 0 0 0 var(--fd-border-width) var(--fd-bg-brand-tint-medium),
+    ring-inset-brand-strong: inset 0 0 0 var(--fd-border-width) var(--fd-bg-brand-tint-strong),
+    ring-inset-border-strong: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-border-strong) 62%, transparent),
+    ring-inset-teal: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-teal-700) 16%, transparent),
+    ring-inset-amber: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-amber-600) 20%, transparent),
+    ring-inset-muted: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent),
+    ring-inset-success: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-emerald-500) 18%, transparent),
+    ring-inset-primary: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-primary-600) 14%, transparent),
+    ring-inset-border: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-border) 82%, transparent),
+    ring-inset-border-muted: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-border) 80%, transparent),
+    ring-inset-border-emphasis: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-border-strong) 86%, transparent),
+    ring-inset-border-extra: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-border-strong) 92%, transparent),
+    ring-inset-primary-medium: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent),
+    ring-inset-primary-focus: inset 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent),
+    highlight-inset-light-sm: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
+    highlight-inset-light-md: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 16%, transparent),
+    highlight-inset-light-lg: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
+    highlight-inset-light-xl: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 22%, transparent),
+    highlight-inset-dialog: inset 0 1px 0 color-mix(in srgb, var(--fd-color-dialog-surface) 30%, transparent),
+    inner-depth-muted: inset 0 -2px 12px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent),
+    glow-primary-xs: 0 4px 14px color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent),
+    glow-primary-sm: 0 4px 14px color-mix(in srgb, var(--fd-color-primary-600) 20%, transparent),
+    divider-inverse-subtle: inset 0 var(--fd-border-width) 0 color-mix(in srgb, var(--fd-color-white) 10%, transparent),
     glow-light-sm: 0 0 12px color-mix(in srgb, var(--fd-color-white) 50%, transparent),
     accent: 0 10px 24px color-mix(in srgb, var(--fd-shadow-accent-color) 18%, transparent),
     accent-strong: 0 12px 30px color-mix(in srgb, var(--fd-shadow-accent-color) 24%, transparent),
@@ -1167,7 +1190,33 @@ $fd-theme-design-tokens: (
         --fd-shadow-ring-light: #{fd-token(elevation, ring-light)};
         --fd-shadow-ring-light-strong: #{fd-token(elevation, ring-light-strong)};
         --fd-shadow-ring-danger: #{fd-token(elevation, ring-danger)};
+        --fd-shadow-ring-inset-brand: #{fd-token(elevation, ring-inset-brand)};
+        --fd-shadow-ring-inset-brand-strong: #{fd-token(elevation, ring-inset-brand-strong)};
+        --fd-shadow-ring-inset-border-strong: #{fd-token(elevation, ring-inset-border-strong)};
+        --fd-shadow-ring-inset-teal: #{fd-token(elevation, ring-inset-teal)};
+        --fd-shadow-ring-inset-amber: #{fd-token(elevation, ring-inset-amber)};
+        --fd-shadow-ring-inset-muted: #{fd-token(elevation, ring-inset-muted)};
+        --fd-shadow-ring-inset-success: #{fd-token(elevation, ring-inset-success)};
+        --fd-shadow-ring-inset-primary: #{fd-token(elevation, ring-inset-primary)};
+        --fd-shadow-ring-inset-border: #{fd-token(elevation, ring-inset-border)};
+        --fd-shadow-ring-inset-border-muted: #{fd-token(elevation, ring-inset-border-muted)};
+        --fd-shadow-ring-inset-border-emphasis: #{fd-token(elevation, ring-inset-border-emphasis)};
+        --fd-shadow-ring-inset-border-extra: #{fd-token(elevation, ring-inset-border-extra)};
+        --fd-shadow-ring-inset-primary-medium: #{fd-token(elevation, ring-inset-primary-medium)};
+        --fd-shadow-ring-inset-primary-focus: #{fd-token(elevation, ring-inset-primary-focus)};
+        --fd-shadow-highlight-inset-light-sm: #{fd-token(elevation, highlight-inset-light-sm)};
+        --fd-shadow-highlight-inset-light-md: #{fd-token(elevation, highlight-inset-light-md)};
+        --fd-shadow-highlight-inset-light-lg: #{fd-token(elevation, highlight-inset-light-lg)};
+        --fd-shadow-highlight-inset-light-xl: #{fd-token(elevation, highlight-inset-light-xl)};
+        --fd-shadow-highlight-inset-dialog: #{fd-token(elevation, highlight-inset-dialog)};
+        --fd-shadow-inner-depth-muted: #{fd-token(elevation, inner-depth-muted)};
+        --fd-shadow-glow-primary-xs: #{fd-token(elevation, glow-primary-xs)};
+        --fd-shadow-glow-primary-sm: #{fd-token(elevation, glow-primary-sm)};
+        --fd-shadow-divider-inverse-subtle: #{fd-token(elevation, divider-inverse-subtle)};
         --fd-shadow-glow-light-sm: #{fd-token(elevation, glow-light-sm)};
+        --fd-shadow-nutrient-good: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-emerald-500) 28%, transparent);
+        --fd-shadow-nutrient-warning: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-yellow-300) 28%, transparent);
+        --fd-shadow-nutrient-danger: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
         --fd-shadow-accent-color: var(--fd-color-primary-600);
         --fd-shadow-accent: #{fd-token(elevation, accent)};
         --fd-shadow-accent-strong: #{fd-token(elevation, accent-strong)};
@@ -1190,6 +1239,22 @@ $fd-theme-design-tokens: (
         --fd-color-border-status-warning: color-mix(in srgb, var(--fd-color-yellow-300) 32%, var(--fd-color-border));
         --fd-color-border-status-danger: color-mix(in srgb, var(--fd-color-danger) 28%, var(--fd-color-border));
         --fd-color-border-status-premium: color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
+        --fd-color-border-nutrient-good: color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
+        --fd-color-border-nutrient-warning: color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
+        --fd-color-border-nutrient-danger: color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);
+        --fd-color-border-primary-faint: color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
+        --fd-color-border-primary-subtle: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        --fd-color-border-primary-soft: color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent);
+        --fd-color-border-primary-medium: color-mix(in srgb, var(--fd-color-primary-500) 15%, transparent);
+        --fd-color-border-primary-strong: color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+        --fd-color-border-slate-faint: color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
+        --fd-color-border-slate-subtle: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+        --fd-color-border-slate-strong: color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
+        --fd-color-border-dark-faint: color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
+        --fd-color-border-dark-strong: color-mix(in srgb, var(--fd-color-slate-900) 24%, transparent);
+        --fd-color-border-inverse-faint: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+        --fd-color-border-inverse-subtle: color-mix(in srgb, var(--fd-color-white) 12%, transparent);
+        --fd-color-border-ai: color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));
         --fd-outline-focus: var(--fd-border-width-strong) solid var(--fd-color-primary-400);
         --fd-outline-focus-strong: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
         --fd-outline-offset: var(--fd-border-width-strong);

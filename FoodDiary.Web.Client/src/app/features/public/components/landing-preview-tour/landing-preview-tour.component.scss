@@ -111,7 +111,7 @@
         padding: var(--fd-landing-surface-padding);
         border-radius: var(--fd-landing-radius-panel);
         background: color-mix(in srgb, var(--fd-bg-surface-raised) 62%, transparent);
-        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-slate-400) 16%, transparent);
+        border: var(--fd-border-width) solid var(--fd-color-border-slate-faint);
         box-shadow: var(--fd-landing-shadow-medium);
         animation: landingFadeUp 760ms ease-out both;
     }

@@ -21,15 +21,15 @@
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text-muted);
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
-            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 82%, transparent);
+            var(--fd-shadow-highlight-inset-light-lg),
+            var(--fd-shadow-ring-inset-border);
     }
 
     &__status--saving {
         --fd-pill-color: var(--fd-color-primary-700);
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
-            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent),
+            var(--fd-shadow-highlight-inset-light-lg),
+            var(--fd-shadow-ring-inset-primary-medium),
             0 10px 24px var(--fd-bg-brand-tint-strong);
     }
 
@@ -147,9 +147,9 @@
                 color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
             );
             box-shadow:
-                inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 16%, transparent),
-                inset 0 -2px 12px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent),
-                inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 82%, transparent);
+                var(--fd-shadow-highlight-inset-light-md),
+                var(--fd-shadow-inner-depth-muted),
+                var(--fd-shadow-ring-inset-border);
             z-index: 1;
         }
     }
@@ -186,15 +186,15 @@
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: var(--fd-radius-lg);
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
-            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 80%, transparent);
+            var(--fd-shadow-highlight-inset-light-sm),
+            var(--fd-shadow-ring-inset-border-muted);
         transition: box-shadow 0.2s ease;
         pointer-events: auto;
 
         &:focus {
             box-shadow:
-                inset 0 0 0 2px color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent),
-                0 4px 14px color-mix(in srgb, var(--fd-color-primary-600) 20%, transparent);
+                var(--fd-shadow-ring-inset-primary-focus),
+                var(--fd-shadow-glow-primary-sm);
         }
 
         &::-webkit-outer-spin-button,
@@ -316,8 +316,8 @@
         border-radius: var(--fd-radius-lg);
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 14%, transparent),
-            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border) 80%, transparent);
+            var(--fd-shadow-highlight-inset-light-sm),
+            var(--fd-shadow-ring-inset-border-muted);
     }
 
     &__macro-input {
@@ -355,8 +355,8 @@
         );
         overflow: visible;
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 22%, transparent),
-            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border-strong) 86%, transparent),
+            var(--fd-shadow-highlight-inset-light-xl),
+            var(--fd-shadow-ring-inset-border-emphasis),
             0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --macro-thumb-size: 16px;
 
@@ -393,8 +393,8 @@
             color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
         );
         box-shadow:
-            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 18%, transparent),
-            inset 0 0 0 1px color-mix(in srgb, var(--fd-color-border-strong) 92%, transparent);
+            var(--fd-shadow-highlight-inset-light-lg),
+            var(--fd-shadow-ring-inset-border-extra);
         z-index: 0;
     }
 
@@ -468,13 +468,13 @@
         outline: none;
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: var(--fd-radius-card);
-        box-shadow: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        box-shadow: var(--fd-shadow-ring-inset-muted);
         transition: box-shadow 0.2s ease;
 
         &:focus {
             box-shadow:
-                inset 0 0 0 2px color-mix(in srgb, var(--fd-color-primary-600) 50%, transparent),
-                0 4px 14px color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent);
+                var(--fd-shadow-ring-inset-primary-focus),
+                var(--fd-shadow-glow-primary-xs);
         }
 
         &::-webkit-outer-spin-button,
@@ -506,7 +506,7 @@
         --fd-pill-color: var(--fd-color-emerald-700);
 
         &--positive {
-            box-shadow: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-emerald-500) 18%, transparent);
+            box-shadow: var(--fd-shadow-ring-inset-success);
         }
     }
 

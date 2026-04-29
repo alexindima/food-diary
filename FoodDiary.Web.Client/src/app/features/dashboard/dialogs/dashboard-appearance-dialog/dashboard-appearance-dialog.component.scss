@@ -150,8 +150,8 @@
     position: relative;
     overflow: hidden;
     box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--fd-color-dialog-surface) 30%, transparent),
-        inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        var(--fd-shadow-highlight-inset-dialog),
+        var(--fd-shadow-ring-inset-muted);
 }
 
 .dashboard-appearance-dialog__swatch::after {
@@ -202,8 +202,8 @@
     align-content: center;
     gap: var(--fd-space-xxs);
     box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--fd-color-dialog-surface) 30%, transparent),
-        inset 0 0 0 1px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        var(--fd-shadow-highlight-inset-dialog),
+        var(--fd-shadow-ring-inset-muted);
 }
 
 .dashboard-appearance-dialog__style-preview span {

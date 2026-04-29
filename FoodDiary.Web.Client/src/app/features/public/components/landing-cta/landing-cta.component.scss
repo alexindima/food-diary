@@ -43,7 +43,7 @@
         );
         border-radius: var(--fd-landing-radius-panel);
         padding: var(--fd-landing-surface-padding-lg);
-        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-white) 8%, transparent);
+        border: var(--fd-border-width) solid var(--fd-color-border-inverse-faint);
         box-shadow: var(--fd-landing-shadow-strong);
         display: flex;
         justify-content: space-between;
