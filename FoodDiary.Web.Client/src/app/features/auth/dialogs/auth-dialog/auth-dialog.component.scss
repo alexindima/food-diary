@@ -1,9 +1,7 @@
 @use 'variables';
 
 .auth-dialog__shell {
-    --fd-dialog-shell-shadow:
-        0 24px 64px color-mix(in srgb, var(--fd-color-slate-900) 26%, transparent),
-        0 4px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    --fd-dialog-shell-shadow: var(--fd-shadow-auth-dialog);
 }
 
 .auth-dialog__auth {

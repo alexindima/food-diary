@@ -282,7 +282,7 @@
 
     &__catalog-subtitle {
         max-width: 760px;
-        @include landing.marketing-body(1rem, 1.6, color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent));
+        @include landing.marketing-body(1rem, 1.6, var(--fd-color-landing-dark-text-soft));
     }
 
     &__cards {
@@ -322,7 +322,7 @@
 
     &__draft-subtitle,
     &__draft-note {
-        @include landing.marketing-body(1rem, 1.65, color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent));
+        @include landing.marketing-body(1rem, 1.65, var(--fd-color-landing-dark-text-soft));
     }
 
     &__draft-pills {
@@ -362,7 +362,7 @@
     }
 
     .landing-section__subtitle {
-        color: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
+        color: var(--fd-color-landing-dark-text-soft);
     }
 
     @media #{variables.$media-desktop} {

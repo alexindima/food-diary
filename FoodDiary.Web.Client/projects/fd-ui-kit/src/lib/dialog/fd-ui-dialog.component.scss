@@ -123,17 +123,15 @@
 
     &:focus-visible {
         outline: none;
-        box-shadow:
-            0 0 0 2px color-mix(in srgb, var(--fd-color-dialog-surface) 88%, transparent),
-            0 0 0 4px color-mix(in srgb, var(--fd-color-primary-400) 52%, transparent);
+        box-shadow: var(--fd-shadow-dialog-close-focus);
     }
 }
 
 .fd-ui-dialog__body {
     order: 1;
-    --fd-dialog-scrollbar-thumb: color-mix(in srgb, var(--fd-color-slate-500) 52%, transparent);
-    --fd-dialog-scrollbar-thumb-hover: color-mix(in srgb, var(--fd-color-slate-600) 68%, transparent);
-    --fd-dialog-scrollbar-track: color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+    --fd-dialog-scrollbar-thumb: var(--fd-color-dialog-scrollbar-thumb);
+    --fd-dialog-scrollbar-thumb-hover: var(--fd-color-dialog-scrollbar-thumb-hover);
+    --fd-dialog-scrollbar-track: var(--fd-color-dialog-scrollbar-track);
     color: inherit;
     flex: 1 1 auto;
     min-height: 0;
@@ -236,9 +234,7 @@
     }
 
     &:focus-visible {
-        box-shadow:
-            0 0 0 2px color-mix(in srgb, var(--fd-color-dialog-surface) 88%, transparent),
-            0 0 0 4px color-mix(in srgb, var(--fd-color-primary-500) 26%, transparent);
+        box-shadow: var(--fd-shadow-dialog-container-focus);
     }
 }
 

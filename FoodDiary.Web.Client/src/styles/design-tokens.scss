@@ -963,6 +963,24 @@ $fd-theme-design-tokens: (
         --fd-bg-card-editor-gradient: linear-gradient(180deg, var(--fd-bg-surface-elevated), var(--fd-bg-surface));
         --fd-bg-card-profile-gradient: var(--fd-bg-surface-panel-gradient);
         --fd-bg-surface-raised-blend: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, var(--fd-bg-surface));
+        --fd-bg-control-surface-mixed: color-mix(in srgb, var(--fd-bg-surface-raised) 84%, var(--fd-color-border-strong));
+        --fd-bg-button-card-action: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white))
+        );
+        --fd-bg-button-card-action-hover: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-200) 78%, var(--fd-color-white))
+        );
+        --fd-bg-button-card-action-active: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-200) 74%, var(--fd-color-white))
+        );
+        --fd-bg-emoji-picker-option-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-bg-surface-raised));
+        --fd-bg-emoji-picker-option-selected: color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-bg-surface-raised));
         --fd-bg-surface-glass-minimal: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
         --fd-bg-surface-glass-subtle: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
         --fd-bg-surface-glass-medium: color-mix(in srgb, var(--fd-bg-surface-raised) 12%, transparent);
@@ -979,6 +997,9 @@ $fd-theme-design-tokens: (
             var(--fd-bg-surface-raised) 0%,
             color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised)) 100%
         );
+        --fd-bg-brand-surface-soft: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
+        --fd-bg-brand-surface-medium: color-mix(in srgb, var(--fd-bg-brand-soft) 48%, var(--fd-bg-surface-raised));
+        --fd-bg-brand-surface-strong: color-mix(in srgb, var(--fd-bg-brand-soft) 54%, var(--fd-bg-surface-raised));
         --fd-bg-landing-page:
             radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 22%),
             radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--fd-color-emerald-500) 4%, transparent), transparent 25%),
@@ -987,6 +1008,7 @@ $fd-theme-design-tokens: (
         --fd-bg-landing-brand-soft: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
         --fd-bg-landing-accent-card: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
         --fd-bg-landing-drawer: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
+        --fd-bg-landing-eyebrow-info: color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent);
         --fd-bg-landing-icon-soft: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
         --fd-bg-landing-faq-control: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         --fd-bg-landing-surface-translucent: color-mix(in srgb, var(--fd-bg-surface-raised) 78%, transparent);
@@ -1003,6 +1025,8 @@ $fd-theme-design-tokens: (
             color-mix(in srgb, var(--fd-color-slate-900) 96%, transparent),
             color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
         );
+        --fd-bg-landing-cta-orb: radial-gradient(circle, color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent), transparent 70%);
+        --fd-bg-landing-cta-orb-accent: radial-gradient(circle, color-mix(in srgb, var(--fd-color-teal-500) 22%, transparent), transparent 70%);
         --fd-bg-border: var(--fd-color-border);
         --fd-bg-border-strong: var(--fd-color-border-strong);
         --fd-bg-track-muted: var(--fd-color-slate-200);
@@ -1038,6 +1062,39 @@ $fd-theme-design-tokens: (
         --fd-bg-danger-soft: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
         --fd-bg-danger-tint: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-bg-surface-raised));
         --fd-bg-danger-tint-strong: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
+        --fd-bg-danger-transparent-hover: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
+        --fd-bg-danger-transparent-active: color-mix(in srgb, var(--fd-color-danger) 14%, transparent);
+        --fd-bg-danger-surface-hover: color-mix(in srgb, var(--fd-color-danger) 16%, var(--fd-bg-surface-raised));
+        --fd-bg-danger-surface-active: color-mix(in srgb, var(--fd-color-danger) 20%, var(--fd-bg-surface-raised));
+        --fd-bg-scrim-faint: color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+        --fd-bg-ai-result-surface: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-bg-surface-raised));
+        --fd-bg-ai-text-preview:
+            linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--fd-color-purple-500) 8%, transparent),
+                color-mix(in srgb, var(--fd-color-blue-500) 4%, transparent)
+            ),
+            var(--fd-color-slate-50);
+        --fd-bg-ai-scan-overlay: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent), color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent));
+        --fd-bg-ai-scan-overlay-nutrition: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-green-500) 8%, transparent), color-mix(in srgb, var(--fd-color-green-500) 0%, transparent));
+        --fd-bg-ai-scan-line: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
+            var(--fd-color-blue-500),
+            color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-white)),
+            var(--fd-color-blue-500),
+            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
+        );
+        --fd-bg-ai-scan-line-nutrition: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
+            var(--fd-color-green-500),
+            color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-white)),
+            var(--fd-color-green-500),
+            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
+        );
+        --fd-bg-satiety-card-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
+        --fd-bg-progress-track-strong: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-bg-surface-raised));
         --fd-bg-list-empty: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent),
@@ -1261,10 +1318,42 @@ $fd-theme-design-tokens: (
         --fd-shadow-nutrient-danger: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
         --fd-shadow-accent-color: var(--fd-color-primary-600);
         --fd-shadow-accent: #{fd-token(elevation, accent)};
+        --fd-shadow-dialog-shell: 0 18px 45px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent);
+        --fd-shadow-button-toolbar-solid: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
+        --fd-shadow-button-ai: 0 8px 18px color-mix(in srgb, var(--fd-color-ai-strong) 24%, transparent);
+        --fd-shadow-button-ai-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-ai-strong) 28%, transparent);
+        --fd-shadow-emoji-picker-option: 0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+        --fd-shadow-emoji-picker-option-hover: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
+        --fd-shadow-emoji-picker-option-selected:
+            0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent),
+            0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-primary-400) 34%, transparent);
+        --fd-shadow-button-focus-ring:
+            0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
+            0 0 0 calc(var(--fd-border-width-strong) * 2) color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
+        --fd-shadow-dialog-close-focus:
+            0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-dialog-surface) 88%, transparent),
+            0 0 0 calc(var(--fd-border-width-strong) * 2) color-mix(in srgb, var(--fd-color-primary-400) 52%, transparent);
+        --fd-shadow-dialog-container-focus:
+            0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-dialog-surface) 88%, transparent),
+            0 0 0 calc(var(--fd-border-width-strong) * 2) color-mix(in srgb, var(--fd-color-primary-500) 26%, transparent);
+        --fd-shadow-auth-dialog:
+            0 24px 64px color-mix(in srgb, var(--fd-color-slate-900) 26%, transparent),
+            0 4px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+        --fd-shadow-filter-drop-sm: drop-shadow(0 4px 10px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
+        --fd-shadow-filter-glow-sm: drop-shadow(0 0 10px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent));
+        --fd-shadow-ai-scan-line:
+            0 0 16px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
+            0 0 30px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-white));
+        --fd-shadow-ai-scan-line-nutrition:
+            0 0 16px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
+            0 0 30px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
         --fd-landing-shadow-soft: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-landing-shadow-medium: 0 22px 48px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
         --fd-landing-shadow-strong: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
         --fd-landing-shadow-highlight: inset 0 var(--fd-border-width) 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent);
+        --fd-landing-shadow-chip:
+            inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent),
+            0 12px 26px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-shadow-accent-strong: #{fd-token(elevation, accent-strong)};
         --fd-shadow-accent-glow: #{fd-token(elevation, accent-glow)};
         --fd-shadow-none: #{fd-token(elevation, none)};
@@ -1299,6 +1388,18 @@ $fd-theme-design-tokens: (
         --fd-color-border-card-recipe: color-mix(in srgb, var(--fd-color-emerald-500) 25%, transparent);
         --fd-color-border-card-info: color-mix(in srgb, var(--fd-color-slate-400) 40%, transparent);
         --fd-color-border-card-entry: var(--fd-color-border-dark-muted);
+        --fd-color-border-button-spinner: color-mix(in srgb, currentColor 28%, transparent);
+        --fd-color-border-button-card-action: color-mix(in srgb, var(--fd-color-blue-500) 22%, transparent);
+        --fd-color-border-button-card-action-strong: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
+        --fd-color-border-calendar-hover: color-mix(in srgb, var(--fd-color-border-strong) 55%, transparent);
+        --fd-color-border-calendar-today: color-mix(in srgb, var(--fd-color-primary-500) 28%, transparent);
+        --fd-color-border-calendar-active: color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
+        --fd-color-border-switch-checked: color-mix(in srgb, var(--fd-color-primary-500) 36%, transparent);
+        --fd-color-border-emoji-picker-option: color-mix(in srgb, var(--fd-color-border-strong) 38%, transparent);
+        --fd-color-border-emoji-picker-option-hover: color-mix(in srgb, var(--fd-color-primary-400) 46%, transparent);
+        --fd-color-border-emoji-picker-option-selected: color-mix(in srgb, var(--fd-color-primary-500) 68%, transparent);
+        --fd-color-border-brand-surface: color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
+        --fd-color-border-summary-track: color-mix(in srgb, var(--fd-color-border-strong) 68%, var(--fd-color-surface-raised));
         --fd-landing-border-soft: color-mix(in srgb, var(--fd-color-border) 78%, transparent);
         --fd-landing-border-strong: color-mix(in srgb, var(--fd-color-border-strong) 36%, transparent);
         --fd-landing-dark-border: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
@@ -1327,6 +1428,17 @@ $fd-theme-design-tokens: (
         --fd-outline-focus: var(--fd-border-width-strong) solid var(--fd-color-primary-400);
         --fd-outline-focus-strong: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
         --fd-outline-offset: var(--fd-border-width-strong);
+        --fd-color-calendar-outside: color-mix(in srgb, var(--fd-color-text-muted) 72%, transparent);
+        --fd-color-dialog-scrollbar-thumb: color-mix(in srgb, var(--fd-color-slate-500) 52%, transparent);
+        --fd-color-dialog-scrollbar-thumb-hover: color-mix(in srgb, var(--fd-color-slate-600) 68%, transparent);
+        --fd-color-dialog-scrollbar-track: color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+        --fd-color-danger-on-light: color-mix(in srgb, var(--fd-color-danger) 70%, var(--fd-color-white));
+        --fd-color-text-muted-soft: color-mix(in srgb, var(--fd-color-text-muted) 80%, transparent);
+        --fd-color-landing-dark-text-muted: color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent);
+        --fd-color-landing-dark-text-soft: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
+        --fd-color-landing-dark-overline: color-mix(in srgb, var(--fd-color-slate-200) 78%, transparent);
+        --fd-color-landing-dark-description: color-mix(in srgb, var(--fd-color-white) 96%, var(--fd-color-teal-500));
+        --fd-color-landing-dark-note: color-mix(in srgb, var(--fd-color-white) 95%, var(--fd-color-teal-500));
 
         --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
         --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};

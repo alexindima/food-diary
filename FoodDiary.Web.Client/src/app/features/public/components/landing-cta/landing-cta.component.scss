@@ -18,7 +18,7 @@
     }
 
     &__subtitle {
-        @include landing.marketing-body(1.02rem, 1.65, color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent), 620px, 8px 0 0);
+        @include landing.marketing-body(1.02rem, 1.65, var(--fd-color-landing-dark-text-muted), 620px, 8px 0 0);
     }
 
     &__actions {
@@ -59,7 +59,7 @@
             height: 260px;
             right: -40px;
             top: -80px;
-            background: radial-gradient(circle, color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent), transparent 70%);
+            background: var(--fd-bg-landing-cta-orb);
         }
 
         &::after {
@@ -67,7 +67,7 @@
             height: 240px;
             left: -60px;
             bottom: -110px;
-            background: radial-gradient(circle, color-mix(in srgb, var(--fd-color-teal-500) 22%, transparent), transparent 70%);
+            background: var(--fd-bg-landing-cta-orb-accent);
         }
 
         @media #{variables.$media-tablet} {

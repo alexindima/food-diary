@@ -21,7 +21,7 @@
     }
 
     &__eyebrow {
-        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 10%, transparent));
+        @include landing.section-eyebrow(var(--fd-bg-landing-eyebrow-info));
     }
 
     &__title {
@@ -115,7 +115,7 @@
     }
 
     &__cta-text {
-        @include landing.marketing-body(1rem, 1.65, color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent));
+        @include landing.marketing-body(1rem, 1.65, var(--fd-color-landing-dark-text-muted));
     }
 
     &__cta-actions {

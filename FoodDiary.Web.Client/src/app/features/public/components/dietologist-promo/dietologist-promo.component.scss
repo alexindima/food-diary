@@ -139,7 +139,7 @@
 
     &__card-text {
         margin-top: 0;
-        color: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
+        color: var(--fd-color-landing-dark-text-soft);
     }
 
     &__permission-label {

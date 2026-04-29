@@ -9,16 +9,14 @@
     --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding);
     --fd-emoji-picker-option-radius: var(--fd-radius-card);
     --fd-emoji-picker-option-bg-default: var(--fd-bg-surface-solid);
-    --fd-emoji-picker-option-bg-hover: color-mix(in srgb, var(--fd-color-primary-100) 55%, var(--fd-bg-surface-raised));
-    --fd-emoji-picker-option-bg-selected: color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-bg-surface-raised));
-    --fd-emoji-picker-option-border-default: color-mix(in srgb, var(--fd-color-border-strong) 38%, transparent);
-    --fd-emoji-picker-option-border-hover: color-mix(in srgb, var(--fd-color-primary-400) 46%, transparent);
-    --fd-emoji-picker-option-border-selected: color-mix(in srgb, var(--fd-color-primary-500) 68%, transparent);
-    --fd-emoji-picker-option-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
-    --fd-emoji-picker-option-shadow-hover: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
-    --fd-emoji-picker-option-shadow-selected:
-        0 12px 28px color-mix(in srgb, var(--fd-color-slate-900) 16%, transparent),
-        0 0 0 1px color-mix(in srgb, var(--fd-color-primary-400) 34%, transparent);
+    --fd-emoji-picker-option-bg-hover: var(--fd-bg-emoji-picker-option-hover);
+    --fd-emoji-picker-option-bg-selected: var(--fd-bg-emoji-picker-option-selected);
+    --fd-emoji-picker-option-border-default: var(--fd-color-border-emoji-picker-option);
+    --fd-emoji-picker-option-border-hover: var(--fd-color-border-emoji-picker-option-hover);
+    --fd-emoji-picker-option-border-selected: var(--fd-color-border-emoji-picker-option-selected);
+    --fd-emoji-picker-option-shadow-default: var(--fd-shadow-emoji-picker-option);
+    --fd-emoji-picker-option-shadow-hover: var(--fd-shadow-emoji-picker-option-hover);
+    --fd-emoji-picker-option-shadow-selected: var(--fd-shadow-emoji-picker-option-selected);
     display: flex;
     flex-wrap: wrap;
     gap: var(--fd-emoji-picker-gap);

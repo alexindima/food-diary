@@ -93,7 +93,7 @@
     }
 
     &__track {
-        stroke: color-mix(in srgb, var(--fd-color-border-strong) 68%, var(--fd-color-surface-raised));
+        stroke: var(--fd-color-border-summary-track);
         opacity: 1;
         stroke-linecap: round;
         transition:
@@ -226,11 +226,11 @@
 
         &:hover {
             transform: translateY(-2px) scale(1.02);
-            filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
+            filter: var(--fd-shadow-filter-drop-sm);
 
             .dashboard-summary-card__bar-fill {
                 opacity: 1;
-                filter: drop-shadow(0 0 10px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent));
+                filter: var(--fd-shadow-filter-glow-sm);
             }
         }
     }
@@ -256,7 +256,7 @@
         width: 100%;
         --fd-progress-height: 20px;
         --fd-progress-radius: var(--fd-radius-pill);
-        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-bg-surface-raised));
+        --fd-progress-track-background: var(--fd-bg-progress-track-strong);
         position: relative;
     }
 

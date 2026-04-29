@@ -3,7 +3,7 @@
 .ai-photo-result {
     border: var(--fd-border-width) solid var(--fd-color-border-ai);
     border-radius: var(--fd-radius-card);
-    background: color-mix(in srgb, var(--fd-color-purple-500) 7%, var(--fd-bg-surface-raised));
+    background: var(--fd-bg-ai-result-surface);
     padding: var(--fd-space-stat-tile-padding);
     display: flex;
     flex-direction: column;
@@ -30,8 +30,8 @@
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-sm);
     --fd-button-background-default: transparent;
-    --fd-button-background-hover: color-mix(in srgb, var(--fd-color-danger) 16%, var(--fd-bg-surface-raised));
-    --fd-button-background-active: color-mix(in srgb, var(--fd-color-danger) 20%, var(--fd-bg-surface-raised));
+    --fd-button-background-hover: var(--fd-bg-danger-surface-hover);
+    --fd-button-background-active: var(--fd-bg-danger-surface-active);
     --fd-button-border-default: transparent;
     --fd-button-border-hover: transparent;
     --fd-button-border-active: transparent;
@@ -71,13 +71,7 @@
     justify-content: flex-start;
     gap: var(--fd-space-xs);
     padding: var(--fd-space-card-profile-gap) var(--fd-space-lg);
-    background:
-        linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--fd-color-purple-500) 8%, transparent),
-            color-mix(in srgb, var(--fd-color-blue-500) 4%, transparent)
-        ),
-        var(--fd-color-slate-50);
+    background: var(--fd-bg-ai-text-preview);
 }
 
 .ai-photo-result__text-preview-label {
@@ -112,11 +106,11 @@
     border-radius: var(--fd-radius-lg);
     overflow: hidden;
     pointer-events: none;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent), color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent));
+    background: var(--fd-bg-ai-scan-overlay);
 }
 
 .ai-photo-result__scan-overlay:has(.ai-photo-result__scan-line--nutrition) {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-green-500) 8%, transparent), color-mix(in srgb, var(--fd-color-green-500) 0%, transparent));
+    background: var(--fd-bg-ai-scan-overlay-nutrition);
 }
 
 .ai-photo-result__scan-line {
@@ -125,32 +119,14 @@
     right: 12px;
     height: 5px;
     border-radius: var(--fd-radius-pill);
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
-        var(--fd-color-blue-500),
-        color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-white)),
-        var(--fd-color-blue-500),
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
-    );
-    box-shadow:
-        0 0 16px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
-        0 0 30px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-white));
+    background: var(--fd-bg-ai-scan-line);
+    box-shadow: var(--fd-shadow-ai-scan-line);
     animation: ai-photo-scan 4s ease-in-out infinite;
 }
 
 .ai-photo-result__scan-line--nutrition {
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
-        var(--fd-color-green-500),
-        color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-white)),
-        var(--fd-color-green-500),
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
-    );
-    box-shadow:
-        0 0 16px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
-        0 0 30px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
+    background: var(--fd-bg-ai-scan-line-nutrition);
+    box-shadow: var(--fd-shadow-ai-scan-line-nutrition);
 }
 
 @keyframes ai-photo-scan {
@@ -315,12 +291,12 @@
     --fd-button-secondary-text-default: var(--fd-color-slate-500);
     --fd-button-secondary-text-hover: var(--fd-color-slate-700);
     --fd-button-secondary-text-active: var(--fd-color-slate-700);
-    --fd-button-secondary-border-default: color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
+    --fd-button-secondary-border-default: var(--fd-color-border-brand-surface);
     --fd-button-secondary-border-hover: var(--fd-color-slate-400);
     --fd-button-secondary-border-active: var(--fd-color-slate-400);
-    --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
-    --fd-button-secondary-background-hover: color-mix(in srgb, var(--fd-bg-brand-soft) 48%, var(--fd-bg-surface-raised));
-    --fd-button-secondary-background-active: color-mix(in srgb, var(--fd-bg-brand-soft) 54%, var(--fd-bg-surface-raised));
+    --fd-button-secondary-background-default: var(--fd-bg-brand-surface-soft);
+    --fd-button-secondary-background-hover: var(--fd-bg-brand-surface-medium);
+    --fd-button-secondary-background-active: var(--fd-bg-brand-surface-strong);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-shadow-active: var(--fd-shadow-none);
@@ -475,7 +451,7 @@
 }
 
 .ai-photo-result__satiety-card {
-    --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
+    --satiety-gradient: var(--fd-bg-satiety-card-gradient);
     border: var(--fd-border-muted);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-sm);

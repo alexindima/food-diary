@@ -74,7 +74,7 @@
 
     &:hover:not(:disabled) {
         background: var(--fd-bg-brand-tint-subtle);
-        border-color: color-mix(in srgb, var(--fd-color-border-strong) 55%, transparent);
+        border-color: var(--fd-color-border-calendar-hover);
     }
 
     &:focus-visible {
@@ -90,11 +90,11 @@
 }
 
 .fd-ui-calendar__day--outside {
-    color: color-mix(in srgb, var(--fd-color-text-muted) 72%, transparent);
+    color: var(--fd-color-calendar-outside);
 }
 
 .fd-ui-calendar__day--today {
-    border-color: color-mix(in srgb, var(--fd-color-primary-500) 28%, transparent);
+    border-color: var(--fd-color-border-calendar-today);
 }
 
 .fd-ui-calendar__day--selected {
@@ -105,5 +105,5 @@
 
 .fd-ui-calendar__day--active:not(.fd-ui-calendar__day--selected) {
     background: var(--fd-bg-brand-tint-medium);
-    border-color: color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
+    border-color: var(--fd-color-border-calendar-active);
 }

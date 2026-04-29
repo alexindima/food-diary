@@ -112,7 +112,7 @@
         height: var(--fd-button-spinner-size);
         translate: -50% -50%;
         border-radius: 50%;
-        border: var(--fd-border-width-strong) solid color-mix(in srgb, currentColor 28%, transparent);
+        border: var(--fd-border-width-strong) solid var(--fd-color-border-button-spinner);
         border-top-color: currentColor;
         animation: fd-ui-button-spin 0.7s linear infinite;
     }
@@ -168,9 +168,7 @@
     --fd-button-background-default: var(--fd-bg-surface-raised);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
-    --fd-button-focus-ring-shadow:
-        0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
-        0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
+    --fd-button-focus-ring-shadow: var(--fd-shadow-button-focus-ring);
 }
 
 @keyframes fd-ui-button-spin {
@@ -188,7 +186,7 @@
     --fd-button-border-width: 0;
     --fd-button-background-default: var(--fd-bg-brand);
     --fd-button-text-default: var(--fd-color-white);
-    --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
+    --fd-button-shadow-default: var(--fd-shadow-button-toolbar-solid);
 }
 
 .fd-ui-button--appearance-card-action {
@@ -197,24 +195,12 @@
     --fd-button-height-explicit: var(--fd-size-control-md);
     --fd-button-height: var(--fd-size-control-md);
     --fd-button-padding-x: 0;
-    --fd-button-background-default: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),
-        color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white))
-    );
-    --fd-button-background-hover: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-primary-100) 76%, var(--fd-color-white)),
-        color-mix(in srgb, var(--fd-color-primary-200) 78%, var(--fd-color-white))
-    );
-    --fd-button-background-active: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-white)),
-        color-mix(in srgb, var(--fd-color-primary-200) 74%, var(--fd-color-white))
-    );
-    --fd-button-border-default: color-mix(in srgb, var(--fd-color-blue-500) 22%, transparent);
-    --fd-button-border-hover: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
-    --fd-button-border-active: color-mix(in srgb, var(--fd-color-blue-500) 30%, transparent);
+    --fd-button-background-default: var(--fd-bg-button-card-action);
+    --fd-button-background-hover: var(--fd-bg-button-card-action-hover);
+    --fd-button-background-active: var(--fd-bg-button-card-action-active);
+    --fd-button-border-default: var(--fd-color-border-button-card-action);
+    --fd-button-border-hover: var(--fd-color-border-button-card-action-strong);
+    --fd-button-border-active: var(--fd-color-border-button-card-action-strong);
     --fd-button-text-default: var(--fd-color-primary-600);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
@@ -245,9 +231,7 @@
     --fd-button-text-default: var(--fd-color-text);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
-    --fd-button-focus-ring-shadow:
-        0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 90%, transparent),
-        0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 56%, transparent);
+    --fd-button-focus-ring-shadow: var(--fd-shadow-button-focus-ring);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     border-radius: var(--fd-radius-button);
@@ -264,8 +248,8 @@
     --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-ai-hover-start), var(--fd-gradient-ai-hover-end));
     --fd-button-background-active: linear-gradient(135deg, var(--fd-gradient-ai-start), var(--fd-gradient-ai-end));
     --fd-button-text-default: var(--fd-color-on-ai);
-    --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-ai-strong) 24%, transparent);
-    --fd-button-shadow-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-ai-strong) 28%, transparent);
+    --fd-button-shadow-default: var(--fd-shadow-button-ai);
+    --fd-button-shadow-hover: var(--fd-shadow-button-ai-hover);
 }
 
 .fd-ui-button--primary.fd-ui-button--solid:has(.fd-ui-button__label:empty) {
@@ -277,7 +261,7 @@
     --fd-button-border-radius: var(--fd-radius-chip);
     --fd-button-padding-x: var(--fd-space-sm);
     --fd-button-background-default: var(--fd-bg-surface-raised);
-    --fd-button-border-default: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    --fd-button-border-default: var(--fd-color-border-dark-muted);
     --fd-button-shadow-default: var(--fd-shadow-none);
 }
 
