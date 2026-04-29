@@ -90,7 +90,7 @@
 
         &:hover {
             transform: translateY(-1px);
-            border-color: color-mix(in srgb, var(--fd-color-primary-600) 45%, transparent);
+            border-color: var(--fd-color-border-primary-prominent);
             box-shadow: var(--fd-shadow-accent);
         }
 

@@ -11,7 +11,7 @@
     width: var(--fd-size-control-sm);
     height: var(--fd-size-control-sm);
     border-radius: 50%;
-    border: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+    border: var(--fd-border-width-emphasis) solid var(--fd-color-border-loader);
     border-top-color: var(--fd-color-primary-600);
     animation: fd-ui-loader-spin 0.75s linear infinite;
 }

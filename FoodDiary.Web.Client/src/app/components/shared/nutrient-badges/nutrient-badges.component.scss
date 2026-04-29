@@ -28,7 +28,7 @@
     background: transparent;
     color: var(--chip-color, var(--fd-color-text));
     box-shadow: var(--fd-shadow-none);
-    border-right: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-border) 72%, transparent);
+    border-right: var(--fd-border-width) solid var(--fd-color-border-divider-soft);
 }
 
 .nutrient-badges__chip:last-child {
@@ -91,7 +91,7 @@
         justify-content: center;
         gap: var(--fd-space-pill-compact-gap);
         padding: var(--fd-space-status-badge-padding);
-        border-right: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-border) 72%, transparent);
+        border-right: var(--fd-border-width) solid var(--fd-color-border-divider-soft);
         min-width: 0;
     }
 

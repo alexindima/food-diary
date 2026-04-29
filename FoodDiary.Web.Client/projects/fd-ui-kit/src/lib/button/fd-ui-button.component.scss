@@ -186,7 +186,7 @@
 
 .fd-ui-button--appearance-toolbar.fd-ui-button--primary.fd-ui-button--solid {
     --fd-button-border-width: 0;
-    --fd-button-background-default: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
+    --fd-button-background-default: var(--fd-bg-brand);
     --fd-button-text-default: var(--fd-color-white);
     --fd-button-shadow-default: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
 }

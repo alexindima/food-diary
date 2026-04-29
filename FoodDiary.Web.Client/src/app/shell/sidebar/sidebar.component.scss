@@ -394,7 +394,7 @@
 
         &.is-pending:not(.is-active) {
             background: var(--fd-bg-brand-tint);
-            border-color: color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
+            border-color: var(--fd-color-border-primary-strong);
             box-shadow: var(--fd-shadow-accent);
         }
     }

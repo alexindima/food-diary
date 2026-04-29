@@ -57,12 +57,12 @@
         box-shadow 0.2s ease,
         border-color 0.2s ease;
 
-    &:hover {
-        transform: translateY(-1px);
-        box-shadow:
-            var(--fd-shadow-lg),
-            inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
-    }
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                var(--fd-shadow-lg),
+                var(--fd-shadow-ring-inset-primary-strong);
+        }
 
     &.is-read {
         background: var(--fd-bg-surface);

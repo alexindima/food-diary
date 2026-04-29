@@ -23,7 +23,7 @@
     letter-spacing: var(--fd-letter-spacing-subtle);
     --fd-pill-bg: var(--fd-bg-dialog);
     --fd-pill-color: var(--fd-color-primary-700);
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
+    --fd-pill-border: var(--fd-color-border-control-radio);
     box-shadow: var(--fd-shadow-lg);
     z-index: 2;
 }

@@ -53,20 +53,20 @@
 }
 
 .not-found__button--primary {
-    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
+    background: var(--fd-bg-brand);
     color: var(--fd-color-white);
     box-shadow: var(--fd-shadow-accent);
 }
 
 .not-found__button--primary:hover {
-    background: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
+    background: var(--fd-bg-brand-hover);
     transform: scale(1.05);
 }
 
 .not-found__button--secondary {
     background-color: transparent;
     color: var(--fd-color-primary-600);
-    border: var(--fd-border-width-strong) solid color-mix(in srgb, var(--fd-color-primary-600) 45%, transparent);
+    border: var(--fd-border-width-strong) solid var(--fd-color-border-primary-prominent);
 }
 
 .not-found__button--secondary:hover {

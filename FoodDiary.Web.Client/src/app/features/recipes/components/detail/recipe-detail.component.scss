@@ -51,15 +51,15 @@
     &__quality-fill {
 
         &--green {
-            background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-bg-surface-raised)));
+            background: var(--fd-bg-quality-good);
         }
 
         &--yellow {
-            background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300)));
+            background: var(--fd-bg-quality-warning);
         }
 
         &--red {
-            background: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-bg-surface-raised)));
+            background: var(--fd-bg-quality-danger);
         }
     }
 
