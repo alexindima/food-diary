@@ -15,6 +15,6 @@ label {
 }
 
 p {
-    margin: 4px 0;
+    margin: calc(var(--fd-space-xxs) / 2) 0;
     color: var(--fd-color-text-muted);
 }
