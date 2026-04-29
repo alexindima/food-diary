@@ -1,7 +1,7 @@
 :host {
     --fd-accent-color: var(--fd-color-primary-600);
-    --fd-accent-thickness: 6px;
-    --fd-accent-thickness-active: 10px;
+    --fd-accent-thickness: var(--fd-size-accent-thickness);
+    --fd-accent-thickness-active: var(--fd-size-accent-thickness-active);
     --fd-accent-overlay-opacity: 0;
     --fd-accent-surface-radius: var(--fd-radius-card);
     position: relative;
@@ -41,8 +41,8 @@
 
 :host(.fd-ui-accent-surface--side-top)::after,
 :host(.fd-ui-accent-surface--side-bottom)::after {
-    --fd-accent-thickness: 4px;
-    --fd-accent-thickness-active: 8px;
+    --fd-accent-thickness: var(--fd-size-accent-thickness-horizontal);
+    --fd-accent-thickness-active: var(--fd-size-accent-thickness-horizontal-active);
     left: 0;
     right: 0;
 }

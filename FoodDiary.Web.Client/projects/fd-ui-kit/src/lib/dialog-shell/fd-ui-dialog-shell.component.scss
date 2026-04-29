@@ -6,13 +6,13 @@
     --fd-dialog-shell-shadow: var(--fd-shadow-dialog-shell);
     --fd-dialog-shell-border: var(--fd-border-width) solid var(--fd-color-dialog-border);
     --fd-dialog-shell-background: var(--fd-bg-dialog);
-    --fd-dialog-panel-max-width: 640px;
+    --fd-dialog-panel-max-width: var(--fd-size-dialog-panel-width-md);
     border-radius: var(--fd-radius-dialog);
     box-shadow: var(--fd-dialog-shell-shadow);
     border: var(--fd-dialog-shell-border);
     background: var(--fd-dialog-shell-background);
     max-width: min(100%, var(--fd-dialog-panel-max-width));
-    max-height: 90vh;
+    max-height: var(--fd-size-dialog-max-height-detail);
     overflow: hidden;
     transform: scale(0.97);
     opacity: 0;
@@ -31,7 +31,7 @@
 
 .fd-ui-dialog-shell--flush .fd-ui-dialog__body {
     padding: 0;
-    max-height: calc(90vh - 32px);
+    max-height: calc(var(--fd-size-dialog-max-height-detail) - var(--fd-size-control-sm));
     overflow-y: auto;
     min-height: 0;
     scrollbar-gutter: stable;

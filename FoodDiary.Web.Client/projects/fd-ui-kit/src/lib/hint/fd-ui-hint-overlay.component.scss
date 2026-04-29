@@ -9,7 +9,7 @@
     --fd-hint-border: var(--fd-border-default);
     --fd-hint-shadow: var(--fd-shadow-sm);
     --fd-hint-radius: var(--fd-radius-panel);
-    --fd-hint-max-width: 280px;
+    --fd-hint-max-width: var(--fd-size-hint-max-width);
     max-width: var(--fd-hint-max-width);
     padding: var(--fd-space-hint-padding);
     border-radius: var(--fd-hint-radius);

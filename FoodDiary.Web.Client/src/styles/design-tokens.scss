@@ -31,13 +31,48 @@ $fd-size-tokens: (
     icon-xxl: 2rem,
     icon-hero: 2.25rem,
     icon-empty: 3rem,
+    control-micro: 22px,
     control-xs: 24px,
+    control-xxs: 28px,
     control-sm: 32px,
+    control-chip: 34px,
+    control-compact: 36px,
+    control-toolbar: 38px,
     control-md: 40px,
+    control-md-plus: 42px,
     control-touch: 44px,
     control-lg: 48px,
     control-xl: 56px,
     control-xxl: 64px,
+    button-icon-xs: 0.9rem,
+    button-icon-sm: 1rem,
+    button-icon-lg: 1.3rem,
+    button-icon-xl: 1.6rem,
+    button-spinner-xs: 0.8rem,
+    pill-height: 28px,
+    pill-height-compact: 24px,
+    pill-height-tiny: 22px,
+    pill-height-relaxed: 30px,
+    progress-height-sm: 4px,
+    progress-height-md: 8px,
+    progress-height-lg: 10px,
+    progress-height-xl: 20px,
+    progress-radius-sm: 2px,
+    top-loader-height: 3px,
+    hint-max-width: 280px,
+    accent-thickness: 6px,
+    accent-thickness-active: 10px,
+    accent-thickness-horizontal: 4px,
+    accent-thickness-horizontal-active: 8px,
+    chip-select-item-height: 38px,
+    chip-select-item-height-sm: 34px,
+    section-state-min-height: 176px,
+    section-state-compact-min-height: 128px,
+    satiety-scale-vertical-max-width: 420px,
+    checkbox-control: 18px,
+    checkbox-checkmark-width: 10px,
+    checkbox-checkmark-height: 6px,
+    form-field-subscript-height: 18px,
     emoji-picker-emoji: 1.7rem,
     emoji-picker-emoji-sm: 1.4rem,
     dialog-panel-width-offset: 2rem,
@@ -50,6 +85,7 @@ $fd-size-tokens: (
     dialog-chart-width: min(1440px, calc(100vw - 40px)),
     dialog-max-height: 80vh,
     dialog-max-height-detail: 90vh,
+    dialog-max-height-admin: 94vh,
     dialog-vertical-padding: 2.5rem,
     dialog-vertical-padding-sm: 2rem,
     dialog-vertical-padding-lg: 3rem,
@@ -91,6 +127,8 @@ $fd-typography-tokens: (
     text-body-tiny-plus-size: 0.86rem,
     text-body-tiny-size: 0.84rem,
     text-body-micro-size: 0.82rem,
+    text-body-nano-size: 0.8rem,
+    text-page-title-mobile-size: 1.65rem,
     text-body-lg-size: 1.04rem,
     text-caption-size: 0.85rem,
     text-caption-line-height: 1.35,
@@ -1412,6 +1450,8 @@ $fd-theme-design-tokens: (
         --fd-text-body-tiny-plus-size: #{fd-token(typography, text-body-tiny-plus-size)};
         --fd-text-body-tiny-size: #{fd-token(typography, text-body-tiny-size)};
         --fd-text-body-micro-size: #{fd-token(typography, text-body-micro-size)};
+        --fd-text-body-nano-size: #{fd-token(typography, text-body-nano-size)};
+        --fd-text-page-title-mobile-size: #{fd-token(typography, text-page-title-mobile-size)};
         --fd-text-body-lg-size: #{fd-token(typography, text-body-lg-size)};
         --fd-text-body-size: #{fd-token(typography, text-body-size)};
         --fd-text-body-line-height: #{fd-token(typography, text-body-line-height)};
@@ -1537,6 +1577,9 @@ $fd-theme-design-tokens: (
         --fd-shadow-button-toolbar-solid: 0 8px 18px color-mix(in srgb, var(--fd-color-primary-600) 24%, transparent);
         --fd-shadow-button-ai: 0 8px 18px color-mix(in srgb, var(--fd-color-ai-strong) 24%, transparent);
         --fd-shadow-button-ai-hover: 0 10px 22px color-mix(in srgb, var(--fd-color-ai-strong) 28%, transparent);
+        --fd-shadow-button-hover: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
+        --fd-shadow-chip-select-selected:
+            0 10px 18px color-mix(in srgb, var(--fd-chip-select-shadow-selected-color) 22%, transparent);
         --fd-shadow-emoji-picker-option: 0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
         --fd-shadow-emoji-picker-option-hover: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 14%, transparent);
         --fd-shadow-emoji-picker-option-selected:
@@ -1595,6 +1638,7 @@ $fd-theme-design-tokens: (
             )};
         --fd-shadow-none: #{fd-token(elevation, none)};
         --fd-transform-card-hover: translateY(calc(0px - var(--fd-space-micro)));
+        --fd-transform-control-hover: translateY(calc(0px - var(--fd-border-width)));
         --fd-card-hover-transform: var(--fd-transform-card-hover);
         --fd-card-hover-shadow: var(--fd-shadow-card-hover);
 
@@ -1781,12 +1825,48 @@ $fd-theme-design-tokens: (
         --fd-size-icon-xxl: #{fd-token(size, icon-xxl)};
         --fd-size-icon-hero: #{fd-token(size, icon-hero)};
         --fd-size-icon-empty: #{fd-token(size, icon-empty)};
+        --fd-size-control-micro: #{fd-token(size, control-micro)};
+        --fd-size-control-xs: #{fd-token(size, control-xs)};
         --fd-size-control-sm: #{fd-token(size, control-sm)};
+        --fd-size-control-xxs: #{fd-token(size, control-xxs)};
+        --fd-size-control-chip: #{fd-token(size, control-chip)};
+        --fd-size-control-compact: #{fd-token(size, control-compact)};
+        --fd-size-control-toolbar: #{fd-token(size, control-toolbar)};
         --fd-size-control-md: #{fd-token(size, control-md)};
+        --fd-size-control-md-plus: #{fd-token(size, control-md-plus)};
         --fd-size-control-touch: #{fd-token(size, control-touch)};
         --fd-size-control-lg: #{fd-token(size, control-lg)};
         --fd-size-control-xl: #{fd-token(size, control-xl)};
         --fd-size-control-xxl: #{fd-token(size, control-xxl)};
+        --fd-size-button-icon-xs: #{fd-token(size, button-icon-xs)};
+        --fd-size-button-icon-sm: #{fd-token(size, button-icon-sm)};
+        --fd-size-button-icon-lg: #{fd-token(size, button-icon-lg)};
+        --fd-size-button-icon-xl: #{fd-token(size, button-icon-xl)};
+        --fd-size-button-spinner-xs: #{fd-token(size, button-spinner-xs)};
+        --fd-size-pill-height: #{fd-token(size, pill-height)};
+        --fd-size-pill-height-compact: #{fd-token(size, pill-height-compact)};
+        --fd-size-pill-height-tiny: #{fd-token(size, pill-height-tiny)};
+        --fd-size-pill-height-relaxed: #{fd-token(size, pill-height-relaxed)};
+        --fd-size-progress-height-sm: #{fd-token(size, progress-height-sm)};
+        --fd-size-progress-height-md: #{fd-token(size, progress-height-md)};
+        --fd-size-progress-height-lg: #{fd-token(size, progress-height-lg)};
+        --fd-size-progress-height-xl: #{fd-token(size, progress-height-xl)};
+        --fd-size-progress-radius-sm: #{fd-token(size, progress-radius-sm)};
+        --fd-size-top-loader-height: #{fd-token(size, top-loader-height)};
+        --fd-size-hint-max-width: #{fd-token(size, hint-max-width)};
+        --fd-size-accent-thickness: #{fd-token(size, accent-thickness)};
+        --fd-size-accent-thickness-active: #{fd-token(size, accent-thickness-active)};
+        --fd-size-accent-thickness-horizontal: #{fd-token(size, accent-thickness-horizontal)};
+        --fd-size-accent-thickness-horizontal-active: #{fd-token(size, accent-thickness-horizontal-active)};
+        --fd-size-chip-select-item-height: #{fd-token(size, chip-select-item-height)};
+        --fd-size-chip-select-item-height-sm: #{fd-token(size, chip-select-item-height-sm)};
+        --fd-size-section-state-min-height: #{fd-token(size, section-state-min-height)};
+        --fd-size-section-state-compact-min-height: #{fd-token(size, section-state-compact-min-height)};
+        --fd-size-satiety-scale-vertical-max-width: #{fd-token(size, satiety-scale-vertical-max-width)};
+        --fd-size-checkbox-control: #{fd-token(size, checkbox-control)};
+        --fd-size-checkbox-checkmark-width: #{fd-token(size, checkbox-checkmark-width)};
+        --fd-size-checkbox-checkmark-height: #{fd-token(size, checkbox-checkmark-height)};
+        --fd-size-form-field-subscript-height: #{fd-token(size, form-field-subscript-height)};
         --fd-size-emoji-picker-emoji: #{fd-token(size, emoji-picker-emoji)};
         --fd-size-emoji-picker-emoji-sm: #{fd-token(size, emoji-picker-emoji-sm)};
         --fd-size-dialog-panel-width-offset: #{fd-token(size, dialog-panel-width-offset)};
@@ -1799,6 +1879,7 @@ $fd-theme-design-tokens: (
         --fd-size-dialog-chart-width: #{fd-token(size, dialog-chart-width)};
         --fd-size-dialog-max-height: #{fd-token(size, dialog-max-height)};
         --fd-size-dialog-max-height-detail: #{fd-token(size, dialog-max-height-detail)};
+        --fd-size-dialog-max-height-admin: #{fd-token(size, dialog-max-height-admin)};
         --fd-size-dialog-vertical-padding: #{fd-token(size, dialog-vertical-padding)};
         --fd-size-dialog-vertical-padding-sm: #{fd-token(size, dialog-vertical-padding-sm)};
         --fd-size-dialog-vertical-padding-lg: #{fd-token(size, dialog-vertical-padding-lg)};

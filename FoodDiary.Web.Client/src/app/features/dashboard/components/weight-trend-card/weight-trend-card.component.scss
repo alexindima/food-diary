@@ -31,7 +31,7 @@
         --fd-pill-bg: var(--fd-bg-status-info);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text);
-        --fd-pill-min-height: 30px;
+        --fd-pill-min-height: var(--fd-size-pill-height-relaxed);
         margin-bottom: var(--fd-space-xs);
 
         &--positive {

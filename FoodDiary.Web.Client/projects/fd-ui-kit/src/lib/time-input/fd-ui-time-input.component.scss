@@ -111,8 +111,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: var(--fd-size-control-xxs);
+    height: var(--fd-size-control-xxs);
     cursor: pointer;
 }
 
@@ -121,8 +121,8 @@
 }
 
 .fd-ui-time-input__suffix fd-ui-icon {
-    width: 20px;
-    height: 20px;
+    width: var(--fd-size-icon-lg);
+    height: var(--fd-size-icon-lg);
     font-size: var(--fd-text-card-title-size);
     line-height: 1;
     display: block;

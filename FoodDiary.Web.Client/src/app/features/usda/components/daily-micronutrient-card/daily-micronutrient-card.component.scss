@@ -56,7 +56,7 @@
 }
 
 .progress-bar {
-    --fd-progress-height: 4px;
+    --fd-progress-height: var(--fd-size-progress-height-sm);
     --fd-progress-radius: var(--fd-space-micro);
     --fd-progress-track-background: var(--fd-bg-surface-muted);
 }

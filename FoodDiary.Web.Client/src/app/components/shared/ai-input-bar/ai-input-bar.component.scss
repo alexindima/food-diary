@@ -49,7 +49,7 @@
         --fd-button-width: var(--fd-size-control-md);
         --fd-button-min-width: var(--fd-size-control-md);
         --fd-button-height: var(--fd-size-control-md);
-        --fd-button-height-explicit: 40px;
+        --fd-button-height-explicit: var(--fd-size-control-md);
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-button);
         --fd-button-disabled-opacity: 0.4;
@@ -90,12 +90,12 @@
 
     &__submit {
         flex-shrink: 0;
-        --fd-button-host-width: 36px;
-        --fd-button-host-min-width: 36px;
-        --fd-button-width: 36px;
-        --fd-button-min-width: 36px;
-        --fd-button-height: 36px;
-        --fd-button-height-explicit: 36px;
+        --fd-button-host-width: var(--fd-size-control-compact);
+        --fd-button-host-min-width: var(--fd-size-control-compact);
+        --fd-button-width: var(--fd-size-control-compact);
+        --fd-button-min-width: var(--fd-size-control-compact);
+        --fd-button-height: var(--fd-size-control-compact);
+        --fd-button-height-explicit: var(--fd-size-control-compact);
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-button);
         --fd-button-background-default: var(--fd-color-ai-strong);

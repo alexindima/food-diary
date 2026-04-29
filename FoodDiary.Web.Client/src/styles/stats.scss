@@ -28,7 +28,7 @@
 }
 
 .fd-ui-stat-tile--subtle {
-    --fd-stat-tile-radius: 16px;
+    --fd-stat-tile-radius: var(--fd-radius-xl);
     --fd-stat-tile-background: var(--fd-bg-stat-tile-subtle);
     --fd-stat-tile-border: var(--fd-border-muted);
     --fd-stat-tile-shadow: var(--fd-shadow-none);

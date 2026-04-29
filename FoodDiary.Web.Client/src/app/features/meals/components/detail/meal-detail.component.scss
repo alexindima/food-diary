@@ -36,7 +36,7 @@
     }
 
     &__quality-bar {
-        --fd-progress-height: 8px;
+        --fd-progress-height: var(--fd-size-progress-height-md);
         --fd-progress-radius: var(--fd-radius-pill);
         --fd-progress-track-background: var(--fd-bg-muted-tint-strong);
     }
@@ -100,7 +100,7 @@
         --fd-button-width: var(--fd-size-control-md);
         --fd-button-min-width: var(--fd-size-control-md);
         --fd-button-height: var(--fd-size-control-md);
-        --fd-button-height-explicit: 40px;
+        --fd-button-height-explicit: var(--fd-size-control-md);
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-lg);
         --fd-button-background: var(--fd-bg-surface-raised);

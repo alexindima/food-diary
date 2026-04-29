@@ -24,7 +24,7 @@
 
     &__hero {
         --fd-recipe-input-height: var(--fd-size-control-lg);
-        --fd-recipe-input-subscript: 18px;
+        --fd-recipe-input-subscript: var(--fd-size-form-field-subscript-height);
         --fd-recipe-image-size: calc(
             (var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
         );

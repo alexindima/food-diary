@@ -359,7 +359,7 @@
             var(--fd-shadow-highlight-inset-light-xl),
             var(--fd-shadow-ring-inset-border-emphasis),
             0 8px 18px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-        --macro-thumb-size: 16px;
+        --macro-thumb-size: var(--fd-size-icon-sm);
 
         &::after {
             content: '';

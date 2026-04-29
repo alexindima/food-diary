@@ -21,8 +21,8 @@
 }
 
 .fd-ui-progress-track {
-    --fd-progress-height: 4px;
-    --fd-progress-radius: 2px;
+    --fd-progress-height: var(--fd-size-progress-height-sm);
+    --fd-progress-radius: var(--fd-size-progress-radius-sm);
     --fd-progress-track-background: var(--fd-bg-surface-muted);
     position: relative;
     display: block;

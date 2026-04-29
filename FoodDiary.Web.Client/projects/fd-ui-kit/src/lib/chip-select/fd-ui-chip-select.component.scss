@@ -1,6 +1,6 @@
 :host {
     display: block;
-    --fd-chip-select-item-height: 38px;
+    --fd-chip-select-item-height: var(--fd-size-chip-select-item-height);
     --fd-chip-select-border: var(--fd-color-slate-200);
     --fd-chip-select-background: var(--fd-bg-surface-raised);
     --fd-chip-select-text: var(--fd-color-slate-700);
@@ -16,7 +16,7 @@
     --fd-chip-select-border-selected-hover: var(--fd-color-purple-700);
     --fd-chip-select-background-selected-hover: var(--fd-color-purple-700);
     --fd-chip-select-shadow-selected-color: var(--fd-color-purple-500);
-    --fd-chip-select-shadow-selected: 0 10px 18px color-mix(in srgb, var(--fd-chip-select-shadow-selected-color) 22%, transparent);
+    --fd-chip-select-shadow-selected: var(--fd-shadow-chip-select-selected);
 }
 
 .fd-ui-chip-select {
@@ -75,6 +75,6 @@
 }
 
 .fd-ui-chip-select--size-sm .fd-ui-chip-select__item {
-    --fd-chip-select-item-height: 34px;
+    --fd-chip-select-item-height: var(--fd-size-chip-select-item-height-sm);
     --fd-chip-select-font-size: var(--fd-text-caption-size);
 }

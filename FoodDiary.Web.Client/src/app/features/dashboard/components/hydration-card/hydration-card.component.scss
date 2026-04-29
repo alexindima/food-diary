@@ -24,7 +24,7 @@
 
     &__progress-track {
         flex: 1;
-        --fd-progress-height: 10px;
+        --fd-progress-height: var(--fd-size-progress-height-lg);
         --fd-progress-radius: var(--fd-radius-pill);
         --fd-progress-track-background: color-mix(in srgb, var(--fd-bg-surface-raised) 28%, transparent);
     }

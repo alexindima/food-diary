@@ -135,8 +135,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: var(--fd-size-control-xxs);
+    height: var(--fd-size-control-xxs);
     color: var(--fd-color-text-muted);
     pointer-events: none;
 }

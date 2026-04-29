@@ -69,7 +69,7 @@
         align-items: center;
         column-gap: var(--fd-space-page-header-mobile-column-gap);
         row-gap: var(--fd-space-page-header-mobile-row-gap);
-        --fd-page-title-size: 1.65rem;
+        --fd-page-title-size: var(--fd-text-page-title-mobile-size);
         --fd-page-title-line-height: 1.1;
         --fd-page-subtitle-size: var(--fd-text-caption-size);
         --fd-page-subtitle-line-height: var(--fd-text-caption-line-height);

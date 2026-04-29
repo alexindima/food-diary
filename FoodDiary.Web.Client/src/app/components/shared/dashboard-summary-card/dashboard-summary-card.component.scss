@@ -231,7 +231,7 @@
 
     &__bar-track {
         width: 100%;
-        --fd-progress-height: 20px;
+        --fd-progress-height: var(--fd-size-progress-height-xl);
         --fd-progress-radius: var(--fd-radius-pill);
         --fd-progress-track-background: var(--fd-bg-progress-track-strong);
         position: relative;

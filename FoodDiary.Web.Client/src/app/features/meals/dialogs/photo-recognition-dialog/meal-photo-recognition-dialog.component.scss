@@ -130,7 +130,7 @@
     --fd-button-width: var(--fd-size-control-xs);
     --fd-button-min-width: var(--fd-size-control-xs);
     --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: 24px;
+    --fd-button-height-explicit: var(--fd-size-control-xs);
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
     --fd-button-background-hover: transparent;
@@ -151,8 +151,8 @@
 
 .photo-ai-dialog__edit-add {
     margin-top: var(--fd-space-xs);
-    --fd-button-height: 42px;
-    --fd-button-height-explicit: 42px;
+    --fd-button-height: var(--fd-size-control-md-plus);
+    --fd-button-height-explicit: var(--fd-size-control-md-plus);
     --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-text-default: var(--fd-color-slate-500);
     --fd-button-text-hover: var(--fd-color-slate-700);
@@ -173,7 +173,7 @@
     --fd-button-width: var(--fd-size-control-xs);
     --fd-button-min-width: var(--fd-size-control-xs);
     --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: 24px;
+    --fd-button-height-explicit: var(--fd-size-control-xs);
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
     --fd-button-background-hover: transparent;

@@ -25,7 +25,7 @@
 }
 
 .metric-value {
-    --fd-text-metric-lg-size: 1.25rem;
+    --fd-text-metric-lg-size: var(--fd-text-title-md-size);
     --fd-text-metric-lg-line-height: 1.1;
 }
 

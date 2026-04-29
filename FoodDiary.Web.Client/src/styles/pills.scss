@@ -2,7 +2,7 @@
     --fd-pill-bg: var(--fd-bg-status-muted);
     --fd-pill-border: var(--fd-color-border-status-muted);
     --fd-pill-color: var(--fd-color-text);
-    --fd-pill-min-height: 28px;
+    --fd-pill-min-height: var(--fd-size-pill-height);
     --fd-pill-padding-inline: var(--fd-space-xs);
     display: inline-flex;
     align-items: center;
@@ -18,7 +18,7 @@
 }
 
 .fd-ui-pill--compact {
-    --fd-pill-min-height: 24px;
+    --fd-pill-min-height: var(--fd-size-pill-height-compact);
     --fd-pill-padding-inline: var(--fd-space-xs);
     gap: var(--fd-space-pill-compact-gap);
 }

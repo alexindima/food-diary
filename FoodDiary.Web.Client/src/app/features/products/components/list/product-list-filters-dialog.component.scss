@@ -25,7 +25,7 @@
     @media #{variables.$media-mobile} {
 
         &__types {
-            --fd-chip-select-item-height: 38px;
+            --fd-chip-select-item-height: var(--fd-size-chip-select-item-height);
         }
     }
 }

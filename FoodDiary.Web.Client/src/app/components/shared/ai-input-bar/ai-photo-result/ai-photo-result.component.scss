@@ -17,10 +17,10 @@
 }
 
 .ai-photo-result__dismiss {
-    --fd-button-width: 28px;
-    --fd-button-min-width: 28px;
-    --fd-button-height: 28px;
-    --fd-button-height-explicit: 28px;
+    --fd-button-width: var(--fd-size-control-xxs);
+    --fd-button-min-width: var(--fd-size-control-xxs);
+    --fd-button-height: var(--fd-size-control-xxs);
+    --fd-button-height-explicit: var(--fd-size-control-xxs);
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-sm);
     --fd-button-background-default: transparent;
@@ -146,7 +146,7 @@
     --fd-button-width: var(--fd-size-control-xs);
     --fd-button-min-width: var(--fd-size-control-xs);
     --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: 24px;
+    --fd-button-height-explicit: var(--fd-size-control-xs);
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
     --fd-button-background-hover: transparent;
@@ -220,7 +220,7 @@
     --fd-button-width: var(--fd-size-control-xs);
     --fd-button-min-width: var(--fd-size-control-xs);
     --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: 24px;
+    --fd-button-height-explicit: var(--fd-size-control-xs);
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
     --fd-button-background-hover: transparent;
@@ -242,8 +242,8 @@
 .ai-photo-result__edit-add {
     --fd-button-width: 100%;
     --fd-button-min-width: 100%;
-    --fd-button-height: 36px;
-    --fd-button-height-explicit: 36px;
+    --fd-button-height: var(--fd-size-control-compact);
+    --fd-button-height-explicit: var(--fd-size-control-compact);
     --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-padding-x: var(--fd-space-md);
     --fd-button-font-size: var(--fd-text-caption-size);

@@ -33,7 +33,7 @@
     --fd-button-width: var(--fd-size-control-sm);
     --fd-button-min-width: var(--fd-size-control-sm);
     --fd-button-height: var(--fd-size-control-sm);
-    --fd-button-height-explicit: 32px;
+    --fd-button-height-explicit: var(--fd-size-control-sm);
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-background-default: var(--fd-bg-surface-raised);
@@ -98,10 +98,10 @@
 }
 
 .quick-consumption__remove {
-    --fd-button-width: 34px;
-    --fd-button-min-width: 34px;
-    --fd-button-height: 34px;
-    --fd-button-height-explicit: 34px;
+    --fd-button-width: var(--fd-size-control-chip);
+    --fd-button-min-width: var(--fd-size-control-chip);
+    --fd-button-height: var(--fd-size-control-chip);
+    --fd-button-height-explicit: var(--fd-size-control-chip);
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-background-default: var(--fd-bg-surface-raised);

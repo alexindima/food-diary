@@ -44,7 +44,7 @@
         --fd-button-width: var(--fd-size-control-md);
         --fd-button-min-width: var(--fd-size-control-md);
         --fd-button-height: var(--fd-size-control-md);
-        --fd-button-height-explicit: 40px;
+        --fd-button-height-explicit: var(--fd-size-control-md);
         --fd-button-padding-x: 0;
         --fd-button-text-padding-x: 0;
         --fd-button-secondary-text-background-default: var(--fd-bg-brand-tint);
@@ -62,7 +62,7 @@
         --fd-button-shadow-default: var(--fd-shadow-none);
         --fd-button-shadow-hover: var(--fd-shadow-accent);
         --fd-button-shadow-active: var(--fd-shadow-none);
-        --fd-button-transform-hover: translateY(-1px);
+        --fd-button-transform-hover: var(--fd-transform-control-hover);
         --fd-button-transform-active: translateY(0);
         flex-shrink: 0;
         position: relative;
@@ -384,7 +384,7 @@
         --fd-button-shadow-default: var(--fd-shadow-none);
         --fd-button-shadow-hover: var(--fd-shadow-none);
         --fd-button-shadow-active: var(--fd-shadow-none);
-        --fd-button-transform-hover: translateY(-1px);
+        --fd-button-transform-hover: var(--fd-transform-control-hover);
         --fd-button-transform-active: translateY(0);
     }
 }

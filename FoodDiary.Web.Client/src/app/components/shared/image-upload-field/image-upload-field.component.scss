@@ -114,10 +114,10 @@
     }
 
     &__control-btn {
-        --fd-button-width: 38px;
-        --fd-button-min-width: 38px;
-        --fd-button-height: 36px;
-        --fd-button-height-explicit: 36px;
+        --fd-button-width: var(--fd-size-control-toolbar);
+        --fd-button-min-width: var(--fd-size-control-toolbar);
+        --fd-button-height: var(--fd-size-control-compact);
+        --fd-button-height-explicit: var(--fd-size-control-compact);
         --fd-button-padding-x: 0;
         --fd-button-border-radius: 0;
         --fd-button-background-default: transparent;

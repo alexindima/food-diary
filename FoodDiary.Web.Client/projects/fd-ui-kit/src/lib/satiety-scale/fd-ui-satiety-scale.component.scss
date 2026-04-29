@@ -1,7 +1,7 @@
 .satiety-scale {
     --fd-satiety-scale-list-gap: var(--fd-space-satiety-scale-list-gap);
-    --fd-satiety-scale-vertical-list-max-width: 420px;
-    --fd-satiety-scale-vertical-option-max-width: 420px;
+    --fd-satiety-scale-vertical-list-max-width: var(--fd-size-satiety-scale-vertical-max-width);
+    --fd-satiety-scale-vertical-option-max-width: var(--fd-size-satiety-scale-vertical-max-width);
     --fd-satiety-scale-vertical-list-columns: initial;
     --fd-satiety-scale-vertical-list-align-items: stretch;
     --fd-satiety-scale-vertical-option-min-height: auto;
@@ -60,8 +60,8 @@
         max-width: var(--fd-satiety-scale-vertical-option-max-width);
         min-height: var(--fd-satiety-scale-vertical-option-min-height);
         padding: var(--fd-satiety-scale-vertical-option-padding);
-        --fd-accent-thickness: 4px;
-        --fd-accent-thickness-active: 8px;
+        --fd-accent-thickness: var(--fd-size-accent-thickness-horizontal);
+        --fd-accent-thickness-active: var(--fd-size-accent-thickness-horizontal-active);
     }
 
     &__option {

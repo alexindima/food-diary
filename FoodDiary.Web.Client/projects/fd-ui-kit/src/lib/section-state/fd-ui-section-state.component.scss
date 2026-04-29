@@ -1,8 +1,8 @@
 :host {
     display: block;
     width: 100%;
-    --fd-section-state-min-height: 176px;
-    --fd-section-state-compact-min-height: 128px;
+    --fd-section-state-min-height: var(--fd-size-section-state-min-height);
+    --fd-section-state-compact-min-height: var(--fd-size-section-state-compact-min-height);
 }
 
 .fd-ui-section-state__surface {

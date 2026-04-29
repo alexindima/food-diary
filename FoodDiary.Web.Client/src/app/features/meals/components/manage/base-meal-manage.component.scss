@@ -48,7 +48,7 @@
 
     &__hero {
         --fd-consumption-input-height: var(--fd-size-control-lg);
-        --fd-consumption-input-subscript: 18px;
+        --fd-consumption-input-subscript: var(--fd-size-form-field-subscript-height);
         --fd-consumption-image-size: calc(
             (var(--fd-consumption-input-height) + var(--fd-consumption-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
         );
@@ -299,7 +299,7 @@
         --fd-button-width: var(--fd-size-control-xs);
         --fd-button-min-width: var(--fd-size-control-xs);
         --fd-button-height: var(--fd-size-control-xs);
-        --fd-button-height-explicit: 24px;
+        --fd-button-height-explicit: var(--fd-size-control-xs);
         --fd-button-padding-x: 0;
         --fd-button-background-default: transparent;
         --fd-button-background-hover: transparent;

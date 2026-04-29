@@ -10,7 +10,7 @@
 
 .product-manage__hero {
     --fd-product-input-height: var(--fd-size-control-lg);
-    --fd-product-input-subscript: 18px;
+    --fd-product-input-subscript: var(--fd-size-form-field-subscript-height);
     --fd-product-image-size: calc(
         (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
     );

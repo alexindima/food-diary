@@ -3,7 +3,7 @@
 }
 
 .fd-ui-checkbox {
-    --fd-checkbox-control-size: 18px;
+    --fd-checkbox-control-size: var(--fd-size-checkbox-control);
     --fd-checkbox-control-radius: var(--fd-radius-xs);
     --fd-checkbox-control-border-color: var(--fd-color-border-control-radio);
     --fd-checkbox-control-checked-background: var(--fd-color-primary-600);
@@ -51,8 +51,8 @@
 }
 
 .fd-ui-checkbox__checkmark {
-    width: 10px;
-    height: 6px;
+    width: var(--fd-size-checkbox-checkmark-width);
+    height: var(--fd-size-checkbox-checkmark-height);
     border-left: var(--fd-border-width-strong) solid transparent;
     border-bottom: var(--fd-border-width-strong) solid transparent;
     transform: rotate(-45deg) translateY(-1px);

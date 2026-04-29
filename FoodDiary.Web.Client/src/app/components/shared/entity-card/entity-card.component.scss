@@ -41,7 +41,7 @@
     --fd-button-width: var(--fd-size-control-xs);
     --fd-button-min-width: var(--fd-size-control-xs);
     --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: 24px;
+    --fd-button-height-explicit: var(--fd-size-control-xs);
     --fd-button-padding-x: 0;
     --fd-button-icon-size: var(--fd-text-section-title-size);
     --fd-button-border-radius: var(--fd-radius-pill);
@@ -214,12 +214,12 @@
     }
 
     .entity-card__favorite-button {
-        --fd-button-host-width: 22px;
-        --fd-button-host-min-width: 22px;
-        --fd-button-width: 22px;
-        --fd-button-min-width: 22px;
-        --fd-button-height: 22px;
-        --fd-button-height-explicit: 22px;
+        --fd-button-host-width: var(--fd-size-control-micro);
+        --fd-button-host-min-width: var(--fd-size-control-micro);
+        --fd-button-width: var(--fd-size-control-micro);
+        --fd-button-min-width: var(--fd-size-control-micro);
+        --fd-button-height: var(--fd-size-control-micro);
+        --fd-button-height-explicit: var(--fd-size-control-micro);
     }
 
     .entity-card__name {
@@ -297,9 +297,9 @@
     }
 
     .entity-card__action-button {
-        width: 34px;
-        min-width: 34px;
-        height: 34px;
-        flex: 0 0 34px;
+        width: var(--fd-size-control-chip);
+        min-width: var(--fd-size-control-chip);
+        height: var(--fd-size-control-chip);
+        flex: 0 0 var(--fd-size-control-chip);
     }
 }

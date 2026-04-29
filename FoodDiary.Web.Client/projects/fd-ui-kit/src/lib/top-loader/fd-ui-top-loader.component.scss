@@ -1,5 +1,5 @@
 .fd-ui-top-loader {
-    --fd-ui-top-loader-height: 3px;
+    --fd-ui-top-loader-height: var(--fd-size-top-loader-height);
     --fd-ui-top-loader-z-index: 11000;
     position: fixed;
     inset: 0 0 auto;

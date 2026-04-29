@@ -370,7 +370,7 @@ html[data-theme='dark'] {
     --fd-button-white-space: normal;
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-transform-default: none;
-    --fd-button-transform-hover: translateY(-1px);
+    --fd-button-transform-hover: var(--fd-transform-control-hover);
     --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-active: translateY(0);
     --fd-button-shadow-disabled: var(--fd-shadow-none);
@@ -386,7 +386,7 @@ html[data-theme='dark'] {
     --fd-button-letter-spacing: var(--fd-letter-spacing-emphasis);
     --fd-button-min-width: 0;
     --fd-button-margin: 0;
-    --fd-button-shadow-hover: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);
+    --fd-button-shadow-hover: var(--fd-shadow-button-hover);
     --fd-button-disabled-opacity: 1;
     --fd-button-background-hover: var(--fd-button-background-default);
     --fd-button-border-hover: var(--fd-button-border-default);

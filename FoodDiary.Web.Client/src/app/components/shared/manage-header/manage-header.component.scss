@@ -35,9 +35,9 @@
         border-bottom: var(--fd-border-width) solid var(--fd-page-header-mobile-border-color);
         background: var(--fd-page-header-mobile-background);
         --fd-bg-page: var(--fd-page-header-mobile-background);
-        --fd-page-title-size: 1.65rem;
+        --fd-page-title-size: var(--fd-text-page-title-mobile-size);
         --fd-page-title-line-height: 1.1;
-        --fd-page-subtitle-size: 0.8rem;
+        --fd-page-subtitle-size: var(--fd-text-body-nano-size);
         --fd-page-subtitle-line-height: 1.3;
     }
 
