@@ -1004,9 +1004,17 @@ $fd-theme-design-tokens: (
         --fd-bg-sidebar: linear-gradient(180deg, var(--fd-gradient-sidebar-start) 0%, var(--fd-gradient-sidebar-end) 100%);
         --fd-bg-premium: linear-gradient(135deg, var(--fd-gradient-premium-start), var(--fd-gradient-premium-end));
         --fd-bg-accent-soft: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        --fd-bg-accent-medium: color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
         --fd-bg-success-soft: color-mix(in srgb, var(--fd-color-success) 14%, var(--fd-bg-surface-raised));
         --fd-bg-warning-soft: color-mix(in srgb, var(--fd-color-yellow-300) 16%, var(--fd-bg-surface-raised));
         --fd-bg-danger-soft: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
+        --fd-bg-danger-tint: color-mix(in srgb, var(--fd-color-danger) 8%, var(--fd-bg-surface-raised));
+        --fd-bg-danger-tint-strong: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface-raised));
+        --fd-bg-list-empty: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent),
+            color-mix(in srgb, var(--fd-color-white) 95%, transparent)
+        );
         --fd-bg-quality-good: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-bg-surface-raised)));
         --fd-bg-quality-warning: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300)));
         --fd-bg-quality-danger: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-bg-surface-raised)));
@@ -1263,7 +1271,12 @@ $fd-theme-design-tokens: (
         --fd-color-border-slate-subtle: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
         --fd-color-border-slate-strong: color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         --fd-color-border-dark-faint: color-mix(in srgb, var(--fd-color-gray-900-static) 6%, transparent);
+        --fd-color-border-dark-muted: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-color-border-dark-subtle: color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+        --fd-color-border-dark-medium: color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
         --fd-color-border-dark-strong: color-mix(in srgb, var(--fd-color-slate-900) 24%, transparent);
+        --fd-color-border-danger-soft: color-mix(in srgb, var(--fd-color-danger) 18%, transparent);
+        --fd-color-border-danger-medium: color-mix(in srgb, var(--fd-color-danger) 24%, transparent);
         --fd-color-border-inverse-faint: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         --fd-color-border-inverse-subtle: color-mix(in srgb, var(--fd-color-white) 12%, transparent);
         --fd-color-border-ai: color-mix(in srgb, var(--fd-color-purple-500) 28%, var(--fd-color-white));

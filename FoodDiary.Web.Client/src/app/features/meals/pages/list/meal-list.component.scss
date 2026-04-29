@@ -106,11 +106,7 @@
         padding: var(--fd-space-lg);
         border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent),
-            color-mix(in srgb, var(--fd-color-white) 95%, transparent)
-        );
+        background: var(--fd-bg-list-empty);
     }
 
     &__empty-title {
@@ -292,8 +288,8 @@
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-md);
         --fd-button-background-default: transparent;
-        --fd-button-background-hover: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
-        --fd-button-background-active: color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
+        --fd-button-background-hover: var(--fd-bg-accent-soft);
+        --fd-button-background-active: var(--fd-bg-accent-medium);
         --fd-button-border-default: transparent;
         --fd-button-border-hover: transparent;
         --fd-button-border-active: transparent;
