@@ -38,6 +38,7 @@
     }
 
     &__brand-notifications {
+        --sidebar-notification-dot-inset: calc(var(--fd-space-xs) - var(--fd-border-width));
         --fd-button-host-width: var(--fd-size-control-md);
         --fd-button-host-min-width: var(--fd-size-control-md);
         --fd-button-width: var(--fd-size-control-md);
@@ -69,8 +70,8 @@
 
     &__brand-notifications-dot {
         position: absolute;
-        top: 7px;
-        right: 7px;
+        top: var(--sidebar-notification-dot-inset);
+        right: var(--sidebar-notification-dot-inset);
         width: 10px;
         height: 10px;
         border-radius: var(--fd-radius-pill);
@@ -496,8 +497,8 @@
 
     &__item-dot {
         position: absolute;
-        top: 8px;
-        right: calc(50% - 16px);
+        top: var(--fd-space-xs);
+        right: calc(50% - var(--fd-space-md));
         width: 10px;
         height: 10px;
         border-radius: var(--fd-radius-pill);

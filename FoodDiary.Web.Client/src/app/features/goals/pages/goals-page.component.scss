@@ -237,10 +237,11 @@
     }
 
     &__range {
+        --goals-range-hit-slop: calc(var(--fd-space-xs) + var(--fd-space-micro));
         position: absolute;
-        inset: -10px;
-        width: calc(100% + 20px);
-        height: calc(100% + 20px);
+        inset: calc(0px - var(--goals-range-hit-slop));
+        width: calc(100% + var(--goals-range-hit-slop) + var(--goals-range-hit-slop));
+        height: calc(100% + var(--goals-range-hit-slop) + var(--goals-range-hit-slop));
         opacity: 0;
         cursor: grab;
         z-index: 2;

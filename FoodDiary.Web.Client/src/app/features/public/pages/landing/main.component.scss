@@ -91,7 +91,7 @@
     }
 
     &__title {
-        @include landing.marketing-title(clamp(26px, 3vw, 34px), 1.08, -0.01em, var(--fd-color-text));
+        @include landing.marketing-title(var(--fd-landing-title-size-md), 1.08, -0.01em, var(--fd-color-text));
     }
 
     &__subtitle {

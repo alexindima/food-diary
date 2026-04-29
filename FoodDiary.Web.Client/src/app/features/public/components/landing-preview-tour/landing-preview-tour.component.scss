@@ -148,7 +148,7 @@
     }
 
     &__title {
-        @include landing.marketing-title(clamp(22px, 2.6vw, 30px), 1.1, -0.015em, var(--fd-color-slate-900));
+        @include landing.marketing-title(var(--fd-landing-title-size-xs), 1.1, -0.015em, var(--fd-color-slate-900));
     }
 
     &__subtitle {
@@ -277,7 +277,7 @@
     }
 
     &__catalog-title {
-        @include landing.marketing-title(clamp(24px, 2.5vw, 32px), 1.08, -0.02em, var(--fd-color-slate-50), 800);
+        @include landing.marketing-title(var(--fd-landing-title-size-dark-sm), 1.08, -0.02em, var(--fd-color-slate-50), 800);
     }
 
     &__catalog-subtitle {
@@ -317,7 +317,7 @@
     }
 
     &__draft-title {
-        @include landing.marketing-title(clamp(24px, 2.8vw, 34px), 1.06, -0.025em, var(--fd-color-slate-50));
+        @include landing.marketing-title(var(--fd-landing-title-size-dark-lg), 1.06, -0.025em, var(--fd-color-slate-50));
     }
 
     &__draft-subtitle,

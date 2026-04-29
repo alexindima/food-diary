@@ -55,7 +55,7 @@
 
     &__chart {
         height: var(--fd-size-control-md);
-        margin: var(--fd-space-xxs) calc(var(--fd-space-xs) * -1) var(--fd-space-xxs);
+        margin: var(--fd-space-xxs) calc(0px - var(--fd-space-xs)) var(--fd-space-xxs);
     }
 
     &__empty {

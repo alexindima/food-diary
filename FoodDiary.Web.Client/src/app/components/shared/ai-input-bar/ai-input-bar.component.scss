@@ -58,7 +58,7 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1.5rem;
+        --fd-button-icon-size: var(--fd-size-icon-lg);
         --fd-button-secondary-background-default: var(--fd-bg-ai-button-surface);
         --fd-button-secondary-background-hover: var(--fd-bg-ai-button-surface-hover);
         --fd-button-secondary-background-active: var(--fd-bg-ai-button-surface-active);
@@ -116,11 +116,11 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1.5rem;
+        --fd-button-icon-size: var(--fd-size-icon-lg);
     }
 }
 
 .ai-input-bar__result-panel {
     display: block;
-    margin-top: calc(var(--fd-space-xxs) / -4);
+    margin-top: calc(0px - var(--fd-border-width));
 }

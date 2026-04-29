@@ -29,7 +29,7 @@
 }
 
 @mixin marketing-title(
-    $size: clamp(28px, 3vw, 36px),
+    $size: var(--fd-landing-title-size),
     $line-height: 1.08,
     $letter-spacing: var(--fd-letter-spacing-tight),
     $color: var(--fd-color-slate-900),

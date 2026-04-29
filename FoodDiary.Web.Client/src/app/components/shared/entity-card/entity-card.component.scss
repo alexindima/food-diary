@@ -153,6 +153,9 @@
 }
 
 .entity-card__action-group {
+    --entity-card-action-divider-space: calc(var(--fd-space-xs) + var(--fd-space-micro));
+    --entity-card-action-divider-offset: calc(0px - var(--entity-card-action-divider-space));
+    --entity-card-action-divider-offset-compact: calc(0px - var(--fd-space-xs));
     position: relative;
     width: fit-content;
     min-width: clamp(52px, 7vw, 80px);
@@ -161,7 +164,7 @@
     &::before {
         content: '';
         position: absolute;
-        left: -10px;
+        left: var(--entity-card-action-divider-offset);
         top: 50%;
         width: 2px;
         height: calc(100% - 2px);
@@ -273,7 +276,7 @@
         padding: var(--fd-space-micro) 0;
 
         &::before {
-            left: -8px;
+            left: var(--entity-card-action-divider-offset-compact);
             width: 2px;
             height: calc(100% - 1px);
             display: block;

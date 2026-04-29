@@ -1686,6 +1686,18 @@ $fd-theme-design-tokens: (
         --fd-landing-grid-gap: clamp(var(--fd-space-md), 3vw, calc(var(--fd-space-xxl) - calc(var(--fd-space-xs) / 2)));
         --fd-landing-stack-gap: clamp(var(--fd-space-lg), 4vw, calc(var(--fd-space-xxl) + var(--fd-space-xxs)));
         --fd-landing-cta-margin-top: clamp(var(--fd-space-xl), 3vw, var(--fd-space-xxl));
+        --fd-landing-title-size: clamp(28px, 3vw, 38px);
+        --fd-landing-title-size-md: clamp(26px, 3vw, 34px);
+        --fd-landing-title-size-sm: clamp(24px, 3vw, 34px);
+        --fd-landing-title-size-xs: clamp(22px, 2.6vw, 30px);
+        --fd-landing-title-size-dark: clamp(24px, 2.6vw, 34px);
+        --fd-landing-title-size-dark-sm: clamp(24px, 2.5vw, 32px);
+        --fd-landing-title-size-dark-lg: clamp(24px, 2.8vw, 34px);
+        --fd-landing-hero-title-size: clamp(36px, 5.4vw, 60px);
+        --fd-landing-hero-feature-title-size: clamp(24px, 2.3vw, 34px);
+        --fd-landing-hero-feature-title-compact-size: clamp(22px, 6vw, 30px);
+        --fd-landing-seo-title-size: clamp(2.3rem, 5vw, 3.9rem);
+        --fd-landing-seo-section-title-size: clamp(1.75rem, 3vw, 2.4rem);
         --fd-landing-radius-panel: var(--fd-radius-panel);
         --fd-landing-radius-card: var(--fd-radius-card);
         --fd-landing-radius-chip: var(--fd-radius-chip);

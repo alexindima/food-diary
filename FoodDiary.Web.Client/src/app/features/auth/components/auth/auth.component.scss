@@ -25,7 +25,7 @@
 
     &__link {
         align-self: flex-start;
-        margin-top: calc(var(--fd-space-sm) / -2);
+        margin-top: calc(var(--fd-border-width-strong) - var(--fd-space-xs));
         --fd-button-width: auto;
         --fd-button-min-width: auto;
         --fd-button-height: auto;

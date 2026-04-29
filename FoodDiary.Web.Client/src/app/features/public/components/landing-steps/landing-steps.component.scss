@@ -94,7 +94,7 @@
     }
 
     &__cta-title {
-        @include landing.marketing-title(clamp(24px, 2.6vw, 34px), 1.08, -0.02em, var(--fd-color-slate-50));
+        @include landing.marketing-title(var(--fd-landing-title-size-dark), 1.08, -0.02em, var(--fd-color-slate-50));
     }
 
     &__cta-text {

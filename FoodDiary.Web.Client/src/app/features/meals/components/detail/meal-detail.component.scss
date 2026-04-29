@@ -3,7 +3,7 @@
 .consumption-detail {
 
     &__tabs {
-        margin: calc(var(--fd-space-xs) * -1) calc(var(--fd-space-xxs) * -1) var(--fd-space-sm);
+        margin: calc(0px - var(--fd-space-xs)) calc(0px - var(--fd-space-xxs)) var(--fd-space-sm);
         padding-bottom: var(--fd-space-xxs);
     }
 
@@ -117,7 +117,7 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1.375rem;
+        --fd-button-icon-size: var(--fd-size-icon-lg);
 
         &--active {
             --fd-button-border-color: var(--fd-color-amber-500);

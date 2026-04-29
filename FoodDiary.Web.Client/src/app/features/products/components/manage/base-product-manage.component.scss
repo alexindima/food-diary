@@ -56,7 +56,7 @@
 
     &__sticky-stack {
         position: sticky;
-        top: calc(var(--fd-space-xl) + 8px);
+        top: calc(var(--fd-space-xl) + var(--fd-space-xs));
 
         @media #{variables.$media-mobile} {
             position: static;

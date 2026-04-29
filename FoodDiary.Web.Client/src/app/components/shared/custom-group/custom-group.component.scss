@@ -5,6 +5,10 @@
 }
 
 .custom-group {
+    --custom-group-label-height: calc(var(--fd-size-control-xs) - var(--fd-space-xxs));
+    --custom-group-label-offset: calc(var(--fd-border-width) - var(--fd-space-sm));
+    --custom-group-label-inline-offset: calc(var(--fd-space-xs) + var(--fd-space-micro));
+    --custom-group-button-inline-offset: calc(var(--fd-space-sm) + var(--fd-space-micro) + var(--fd-border-width));
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-md);
     padding: var(--fd-space-lg);
@@ -14,36 +18,36 @@
 
 .custom-group__title {
     position: absolute;
-    top: -11px;
+    top: var(--custom-group-label-offset);
     background: var(--fd-bg-surface-raised);
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0 var(--fd-space-xs);
-    line-height: 20px;
+    line-height: var(--custom-group-label-height);
     color: var(--fd-color-text);
 }
 
 .custom-group__toggle {
     position: absolute;
-    top: -11px;
-    left: 10px;
+    top: var(--custom-group-label-offset);
+    left: var(--custom-group-label-inline-offset);
     background: var(--fd-bg-surface-raised);
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0;
     width: var(--fd-size-control-xs);
     font-size: var(--fd-text-body-size);
-    line-height: 20px;
+    line-height: var(--custom-group-label-height);
 }
 
 .custom-group__button {
     position: absolute;
-    top: -11px;
-    right: 15px;
+    top: var(--custom-group-label-offset);
+    right: var(--custom-group-button-inline-offset);
     --fd-button-width: auto;
-    --fd-button-min-width: 20px;
-    --fd-button-height: 20px;
-    --fd-button-height-explicit: 20px;
+    --fd-button-min-width: var(--custom-group-label-height);
+    --fd-button-height: var(--custom-group-label-height);
+    --fd-button-height-explicit: var(--custom-group-label-height);
     --fd-button-padding-x: var(--fd-space-xs);
     --fd-button-border-radius: var(--fd-radius-xs);
     --fd-button-font-size: var(--fd-text-helper-size);

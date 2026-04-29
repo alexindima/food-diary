@@ -15,8 +15,8 @@
 
 .photo-ai-dialog__status {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: var(--fd-space-sm);
+    right: var(--fd-space-sm);
     letter-spacing: var(--fd-letter-spacing-subtle);
     --fd-pill-bg: var(--fd-bg-dialog);
     --fd-pill-color: var(--fd-color-primary-700);
@@ -46,8 +46,8 @@
 
 .photo-ai-dialog__scan-line {
     position: absolute;
-    left: 16px;
-    right: 16px;
+    left: var(--fd-space-md);
+    right: var(--fd-space-md);
     height: 7px;
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-ai-dialog-scan-line);
@@ -65,17 +65,17 @@
 @keyframes photo-ai-scan {
 
     0% {
-        top: 12px;
+        top: var(--fd-space-sm);
         opacity: 0.6;
     }
 
     50% {
-        top: calc(100% - 24px);
+        top: calc(100% - var(--fd-space-lg));
         opacity: 1;
     }
 
     100% {
-        top: 12px;
+        top: var(--fd-space-sm);
         opacity: 0.6;
     }
 }

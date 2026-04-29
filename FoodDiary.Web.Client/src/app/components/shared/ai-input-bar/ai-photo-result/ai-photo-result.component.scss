@@ -80,8 +80,8 @@
 
 .ai-photo-result__status {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: var(--fd-space-xs);
+    right: var(--fd-space-xs);
     letter-spacing: var(--fd-letter-spacing-subtle);
     --fd-pill-bg: var(--fd-bg-surface-raised);
     --fd-pill-color: var(--fd-color-primary-700);
@@ -106,8 +106,8 @@
 
 .ai-photo-result__scan-line {
     position: absolute;
-    left: 12px;
-    right: 12px;
+    left: var(--fd-space-sm);
+    right: var(--fd-space-sm);
     height: 5px;
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-ai-scan-line);
@@ -123,17 +123,17 @@
 @keyframes ai-photo-scan {
 
     0% {
-        top: 8px;
+        top: var(--fd-space-xs);
         opacity: 0.6;
     }
 
     50% {
-        top: calc(100% - 16px);
+        top: calc(100% - var(--fd-space-md));
         opacity: 1;
     }
 
     100% {
-        top: 8px;
+        top: var(--fd-space-xs);
         opacity: 0.6;
     }
 }
@@ -338,7 +338,7 @@
         grid-template-rows 0.25s ease,
         opacity 0.2s ease,
         margin-top 0.25s ease;
-    margin-top: calc(var(--fd-space-xxs) * -1);
+    margin-top: calc(0px - var(--fd-space-xxs));
 }
 
 .ai-photo-result__details--expanded {

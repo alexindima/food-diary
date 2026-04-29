@@ -6,10 +6,16 @@
 .dynamic-progress-bar {
     position: relative;
     width: 100%;
-    --fd-progress-height: 25px;
+    --dynamic-progress-height: calc(var(--fd-size-control-xs) + var(--fd-border-width));
+    --dynamic-progress-title-offset: calc(0px - var(--fd-border-width));
+    --dynamic-progress-overflow-line-space: calc(var(--fd-space-xxs) + var(--fd-border-width));
+    --dynamic-progress-overflow-line-offset: calc(0px - var(--dynamic-progress-overflow-line-space));
+    --dynamic-progress-overflow-text-offset: calc(0px - var(--dynamic-progress-height));
+    --dynamic-progress-overflow-label-offset: var(--fd-radius-sm);
+    --fd-progress-height: var(--dynamic-progress-height);
     --fd-progress-radius: var(--fd-radius-lg);
     --fd-progress-track-background: var(--fd-bg-track-muted);
-    height: 25px;
+    height: var(--dynamic-progress-height);
     margin: var(--fd-space-lg) 0;
 }
 
@@ -24,7 +30,7 @@
 .dynamic-progress-bar-title {
     position: absolute;
     transform: translateX(-50%);
-    top: -1px;
+    top: var(--dynamic-progress-title-offset);
     transition:
         left 0.3s ease,
         width 0.3s ease;
@@ -40,8 +46,8 @@
 
 .dynamic-progress-bar-overflow-line {
     position: absolute;
-    top: -5px;
-    bottom: -5px;
+    top: var(--dynamic-progress-overflow-line-offset);
+    bottom: var(--dynamic-progress-overflow-line-offset);
     width: 2px;
     background-color: var(--fd-bg-overlay-medium);
     transform: translateX(-50%);
@@ -52,7 +58,7 @@
 
 .dynamic-progress-bar-overflow-text {
     position: absolute;
-    bottom: -25px;
+    bottom: var(--dynamic-progress-overflow-text-offset);
     text-align: center;
     transform: translateX(-100%);
     width: max-content;
@@ -68,7 +74,7 @@
 
 .dynamic-progress-bar-overflow-label {
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + var(--dynamic-progress-overflow-label-offset));
     transform: translateX(-50%);
     color: var(--fd-color-dialog-overlay);
     line-height: 1;

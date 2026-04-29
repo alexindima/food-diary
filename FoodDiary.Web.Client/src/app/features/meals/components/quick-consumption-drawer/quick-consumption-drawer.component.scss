@@ -2,8 +2,8 @@
 
 .quick-consumption {
     position: fixed;
-    right: 18px;
-    bottom: 18px;
+    right: var(--fd-space-card-profile-gap);
+    bottom: var(--fd-space-card-profile-gap);
     width: min(380px, 90vw);
     background: var(--fd-bg-surface-brand);
     box-shadow: var(--fd-shadow-xl);
@@ -138,8 +138,8 @@
 @media #{variables.$media-phablet} {
 
     .quick-consumption {
-        left: 12px;
-        right: 12px;
+        left: var(--fd-space-sm);
+        right: var(--fd-space-sm);
         width: auto;
     }
 }

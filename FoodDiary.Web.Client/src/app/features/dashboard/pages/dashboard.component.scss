@@ -168,8 +168,8 @@ $color-text-secondary: var(--fd-color-text-muted);
 
     &__block-label {
         position: absolute;
-        top: 12px;
-        right: 12px;
+        top: var(--fd-space-sm);
+        right: var(--fd-space-sm);
         --fd-pill-bg: var(--fd-bg-status-muted);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-text);

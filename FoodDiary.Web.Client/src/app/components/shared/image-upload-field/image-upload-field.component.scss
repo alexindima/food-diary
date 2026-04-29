@@ -1,4 +1,5 @@
 .image-upload-field {
+    --image-upload-control-inset: calc(var(--fd-space-xs) + var(--fd-space-micro));
     padding: 0;
     border-radius: var(--fd-radius-card);
     background: transparent;
@@ -103,8 +104,8 @@
 
     &__control {
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: var(--image-upload-control-inset);
+        right: var(--image-upload-control-inset);
         display: inline-flex;
         overflow: hidden;
         border-radius: var(--fd-radius-button);
@@ -133,7 +134,7 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1rem;
+        --fd-button-icon-size: var(--fd-size-icon-sm);
     }
 
     &__control > &__control-btn:not(:last-child) {
@@ -150,9 +151,9 @@
 
     &__hint--inline {
         position: absolute;
-        right: 10px;
-        bottom: 8px;
-        left: 10px;
+        right: var(--image-upload-control-inset);
+        bottom: var(--fd-space-xs);
+        left: var(--image-upload-control-inset);
         text-align: left;
     }
 

@@ -39,7 +39,7 @@
 
     &__title {
         margin: var(--fd-space-sm) 0 0;
-        @include landing.marketing-title(clamp(28px, 3vw, 38px), 1.08, -0.02em, var(--fd-color-text));
+        @include landing.marketing-title(var(--fd-landing-title-size), 1.08, -0.02em, var(--fd-color-text));
     }
 
     &__subtitle,

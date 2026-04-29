@@ -12,7 +12,7 @@
     background: var(--fd-bg-surface-raised-blend);
     border-bottom: var(--fd-border-default);
     padding: var(--fd-space-sm) var(--fd-space-lg);
-    margin: calc(var(--fd-space-sm) * -1) calc(var(--fd-space-lg) * -1) 0;
+    margin: calc(0px - var(--fd-space-sm)) calc(0px - var(--fd-space-lg)) 0;
 }
 
 .recipe-step-card__drag {
