@@ -27,6 +27,16 @@ export interface NutrientBar {
 export class DashboardSummaryCardComponent {
     private static readonly COLOR_FALLBACK_RGB: [number, number, number] = [90, 169, 250];
     private static readonly CSS_VAR_PATTERN = /^var\((--[^),\s]+)(?:,\s*([^)]+))?\)$/;
+    private static readonly CSS_COLOR_CHANNELS: Record<string, [number, number, number]> = {
+        '--fd-color-sky-500': [14, 165, 233],
+        '--fd-color-blue-500': [59, 130, 246],
+        '--fd-color-emerald-500': [16, 185, 129],
+        '--fd-color-green-500': [34, 197, 94],
+        '--fd-color-emerald-700': [4, 120, 87],
+        '--fd-color-amber-500': [245, 158, 11],
+        '--fd-color-orange-500': [249, 115, 22],
+        '--fd-color-danger': [239, 68, 68],
+    };
     public readonly goalAction = output<void>();
     public readonly dailyGoal = input<number>(0);
     public readonly dailyConsumed = input<number>(0);
@@ -302,13 +312,9 @@ export class DashboardSummaryCardComponent {
     }
 
     private parseCssVariable(variableName: string, fallback?: string): [number, number, number] | null {
-        if (typeof document === 'undefined') {
-            return fallback ? this.parseColor(fallback.trim()) : null;
-        }
-
-        const resolved = getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
-        if (resolved) {
-            return this.parseColor(resolved);
+        const channels = DashboardSummaryCardComponent.CSS_COLOR_CHANNELS[variableName];
+        if (channels) {
+            return channels;
         }
 
         return fallback ? this.parseColor(fallback.trim()) : null;
