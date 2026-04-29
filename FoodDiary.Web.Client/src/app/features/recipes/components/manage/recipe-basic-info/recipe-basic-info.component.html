@@ -8,7 +8,7 @@
         accent="primary"
         [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
     >
-        <div class="recipe-basic-info__hero">
+        <div class="recipe-basic-info__hero fd-grid fd-gap-lg">
             <div class="recipe-basic-info__image">
                 <fd-image-upload-field
                     appearance="compact"
@@ -22,7 +22,7 @@
                     [cropAspectRatio]="1"
                 />
             </div>
-            <div class="recipe-basic-info__hero-field">
+            <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
                 <fd-ui-input
                     formControlName="name"
                     size="lg"
@@ -32,7 +32,7 @@
                     [error]="getFieldError('name')"
                 />
             </div>
-            <div class="recipe-basic-info__hero-field">
+            <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
                 <fd-ui-input
                     formControlName="category"
                     size="lg"
@@ -40,7 +40,7 @@
                     [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
                 />
             </div>
-            <div class="recipe-basic-info__hero-field">
+            <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
                 <fd-ui-input
                     formControlName="cookTime"
                     type="number"
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="recipe-basic-info__basic-grid">
+        <div class="recipe-basic-info__basic-grid fd-grid fd-gap-lg">
             <fd-ui-input
                 formControlName="prepTime"
                 size="lg"
@@ -93,8 +93,8 @@
         headerAlign="center"
         [title]="'RECIPE_MANAGE.TRACKING_PREFERENCES' | translate"
     >
-        <div class="recipe-basic-info__basic-grid">
-            <div class="recipe-basic-info__field recipe-basic-info__field--full">
+        <div class="recipe-basic-info__basic-grid fd-grid fd-gap-lg">
+            <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
                 <fd-ui-select
                     formControlName="visibility"
                     size="lg"
@@ -104,7 +104,7 @@
                     [error]="getFieldError('visibility')"
                 />
             </div>
-            <div class="recipe-basic-info__field recipe-basic-info__field--full">
+            <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
                 <fd-ui-textarea
                     formControlName="comment"
                     [label]="'RECIPE_MANAGE.COMMENT' | translate"

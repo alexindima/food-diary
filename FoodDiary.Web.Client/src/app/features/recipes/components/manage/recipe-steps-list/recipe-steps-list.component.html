@@ -1,10 +1,10 @@
-<div class="recipe-steps-list__block">
+<div class="recipe-steps-list__block fd-stack fd-gap-sm">
     <div class="recipe-steps-list__title fd-ui-overline">
         {{ 'RECIPE_MANAGE.STEPS_SECTION_TITLE' | translate }}
     </div>
-    <section class="recipe-steps-list__section">
+    <section class="recipe-steps-list__section fd-stack fd-gap-sm">
         <div
-            class="recipe-steps-list__steps"
+            class="recipe-steps-list__steps fd-stack fd-gap-sm"
             cdkDropList
             #dragBoundary
             [cdkDropListData]="stepsFormArray().controls"
