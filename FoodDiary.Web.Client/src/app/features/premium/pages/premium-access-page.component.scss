@@ -78,7 +78,7 @@
     padding: var(--fd-space-card-profile-padding);
     border-radius: var(--fd-radius-panel);
     border: var(--fd-border-default);
-    background: color-mix(in srgb, var(--fd-color-surface-elevated) 82%, rgb(255 255 255));
+    background: var(--fd-bg-surface-elevated);
 }
 
 .premium-access-page__plan--featured {

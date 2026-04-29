@@ -1,11 +1,11 @@
 .admin-users {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .toolbar {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--fd-space-sm);
     align-items: center;
 }
 
@@ -15,14 +15,14 @@
 
 .admin-users__section {
     display: grid;
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
+    gap: var(--fd-space-md);
+    padding-top: var(--fd-space-md);
+    border-top: var(--fd-border-default);
 }
 
 .admin-users__section-header {
     display: flex;
-    gap: 1rem;
+    gap: var(--fd-space-md);
     align-items: flex-start;
     justify-content: space-between;
 }
@@ -33,8 +33,8 @@
 }
 
 .admin-users__section-header p {
-    margin: 0.25rem 0 0;
-    color: #6b7280;
+    margin: var(--fd-space-xxs) 0 0;
+    color: var(--fd-color-text-muted);
 }
 
 .users-table {
@@ -44,14 +44,14 @@
 
 .users-table th,
 .users-table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
     text-align: left;
 }
 
 .users-table__actions {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--fd-space-xs);
     flex-wrap: wrap;
 }
 
@@ -64,6 +64,6 @@
 
 .pagination {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--fd-space-sm);
     align-items: center;
 }

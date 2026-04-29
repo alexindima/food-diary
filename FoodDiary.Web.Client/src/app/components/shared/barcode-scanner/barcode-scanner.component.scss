@@ -4,7 +4,7 @@
     position: relative;
     width: 100%;
     min-height: 300px;
-    background: #000;
+    background: var(--fd-color-slate-900);
 }
 
 .barcode-scanner__video {
@@ -30,7 +30,7 @@
     p {
         margin: 0;
         font-size: var(--fd-font-size-base);
-        color: #a94442;
+        color: var(--fd-color-danger);
     }
 }
 

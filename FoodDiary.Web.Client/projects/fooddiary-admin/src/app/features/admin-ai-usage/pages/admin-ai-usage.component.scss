@@ -1,16 +1,16 @@
 .admin-ai-usage {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .stat {
     display: grid;
-    gap: 0.25rem;
+    gap: var(--fd-space-xxs);
 }
 
 .stat__label {
-    color: #6b7280;
+    color: var(--fd-color-text-muted);
     font-size: 0.875rem;
 }
 

@@ -1,11 +1,11 @@
 .lesson-edit-dialog {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .form-row--inline {
     display: flex;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 
     > * {
         flex: 1;
@@ -13,7 +13,7 @@
 }
 
 .content-counter {
-    margin-top: 0.25rem;
+    margin-top: var(--fd-space-xxs);
     font-size: var(--fd-text-helper-size);
     line-height: var(--fd-text-helper-line-height);
     font-weight: var(--fd-text-helper-weight);
@@ -33,13 +33,13 @@
 .preview-toggle,
 .dialog-actions {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--fd-space-sm);
 }
 
 .preview {
     min-height: 12rem;
-    padding: 1rem;
-    border: 1px solid color-mix(in srgb, var(--fd-color-border-strong) 64%, transparent);
+    padding: var(--fd-space-md);
+    border: var(--fd-border-subtle);
     border-radius: var(--fd-radius-card);
     background: var(--fd-color-surface-raised);
 }

@@ -1,89 +1,89 @@
 /* Food Diary color tokens */
 $fd-color-primary-50: var(--fd-color-primary-50);
-$fd-color-primary-100: #e0eaff;
-$fd-color-primary-200: #c2d4ff;
-$fd-color-primary-300: #9bb8ff;
-$fd-color-primary-400: #7094ff;
-$fd-color-primary-500: #4a6cf7;
-$fd-color-primary-600: #3451d6;
-$fd-color-primary-700: #2439b0;
-$fd-color-primary-800: #1b2a80;
-$fd-color-primary-900: #121c54;
+$fd-color-primary-100: var(--fd-color-primary-100);
+$fd-color-primary-200: var(--fd-color-primary-200);
+$fd-color-primary-300: var(--fd-color-primary-300);
+$fd-color-primary-400: var(--fd-color-primary-400);
+$fd-color-primary-500: var(--fd-color-primary-500);
+$fd-color-primary-600: var(--fd-color-primary-600);
+$fd-color-primary-700: var(--fd-color-primary-700);
+$fd-color-primary-800: var(--fd-color-primary-800);
+$fd-color-primary-900: var(--fd-color-primary-900);
 
-$fd-color-secondary-50: #f3eeff;
-$fd-color-secondary-100: #e6ddff;
-$fd-color-secondary-200: #cfc1ff;
-$fd-color-secondary-300: #b49eff;
-$fd-color-secondary-400: #977aff;
-$fd-color-secondary-500: #7b61ff;
-$fd-color-secondary-600: #644cdb;
-$fd-color-secondary-700: #4c39b7;
-$fd-color-secondary-800: #362787;
-$fd-color-secondary-900: #241856;
+$fd-color-secondary-50: var(--fd-color-secondary-50);
+$fd-color-secondary-100: var(--fd-color-secondary-100);
+$fd-color-secondary-200: var(--fd-color-secondary-200);
+$fd-color-secondary-300: var(--fd-color-secondary-300);
+$fd-color-secondary-400: var(--fd-color-secondary-400);
+$fd-color-secondary-500: var(--fd-color-secondary-500);
+$fd-color-secondary-600: var(--fd-color-secondary-600);
+$fd-color-secondary-700: var(--fd-color-secondary-700);
+$fd-color-secondary-800: var(--fd-color-secondary-800);
+$fd-color-secondary-900: var(--fd-color-secondary-900);
 
-$fd-color-gray-50: #f9fafb;
-$fd-color-gray-100: #f3f4f6;
-$fd-color-gray-200: #e5e7eb;
-$fd-color-gray-300: #d1d5db;
-$fd-color-gray-400: #9ca3af;
-$fd-color-gray-500: #6b7280;
-$fd-color-gray-600: #4b5563;
-$fd-color-gray-700: #374151;
-$fd-color-gray-800: #1f2933;
-$fd-color-gray-900: #111827;
+$fd-color-gray-50: var(--fd-color-gray-50);
+$fd-color-gray-100: var(--fd-color-gray-100);
+$fd-color-gray-200: var(--fd-color-gray-200);
+$fd-color-gray-300: var(--fd-color-gray-300);
+$fd-color-gray-400: var(--fd-color-gray-400);
+$fd-color-gray-500: var(--fd-color-gray-500);
+$fd-color-gray-600: var(--fd-color-gray-600);
+$fd-color-gray-700: var(--fd-color-gray-700);
+$fd-color-gray-800: var(--fd-color-gray-800);
+$fd-color-gray-900: var(--fd-color-gray-900);
 
-$fd-color-success-50: #ecfdf3;
-$fd-color-success-100: #d1fae5;
-$fd-color-success-200: #a7f3d0;
-$fd-color-success-300: #6ee7b7;
-$fd-color-success-400: #34d399;
-$fd-color-success-500: #10b981;
-$fd-color-success-600: #059669;
-$fd-color-success-700: #047857;
-$fd-color-success-800: #065f46;
-$fd-color-success-900: #064e3b;
+$fd-color-success-50: var(--fd-color-success-50);
+$fd-color-success-100: var(--fd-color-success-100);
+$fd-color-success-200: var(--fd-color-success-200);
+$fd-color-success-300: var(--fd-color-success-300);
+$fd-color-success-400: var(--fd-color-success-400);
+$fd-color-success-500: var(--fd-color-success-500);
+$fd-color-success-600: var(--fd-color-success-600);
+$fd-color-success-700: var(--fd-color-success-700);
+$fd-color-success-800: var(--fd-color-success-800);
+$fd-color-success-900: var(--fd-color-success-900);
 
-$fd-color-warning-50: #fff7ed;
-$fd-color-warning-100: #ffedd5;
-$fd-color-warning-200: #fed7aa;
-$fd-color-warning-300: #fdba74;
-$fd-color-warning-400: #fb923c;
-$fd-color-warning-500: #f97316;
-$fd-color-warning-600: #ea580c;
-$fd-color-warning-700: #c2410c;
-$fd-color-warning-800: #9a3412;
-$fd-color-warning-900: #7c2d12;
+$fd-color-warning-50: var(--fd-color-warning-50);
+$fd-color-warning-100: var(--fd-color-warning-100);
+$fd-color-warning-200: var(--fd-color-warning-200);
+$fd-color-warning-300: var(--fd-color-warning-300);
+$fd-color-warning-400: var(--fd-color-warning-400);
+$fd-color-warning-500: var(--fd-color-warning-500);
+$fd-color-warning-600: var(--fd-color-warning-600);
+$fd-color-warning-700: var(--fd-color-warning-700);
+$fd-color-warning-800: var(--fd-color-warning-800);
+$fd-color-warning-900: var(--fd-color-warning-900);
 
-$fd-color-danger-50: #fef2f2;
-$fd-color-danger-100: #fee2e2;
-$fd-color-danger-200: #fecaca;
-$fd-color-danger-300: #fca5a5;
-$fd-color-danger-400: #f87171;
-$fd-color-danger-500: #ef4444;
-$fd-color-danger-600: #dc2626;
-$fd-color-danger-700: #b91c1c;
-$fd-color-danger-800: #991b1b;
-$fd-color-danger-900: #7f1d1d;
+$fd-color-danger-50: var(--fd-color-danger-50);
+$fd-color-danger-100: var(--fd-color-danger-100);
+$fd-color-danger-200: var(--fd-color-danger-200);
+$fd-color-danger-300: var(--fd-color-danger-300);
+$fd-color-danger-400: var(--fd-color-danger-400);
+$fd-color-danger-500: var(--fd-color-danger-500);
+$fd-color-danger-600: var(--fd-color-danger-600);
+$fd-color-danger-700: var(--fd-color-danger-700);
+$fd-color-danger-800: var(--fd-color-danger-800);
+$fd-color-danger-900: var(--fd-color-danger-900);
 
-$fd-color-success: #4bb543;
-$fd-color-warning: #ffcc00;
-$fd-color-danger: #ff3b3b;
-$fd-color-info: #2f80ed;
+$fd-color-success: var(--fd-color-success);
+$fd-color-warning: var(--fd-color-warn);
+$fd-color-danger: var(--fd-color-danger);
+$fd-color-info: var(--fd-color-info);
 
-$fd-color-bg-page: #f5f7fb;
-$fd-color-bg-card: #ffffff;
-$fd-color-bg-muted: #f0f4fa;
+$fd-color-bg-page: var(--fd-color-background);
+$fd-color-bg-card: var(--fd-color-surface);
+$fd-color-bg-muted: var(--fd-color-surface-muted);
 
-$fd-color-chart-calories: #f2994a;
-$fd-color-chart-proteins: #2d9cdb;
-$fd-color-chart-fats: #f2c94c;
-$fd-color-chart-carbs: #27ae60;
-$fd-color-chart-fiber: #9b51e0;
+$fd-color-chart-calories: var(--fd-color-chart-calories);
+$fd-color-chart-proteins: var(--fd-color-chart-proteins);
+$fd-color-chart-fats: var(--fd-color-chart-fats);
+$fd-color-chart-carbs: var(--fd-color-chart-carbs);
+$fd-color-chart-fiber: var(--fd-color-chart-fiber);
 
-$fd-color-dialog-surface: #ffffff;
-$fd-color-dialog-surface-muted: #f8faff;
+$fd-color-dialog-surface: var(--fd-color-dialog-surface);
+$fd-color-dialog-surface-muted: var(--fd-color-dialog-surface-muted);
 $fd-color-dialog-border: color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent);
-$fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
+$fd-color-dialog-overlay: var(--fd-bg-overlay-strong);
 
 /* Button tokens derived from the palette */
 $fd-button-tokens: (
@@ -101,8 +101,8 @@ $fd-button-tokens: (
             disabled: transparent,
         ),
         text: (
-            default: #ffffff,
-            disabled: #ffffffa0,
+            default: var(--fd-color-white),
+            disabled: color-mix(in srgb, var(--fd-color-white) 63%, transparent),
         ),
     ),
     outline: (
@@ -143,7 +143,7 @@ $fd-button-tokens: (
     ),
     secondary: (
         background: (
-            default: #ffffff,
+            default: var(--fd-color-white),
             hover: $fd-color-gray-100,
             active: $fd-color-gray-200,
             disabled: $fd-color-gray-200,
@@ -180,9 +180,9 @@ $fd-button-tokens: (
     danger: (
         background: (
             default: $fd-color-danger,
-            hover: #e03535,
-            active: #c42f2f,
-            disabled: #ffb3b3,
+            hover: color-mix(in srgb, var(--fd-color-danger) 86%, var(--fd-color-slate-900) 14%),
+            active: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-slate-900) 24%),
+            disabled: color-mix(in srgb, var(--fd-color-danger) 34%, var(--fd-color-white)),
         ),
         border: (
             default: transparent,
@@ -191,16 +191,16 @@ $fd-button-tokens: (
             disabled: transparent,
         ),
         text: (
-            default: #ffffff,
-            disabled: #ffffffa0,
+            default: var(--fd-color-white),
+            disabled: color-mix(in srgb, var(--fd-color-white) 63%, transparent),
         ),
     ),
     danger-ghost: (
         background: (
             default: transparent,
-            hover: rgba($fd-color-danger, 0.08),
-            active: rgba($fd-color-danger, 0.16),
-            disabled: rgba($fd-color-danger, 0.04),
+            hover: color-mix(in srgb, var(--fd-color-danger) 8%, transparent),
+            active: color-mix(in srgb, var(--fd-color-danger) 16%, transparent),
+            disabled: color-mix(in srgb, var(--fd-color-danger) 4%, transparent),
         ),
         border: (
             default: transparent,
@@ -210,15 +210,15 @@ $fd-button-tokens: (
         ),
         text: (
             default: $fd-color-danger,
-            disabled: #ffb3b3,
+            disabled: color-mix(in srgb, var(--fd-color-danger) 34%, var(--fd-color-white)),
         ),
     ),
     info: (
         background: (
-            default: #e0ecff,
-            hover: #d0e0ff,
-            active: #c0d4ff,
-            disabled: rgba(208, 224, 255, 0.6),
+            default: color-mix(in srgb, var(--fd-color-info) 12%, var(--fd-color-surface)),
+            hover: color-mix(in srgb, var(--fd-color-info) 18%, var(--fd-color-surface-raised)),
+            active: color-mix(in srgb, var(--fd-color-info) 24%, var(--fd-color-surface-raised)),
+            disabled: color-mix(in srgb, var(--fd-color-info) 8%, var(--fd-color-surface)),
         ),
         border: (
             default: transparent,
@@ -228,14 +228,14 @@ $fd-button-tokens: (
         ),
         text: (
             default: $fd-color-info,
-            disabled: rgba(48, 107, 192, 0.45),
+            disabled: color-mix(in srgb, var(--fd-color-info) 45%, var(--fd-color-surface)),
         ),
     ),
     info-text: (
         background: (
             default: transparent,
-            hover: rgba(74, 144, 226, 0.12),
-            active: rgba(74, 144, 226, 0.2),
+            hover: color-mix(in srgb, var(--fd-color-info) 12%, transparent),
+            active: color-mix(in srgb, var(--fd-color-info) 20%, transparent),
             disabled: transparent,
         ),
         border: (
@@ -246,7 +246,7 @@ $fd-button-tokens: (
         ),
         text: (
             default: $fd-color-info,
-            disabled: rgba(48, 107, 192, 0.45),
+            disabled: color-mix(in srgb, var(--fd-color-info) 45%, var(--fd-color-surface)),
         ),
     ),
 );
@@ -279,38 +279,38 @@ html[data-theme='dark'] {
     --fd-color-secondary-800: var(--fd-color-slate-800);
     --fd-color-secondary-900: var(--fd-color-slate-900);
 
-    --fd-color-success-50: #{$fd-color-success-50};
-    --fd-color-success-100: #{$fd-color-success-100};
-    --fd-color-success-200: #{$fd-color-success-200};
-    --fd-color-success-300: #{$fd-color-success-300};
-    --fd-color-success-400: #{$fd-color-success-400};
-    --fd-color-success-500: #{$fd-color-success-500};
-    --fd-color-success-600: #{$fd-color-success-600};
-    --fd-color-success-700: #{$fd-color-success-700};
-    --fd-color-success-800: #{$fd-color-success-800};
-    --fd-color-success-900: #{$fd-color-success-900};
+    --fd-color-success-50: var(--fd-palette-success-50);
+    --fd-color-success-100: var(--fd-palette-success-100);
+    --fd-color-success-200: var(--fd-palette-success-200);
+    --fd-color-success-300: var(--fd-palette-success-300);
+    --fd-color-success-400: var(--fd-palette-success-400);
+    --fd-color-success-500: var(--fd-palette-success-500);
+    --fd-color-success-600: var(--fd-palette-success-600);
+    --fd-color-success-700: var(--fd-palette-success-700);
+    --fd-color-success-800: var(--fd-palette-success-800);
+    --fd-color-success-900: var(--fd-palette-success-900);
 
-    --fd-color-warning-50: #{$fd-color-warning-50};
-    --fd-color-warning-100: #{$fd-color-warning-100};
-    --fd-color-warning-200: #{$fd-color-warning-200};
-    --fd-color-warning-300: #{$fd-color-warning-300};
-    --fd-color-warning-400: #{$fd-color-warning-400};
-    --fd-color-warning-500: #{$fd-color-warning-500};
-    --fd-color-warning-600: #{$fd-color-warning-600};
-    --fd-color-warning-700: #{$fd-color-warning-700};
-    --fd-color-warning-800: #{$fd-color-warning-800};
-    --fd-color-warning-900: #{$fd-color-warning-900};
+    --fd-color-warning-50: var(--fd-palette-warning-50);
+    --fd-color-warning-100: var(--fd-palette-warning-100);
+    --fd-color-warning-200: var(--fd-palette-warning-200);
+    --fd-color-warning-300: var(--fd-palette-warning-300);
+    --fd-color-warning-400: var(--fd-palette-warning-400);
+    --fd-color-warning-500: var(--fd-palette-warning-500);
+    --fd-color-warning-600: var(--fd-palette-warning-600);
+    --fd-color-warning-700: var(--fd-palette-warning-700);
+    --fd-color-warning-800: var(--fd-palette-warning-800);
+    --fd-color-warning-900: var(--fd-palette-warning-900);
 
-    --fd-color-danger-50: #{$fd-color-danger-50};
-    --fd-color-danger-100: #{$fd-color-danger-100};
-    --fd-color-danger-200: #{$fd-color-danger-200};
-    --fd-color-danger-300: #{$fd-color-danger-300};
-    --fd-color-danger-400: #{$fd-color-danger-400};
-    --fd-color-danger-500: #{$fd-color-danger-500};
-    --fd-color-danger-600: #{$fd-color-danger-600};
-    --fd-color-danger-700: #{$fd-color-danger-700};
-    --fd-color-danger-800: #{$fd-color-danger-800};
-    --fd-color-danger-900: #{$fd-color-danger-900};
+    --fd-color-danger-50: var(--fd-palette-danger-50);
+    --fd-color-danger-100: var(--fd-palette-danger-100);
+    --fd-color-danger-200: var(--fd-palette-danger-200);
+    --fd-color-danger-300: var(--fd-palette-danger-300);
+    --fd-color-danger-400: var(--fd-palette-danger-400);
+    --fd-color-danger-500: var(--fd-palette-danger-500);
+    --fd-color-danger-600: var(--fd-palette-danger-600);
+    --fd-color-danger-700: var(--fd-palette-danger-700);
+    --fd-color-danger-800: var(--fd-palette-danger-800);
+    --fd-color-danger-900: var(--fd-palette-danger-900);
 
     --fd-color-bg-page: var(--fd-color-background);
     --fd-color-bg-card: var(--fd-color-surface);
@@ -337,7 +337,7 @@ html[data-theme='dark'] {
     --fd-color-nutrition-carbs-fill: color-mix(in srgb, var(--fd-color-nutrition-carbs) 14%, transparent);
     --fd-color-nutrition-fiber-fill: color-mix(in srgb, var(--fd-color-nutrition-fiber) 14%, transparent);
     --fd-color-nutrition-alcohol-fill: color-mix(in srgb, var(--fd-color-nutrition-alcohol) 10%, transparent);
-    --fd-color-nutrition-macro-bar-bg: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+    --fd-color-nutrition-macro-bar-bg: var(--fd-bg-muted-tint-strong);
     --fd-color-nutrition-error-border: color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
     --fd-color-nutrition-error-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
     --fd-color-nutrition-error-text: var(--fd-color-red-700);
@@ -347,7 +347,7 @@ html[data-theme='dark'] {
     --fd-color-dialog-surface: var(--fd-color-surface);
     --fd-color-dialog-surface-muted: var(--fd-color-surface-muted);
     --fd-color-dialog-border: var(--fd-color-border);
-    --fd-color-dialog-overlay: rgba(15, 23, 42, 0.6);
+    --fd-color-dialog-overlay: var(--fd-bg-overlay-strong);
 
     --fd-color-warn-strong: var(--fd-color-orange-500);
     --fd-color-success-strong: var(--fd-color-green-500);
@@ -478,15 +478,15 @@ html[data-theme='dark'] {
     --fd-button-secondary-text-text-disabled: var(--fd-color-text-muted);
 
     --fd-button-danger-background-default: var(--fd-color-danger);
-    --fd-button-danger-background-hover: #e03535;
-    --fd-button-danger-background-active: #c42f2f;
-    --fd-button-danger-background-disabled: #ffb3b3;
+    --fd-button-danger-background-hover: color-mix(in srgb, var(--fd-color-danger) 86%, var(--fd-color-slate-900) 14%);
+    --fd-button-danger-background-active: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-slate-900) 24%);
+    --fd-button-danger-background-disabled: color-mix(in srgb, var(--fd-color-danger) 34%, var(--fd-color-white));
     --fd-button-danger-border-default: transparent;
     --fd-button-danger-border-hover: transparent;
     --fd-button-danger-border-active: transparent;
     --fd-button-danger-border-disabled: transparent;
-    --fd-button-danger-text-default: #ffffff;
-    --fd-button-danger-text-disabled: rgba(255, 255, 255, 0.63);
+    --fd-button-danger-text-default: var(--fd-color-white);
+    --fd-button-danger-text-disabled: color-mix(in srgb, var(--fd-color-white) 63%, transparent);
 
     --fd-button-danger-outline-background-default: transparent;
     --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 10%, transparent);
@@ -500,15 +500,15 @@ html[data-theme='dark'] {
     --fd-button-danger-outline-text-disabled: color-mix(in srgb, var(--fd-color-danger) 45%, var(--fd-color-surface));
 
     --fd-button-danger-ghost-background-default: transparent;
-    --fd-button-danger-ghost-background-hover: rgb(var(--fd-color-danger-rgb) / 0.08);
-    --fd-button-danger-ghost-background-active: rgb(var(--fd-color-danger-rgb) / 0.16);
-    --fd-button-danger-ghost-background-disabled: rgb(var(--fd-color-danger-rgb) / 0.04);
+    --fd-button-danger-ghost-background-hover: color-mix(in srgb, var(--fd-color-danger) 8%, transparent);
+    --fd-button-danger-ghost-background-active: color-mix(in srgb, var(--fd-color-danger) 16%, transparent);
+    --fd-button-danger-ghost-background-disabled: color-mix(in srgb, var(--fd-color-danger) 4%, transparent);
     --fd-button-danger-ghost-border-default: transparent;
     --fd-button-danger-ghost-border-hover: transparent;
     --fd-button-danger-ghost-border-active: transparent;
     --fd-button-danger-ghost-border-disabled: transparent;
     --fd-button-danger-ghost-text-default: var(--fd-color-danger);
-    --fd-button-danger-ghost-text-disabled: #ffb3b3;
+    --fd-button-danger-ghost-text-disabled: color-mix(in srgb, var(--fd-color-danger) 34%, var(--fd-color-white));
 
     --fd-button-info-background-default: color-mix(in srgb, var(--fd-color-info) 12%, var(--fd-color-surface));
     --fd-button-info-background-hover: color-mix(in srgb, var(--fd-color-info) 18%, var(--fd-color-surface-raised));

@@ -142,8 +142,8 @@
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-pill);
         --fd-button-background: color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
-        --fd-button-background-hover: rgba(239, 68, 68, 0.15);
-        --fd-button-background-active: rgba(239, 68, 68, 0.2);
+        --fd-button-background-hover: var(--fd-bg-danger-soft);
+        --fd-button-background-active: var(--fd-bg-status-danger);
         --fd-button-border-color: transparent;
         --fd-button-border-color-hover: transparent;
         --fd-button-border-color-active: transparent;

@@ -151,8 +151,8 @@
     --fd-button-text-active: var(--fd-color-on-brand);
     --fd-button-text-disabled: var(--fd-color-surface-muted);
     --fd-button-border-width: 0;
-    --fd-button-shadow-default: 0 10px 26px rgb(var(--fd-color-primary-rgb) / 0.28);
-    --fd-button-shadow-hover: 0 12px 30px rgb(var(--fd-color-primary-rgb) / 0.32);
+    --fd-button-shadow-default: var(--fd-shadow-accent);
+    --fd-button-shadow-hover: var(--fd-shadow-accent-strong);
     --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-shadow-disabled: var(--fd-shadow-none);
 }

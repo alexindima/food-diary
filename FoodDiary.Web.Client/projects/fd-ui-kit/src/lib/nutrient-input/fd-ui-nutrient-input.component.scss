@@ -4,7 +4,7 @@
 
 .fd-ui-nutrient-input {
     --fd-nutrient-tint: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
-    --fd-nutrient-text-color: rgba(15, 23, 42, 0.65);
+    --fd-nutrient-text-color: var(--fd-color-text-muted);
     --fd-nutrient-label-text-gap: calc(var(--fd-space-xxs) / 2);
     display: flex;
     flex-direction: column;
@@ -101,7 +101,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--error {
-    border-color: #ef4444;
+    border-color: var(--fd-color-danger);
 }
 
 .fd-ui-nutrient-input--disabled {

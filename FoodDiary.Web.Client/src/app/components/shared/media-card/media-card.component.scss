@@ -8,7 +8,7 @@
 }
 
 :host(:focus-visible) .media-card {
-    outline: 2px solid rgba(37, 99, 235, 0.35);
+    outline: var(--fd-border-width-strong) solid var(--fd-color-border-status-info);
     outline-offset: 2px;
 }
 

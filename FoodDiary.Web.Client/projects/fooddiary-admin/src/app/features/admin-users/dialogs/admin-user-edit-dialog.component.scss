@@ -1,11 +1,11 @@
 .admin-user-edit-dialog {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .roles {
     display: grid;
-    gap: 0.5rem;
+    gap: var(--fd-space-xs);
 }
 
 .roles__title {

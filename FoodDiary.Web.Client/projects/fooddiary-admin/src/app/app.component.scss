@@ -1,36 +1,38 @@
+@use 'variables' as variables;
+
 .admin-shell {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
-    background: var(--fd-layout-page-background, #f4f6fb);
-    color: #0f172a;
+    background: var(--fd-bg-page);
+    color: var(--fd-color-slate-900);
 }
 
 .admin-shell__sidebar {
-    background: #0f172a;
-    color: #e2e8f0;
-    padding: 24px 20px;
+    background: var(--fd-color-slate-900);
+    color: var(--fd-color-slate-200);
+    padding: var(--fd-space-lg) var(--fd-space-md);
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--fd-space-lg);
 }
 
 .admin-shell__brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--fd-space-sm);
 }
 
 .admin-shell__logo {
     width: 44px;
     height: 44px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #4dabff, #2563eb);
+    border-radius: var(--fd-radius-lg);
+    background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
     display: grid;
     place-items: center;
     font-weight: 800;
     letter-spacing: 0.02em;
-    color: #ffffff;
+    color: var(--fd-color-white);
 }
 
 .admin-shell__title {
@@ -40,13 +42,13 @@
 
 .admin-shell__subtitle {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--fd-color-slate-400);
 }
 
 .admin-shell__nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--fd-space-xs);
 }
 
 .admin-shell__nav-item {
@@ -54,8 +56,8 @@
     background: transparent;
     color: inherit;
     text-align: left;
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border-radius: var(--fd-radius-button);
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
@@ -64,14 +66,14 @@
 
 .admin-shell__nav-item--active,
 .admin-shell__nav-item:hover {
-    background: rgba(148, 163, 184, 0.16);
+    background: var(--fd-bg-muted-tint-strong);
 }
 
 .admin-shell__content {
-    padding: 32px 36px;
+    padding: var(--fd-space-xl) var(--fd-space-xxl);
 }
 
-@media (max-width: 1100px) {
+@media #{variables.$media-desktop} {
 
     .admin-shell {
         grid-template-columns: 1fr;

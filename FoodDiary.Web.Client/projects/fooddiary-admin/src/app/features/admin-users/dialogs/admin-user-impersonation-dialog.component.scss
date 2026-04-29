@@ -1,6 +1,6 @@
 .admin-user-impersonation-dialog {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .admin-user-impersonation-dialog__error {

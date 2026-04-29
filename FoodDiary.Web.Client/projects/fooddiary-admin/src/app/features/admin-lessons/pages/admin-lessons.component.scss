@@ -1,6 +1,6 @@
 .admin-lessons {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .toolbar {
@@ -15,12 +15,12 @@
 
 .lessons-table th,
 .lessons-table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
     text-align: left;
 }
 
 .actions {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--fd-space-xs);
 }

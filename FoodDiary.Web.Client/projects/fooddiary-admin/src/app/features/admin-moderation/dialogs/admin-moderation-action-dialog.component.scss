@@ -1,8 +1,8 @@
 .dialog-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
-    margin-top: 16px;
+    gap: var(--fd-space-xs);
+    margin-top: var(--fd-space-md);
 }
 
 label {
@@ -11,7 +11,7 @@ label {
     line-height: var(--fd-text-body-sm-line-height);
     font-weight: var(--fd-text-action-weight);
     color: var(--fd-color-text);
-    margin: 12px 0 4px;
+    margin: var(--fd-space-sm) 0 var(--fd-space-xxs);
 }
 
 p {

@@ -127,8 +127,38 @@ $fd-static-color-tokens: (
     teal-500: #14b8a6,
     teal-700: #0f766e,
     green-500: #22c55e,
+    success-50: #ecfdf3,
+    success-100: #d1fae5,
+    success-200: #a7f3d0,
+    success-300: #6ee7b7,
+    success-400: #34d399,
+    success-500: #10b981,
+    success-600: #059669,
+    success-700: #047857,
+    success-800: #065f46,
+    success-900: #064e3b,
     emerald-500: #10b981,
     emerald-700: #047857,
+    warning-50: #fff7ed,
+    warning-100: #ffedd5,
+    warning-200: #fed7aa,
+    warning-300: #fdba74,
+    warning-400: #fb923c,
+    warning-500: #f97316,
+    warning-600: #ea580c,
+    warning-700: #c2410c,
+    warning-800: #9a3412,
+    warning-900: #7c2d12,
+    danger-50: #fef2f2,
+    danger-100: #fee2e2,
+    danger-200: #fecaca,
+    danger-300: #fca5a5,
+    danger-400: #f87171,
+    danger-500: #ef4444,
+    danger-600: #dc2626,
+    danger-700: #b91c1c,
+    danger-800: #991b1b,
+    danger-900: #7f1d1d,
     red-600: #dc2626,
     red-700: #b91c1c,
     rose-500: #ec4899,
@@ -413,6 +443,41 @@ $fd-theme-design-tokens: (
     }
 
     @return $value;
+}
+
+@mixin fd-emit-static-palette-variables($selector) {
+    #{$selector} {
+        --fd-palette-success-50: #{fd-token(colors, success-50)};
+        --fd-palette-success-100: #{fd-token(colors, success-100)};
+        --fd-palette-success-200: #{fd-token(colors, success-200)};
+        --fd-palette-success-300: #{fd-token(colors, success-300)};
+        --fd-palette-success-400: #{fd-token(colors, success-400)};
+        --fd-palette-success-500: #{fd-token(colors, success-500)};
+        --fd-palette-success-600: #{fd-token(colors, success-600)};
+        --fd-palette-success-700: #{fd-token(colors, success-700)};
+        --fd-palette-success-800: #{fd-token(colors, success-800)};
+        --fd-palette-success-900: #{fd-token(colors, success-900)};
+        --fd-palette-warning-50: #{fd-token(colors, warning-50)};
+        --fd-palette-warning-100: #{fd-token(colors, warning-100)};
+        --fd-palette-warning-200: #{fd-token(colors, warning-200)};
+        --fd-palette-warning-300: #{fd-token(colors, warning-300)};
+        --fd-palette-warning-400: #{fd-token(colors, warning-400)};
+        --fd-palette-warning-500: #{fd-token(colors, warning-500)};
+        --fd-palette-warning-600: #{fd-token(colors, warning-600)};
+        --fd-palette-warning-700: #{fd-token(colors, warning-700)};
+        --fd-palette-warning-800: #{fd-token(colors, warning-800)};
+        --fd-palette-warning-900: #{fd-token(colors, warning-900)};
+        --fd-palette-danger-50: #{fd-token(colors, danger-50)};
+        --fd-palette-danger-100: #{fd-token(colors, danger-100)};
+        --fd-palette-danger-200: #{fd-token(colors, danger-200)};
+        --fd-palette-danger-300: #{fd-token(colors, danger-300)};
+        --fd-palette-danger-400: #{fd-token(colors, danger-400)};
+        --fd-palette-danger-500: #{fd-token(colors, danger-500)};
+        --fd-palette-danger-600: #{fd-token(colors, danger-600)};
+        --fd-palette-danger-700: #{fd-token(colors, danger-700)};
+        --fd-palette-danger-800: #{fd-token(colors, danger-800)};
+        --fd-palette-danger-900: #{fd-token(colors, danger-900)};
+    }
 }
 
 @function fd-theme-token($theme, $group, $name) {

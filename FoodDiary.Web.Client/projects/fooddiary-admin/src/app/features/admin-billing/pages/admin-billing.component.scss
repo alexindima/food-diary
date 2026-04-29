@@ -1,12 +1,12 @@
 .admin-billing {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .admin-billing__header {
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
+    gap: var(--fd-space-md);
     align-items: flex-start;
 
     h1 {
@@ -14,8 +14,8 @@
     }
 
     p {
-        margin: 0.25rem 0 0;
-        color: #6b7280;
+        margin: var(--fd-space-xxs) 0 0;
+        color: var(--fd-color-text-muted);
     }
 }
 
@@ -24,43 +24,43 @@
 .admin-billing__pagination {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: var(--fd-space-sm);
     align-items: center;
 }
 
 .admin-billing__tabs button {
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    padding: 0.45rem 0.8rem;
-    background: #fff;
+    border: var(--fd-border-strong);
+    border-radius: var(--fd-radius-md);
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    background: var(--fd-color-white);
     cursor: pointer;
 
     &.active {
-        border-color: #2563eb;
-        background: #eff6ff;
-        color: #1d4ed8;
+        border-color: var(--fd-color-primary-600);
+        background: var(--fd-bg-status-info);
+        color: var(--fd-color-primary-700);
         font-weight: 700;
     }
 }
 
 .admin-billing__filters {
-    padding: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    background: #fff;
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-lg);
+    background: var(--fd-color-white);
 
     label {
         display: grid;
-        gap: 0.25rem;
+        gap: var(--fd-space-xxs);
         font-size: 0.8rem;
-        color: #6b7280;
+        color: var(--fd-color-text-muted);
     }
 
     input {
         min-height: 2.5rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        padding: 0 0.75rem;
+        border: var(--fd-border-strong);
+        border-radius: var(--fd-radius-md);
+        padding: 0 var(--fd-space-sm);
     }
 }
 
@@ -71,19 +71,19 @@
 .admin-billing__table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
+    background: var(--fd-color-white);
 }
 
 .admin-billing__table th,
 .admin-billing__table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
     text-align: left;
     vertical-align: top;
 }
 
 .admin-billing__table th {
-    color: #374151;
+    color: var(--fd-color-slate-700);
     font-size: 0.8rem;
     text-transform: uppercase;
 }
@@ -93,7 +93,7 @@
 
     span {
         display: block;
-        color: #6b7280;
+        color: var(--fd-color-text-muted);
         font-size: 0.8rem;
         overflow-wrap: anywhere;
     }
@@ -102,16 +102,16 @@
 .admin-billing__badge {
     display: inline-block;
     width: fit-content;
-    border-radius: 999px;
-    padding: 0.2rem 0.5rem;
-    background: #eef2ff;
-    color: #3730a3;
+    border-radius: var(--fd-radius-pill);
+    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    background: var(--fd-bg-status-info);
+    color: var(--fd-color-primary-700);
     font-weight: 700;
 }
 
 .admin-billing__badge--warn {
-    background: #fff7ed;
-    color: #c2410c;
+    background: var(--fd-bg-category-orange);
+    color: var(--fd-color-orange-700);
 }
 
 .admin-billing__metadata {
@@ -122,10 +122,10 @@
     width: min(520px, calc(100vw - 2rem));
     display: grid;
     grid-template-rows: auto 1fr;
-    border: 1px solid #d1d5db;
-    border-radius: 0.75rem;
-    background: #fff;
-    box-shadow: 0 20px 45px rgb(15 23 42 / 18%);
+    border: var(--fd-border-strong);
+    border-radius: var(--fd-radius-lg);
+    background: var(--fd-color-white);
+    box-shadow: var(--fd-shadow-xl);
     z-index: 20;
 }
 
@@ -133,13 +133,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--fd-space-md);
+    border-bottom: var(--fd-border-default);
 
     button {
         border: 0;
         background: transparent;
-        color: #2563eb;
+        color: var(--fd-color-primary-600);
         cursor: pointer;
         font-weight: 700;
     }
@@ -147,7 +147,7 @@
 
 .admin-billing__metadata pre {
     margin: 0;
-    padding: 1rem;
+    padding: var(--fd-space-md);
     overflow: auto;
     font-size: 0.8rem;
     white-space: pre-wrap;

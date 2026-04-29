@@ -1,6 +1,6 @@
 .admin-email-templates {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .toolbar {
@@ -15,7 +15,7 @@
 
 .templates-table th,
 .templates-table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
     text-align: left;
 }

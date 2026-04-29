@@ -1,11 +1,13 @@
+@use 'variables' as variables;
+
 .admin-mail-inbox {
     display: grid;
-    gap: 1rem;
+    gap: var(--fd-space-md);
 }
 
 .toolbar {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--fd-space-sm);
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
@@ -13,26 +15,26 @@
 
 .toolbar__field {
     display: grid;
-    gap: 0.25rem;
-    color: #4b5563;
+    gap: var(--fd-space-xxs);
+    color: var(--fd-color-slate-600);
     font-size: 0.75rem;
     font-weight: 700;
 }
 
 .toolbar__field select {
     min-height: 2.5rem;
-    padding: 0 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    background: #fff;
-    color: #111827;
+    padding: 0 var(--fd-space-sm);
+    border: var(--fd-border-strong);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-white);
+    color: var(--fd-color-gray-900);
     font: inherit;
 }
 
 .mail-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
-    gap: 1rem;
+    gap: var(--fd-space-md);
     align-items: start;
 }
 
@@ -48,8 +50,8 @@
 
 .mail-table th,
 .mail-table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
     text-align: left;
     vertical-align: top;
 }
@@ -60,21 +62,21 @@
 
 .mail-table__row--active,
 .mail-table__row:hover {
-    background: #f3f4f6;
+    background: var(--fd-bg-surface-muted);
 }
 
 .mail-details {
     display: grid;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    background: #fff;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-white);
 }
 
 .mail-details__header {
     display: flex;
-    gap: 1rem;
+    gap: var(--fd-space-md);
     align-items: flex-start;
     justify-content: space-between;
 }
@@ -85,22 +87,22 @@
 }
 
 .mail-details__meta {
-    color: #6b7280;
+    color: var(--fd-color-text-muted);
     font-size: 0.875rem;
 }
 
 .mail-details__status {
-    padding: 0.25rem 0.5rem;
-    border-radius: 999px;
-    background: #eef2ff;
-    color: #3730a3;
+    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-status-info);
+    color: var(--fd-color-primary-700);
     font-size: 0.75rem;
     font-weight: 700;
 }
 
 .mail-details__badges {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--fd-space-xs);
     align-items: flex-start;
     flex-wrap: wrap;
     justify-content: flex-end;
@@ -110,33 +112,33 @@
     display: inline-flex;
     align-items: center;
     min-height: 1.5rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 999px;
-    background: #f3f4f6;
-    color: #374151;
+    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-surface-muted);
+    color: var(--fd-color-slate-700);
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
 }
 
 .mail-badge--dmarc {
-    background: #ecfdf5;
-    color: #047857;
+    background: var(--fd-bg-status-success);
+    color: var(--fd-color-emerald-700);
 }
 
 .mail-fields {
     display: grid;
-    gap: 0.75rem;
+    gap: var(--fd-space-sm);
     margin: 0;
 }
 
 .mail-fields div {
     display: grid;
-    gap: 0.25rem;
+    gap: var(--fd-space-xxs);
 }
 
 .mail-fields dt {
-    color: #6b7280;
+    color: var(--fd-color-text-muted);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -149,43 +151,43 @@
 
 .body-switcher {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--fd-space-xs);
     flex-wrap: wrap;
 }
 
 .dmarc-report {
     display: grid;
-    gap: 0.75rem;
-    padding: 1rem;
-    border: 1px solid #d1fae5;
-    border-radius: 0.5rem;
-    background: #f0fdf4;
+    gap: var(--fd-space-sm);
+    padding: var(--fd-space-md);
+    border: var(--fd-border-width) solid var(--fd-color-border-status-success);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-bg-status-success);
 }
 
 .dmarc-report__header {
     display: flex;
-    gap: 1rem;
+    gap: var(--fd-space-md);
     align-items: flex-start;
     justify-content: space-between;
 }
 
 .dmarc-report__header h3 {
-    margin: 0 0 0.25rem;
+    margin: 0 0 var(--fd-space-xxs);
     font-size: 1rem;
 }
 
 .dmarc-report__header p {
     margin: 0;
-    color: #4b5563;
+    color: var(--fd-color-slate-600);
     font-size: 0.875rem;
 }
 
 .dmarc-report__stats {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--fd-space-xs);
     flex-wrap: wrap;
     justify-content: flex-end;
-    color: #065f46;
+    color: var(--fd-color-primary-800);
     font-size: 0.8125rem;
     font-weight: 700;
 }
@@ -197,19 +199,19 @@
 .dmarc-report__table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
+    background: var(--fd-color-white);
 }
 
 .dmarc-report__table th,
 .dmarc-report__table td {
-    padding: 0.5rem;
-    border-bottom: 1px solid #d1fae5;
+    padding: var(--fd-space-xs);
+    border-bottom: var(--fd-border-width) solid var(--fd-color-border-status-success);
     text-align: left;
     white-space: nowrap;
 }
 
 .dmarc-report__table th {
-    color: #065f46;
+    color: var(--fd-color-primary-800);
     font-size: 0.75rem;
     text-transform: uppercase;
 }
@@ -218,18 +220,18 @@
     min-height: 16rem;
     max-height: 32rem;
     margin: 0;
-    padding: 1rem;
+    padding: var(--fd-space-md);
     overflow: auto;
-    border-radius: 0.5rem;
-    background: #111827;
-    color: #f9fafb;
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-gray-900);
+    color: var(--fd-color-slate-50);
     font-family: Consolas, Monaco, monospace;
     font-size: 0.875rem;
     line-height: 1.5;
     white-space: pre-wrap;
 }
 
-@media (max-width: 56rem) {
+@media #{variables.$media-desktop-sm} {
 
     .mail-layout {
         grid-template-columns: 1fr;

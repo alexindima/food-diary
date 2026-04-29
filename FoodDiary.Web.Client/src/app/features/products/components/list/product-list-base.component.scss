@@ -259,7 +259,7 @@
         transition: all 0.15s ease;
 
         &:hover {
-            background: #f1f5f9;
+            background: var(--fd-bg-surface-inset);
             border-color: color-mix(in srgb, var(--fd-color-slate-400) 35%, transparent);
         }
     }

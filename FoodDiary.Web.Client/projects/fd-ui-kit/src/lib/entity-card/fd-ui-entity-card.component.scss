@@ -17,7 +17,7 @@
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
         position: relative;
-        background-color: rgba(148, 163, 184, 0.25);
+        background-color: var(--fd-bg-muted-tint-strong);
 
         img {
             width: 100%;

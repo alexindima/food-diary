@@ -1,43 +1,43 @@
 .admin-moderation {
-    padding: 24px;
+    padding: var(--fd-space-lg);
 }
 
 .toolbar {
     display: flex;
-    gap: 12px;
+    gap: var(--fd-space-sm);
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: var(--fd-space-md);
 
     select {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border: var(--fd-border-strong);
+        border-radius: var(--fd-radius-xs);
         font-size: 14px;
     }
 }
 
 .summary {
-    margin-bottom: 12px;
+    margin-bottom: var(--fd-space-sm);
     font-size: 14px;
-    color: #666;
+    color: var(--fd-color-text-muted);
 }
 
 .reports-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 16px;
+    margin-bottom: var(--fd-space-md);
 
     th,
     td {
-        padding: 10px 12px;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
         text-align: left;
-        border-bottom: 1px solid #eee;
+        border-bottom: var(--fd-border-default);
     }
 
     th {
         font-weight: 600;
         font-size: 13px;
-        color: #666;
+        color: var(--fd-color-text-muted);
     }
 }
 
@@ -50,36 +50,36 @@
 
 .status-badge {
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
+    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
     font-size: 12px;
     font-weight: 500;
 
     &--pending {
-        background: #fff3cd;
-        color: #856404;
+        background: var(--fd-bg-status-warning);
+        color: var(--fd-color-orange-700);
     }
 
     &--reviewed {
-        background: #d4edda;
-        color: #155724;
+        background: var(--fd-bg-status-success);
+        color: var(--fd-color-success);
     }
 
     &--dismissed {
-        background: #e2e3e5;
-        color: #383d41;
+        background: var(--fd-bg-status-muted);
+        color: var(--fd-color-text-muted);
     }
 }
 
 .action-buttons {
     display: flex;
-    gap: 6px;
+    gap: var(--fd-space-control-gap);
 }
 
 .pagination {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--fd-space-sm);
     justify-content: center;
-    margin-top: 16px;
+    margin-top: var(--fd-space-md);
 }

@@ -14,30 +14,31 @@
     }
 
     &__stat {
+        --fd-accent-color: var(--fd-color-primary-500);
         --fd-stat-tile-padding: var(--fd-space-stat-tile-padding);
         --fd-stat-tile-gap: var(--fd-space-stat-tile-compact-gap);
         --fd-stat-tile-background: linear-gradient(
             180deg,
-            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--accent-color, var(--fd-color-primary-500)) 8%),
-            color-mix(in srgb, var(--fd-color-surface) 96%, var(--accent-color, var(--fd-color-primary-500)) 4%)
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-accent-color) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-accent-color) 4%)
         );
         --fd-stat-tile-shadow: var(--fd-shadow-lg);
     }
 
     &__stat:nth-child(1) {
-        --accent-color: var(--fd-color-orange-500);
+        --fd-accent-color: var(--fd-color-orange-500);
     }
 
     &__stat:nth-child(2) {
-        --accent-color: var(--fd-color-purple-500);
+        --fd-accent-color: var(--fd-color-purple-500);
     }
 
     &__stat:nth-child(3) {
-        --accent-color: var(--fd-color-sky-500);
+        --fd-accent-color: var(--fd-color-sky-500);
     }
 
     &__stat:nth-child(4) {
-        --accent-color: var(--fd-color-green-500);
+        --fd-accent-color: var(--fd-color-green-500);
     }
 
     &__stat-icon {

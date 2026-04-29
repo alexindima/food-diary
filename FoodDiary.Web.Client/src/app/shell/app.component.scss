@@ -90,8 +90,8 @@
     min-height: var(--fd-layout-shell-impersonation-banner-height);
     padding: var(--fd-space-inline-alert-notice-padding);
     box-sizing: border-box;
-    background: #7f1d1d;
-    color: #ffffff;
+    background: var(--fd-color-red-700);
+    color: var(--fd-color-white);
     font-size: var(--fd-text-body-sm-size);
     font-weight: 600;
     box-shadow: var(--fd-shadow-xs);
@@ -106,11 +106,11 @@
 }
 
 .fd-impersonation-banner__button {
-    border: var(--fd-border-width) solid rgba(255, 255, 255, 0.72);
+    border: var(--fd-border-inverse);
     border-radius: var(--fd-radius-sm);
     padding: var(--fd-space-status-badge-padding);
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
+    background: var(--fd-bg-surface-glass-medium);
+    color: var(--fd-color-white);
     font: inherit;
     cursor: pointer;
 }
