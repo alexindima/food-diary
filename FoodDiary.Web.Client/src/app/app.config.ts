@@ -11,8 +11,7 @@ import {
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalizationService } from './services/localization.service';
 import { AuthService } from './services/auth.service';
 import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
@@ -29,6 +28,7 @@ import { GlobalErrorHandler } from './services/error-handler.service';
 import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ThemeService } from './services/theme.service';
+import { FoodDiaryTranslationLoader } from './services/food-diary-translation.loader';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
 
@@ -80,8 +80,10 @@ export const appConfig: ApplicationConfig = {
                     return;
                 }
 
+                await localizationService.loadApplicationTranslations();
                 const user = await firstValueFrom(userService.getInfoSilently());
                 await localizationService.applyLanguagePreference(user?.language ?? null);
+                await localizationService.loadApplicationTranslations();
                 themeService.syncWithUserPreferences(user?.theme, user?.uiStyle);
             });
         }),
@@ -99,10 +101,8 @@ export const appConfig: ApplicationConfig = {
         ),
         provideHttpClient(withInterceptorsFromDi(), withFetch()),
         importProvidersFrom(TranslateModule.forRoot()),
-        provideTranslateHttpLoader({
-            prefix: './assets/i18n/',
-            suffix: `.json?v=${environment.buildVersion ?? 'dev'}`,
-        }),
+        FoodDiaryTranslationLoader,
+        { provide: TranslateLoader, useExisting: FoodDiaryTranslationLoader },
         ...(isBrowserEnvironment
             ? [
                   provideServiceWorker('ngsw-worker.js', {

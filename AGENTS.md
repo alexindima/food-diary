@@ -32,8 +32,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Prefer C# primary constructors where applicable.
 - If backend HTTP routes, payloads, status codes, or Swagger-visible API surface change, update the relevant contract snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them with the feature.
 - For UI text changes, update both locales:
-  - `FoodDiary.Web.Client/assets/i18n/en.json`
-  - `FoodDiary.Web.Client/assets/i18n/ru.json`
+  - `FoodDiary.Web.Client/assets/i18n/en/*.json`
+  - `FoodDiary.Web.Client/assets/i18n/ru/*.json`
 - Verify Russian text rendering after edits (no mojibake / replacement symbols).
 
 ## Build Baseline

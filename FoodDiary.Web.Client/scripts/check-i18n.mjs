@@ -4,10 +4,7 @@ import path from 'node:path';
 const rootDir = process.cwd();
 const i18nDir = path.join(rootDir, 'assets', 'i18n');
 const sourceDirs = [path.join(rootDir, 'src'), path.join(rootDir, 'projects', 'fooddiary-admin', 'src')];
-const localeFiles = {
-    en: path.join(i18nDir, 'en.json'),
-    ru: path.join(i18nDir, 'ru.json'),
-};
+const localeBundles = ['core', 'public', 'app'];
 
 const mojibakePatterns = [
     /Ð[\u0080-\u00BF]/u,
@@ -18,12 +15,15 @@ const mojibakePatterns = [
 
 const issues = [];
 
-const locales = Object.fromEntries(
-    Object.entries(localeFiles).map(([locale, filePath]) => [locale, JSON.parse(fs.readFileSync(filePath, 'utf8'))]),
-);
-const availableKeys = new Set(flattenKeys(locales.en));
+const locales = {
+    en: readLocaleBundles('en'),
+    ru: readLocaleBundles('ru'),
+};
+const availableKeys = new Set(flattenKeys(mergeBundles(locales.en)));
 
-compareNodes('', locales.en, locales.ru);
+for (const bundle of localeBundles) {
+    compareNodes(bundle, locales.en[bundle], locales.ru[bundle]);
+}
 checkRuntimeTranslationKeys();
 
 if (issues.length > 0) {
@@ -97,6 +97,19 @@ function compareNodes(currentPath, enNode, ruNode) {
     }
 }
 
+function readLocaleBundles(locale) {
+    return Object.fromEntries(
+        localeBundles.map(bundle => {
+            const filePath = path.join(i18nDir, locale, `${bundle}.json`);
+            return [bundle, JSON.parse(fs.readFileSync(filePath, 'utf8'))];
+        }),
+    );
+}
+
+function mergeBundles(bundles) {
+    return localeBundles.reduce((result, bundle) => deepMerge(result, bundles[bundle]), {});
+}
+
 function isPlainObject(value) {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -134,6 +147,17 @@ function flattenKeys(node, currentPath = '') {
     }
 
     return Object.entries(node).flatMap(([key, value]) => flattenKeys(value, joinPath(currentPath, key)));
+}
+
+function deepMerge(target, source) {
+    const output = { ...target };
+
+    for (const [key, value] of Object.entries(source)) {
+        const targetValue = output[key];
+        output[key] = isPlainObject(targetValue) && isPlainObject(value) ? deepMerge(targetValue, value) : value;
+    }
+
+    return output;
 }
 
 function checkRuntimeTranslationKeys() {

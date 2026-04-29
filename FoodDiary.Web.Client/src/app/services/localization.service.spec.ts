@@ -1,15 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { LocalizationService } from './localization.service';
+import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 
 describe('LocalizationService', () => {
     let service: LocalizationService;
     let translateSpy: any;
     let langChangeSubject: Subject<LangChangeEvent>;
     let mockDocument: Document;
+    let translationLoaderSpy: any;
+    let routerEventsSubject: Subject<unknown>;
     let documentLang: string | null;
     let currentLangValue: string;
 
@@ -24,6 +28,7 @@ describe('LocalizationService', () => {
             getBrowserLang: vi.fn(),
             getDefaultLang: vi.fn(),
             instant: vi.fn(),
+            setTranslation: vi.fn(),
         } as any;
 
         Object.defineProperty(translateSpy, 'onLangChange', {
@@ -42,6 +47,11 @@ describe('LocalizationService', () => {
         translateSpy.use.mockReturnValue(of({} as any));
         translateSpy.getDefaultLang.mockReturnValue('en');
         translateSpy.getBrowserLang.mockReturnValue('en');
+        translationLoaderSpy = {
+            isPublicRoute: vi.fn().mockReturnValue(true),
+            loadApplicationTranslations: vi.fn().mockReturnValue(of({ DASHBOARD: { TITLE: 'Dashboard' } })),
+        } as any;
+        routerEventsSubject = new Subject<unknown>();
 
         documentLang = null;
         mockDocument = {
@@ -61,6 +71,8 @@ describe('LocalizationService', () => {
                 LocalizationService,
                 { provide: TranslateService, useValue: translateSpy },
                 { provide: DOCUMENT, useValue: mockDocument },
+                { provide: FoodDiaryTranslationLoader, useValue: translationLoaderSpy },
+                { provide: Router, useValue: { events: routerEventsSubject.asObservable() } },
             ],
         });
 
@@ -150,5 +162,12 @@ describe('LocalizationService', () => {
         langChangeSubject.next({ lang: 'ru', translations: {} });
 
         expect(mockDocument.documentElement.getAttribute('lang')).toBe('ru');
+    });
+
+    it('should extend current language with application translations', async () => {
+        await service.loadApplicationTranslations();
+
+        expect(translationLoaderSpy.loadApplicationTranslations).toHaveBeenCalledWith('en');
+        expect(translateSpy.setTranslation).toHaveBeenCalledWith('en', { DASHBOARD: { TITLE: 'Dashboard' } }, true);
     });
 });

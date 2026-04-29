@@ -1,10 +1,12 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MeasurementUnit } from '../features/products/models/product.data';
 import { BrowserStorageService } from './browser-storage.service';
+import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 
 @Injectable()
 export class LocalizationService {
@@ -13,8 +15,11 @@ export class LocalizationService {
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly router = inject(Router);
     private readonly storage = inject(BrowserStorageService);
+    private readonly translationLoader = inject(FoodDiaryTranslationLoader);
     private readonly storageKey = 'fd_language';
+    private readonly applicationTranslationLanguages = new Set<string>();
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -22,6 +27,17 @@ export class LocalizationService {
             this.persistLanguage(normalized);
             this.setDocumentLang(normalized);
         });
+
+        this.router.events
+            .pipe(
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(event => {
+                if (!this.translationLoader.isPublicRoute(event.urlAfterRedirects)) {
+                    void this.loadApplicationTranslations();
+                }
+            });
     }
 
     public initializeLocalization(): Promise<void> {
@@ -54,6 +70,18 @@ export class LocalizationService {
     public getCurrentLanguage(): string {
         const current = this.translateService.currentLang || this.translateService.getDefaultLang();
         return this.normalizeLanguage(current);
+    }
+
+    public loadApplicationTranslations(): Promise<void> {
+        const currentLang = this.getCurrentLanguage();
+        if (this.applicationTranslationLanguages.has(currentLang)) {
+            return Promise.resolve();
+        }
+
+        return firstValueFrom(this.translationLoader.loadApplicationTranslations(currentLang)).then(translations => {
+            this.translateService.setTranslation(currentLang, translations, true);
+            this.applicationTranslationLanguages.add(currentLang);
+        });
     }
 
     public clearStoredLanguage(): void {

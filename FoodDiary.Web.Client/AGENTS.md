@@ -62,6 +62,6 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 ## Localization
 
 - Update both locale files for UI copy changes:
-    - `assets/i18n/en.json`
-    - `assets/i18n/ru.json`
+    - `assets/i18n/en/*.json`
+    - `assets/i18n/ru/*.json`
 - Verify Cyrillic output after edits.
