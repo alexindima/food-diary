@@ -1,9 +1,6 @@
 @use 'variables' as variables;
 
 .nutrition-editor {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-card-content-gap);
 
     &__input {
         width: 100%;
@@ -12,7 +9,6 @@
     &__grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: var(--fd-space-card-header-gap);
 
         &--secondary {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -40,7 +36,6 @@
         background: var(--fd-color-nutrition-error-bg);
         color: var(--fd-color-nutrition-error-text);
         display: grid;
-        gap: var(--fd-space-inline-alert-content-gap);
     }
 
     &__hint {

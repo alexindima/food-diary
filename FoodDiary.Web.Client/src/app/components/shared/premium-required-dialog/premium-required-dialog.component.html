@@ -2,7 +2,7 @@
     <p class="premium-required-dialog__message fd-ui-body">
         {{ data.message || ('AI.PREMIUM_DIALOG.MESSAGE' | translate) }}
     </p>
-    <div fdUiDialogFooter class="premium-required-dialog__footer">
+    <div fdUiDialogFooter class="premium-required-dialog__footer fd-row fd-justify-end fd-gap-dialog-footer">
         <fd-ui-button type="button" fill="ghost" variant="secondary" (click)="onCancel()">
             {{ data.cancelLabel || ('AI.PREMIUM_DIALOG.CANCEL' | translate) }}
         </fd-ui-button>

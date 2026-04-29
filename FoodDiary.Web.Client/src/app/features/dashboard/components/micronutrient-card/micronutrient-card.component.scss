@@ -5,15 +5,6 @@
     border-radius: var(--fd-radius-card);
     border: var(--fd-border-strong);
     background: var(--fd-bg-surface-raised);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
-
-    &__loading {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
 
     &__skeleton {
         height: 12px;
@@ -30,44 +21,14 @@
         padding-top: var(--fd-space-xxs);
     }
 
-    &__empty-text {
-        color: var(--fd-color-text-muted);
-    }
-
     &__coverage {
-        color: var(--fd-color-text-muted);
         background: color-mix(in srgb, var(--fd-color-slate-400) 8%, transparent);
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: var(--fd-radius-sm);
     }
 
-    &__section {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
-    }
-
-    &__section-label {
-        color: var(--fd-color-text-muted);
-    }
-
     &__nutrient {
-        display: flex;
-        flex-direction: column;
         gap: calc(var(--fd-space-xxs) / 2);
-
-        &--good {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-        }
-    }
-
-    &__nutrient-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: var(--fd-space-xs);
     }
 
     &__nutrient-name {
@@ -75,14 +36,10 @@
     }
 
     &__nutrient-value {
-        color: var(--fd-color-text-muted);
         flex-shrink: 0;
     }
 
     &__nutrient-check {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-xxs);
         color: var(--fd-color-green-500);
         flex-shrink: 0;
 
@@ -107,17 +64,11 @@
     }
 
     &__scores {
-        display: flex;
-        gap: var(--fd-space-xxs);
-        flex-wrap: wrap;
         padding-top: var(--fd-space-xxs);
         border-top: var(--fd-border-muted);
     }
 
     &__score {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-xxs);
         padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
         border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-slate-400) 10%, transparent);

@@ -1,7 +1,4 @@
-.ai-input-bar {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-control-gap);
+﻿.ai-input-bar {
     padding: var(--fd-space-surface-padding);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
@@ -89,7 +86,6 @@
             --fd-button-secondary-text-active: var(--fd-color-red-600);
             --fd-button-secondary-text-disabled: var(--fd-color-danger);
         }
-
     }
 
     &__submit {
@@ -128,5 +124,3 @@
     display: block;
     margin-top: calc(var(--fd-space-xxs) / -4);
 }
-
-

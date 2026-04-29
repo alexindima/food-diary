@@ -1,12 +1,12 @@
 <fd-ui-dialog class="ai-consent-dialog" [title]="'AI_CONSENT.TITLE' | translate">
     <div class="ai-consent-dialog__body">
         <div class="ai-consent-dialog__text fd-ui-body-sm" [innerHTML]="'AI_CONSENT.TEXT' | translate"></div>
-        <label class="ai-consent-dialog__checkbox">
+        <label class="ai-consent-dialog__checkbox fd-row fd-align-start fd-gap-xs">
             <input type="checkbox" [checked]="isAgreed()" (change)="onCheckboxChange($event)" />
             <span class="fd-ui-body-sm">{{ 'AI_CONSENT.AGREE_LABEL' | translate }}</span>
         </label>
     </div>
-    <div fdUiDialogFooter class="ai-consent-dialog__footer">
+    <div fdUiDialogFooter class="ai-consent-dialog__footer fd-row fd-justify-end fd-gap-sm">
         <fd-ui-button type="button" fill="ghost" variant="secondary" (click)="onCancel()">
             {{ 'AI_CONSENT.CANCEL' | translate }}
         </fd-ui-button>

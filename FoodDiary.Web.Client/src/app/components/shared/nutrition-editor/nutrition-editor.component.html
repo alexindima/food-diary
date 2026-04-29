@@ -1,4 +1,4 @@
-<div class="nutrition-editor" [formGroup]="formGroup()">
+<div class="nutrition-editor fd-stack fd-gap-card-content" [formGroup]="formGroup()">
     <ng-content select="[nutrition-before]" />
 
     <fd-ui-nutrient-input
@@ -21,7 +21,7 @@
         </div>
     }
 
-    <div class="nutrition-editor__grid">
+    <div class="nutrition-editor__grid fd-gap-card-header">
         <fd-ui-nutrient-input
             class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--proteins"
             [formControlName]="controlNames().proteins"
@@ -75,7 +75,7 @@
         }
     </div>
 
-    <div class="nutrition-editor__grid nutrition-editor__grid--secondary">
+    <div class="nutrition-editor__grid nutrition-editor__grid--secondary fd-gap-card-header">
         <fd-ui-nutrient-input
             class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--fiber"
             [formControlName]="controlNames().fiber"
@@ -105,7 +105,7 @@
     </div>
 
     @if (macrosError()) {
-        <div class="nutrition-editor__errors fd-ui-error-text">
+        <div class="nutrition-editor__errors fd-gap-inline-alert-content fd-ui-error-text">
             {{ macrosError() }}
         </div>
     }

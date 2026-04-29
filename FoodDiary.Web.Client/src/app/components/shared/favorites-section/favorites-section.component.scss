@@ -8,10 +8,6 @@
 
 .fd-favorites-section__header {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--fd-space-sm);
     padding: var(--fd-space-surface-padding);
     border: none;
     background: transparent;
@@ -21,9 +17,6 @@
 }
 
 .fd-favorites-section__title-group {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-xs);
     min-width: 0;
 }
 
@@ -41,9 +34,6 @@
 }
 
 .fd-favorites-section__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
     padding: var(--fd-space-sm);
     border-top: var(--fd-border-subtle);
 }

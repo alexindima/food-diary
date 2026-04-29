@@ -10,12 +10,6 @@
     padding: var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding) 0;
 }
 
-.fd-manage-header__top-row {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-page-header-gap);
-}
-
 .fd-manage-header__title {
     margin: 0;
 }
@@ -26,9 +20,6 @@
 
 .fd-manage-header__actions {
     margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-page-header-actions-gap);
 }
 
 :host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {

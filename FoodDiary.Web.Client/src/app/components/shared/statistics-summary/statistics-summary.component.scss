@@ -34,7 +34,6 @@
 .stats-summary-card__average-details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--fd-space-card-header-gap);
 }
 
 .stats-summary-card__average-item {
@@ -95,6 +94,3 @@
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
-
-
-

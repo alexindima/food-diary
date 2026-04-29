@@ -1,6 +1,6 @@
 <div class="fd-favorites-section fd-ui-surface">
-    <button type="button" class="fd-favorites-section__header" (click)="onToggle()">
-        <span class="fd-favorites-section__title-group fd-ui-card-title">
+    <button type="button" class="fd-favorites-section__header fd-row fd-justify-between fd-gap-sm" (click)="onToggle()">
+        <span class="fd-favorites-section__title-group fd-inline-center fd-gap-xs fd-ui-card-title">
             <fd-ui-icon class="fd-favorites-section__star" name="star"></fd-ui-icon>
             <span>{{ title() }} ({{ count() }})</span>
         </span>
@@ -8,7 +8,7 @@
     </button>
 
     @if (isOpen()) {
-        <div class="fd-favorites-section__body">
+        <div class="fd-favorites-section__body fd-stack fd-gap-sm">
             <ng-content />
 
             @if (showLoadMore() && loadMoreLabel()) {

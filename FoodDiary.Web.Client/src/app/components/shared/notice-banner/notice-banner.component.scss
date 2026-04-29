@@ -5,10 +5,6 @@
     --fd-notice-icon-bg: var(--fd-bg-notice-icon);
     --fd-notice-icon-fg: var(--fd-color-white);
     --fd-notice-action: var(--fd-color-primary-500);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--fd-space-inline-alert-gap);
     padding: var(--fd-space-inline-alert-padding);
     border-radius: var(--fd-radius-panel);
     width: 100%;
@@ -16,9 +12,6 @@
 }
 
 .fd-notice__main {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--fd-space-inline-alert-gap);
     flex: 1 1 auto;
     min-width: 0;
 }
@@ -29,15 +22,10 @@
     border-radius: var(--fd-radius-button);
     background: var(--fd-notice-icon-bg);
     color: var(--fd-notice-icon-fg);
-    display: grid;
-    place-items: center;
     flex: 0 0 auto;
 }
 
 .fd-notice__text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-inline-alert-content-gap);
     min-width: 0;
     flex: 1 1 auto;
 }
@@ -76,7 +64,6 @@
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-transform-disabled: none;
-    white-space: nowrap;
     flex: 0 0 auto;
     text-decoration: none;
 
@@ -104,6 +91,3 @@
         text-align: left;
     }
 }
-
-
-

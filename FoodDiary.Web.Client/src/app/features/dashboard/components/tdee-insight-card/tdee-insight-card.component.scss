@@ -15,9 +15,6 @@
     );
     box-shadow: var(--fd-shadow-lg);
     color: var(--fd-color-text);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
 
     &--loading {
         opacity: 0.75;
@@ -28,24 +25,8 @@
         margin-bottom: calc(var(--fd-space-xxs) / 2);
     }
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
-    &__main-value {
-        display: flex;
-        align-items: baseline;
-        gap: var(--fd-space-xxs);
-    }
-
     &__number {
         color: var(--fd-color-orange-700);
-    }
-
-    &__unit {
-        color: var(--fd-color-text-muted);
     }
 
     &__confidence {
@@ -75,15 +56,7 @@
     }
 
     &__meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: calc(var(--fd-space-xxs) / 2) 0;
-        gap: var(--fd-space-sm);
-    }
-
-    &__meta-label {
-        color: var(--fd-color-text-muted);
     }
 
     &__meta-value {
@@ -91,9 +64,6 @@
     }
 
     &__hint {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel);
         background: var(--fd-bg-category-sky);
@@ -110,10 +80,6 @@
     }
 
     &__suggestion {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-sm);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-panel);
         background: var(--fd-bg-status-success);
@@ -125,10 +91,6 @@
 
     &__loading,
     &__empty {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
-        color: var(--fd-color-text-muted);
         padding: calc(var(--fd-space-xxs) / 2) 0;
 
         fd-ui-icon {

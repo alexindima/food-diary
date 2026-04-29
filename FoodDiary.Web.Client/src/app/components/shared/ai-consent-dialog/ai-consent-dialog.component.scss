@@ -33,9 +33,6 @@
     }
 
     &__checkbox {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--fd-space-xs);
         margin-top: var(--fd-space-md);
         cursor: pointer;
         color: var(--fd-color-text);
@@ -49,12 +46,4 @@
             cursor: pointer;
         }
     }
-
-    &__footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: var(--fd-space-sm);
-    }
 }
-
-

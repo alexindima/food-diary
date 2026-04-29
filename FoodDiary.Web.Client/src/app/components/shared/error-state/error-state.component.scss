@@ -1,13 +1,6 @@
-@use 'variables' as variables;
-
 .fd-error-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     padding: var(--fd-space-xxl) var(--fd-space-md);
-    gap: var(--fd-space-xs);
 }
 
 .fd-error-state__icon {

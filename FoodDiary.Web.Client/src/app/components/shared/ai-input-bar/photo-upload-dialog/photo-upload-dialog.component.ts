@@ -12,7 +12,6 @@ import { ImageSelection } from '../../../../shared/models/image-upload.data';
     standalone: true,
     imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, ImageUploadFieldComponent],
     templateUrl: './photo-upload-dialog.component.html',
-    styleUrls: ['./photo-upload-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotoUploadDialogComponent {

@@ -20,11 +20,3 @@
 .premium-required-dialog__link:focus {
     text-decoration: underline;
 }
-
-.premium-required-dialog__footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--fd-space-dialog-footer-gap);
-}
-
-

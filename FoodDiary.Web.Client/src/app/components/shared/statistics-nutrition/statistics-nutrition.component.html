@@ -1,4 +1,4 @@
-<fd-ui-card class="stats-nutrition-card" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
+<fd-ui-card class="stats-nutrition-card fd-stack fd-gap-md" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
     <fd-ui-tabs
         class="stats-nutrition-card__tabs"
         appearance="wrap-compact"
@@ -36,8 +36,8 @@
                 </div>
             }
             @case ('distribution') {
-                <div class="stats-nutrition-card__distribution-grid">
-                    <div class="stats-nutrition-card__chart-card">
+                <div class="stats-nutrition-card__distribution-grid fd-gap-md">
+                    <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
                         <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
                         <canvas
                             baseChart
@@ -47,7 +47,7 @@
                             [legend]="false"
                         ></canvas>
                     </div>
-                    <div class="stats-nutrition-card__chart-card">
+                    <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
                         <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.RADAR' | translate }}</h4>
                         <canvas
                             baseChart
@@ -57,7 +57,7 @@
                             [legend]="false"
                         ></canvas>
                     </div>
-                    <div class="stats-nutrition-card__chart-card">
+                    <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
                         <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
                         <canvas
                             baseChart

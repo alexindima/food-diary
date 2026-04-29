@@ -1,14 +1,14 @@
 <fd-ui-dialog [title]="'BARCODE_SCANNER.TITLE' | translate" [dismissible]="true" (close)="close()">
     <div class="barcode-scanner">
         @if (isUnsupported()) {
-            <div class="barcode-scanner__message">
+            <div class="barcode-scanner__message fd-stack fd-center fd-gap-md">
                 <p>{{ 'BARCODE_SCANNER.UNSUPPORTED' | translate }}</p>
                 <fd-ui-button variant="secondary" (click)="close()">
                     {{ 'COMMON.CLOSE' | translate }}
                 </fd-ui-button>
             </div>
         } @else if (isCameraError()) {
-            <div class="barcode-scanner__message">
+            <div class="barcode-scanner__message fd-stack fd-center fd-gap-md">
                 <p>{{ 'BARCODE_SCANNER.CAMERA_ERROR' | translate }}</p>
                 <fd-ui-button variant="secondary" (click)="close()">
                     {{ 'COMMON.CLOSE' | translate }}
@@ -16,7 +16,7 @@
             </div>
         } @else {
             @if (!isCameraReady()) {
-                <div class="barcode-scanner__loading">
+                <div class="barcode-scanner__loading fd-stack fd-center">
                     <fd-ui-loader />
                 </div>
             }

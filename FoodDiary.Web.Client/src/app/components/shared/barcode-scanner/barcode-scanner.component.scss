@@ -18,12 +18,7 @@
 }
 
 .barcode-scanner__message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: var(--fd-space-lg);
-    gap: var(--fd-space-md);
     background: var(--fd-bg-surface-raised);
     text-align: center;
 
@@ -35,12 +30,6 @@
 }
 
 .barcode-scanner__loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: var(--fd-space-lg);
     background: var(--fd-bg-surface-raised);
 }
-
-

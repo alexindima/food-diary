@@ -1,11 +1,11 @@
 <div
-    class="fd-notice fd-ui-notice-surface"
+    class="fd-notice fd-row fd-wrap fd-gap-inline-alert fd-ui-notice-surface"
     [class.fd-ui-notice-surface--info]="type() === 'info'"
     [class.fd-ui-notice-surface--warning]="type() === 'warning'"
     [class.fd-ui-notice-surface--danger]="type() === 'error'"
 >
-    <div class="fd-notice__main">
-        <div class="fd-notice__icon" aria-hidden="true">
+    <div class="fd-notice__main fd-row fd-align-start fd-gap-inline-alert">
+        <div class="fd-notice__icon fd-place-center" aria-hidden="true">
             @switch (type()) {
                 @case ('warning') {
                     !
@@ -18,13 +18,13 @@
                 }
             }
         </div>
-        <div class="fd-notice__text">
+        <div class="fd-notice__text fd-stack fd-gap-inline-alert-content">
             <div class="fd-notice__title fd-ui-card-title">{{ title() }}</div>
             <div class="fd-notice__message fd-ui-body-sm">{{ message() }}</div>
         </div>
     </div>
     @if (showAction()) {
-        <fd-ui-button class="fd-notice__action" type="button" variant="secondary" fill="text" size="sm" (click)="onAction()">
+        <fd-ui-button class="fd-notice__action fd-nowrap" type="button" variant="secondary" fill="text" size="sm" (click)="onAction()">
             {{ actionLabel() }}
         </fd-ui-button>
     }

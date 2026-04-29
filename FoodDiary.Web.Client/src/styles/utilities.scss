@@ -69,6 +69,18 @@
     gap: var(--fd-space-lg);
 }
 
+.fd-gap-control {
+    gap: var(--fd-space-control-gap);
+}
+
+.fd-gap-page-header {
+    gap: var(--fd-space-page-header-gap);
+}
+
+.fd-gap-page-header-actions {
+    gap: var(--fd-space-page-header-actions-gap);
+}
+
 .fd-gap-actions {
     gap: var(--fd-space-actions-gap);
 }
@@ -89,8 +101,20 @@
     gap: var(--fd-space-card-relaxed-gap);
 }
 
+.fd-gap-inline-alert {
+    gap: var(--fd-space-inline-alert-gap);
+}
+
+.fd-gap-inline-alert-content {
+    gap: var(--fd-space-inline-alert-content-gap);
+}
+
 .fd-gap-inline-alert-actions {
     gap: var(--fd-space-inline-alert-actions-gap);
+}
+
+.fd-gap-dialog-footer {
+    gap: var(--fd-space-dialog-footer-gap);
 }
 
 .fd-min-w-0 {

@@ -11,7 +11,7 @@
         [deleteOnClear]="true"
         (imageChanged)="onImageChanged($event)"
     />
-    <div fdUiDialogFooter class="photo-upload-dialog__footer">
+    <div fdUiDialogFooter class="photo-upload-dialog__footer fd-row fd-justify-end">
         <fd-ui-button fill="outline" variant="secondary" (click)="close()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>

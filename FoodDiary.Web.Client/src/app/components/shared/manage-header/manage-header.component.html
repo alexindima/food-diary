@@ -1,5 +1,5 @@
 ﻿<header class="fd-manage-header">
-    <div class="fd-manage-header__top-row">
+    <div class="fd-manage-header__top-row fd-row fd-gap-page-header">
         <fd-ui-button
             type="button"
             class="fd-manage-header__back"
@@ -12,7 +12,7 @@
             (click)="onBackClick()"
         />
         <h1 class="fd-manage-header__title fd-page-title">{{ title() }}</h1>
-        <div class="fd-manage-header__actions">
+        <div class="fd-manage-header__actions fd-inline-center fd-gap-page-header-actions">
             <ng-content select="[fdManageHeaderActions]"></ng-content>
         </div>
     </div>
