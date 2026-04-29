@@ -75,7 +75,6 @@ describe('LocalizationService', () => {
         await service.initializeLocalization();
 
         expect(translateSpy.addLangs).toHaveBeenCalledWith(['en', 'ru']);
-        expect(translateSpy.setDefaultLang).toHaveBeenCalledWith('en');
         expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
 

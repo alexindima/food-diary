@@ -26,7 +26,6 @@ export class LocalizationService {
 
     public initializeLocalization(): Promise<void> {
         this.translateService.addLangs(['en', 'ru']);
-        this.translateService.setDefaultLang('en');
 
         const browserLang = this.translateService.getBrowserLang();
         const storedLang = this.getStoredLanguage();

@@ -4,6 +4,10 @@
 
 .hero {
     position: relative;
+    display: flex;
+    min-height: calc(100svh + var(--fd-space-md));
+    box-sizing: border-box;
+    flex-direction: column;
     padding: var(--fd-landing-section-space-tight) 0 var(--fd-landing-section-space-compact);
     overflow: hidden;
     background:
@@ -46,9 +50,11 @@
 
     &__grid {
         max-width: var(--fd-landing-container-max-width);
+        flex: 1 1 auto;
         margin: 0 auto;
         padding: 0 var(--fd-layout-page-horizontal-padding);
         display: grid;
+        width: 100%;
         grid-template-columns: minmax(0, 1fr) minmax(320px, 0.84fr);
         gap: var(--fd-landing-section-space);
         align-items: center;
@@ -89,6 +95,40 @@
         flex-wrap: wrap;
         align-items: center;
         margin-top: var(--fd-space-xxs);
+    }
+
+    &__search-intent {
+        display: grid;
+        gap: var(--fd-space-xs);
+        max-width: 640px;
+    }
+
+    &__search-title {
+        @include landing.marketing-title(1.12rem, 1.3, 0, var(--fd-color-slate-800), 800);
+    }
+
+    &__search-text {
+        @include landing.marketing-body(0.98rem, 1.65, var(--fd-color-slate-600), 620px);
+    }
+
+    &__search-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--fd-space-xs);
+    }
+
+    &__search-tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: var(--fd-size-control-md);
+        padding: 0 var(--fd-space-sm);
+        border-radius: var(--fd-radius-pill);
+        background: color-mix(in srgb, var(--fd-color-white) 76%, var(--fd-color-primary-100));
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 22%, transparent);
+        color: var(--fd-color-primary-700);
+        font-size: var(--fd-text-body-subtle-size);
+        font-weight: var(--fd-text-section-title-weight);
+        box-shadow: var(--fd-shadow-ring-inset-primary);
     }
 
     &__cta {
@@ -292,6 +332,15 @@
 
         &__subtitle {
             text-wrap: pretty;
+        }
+
+        &__search-intent {
+            justify-items: center;
+            text-align: center;
+        }
+
+        &__search-tags {
+            justify-content: center;
         }
 
         &__actions {

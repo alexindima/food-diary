@@ -16,6 +16,16 @@
             <h1 class="hero__title">{{ 'LANDING_HERO.HEADLINE' | translate }}</h1>
             <p class="hero__subtitle">{{ 'LANDING_HERO.SUBTITLE' | translate }}</p>
 
+            <section class="hero__search-intent" [attr.aria-label]="'LANDING_HERO.SEARCH.ARIA_LABEL' | translate">
+                <h2 class="hero__search-title">{{ 'LANDING_HERO.SEARCH.TITLE' | translate }}</h2>
+                <p class="hero__search-text">{{ 'LANDING_HERO.SEARCH.TEXT' | translate }}</p>
+                <div class="hero__search-tags" aria-hidden="true">
+                    @for (key of searchIntentKeys; track key) {
+                        <span class="hero__search-tag">{{ 'LANDING_HERO.SEARCH.ITEMS.' + key | translate }}</span>
+                    }
+                </div>
+            </section>
+
             <div class="hero__actions">
                 <fd-ui-button
                     class="hero__cta hero__cta--primary"

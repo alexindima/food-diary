@@ -151,6 +151,17 @@
         "OVERLINE": "Online food diary",
         "HEADLINE": "Track meals, plan ahead, and see what actually works.",
         "SUBTITLE": "Food Diary combines meal logging, nutrition planning, progress analytics, focused routines, and specialist collaboration in one product workspace.",
+        "SEARCH": {
+            "ARIA_LABEL": "Food diary use cases",
+            "TITLE": "For people looking for a food diary app, calorie counter, and practical nutrition planner",
+            "TEXT": "Keep an online food diary, log breakfast, lunch, dinner, and snacks, track calories and macros, plan weekly meals, and review how nutrition connects with weight, waist, fasting, and long-term habits.",
+            "ITEMS": {
+                "FOOD_LOG": "Online food diary",
+                "CALORIES": "Calorie and macro tracker",
+                "PLANNING": "Meal planner and weekly menu",
+                "PROGRESS": "Weight and progress tracker"
+            }
+        },
         "REASSURANCE": "Free to start • No ads • Built for long-term routines",
         "LOGIN": "Login",
         "REGISTER": "Register",
