@@ -4,9 +4,6 @@
     margin: 0 auto;
 
     &__header {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
         margin-bottom: var(--fd-space-lg);
     }
 
@@ -18,22 +15,10 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__profile-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xs);
-    }
-
     &__chip {
         --fd-pill-bg: var(--fd-bg-status-info);
         --fd-pill-border: transparent;
         --fd-pill-color: var(--fd-color-primary-700);
-    }
-
-    &__sections {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
     }
 
     &__section {

@@ -1,8 +1,5 @@
 .dietologist-invitation {
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: var(--fd-space-xl) var(--fd-space-md);
 }
 
@@ -19,11 +16,3 @@
     margin: 0 0 var(--fd-space-md);
     color: var(--fd-color-slate-600);
 }
-
-.dietologist-invitation__actions {
-    display: flex;
-    gap: var(--fd-space-sm);
-    flex-wrap: wrap;
-}
-
-

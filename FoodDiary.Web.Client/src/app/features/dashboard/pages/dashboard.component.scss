@@ -30,7 +30,6 @@ $color-text-secondary: var(--fd-color-text-muted);
     }
 
     &__block--fasting {
-        display: flex;
         position: relative;
         min-width: 0;
         border-radius: var(--fd-radius-card);
@@ -44,10 +43,6 @@ $color-text-secondary: var(--fd-color-text-muted);
     &__fasting-overlay {
         position: absolute;
         inset: var(--fd-space-md);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        gap: var(--fd-space-xxs);
         padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-panel);
         background: linear-gradient(
@@ -74,13 +69,8 @@ $color-text-secondary: var(--fd-color-text-muted);
         grid-auto-rows: auto;
     }
 
-    &__row {
-        display: grid;
-        gap: var(--fd-space-lg);
-
-        &--pair {
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        }
+    &__row--pair {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
     &__card {
@@ -329,8 +319,6 @@ $color-text-secondary: var(--fd-color-text-muted);
             margin-left: 0;
             width: auto;
             flex-wrap: nowrap;
-            gap: var(--fd-space-xxs);
-            justify-content: flex-end;
             min-width: 0;
         }
 
@@ -348,12 +336,10 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &__quick-add {
-            gap: var(--fd-space-xs);
             margin-bottom: var(--fd-space-lg);
         }
 
         &__manual-add {
-            gap: var(--fd-space-xs);
             padding-left: calc(var(--fd-space-xxs) / 2);
         }
 

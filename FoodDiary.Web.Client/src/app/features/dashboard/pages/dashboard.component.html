@@ -2,8 +2,8 @@
     @if (layout.isEditingLayout()) {
         <div class="dashboard__edit-overlay"></div>
     }
-    <header class="dashboard__header">
-        <div class="dashboard__title-block">
+    <header class="dashboard__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-page-header-actions">
+        <div class="dashboard__title-block fd-stack fd-gap-xxs">
             <h1 class="dashboard__title fd-ui-page-title">
                 @if (isTodaySelected()) {
                     <span class="dashboard__title-text dashboard__title-text--full">{{ 'DASHBOARD.TITLE' | translate }}</span>
@@ -20,8 +20,8 @@
             <p class="dashboard__subtitle fd-ui-page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
         </div>
 
-        <div class="dashboard__header-actions">
-            <div class="dashboard__date-group">
+        <div class="dashboard__header-actions fd-row fd-align-start fd-justify-end fd-wrap fd-gap-sm">
+            <div class="dashboard__date-group fd-inline-center">
                 <fd-ui-date-picker-button
                     class="dashboard__date-button"
                     [value]="selectedDate()"
@@ -77,13 +77,13 @@
                 <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>
             } @else {
                 @if (isTodaySelected() && !layout.isEditingLayout()) {
-                    <section class="dashboard__quick-add" aria-label="Quick meal add">
+                    <section class="dashboard__quick-add fd-stack fd-gap-card-profile" aria-label="Quick meal add">
                         @defer (on idle) {
                             <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
                         } @placeholder {
                             <div class="dashboard__quick-add-placeholder" aria-hidden="true"></div>
                         }
-                        <div class="dashboard__manual-add">
+                        <div class="dashboard__manual-add fd-row fd-wrap fd-gap-xs">
                             <span class="dashboard__manual-add-label fd-ui-action-text">{{
                                 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate
                             }}</span>
@@ -101,7 +101,7 @@
                     </section>
                 }
                 <section
-                    class="dashboard__grid"
+                    class="dashboard__grid fd-grid fd-gap-lg fd-align-start"
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
                     [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
                 >
@@ -118,7 +118,7 @@
                     <div class="dashboard__column fd-grid fd-gap-lg">
                         @if (shouldRenderFastingWidget()) {
                             <div
-                                class="dashboard__block dashboard__block--fasting"
+                                class="dashboard__block dashboard__block--fasting fd-row"
                                 [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('fasting')"
                                 [attr.role]="layout.isEditingLayout() ? 'button' : 'button'"
                                 [attr.tabindex]="layout.isEditingLayout() ? 0 : 0"
@@ -157,7 +157,7 @@
                                     />
                                 </fd-dashboard-card-shell>
                                 @if (layout.isEditingLayout()) {
-                                    <div class="dashboard__fasting-overlay">
+                                    <div class="dashboard__fasting-overlay fd-stack fd-justify-end fd-gap-xxs">
                                         <div class="dashboard__fasting-overlay-title fd-ui-card-title">
                                             {{ 'DASHBOARD.FASTING_EDIT_TITLE' | translate }}
                                         </div>

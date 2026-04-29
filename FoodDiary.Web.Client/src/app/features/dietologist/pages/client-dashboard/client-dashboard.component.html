@@ -1,11 +1,11 @@
 <div class="client-dashboard">
-    <div class="client-dashboard__header">
+    <div class="client-dashboard__header fd-stack fd-gap-xs">
         <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">Back to clients</fd-ui-button>
         @if (client(); as currentClient) {
             <h1 class="client-dashboard__title fd-page-title">{{ getClientTitle(currentClient) }}</h1>
             <span class="client-dashboard__email fd-ui-caption">{{ currentClient.email }}</span>
             @if (currentClient.permissions.shareProfile) {
-                <div class="client-dashboard__profile-meta">
+                <div class="client-dashboard__profile-meta fd-row fd-wrap fd-gap-xs">
                     @if (currentClient.height) {
                         <span class="client-dashboard__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
                             {{ currentClient.height }} cm
@@ -31,7 +31,7 @@
     } @else if (!client()) {
         <p class="fd-ui-body-sm">Client not found.</p>
     } @else {
-        <div class="client-dashboard__sections">
+        <div class="client-dashboard__sections fd-stack fd-gap-md">
             @if (client()!.permissions.shareProfile) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">

@@ -11,28 +11,15 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
     &__card {
         cursor: pointer;
     }
 
     &__card-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: var(--fd-space-md);
-        gap: var(--fd-space-md);
     }
 
     &__info {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
         min-width: 0;
         flex: 1;
     }
@@ -47,9 +34,6 @@
             color-mix(in srgb, var(--fd-color-primary-100) 45%, var(--fd-color-white))
         );
         color: var(--fd-color-primary-700);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         font-size: var(--fd-text-title-sm-size);
         font-weight: var(--fd-text-section-title-weight);
         overflow: hidden;
@@ -60,12 +44,6 @@
             height: 100%;
             object-fit: cover;
         }
-    }
-
-    &__meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xs);
     }
 
     &__chip {
