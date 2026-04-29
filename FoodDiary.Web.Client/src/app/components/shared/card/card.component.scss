@@ -6,8 +6,6 @@
     border: var(--fd-border-subtle);
     border-radius: var(--fd-radius-md);
     background-color: var(--fd-bg-surface-subtle);
-    display: flex;
-    flex-direction: column;
     box-shadow: var(--fd-shadow-md);
     transition:
         transform 0.2s,
@@ -18,5 +16,3 @@
         box-shadow: var(--fd-shadow-lg);
     }
 }
-
-

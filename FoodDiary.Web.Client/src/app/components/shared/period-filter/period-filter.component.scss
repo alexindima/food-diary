@@ -1,10 +1,6 @@
 @use 'variables' as variables;
 
 .fd-period-filter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--fd-period-gap);
 
     &__tabs {
         flex: 1 1 260px;

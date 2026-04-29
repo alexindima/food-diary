@@ -5,9 +5,6 @@
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-ai-result-surface);
     padding: var(--fd-space-stat-tile-padding);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
 }
 
 :host(.ai-input-bar__result-panel) .ai-photo-result {
@@ -16,9 +13,6 @@
 }
 
 .ai-photo-result__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     color: var(--fd-color-purple-500);
 }
 
@@ -66,10 +60,7 @@
 
 .ai-photo-result__text-preview {
     min-height: 0;
-    display: flex;
-    flex-direction: column;
     justify-content: flex-start;
-    gap: var(--fd-space-xs);
     padding: var(--fd-space-card-profile-gap) var(--fd-space-lg);
     background: var(--fd-bg-ai-text-preview);
 }
@@ -151,18 +142,6 @@
     margin: 0;
 }
 
-.ai-photo-result__items-header {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-xs);
-}
-
-.ai-photo-result__items-title {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-xxs);
-}
-
 .ai-photo-result__action-btn {
     --fd-button-width: var(--fd-size-control-xs);
     --fd-button-min-width: var(--fd-size-control-xs);
@@ -186,16 +165,7 @@
     --fd-button-icon-size: var(--fd-text-section-title-size);
 }
 
-.ai-photo-result__table {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
-}
-
 .ai-photo-result__table-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: var(--fd-space-xs);
     border-radius: var(--fd-radius-md);
     background: var(--fd-bg-surface-raised);
@@ -211,16 +181,9 @@
     font-variant-numeric: tabular-nums;
 }
 
-.ai-photo-result__edit-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
-}
-
 .ai-photo-result__edit-row {
     display: grid;
     grid-template-columns: 24px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 24px;
-    gap: var(--fd-space-xs);
     align-items: center;
     padding: var(--fd-space-xxs) var(--fd-space-xs);
     border-radius: var(--fd-radius-button);
@@ -231,9 +194,6 @@
 .ai-photo-result__edit-handle {
     cursor: grab;
     color: var(--fd-color-slate-400);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 
     fd-ui-icon {
         font-size: var(--fd-text-section-title-size);
@@ -318,8 +278,6 @@
 }
 
 .ai-photo-result__nutrition-item {
-    display: flex;
-    flex-direction: column;
     gap: calc(var(--fd-space-xxs) / 2);
 }
 
@@ -391,21 +349,11 @@
 
 .ai-photo-result__details-inner {
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-card-profile-gap);
 }
 
 .ai-photo-result__details-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--fd-space-sm);
-}
-
-.ai-photo-result__detail-field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
 }
 
 .ai-photo-result__detail-label {
@@ -436,13 +384,6 @@
 .ai-photo-result__satiety-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--fd-space-sm);
-}
-
-.ai-photo-result__satiety-field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
 }
 
 .ai-photo-result__satiety-label {
@@ -455,9 +396,6 @@
     border: var(--fd-border-muted);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-sm);
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-sm);
     text-align: left;
     cursor: pointer;
     background: var(--fd-bg-surface-translucent-solid);
@@ -493,9 +431,6 @@
     height: var(--fd-size-control-md);
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-surface-translucent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-weight: var(--fd-text-action-weight);
     color: var(--fd-color-slate-900);
     position: relative;
@@ -519,7 +454,6 @@
     color: var(--fd-color-slate-500);
 }
 
-
 @media #{variables.$media-tablet} {
 
     .ai-photo-result__details-grid,
@@ -527,6 +461,3 @@
         grid-template-columns: 1fr;
     }
 }
-
-
-

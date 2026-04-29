@@ -9,7 +9,7 @@
                 (action)="onGoalAction()"
             />
         }
-        <div class="dashboard-summary-card__layout">
+        <div class="dashboard-summary-card__layout fd-grid fd-gap-card-content">
             <div
                 class="dashboard-summary-card__chart"
                 [class.is-daily-hovered]="isDailyHovered()"
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="dashboard-summary-card__bars fd-gap-card-relaxed">
+            <div class="dashboard-summary-card__bars fd-grid fd-gap-card-relaxed">
                 @for (bar of resolvedNutrientBars(); track bar.id) {
                     <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
                         <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">

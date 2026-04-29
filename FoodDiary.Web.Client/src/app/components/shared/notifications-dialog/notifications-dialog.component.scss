@@ -6,9 +6,6 @@
 
 .notifications-dialog__state {
     min-height: 16rem;
-    display: grid;
-    place-items: center;
-    gap: var(--fd-space-sm);
     text-align: center;
     color: var(--fd-color-text-muted);
 
@@ -30,16 +27,12 @@
 }
 
 .notifications-dialog__list {
-    display: grid;
-    gap: var(--fd-space-sm);
     padding-right: var(--fd-space-lg);
 }
 
 .notifications-dialog__item {
     width: 100%;
-    display: grid;
     grid-template-columns: 1fr;
-    gap: var(--fd-space-xxs);
     align-items: start;
     padding: var(--fd-space-inline-alert-notice-padding);
     border-radius: var(--fd-radius-card);
@@ -54,10 +47,10 @@
         box-shadow 0.2s ease,
         border-color 0.2s ease;
 
-        &:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--fd-shadow-notification-hover);
-        }
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--fd-shadow-notification-hover);
+    }
 
     &.is-read {
         background: var(--fd-bg-surface);
@@ -101,29 +94,14 @@
 }
 
 .notifications-dialog__item-content {
-    display: grid;
-    gap: var(--fd-space-xxs);
     min-width: 0;
 }
 
-.notifications-dialog__item-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--fd-space-md);
-}
-
 .notifications-dialog__item-meta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--fd-space-xs);
     flex-shrink: 0;
 }
 
 .notifications-dialog__item-head-main {
-    display: grid;
-    gap: var(--fd-space-xxs);
     min-width: 0;
 }
 
@@ -145,8 +123,6 @@
     width: var(--fd-size-icon-hero);
     height: var(--fd-size-icon-hero);
     border-radius: var(--fd-radius-input);
-    display: grid;
-    place-items: center;
     background: var(--fd-bg-brand-tint-medium);
     color: var(--fd-color-primary-600);
 

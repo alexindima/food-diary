@@ -21,9 +21,7 @@
     }
 
     &__layout {
-        display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--fd-space-card-content-gap);
         align-items: center;
 
         @media #{variables.$media-tablet} {
@@ -201,10 +199,6 @@
     &__legend {
         display: grid;
         gap: var(--fd-space-card-content-gap);
-    }
-
-    &__bars {
-        display: grid;
     }
 
     &__bar {

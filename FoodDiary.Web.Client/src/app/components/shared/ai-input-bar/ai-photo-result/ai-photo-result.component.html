@@ -1,5 +1,5 @@
-<div class="ai-photo-result">
-    <div class="ai-photo-result__header">
+<div class="ai-photo-result fd-stack fd-gap-sm">
+    <div class="ai-photo-result__header fd-row fd-justify-between">
         <span class="fd-ui-card-title">{{ titleKey() | translate }}</span>
         <fd-ui-button
             class="ai-photo-result__dismiss"
@@ -17,7 +17,7 @@
             @if (imageUrl()) {
                 <img class="ai-photo-result__preview" [src]="imageUrl()" [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate" />
             } @else {
-                <div class="ai-photo-result__text-preview">
+                <div class="ai-photo-result__text-preview fd-stack fd-gap-xs">
                     <div class="ai-photo-result__text-preview-label fd-ui-overline">{{ sourceTextLabelKey() | translate }}</div>
                     <div class="ai-photo-result__text-preview-value fd-ui-body">{{ sourceText() }}</div>
                 </div>
@@ -46,8 +46,8 @@
     }
 
     @if (!isAnalyzing() && results().length) {
-        <div class="ai-photo-result__items-header">
-            <span class="ai-photo-result__items-title">
+        <div class="ai-photo-result__items-header fd-row fd-gap-xs">
+            <span class="ai-photo-result__items-title fd-inline-center fd-gap-xxs">
                 <fd-ui-button
                     class="ai-photo-result__action-btn"
                     variant="secondary"
@@ -77,10 +77,10 @@
         </div>
 
         @if (isEditing()) {
-            <div class="ai-photo-result__edit-list" cdkDropList (cdkDropListDropped)="onEditItemDrop($event)">
+            <div class="ai-photo-result__edit-list fd-stack fd-gap-xs" cdkDropList (cdkDropListDropped)="onEditItemDrop($event)">
                 @for (item of editItems(); track item.id; let i = $index) {
-                    <div class="ai-photo-result__edit-row" cdkDrag>
-                        <div class="ai-photo-result__edit-handle" cdkDragHandle>
+                    <div class="ai-photo-result__edit-row fd-gap-xs" cdkDrag>
+                        <div class="ai-photo-result__edit-handle fd-inline-center" cdkDragHandle>
                             <fd-ui-icon name="drag_indicator"></fd-ui-icon>
                         </div>
                         <input
@@ -123,9 +123,9 @@
                 + {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
             </fd-ui-button>
         } @else {
-            <div class="ai-photo-result__table">
+            <div class="ai-photo-result__table fd-stack fd-gap-xxs">
                 @for (item of results(); track item.nameEn) {
-                    <div class="ai-photo-result__table-row">
+                    <div class="ai-photo-result__table-row fd-row fd-justify-between">
                         <span class="ai-photo-result__item-name fd-ui-body-sm">{{ getDisplayName(item) }}</span>
                         <span class="ai-photo-result__item-amount fd-ui-caption">{{ formatAmount(item) }}</span>
                     </div>
@@ -136,37 +136,37 @@
         @if (!isNutritionLoading() && nutrition()) {
             <div class="ai-photo-result__nutrition">
                 <div class="ai-photo-result__nutrition-grid">
-                    <div class="ai-photo-result__nutrition-item">
+                    <div class="ai-photo-result__nutrition-item fd-stack">
                         <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}</span>
                         <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
                             formatMacro(nutrition()!.calories, 'GENERAL.UNITS.KCAL')
                         }}</span>
                     </div>
-                    <div class="ai-photo-result__nutrition-item">
+                    <div class="ai-photo-result__nutrition-item fd-stack">
                         <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}</span>
                         <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
                             formatMacro(nutrition()!.protein, 'GENERAL.UNITS.G')
                         }}</span>
                     </div>
-                    <div class="ai-photo-result__nutrition-item">
+                    <div class="ai-photo-result__nutrition-item fd-stack">
                         <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.FAT' | translate }}</span>
                         <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
                             formatMacro(nutrition()!.fat, 'GENERAL.UNITS.G')
                         }}</span>
                     </div>
-                    <div class="ai-photo-result__nutrition-item">
+                    <div class="ai-photo-result__nutrition-item fd-stack">
                         <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.CARB' | translate }}</span>
                         <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
                             formatMacro(nutrition()!.carbs, 'GENERAL.UNITS.G')
                         }}</span>
                     </div>
-                    <div class="ai-photo-result__nutrition-item">
+                    <div class="ai-photo-result__nutrition-item fd-stack">
                         <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.FIBER' | translate }}</span>
                         <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
                             formatMacro(nutrition()!.fiber, 'GENERAL.UNITS.G')
                         }}</span>
                     </div>
-                    <div class="ai-photo-result__nutrition-item">
+                    <div class="ai-photo-result__nutrition-item fd-stack">
                         <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.ALCOHOL' | translate }}</span>
                         <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
                             formatMacro(nutrition()!.alcohol, 'GENERAL.UNITS.G')
@@ -203,9 +203,9 @@
             </div>
 
             <div class="ai-photo-result__details" [class.ai-photo-result__details--expanded]="showDetails() && isDetailsExpanded()">
-                <div class="ai-photo-result__details-inner">
-                    <div class="ai-photo-result__details-grid">
-                        <label class="ai-photo-result__detail-field">
+                <div class="ai-photo-result__details-inner fd-stack fd-gap-card-profile">
+                    <div class="ai-photo-result__details-grid fd-gap-sm">
+                        <label class="ai-photo-result__detail-field fd-stack fd-gap-xxs">
                             <span class="ai-photo-result__detail-label fd-ui-field-label fd-ui-field-label--floating">{{
                                 'AI_INPUT_BAR.DETAIL_DATE' | translate
                             }}</span>
@@ -217,7 +217,7 @@
                                 #dateInput
                             />
                         </label>
-                        <label class="ai-photo-result__detail-field">
+                        <label class="ai-photo-result__detail-field fd-stack fd-gap-xxs">
                             <span class="ai-photo-result__detail-label fd-ui-field-label fd-ui-field-label--floating">{{
                                 'AI_INPUT_BAR.DETAIL_TIME' | translate
                             }}</span>
@@ -231,7 +231,7 @@
                         </label>
                     </div>
 
-                    <label class="ai-photo-result__detail-field">
+                    <label class="ai-photo-result__detail-field fd-stack fd-gap-xxs">
                         <span class="ai-photo-result__detail-label fd-ui-field-label fd-ui-field-label--floating">{{
                             'AI_INPUT_BAR.DETAIL_COMMENT' | translate
                         }}</span>
@@ -244,20 +244,20 @@
                         ></textarea>
                     </label>
 
-                    <div class="ai-photo-result__satiety-grid">
-                        <div class="ai-photo-result__satiety-field">
+                    <div class="ai-photo-result__satiety-grid fd-gap-sm">
+                        <div class="ai-photo-result__satiety-field fd-stack fd-gap-xxs">
                             <p class="ai-photo-result__satiety-label fd-ui-field-label fd-ui-field-label--floating">
                                 {{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}
                             </p>
                             @let beforeMeta = getSatietyLevelMeta(preMealSatietyLevel());
                             <button
                                 type="button"
-                                class="ai-photo-result__satiety-card"
+                                class="ai-photo-result__satiety-card fd-row fd-gap-sm"
                                 (click)="openSatietyDialog('before')"
                                 [attr.aria-label]="getSatietyButtonAriaLabel('before')"
                                 [style.--satiety-gradient]="beforeMeta.gradient"
                             >
-                                <div class="ai-photo-result__satiety-indicator">
+                                <div class="ai-photo-result__satiety-indicator fd-center">
                                     {{ (preMealSatietyLevel() ?? 0) > 0 ? preMealSatietyLevel() : '?' }}
                                 </div>
                                 <div class="ai-photo-result__satiety-text">
@@ -268,19 +268,19 @@
                             </button>
                         </div>
 
-                        <div class="ai-photo-result__satiety-field">
+                        <div class="ai-photo-result__satiety-field fd-stack fd-gap-xxs">
                             <p class="ai-photo-result__satiety-label fd-ui-field-label fd-ui-field-label--floating">
                                 {{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}
                             </p>
                             @let afterMeta = getSatietyLevelMeta(postMealSatietyLevel());
                             <button
                                 type="button"
-                                class="ai-photo-result__satiety-card"
+                                class="ai-photo-result__satiety-card fd-row fd-gap-sm"
                                 (click)="openSatietyDialog('after')"
                                 [attr.aria-label]="getSatietyButtonAriaLabel('after')"
                                 [style.--satiety-gradient]="afterMeta.gradient"
                             >
-                                <div class="ai-photo-result__satiety-indicator">
+                                <div class="ai-photo-result__satiety-indicator fd-center">
                                     {{ (postMealSatietyLevel() ?? 0) > 0 ? postMealSatietyLevel() : '?' }}
                                 </div>
                                 <div class="ai-photo-result__satiety-text">

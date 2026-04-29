@@ -10,7 +10,7 @@
 >
     <div
         fdMediaCardMedia
-        class="entity-card__thumb"
+        class="entity-card__thumb fd-place-center"
         [class.entity-card__thumb--previewable]="hasPreviewImage()"
         [fdUiHint]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
         [fdUiHintDisabled]="!hasPreviewImage()"
@@ -28,12 +28,12 @@
         }
     </div>
 
-    <div fdMediaCardContent class="entity-card__content">
-        <div class="entity-card__title-block">
-            <div class="entity-card__name-row">
+    <div fdMediaCardContent class="entity-card__content fd-gap-entity-card-content fd-min-w-0">
+        <div class="entity-card__title-block fd-stack fd-gap-entity-card-title fd-min-w-0">
+            <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
                 @if (showFavorite()) {
                     <fd-ui-button
-                        class="entity-card__favorite-button"
+                        class="entity-card__favorite-button fd-inline-center"
                         appearance="plain-icon"
                         variant="secondary"
                         fill="text"
@@ -50,19 +50,19 @@
                 @if (ownershipIcon(); as icon) {
                     <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
                 }
-                <div class="entity-card__name fd-ui-card-title">{{ title() }}</div>
+                <div class="entity-card__name fd-ui-card-title fd-truncate">{{ title() }}</div>
                 @if (titleMuted(); as mutedTitle) {
-                    <div class="entity-card__title-muted fd-ui-meta-text">{{ mutedTitle }}</div>
+                    <div class="entity-card__title-muted fd-ui-meta-text fd-nowrap">{{ mutedTitle }}</div>
                 }
             </div>
 
             @if (description(); as bodyDescription) {
-                <div class="entity-card__description fd-ui-caption">{{ bodyDescription }}</div>
+                <div class="entity-card__description fd-ui-caption fd-truncate">{{ bodyDescription }}</div>
             }
         </div>
 
-        <div class="entity-card__summary-row">
-            <div class="entity-card__nutrients">
+        <div class="entity-card__summary-row fd-gap-entity-card-header fd-min-w-0">
+            <div class="entity-card__nutrients fd-row fd-min-w-0">
                 <div
                     class="entity-card__nutrients-container"
                     [class.entity-card__nutrients-container--green]="normalizedQuality()?.grade === 'green'"
@@ -80,8 +80,13 @@
             </div>
 
             @if (normalizedQuality(); as cardQuality) {
-                <div class="entity-card__quality" [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate">
-                    <span class="entity-card__quality-label fd-ui-stat-label">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                <div
+                    class="entity-card__quality fd-gap-entity-card-header fd-min-w-0"
+                    [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
+                >
+                    <span class="entity-card__quality-label fd-ui-stat-label fd-nowrap">{{
+                        'PRODUCT_CARD.QUALITY_SCORE' | translate
+                    }}</span>
                     <div class="entity-card__quality-bar" aria-hidden="true">
                         <span
                             class="entity-card__quality-fill entity-card__quality-fill--{{ cardQuality.grade }}"
@@ -99,8 +104,8 @@
         </div>
     </div>
 
-    <div fdMediaCardActions class="entity-card__action-group">
-        <div class="entity-card__calories-inline">
+    <div fdMediaCardActions class="entity-card__action-group fd-stack fd-center fd-gap-entity-card-content">
+        <div class="entity-card__calories-inline fd-stack fd-center fd-gap-entity-card-title fd-nowrap">
             <span class="entity-card__calories-value fd-ui-metric-lg">
                 {{ calories() | number: '1.0-0' }}
             </span>

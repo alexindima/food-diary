@@ -8,6 +8,10 @@
     align-items: center;
 }
 
+.fd-grid {
+    display: grid;
+}
+
 .fd-inline-center {
     display: inline-flex;
     align-items: center;
@@ -81,6 +85,14 @@
     gap: var(--fd-space-page-header-actions-gap);
 }
 
+.fd-gap-period {
+    gap: var(--fd-period-gap);
+}
+
+.fd-gap-pill {
+    gap: var(--fd-space-pill-gap);
+}
+
 .fd-gap-actions {
     gap: var(--fd-space-actions-gap);
 }
@@ -99,6 +111,18 @@
 
 .fd-gap-card-relaxed {
     gap: var(--fd-space-card-relaxed-gap);
+}
+
+.fd-gap-entity-card-content {
+    gap: var(--fd-space-entity-card-content-gap);
+}
+
+.fd-gap-entity-card-header {
+    gap: var(--fd-space-entity-card-header-gap);
+}
+
+.fd-gap-entity-card-title {
+    gap: var(--fd-space-entity-card-title-gap);
 }
 
 .fd-gap-inline-alert {

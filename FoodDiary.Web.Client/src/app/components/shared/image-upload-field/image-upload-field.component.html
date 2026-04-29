@@ -1,6 +1,6 @@
-﻿<div class="image-upload-field" [class.image-upload-field--disabled]="disabled" [class]="appearanceClass()">
+﻿<div class="image-upload-field fd-stack fd-gap-xs" [class.image-upload-field--disabled]="disabled" [class]="appearanceClass()">
     <div
-        class="image-upload-field__dropzone"
+        class="image-upload-field__dropzone fd-place-center"
         role="button"
         tabindex="0"
         [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
@@ -49,7 +49,7 @@
                 />
             </div>
         } @else {
-            <div class="image-upload-field__placeholder">
+            <div class="image-upload-field__placeholder fd-gap-xxs">
                 <div class="image-upload-field__icon">&#8593;</div>
                 <div class="image-upload-field__main-text fd-ui-card-title">{{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}</div>
                 <div class="image-upload-field__sub-text image-upload-field__sub-text--plain fd-ui-caption">
@@ -65,7 +65,7 @@
         }
 
         @if (isUploading) {
-            <div class="image-upload-field__overlay fd-ui-action-text" role="status" aria-live="polite">
+            <div class="image-upload-field__overlay fd-place-center fd-ui-action-text" role="status" aria-live="polite">
                 {{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}
             </div>
         }
@@ -76,15 +76,15 @@
 
     @defer (when isCropping && cropPreviewUrl) {
         @if (isCropping && cropPreviewUrl) {
-            <div class="image-upload-field__cropper-backdrop" aria-hidden="true"></div>
+            <div class="image-upload-field__cropper-backdrop fd-place-center" aria-hidden="true"></div>
             <div
-                class="image-upload-field__cropper"
+                class="image-upload-field__cropper fd-stack fd-gap-md"
                 role="dialog"
                 aria-modal="true"
                 [attr.aria-labelledby]="cropTitleId"
                 [attr.aria-describedby]="cropSubtitleId"
             >
-                <div class="image-upload-field__cropper-header">
+                <div class="image-upload-field__cropper-header fd-stack fd-gap-xxs">
                     <div [id]="cropTitleId" class="image-upload-field__cropper-title fd-ui-card-title">
                         {{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}
                     </div>
@@ -101,7 +101,7 @@
                         class="image-upload-field__cropper-image"
                     />
                 </div>
-                <div class="image-upload-field__cropper-actions">
+                <div class="image-upload-field__cropper-actions fd-row fd-justify-end fd-wrap fd-gap-xs">
                     <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{
                         'COMMON.CANCEL' | translate
                     }}</fd-ui-button>

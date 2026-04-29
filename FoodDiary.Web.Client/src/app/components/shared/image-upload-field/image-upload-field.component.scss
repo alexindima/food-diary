@@ -1,15 +1,10 @@
 .image-upload-field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
     padding: 0;
     border-radius: var(--fd-radius-card);
     background: transparent;
 
     &__dropzone {
         position: relative;
-        display: grid;
-        place-items: center;
         min-height: 190px;
         height: auto;
         overflow: hidden;
@@ -40,7 +35,6 @@
     &__placeholder {
         display: grid;
         width: 100%;
-        gap: var(--fd-space-xxs);
         padding: var(--fd-space-xl) var(--fd-space-lg);
         color: var(--fd-color-slate-900);
         text-align: center;
@@ -89,17 +83,12 @@
     &__overlay {
         position: absolute;
         inset: 0;
-        display: grid;
-        place-items: center;
         background: var(--fd-bg-scrim);
         color: var(--fd-color-white);
         letter-spacing: var(--fd-letter-spacing-emphasis);
     }
 
     &__actions {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
         flex-wrap: wrap;
     }
 
@@ -168,9 +157,6 @@
     }
 
     &__label-block {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
         margin-bottom: var(--fd-space-xxs);
     }
 
@@ -189,27 +175,16 @@
         position: fixed;
         inset: 0;
         z-index: 1000;
-        display: grid;
-        place-items: center;
         padding: var(--fd-space-md);
         background: var(--fd-bg-overlay-strong);
     }
 
     &__cropper {
-        display: flex;
-        flex-direction: column;
         width: min(720px, 100%);
-        gap: var(--fd-space-md);
         padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-dialog);
         background: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-xl);
-    }
-
-    &__cropper-header {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
     }
 
     &__cropper-title {
@@ -247,13 +222,6 @@
     &__cropper-body cropper-selection {
         width: 100%;
         height: 100%;
-    }
-
-    &__cropper-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: var(--fd-space-xs);
-        flex-wrap: wrap;
     }
 
     &--appearance-compact {

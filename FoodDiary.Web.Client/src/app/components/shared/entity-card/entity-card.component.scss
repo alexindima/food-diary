@@ -7,8 +7,6 @@
 .entity-card__thumb {
     width: 100%;
     height: 100%;
-    display: grid;
-    place-items: center;
     background: var(--fd-bg-brand-soft);
 
     img {
@@ -28,30 +26,15 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
-    gap: var(--fd-space-entity-card-content-gap);
-    min-width: 0;
-}
-
-.entity-card__title-block {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-entity-card-title-gap);
-    min-width: 0;
 }
 
 .entity-card__summary-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: var(--fd-space-entity-card-header-gap);
-    min-width: 0;
 }
 
 .entity-card__name-row {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-entity-card-header-gap);
-    min-width: 0;
     overflow: hidden;
 }
 
@@ -80,9 +63,6 @@
     --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
     --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
     --fd-button-secondary-text-text-disabled: var(--fd-color-favorite-muted);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     flex-shrink: 0;
 
     &--active {
@@ -105,32 +85,22 @@
 .entity-card__name {
     color: var(--fd-color-text);
     line-height: 1.35;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
     text-align: left;
 }
 
 .entity-card__title-muted {
     color: var(--fd-color-text-muted-subtle);
-    white-space: nowrap;
     flex-shrink: 0;
 }
 
 .entity-card__description {
     color: var(--fd-color-text-muted-subtle);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .entity-card__quality {
     display: inline-grid;
     grid-template-columns: auto 120px auto;
     align-items: center;
-    gap: var(--fd-space-entity-card-header-gap);
-    min-width: 0;
     width: fit-content;
     max-width: 100%;
     align-self: center;
@@ -139,7 +109,6 @@
 
 .entity-card__quality-label {
     color: var(--fd-color-text-muted-emphasis);
-    white-space: nowrap;
 }
 
 .entity-card__quality-bar {
@@ -178,9 +147,6 @@
 
 .entity-card__nutrients {
     width: 100%;
-    display: flex;
-    align-items: center;
-    min-width: 0;
     flex: 1 1 auto;
 }
 
@@ -191,11 +157,6 @@
 
 .entity-card__action-group {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--fd-space-entity-card-content-gap);
-    justify-content: center;
     width: fit-content;
     min-width: clamp(52px, 7vw, 80px);
     padding: var(--fd-space-xxs) 0;
@@ -215,12 +176,7 @@
 }
 
 .entity-card__calories-inline {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--fd-space-entity-card-title-gap);
     color: var(--fd-color-text);
-    white-space: nowrap;
     flex-shrink: 0;
 }
 
@@ -249,18 +205,12 @@
     }
 
     .entity-card__content {
-        gap: var(--fd-space-entity-card-content-gap);
         align-items: center;
         justify-items: stretch;
     }
 
     .entity-card__title-block {
         align-items: flex-start;
-        gap: var(--fd-space-entity-card-title-gap);
-    }
-
-    .entity-card__name-row {
-        gap: var(--fd-space-entity-card-header-gap);
     }
 
     .entity-card__favorite-button {
@@ -336,7 +286,6 @@
     .entity-card__calories-inline {
         flex-direction: column;
         align-items: center;
-        gap: var(--fd-space-entity-card-title-gap);
     }
 
     .entity-card__calories-value {

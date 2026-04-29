@@ -7,9 +7,6 @@
 .nutrient-badges {
     --fd-nutrient-badges-border: var(--fd-border-default);
     --fd-nutrient-badges-shadow: var(--fd-shadow-none);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
     border-radius: var(--fd-radius-nutrient-bar);
     background: var(--fd-bg-surface);
     color: var(--fd-color-text);
@@ -20,9 +17,6 @@
 }
 
 .nutrient-badges__chip {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-pill-gap);
     padding: var(--fd-space-chip-select-item-padding);
     border-radius: 0;
     background: transparent;
@@ -114,5 +108,3 @@
         display: none;
     }
 }
-
-
