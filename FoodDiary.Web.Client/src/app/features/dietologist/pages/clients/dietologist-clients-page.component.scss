@@ -50,8 +50,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.125rem;
-        font-weight: 700;
+        font-size: var(--fd-text-title-sm-size);
+        font-weight: var(--fd-text-section-title-weight);
         overflow: hidden;
         flex-shrink: 0;
 

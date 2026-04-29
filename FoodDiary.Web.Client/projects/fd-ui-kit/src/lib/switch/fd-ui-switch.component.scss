@@ -51,7 +51,7 @@
         font-weight: var(--fd-font-weight-bold);
         line-height: 1;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: var(--fd-letter-spacing-wide);
     }
 
     &--checked &__track {

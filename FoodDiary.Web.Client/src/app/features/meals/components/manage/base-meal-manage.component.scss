@@ -419,7 +419,7 @@
         line-height: var(--fd-text-stat-label-line-height);
         font-weight: var(--fd-text-stat-label-weight);
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: var(--fd-letter-spacing-wide);
         color: var(--fd-color-slate-500);
     }
 

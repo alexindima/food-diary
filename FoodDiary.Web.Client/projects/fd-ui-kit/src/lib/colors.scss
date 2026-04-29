@@ -382,7 +382,7 @@ html[data-theme='dark'] {
     --fd-button-spinner-size: 1rem;
     --fd-button-border-width: 1px;
     --fd-button-border-style: solid;
-    --fd-button-letter-spacing: 0.02em;
+    --fd-button-letter-spacing: var(--fd-letter-spacing-emphasis);
     --fd-button-min-width: 0;
     --fd-button-margin: 0;
     --fd-button-shadow-hover: 0 8px 20px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent);

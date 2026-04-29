@@ -45,6 +45,12 @@
     font-weight: var(--fd-text-body-sm-weight);
 }
 
+.fd-ui-body-xs {
+    font-size: var(--fd-text-body-xs-size);
+    line-height: var(--fd-text-body-xs-line-height);
+    font-weight: var(--fd-text-body-xs-weight);
+}
+
 .fd-ui-body {
     font-size: var(--fd-text-body-size);
     line-height: var(--fd-text-body-line-height);
@@ -55,6 +61,12 @@
     font-size: var(--fd-text-caption-size);
     line-height: var(--fd-text-caption-line-height);
     font-weight: var(--fd-text-caption-weight);
+}
+
+.fd-ui-caption-strong {
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+    font-weight: var(--fd-text-section-title-weight);
 }
 
 .fd-ui-field-label {
@@ -75,11 +87,31 @@
     color: var(--fd-color-text-muted);
 }
 
+.fd-ui-code-sm {
+    font-family: var(--fd-font-family-monospace);
+    font-size: var(--fd-text-code-sm-size);
+    line-height: var(--fd-text-code-sm-line-height);
+    font-weight: var(--fd-text-code-sm-weight);
+}
+
+.fd-ui-helper-strong {
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-section-title-weight);
+}
+
 .fd-ui-metric-lg {
     font-size: var(--fd-text-metric-lg-size);
     line-height: var(--fd-text-metric-lg-line-height);
     font-weight: var(--fd-text-metric-lg-weight);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--fd-letter-spacing-tight);
+    color: var(--fd-color-text);
+}
+
+.fd-ui-metric-md {
+    font-size: var(--fd-text-metric-md-size);
+    line-height: var(--fd-text-metric-md-line-height);
+    font-weight: var(--fd-text-metric-md-weight);
     color: var(--fd-color-text);
 }
 
@@ -117,11 +149,29 @@
     font-weight: var(--fd-text-action-weight);
 }
 
+.fd-ui-title-sm {
+    font-size: var(--fd-text-title-sm-size);
+    line-height: var(--fd-text-title-sm-line-height);
+    font-weight: var(--fd-text-title-sm-weight);
+}
+
+.fd-ui-title-md {
+    font-size: var(--fd-text-title-md-size);
+    line-height: var(--fd-text-title-md-line-height);
+    font-weight: var(--fd-text-title-md-weight);
+}
+
+.fd-ui-display-sm {
+    font-size: var(--fd-text-display-sm-size);
+    line-height: var(--fd-text-display-sm-line-height);
+    font-weight: var(--fd-text-display-sm-weight);
+}
+
 .fd-ui-overline {
     font-size: var(--fd-text-helper-size);
     line-height: var(--fd-text-helper-line-height);
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-weight: var(--fd-font-weight-bold);
+    letter-spacing: var(--fd-letter-spacing-overline);
     text-transform: uppercase;
     color: var(--fd-color-text-muted);
 }

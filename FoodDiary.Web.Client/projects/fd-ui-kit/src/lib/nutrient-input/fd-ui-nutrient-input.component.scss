@@ -19,7 +19,7 @@
 
 .fd-ui-nutrient-input__label {
     font-size: var(--fd-text-stat-label-size);
-    letter-spacing: 0.08em;
+    letter-spacing: var(--fd-letter-spacing-overline);
     font-weight: var(--fd-text-stat-label-weight);
     color: var(--fd-nutrient-text-color);
     display: inline-flex;
@@ -156,7 +156,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
     font-size: 1em;
     font-weight: var(--fd-font-weight-bold);
     color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, var(--fd-color-white));
-    letter-spacing: 0.02em;
+    letter-spacing: var(--fd-letter-spacing-emphasis);
     text-transform: lowercase;
     flex: 0 0 auto;
 }

@@ -30,18 +30,11 @@
     background: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-color-primary-600));
     display: grid;
     place-items: center;
-    font-weight: 800;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--fd-letter-spacing-emphasis);
     color: var(--fd-color-white);
 }
 
-.admin-shell__title {
-    font-weight: 700;
-    font-size: 1rem;
-}
-
 .admin-shell__subtitle {
-    font-size: 0.8rem;
     color: var(--fd-color-slate-400);
 }
 
@@ -58,7 +51,6 @@
     text-align: left;
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-button);
-    font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: block;

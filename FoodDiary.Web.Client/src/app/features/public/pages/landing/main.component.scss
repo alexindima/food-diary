@@ -286,7 +286,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
+        font-weight: var(--fd-text-metric-lg-weight);
     }
 
     &__title {
@@ -337,7 +337,7 @@
             justify-content: center;
             background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
             color: var(--fd-color-primary-700);
-            font-size: 1.1rem;
+            font-size: var(--fd-text-section-title-size);
             line-height: 1;
         }
     }
@@ -379,7 +379,7 @@
         border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         box-shadow: var(--fd-landing-shadow-soft);
         color: var(--fd-color-primary-700);
-        font-weight: 800;
+        font-weight: var(--fd-text-metric-lg-weight);
         text-decoration: none;
 
         &:hover {

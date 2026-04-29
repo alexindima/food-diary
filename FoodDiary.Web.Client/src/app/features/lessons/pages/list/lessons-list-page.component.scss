@@ -11,8 +11,9 @@
     }
 
     &__title {
-        font-size: 1.8rem;
-        font-weight: 800;
+        font-size: var(--fd-text-display-sm-size);
+        line-height: var(--fd-text-display-sm-line-height);
+        font-weight: var(--fd-text-display-sm-weight);
         margin: 0;
     }
 
@@ -49,8 +50,8 @@
     }
 
     &__progress-text {
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: var(--fd-text-caption-size);
+        font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }
 
@@ -74,7 +75,7 @@
         gap: var(--fd-space-sm);
         padding: var(--fd-space-xxl) 0;
         color: var(--fd-color-text-muted);
-        font-weight: 600;
+        font-weight: var(--fd-font-weight-bold);
     }
 }
 
@@ -119,21 +120,21 @@
 
     &__check {
         color: var(--fd-color-green-500);
-        font-size: 1.25rem;
-        width: 1.25rem;
-        height: 1.25rem;
+        font-size: var(--fd-text-title-md-size);
+        width: var(--fd-text-title-md-size);
+        height: var(--fd-text-title-md-size);
     }
 
     &__title {
-        font-size: 1.1rem;
-        font-weight: 800;
+        font-size: var(--fd-text-section-title-size);
+        font-weight: var(--fd-text-metric-lg-weight);
         margin: 0;
         color: var(--fd-color-text);
     }
 
     &__summary {
         margin: 0;
-        font-size: 0.85rem;
+        font-size: var(--fd-text-caption-size);
         color: var(--fd-color-text-muted);
         line-height: 1.5;
         display: -webkit-box;
@@ -145,8 +146,8 @@
     &__meta {
         display: flex;
         gap: var(--fd-space-sm);
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: var(--fd-text-label-floating-size);
+        font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }
 }

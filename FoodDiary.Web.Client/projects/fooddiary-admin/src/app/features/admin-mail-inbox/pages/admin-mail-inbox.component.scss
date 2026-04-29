@@ -17,8 +17,6 @@
     display: grid;
     gap: var(--fd-space-xxs);
     color: var(--fd-color-slate-600);
-    font-size: 0.75rem;
-    font-weight: 700;
 }
 
 .toolbar__field select {
@@ -81,14 +79,8 @@
     justify-content: space-between;
 }
 
-.mail-details__subject {
-    font-size: 1.125rem;
-    font-weight: 700;
-}
-
 .mail-details__meta {
     color: var(--fd-color-text-muted);
-    font-size: 0.875rem;
 }
 
 .mail-details__status {
@@ -96,8 +88,6 @@
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-status-info);
     color: var(--fd-color-primary-700);
-    font-size: 0.75rem;
-    font-weight: 700;
 }
 
 .mail-details__badges {
@@ -116,8 +106,6 @@
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-surface-muted);
     color: var(--fd-color-slate-700);
-    font-size: 0.75rem;
-    font-weight: 700;
     white-space: nowrap;
 }
 
@@ -139,8 +127,6 @@
 
 .mail-fields dt {
     color: var(--fd-color-text-muted);
-    font-size: 0.75rem;
-    font-weight: 700;
     text-transform: uppercase;
 }
 
@@ -173,13 +159,11 @@
 
 .dmarc-report__header h3 {
     margin: 0 0 var(--fd-space-xxs);
-    font-size: 1rem;
 }
 
 .dmarc-report__header p {
     margin: 0;
     color: var(--fd-color-slate-600);
-    font-size: 0.875rem;
 }
 
 .dmarc-report__stats {
@@ -188,8 +172,6 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     color: var(--fd-color-primary-800);
-    font-size: 0.8125rem;
-    font-weight: 700;
 }
 
 .dmarc-report__table-wrap {
@@ -212,7 +194,7 @@
 
 .dmarc-report__table th {
     color: var(--fd-color-primary-800);
-    font-size: 0.75rem;
+    font-size: var(--fd-text-helper-size);
     text-transform: uppercase;
 }
 
@@ -225,9 +207,9 @@
     border-radius: var(--fd-radius-md);
     background: var(--fd-color-gray-900);
     color: var(--fd-color-slate-50);
-    font-family: Consolas, Monaco, monospace;
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-family: var(--fd-font-family-monospace);
+    font-size: var(--fd-text-body-xs-size);
+    line-height: var(--fd-line-height-base);
     white-space: pre-wrap;
 }
 

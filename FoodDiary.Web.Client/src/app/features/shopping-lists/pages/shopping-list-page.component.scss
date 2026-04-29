@@ -51,7 +51,7 @@
     &__new-button,
     &__delete-button,
     &__clear-button {
-        --fd-button-font-weight: 700;
+        --fd-button-font-weight: var(--fd-text-section-title-weight);
     }
 
     &__loader {

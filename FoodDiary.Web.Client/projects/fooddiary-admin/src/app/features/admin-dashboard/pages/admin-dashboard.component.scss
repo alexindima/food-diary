@@ -16,12 +16,6 @@
 
 .admin-dashboard__label {
     color: var(--fd-color-text-muted);
-    font-size: 0.875rem;
-}
-
-.admin-dashboard__value {
-    font-size: 1.5rem;
-    font-weight: 700;
 }
 
 .admin-dashboard__section {
@@ -36,14 +30,8 @@
     gap: var(--fd-space-md);
 }
 
-.admin-dashboard__section-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-}
-
 .admin-dashboard__section-subtitle {
     color: var(--fd-color-text-muted);
-    font-size: 0.875rem;
 }
 
 .admin-dashboard__telemetry-grid {
@@ -56,7 +44,7 @@
     display: grid;
     gap: var(--fd-space-xxs);
     color: var(--fd-color-slate-600);
-    font-size: 0.95rem;
+    font-size: var(--fd-text-body-sm-size);
 }
 
 .admin-dashboard__preset-list {
@@ -82,5 +70,5 @@
 
 .admin-dashboard__preset-meta {
     color: var(--fd-color-slate-600);
-    font-size: 0.9rem;
+    font-size: var(--fd-text-stat-value-size);
 }

@@ -9,10 +9,6 @@
     align-items: center;
 }
 
-.summary {
-    font-weight: 600;
-}
-
 .admin-users__section {
     display: grid;
     gap: var(--fd-space-md);
@@ -29,7 +25,6 @@
 
 .admin-users__section-header h2 {
     margin: 0;
-    font-size: 1.125rem;
 }
 
 .admin-users__section-header p {

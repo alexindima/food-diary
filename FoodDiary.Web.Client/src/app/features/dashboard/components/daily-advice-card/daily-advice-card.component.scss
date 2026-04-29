@@ -46,9 +46,9 @@
         color: var(--fd-color-sky-500);
 
         fd-ui-icon {
-            font-size: 1rem;
-            width: 1rem;
-            height: 1rem;
+            font-size: var(--fd-text-body-size);
+            width: var(--fd-size-icon-sm);
+            height: var(--fd-size-icon-sm);
         }
     }
 

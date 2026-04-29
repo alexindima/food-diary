@@ -12,13 +12,13 @@
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border: var(--fd-border-strong);
         border-radius: var(--fd-radius-xs);
-        font-size: 14px;
+        font-size: var(--fd-text-body-xs-size);
     }
 }
 
 .summary {
     margin-bottom: var(--fd-space-sm);
-    font-size: 14px;
+    font-size: var(--fd-text-body-xs-size);
     color: var(--fd-color-text-muted);
 }
 
@@ -35,8 +35,8 @@
     }
 
     th {
-        font-weight: 600;
-        font-size: 13px;
+        font-weight: var(--fd-font-weight-bold);
+        font-size: var(--fd-text-code-sm-size);
         color: var(--fd-color-text-muted);
     }
 }
@@ -52,8 +52,8 @@
     display: inline-block;
     padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
     border-radius: var(--fd-radius-pill);
-    font-size: 12px;
-    font-weight: 500;
+    font-size: var(--fd-text-helper-size);
+    font-weight: var(--fd-font-weight-medium);
 
     &--pending {
         background: var(--fd-bg-status-warning);

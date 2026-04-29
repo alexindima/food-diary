@@ -211,7 +211,7 @@
     &__ring-value {
         margin: 0;
         line-height: 1.1;
-        letter-spacing: 0.02em;
+        letter-spacing: var(--fd-letter-spacing-emphasis);
     }
 
     &__ring-unit {
@@ -452,7 +452,7 @@
 
     &__target-number {
         color: var(--fd-color-slate-900);
-        letter-spacing: 0.02em;
+        letter-spacing: var(--fd-letter-spacing-emphasis);
     }
 
     &__target-unit {

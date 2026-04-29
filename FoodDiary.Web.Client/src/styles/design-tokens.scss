@@ -21,6 +21,15 @@ $fd-spacing-tokens: (
 );
 
 $fd-size-tokens: (
+    icon-xs: 0.875rem,
+    icon-sm: 1rem,
+    icon-md: 1.125rem,
+    icon-lg: 1.5rem,
+    icon-action-lg: 1.6rem,
+    icon-xl: 1.75rem,
+    icon-xxl: 2rem,
+    icon-hero: 2.25rem,
+    icon-empty: 3rem,
     control-xs: 24px,
     control-sm: 32px,
     control-md: 40px,
@@ -41,15 +50,29 @@ $fd-typography-tokens: (
     text-body-size: 1rem,
     text-body-line-height: 1.6,
     text-body-weight: 500,
+    text-body-xs-size: 0.875rem,
+    text-body-xs-line-height: 1.35,
+    text-body-xs-weight: 400,
     text-body-sm-size: 0.95rem,
     text-body-sm-line-height: 1.45,
     text-body-sm-weight: 400,
+    text-body-comfort-size: 0.96rem,
+    text-body-compact-size: 0.92rem,
+    text-body-emphasis-size: 0.98rem,
+    text-body-subtle-size: 0.88rem,
+    text-body-tiny-plus-size: 0.86rem,
+    text-body-tiny-size: 0.84rem,
+    text-body-micro-size: 0.82rem,
+    text-body-lg-size: 1.04rem,
     text-caption-size: 0.85rem,
     text-caption-line-height: 1.35,
     text-caption-weight: 500,
     text-helper-size: 0.75rem,
     text-helper-line-height: 1.2,
     text-helper-weight: 400,
+    text-code-sm-size: 0.8125rem,
+    text-code-sm-line-height: 1.35,
+    text-code-sm-weight: 400,
     text-label-size: 1rem,
     text-label-line-height: 1.2,
     text-label-weight: 600,
@@ -57,6 +80,18 @@ $fd-typography-tokens: (
     text-section-title-size: 1.1rem,
     text-section-title-line-height: 1.3,
     text-section-title-weight: 700,
+    text-title-sm-size: 1.125rem,
+    text-title-sm-line-height: 1.3,
+    text-title-sm-weight: 700,
+    text-title-xs-size: 1.08rem,
+    text-title-xs-line-height: 1.3,
+    text-title-xs-weight: 700,
+    text-title-md-size: 1.25rem,
+    text-title-md-line-height: 1.3,
+    text-title-md-weight: 700,
+    text-title-compact-size: 1.2rem,
+    text-title-compact-line-height: 1.3,
+    text-title-compact-weight: 800,
     text-card-title-size: 1.05rem,
     text-card-title-line-height: 1.3,
     text-card-title-weight: 700,
@@ -66,10 +101,24 @@ $fd-typography-tokens: (
     text-metric-lg-size: clamp(1.8rem, 2vw, 2.2rem),
     text-metric-lg-line-height: 1.1,
     text-metric-lg-weight: 800,
+    text-display-sm-size: 1.8rem,
+    text-display-sm-line-height: 1.15,
+    text-display-sm-weight: 800,
+    text-metric-md-size: 1.5rem,
+    text-metric-md-line-height: 1.1,
+    text-metric-md-weight: 700,
     text-metric-hero-size: clamp(2.2rem, 2.8vw, 2.6rem),
     text-metric-hero-line-height: 1,
     text-metric-hero-weight: 800,
     text-metric-hero-tracking: -0.03em,
+    letter-spacing-tight-lg: -0.04em,
+    letter-spacing-tight: -0.02em,
+    letter-spacing-tight-sm: -0.01em,
+    letter-spacing-subtle: 0.01em,
+    letter-spacing-emphasis: 0.02em,
+    letter-spacing-label: 0.03em,
+    letter-spacing-wide: 0.04em,
+    letter-spacing-overline: 0.08em,
     text-metric-unit-size: 1rem,
     text-metric-unit-line-height: 1.2,
     text-metric-unit-weight: 600,
@@ -93,6 +142,16 @@ $fd-elevation-tokens: (
     lg: 0 14px 32px color-mix(in srgb, var(--fd-color-shadow) 18%, transparent),
     xl: 0 24px 56px color-mix(in srgb, var(--fd-color-shadow) 22%, transparent),
     focus: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary-600) 22%, transparent),
+    focus-danger: 0 0 0 var(--fd-border-width-emphasis) color-mix(in srgb, var(--fd-color-danger) 14%, transparent),
+    focus-accent-subtle: 0 0 0 var(--fd-border-width-emphasis) color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent),
+    autofill-inset: 0 0 0 1000px var(--fd-input-control-background) inset,
+    shell-sidebar: 6px 0 24px color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent),
+    divider-light: inset 0 var(--fd-border-width) 0 color-mix(in srgb, var(--fd-color-white) 80%, transparent),
+    divider-light-muted: inset 0 var(--fd-border-width) 0 color-mix(in srgb, var(--fd-color-white) 75%, transparent),
+    ring-light: 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-white) 80%, transparent),
+    ring-light-strong: 0 0 0 var(--fd-border-width-strong) color-mix(in srgb, var(--fd-color-white) 85%, transparent),
+    ring-danger: 0 0 0 calc(var(--fd-border-width-strong) * 2) var(--fd-bg-status-danger),
+    glow-light-sm: 0 0 12px color-mix(in srgb, var(--fd-color-white) 50%, transparent),
     accent: 0 10px 24px color-mix(in srgb, var(--fd-shadow-accent-color) 18%, transparent),
     accent-strong: 0 12px 30px color-mix(in srgb, var(--fd-shadow-accent-color) 24%, transparent),
     accent-glow: 0 0 24px color-mix(in srgb, var(--fd-shadow-accent-color) 35%, transparent),
@@ -1010,15 +1069,29 @@ $fd-theme-design-tokens: (
         --fd-text-body-sm-size: #{fd-token(typography, text-body-sm-size)};
         --fd-text-body-sm-line-height: #{fd-token(typography, text-body-sm-line-height)};
         --fd-text-body-sm-weight: #{fd-token(typography, text-body-sm-weight)};
+        --fd-text-body-comfort-size: #{fd-token(typography, text-body-comfort-size)};
+        --fd-text-body-compact-size: #{fd-token(typography, text-body-compact-size)};
+        --fd-text-body-emphasis-size: #{fd-token(typography, text-body-emphasis-size)};
+        --fd-text-body-subtle-size: #{fd-token(typography, text-body-subtle-size)};
+        --fd-text-body-tiny-plus-size: #{fd-token(typography, text-body-tiny-plus-size)};
+        --fd-text-body-tiny-size: #{fd-token(typography, text-body-tiny-size)};
+        --fd-text-body-micro-size: #{fd-token(typography, text-body-micro-size)};
+        --fd-text-body-lg-size: #{fd-token(typography, text-body-lg-size)};
         --fd-text-body-size: #{fd-token(typography, text-body-size)};
         --fd-text-body-line-height: #{fd-token(typography, text-body-line-height)};
         --fd-text-body-weight: #{fd-token(typography, text-body-weight)};
+        --fd-text-body-xs-size: #{fd-token(typography, text-body-xs-size)};
+        --fd-text-body-xs-line-height: #{fd-token(typography, text-body-xs-line-height)};
+        --fd-text-body-xs-weight: #{fd-token(typography, text-body-xs-weight)};
         --fd-text-caption-size: #{fd-token(typography, text-caption-size)};
         --fd-text-caption-line-height: #{fd-token(typography, text-caption-line-height)};
         --fd-text-caption-weight: #{fd-token(typography, text-caption-weight)};
         --fd-text-helper-size: #{fd-token(typography, text-helper-size)};
         --fd-text-helper-line-height: #{fd-token(typography, text-helper-line-height)};
         --fd-text-helper-weight: #{fd-token(typography, text-helper-weight)};
+        --fd-text-code-sm-size: #{fd-token(typography, text-code-sm-size)};
+        --fd-text-code-sm-line-height: #{fd-token(typography, text-code-sm-line-height)};
+        --fd-text-code-sm-weight: #{fd-token(typography, text-code-sm-weight)};
         --fd-text-label-size: #{fd-token(typography, text-label-size)};
         --fd-text-label-line-height: #{fd-token(typography, text-label-line-height)};
         --fd-text-label-weight: #{fd-token(typography, text-label-weight)};
@@ -1026,6 +1099,18 @@ $fd-theme-design-tokens: (
         --fd-text-section-title-size: #{fd-token(typography, text-section-title-size)};
         --fd-text-section-title-line-height: #{fd-token(typography, text-section-title-line-height)};
         --fd-text-section-title-weight: #{fd-token(typography, text-section-title-weight)};
+        --fd-text-title-sm-size: #{fd-token(typography, text-title-sm-size)};
+        --fd-text-title-sm-line-height: #{fd-token(typography, text-title-sm-line-height)};
+        --fd-text-title-sm-weight: #{fd-token(typography, text-title-sm-weight)};
+        --fd-text-title-xs-size: #{fd-token(typography, text-title-xs-size)};
+        --fd-text-title-xs-line-height: #{fd-token(typography, text-title-xs-line-height)};
+        --fd-text-title-xs-weight: #{fd-token(typography, text-title-xs-weight)};
+        --fd-text-title-md-size: #{fd-token(typography, text-title-md-size)};
+        --fd-text-title-md-line-height: #{fd-token(typography, text-title-md-line-height)};
+        --fd-text-title-md-weight: #{fd-token(typography, text-title-md-weight)};
+        --fd-text-title-compact-size: #{fd-token(typography, text-title-compact-size)};
+        --fd-text-title-compact-line-height: #{fd-token(typography, text-title-compact-line-height)};
+        --fd-text-title-compact-weight: #{fd-token(typography, text-title-compact-weight)};
         --fd-text-card-title-size: #{fd-token(typography, text-card-title-size)};
         --fd-text-card-title-line-height: #{fd-token(typography, text-card-title-line-height)};
         --fd-text-card-title-weight: #{fd-token(typography, text-card-title-weight)};
@@ -1035,10 +1120,24 @@ $fd-theme-design-tokens: (
         --fd-text-metric-lg-size: #{fd-token(typography, text-metric-lg-size)};
         --fd-text-metric-lg-line-height: #{fd-token(typography, text-metric-lg-line-height)};
         --fd-text-metric-lg-weight: #{fd-token(typography, text-metric-lg-weight)};
+        --fd-text-display-sm-size: #{fd-token(typography, text-display-sm-size)};
+        --fd-text-display-sm-line-height: #{fd-token(typography, text-display-sm-line-height)};
+        --fd-text-display-sm-weight: #{fd-token(typography, text-display-sm-weight)};
+        --fd-text-metric-md-size: #{fd-token(typography, text-metric-md-size)};
+        --fd-text-metric-md-line-height: #{fd-token(typography, text-metric-md-line-height)};
+        --fd-text-metric-md-weight: #{fd-token(typography, text-metric-md-weight)};
         --fd-text-metric-hero-size: #{fd-token(typography, text-metric-hero-size)};
         --fd-text-metric-hero-line-height: #{fd-token(typography, text-metric-hero-line-height)};
         --fd-text-metric-hero-weight: #{fd-token(typography, text-metric-hero-weight)};
         --fd-text-metric-hero-tracking: #{fd-token(typography, text-metric-hero-tracking)};
+        --fd-letter-spacing-tight-lg: #{fd-token(typography, letter-spacing-tight-lg)};
+        --fd-letter-spacing-tight: #{fd-token(typography, letter-spacing-tight)};
+        --fd-letter-spacing-tight-sm: #{fd-token(typography, letter-spacing-tight-sm)};
+        --fd-letter-spacing-subtle: #{fd-token(typography, letter-spacing-subtle)};
+        --fd-letter-spacing-emphasis: #{fd-token(typography, letter-spacing-emphasis)};
+        --fd-letter-spacing-label: #{fd-token(typography, letter-spacing-label)};
+        --fd-letter-spacing-wide: #{fd-token(typography, letter-spacing-wide)};
+        --fd-letter-spacing-overline: #{fd-token(typography, letter-spacing-overline)};
         --fd-text-metric-unit-size: #{fd-token(typography, text-metric-unit-size)};
         --fd-text-metric-unit-line-height: #{fd-token(typography, text-metric-unit-line-height)};
         --fd-text-metric-unit-weight: #{fd-token(typography, text-metric-unit-weight)};
@@ -1059,6 +1158,16 @@ $fd-theme-design-tokens: (
         --fd-shadow-lg: #{fd-token(elevation, lg)};
         --fd-shadow-xl: #{fd-token(elevation, xl)};
         --fd-shadow-focus: #{fd-token(elevation, focus)};
+        --fd-shadow-focus-danger: #{fd-token(elevation, focus-danger)};
+        --fd-shadow-focus-accent-subtle: #{fd-token(elevation, focus-accent-subtle)};
+        --fd-shadow-autofill-inset: #{fd-token(elevation, autofill-inset)};
+        --fd-shadow-shell-sidebar: #{fd-token(elevation, shell-sidebar)};
+        --fd-shadow-divider-light: #{fd-token(elevation, divider-light)};
+        --fd-shadow-divider-light-muted: #{fd-token(elevation, divider-light-muted)};
+        --fd-shadow-ring-light: #{fd-token(elevation, ring-light)};
+        --fd-shadow-ring-light-strong: #{fd-token(elevation, ring-light-strong)};
+        --fd-shadow-ring-danger: #{fd-token(elevation, ring-danger)};
+        --fd-shadow-glow-light-sm: #{fd-token(elevation, glow-light-sm)};
         --fd-shadow-accent-color: var(--fd-color-primary-600);
         --fd-shadow-accent: #{fd-token(elevation, accent)};
         --fd-shadow-accent-strong: #{fd-token(elevation, accent-strong)};
@@ -1106,6 +1215,15 @@ $fd-theme-design-tokens: (
         --fd-space-xl: #{fd-token(spacing, xl)};
         --fd-space-xxl: #{fd-token(spacing, xxl)};
         --fd-size-control-xs: #{fd-token(size, control-xs)};
+        --fd-size-icon-xs: #{fd-token(size, icon-xs)};
+        --fd-size-icon-sm: #{fd-token(size, icon-sm)};
+        --fd-size-icon-md: #{fd-token(size, icon-md)};
+        --fd-size-icon-lg: #{fd-token(size, icon-lg)};
+        --fd-size-icon-action-lg: #{fd-token(size, icon-action-lg)};
+        --fd-size-icon-xl: #{fd-token(size, icon-xl)};
+        --fd-size-icon-xxl: #{fd-token(size, icon-xxl)};
+        --fd-size-icon-hero: #{fd-token(size, icon-hero)};
+        --fd-size-icon-empty: #{fd-token(size, icon-empty)};
         --fd-size-control-sm: #{fd-token(size, control-sm)};
         --fd-size-control-md: #{fd-token(size, control-md)};
         --fd-size-control-touch: #{fd-token(size, control-touch)};

@@ -122,8 +122,8 @@
     font-weight: inherit;
     line-height: var(--fd-text-body-line-height);
     border-radius: inherit;
-    -webkit-box-shadow: 0 0 0 1000px var(--fd-input-control-background) inset;
-    box-shadow: 0 0 0 1000px var(--fd-input-control-background) inset;
+    -webkit-box-shadow: var(--fd-shadow-autofill-inset);
+    box-shadow: var(--fd-shadow-autofill-inset);
     transition: background-color 9999s ease-out 0s;
 }
 

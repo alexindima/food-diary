@@ -14,7 +14,7 @@
     padding: var(--fd-space-surface-padding);
     z-index: 10000;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: var(--fd-font-weight-medium);
     border-radius: var(--fd-radius-button);
 
     &:focus-visible {
@@ -93,7 +93,7 @@
     background: var(--fd-color-red-700);
     color: var(--fd-color-white);
     font-size: var(--fd-text-body-sm-size);
-    font-weight: 600;
+    font-weight: var(--fd-font-weight-bold);
     box-shadow: var(--fd-shadow-xs);
 }
 
@@ -102,7 +102,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 400;
+    font-weight: var(--fd-font-weight-regular);
 }
 
 .fd-impersonation-banner__button {

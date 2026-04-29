@@ -13,9 +13,9 @@
     color: var(--fd-color-text-muted);
 
     fd-ui-icon {
-        font-size: 2rem;
-        width: 2rem;
-        height: 2rem;
+        font-size: var(--fd-size-icon-xxl);
+        width: var(--fd-size-icon-xxl);
+        height: var(--fd-size-icon-xxl);
         color: var(--fd-color-primary-600);
     }
 }
@@ -113,7 +113,7 @@
     height: 0.625rem;
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-danger);
-    box-shadow: 0 0 0 calc(var(--fd-border-width-strong) * 2) var(--fd-bg-status-danger);
+    box-shadow: var(--fd-shadow-ring-danger);
     flex-shrink: 0;
 
     &.is-hidden {
@@ -163,8 +163,8 @@
 }
 
 .notifications-dialog__item-icon {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: var(--fd-size-icon-hero);
+    height: var(--fd-size-icon-hero);
     border-radius: var(--fd-radius-input);
     display: grid;
     place-items: center;
@@ -172,9 +172,9 @@
     color: var(--fd-color-primary-600);
 
     fd-ui-icon {
-        font-size: 1.2rem;
-        width: 1.2rem;
-        height: 1.2rem;
+        font-size: var(--fd-text-title-compact-size);
+        width: var(--fd-text-title-compact-size);
+        height: var(--fd-text-title-compact-size);
     }
 
     &--dietologist {

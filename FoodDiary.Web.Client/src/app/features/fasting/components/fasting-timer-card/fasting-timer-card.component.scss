@@ -121,7 +121,7 @@
         font-variant-numeric: tabular-nums;
 
         &--summary {
-            letter-spacing: -0.04em;
+            letter-spacing: var(--fd-letter-spacing-tight-lg);
         }
 
         &--idle {
@@ -191,12 +191,12 @@
 
     &__summary-protocol-separator {
         color: var(--fd-color-text-muted);
-        font-weight: 600;
+        font-weight: var(--fd-font-weight-bold);
     }
 
     &__summary-time {
         color: var(--fd-color-text);
-        letter-spacing: -0.03em;
+        letter-spacing: var(--fd-text-metric-hero-tracking);
         font-variant-numeric: tabular-nums;
 
         &--idle {

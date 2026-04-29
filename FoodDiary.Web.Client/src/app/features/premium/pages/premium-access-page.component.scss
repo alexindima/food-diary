@@ -58,7 +58,7 @@
 
 .premium-access-page__badge {
     min-height: var(--fd-size-control-sm);
-    letter-spacing: 0.01em;
+    letter-spacing: var(--fd-letter-spacing-subtle);
 }
 
 .premium-access-page__meta {
@@ -125,7 +125,7 @@
 .premium-access-page__link {
     color: var(--fd-color-primary-600);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: var(--fd-font-weight-bold);
 }
 
 .premium-access-page__link:hover,

@@ -46,8 +46,8 @@
     }
 
     &__manual-add-label {
-        font-size: 0.82rem;
-        font-weight: 600;
+        font-size: var(--fd-text-body-micro-size);
+        font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-slate-400);
         line-height: 1;
         align-self: center;
@@ -76,7 +76,7 @@
         --fd-button-transform-active: none;
         --fd-button-icon-size: var(--fd-text-section-title-size);
         font-size: var(--fd-text-action-size);
-        font-weight: 700;
+        font-weight: var(--fd-text-section-title-weight);
     }
 
     &__loader {
@@ -114,15 +114,15 @@
     }
 
     &__empty-title {
-        font-size: 1rem;
-        font-weight: 800;
+        font-size: var(--fd-text-body-size);
+        font-weight: var(--fd-text-metric-lg-weight);
         color: var(--fd-color-text);
     }
 
     &__empty-copy {
         max-width: 420px;
-        font-size: 0.95rem;
-        font-weight: 500;
+        font-size: var(--fd-text-body-sm-size);
+        font-weight: var(--fd-font-weight-medium);
         line-height: 1.5;
     }
 
@@ -155,8 +155,8 @@
     }
 
     &__day-label {
-        font-weight: 800;
-        font-size: 1.05rem;
+        font-weight: var(--fd-text-metric-lg-weight);
+        font-size: var(--fd-text-card-title-size);
         color: var(--fd-color-text);
         white-space: nowrap;
     }
@@ -207,7 +207,7 @@
         }
 
         &__day-label {
-            font-size: 0.95rem;
+            font-size: var(--fd-text-body-sm-size);
         }
 
         &__grid {
@@ -265,8 +265,8 @@
     }
 
     &__favorite-name {
-        font-weight: 600;
-        font-size: 0.9rem;
+        font-weight: var(--fd-font-weight-bold);
+        font-size: var(--fd-text-stat-value-size);
         color: var(--fd-color-text);
         white-space: nowrap;
         overflow: hidden;
@@ -274,7 +274,7 @@
     }
 
     &__favorite-meta {
-        font-size: 0.8rem;
+        font-size: var(--fd-text-label-floating-size);
         color: var(--fd-color-text-muted);
         margin-top: calc(var(--fd-space-xxs) / 2);
     }

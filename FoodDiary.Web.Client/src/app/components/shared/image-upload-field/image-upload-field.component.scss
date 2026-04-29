@@ -52,7 +52,7 @@
         height: auto;
         margin: 0 auto;
         color: var(--fd-color-primary-500);
-        font-size: 2.25rem;
+        font-size: var(--fd-size-icon-hero);
         line-height: 1;
     }
 
@@ -93,7 +93,7 @@
         place-items: center;
         background: var(--fd-bg-scrim);
         color: var(--fd-color-white);
-        letter-spacing: 0.02em;
+        letter-spacing: var(--fd-letter-spacing-emphasis);
     }
 
     &__actions {
@@ -271,7 +271,7 @@
         }
 
         .image-upload-field__icon {
-            font-size: 1.75rem;
+            font-size: var(--fd-size-icon-xl);
         }
 
         .image-upload-field__main-text {

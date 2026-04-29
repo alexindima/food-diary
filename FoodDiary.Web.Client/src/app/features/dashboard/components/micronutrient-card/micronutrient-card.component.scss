@@ -87,9 +87,9 @@
         flex-shrink: 0;
 
         fd-ui-icon {
-            font-size: 0.875rem;
-            width: 0.875rem;
-            height: 0.875rem;
+            font-size: var(--fd-size-icon-xs);
+            width: var(--fd-size-icon-xs);
+            height: var(--fd-size-icon-xs);
         }
     }
 
@@ -124,9 +124,9 @@
         color: var(--fd-color-text-muted);
 
         fd-ui-icon {
-            font-size: 0.875rem;
-            width: 0.875rem;
-            height: 0.875rem;
+            font-size: var(--fd-size-icon-xs);
+            width: var(--fd-size-icon-xs);
+            height: var(--fd-size-icon-xs);
         }
 
         &[data-grade='excellent'],

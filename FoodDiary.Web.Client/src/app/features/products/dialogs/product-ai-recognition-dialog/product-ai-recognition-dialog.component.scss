@@ -15,7 +15,7 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    letter-spacing: 0.01em;
+    letter-spacing: var(--fd-letter-spacing-subtle);
     --fd-pill-bg: var(--product-ai-surface);
     --fd-pill-color: var(--fd-color-text-muted);
     --fd-pill-border: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);

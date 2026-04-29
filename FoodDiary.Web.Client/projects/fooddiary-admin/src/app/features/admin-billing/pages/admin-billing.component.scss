@@ -39,7 +39,7 @@
         border-color: var(--fd-color-primary-600);
         background: var(--fd-bg-status-info);
         color: var(--fd-color-primary-700);
-        font-weight: 700;
+        font-weight: var(--fd-text-section-title-weight);
     }
 }
 
@@ -52,7 +52,7 @@
     label {
         display: grid;
         gap: var(--fd-space-xxs);
-        font-size: 0.8rem;
+        font-size: var(--fd-text-label-floating-size);
         color: var(--fd-color-text-muted);
     }
 
@@ -62,10 +62,6 @@
         border-radius: var(--fd-radius-md);
         padding: 0 var(--fd-space-sm);
     }
-}
-
-.admin-billing__summary {
-    font-weight: 600;
 }
 
 .admin-billing__table {
@@ -84,17 +80,17 @@
 
 .admin-billing__table th {
     color: var(--fd-color-slate-700);
-    font-size: 0.8rem;
+    font-size: var(--fd-text-label-floating-size);
     text-transform: uppercase;
 }
 
 .admin-billing__table td {
-    font-size: 0.9rem;
+    font-size: var(--fd-text-stat-value-size);
 
     span {
         display: block;
         color: var(--fd-color-text-muted);
-        font-size: 0.8rem;
+        font-size: var(--fd-text-label-floating-size);
         overflow-wrap: anywhere;
     }
 }
@@ -106,7 +102,7 @@
     padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
     background: var(--fd-bg-status-info);
     color: var(--fd-color-primary-700);
-    font-weight: 700;
+    font-weight: var(--fd-text-section-title-weight);
 }
 
 .admin-billing__badge--warn {
@@ -141,7 +137,7 @@
         background: transparent;
         color: var(--fd-color-primary-600);
         cursor: pointer;
-        font-weight: 700;
+        font-weight: var(--fd-text-section-title-weight);
     }
 }
 
@@ -149,6 +145,6 @@
     margin: 0;
     padding: var(--fd-space-md);
     overflow: auto;
-    font-size: 0.8rem;
+    font-size: var(--fd-text-label-floating-size);
     white-space: pre-wrap;
 }

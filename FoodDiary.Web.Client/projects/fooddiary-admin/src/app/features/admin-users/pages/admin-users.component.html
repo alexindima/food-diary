@@ -10,7 +10,7 @@
     @if (isLoading()) {
         <p>Loading users...</p>
     } @else {
-        <div class="summary">Total users: {{ totalItems() }}</div>
+        <div class="summary fd-ui-action-text">Total users: {{ totalItems() }}</div>
 
         <table class="users-table">
             <thead>
@@ -67,8 +67,8 @@
     <section class="admin-users__section">
         <div class="admin-users__section-header">
             <div>
-                <h2>Impersonation sessions</h2>
-                <p>Recent admin access sessions started on behalf of users.</p>
+                <h2 class="fd-ui-title-sm">Impersonation sessions</h2>
+                <p class="fd-ui-body-xs">Recent admin access sessions started on behalf of users.</p>
             </div>
             <fd-ui-input [ngModel]="sessionsSearch()" (ngModelChange)="onSessionsSearchChange($event)" placeholder="Search sessions" />
         </div>
@@ -76,7 +76,7 @@
         @if (isSessionsLoading()) {
             <p>Loading sessions...</p>
         } @else {
-            <div class="summary">Total sessions: {{ sessionsTotalItems() }}</div>
+            <div class="summary fd-ui-action-text">Total sessions: {{ sessionsTotalItems() }}</div>
 
             <table class="users-table">
                 <thead>

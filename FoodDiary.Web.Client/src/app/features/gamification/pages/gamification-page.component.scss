@@ -42,9 +42,9 @@
     }
 
     &__stat-icon {
-        font-size: 1.75rem;
-        width: 1.75rem;
-        height: 1.75rem;
+        font-size: var(--fd-size-icon-xl);
+        width: var(--fd-size-icon-xl);
+        height: var(--fd-size-icon-xl);
 
         &--streak {
             color: var(--fd-color-orange-500);
@@ -178,9 +178,9 @@
     }
 
     &__badge-icon {
-        font-size: 1.5rem;
-        width: 1.5rem;
-        height: 1.5rem;
+        font-size: var(--fd-size-icon-lg);
+        width: var(--fd-size-icon-lg);
+        height: var(--fd-size-icon-lg);
     }
 
     &__badge-label {

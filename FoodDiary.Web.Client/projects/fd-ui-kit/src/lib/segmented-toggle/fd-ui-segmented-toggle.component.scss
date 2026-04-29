@@ -35,7 +35,7 @@
     font-size: var(--fd-text-caption-size);
     font-weight: var(--fd-text-action-weight);
     line-height: 1;
-    letter-spacing: 0.08em;
+    letter-spacing: var(--fd-letter-spacing-overline);
     text-transform: uppercase;
     cursor: pointer;
     transition:

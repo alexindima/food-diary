@@ -64,13 +64,17 @@
 .preview-title {
     margin: 0;
     color: var(--fd-color-text);
-    font: var(--fd-text-card-title);
+    font-size: var(--fd-text-card-title-size);
+    line-height: var(--fd-text-card-title-line-height);
+    font-weight: var(--fd-text-card-title-weight);
 }
 
 .preview-subtitle {
     margin: 0.125rem 0 0;
     color: var(--fd-color-text-muted);
-    font: var(--fd-text-helper);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-helper-weight);
 }
 
 .preview-mode,
@@ -105,13 +109,16 @@
 .token-list dt {
     color: var(--fd-color-text);
     font-family: var(--fd-font-family-monospace);
-    font-size: 0.8125rem;
+    font-size: var(--fd-text-code-sm-size);
+    line-height: var(--fd-text-code-sm-line-height);
 }
 
 .token-list dd {
     overflow: hidden;
     color: var(--fd-color-text-muted);
-    font: var(--fd-text-helper);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-helper-weight);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -129,7 +136,9 @@
 .test-send__status {
     grid-column: 1 / -1;
     margin: calc(var(--fd-space-xxs) * -1) 0 0;
-    font: var(--fd-text-helper);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    font-weight: var(--fd-text-helper-weight);
 }
 
 .test-send__status--sent {
@@ -156,8 +165,8 @@
     padding: var(--fd-space-md);
     color: var(--fd-color-text);
     font-family: var(--fd-font-family-monospace);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: var(--fd-text-body-xs-size);
+    line-height: var(--fd-text-body-line-height);
     white-space: pre-wrap;
 }
 

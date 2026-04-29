@@ -11,9 +11,9 @@
 }
 
 .fd-error-state__icon {
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
+    font-size: var(--fd-size-icon-empty);
+    width: var(--fd-size-icon-empty);
+    height: var(--fd-size-icon-empty);
     color: var(--fd-color-text-muted);
     margin-bottom: var(--fd-space-xs);
 }

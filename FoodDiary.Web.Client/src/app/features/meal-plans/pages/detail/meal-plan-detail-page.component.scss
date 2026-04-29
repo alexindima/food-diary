@@ -21,8 +21,9 @@
     }
 
     &__title {
-        font-size: 1.8rem;
-        font-weight: 800;
+        font-size: var(--fd-text-display-sm-size);
+        line-height: var(--fd-text-display-sm-line-height);
+        font-weight: var(--fd-text-display-sm-weight);
         margin: 0;
     }
 
@@ -48,8 +49,8 @@
 .meal-plan-day {
     // stylelint-disable-next-line rule-empty-line-before
     &__title {
-        font-size: 1.1rem;
-        font-weight: 700;
+        font-size: var(--fd-text-section-title-size);
+        font-weight: var(--fd-text-section-title-weight);
         margin: 0 0 var(--fd-space-sm);
         color: var(--fd-color-text);
     }
@@ -72,24 +73,24 @@
 
     &__type {
         min-width: 80px;
-        font-size: 0.75rem;
-        font-weight: 700;
+        font-size: var(--fd-text-helper-size);
+        font-weight: var(--fd-text-section-title-weight);
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: var(--fd-letter-spacing-wide);
         color: var(--fd-color-sky-600);
     }
 
     &__recipe {
         flex: 1;
-        font-weight: 700;
+        font-weight: var(--fd-text-section-title-weight);
         color: var(--fd-color-text);
     }
 
     &__nutrition {
         display: flex;
         gap: var(--fd-space-xs);
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: var(--fd-text-caption-size);
+        font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }
 }

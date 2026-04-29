@@ -286,7 +286,7 @@
             font-size: var(--fd-text-metric-lg-size);
             line-height: var(--fd-text-metric-lg-line-height);
             font-weight: var(--fd-text-metric-lg-weight);
-            letter-spacing: -0.02em;
+            letter-spacing: var(--fd-letter-spacing-tight);
             color: var(--fd-color-text);
             margin: 0 0 var(--fd-space-lg);
         }

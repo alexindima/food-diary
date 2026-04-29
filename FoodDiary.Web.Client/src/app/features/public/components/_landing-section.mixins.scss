@@ -18,7 +18,11 @@
     animation: landingFadeUp 700ms ease-out both;
 }
 
-@mixin marketing-eyebrow($size: 0.9rem, $letter-spacing: 0.02em, $weight: 700) {
+@mixin marketing-eyebrow(
+    $size: var(--fd-text-stat-value-size),
+    $letter-spacing: var(--fd-letter-spacing-emphasis),
+    $weight: var(--fd-text-section-title-weight)
+) {
     font-weight: $weight;
     font-size: $size;
     letter-spacing: $letter-spacing;
@@ -27,7 +31,7 @@
 @mixin marketing-title(
     $size: clamp(28px, 3vw, 36px),
     $line-height: 1.08,
-    $letter-spacing: -0.02em,
+    $letter-spacing: var(--fd-letter-spacing-tight),
     $color: var(--fd-color-slate-900),
     $weight: null
 ) {

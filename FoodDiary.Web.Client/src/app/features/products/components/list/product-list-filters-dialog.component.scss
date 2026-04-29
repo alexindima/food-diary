@@ -15,7 +15,7 @@
         margin: 0;
         font-size: var(--fd-text-helper-size);
         line-height: var(--fd-text-helper-line-height);
-        letter-spacing: 0.08em;
+        letter-spacing: var(--fd-letter-spacing-overline);
         text-transform: uppercase;
         color: var(--fd-color-text-muted);
         font-weight: var(--fd-text-helper-weight);

@@ -247,7 +247,7 @@
 
 .entity-card__calories-unit {
     color: var(--fd-color-text-muted);
-    letter-spacing: 0.04em;
+    letter-spacing: var(--fd-letter-spacing-wide);
 }
 
 .entity-card__action-button {

@@ -46,7 +46,7 @@
     }
 
     &__content strong {
-        font-weight: 600;
+        font-weight: var(--fd-font-weight-bold);
     }
 }
 

@@ -36,9 +36,9 @@
 }
 
 .nutrient-badges__chip-icon {
-    font-size: 1rem;
-    width: 1rem;
-    height: 1rem;
+    font-size: var(--fd-text-body-size);
+    width: var(--fd-size-icon-sm);
+    height: var(--fd-size-icon-sm);
     line-height: 1;
     color: inherit;
 }
@@ -100,9 +100,9 @@
     }
 
     .nutrient-badges__chip-icon {
-        font-size: 0.875rem;
-        width: 0.875rem;
-        height: 0.875rem;
+        font-size: var(--fd-size-icon-xs);
+        width: var(--fd-size-icon-xs);
+        height: var(--fd-size-icon-xs);
     }
 
     .nutrient-badges__chip-value {

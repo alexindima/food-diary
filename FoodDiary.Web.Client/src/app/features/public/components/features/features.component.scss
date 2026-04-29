@@ -57,7 +57,7 @@
     &__summary-title {
         margin: var(--fd-space-sm) 0 0;
         color: var(--fd-color-text);
-        font-weight: 700;
+        font-weight: var(--fd-text-section-title-weight);
     }
 
     &__category-strip {
@@ -79,7 +79,7 @@
         border-radius: var(--fd-radius-pill);
         padding: var(--fd-space-sm) var(--fd-space-md);
         font: inherit;
-        font-weight: 600;
+        font-weight: var(--fd-font-weight-bold);
         white-space: nowrap;
         cursor: pointer;
         transition:

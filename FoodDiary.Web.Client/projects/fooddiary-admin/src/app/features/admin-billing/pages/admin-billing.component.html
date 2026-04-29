@@ -1,8 +1,8 @@
 <div class="admin-billing">
     <header class="admin-billing__header">
         <div>
-            <h1>Billing</h1>
-            <p>Subscriptions, payments, renewal attempts and webhook events.</p>
+            <h1 class="fd-page-title">Billing</h1>
+            <p class="fd-page-subtitle">Subscriptions, payments, renewal attempts and webhook events.</p>
         </div>
         <fd-ui-button type="button" variant="secondary" (click)="load()"> Refresh </fd-ui-button>
     </header>
@@ -35,7 +35,7 @@
     @if (isLoading()) {
         <p>Loading billing records...</p>
     } @else {
-        <div class="admin-billing__summary">Total records: {{ totalItems() }}</div>
+        <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
 
         @if (activeTab() === 'subscriptions') {
             <table class="admin-billing__table">

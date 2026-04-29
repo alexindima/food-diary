@@ -42,8 +42,8 @@
 
         input[type='checkbox'] {
             margin-top: calc(var(--fd-space-xxs) / 2);
-            width: 1.125rem;
-            height: 1.125rem;
+            width: var(--fd-size-icon-md);
+            height: var(--fd-size-icon-md);
             flex-shrink: 0;
             accent-color: var(--fd-color-purple-500);
             cursor: pointer;

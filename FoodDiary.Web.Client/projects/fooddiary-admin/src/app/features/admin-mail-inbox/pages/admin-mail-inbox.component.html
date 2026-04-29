@@ -1,6 +1,6 @@
 <div class="admin-mail-inbox">
     <div class="toolbar">
-        <label class="toolbar__field">
+        <label class="toolbar__field fd-ui-helper-strong">
             <span>Type</span>
             <select [ngModel]="categoryFilter()" (ngModelChange)="setCategoryFilter($event)">
                 <option value="all">All</option>
@@ -36,7 +36,10 @@
                             >
                                 <td>{{ message.receivedAtUtc | date: 'short' }}</td>
                                 <td>
-                                    <span class="mail-badge" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
+                                    <span
+                                        class="mail-badge fd-ui-helper-strong"
+                                        [class.mail-badge--dmarc]="message.category === 'dmarc-report'"
+                                    >
                                         {{ formatCategory(message.category) }}
                                     </span>
                                 </td>
@@ -60,28 +63,28 @@
             } @else if (selectedMessage(); as message) {
                 <div class="mail-details__header">
                     <div>
-                        <div class="mail-details__subject">{{ message.subject || '(no subject)' }}</div>
-                        <div class="mail-details__meta">{{ message.receivedAtUtc | date: 'medium' }}</div>
+                        <div class="mail-details__subject fd-ui-title-sm">{{ message.subject || '(no subject)' }}</div>
+                        <div class="mail-details__meta fd-ui-body-xs">{{ message.receivedAtUtc | date: 'medium' }}</div>
                     </div>
                     <div class="mail-details__badges">
-                        <span class="mail-badge" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
+                        <span class="mail-badge fd-ui-helper-strong" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
                             {{ formatCategory(message.category) }}
                         </span>
-                        <span class="mail-details__status">{{ message.status }}</span>
+                        <span class="mail-details__status fd-ui-helper-strong">{{ message.status }}</span>
                     </div>
                 </div>
 
                 <dl class="mail-fields">
                     <div>
-                        <dt>From</dt>
+                        <dt class="fd-ui-helper-strong">From</dt>
                         <dd>{{ message.fromAddress || '-' }}</dd>
                     </div>
                     <div>
-                        <dt>To</dt>
+                        <dt class="fd-ui-helper-strong">To</dt>
                         <dd>{{ formatRecipients(message.toRecipients) }}</dd>
                     </div>
                     <div>
-                        <dt>Message ID</dt>
+                        <dt class="fd-ui-helper-strong">Message ID</dt>
                         <dd>{{ message.messageId || '-' }}</dd>
                     </div>
                 </dl>
@@ -90,14 +93,14 @@
                     <section class="dmarc-report" aria-label="DMARC report summary">
                         <div class="dmarc-report__header">
                             <div>
-                                <h3>DMARC report</h3>
-                                <p>
+                                <h3 class="fd-ui-body">DMARC report</h3>
+                                <p class="fd-ui-body-xs">
                                     {{ report.domain || '-' }} | {{ report.organizationName || '-' }} |
                                     {{ report.dateRangeStartUtc | date: 'mediumDate' }} -
                                     {{ report.dateRangeEndUtc | date: 'mediumDate' }}
                                 </p>
                             </div>
-                            <div class="dmarc-report__stats">
+                            <div class="dmarc-report__stats fd-ui-caption-strong">
                                 <span>{{ dmarcTotalMessages() }} messages</span>
                                 <span>{{ dmarcProblemRecords() }} issues</span>
                             </div>

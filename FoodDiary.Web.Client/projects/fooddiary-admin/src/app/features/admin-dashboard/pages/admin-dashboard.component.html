@@ -5,36 +5,36 @@
         <div class="admin-dashboard__grid">
             <fd-ui-card>
                 <div class="admin-dashboard__stat">
-                    <div class="admin-dashboard__label">Total users</div>
-                    <div class="admin-dashboard__value">{{ summary()?.totalUsers ?? 0 }}</div>
+                    <div class="admin-dashboard__label fd-ui-body-xs">Total users</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.totalUsers ?? 0 }}</div>
                 </div>
             </fd-ui-card>
 
             <fd-ui-card>
                 <div class="admin-dashboard__stat">
-                    <div class="admin-dashboard__label">Active users</div>
-                    <div class="admin-dashboard__value">{{ summary()?.activeUsers ?? 0 }}</div>
+                    <div class="admin-dashboard__label fd-ui-body-xs">Active users</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.activeUsers ?? 0 }}</div>
                 </div>
             </fd-ui-card>
 
             <fd-ui-card>
                 <div class="admin-dashboard__stat">
-                    <div class="admin-dashboard__label">Premium users</div>
-                    <div class="admin-dashboard__value">{{ summary()?.premiumUsers ?? 0 }}</div>
+                    <div class="admin-dashboard__label fd-ui-body-xs">Premium users</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.premiumUsers ?? 0 }}</div>
                 </div>
             </fd-ui-card>
 
             <fd-ui-card>
                 <div class="admin-dashboard__stat">
-                    <div class="admin-dashboard__label">Pending reports</div>
-                    <div class="admin-dashboard__value">{{ summary()?.pendingReportsCount ?? 0 }}</div>
+                    <div class="admin-dashboard__label fd-ui-body-xs">Pending reports</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.pendingReportsCount ?? 0 }}</div>
                 </div>
             </fd-ui-card>
 
             <fd-ui-card>
                 <div class="admin-dashboard__stat">
-                    <div class="admin-dashboard__label">AI total tokens</div>
-                    <div class="admin-dashboard__value">{{ aiUsage()?.totalTokens ?? 0 }}</div>
+                    <div class="admin-dashboard__label fd-ui-body-xs">AI total tokens</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ aiUsage()?.totalTokens ?? 0 }}</div>
                 </div>
             </fd-ui-card>
         </div>
@@ -43,8 +43,10 @@
             <div class="admin-dashboard__section">
                 <div class="admin-dashboard__section-header">
                     <div>
-                        <div class="admin-dashboard__section-title">Fasting telemetry</div>
-                        <div class="admin-dashboard__section-subtitle">Internal product metrics for fasting adoption and check-ins</div>
+                        <div class="admin-dashboard__section-title fd-ui-title-sm">Fasting telemetry</div>
+                        <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
+                            Internal product metrics for fasting adoption and check-ins
+                        </div>
                     </div>
                 </div>
 
@@ -53,28 +55,38 @@
                 } @else {
                     <div class="admin-dashboard__telemetry-grid">
                         <div class="admin-dashboard__stat">
-                            <div class="admin-dashboard__label">Started sessions</div>
-                            <div class="admin-dashboard__value">{{ formatMetric(fastingTelemetry()?.startedSessions) }}</div>
+                            <div class="admin-dashboard__label fd-ui-body-xs">Started sessions</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">
+                                {{ formatMetric(fastingTelemetry()?.startedSessions) }}
+                            </div>
                         </div>
                         <div class="admin-dashboard__stat">
-                            <div class="admin-dashboard__label">Completed sessions</div>
-                            <div class="admin-dashboard__value">{{ formatMetric(fastingTelemetry()?.completedSessions) }}</div>
+                            <div class="admin-dashboard__label fd-ui-body-xs">Completed sessions</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">
+                                {{ formatMetric(fastingTelemetry()?.completedSessions) }}
+                            </div>
                         </div>
                         <div class="admin-dashboard__stat">
-                            <div class="admin-dashboard__label">Saved check-ins</div>
-                            <div class="admin-dashboard__value">{{ formatMetric(fastingTelemetry()?.savedCheckIns) }}</div>
+                            <div class="admin-dashboard__label fd-ui-body-xs">Saved check-ins</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ formatMetric(fastingTelemetry()?.savedCheckIns) }}</div>
                         </div>
                         <div class="admin-dashboard__stat">
-                            <div class="admin-dashboard__label">Completion rate</div>
-                            <div class="admin-dashboard__value">{{ formatMetric(fastingTelemetry()?.completionRatePercent) }}%</div>
+                            <div class="admin-dashboard__label fd-ui-body-xs">Completion rate</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">
+                                {{ formatMetric(fastingTelemetry()?.completionRatePercent) }}%
+                            </div>
                         </div>
                         <div class="admin-dashboard__stat">
-                            <div class="admin-dashboard__label">Check-in rate</div>
-                            <div class="admin-dashboard__value">{{ formatMetric(fastingTelemetry()?.checkInRatePercent) }}%</div>
+                            <div class="admin-dashboard__label fd-ui-body-xs">Check-in rate</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">
+                                {{ formatMetric(fastingTelemetry()?.checkInRatePercent) }}%
+                            </div>
                         </div>
                         <div class="admin-dashboard__stat">
-                            <div class="admin-dashboard__label">Avg completed duration</div>
-                            <div class="admin-dashboard__value">{{ formatMetric(fastingTelemetry()?.averageCompletedDurationHours) }}h</div>
+                            <div class="admin-dashboard__label fd-ui-body-xs">Avg completed duration</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">
+                                {{ formatMetric(fastingTelemetry()?.averageCompletedDurationHours) }}h
+                            </div>
                         </div>
                     </div>
 
@@ -84,7 +96,7 @@
                     </div>
 
                     <div class="admin-dashboard__preset-list">
-                        <div class="admin-dashboard__section-subtitle">Top reminder presets</div>
+                        <div class="admin-dashboard__section-subtitle fd-ui-body-xs">Top reminder presets</div>
 
                         @if (fastingTelemetry()!.topPresets.length === 0) {
                             <p>No reminder preset data yet.</p>

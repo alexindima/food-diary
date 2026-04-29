@@ -121,7 +121,7 @@
     }
 
     &__no-results-icon {
-        font-size: 2rem;
+        font-size: var(--fd-size-icon-xxl);
         color: var(--fd-color-danger);
     }
 }
