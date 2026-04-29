@@ -8,7 +8,7 @@
         [ariaLabel]="'PRODUCT_LIST.FILTERS_TITLE' | translate"
     />
 
-    <section class="product-list-filters-dialog__section">
+    <section class="product-list-filters-dialog__section fd-grid fd-gap-xs">
         <h3 class="product-list-filters-dialog__section-title">{{ 'PRODUCT_LIST.FILTER_CATEGORIES' | translate }}</h3>
         <fd-ui-chip-select
             class="product-list-filters-dialog__types"
@@ -19,7 +19,7 @@
         />
     </section>
 
-    <div fdUiDialogFooter class="product-list-filters-dialog__footer">
+    <div fdUiDialogFooter class="product-list-filters-dialog__footer fd-row fd-gap-xs fd-justify-end">
         <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onCancel()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>

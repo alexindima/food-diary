@@ -1,5 +1,5 @@
 <fd-ui-dialog [title]="'PRODUCT_AI_DIALOG.TITLE' | translate">
-    <div class="product-ai-dialog">
+    <div class="product-ai-dialog fd-stack fd-gap-lg">
         <div class="product-ai-dialog__upload">
             <fd-image-upload-field
                 appearance="preview"
@@ -38,7 +38,7 @@
             [disabled]="isLoading() || isNutritionLoading()"
         />
 
-        <div class="product-ai-dialog__controls">
+        <div class="product-ai-dialog__controls fd-row">
             @if (hasAnalyzed()) {
                 <fd-ui-button
                     type="button"
@@ -77,13 +77,13 @@
         }
 
         @if (nutrition(); as nutrition) {
-            <div class="product-ai-dialog__summary" [formGroup]="resultForm">
+            <div class="product-ai-dialog__summary fd-stack fd-gap-md" [formGroup]="resultForm">
                 @if (itemNames().length) {
-                    <div class="product-ai-dialog__items">
+                    <div class="product-ai-dialog__items fd-stack fd-gap-sm">
                         <div class="product-ai-dialog__items-label fd-ui-caption">
                             {{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}
                         </div>
-                        <div class="product-ai-dialog__items-list">
+                        <div class="product-ai-dialog__items-list fd-row fd-wrap fd-gap-xs">
                             @for (item of itemNames(); track item) {
                                 <span class="product-ai-dialog__item-chip fd-ui-pill fd-ui-pill--compact fd-ui-caption">{{ item }}</span>
                             }
@@ -103,7 +103,7 @@
                     </div>
                 }
 
-                <div class="product-ai-dialog__form-grid">
+                <div class="product-ai-dialog__form-grid fd-grid fd-gap-md">
                     <fd-ui-input
                         formControlName="name"
                         [label]="'PRODUCT_AI_DIALOG.NAME' | translate"
@@ -112,7 +112,7 @@
                     <fd-ui-select formControlName="baseUnit" [label]="'PRODUCT_AI_DIALOG.BASE_UNIT' | translate" [options]="unitOptions" />
                 </div>
 
-                <div class="product-ai-dialog__nutrition-grid">
+                <div class="product-ai-dialog__nutrition-grid fd-grid fd-gap-md">
                     <fd-ui-input formControlName="caloriesPerBase" type="number" [label]="'PRODUCT_MANAGE.CALORIES' | translate" />
                     <fd-ui-input formControlName="proteinsPerBase" type="number" [label]="'PRODUCT_MANAGE.PROTEINS' | translate" />
                     <fd-ui-input formControlName="fatsPerBase" type="number" [label]="'PRODUCT_MANAGE.FATS' | translate" />

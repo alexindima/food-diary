@@ -1,4 +1,4 @@
-@use 'variables';
+@use 'variables' as variables;
 
 .auth-dialog__shell {
     --fd-dialog-shell-shadow: var(--fd-shadow-auth-dialog);

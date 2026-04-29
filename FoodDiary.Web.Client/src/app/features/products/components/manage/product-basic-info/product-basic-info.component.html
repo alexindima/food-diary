@@ -7,8 +7,8 @@
     accent="primary"
     [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate"
 >
-    <div class="product-manage__hero">
-        <div class="product-manage__image">
+    <div class="product-manage__hero fd-grid fd-gap-lg">
+        <div class="product-manage__image fd-row">
             <fd-image-upload-field
                 appearance="compact"
                 [formControl]="formGroup().controls.imageUrl"
@@ -19,7 +19,7 @@
                 [cropAspectRatio]="1"
             />
         </div>
-        <div class="product-manage__hero-field">
+        <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
                 [formControl]="formGroup().controls.name"
                 size="lg"
@@ -29,7 +29,7 @@
                 [error]="getControlError()('name')"
             />
         </div>
-        <div class="product-manage__hero-field">
+        <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
                 [formControl]="formGroup().controls.brand"
                 size="lg"
@@ -37,7 +37,7 @@
                 [placeholder]="'PRODUCT_MANAGE.BRAND_PLACEHOLDER' | translate"
             />
         </div>
-        <div class="product-manage__hero-field">
+        <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
                 [formControl]="formGroup().controls.barcode"
                 size="lg"
@@ -49,8 +49,8 @@
             />
         </div>
     </div>
-    <div class="product-manage__basic-grid">
-        <div class="product-manage__field product-manage__field--full">
+    <div class="product-manage__basic-grid fd-grid fd-gap-lg">
+        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-select
                 [formControl]="formGroup().controls.productType"
                 size="lg"
@@ -60,7 +60,7 @@
                 [error]="getControlError()('productType')"
             />
         </div>
-        <div class="product-manage__field product-manage__field--full">
+        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-textarea
                 [formControl]="formGroup().controls.description"
                 [label]="'PRODUCT_MANAGE.DESCRIPTION' | translate"
@@ -68,8 +68,8 @@
                 [rows]="3"
             />
         </div>
-        <div class="product-manage__serving-row product-manage__field--full">
-            <div class="product-manage__serving-part">
+        <div class="product-manage__serving-row product-manage__field--full fd-row fd-wrap fd-gap-lg">
+            <div class="product-manage__serving-part fd-stack fd-gap-xs">
                 <fd-ui-input
                     [formControl]="formGroup().controls.defaultPortionAmount"
                     size="lg"
@@ -80,7 +80,7 @@
                     [error]="getControlError()('defaultPortionAmount')"
                 />
             </div>
-            <div class="product-manage__serving-part">
+            <div class="product-manage__serving-part fd-stack fd-gap-xs">
                 <fd-ui-select
                     [formControl]="formGroup().controls.baseUnit"
                     size="lg"
@@ -101,8 +101,8 @@
     headerAlign="center"
     [title]="'PRODUCT_MANAGE.TRACKING_PREFERENCES' | translate"
 >
-    <div class="product-manage__basic-grid">
-        <div class="product-manage__field product-manage__field--full">
+    <div class="product-manage__basic-grid fd-grid fd-gap-lg">
+        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-select
                 [formControl]="formGroup().controls.visibility"
                 size="lg"
@@ -111,7 +111,7 @@
                 [error]="getControlError()('visibility')"
             />
         </div>
-        <div class="product-manage__field product-manage__field--full">
+        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-textarea
                 [formControl]="formGroup().controls.comment"
                 [label]="'PRODUCT_MANAGE.COMMENT' | translate"

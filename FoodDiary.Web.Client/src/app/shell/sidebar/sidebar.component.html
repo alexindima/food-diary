@@ -42,7 +42,7 @@
     </nav>
 
     <div class="sidebar__section">
-        <button class="sidebar__section-header fd-row fd-gap-xs" type="button" (click)="toggleFoodTracking()">
+        <button class="sidebar__section-header fd-row fd-gap-xs fd-justify-between" type="button" (click)="toggleFoodTracking()">
             <span class="fd-ui-action-text">{{ 'SIDEBAR.FOOD_TRACKING' | translate }}</span>
             <fd-ui-icon name="expand_more" [class.is-open]="isFoodTrackingOpen()"></fd-ui-icon>
         </button>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="sidebar__section">
-        <button class="sidebar__section-header fd-row fd-gap-xs" type="button" (click)="toggleBodyTracking()">
+        <button class="sidebar__section-header fd-row fd-gap-xs fd-justify-between" type="button" (click)="toggleBodyTracking()">
             <span class="fd-ui-action-text">{{ 'SIDEBAR.BODY_TRACKING' | translate }}</span>
             <fd-ui-icon name="expand_more" [class.is-open]="isBodyTrackingOpen()"></fd-ui-icon>
         </button>
@@ -87,25 +87,25 @@
     </nav>
 
     @if (currentUser(); as user) {
-        <div class="sidebar__user-wrapper">
+        <div class="sidebar__user-wrapper fd-stack fd-gap-xxs">
             <button
                 #userMenuButton
                 type="button"
-                class="sidebar__user fd-row fd-gap-xs"
+                class="sidebar__user fd-grid fd-gap-xs fd-align-center"
                 aria-haspopup="menu"
                 [attr.aria-expanded]="isUserMenuOpen()"
                 (click)="toggleUserMenu(userMenuButton)"
             >
                 @if (user.profileImage) {
-                    <div class="sidebar__avatar sidebar__avatar--image">
+                    <div class="sidebar__avatar sidebar__avatar--image fd-place-center">
                         <img [src]="user.profileImage" alt="Avatar" />
                     </div>
                 } @else {
-                    <div class="sidebar__avatar">
+                    <div class="sidebar__avatar fd-place-center">
                         {{ user.username || user.email || 'U' | slice: 0 : 1 | uppercase }}
                     </div>
                 }
-                <div class="sidebar__user-meta fd-grid fd-gap-xxs">
+                <div class="sidebar__user-meta fd-stack">
                     <div class="sidebar__user-name fd-ui-action-text">{{ user.username || user.email }}</div>
                     <div class="sidebar__user-plan fd-ui-caption">
                         {{ (isPremium() ? 'SIDEBAR.PLAN_PRO' : 'SIDEBAR.PLAN_FREE') | translate }}
@@ -115,7 +115,12 @@
             </button>
 
             @if (isUserMenuOpen()) {
-                <div #userMenu class="sidebar__user-menu" role="menu" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
+                <div
+                    #userMenu
+                    class="sidebar__user-menu fd-stack fd-gap-xxs"
+                    role="menu"
+                    [attr.aria-label]="'SIDEBAR.USER_MENU' | translate"
+                >
                     <a
                         routerLink="/profile"
                         routerLinkActive="is-active"

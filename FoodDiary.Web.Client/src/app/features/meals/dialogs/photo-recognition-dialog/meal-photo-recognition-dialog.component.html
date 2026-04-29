@@ -3,7 +3,7 @@
     [subtitle]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
     size="lg"
 >
-    <div class="photo-ai-dialog">
+    <div class="photo-ai-dialog fd-stack fd-gap-lg">
         <div class="photo-ai-dialog__upload">
             <fd-image-upload-field
                 appearance="preview"
@@ -43,9 +43,9 @@
             }
 
             @if (results().length) {
-                <div class="photo-ai-dialog__results">
-                    <div class="photo-ai-dialog__results-title fd-ui-card-title">
-                        <span class="photo-ai-dialog__title-left">
+                <div class="photo-ai-dialog__results fd-stack fd-gap-sm">
+                    <div class="photo-ai-dialog__results-title fd-ui-card-title fd-row fd-gap-xs">
+                        <span class="photo-ai-dialog__title-left fd-row fd-gap-xs">
                             <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
                             <fd-ui-button
                                 class="photo-ai-dialog__action-button"
@@ -58,7 +58,7 @@
                                 (click)="onReanalyze()"
                             />
                         </span>
-                        <span class="photo-ai-dialog__title-actions">
+                        <span class="photo-ai-dialog__title-actions fd-row fd-gap-xxs">
                             <fd-ui-button
                                 [variant]="isEditing() ? 'primary' : 'secondary'"
                                 [fill]="isEditing() ? 'solid' : 'outline'"
@@ -76,10 +76,14 @@
                         </span>
                     </div>
                     @if (isEditing()) {
-                        <div class="photo-ai-dialog__edit-list" cdkDropList (cdkDropListDropped)="onEditItemDrop($event)">
+                        <div
+                            class="photo-ai-dialog__edit-list fd-stack fd-gap-xs"
+                            cdkDropList
+                            (cdkDropListDropped)="onEditItemDrop($event)"
+                        >
                             @for (item of editItems(); track item.id; let i = $index) {
-                                <div class="photo-ai-dialog__edit-row" cdkDrag>
-                                    <div class="photo-ai-dialog__edit-handle" cdkDragHandle>
+                                <div class="photo-ai-dialog__edit-row fd-grid fd-gap-xs fd-align-center" cdkDrag>
+                                    <div class="photo-ai-dialog__edit-handle fd-inline-center" cdkDragHandle>
                                         <fd-ui-icon name="drag_indicator" />
                                     </div>
                                     <input
@@ -131,7 +135,7 @@
                         </fd-ui-button>
                     } @else {
                         <div class="photo-ai-dialog__table">
-                            <div class="photo-ai-dialog__table-head">
+                            <div class="photo-ai-dialog__table-head fd-grid fd-gap-xs fd-align-center">
                                 <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-stat-label">
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
                                 </div>
@@ -139,8 +143,11 @@
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
                                 </div>
                             </div>
-                            <div class="photo-ai-dialog__table-body">
-                                <div class="photo-ai-dialog__table-row" *ngFor="let item of results(); let i = index">
+                            <div class="photo-ai-dialog__table-body fd-stack">
+                                <div
+                                    class="photo-ai-dialog__table-row fd-grid fd-gap-xs fd-align-center"
+                                    *ngFor="let item of results(); let i = index"
+                                >
                                     <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-body-sm">
                                         {{ getDisplayName(item) }}
                                     </div>
@@ -154,12 +161,12 @@
 
                     @if (!isNutritionLoading()) {
                         @if (nutrition()) {
-                            <div class="photo-ai-dialog__nutrition">
+                            <div class="photo-ai-dialog__nutrition fd-stack fd-gap-xs">
                                 <div class="photo-ai-dialog__nutrition-title fd-ui-card-title">
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE' | translate }}
                                 </div>
-                                <div class="photo-ai-dialog__nutrition-grid">
-                                    <div class="photo-ai-dialog__nutrition-item">
+                                <div class="photo-ai-dialog__nutrition-grid fd-grid">
+                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}
                                         </span>
@@ -167,7 +174,7 @@
                                             {{ formatMacro(nutrition()!.calories, 'GENERAL.UNITS.KCAL') }}
                                         </span>
                                     </div>
-                                    <div class="photo-ai-dialog__nutrition-item">
+                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}
                                         </span>
@@ -175,7 +182,7 @@
                                             {{ formatMacro(nutrition()!.protein, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
-                                    <div class="photo-ai-dialog__nutrition-item">
+                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.FAT' | translate }}
                                         </span>
@@ -183,7 +190,7 @@
                                             {{ formatMacro(nutrition()!.fat, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
-                                    <div class="photo-ai-dialog__nutrition-item">
+                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.CARB' | translate }}
                                         </span>
@@ -191,7 +198,7 @@
                                             {{ formatMacro(nutrition()!.carbs, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
-                                    <div class="photo-ai-dialog__nutrition-item">
+                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.FIBER' | translate }}
                                         </span>
@@ -199,7 +206,7 @@
                                             {{ formatMacro(nutrition()!.fiber, 'GENERAL.UNITS.G') }}
                                         </span>
                                     </div>
-                                    <div class="photo-ai-dialog__nutrition-item">
+                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
                                             {{ 'GENERAL.NUTRIENTS.ALCOHOL' | translate }}
                                         </span>

@@ -1,14 +1,9 @@
-@use 'variables';
+@use 'variables' as variables;
 
 .product-list-filters-dialog {
 
     &__visibility {
         margin-bottom: var(--fd-space-md);
-    }
-
-    &__section {
-        display: grid;
-        gap: var(--fd-space-xs);
     }
 
     &__section-title {
@@ -27,12 +22,6 @@
         --fd-chip-select-item-height: var(--fd-size-control-md);
     }
 
-    &__footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: var(--fd-space-xs);
-    }
-
     @media #{variables.$media-mobile} {
 
         &__types {
@@ -40,6 +29,3 @@
         }
     }
 }
-
-
-

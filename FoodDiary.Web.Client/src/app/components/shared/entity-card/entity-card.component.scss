@@ -23,15 +23,12 @@
 }
 
 .entity-card__content {
-    display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
 }
 
 .entity-card__summary-row {
-    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
 }
 
 .entity-card__name-row {

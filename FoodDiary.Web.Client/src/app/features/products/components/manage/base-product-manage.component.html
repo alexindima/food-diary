@@ -1,4 +1,4 @@
-<div class="product-manage" fdPageContainer>
+<div class="product-manage fd-stack" fdPageContainer>
     <fd-manage-header
         class="product-manage__header"
         [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
@@ -7,9 +7,14 @@
         (back)="onCancel()"
     />
 
-    <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting() || isDeleting()">
-        <div class="product-manage__grid">
-            <div class="product-manage__column product-manage__column--primary">
+    <form
+        class="product-manage__form fd-stack fd-gap-lg"
+        [formGroup]="productForm"
+        (ngSubmit)="onSubmit()"
+        [attr.aria-busy]="isSubmitting() || isDeleting()"
+    >
+        <div class="product-manage__grid fd-grid fd-gap-xl">
+            <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
                 <fd-product-basic-info
                     [formGroup]="productForm"
                     [unitOptions]="unitOptions"
@@ -21,8 +26,8 @@
                 />
             </div>
 
-            <div class="product-manage__column product-manage__column--secondary">
-                <div class="product-manage__sticky-stack">
+            <div class="product-manage__column product-manage__column--secondary fd-stack fd-gap-xl">
+                <div class="product-manage__sticky-stack fd-stack fd-gap-lg">
                     <fd-product-nutrition-editor
                         [formGroup]="productForm"
                         [nutritionMode]="nutritionMode"
@@ -37,7 +42,7 @@
                     />
 
                     <div class="product-manage__actions-panel">
-                        <div class="product-manage__footer-actions">
+                        <div class="product-manage__footer-actions fd-row fd-gap-md">
                             <fd-ui-button
                                 type="button"
                                 class="product-manage__cancel-button"

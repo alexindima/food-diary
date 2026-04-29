@@ -1,4 +1,4 @@
-@use 'variables';
+@use 'variables' as variables;
 
 .photo-ai-dialog {
     --photo-ai-card-radius: var(--fd-radius-card);
@@ -6,9 +6,6 @@
     --photo-ai-surface: var(--fd-color-surface-raised);
     --photo-ai-surface-muted: var(--fd-color-surface);
     --photo-ai-border: var(--fd-color-border-photo-ai);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-lg);
     padding-right: 0;
 }
 
@@ -87,37 +84,16 @@
     margin: 0;
 }
 
-.photo-ai-dialog__results {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
-}
-
 .photo-ai-dialog__results-title {
     color: var(--fd-color-text-strong);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-xs);
     width: 100%;
 }
 
-.photo-ai-dialog__title-left {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-xs);
-}
-
 .photo-ai-dialog__edit-header {
-    display: flex;
-    align-items: center;
     justify-content: flex-end;
-    gap: var(--fd-space-sm);
 }
 
 .photo-ai-dialog__edit-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
     padding: var(--fd-space-sm);
     border-radius: var(--photo-ai-card-radius);
     border: var(--fd-border-width) solid var(--photo-ai-border);
@@ -125,10 +101,7 @@
 }
 
 .photo-ai-dialog__edit-row {
-    display: grid;
     grid-template-columns: 28px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 28px;
-    gap: var(--fd-space-xs);
-    align-items: center;
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--photo-ai-field-radius);
     border: var(--fd-border-width) solid var(--photo-ai-border);
@@ -138,9 +111,6 @@
 .photo-ai-dialog__edit-handle {
     cursor: grab;
     color: var(--fd-color-slate-400);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .photo-ai-dialog__edit-input,
@@ -190,9 +160,6 @@
 }
 
 .photo-ai-dialog__title-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fd-space-xxs);
     padding-left: var(--fd-space-xxs);
     margin-left: auto;
 }
@@ -234,21 +201,13 @@
 
 .photo-ai-dialog__table-head,
 .photo-ai-dialog__table-row {
-    display: grid;
     grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.8fr);
-    gap: var(--fd-space-xs);
-    align-items: center;
 }
 
 .photo-ai-dialog__table-head {
     background: var(--photo-ai-surface-muted);
     color: var(--fd-color-text-muted);
     padding: var(--fd-space-xs) var(--fd-space-md);
-}
-
-.photo-ai-dialog__table-body {
-    display: flex;
-    flex-direction: column;
 }
 
 .photo-ai-dialog__table-row {
@@ -273,9 +232,6 @@
     border: var(--fd-border-width) solid var(--photo-ai-border);
     border-radius: var(--photo-ai-card-radius);
     background: var(--photo-ai-surface);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
 }
 
 .photo-ai-dialog__nutrition-title {
@@ -283,15 +239,8 @@
 }
 
 .photo-ai-dialog__nutrition-grid {
-    display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--fd-space-xs) var(--fd-space-sm);
-}
-
-.photo-ai-dialog__nutrition-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
 }
 
 .photo-ai-dialog__nutrition-label {
@@ -388,7 +337,3 @@
         width: 100%;
     }
 }
-
-
-
-
