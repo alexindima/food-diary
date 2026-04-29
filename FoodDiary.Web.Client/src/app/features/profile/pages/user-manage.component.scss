@@ -106,15 +106,11 @@
     }
 
     &__account-fields {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-lg);
         align-self: start;
         padding: 0;
     }
 
     &__link-button {
-        display: flex;
         align-items: stretch;
         padding-top: 0;
         width: 100%;
@@ -125,10 +121,7 @@
     }
 
     &__account-row {
-        display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--fd-space-lg);
-        align-items: start;
     }
 
     &__account-row-field {
@@ -140,24 +133,7 @@
     }
 
     &__body {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: var(--fd-space-lg);
-        align-items: start;
-    }
-
-    &__billing-summary {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
-    }
-
-    &__billing-primary {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-sm);
-        flex-wrap: wrap;
     }
 
     &__billing-plan {
@@ -168,15 +144,10 @@
     }
 
     &__billing-grid {
-        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: var(--fd-space-sm);
     }
 
     &__billing-item {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-button);
         background: var(--fd-bg-surface-raised);
@@ -196,12 +167,6 @@
         text-transform: uppercase;
     }
 
-    &__billing-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xs);
-    }
-
     &__billing-state,
     &__billing-note {
         color: var(--fd-color-text-muted);
@@ -212,23 +177,7 @@
         color: var(--fd-color-danger);
     }
 
-    &__notifications {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-profile-gap);
-    }
-
-    &__notifications-category-list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
     &__notifications-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-card-profile-gap);
 
         &--nested {
             --fd-surface-padding: var(--fd-space-surface-padding);
@@ -236,9 +185,6 @@
     }
 
     &__notifications-copy {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
         min-width: 0;
     }
 
@@ -246,12 +192,6 @@
         font-size: var(--fd-text-body-emphasis-size);
         font-weight: var(--fd-text-section-title-weight);
         color: var(--fd-color-text);
-    }
-
-    &__notifications-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xs);
     }
 
     &__notifications-badge {
@@ -274,23 +214,13 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__notifications-actions {
-        display: flex;
-        justify-content: flex-start;
-    }
-
     &__notifications-reminders {
-        display: grid;
         grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(140px, 180px)) auto;
-        gap: var(--fd-space-sm);
         align-items: end;
         width: 100%;
     }
 
     &__notifications-reminder-presets {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
         min-width: 0;
     }
 
@@ -302,36 +232,8 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__notifications-reminder-presets-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xs);
-    }
-
     &__notifications-devices {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
         padding-top: var(--fd-space-xxs);
-    }
-
-    &__notifications-devices-header {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
-    }
-
-    &__notifications-device-list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
-    &__notifications-device-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-md);
     }
 
     &__error {
@@ -343,40 +245,6 @@
         &--dietologist {
             text-align: left;
         }
-    }
-
-    &__dietologist {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
-    }
-
-    &__dietologist-summary {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: var(--fd-space-md);
-    }
-
-    &__dietologist-copy,
-    &__dietologist-permissions,
-    &__dietologist-permissions-header,
-    &__dietologist-permission-list,
-    &__dietologist-info-list {
-        display: flex;
-        flex-direction: column;
-    }
-
-    &__dietologist-copy,
-    &__dietologist-permissions-header,
-    &__dietologist-info-list {
-        gap: var(--fd-space-xxs);
-    }
-
-    &__dietologist-permissions,
-    &__dietologist-permission-list {
-        gap: var(--fd-space-sm);
     }
 
     &__dietologist-permissions {
@@ -411,16 +279,7 @@
         }
     }
 
-    &__dietologist-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-sm);
-    }
-
     &__dietologist-summary-actions {
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-end;
         flex-shrink: 0;
     }
 
@@ -429,9 +288,7 @@
     }
 
     &__dietologist-summary-form {
-        display: grid;
         grid-template-columns: minmax(260px, 1fr) auto;
-        gap: var(--fd-space-md);
         align-items: end;
         width: 100%;
     }
@@ -446,17 +303,7 @@
         line-height: 1.35;
     }
 
-    &__privacy {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
-    }
-
     &__privacy-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-sm);
 
         &--danger {
             padding-top: var(--fd-space-xxs);

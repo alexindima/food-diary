@@ -1,4 +1,4 @@
-<div class="consumption-manage__sticky-stack">
+<div class="consumption-manage__sticky-stack fd-stack fd-gap-lg">
     <fd-ui-card
         class="consumption-manage__card consumption-manage__card--nutrition"
         appearance="entry"
@@ -8,7 +8,7 @@
         accent="success"
         [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
     >
-        <div class="consumption-manage__nutrition">
+        <div class="consumption-manage__nutrition fd-stack fd-gap-md">
             <fd-nutrition-editor
                 [formGroup]="consumptionForm()"
                 [controlNames]="nutritionControlNames()"
@@ -36,7 +36,7 @@
     </fd-ui-card>
 
     <div class="consumption-manage__actions-panel">
-        <div class="consumption-manage__footer-actions">
+        <div class="consumption-manage__footer-actions fd-grid fd-gap-md fd-align-center">
             <fd-ui-button
                 type="button"
                 class="consumption-manage__cancel-button"

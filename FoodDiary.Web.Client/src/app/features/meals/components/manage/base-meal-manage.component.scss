@@ -38,70 +38,12 @@
         overflow: visible;
     }
 
-    &__basic-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--fd-space-md);
-
-        @media #{variables.$media-mobile} {
-            grid-template-columns: 1fr;
-        }
-
-        &--dates {
-            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-
-            @media #{variables.$media-tablet} {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            @media #{variables.$media-mobile} {
-                grid-template-columns: 1fr;
-            }
-        }
-    }
-
-    &__field {
-
-        &--full {
-            grid-column: 1 / -1;
-        }
-    }
-
-    &__summary-calories {
-        margin: 0;
-        font-size: var(--fd-text-body-sm-size);
-        line-height: var(--fd-text-body-sm-line-height);
-        font-weight: var(--fd-text-body-sm-weight);
-        color: var(--fd-color-text);
-
-        strong {
-            font-weight: var(--fd-text-action-weight);
-        }
-    }
-
-    &__summary-alcohol {
-        margin: 0;
-        font-size: var(--fd-text-stat-value-size);
-        line-height: var(--fd-text-stat-value-line-height);
-        font-weight: var(--fd-text-stat-value-weight);
-        color: var(--fd-color-text-muted);
-
-        strong {
-            font-weight: var(--fd-text-action-weight);
-        }
-    }
-
     &__card--nutrition {
         container-type: inline-size;
     }
 
     &__card {
         overflow: hidden;
-
-        &--sticky {
-            position: sticky;
-            top: var(--fd-space-xl);
-        }
     }
 
     &__hero {
@@ -126,7 +68,6 @@
         aspect-ratio: 1 / 1;
         align-self: start;
         justify-self: start;
-        display: flex;
 
         > fd-image-upload-field {
             display: block;
@@ -156,18 +97,9 @@
         }
     }
 
-    &__footer {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
     &__sticky-stack {
         position: sticky;
         top: calc(var(--fd-space-xl) + 8px);
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-lg);
         align-self: flex-start;
         justify-self: stretch;
         width: 100%;
@@ -182,10 +114,7 @@
     }
 
     &__footer-actions {
-        display: grid;
         grid-template-columns: max-content minmax(0, 1fr);
-        gap: var(--fd-space-md);
-        align-items: center;
     }
 
     &__action-button {
@@ -318,9 +247,6 @@
     }
 
     &__ai-summary {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
         padding: var(--fd-space-md);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-panel);
@@ -328,25 +254,12 @@
         box-shadow: var(--fd-shadow-lg);
     }
 
-    &__ai-summary-listing {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
     &__ai-summary-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: var(--fd-space-sm);
         padding-bottom: var(--fd-space-sm);
         border-bottom: var(--fd-border-muted);
     }
 
     &__ai-summary-heading {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
         flex: 1;
         min-width: 0;
     }
@@ -361,9 +274,6 @@
     }
 
     &__ai-summary-stats {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xxs);
         font-size: var(--fd-text-stat-value-size);
         line-height: var(--fd-text-stat-value-line-height);
         font-weight: var(--fd-text-stat-value-weight);
@@ -371,9 +281,6 @@
     }
 
     &__ai-summary-calories {
-        display: inline-flex;
-        align-items: baseline;
-        gap: var(--fd-space-xxs);
         color: var(--fd-color-text);
         font-weight: var(--fd-text-action-weight);
     }
@@ -384,17 +291,8 @@
     }
 
     &__ai-summary-nutrients {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-sm);
         color: var(--fd-color-text-muted);
         font-weight: var(--fd-font-weight-medium);
-    }
-
-    &__ai-summary-actions {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
     }
 
     &__ai-summary-action {
@@ -427,9 +325,7 @@
     }
 
     &__ai-summary-body {
-        display: flex;
         align-items: stretch;
-        gap: var(--fd-space-md);
     }
 
     &__ai-summary-image {
@@ -438,9 +334,6 @@
         flex: 0 0 64px;
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-muted-tint-subtle);
-        display: flex;
-        align-items: center;
-        justify-content: center;
         overflow: hidden;
         color: var(--fd-color-text-muted);
     }
@@ -452,16 +345,10 @@
     }
 
     &__ai-summary-list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
         flex: 1;
     }
 
     &__ai-summary-row {
-        display: flex;
-        justify-content: space-between;
-        gap: var(--fd-space-md);
         font-size: var(--fd-text-body-sm-size);
         line-height: var(--fd-text-body-sm-line-height);
         font-weight: var(--fd-text-body-sm-weight);
@@ -510,16 +397,7 @@
     }
 }
 
-.consumption-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
 .consumption-item-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
     padding: var(--fd-space-md) 0;
     border-bottom: var(--fd-border-muted);
 }
@@ -533,61 +411,6 @@
     padding-bottom: 0;
 }
 
-.consumption-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
-}
-
-.consumption-item-card__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--fd-space-md);
-    margin-bottom: var(--fd-space-sm);
-}
-
-.consumption-item-card__title-wrapper {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-sm);
-    flex: 1;
-    min-width: 0;
-}
-
-.consumption-item-card__title {
-    font-weight: var(--fd-text-action-weight);
-    font-size: var(--fd-text-action-size);
-    line-height: var(--fd-text-action-line-height);
-    color: var(--fd-color-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.consumption-item-card__meta {
-    font-size: var(--fd-text-caption-size);
-    line-height: var(--fd-text-caption-line-height);
-    font-weight: var(--fd-text-caption-weight);
-    color: var(--fd-color-text-muted);
-    padding: 0 var(--fd-space-sm);
-    border-radius: var(--fd-radius-badge);
-    background-color: var(--fd-bg-text-muted-tint);
-}
-
-.consumption-item__fields {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
-}
-
-.consumption-item__row {
-    display: flex;
-    gap: var(--fd-space-md);
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
-
 .consumption-item__row--with-remove {
     flex-wrap: nowrap;
     align-items: center;
@@ -599,9 +422,6 @@
 }
 
 .consumption-item__field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
 
     &--source {
         flex: 2 1 240px;
@@ -616,17 +436,8 @@
     width: 100%;
 }
 
-.consumption-item__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--fd-space-sm);
-    flex-wrap: wrap;
-}
-
 .consumption-item__actions--stack {
-    flex-direction: column;
     align-items: stretch;
-    gap: var(--fd-space-sm);
     justify-content: flex-start;
     margin-top: var(--fd-space-sm);
 
@@ -640,31 +451,6 @@
     margin-top: var(--fd-space-sm);
 }
 
-.consumption-manage__nutrition {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
-}
-
 .consumption-manage__nutrition-toggle {
     width: 100%;
-}
-
-.consumption-manage__dialog {
-    padding: var(--fd-space-lg);
-    text-align: center;
-
-    &-title {
-        font-size: var(--fd-text-metric-lg-size);
-        line-height: var(--fd-text-metric-lg-line-height);
-        font-weight: var(--fd-text-metric-lg-weight);
-        color: var(--fd-color-text);
-        margin: 0 0 var(--fd-space-lg);
-    }
-
-    &-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
-    }
 }

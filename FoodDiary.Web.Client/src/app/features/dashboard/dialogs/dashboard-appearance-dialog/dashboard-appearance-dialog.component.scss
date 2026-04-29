@@ -60,9 +60,7 @@
 }
 
 .dashboard-appearance-dialog__grid {
-    display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--fd-space-sm);
 }
 
 .dashboard-appearance-dialog__grid--styles {
@@ -116,9 +114,7 @@
     border-radius: var(--dashboard-appearance-preview-radius);
     position: relative;
     overflow: hidden;
-    box-shadow:
-        var(--fd-shadow-highlight-inset-dialog),
-        var(--fd-shadow-ring-inset-muted);
+    box-shadow: var(--fd-shadow-highlight-inset-dialog), var(--fd-shadow-ring-inset-muted);
 }
 
 .dashboard-appearance-dialog__swatch::after {
@@ -168,9 +164,7 @@
     padding: var(--fd-space-sm);
     align-content: center;
     gap: var(--fd-space-xxs);
-    box-shadow:
-        var(--fd-shadow-highlight-inset-dialog),
-        var(--fd-shadow-ring-inset-muted);
+    box-shadow: var(--fd-shadow-highlight-inset-dialog), var(--fd-shadow-ring-inset-muted);
 }
 
 .dashboard-appearance-dialog__style-preview span {
@@ -182,11 +176,7 @@
 .dashboard-appearance-dialog__style-preview--classic {
     --dashboard-style-preview-surface-radius: 20px;
     --dashboard-style-preview-line-radius: 12px;
-    background: linear-gradient(
-        180deg,
-        var(--dashboard-style-classic-surface-start),
-        var(--dashboard-style-classic-surface-end)
-    );
+    background: linear-gradient(180deg, var(--dashboard-style-classic-surface-start), var(--dashboard-style-classic-surface-end));
 }
 
 .dashboard-appearance-dialog__style-preview--classic span:nth-child(1) {
@@ -207,11 +197,7 @@
 .dashboard-appearance-dialog__style-preview--modern {
     --dashboard-style-preview-surface-radius: 8px;
     --dashboard-style-preview-line-radius: 6px;
-    background: linear-gradient(
-        135deg,
-        var(--dashboard-style-modern-surface-start),
-        var(--dashboard-style-modern-surface-end)
-    );
+    background: linear-gradient(135deg, var(--dashboard-style-modern-surface-start), var(--dashboard-style-modern-surface-end));
 }
 
 .dashboard-appearance-dialog__style-preview--modern span:nth-child(1) {

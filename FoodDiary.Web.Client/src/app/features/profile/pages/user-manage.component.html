@@ -1,4 +1,4 @@
-﻿<div class="user-manage fd-stack fd-gap-md" fdPageContainer>
+<div class="user-manage fd-stack fd-gap-md" fdPageContainer>
     <fd-page-header
         class="user-manage__header"
         [title]="'USER_MANAGE.EDIT_TITLE' | translate"
@@ -50,8 +50,8 @@
                                 [deleteOnClear]="true"
                             />
                         </div>
-                        <div class="user-manage__account-fields">
-                            <div class="user-manage__account-row">
+                        <div class="user-manage__account-fields fd-stack fd-gap-lg">
+                            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                                 <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="email"
@@ -68,7 +68,7 @@
                                     [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
                                 />
                             </div>
-                            <div class="user-manage__account-row">
+                            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                                 <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="firstName"
@@ -84,7 +84,7 @@
                                     [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
                                 />
                             </div>
-                            <div class="user-manage__account-row">
+                            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                                 <fd-ui-date-input
                                     class="user-manage__account-row-field"
                                     formControlName="birthDate"
@@ -101,7 +101,7 @@
                                     [options]="genderOptions"
                                 />
                             </div>
-                            <div class="user-manage__account-row">
+                            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                                 <fd-ui-select
                                     class="user-manage__account-row-field"
                                     formControlName="language"
@@ -119,7 +119,7 @@
                                     [options]="themeOptions"
                                 />
                             </div>
-                            <div class="user-manage__account-row">
+                            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                                 <fd-ui-select
                                     class="user-manage__account-row-field"
                                     formControlName="uiStyle"
@@ -129,8 +129,8 @@
                                     [options]="uiStyleOptions"
                                 />
                             </div>
-                            <div class="user-manage__account-row">
-                                <div class="user-manage__link-button">
+                            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                                <div class="user-manage__link-button fd-row">
                                     <fd-ui-button
                                         class="user-manage__link-button-control"
                                         type="button"
@@ -174,37 +174,37 @@
                         <div class="user-manage__billing-state user-manage__billing-state--error fd-ui-body-sm">
                             {{ billingErrorKey | translate }}
                         </div>
-                        <div class="user-manage__billing-actions">
+                        <div class="user-manage__billing-actions fd-row fd-wrap fd-gap-xs">
                             <fd-ui-button type="button" variant="secondary" fill="outline" (click)="reloadBillingOverview()">
                                 {{ 'USER_MANAGE.BILLING_RETRY' | translate }}
                             </fd-ui-button>
                         </div>
                     } @else if (billingOverview(); as billing) {
-                        <div class="user-manage__billing-summary">
-                            <div class="user-manage__billing-primary">
+                        <div class="user-manage__billing-summary fd-stack fd-gap-md">
+                            <div class="user-manage__billing-primary fd-row fd-wrap fd-gap-sm fd-justify-between">
                                 <div class="user-manage__billing-plan">{{ billingPlanLabelKey() | translate }}</div>
                                 <fd-ui-status-badge [tone]="billing.isPremium ? 'success' : 'muted'">
                                     {{ billingStatusLabelKey() | translate }}
                                 </fd-ui-status-badge>
                             </div>
 
-                            <div class="user-manage__billing-grid">
-                                <div class="user-manage__billing-item">
+                            <div class="user-manage__billing-grid fd-grid fd-gap-sm">
+                                <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                     <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_PROVIDER' | translate }}</span>
                                     <strong>{{ billingProviderLabel() }}</strong>
                                 </div>
-                                <div class="user-manage__billing-item">
+                                <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                     <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_RENEWAL' | translate }}</span>
                                     <strong>{{ billingRenewalLabelKey() | translate }}</strong>
                                 </div>
                                 @if (billing.currentPeriodStartUtc) {
-                                    <div class="user-manage__billing-item">
+                                    <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_PERIOD_START' | translate }}</span>
                                         <strong>{{ billing.currentPeriodStartUtc | date: 'mediumDate' }}</strong>
                                     </div>
                                 }
                                 @if (billing.currentPeriodEndUtc) {
-                                    <div class="user-manage__billing-item">
+                                    <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">
                                             {{
                                                 (billing.cancelAtPeriodEnd
@@ -217,14 +217,14 @@
                                     </div>
                                 }
                                 @if (billing.nextBillingAttemptUtc && !billing.cancelAtPeriodEnd) {
-                                    <div class="user-manage__billing-item">
+                                    <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_NEXT_CHARGE' | translate }}</span>
                                         <strong>{{ billing.nextBillingAttemptUtc | date: 'mediumDate' }}</strong>
                                     </div>
                                 }
                             </div>
 
-                            <div class="user-manage__billing-actions">
+                            <div class="user-manage__billing-actions fd-row fd-wrap fd-gap-xs">
                                 @if (billing.manageBillingAvailable) {
                                     <fd-ui-button
                                         type="button"
@@ -264,7 +264,7 @@
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.BODY_SECTION' | translate }}</div>
                         </div>
                     </div>
-                    <div class="user-manage__body">
+                    <div class="user-manage__body fd-grid fd-gap-lg fd-align-start">
                         <fd-ui-input
                             formControlName="height"
                             type="number"
@@ -299,13 +299,15 @@
                             }
                         </div>
                     </div>
-                    <div class="user-manage__notifications">
-                        <div class="user-manage__notifications-item fd-ui-surface fd-ui-surface--primary">
-                            <div class="user-manage__notifications-copy">
+                    <div class="user-manage__notifications fd-stack fd-gap-card-profile">
+                        <div
+                            class="user-manage__notifications-item fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--primary"
+                        >
+                            <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                 <div class="user-manage__notifications-label">
                                     {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
                                 </div>
-                                <div class="user-manage__notifications-meta">
+                                <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
                                     <span
                                         class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
                                     >
@@ -332,11 +334,11 @@
                         </div>
 
                         @if (pushNotificationsEnabled()) {
-                            <div class="user-manage__notifications-category-list">
+                            <div class="user-manage__notifications-category-list fd-stack fd-gap-sm">
                                 <div
-                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                 >
-                                    <div class="user-manage__notifications-copy">
+                                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                         <div class="user-manage__notifications-label">
                                             {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}
                                         </div>
@@ -355,9 +357,9 @@
 
                                 @if (fastingPushNotificationsEnabled()) {
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_TITLE' | translate }}
                                             </div>
@@ -365,12 +367,12 @@
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_HINT' | translate }}
                                             </div>
                                         </div>
-                                        <div class="user-manage__notifications-reminders">
-                                            <div class="user-manage__notifications-reminder-presets">
+                                        <div class="user-manage__notifications-reminders fd-grid fd-gap-sm">
+                                            <div class="user-manage__notifications-reminder-presets fd-stack fd-gap-xs">
                                                 <div class="user-manage__notifications-reminder-presets-label">
                                                     {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_PRESETS' | translate }}
                                                 </div>
-                                                <div class="user-manage__notifications-reminder-presets-list">
+                                                <div class="user-manage__notifications-reminder-presets-list fd-row fd-wrap fd-gap-xs">
                                                     @for (preset of fastingReminderPresets; track preset.id) {
                                                         <fd-ui-button
                                                             class="user-manage__preset-button"
@@ -420,9 +422,9 @@
                                 }
 
                                 <div
-                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                 >
-                                    <div class="user-manage__notifications-copy">
+                                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                         <div class="user-manage__notifications-label">
                                             {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}
                                         </div>
@@ -440,7 +442,7 @@
                                 </div>
                             </div>
 
-                            <div class="user-manage__notifications-actions">
+                            <div class="user-manage__notifications-actions fd-row">
                                 <fd-ui-button
                                     class="user-manage__notifications-action-button"
                                     type="button"
@@ -460,8 +462,8 @@
                             </div>
                         }
 
-                        <div class="user-manage__notifications-devices">
-                            <div class="user-manage__notifications-devices-header">
+                        <div class="user-manage__notifications-devices fd-stack fd-gap-sm">
+                            <div class="user-manage__notifications-devices-header fd-stack fd-gap-xxs">
                                 <div class="user-manage__notifications-label">
                                     {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES' | translate }}
                                 </div>
@@ -477,14 +479,16 @@
                                 [emptyMessage]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate"
                                 emptyIcon="devices"
                             >
-                                <div class="user-manage__notifications-device-list">
+                                <div class="user-manage__notifications-device-list fd-stack fd-gap-xs">
                                     @for (subscription of connectedDevices(); track subscription.endpoint) {
-                                        <div class="user-manage__notifications-device-item fd-ui-surface fd-ui-surface--raised">
-                                            <div class="user-manage__notifications-copy">
+                                        <div
+                                            class="user-manage__notifications-device-item fd-row fd-gap-md fd-justify-between fd-ui-surface fd-ui-surface--raised"
+                                        >
+                                            <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                                 <div class="user-manage__notifications-label">
                                                     {{ getConnectedDeviceLabel(subscription) }}
                                                 </div>
-                                                <div class="user-manage__notifications-meta">
+                                                <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
                                                     @if (isCurrentDevice(subscription)) {
                                                         <span
                                                             class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
@@ -535,14 +539,16 @@
                         </div>
                     </div>
 
-                    <div class="user-manage__dietologist" [formGroup]="dietologistForm">
+                    <div class="user-manage__dietologist fd-stack fd-gap-md" [formGroup]="dietologistForm">
                         @if (isLoadingDietologist()) {
                             <div class="user-manage__dietologist-empty fd-ui-surface fd-ui-surface--dashed">
                                 {{ 'USER_MANAGE.DIETOLOGIST_LOADING' | translate }}
                             </div>
                         } @else {
-                            <div class="user-manage__dietologist-summary fd-ui-surface fd-ui-surface--warning">
-                                <div class="user-manage__dietologist-copy">
+                            <div
+                                class="user-manage__dietologist-summary fd-row fd-wrap fd-gap-md fd-justify-between fd-ui-surface fd-ui-surface--warning"
+                            >
+                                <div class="user-manage__dietologist-copy fd-stack fd-gap-xxs">
                                     <div class="user-manage__dietologist-label">
                                         @if (isDietologistConnected()) {
                                             {{
@@ -556,7 +562,7 @@
                                         }
                                     </div>
                                     @if (isDietologistConnected()) {
-                                        <div class="user-manage__dietologist-info-list">
+                                        <div class="user-manage__dietologist-info-list fd-stack fd-gap-xxs">
                                             @if (dietologistRelationship()?.acceptedAtUtc) {
                                                 <div class="user-manage__dietologist-info-row">
                                                     {{
@@ -584,7 +590,7 @@
                                     }
                                 </div>
                                 @if (isDietologistConnected()) {
-                                    <div class="user-manage__dietologist-summary-actions">
+                                    <div class="user-manage__dietologist-summary-actions fd-row fd-justify-end fd-align-start">
                                         <fd-ui-button
                                             class="user-manage__dietologist-summary-button"
                                             type="button"
@@ -599,7 +605,7 @@
                                         </fd-ui-button>
                                     </div>
                                 } @else {
-                                    <div class="user-manage__dietologist-summary-form">
+                                    <div class="user-manage__dietologist-summary-form fd-grid fd-gap-md">
                                         <div class="user-manage__dietologist-email user-manage__dietologist-email--summary">
                                             <fd-ui-input
                                                 formControlName="email"
@@ -610,7 +616,7 @@
                                                 [error]="getControlError(dietologistForm.controls.email)"
                                             />
                                         </div>
-                                        <div class="user-manage__dietologist-summary-actions">
+                                        <div class="user-manage__dietologist-summary-actions fd-row fd-justify-end fd-align-start">
                                             @if (!hasDietologistRelationship()) {
                                                 <fd-ui-button
                                                     class="user-manage__dietologist-summary-button"
@@ -640,7 +646,7 @@
                                     </div>
                                 }
                                 @if (hasDietologistRelationship() && !isDietologistConnected()) {
-                                    <div class="user-manage__notifications-meta">
+                                    <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
                                         <span
                                             class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--warning fd-ui-caption"
                                         >
@@ -658,12 +664,12 @@
                                 }
                             </div>
 
-                            <div class="user-manage__dietologist-permissions">
-                                <div class="user-manage__dietologist-permission-list">
+                            <div class="user-manage__dietologist-permissions fd-stack fd-gap-sm">
+                                <div class="user-manage__dietologist-permission-list fd-stack fd-gap-sm">
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate }}
                                             </div>
@@ -678,9 +684,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate }}
                                             </div>
@@ -695,9 +701,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate }}
                                             </div>
@@ -712,9 +718,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate }}
                                             </div>
@@ -729,9 +735,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate }}
                                             </div>
@@ -746,9 +752,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate }}
                                             </div>
@@ -763,9 +769,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate }}
                                             </div>
@@ -780,9 +786,9 @@
                                     </div>
 
                                     <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-ui-surface fd-ui-surface--raised"
+                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                     >
-                                        <div class="user-manage__notifications-copy">
+                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                             <div class="user-manage__notifications-label">
                                                 {{ 'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate }}
                                             </div>
@@ -812,8 +818,8 @@
                         <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</div>
                     </div>
                 </div>
-                <div class="user-manage__privacy">
-                    <div class="user-manage__privacy-item">
+                <div class="user-manage__privacy fd-stack fd-gap-md">
+                    <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">
                         <div class="user-manage__privacy-info">
                             <div class="user-manage__privacy-label">{{ 'USER_MANAGE.AI_CONSENT_LABEL' | translate }}</div>
                             <div class="user-manage__privacy-status">
@@ -846,13 +852,13 @@
                             </fd-ui-button>
                         }
                     </div>
-                    <div class="user-manage__privacy-item">
+                    <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">
                         <a class="user-manage__privacy-link" href="/privacy-policy" target="_blank" rel="noopener noreferrer">
                             {{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}
                         </a>
                     </div>
                     <div class="user-manage__privacy-divider"></div>
-                    <div class="user-manage__privacy-item user-manage__privacy-item--danger">
+                    <div class="user-manage__privacy-item user-manage__privacy-item--danger fd-row fd-gap-sm fd-justify-between">
                         <div class="user-manage__privacy-info">
                             <div class="user-manage__privacy-label">{{ 'USER_MANAGE.DELETE_ACCOUNT_LABEL' | translate }}</div>
                             <div class="user-manage__privacy-hint">{{ 'USER_MANAGE.DELETE_ACCOUNT_HINT' | translate }}</div>

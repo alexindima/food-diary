@@ -1,4 +1,4 @@
-﻿<fd-ui-card
+<fd-ui-card
     class="consumption-manage__card consumption-manage__card--items-ai"
     tone="editor"
     density="compact"
@@ -9,30 +9,30 @@
         {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HINT' | translate }}
     </p>
     @if (aiSessions().length) {
-        <div class="consumption-manage__ai-summary-listing">
+        <div class="consumption-manage__ai-summary-listing fd-stack fd-gap-sm">
             @for (session of aiSessions(); track $index; let idx = $index) {
                 @let totals = getAiSessionTotals(session);
-                <div class="consumption-manage__ai-summary">
-                    <div class="consumption-manage__ai-summary-header">
-                        <div class="consumption-manage__ai-summary-image">
+                <div class="consumption-manage__ai-summary fd-stack fd-gap-md">
+                    <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
+                        <div class="consumption-manage__ai-summary-image fd-center">
                             @if (session.imageUrl) {
                                 <img [src]="session.imageUrl" alt="" loading="lazy" />
                             } @else {
                                 <fd-ui-icon name="photo_camera" size="md" />
                             }
                         </div>
-                        <div class="consumption-manage__ai-summary-heading">
+                        <div class="consumption-manage__ai-summary-heading fd-stack fd-gap-xxs">
                             <div class="consumption-manage__ai-summary-title">
                                 {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate: { count: session.items.length } }}
                             </div>
-                            <div class="consumption-manage__ai-summary-stats">
-                                <div class="consumption-manage__ai-summary-calories">
+                            <div class="consumption-manage__ai-summary-stats fd-stack fd-gap-xxs">
+                                <div class="consumption-manage__ai-summary-calories fd-row fd-gap-xxs fd-align-baseline">
                                     <span class="consumption-manage__ai-summary-label">
                                         {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}:
                                     </span>
                                     <span>{{ formatAiMacro(totals.calories, 'GENERAL.UNITS.KCAL') }}</span>
                                 </div>
-                                <div class="consumption-manage__ai-summary-nutrients">
+                                <div class="consumption-manage__ai-summary-nutrients fd-row fd-wrap fd-gap-sm">
                                     <span>
                                         {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}:
                                         {{ formatAiMacro(totals.proteins, 'GENERAL.UNITS.G') }}
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="consumption-manage__ai-summary-actions">
+                        <div class="consumption-manage__ai-summary-actions fd-row fd-gap-xs">
                             <fd-ui-button
                                 class="consumption-manage__ai-summary-action"
                                 variant="secondary"
@@ -69,14 +69,14 @@
                             />
                         </div>
                     </div>
-                    <div class="consumption-manage__ai-summary-body">
-                        <div class="consumption-manage__ai-summary-list">
+                    <div class="consumption-manage__ai-summary-body fd-row fd-gap-md">
+                        <div class="consumption-manage__ai-summary-list fd-stack fd-gap-xs">
                             @for (
                                 aiItem of isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems);
                                 track $index;
                                 let itemIdx = $index
                             ) {
-                                <div class="consumption-manage__ai-summary-row">
+                                <div class="consumption-manage__ai-summary-row fd-row fd-gap-md fd-justify-between">
                                     <span class="consumption-manage__ai-summary-name">
                                         {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}
                                     </span>
@@ -114,7 +114,7 @@
             }
         </div>
     }
-    <div class="consumption-item__actions consumption-item__actions--stack">
+    <div class="consumption-item__actions consumption-item__actions--stack fd-stack fd-gap-sm">
         <fd-ui-button
             type="button"
             icon="photo_camera"

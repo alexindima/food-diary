@@ -1,16 +1,16 @@
-﻿<fd-ui-card
+<fd-ui-card
     class="consumption-manage__card consumption-manage__card--items"
     tone="editor"
     density="compact"
     headerAlign="center"
     [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
 >
-    <div class="consumption-items">
+    <div class="consumption-items fd-stack">
         @for (item of formArray().controls; track $index; let i = $index; let first = $first) {
-            <div class="consumption-item-card" [formGroup]="item">
-                <div class="consumption-item__fields">
-                    <div class="consumption-item__row consumption-item__row--with-remove">
-                        <div class="consumption-item__field consumption-item__field--source">
+            <div class="consumption-item-card fd-stack fd-gap-md" [formGroup]="item">
+                <div class="consumption-item__fields fd-stack fd-gap-md">
+                    <div class="consumption-item__row consumption-item__row--with-remove fd-row fd-wrap fd-gap-md fd-align-start">
+                        <div class="consumption-item__field consumption-item__field--source fd-stack fd-gap-xs">
                             <fd-ui-input
                                 class="consumption-item__selector-input"
                                 size="lg"
@@ -24,7 +24,7 @@
                                 (click)="onItemSourceClick(i)"
                             />
                         </div>
-                        <div class="consumption-item__field consumption-item__field--amount">
+                        <div class="consumption-item__field consumption-item__field--amount fd-stack fd-gap-xs">
                             <fd-ui-input
                                 formControlName="amount"
                                 size="lg"
@@ -55,7 +55,7 @@
             </div>
         }
     </div>
-    <div class="consumption-item__actions consumption-item__actions--stack">
+    <div class="consumption-item__actions consumption-item__actions--stack fd-stack fd-gap-sm">
         <fd-ui-button
             type="button"
             icon="add"
