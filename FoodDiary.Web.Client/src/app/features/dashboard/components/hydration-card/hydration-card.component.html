@@ -1,4 +1,4 @@
-<div class="hydration-card" [class.hydration-card--loading]="isLoading()">
+<div class="hydration-card fd-min-w-0" [class.hydration-card--loading]="isLoading()">
     <fd-dashboard-widget-frame [title]="title() | translate">
         @if (canAdd()) {
             <fd-ui-button
@@ -14,9 +14,9 @@
                 +{{ addStep() }} {{ 'GENERAL.UNITS.ML' | translate }}
             </fd-ui-button>
         }
-        <div class="hydration-card__content">
-            <div class="hydration-card__value">
-                <span class="hydration-card__liters fd-ui-metric-hero">{{ total() | number: '1.0-0' }}</span>
+        <div class="hydration-card__content fd-stack fd-gap-sm">
+            <div class="hydration-card__value fd-row fd-align-baseline fd-gap-xxs">
+                <span class="hydration-card__liters fd-ui-metric-hero fd-min-w-0">{{ total() | number: '1.0-0' }}</span>
                 <span class="hydration-card__unit fd-ui-metric-unit">
                     @if (hasGoal()) {
                         / {{ goal() | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}
@@ -26,7 +26,7 @@
                 </span>
             </div>
             @if (hasGoal()) {
-                <div class="hydration-card__progress">
+                <div class="hydration-card__progress fd-row fd-gap-xs">
                     <div class="hydration-card__progress-track fd-ui-progress-track">
                         <div class="hydration-card__progress-fill fd-ui-progress-fill" [style.width]="trackWidth()"></div>
                     </div>

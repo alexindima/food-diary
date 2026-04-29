@@ -1,43 +1,53 @@
 <fd-ui-dialog [title]="'DASHBOARD.NOTIFICATIONS.TITLE' | translate" size="md" bodyScrollInset="edge">
-    <div class="dashboard-notification-settings-dialog" [attr.aria-busy]="isLoading() || isUpdating() || pushNotificationsBusy()">
+    <div
+        class="dashboard-notification-settings-dialog fd-stack fd-gap-md"
+        [attr.aria-busy]="isLoading() || isUpdating() || pushNotificationsBusy()"
+    >
         <div class="dashboard-notification-settings-dialog__intro">
-            <p class="dashboard-notification-settings-dialog__subtitle">{{ 'DASHBOARD.NOTIFICATIONS.SUBTITLE' | translate }}</p>
+            <p class="dashboard-notification-settings-dialog__subtitle fd-ui-text-muted">
+                {{ 'DASHBOARD.NOTIFICATIONS.SUBTITLE' | translate }}
+            </p>
         </div>
 
         @if (submitError()) {
             <p class="dashboard-notification-settings-dialog__error" role="alert">{{ submitError() }}</p>
         }
 
-        <section class="dashboard-notification-settings-dialog__section" aria-labelledby="dashboard-notifications-main-heading">
-            <div class="dashboard-notification-settings-dialog__section-header">
+        <section
+            class="dashboard-notification-settings-dialog__section fd-stack fd-gap-sm"
+            aria-labelledby="dashboard-notifications-main-heading"
+        >
+            <div class="dashboard-notification-settings-dialog__section-header fd-stack fd-gap-xxs">
                 <h3
                     id="dashboard-notifications-main-heading"
                     class="dashboard-notification-settings-dialog__section-title fd-ui-card-title"
                 >
                     {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
                 </h3>
-                <p class="dashboard-notification-settings-dialog__section-copy fd-ui-body-sm">
+                <p class="dashboard-notification-settings-dialog__section-copy fd-ui-body-sm fd-ui-text-muted">
                     {{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}
                 </p>
             </div>
 
-            <div class="dashboard-notification-settings-dialog__item dashboard-notification-settings-dialog__item--primary">
-                <div class="dashboard-notification-settings-dialog__copy">
-                    <div class="dashboard-notification-settings-dialog__label">
+            <div
+                class="dashboard-notification-settings-dialog__item dashboard-notification-settings-dialog__item--primary fd-row fd-align-start fd-justify-between fd-gap-md"
+            >
+                <div class="dashboard-notification-settings-dialog__copy fd-stack fd-gap-xs fd-min-w-0">
+                    <div class="dashboard-notification-settings-dialog__label fd-ui-action-text">
                         {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
                     </div>
-                    <div class="dashboard-notification-settings-dialog__meta">
-                        <span class="dashboard-notification-settings-dialog__badge fd-ui-pill fd-ui-pill--primary fd-ui-caption">
+                    <div class="dashboard-notification-settings-dialog__meta fd-row fd-wrap fd-gap-xs">
+                        <span class="dashboard-notification-settings-dialog__badge fd-ui-pill fd-ui-pill--primary fd-ui-caption fd-nowrap">
                             {{ pushNotificationsAccountStatusKey() | translate }}
                         </span>
-                        <span class="dashboard-notification-settings-dialog__badge fd-ui-pill fd-ui-pill--muted fd-ui-caption">
+                        <span class="dashboard-notification-settings-dialog__badge fd-ui-pill fd-ui-pill--muted fd-ui-caption fd-nowrap">
                             {{ pushNotificationsDeviceStatusKey() | translate }}
                         </span>
                     </div>
-                    <div class="dashboard-notification-settings-dialog__hint">
+                    <div class="dashboard-notification-settings-dialog__hint fd-ui-body-sm fd-ui-text-muted">
                         {{ pushNotificationsHintKey() | translate }}
                     </div>
-                    <div class="dashboard-notification-settings-dialog__device-note">
+                    <div class="dashboard-notification-settings-dialog__device-note fd-ui-body-sm fd-ui-text-muted">
                         {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE' | translate }}
                     </div>
                 </div>
@@ -55,13 +65,13 @@
             </div>
 
             @if (pushNotificationsEnabled()) {
-                <div class="dashboard-notification-settings-dialog__list">
-                    <div class="dashboard-notification-settings-dialog__item">
-                        <div class="dashboard-notification-settings-dialog__copy">
-                            <div class="dashboard-notification-settings-dialog__label">
+                <div class="dashboard-notification-settings-dialog__list fd-stack fd-gap-sm">
+                    <div class="dashboard-notification-settings-dialog__item fd-row fd-align-start fd-justify-between fd-gap-md">
+                        <div class="dashboard-notification-settings-dialog__copy fd-stack fd-gap-xs fd-min-w-0">
+                            <div class="dashboard-notification-settings-dialog__label fd-ui-action-text">
                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}
                             </div>
-                            <div class="dashboard-notification-settings-dialog__hint">
+                            <div class="dashboard-notification-settings-dialog__hint fd-ui-body-sm fd-ui-text-muted">
                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}
                             </div>
                         </div>
@@ -78,12 +88,12 @@
                         />
                     </div>
 
-                    <div class="dashboard-notification-settings-dialog__item">
-                        <div class="dashboard-notification-settings-dialog__copy">
-                            <div class="dashboard-notification-settings-dialog__label">
+                    <div class="dashboard-notification-settings-dialog__item fd-row fd-align-start fd-justify-between fd-gap-md">
+                        <div class="dashboard-notification-settings-dialog__copy fd-stack fd-gap-xs fd-min-w-0">
+                            <div class="dashboard-notification-settings-dialog__label fd-ui-action-text">
                                 {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}
                             </div>
-                            <div class="dashboard-notification-settings-dialog__hint">
+                            <div class="dashboard-notification-settings-dialog__hint fd-ui-body-sm fd-ui-text-muted">
                                 {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-<a class="fd-skip-nav" href="#main-content">Skip to main content</a>
+<a class="fd-skip-nav fd-visually-hidden-focusable" href="#main-content">Skip to main content</a>
 <fd-ui-top-loader [visible]="isTopLoaderVisible()" />
 <div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()" [class.fd-root--impersonating]="isImpersonating()">
     @if (isAuthenticated()) {
@@ -14,7 +14,7 @@
             <div class="fd-impersonation-banner" role="status" aria-live="polite">
                 <span>Impersonation mode</span>
                 @if (impersonationReason()) {
-                    <span class="fd-impersonation-banner__reason">{{ impersonationReason() }}</span>
+                    <span class="fd-impersonation-banner__reason fd-truncate">{{ impersonationReason() }}</span>
                 }
                 <button type="button" class="fd-impersonation-banner__button" (click)="stopImpersonation()">Exit</button>
             </div>

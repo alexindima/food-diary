@@ -1,6 +1,6 @@
-<div class="dashboard-widget-header" [class.dashboard-widget-header--with-icon]="hasIcon()">
+<div class="dashboard-widget-header fd-row fd-gap-xs fd-min-w-0" [class.dashboard-widget-header--with-icon]="hasIcon()">
     @if (hasIcon()) {
-        <div class="dashboard-widget-header__icon" [attr.data-tone]="iconTone()" aria-hidden="true">
+        <div class="dashboard-widget-header__icon fd-inline-center" [attr.data-tone]="iconTone()" aria-hidden="true">
             @if (iconName()) {
                 <fd-ui-icon [name]="iconName()!"></fd-ui-icon>
             } @else {
@@ -9,7 +9,7 @@
         </div>
     }
 
-    <div class="dashboard-widget-header__copy">
+    <div class="dashboard-widget-header__copy fd-stack fd-gap-xxs fd-min-w-0">
         <div class="dashboard-widget-header__title fd-ui-card-title">{{ title() }}</div>
 
         @if (description()) {

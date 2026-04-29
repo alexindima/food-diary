@@ -23,30 +23,16 @@
     transform: translateY(-2px);
 }
 
-.weight-summary-card__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
-}
-
 .weight-summary-card__value {
     color: var(--fd-color-text);
 }
 
-.weight-summary-card__trend {
-    color: var(--fd-color-text-muted);
+.weight-summary-card__trend--positive {
+    color: var(--fd-color-success);
+}
 
-    &.weight-summary-card__trend--positive {
-        color: var(--fd-color-success);
-    }
-
-    &.weight-summary-card__trend--negative {
-        color: var(--fd-color-warn);
-    }
-
-    &.weight-summary-card__trend--neutral {
-        color: var(--fd-color-text-muted);
-    }
+.weight-summary-card__trend--negative {
+    color: var(--fd-color-warn);
 }
 
 

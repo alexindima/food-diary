@@ -1,15 +1,15 @@
-<div class="daily-advice-card" [class.daily-advice-card--loading]="isLoading()">
+<div class="daily-advice-card fd-stack fd-gap-sm" [class.daily-advice-card--loading]="isLoading()">
     <fd-dashboard-widget-frame [title]="'DASHBOARD.ADVICE_TITLE' | translate" iconName="tips_and_updates" iconTone="info">
         <div class="daily-advice-card__body">
             @if (isLoading()) {
-                <div class="daily-advice-card__loading fd-ui-action-text">
+                <div class="daily-advice-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
                     <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
                     <span>{{ 'DASHBOARD.ADVICE_LOADING' | translate }}</span>
                 </div>
             } @else if (advice()) {
-                <div class="daily-advice-card__content">
+                <div class="daily-advice-card__content fd-stack fd-gap-xs">
                     @if (advice()?.tag) {
-                        <div class="daily-advice-card__chip fd-ui-overline">
+                        <div class="daily-advice-card__chip fd-row fd-gap-xxs fd-ui-overline">
                             <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
                             <span>{{ 'DASHBOARD.ADVICE_TAGS.' + (advice()?.tag | uppercase) | translate }}</span>
                         </div>
@@ -19,7 +19,7 @@
                     </p>
                 </div>
             } @else {
-                <div class="daily-advice-card__empty fd-ui-action-text">
+                <div class="daily-advice-card__empty fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
                     <fd-ui-icon name="lightbulb"></fd-ui-icon>
                     <span>{{ 'DASHBOARD.ADVICE_EMPTY' | translate }}</span>
                 </div>

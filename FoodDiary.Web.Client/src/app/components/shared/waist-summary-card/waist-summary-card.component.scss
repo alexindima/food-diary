@@ -23,30 +23,16 @@
     transform: translateY(-2px);
 }
 
-.waist-summary-card__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
-}
-
 .waist-summary-card__value {
     color: var(--fd-color-text);
 }
 
-.waist-summary-card__trend {
-    color: var(--fd-color-text-muted);
+.waist-summary-card__trend--positive {
+    color: var(--fd-color-success);
+}
 
-    &.waist-summary-card__trend--positive {
-        color: var(--fd-color-success);
-    }
-
-    &.waist-summary-card__trend--negative {
-        color: var(--fd-color-warn);
-    }
-
-    &.waist-summary-card__trend--neutral {
-        color: var(--fd-color-text-muted);
-    }
+.waist-summary-card__trend--negative {
+    color: var(--fd-color-warn);
 }
 
 

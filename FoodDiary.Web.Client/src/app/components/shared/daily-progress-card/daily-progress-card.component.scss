@@ -3,20 +3,6 @@
 .daily-progress-card {
     height: 100%;
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-content-gap);
-    }
-
-    &__headline {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: var(--fd-space-card-header-gap);
-        flex-wrap: wrap;
-    }
-
     &__label {
         color: var(--fd-color-text-muted);
     }
@@ -46,31 +32,17 @@
     }
 
     &__empty {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-card-content-gap);
         padding: var(--fd-space-xs) 0;
         width: 100%;
         flex-wrap: nowrap;
     }
 
     &__actions-inline {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
         flex-shrink: 0;
 
         .fd-ui-button {
             white-space: nowrap;
         }
-    }
-
-    &__empty-text {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
-        min-width: 0;
     }
 
     &__empty-title {
@@ -81,21 +53,11 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__actions {
-        display: flex;
-        gap: var(--fd-space-actions-gap);
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
     &__placeholder {
         margin-top: var(--fd-space-xs);
         padding: var(--fd-space-surface-padding);
         border-radius: var(--fd-radius-lg);
         background: var(--fd-bg-surface-inset);
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
     }
 
     &__motivation {
@@ -117,7 +79,6 @@
     &__meta {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: var(--fd-space-card-content-gap);
     }
 
     &__meta-label {

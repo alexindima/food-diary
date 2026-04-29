@@ -24,15 +24,9 @@
     --dashboard-style-modern-line-strong: var(--fd-color-orange-500);
     --dashboard-style-modern-line-mid: var(--fd-color-orange-400);
     --dashboard-style-modern-line-soft: var(--fd-color-amber-200);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-lg);
 }
 
 .dashboard-appearance-dialog__intro {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
     padding: var(--fd-space-md);
     border-radius: var(--dashboard-appearance-shell-radius);
     background:
@@ -47,13 +41,9 @@
 
 .dashboard-appearance-dialog__subtitle {
     margin: 0;
-    color: var(--fd-color-text-muted);
 }
 
 .dashboard-appearance-dialog__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
     padding: var(--fd-space-md);
     border-radius: var(--dashboard-appearance-shell-radius);
     background: linear-gradient(
@@ -64,19 +54,9 @@
     border: var(--fd-border-muted);
 }
 
-.dashboard-appearance-dialog__section-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
-}
-
 .dashboard-appearance-dialog__section-title,
 .dashboard-appearance-dialog__section-copy {
     margin: 0;
-}
-
-.dashboard-appearance-dialog__section-copy {
-    color: var(--fd-color-text-muted);
 }
 
 .dashboard-appearance-dialog__grid {
@@ -98,10 +78,6 @@
         color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-dialog-surface)),
         var(--fd-color-surface)
     );
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--fd-space-xs);
     padding: var(--fd-space-stat-tile-padding);
     text-align: left;
     cursor: pointer;
@@ -128,17 +104,8 @@
 }
 
 .dashboard-appearance-dialog__option-title {
-    font-size: var(--fd-text-body-size);
-    line-height: var(--fd-text-body-line-height);
     font-weight: var(--fd-text-card-title-weight);
     color: var(--fd-color-text);
-}
-
-.dashboard-appearance-dialog__option-copy {
-    font-size: var(--fd-text-body-sm-size);
-    line-height: var(--fd-text-body-sm-line-height);
-    font-weight: var(--fd-text-body-sm-weight);
-    color: var(--fd-color-text-muted);
 }
 
 .dashboard-appearance-dialog__swatch {

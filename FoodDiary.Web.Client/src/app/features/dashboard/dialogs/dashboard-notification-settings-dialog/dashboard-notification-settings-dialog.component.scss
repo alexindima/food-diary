@@ -1,11 +1,5 @@
 @use 'variables' as variables;
 
-.dashboard-notification-settings-dialog {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
-}
-
 .dashboard-notification-settings-dialog__intro {
     padding: var(--fd-space-md);
     border-radius: var(--fd-radius-panel);
@@ -21,13 +15,9 @@
 
 .dashboard-notification-settings-dialog__subtitle {
     margin: 0;
-    color: var(--fd-color-text-muted);
 }
 
 .dashboard-notification-settings-dialog__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
     padding: var(--fd-space-md);
     border-radius: var(--fd-radius-panel);
     background: linear-gradient(
@@ -38,32 +28,12 @@
     border: var(--fd-border-muted);
 }
 
-.dashboard-notification-settings-dialog__section-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
-}
-
 .dashboard-notification-settings-dialog__section-title,
 .dashboard-notification-settings-dialog__section-copy {
     margin: 0;
 }
 
-.dashboard-notification-settings-dialog__section-copy {
-    color: var(--fd-color-text-muted);
-}
-
-.dashboard-notification-settings-dialog__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
-}
-
 .dashboard-notification-settings-dialog__item {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--fd-space-md);
     padding: var(--fd-space-md);
     border-radius: var(--fd-radius-card);
     border: var(--fd-border-muted);
@@ -85,36 +55,11 @@
 }
 
 .dashboard-notification-settings-dialog__copy {
-    display: flex;
     flex: 1 1 auto;
-    min-width: 0;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
 }
 
 .dashboard-notification-settings-dialog__label {
-    font-size: var(--fd-text-action-size);
-    line-height: var(--fd-text-action-line-height);
-    font-weight: var(--fd-text-action-weight);
     color: var(--fd-color-text);
-}
-
-.dashboard-notification-settings-dialog__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--fd-space-xs);
-}
-
-.dashboard-notification-settings-dialog__badge {
-    white-space: nowrap;
-}
-
-.dashboard-notification-settings-dialog__hint,
-.dashboard-notification-settings-dialog__device-note {
-    color: var(--fd-color-text-muted);
-    font-size: var(--fd-text-body-sm-size);
-    line-height: var(--fd-text-body-sm-line-height);
-    font-weight: var(--fd-text-body-sm-weight);
 }
 
 .dashboard-notification-settings-dialog__device-note {

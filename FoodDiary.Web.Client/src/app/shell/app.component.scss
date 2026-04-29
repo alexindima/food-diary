@@ -4,11 +4,6 @@
     position: absolute;
     top: var(--fd-space-xs);
     left: var(--fd-space-xs);
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
     background: var(--fd-bg-primary);
     color: var(--fd-color-white);
     padding: var(--fd-space-surface-padding);
@@ -99,9 +94,6 @@
 
 .fd-impersonation-banner__reason {
     max-width: min(560px, 45vw);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-weight: var(--fd-font-weight-regular);
 }
 

@@ -9,7 +9,6 @@
     --wt-accent-muted: color-mix(in srgb, var(--fd-color-primary-100) 72%, var(--fd-color-surface-raised));
     --wt-surface: var(--fd-color-surface);
     width: 100%;
-    min-width: 0;
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-card-profile-gap) var(--fd-space-card-profile-gap) var(--fd-space-stat-tile-padding);
     border: var(--fd-border-strong);
@@ -47,19 +46,11 @@
     }
 
     &__value-row {
-        display: flex;
-        align-items: baseline;
-        gap: var(--fd-space-xs);
         margin-bottom: var(--fd-space-xs);
-        min-width: 0;
     }
 
     &__value {
         color: var(--fd-color-text);
-    }
-
-    &__unit {
-        color: var(--fd-color-text-muted);
     }
 
     &__chart {
@@ -69,11 +60,9 @@
 
     &__empty {
         margin: var(--fd-space-xs) 0 var(--fd-space-xxs);
-        color: var(--fd-color-text-muted);
     }
 
     &__footer {
         margin-top: var(--fd-space-xxs);
-        color: var(--fd-color-text-muted);
     }
 }

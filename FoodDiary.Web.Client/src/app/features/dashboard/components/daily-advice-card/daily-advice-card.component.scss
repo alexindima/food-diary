@@ -1,5 +1,3 @@
-@use 'variables' as variables;
-
 :host {
     display: block;
 }
@@ -11,9 +9,6 @@
     background: var(--fd-bg-surface);
     box-shadow: var(--fd-shadow-lg);
     color: var(--fd-color-text);
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-sm);
 
     &--loading {
         opacity: 0.75;
@@ -25,9 +20,6 @@
     }
 
     &__content {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
         padding-top: var(--fd-space-xxs);
     }
 
@@ -37,9 +29,6 @@
     }
 
     &__chip {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-xxs);
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: var(--fd-radius-panel);
         background: var(--fd-bg-category-sky);
@@ -54,10 +43,6 @@
 
     &__loading,
     &__empty {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
-        color: var(--fd-color-text-muted);
         padding: calc(var(--fd-space-xxs) / 2) 0;
 
         fd-ui-icon {

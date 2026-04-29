@@ -7,7 +7,7 @@
     role="button"
     tabindex="0"
 >
-    <div class="weight-summary-card__content">
+    <div class="weight-summary-card__content fd-stack fd-gap-xxs">
         <strong class="weight-summary-card__value fd-ui-metric-lg">
             @if (latest()) {
                 {{ latest() | number: '1.0-1' }} {{ 'WEIGHT_CARD.KG' | translate }}
@@ -16,7 +16,7 @@
             }
         </strong>
         <span
-            class="weight-summary-card__trend fd-ui-body-sm"
+            class="weight-summary-card__trend fd-ui-body-sm fd-ui-text-muted"
             [class.weight-summary-card__trend--positive]="trend().status === 'positive'"
             [class.weight-summary-card__trend--negative]="trend().status === 'negative'"
             [class.weight-summary-card__trend--neutral]="trend().status === 'neutral'"

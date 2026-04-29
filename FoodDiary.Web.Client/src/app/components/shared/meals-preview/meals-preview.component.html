@@ -1,5 +1,5 @@
-﻿<section class="meals-preview">
-    <div class="meals-preview__header">
+﻿<section class="meals-preview fd-stack fd-gap-card-content">
+    <div class="meals-preview__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-card-header">
         <h2 class="meals-preview__title fd-ui-page-title">
             {{ titleText() || (titleKey() | translate) }}
         </h2>
@@ -10,7 +10,7 @@
         }
     </div>
 
-    <div class="meals-preview__list">
+    <div class="meals-preview__list fd-stack fd-gap-card-content">
         @if (!entries().length && showEmptyState()) {
             <div class="meals-preview__empty fd-ui-body-sm">
                 {{ emptyKey() | translate }}
@@ -20,11 +20,11 @@
                 @if (entry.meal) {
                     <fd-meal-card class="meals-preview__meal-card" [meal]="entry.meal" (open)="open.emit(entry.meal!)" />
                 } @else if (showAddButtons()) {
-                    <div class="meals-preview__placeholder-stack">
-                        <div class="meals-preview__placeholder">
-                            <button class="meals-preview__placeholder-main" type="button" (click)="add.emit(entry.slot)">
-                                <div class="meals-preview__placeholder-left">
-                                    <div class="meals-preview__placeholder-icon">
+                    <div class="meals-preview__placeholder-stack fd-stack fd-gap-card-header">
+                        <div class="meals-preview__placeholder fd-row fd-justify-between fd-gap-card-content">
+                            <button class="meals-preview__placeholder-main fd-row fd-min-w-0" type="button" (click)="add.emit(entry.slot)">
+                                <div class="meals-preview__placeholder-left fd-row fd-gap-card-content fd-min-w-0">
+                                    <div class="meals-preview__placeholder-icon fd-place-center">
                                         <fd-ui-icon [name]="entry.icon || 'restaurant_menu'"></fd-ui-icon>
                                     </div>
                                     <div class="meals-preview__placeholder-text fd-ui-body">
@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                             </button>
-                            <div class="meals-preview__placeholder-actions">
+                            <div class="meals-preview__placeholder-actions fd-row fd-gap-actions">
                                 @if (showAiButtons()) {
                                     <fd-ui-button
                                         class="meals-preview__placeholder-action-button meals-preview__placeholder-action-button--ai"

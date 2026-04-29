@@ -1,0 +1,121 @@
+.fd-stack {
+    display: flex;
+    flex-direction: column;
+}
+
+.fd-row {
+    display: flex;
+    align-items: center;
+}
+
+.fd-inline-center {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fd-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fd-place-center {
+    display: grid;
+    place-items: center;
+}
+
+.fd-align-start {
+    align-items: flex-start;
+}
+
+.fd-align-baseline {
+    align-items: baseline;
+}
+
+.fd-justify-between {
+    justify-content: space-between;
+}
+
+.fd-justify-center {
+    justify-content: center;
+}
+
+.fd-justify-end {
+    justify-content: flex-end;
+}
+
+.fd-wrap {
+    flex-wrap: wrap;
+}
+
+.fd-gap-xxs {
+    gap: var(--fd-space-xxs);
+}
+
+.fd-gap-xs {
+    gap: var(--fd-space-xs);
+}
+
+.fd-gap-sm {
+    gap: var(--fd-space-sm);
+}
+
+.fd-gap-md {
+    gap: var(--fd-space-md);
+}
+
+.fd-gap-lg {
+    gap: var(--fd-space-lg);
+}
+
+.fd-gap-actions {
+    gap: var(--fd-space-actions-gap);
+}
+
+.fd-gap-card-content {
+    gap: var(--fd-space-card-content-gap);
+}
+
+.fd-gap-card-header {
+    gap: var(--fd-space-card-header-gap);
+}
+
+.fd-gap-card-profile {
+    gap: var(--fd-space-card-profile-gap);
+}
+
+.fd-gap-card-relaxed {
+    gap: var(--fd-space-card-relaxed-gap);
+}
+
+.fd-gap-inline-alert-actions {
+    gap: var(--fd-space-inline-alert-actions-gap);
+}
+
+.fd-min-w-0 {
+    min-width: 0;
+}
+
+.fd-nowrap {
+    white-space: nowrap;
+}
+
+.fd-truncate {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-visually-hidden-focusable {
+
+    &:not(:focus):not(:focus-visible) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}

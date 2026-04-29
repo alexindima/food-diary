@@ -8,25 +8,11 @@
     width: 100%;
 }
 
-.stats-summary-card__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-card-content-gap);
-}
-
-.stats-summary-card__row {
-    display: flex;
-    gap: var(--fd-space-card-content-gap);
-    flex-wrap: wrap;
-}
-
 .stats-summary-card__row--top > * {
     flex: 1 1 220px;
-    min-width: 0;
 }
 
 .stats-summary-card__row--macros {
-    gap: var(--fd-space-card-header-gap);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
@@ -37,25 +23,12 @@
     --fd-stat-tile-gap: var(--fd-space-stat-tile-gap);
     --fd-stat-tile-background: var(--fd-bg-stat-tile-featured);
     flex: 1 1 220px;
-    min-width: 0;
 }
 
 .stats-summary-card__total {
     flex: 2 1 260px;
     position: relative;
     overflow: hidden;
-}
-
-.stats-summary-card__average {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-card-header-gap);
-}
-
-.stats-summary-card__average-main {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-card-header-gap);
 }
 
 .stats-summary-card__average-details {
@@ -65,9 +38,6 @@
 }
 
 .stats-summary-card__average-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-card-header-gap);
     padding-top: var(--fd-space-xs);
     border-top: var(--fd-border-subtle);
 }

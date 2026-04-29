@@ -1,11 +1,11 @@
-<div class="cycle-summary-card" [class.cycle-summary-card--loading]="isLoading()">
+<div class="cycle-summary-card fd-stack fd-gap-sm" [class.cycle-summary-card--loading]="isLoading()">
     <fd-dashboard-widget-frame [title]="title() | translate" iconName="autorenew" iconTone="neutral">
         @if (hasCycle()) {
             <div class="cycle-summary-card__day fd-ui-metric-lg">
                 {{ 'CYCLE_CARD.DAY_LABEL' | translate: { day: cycleDay() } }}
             </div>
             @if (statusKey()) {
-                <div class="cycle-summary-card__status fd-ui-body-sm">
+                <div class="cycle-summary-card__status fd-ui-body-sm fd-ui-text-muted">
                     @if (statusDays() !== null) {
                         {{ statusKey() | translate: { days: statusDays() } }}
                     } @else {

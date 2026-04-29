@@ -79,12 +79,12 @@
                 </svg>
 
                 <div
-                    class="dashboard-summary-card__center"
+                    class="dashboard-summary-card__center fd-stack fd-center fd-gap-card-header"
                     [class.is-daily-hovered]="isDailyHovered()"
                     [class.is-weekly-hovered]="isWeeklyHovered()"
                 >
                     @if (normalizedDailyGoal() > 0) {
-                        <div class="dashboard-summary-card__percent fd-ui-metric-hero">
+                        <div class="dashboard-summary-card__percent fd-row fd-align-baseline fd-gap-card-header fd-ui-metric-hero">
                             <span class="dashboard-summary-card__percent-value">{{ dailyPercent() }}</span>
                             <span class="dashboard-summary-card__percent-sign fd-ui-metric-unit">%</span>
                         </div>
@@ -113,14 +113,14 @@
                 </div>
             </div>
 
-            <div class="dashboard-summary-card__bars">
+            <div class="dashboard-summary-card__bars fd-gap-card-relaxed">
                 @for (bar of resolvedNutrientBars(); track bar.id) {
-                    <div class="dashboard-summary-card__bar">
-                        <div class="dashboard-summary-card__bar-header">
+                    <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
+                        <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
                             <span class="dashboard-summary-card__bar-label fd-ui-body-sm">
                                 {{ bar.labelKey ? (bar.labelKey | translate) : bar.label }}
                             </span>
-                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text" [style.color]="getBarColor(bar)">
+                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="getBarColor(bar)">
                                 {{ bar.current | number: '1.0-0' }}
                                 @if (bar.target > 0) {
                                     / {{ bar.target | number: '1.0-0' }}

@@ -6,9 +6,9 @@
         emptyIcon="analytics"
     >
         @if (summary(); as data) {
-            <div class="stats-summary-card__content">
-                <div class="stats-summary-card__row stats-summary-card__row--top">
-                    <div class="stats-summary-card__total fd-ui-stat-tile">
+            <div class="stats-summary-card__content fd-stack fd-gap-card-content">
+                <div class="stats-summary-card__row stats-summary-card__row--top fd-row fd-wrap fd-gap-card-content">
+                    <div class="stats-summary-card__total fd-ui-stat-tile fd-min-w-0">
                         <span class="stats-summary-card__label fd-ui-stat-tile__label fd-ui-meta-text">{{
                             'STATISTICS.TOTAL_CALORIES' | translate
                         }}</span>
@@ -25,8 +25,8 @@
                             ></canvas>
                         </div>
                     </div>
-                    <div class="stats-summary-card__average fd-ui-stat-tile">
-                        <div class="stats-summary-card__average-main">
+                    <div class="stats-summary-card__average fd-ui-stat-tile fd-stack fd-gap-card-header fd-min-w-0">
+                        <div class="stats-summary-card__average-main fd-stack fd-gap-card-header">
                             <span class="stats-summary-card__label fd-ui-stat-tile__label fd-ui-meta-text">{{
                                 'STATISTICS.AVERAGE_CALORIES' | translate
                             }}</span>
@@ -39,7 +39,7 @@
                             </span>
                         </div>
                         <div class="stats-summary-card__average-details">
-                            <div class="stats-summary-card__average-item">
+                            <div class="stats-summary-card__average-item fd-stack fd-gap-card-header">
                                 <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                     {{ data.averageCard.steps | number: '1.0-0' }}
                                 </strong>
@@ -47,7 +47,7 @@
                                     {{ 'STATISTICS.AVERAGE_CARD.STEPS' | translate }}
                                 </span>
                             </div>
-                            <div class="stats-summary-card__average-item">
+                            <div class="stats-summary-card__average-item fd-stack fd-gap-card-header">
                                 <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
                                     {{ data.averageCard.burned | number: '1.0-0' }}
                                     {{ 'GENERAL.UNITS.KCAL' | translate }}
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="stats-summary-card__row stats-summary-card__row--macros">
+                <div class="stats-summary-card__row stats-summary-card__row--macros fd-gap-card-header">
                     @for (macro of data.macros; track macro.labelKey) {
                         <fd-ui-accent-surface
                             class="stats-summary-card__macro-card fd-ui-stat-tile"

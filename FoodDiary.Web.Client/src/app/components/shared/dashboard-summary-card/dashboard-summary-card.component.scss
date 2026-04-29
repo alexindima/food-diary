@@ -135,12 +135,7 @@
     &__center {
         position: absolute;
         inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         text-align: center;
-        gap: var(--fd-space-card-header-gap);
         padding: var(--fd-space-surface-padding);
         color: var(--fd-color-text);
         transition:
@@ -165,9 +160,6 @@
     }
 
     &__percent {
-        display: flex;
-        align-items: baseline;
-        gap: var(--fd-space-card-header-gap);
         color: var(--fd-color-text-strong);
         transition:
             transform 0.25s ease,
@@ -213,13 +205,9 @@
 
     &__bars {
         display: grid;
-        gap: var(--fd-space-card-relaxed-gap);
     }
 
     &__bar {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
         transition:
             transform 0.2s ease,
             filter 0.2s ease;
@@ -236,11 +224,7 @@
     }
 
     &__bar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         color: var(--fd-color-text);
-        gap: var(--fd-space-card-header-gap);
     }
 
     &__bar-label {
@@ -249,7 +233,6 @@
 
     &__bar-value {
         color: var(--fd-color-text-muted);
-        white-space: nowrap;
     }
 
     &__bar-track {

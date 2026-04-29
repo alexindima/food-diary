@@ -1,18 +1,19 @@
-<div class="dashboard-widget-frame">
-    <div class="dashboard-widget-frame__header">
+<div class="dashboard-widget-frame fd-stack fd-gap-card-profile fd-min-w-0">
+    <div class="dashboard-widget-frame__header fd-row fd-align-start fd-justify-between fd-gap-sm fd-min-w-0">
         <fd-dashboard-widget-header
+            class="fd-min-w-0"
             [title]="title()"
             [description]="description()"
             [iconName]="iconName()"
             [iconLabel]="iconLabel()"
             [iconTone]="iconTone()"
         />
-        <div class="dashboard-widget-frame__header-end">
+        <div class="dashboard-widget-frame__header-end fd-row fd-align-start">
             <ng-content select="[fdDashboardWidgetHeaderEnd]" />
         </div>
     </div>
 
-    <div class="dashboard-widget-frame__body">
+    <div class="dashboard-widget-frame__body fd-min-w-0">
         <ng-content />
     </div>
 </div>

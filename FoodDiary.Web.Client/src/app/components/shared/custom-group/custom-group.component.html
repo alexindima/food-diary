@@ -17,7 +17,7 @@
             @if (isOpen() || !isAccordion()) {
                 <ng-content />
             } @else if (collapsedHint()) {
-                <div class="custom-group__hint fd-ui-body-sm">
+                <div class="custom-group__hint fd-ui-body-sm fd-ui-text-muted fd-truncate">
                     {{ collapsedHint() }}
                 </div>
             }

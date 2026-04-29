@@ -3,7 +3,6 @@
 .hydration-card {
     position: relative;
     width: 100%;
-    min-width: 0;
     overflow: hidden;
     border-radius: var(--fd-radius-card);
     background: linear-gradient(145deg, var(--fd-color-blue-500), color-mix(in srgb, var(--fd-color-sky-500) 72%, var(--fd-bg-surface-raised)));
@@ -16,30 +15,8 @@
         pointer-events: none;
     }
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
-    &__value {
-        display: flex;
-        align-items: baseline;
-        gap: var(--fd-space-xxs);
-    }
-
-    &__liters {
-        min-width: 0;
-    }
-
     &__unit {
         opacity: 0.9;
-    }
-
-    &__progress {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
     }
 
     &__progress-track {
