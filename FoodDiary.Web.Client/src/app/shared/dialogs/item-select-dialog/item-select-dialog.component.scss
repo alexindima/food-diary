@@ -1,9 +1,6 @@
 @use 'variables' as variables;
 
 .consumption-item-select {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
     max-height: 70vh;
 
     &__tabs {

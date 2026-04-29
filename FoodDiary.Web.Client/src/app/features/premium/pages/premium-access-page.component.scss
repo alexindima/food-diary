@@ -1,32 +1,18 @@
 @use 'variables' as variables;
 
 .premium-access-page {
-    display: flex;
-    flex-direction: column;
     gap: var(--fd-space-page-section-gap);
 }
 
 .premium-access-page__card {
     padding: var(--fd-space-card-profile-padding);
-    display: grid;
-    gap: var(--fd-space-card-profile-gap);
 }
 
 .premium-access-page__card--overview {
     background: var(--fd-bg-premium-page-overview);
 }
 
-.premium-access-page__section-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--fd-space-card-header-gap);
-    flex-wrap: wrap;
-}
-
 .premium-access-page__section-copy {
-    display: grid;
-    gap: var(--fd-space-card-header-gap);
     min-width: 0;
 }
 
@@ -44,12 +30,6 @@
     color: var(--fd-color-text-muted);
 }
 
-.premium-access-page__badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--fd-space-pill-gap);
-}
-
 .premium-access-page__badge {
     min-height: var(--fd-size-control-sm);
     letter-spacing: var(--fd-letter-spacing-subtle);
@@ -61,14 +41,10 @@
 }
 
 .premium-access-page__plans {
-    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--fd-space-card-content-gap);
 }
 
 .premium-access-page__plan {
-    display: grid;
-    gap: var(--fd-space-card-profile-gap);
     padding: var(--fd-space-card-profile-padding);
     border-radius: var(--fd-radius-panel);
     border: var(--fd-border-default);
@@ -80,11 +56,6 @@
     background: var(--fd-bg-premium-plan-featured);
 }
 
-.premium-access-page__plan-copy {
-    display: grid;
-    gap: var(--fd-space-card-header-gap);
-}
-
 .premium-access-page__plan-kicker {
     --fd-pill-border: transparent;
 }
@@ -94,14 +65,7 @@
     color: var(--fd-color-text);
 }
 
-.premium-access-page__provider-actions {
-    display: grid;
-    gap: var(--fd-space-actions-gap);
-}
-
 .premium-access-page__benefits {
-    display: grid;
-    gap: var(--fd-space-card-header-gap);
     margin: 0;
     padding-left: var(--fd-space-md);
     color: var(--fd-color-text);

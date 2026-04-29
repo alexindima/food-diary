@@ -1,4 +1,4 @@
-<div class="email-verify-pending">
+<div class="email-verify-pending fd-center">
     <fd-ui-card class="email-verify-pending__card" [title]="'AUTH.VERIFY_PENDING.TITLE' | translate">
         <p class="email-verify-pending__description fd-ui-body-sm">
             @if (email()) {
@@ -12,7 +12,7 @@
             <div class="email-verify-pending__status fd-ui-body-sm">{{ statusMessage() }}</div>
         }
 
-        <div class="email-verify-pending__actions">
+        <div class="email-verify-pending__actions fd-row fd-gap-sm">
             <fd-ui-button
                 type="button"
                 variant="secondary"

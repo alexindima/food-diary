@@ -3,7 +3,7 @@
         <h1 class="lessons-list__title">{{ 'LESSONS.TITLE' | translate }}</h1>
         <p class="lessons-list__subtitle">{{ 'LESSONS.SUBTITLE' | translate }}</p>
         @if (progress(); as p) {
-            <div class="lessons-list__progress">
+            <div class="lessons-list__progress fd-row fd-gap-sm">
                 <div class="lessons-list__progress-bar">
                     <div class="lessons-list__progress-fill" [style.width.%]="p.percent"></div>
                 </div>
@@ -12,7 +12,7 @@
         }
     </header>
 
-    <div class="lessons-list__filters">
+    <div class="lessons-list__filters fd-row fd-gap-xs fd-wrap">
         <fd-ui-button
             variant="secondary"
             [fill]="facade.categoryFilter() === null ? 'solid' : 'outline'"
@@ -37,15 +37,15 @@
         @if (facade.isLoading()) {
             <fd-ui-loader />
         } @else if (facade.lessons().length === 0) {
-            <div class="lessons-list__empty">
+            <div class="lessons-list__empty fd-stack fd-align-center fd-gap-sm">
                 <fd-ui-icon name="school" size="xl" />
                 <span>{{ 'LESSONS.EMPTY' | translate }}</span>
             </div>
         } @else {
-            <div class="lessons-list__grid">
+            <div class="lessons-list__grid fd-grid fd-gap-lg">
                 @for (lesson of facade.lessons(); track lesson.id) {
                     <div
-                        class="lesson-card"
+                        class="lesson-card fd-stack fd-gap-xs"
                         fdCardHover
                         [class.lesson-card--read]="lesson.isRead"
                         role="button"
@@ -53,7 +53,7 @@
                         (click)="openLesson(lesson.id)"
                         (keydown.enter)="openLesson(lesson.id)"
                     >
-                        <div class="lesson-card__top">
+                        <div class="lesson-card__top fd-row fd-justify-between">
                             <span class="lesson-card__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                                 {{ 'LESSONS.CATEGORY.' + lesson.category | translate }}
                             </span>
@@ -65,7 +65,7 @@
                         @if (lesson.summary) {
                             <p class="lesson-card__summary">{{ lesson.summary }}</p>
                         }
-                        <div class="lesson-card__meta">
+                        <div class="lesson-card__meta fd-row fd-gap-sm">
                             <span>{{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}</span>
                             <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
                         </div>

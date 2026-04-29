@@ -1,8 +1,5 @@
 .email-verify-pending {
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: var(--fd-space-xl) var(--fd-space-md);
 }
 
@@ -19,15 +16,8 @@
     margin-bottom: var(--fd-space-md);
 }
 
-.email-verify-pending__actions {
-    display: flex;
-    gap: var(--fd-space-sm);
-    justify-content: flex-start;
-}
-
 .email-verify-pending__cooldown {
     margin-top: var(--fd-space-sm);
     color: var(--fd-color-text-muted);
 }
-
 

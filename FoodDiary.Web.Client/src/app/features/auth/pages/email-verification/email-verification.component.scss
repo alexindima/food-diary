@@ -1,8 +1,5 @@
 .email-verify {
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: var(--fd-space-xl) var(--fd-space-md);
 }
 
@@ -13,11 +10,6 @@
 .email-verify__description {
     margin: 0 0 var(--fd-space-md);
     color: var(--fd-color-text-muted);
-}
-
-.email-verify__actions {
-    display: flex;
-    gap: var(--fd-space-sm);
 }
 
 

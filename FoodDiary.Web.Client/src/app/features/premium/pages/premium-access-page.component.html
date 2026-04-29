@@ -1,4 +1,4 @@
-<section fdPageContainer class="premium-access-page">
+<section fdPageContainer class="premium-access-page fd-stack">
     <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate"></fd-page-header>
 
     @if (checkoutReturnState() === 'success') {
@@ -35,9 +35,9 @@
         ></fd-notice-banner>
     }
 
-    <fd-ui-card class="premium-access-page__card premium-access-page__card--overview">
-        <div class="premium-access-page__section-header">
-            <div class="premium-access-page__section-copy">
+    <fd-ui-card class="premium-access-page__card premium-access-page__card--overview fd-grid fd-gap-card-profile">
+        <div class="premium-access-page__section-header fd-row fd-align-start fd-justify-between fd-gap-card-header fd-wrap">
+            <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
                 <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
                 <p class="premium-access-page__text fd-ui-body">
                     {{ (isPremium() ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE') | translate }}
@@ -62,7 +62,7 @@
                 {{ 'PREMIUM_PAGE.STATUS_LOADING' | translate }}
             </p>
         } @else if (overview(); as overview) {
-            <div class="premium-access-page__badges">
+            <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
                 @if (isPremium() && overview.plan) {
                     <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
                         {{ getPlanLabelKey(overview.plan) | translate }}
@@ -87,24 +87,24 @@
     </fd-ui-card>
 
     @if (showPlans()) {
-        <fd-ui-card class="premium-access-page__card">
-            <div class="premium-access-page__section-copy">
+        <fd-ui-card class="premium-access-page__card fd-grid fd-gap-card-profile">
+            <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
                 <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.PLANS.TITLE' | translate }}</h2>
                 <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
                     {{ 'PREMIUM_PAGE.PLANS.SUBTITLE' | translate }}
                 </p>
             </div>
 
-            <div class="premium-access-page__plans">
-                <article class="premium-access-page__plan">
-                    <div class="premium-access-page__plan-copy">
+            <div class="premium-access-page__plans fd-grid fd-gap-card-content">
+                <article class="premium-access-page__plan fd-grid fd-gap-card-profile">
+                    <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
                         <h3 class="premium-access-page__plan-title fd-ui-card-title">
                             {{ 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE' | translate }}
                         </h3>
                         <p class="premium-access-page__text fd-ui-body">{{ 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION' | translate }}</p>
                     </div>
                     @if (showProviderChoices()) {
-                        <div class="premium-access-page__provider-actions">
+                        <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
                             @for (provider of availableProviders(); track provider) {
                                 <fd-ui-button
                                     variant="secondary"
@@ -130,8 +130,8 @@
                     }
                 </article>
 
-                <article class="premium-access-page__plan premium-access-page__plan--featured">
-                    <div class="premium-access-page__plan-copy">
+                <article class="premium-access-page__plan premium-access-page__plan--featured fd-grid fd-gap-card-profile">
+                    <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
                         <span class="premium-access-page__plan-kicker fd-ui-pill fd-ui-pill--primary fd-ui-overline">{{
                             'PREMIUM_PAGE.PLANS.YEARLY.KICKER' | translate
                         }}</span>
@@ -141,7 +141,7 @@
                         <p class="premium-access-page__text fd-ui-body">{{ 'PREMIUM_PAGE.PLANS.YEARLY.DESCRIPTION' | translate }}</p>
                     </div>
                     @if (showProviderChoices()) {
-                        <div class="premium-access-page__provider-actions">
+                        <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
                             @for (provider of availableProviders(); track provider) {
                                 <fd-ui-button
                                     variant="secondary"
@@ -170,15 +170,15 @@
         </fd-ui-card>
     }
 
-    <fd-ui-card class="premium-access-page__card">
-        <div class="premium-access-page__section-copy">
+    <fd-ui-card class="premium-access-page__card fd-grid fd-gap-card-profile">
+        <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
             <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.BENEFITS.TITLE' | translate }}</h2>
             <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
                 {{ 'PREMIUM_PAGE.BENEFITS.SUBTITLE' | translate }}
             </p>
         </div>
 
-        <ul class="premium-access-page__benefits fd-ui-body">
+        <ul class="premium-access-page__benefits fd-grid fd-gap-card-header fd-ui-body">
             <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_1' | translate }}</li>
             <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_2' | translate }}</li>
             <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_3' | translate }}</li>

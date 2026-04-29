@@ -1,6 +1,6 @@
 @if (!embedded()) {
     <fd-ui-dialog [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate" size="lg">
-        <div class="consumption-item-select">
+        <div class="consumption-item-select fd-stack fd-gap-md">
             <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
 
             <div class="consumption-item-select__content">
@@ -27,7 +27,7 @@
         </div>
     </fd-ui-dialog>
 } @else {
-    <div class="consumption-item-select">
+    <div class="consumption-item-select fd-stack fd-gap-md">
         <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
 
         <div class="consumption-item-select__content">

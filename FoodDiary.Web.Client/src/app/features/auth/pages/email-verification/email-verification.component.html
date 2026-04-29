@@ -1,4 +1,4 @@
-<div class="email-verify">
+<div class="email-verify fd-center">
     <fd-ui-card class="email-verify__card" [title]="'AUTH.VERIFY.TITLE' | translate">
         @if (state() === 'pending') {
             <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
@@ -8,7 +8,7 @@
             <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
         }
 
-        <div class="email-verify__actions">
+        <div class="email-verify__actions fd-row fd-gap-sm">
             @if (state() === 'success') {
                 <fd-ui-button type="button" variant="primary" (click)="onContinue()">
                     {{ 'AUTH.VERIFY.CONTINUE' | translate }}

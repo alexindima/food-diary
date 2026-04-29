@@ -24,9 +24,6 @@
 
     &__progress {
         margin-top: var(--fd-space-sm);
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
     }
 
     &__progress-bar {
@@ -56,23 +53,14 @@
     }
 
     &__filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xs);
         margin-bottom: var(--fd-space-lg);
     }
 
     &__grid {
-        display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: var(--fd-space-lg);
     }
 
     &__empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--fd-space-sm);
         padding: var(--fd-space-xxl) 0;
         color: var(--fd-color-text-muted);
         font-weight: var(--fd-font-weight-bold);
@@ -90,9 +78,6 @@
     border: var(--fd-border-default);
     box-shadow: var(--fd-shadow-lg);
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xs);
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -104,12 +89,6 @@
 
     &--read {
         opacity: 0.75;
-    }
-
-    &__top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 
     &__category {
@@ -144,8 +123,6 @@
     }
 
     &__meta {
-        display: flex;
-        gap: var(--fd-space-sm);
         font-size: var(--fd-text-label-floating-size);
         font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
