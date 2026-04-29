@@ -17,8 +17,8 @@
 }
 
 .fd-notice__icon {
-    width: 36px;
-    height: 36px;
+    width: var(--fd-size-control-compact);
+    height: var(--fd-size-control-compact);
     border-radius: var(--fd-radius-button);
     background: var(--fd-notice-icon-bg);
     color: var(--fd-notice-icon-fg);

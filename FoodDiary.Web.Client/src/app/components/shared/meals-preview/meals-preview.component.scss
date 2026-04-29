@@ -51,8 +51,8 @@
 }
 
 .meals-preview__placeholder-icon {
-    width: 36px;
-    height: 36px;
+    width: var(--fd-size-control-compact);
+    height: var(--fd-size-control-compact);
     border-radius: var(--fd-radius-button);
     background: linear-gradient(
         135deg,

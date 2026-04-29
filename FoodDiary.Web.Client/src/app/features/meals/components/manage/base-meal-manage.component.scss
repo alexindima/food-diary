@@ -205,7 +205,7 @@
     &__satiety-card-indicator {
         width: var(--fd-size-control-touch);
         height: var(--fd-size-control-touch);
-        border-radius: 50%;
+        border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-surface-raised);
         font-size: var(--fd-text-card-title-size);
         line-height: var(--fd-text-card-title-line-height);

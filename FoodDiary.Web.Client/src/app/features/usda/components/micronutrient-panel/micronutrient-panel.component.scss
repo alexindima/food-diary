@@ -61,7 +61,7 @@
 }
 
 .dv-percent {
-    min-width: 36px;
+    min-width: var(--fd-size-control-compact);
 }
 
 .empty-state {

@@ -7,8 +7,8 @@
 }
 
 .fd-ui-pagination__button {
-    min-width: 36px;
-    height: 36px;
+    min-width: var(--fd-size-control-compact);
+    height: var(--fd-size-control-compact);
     padding: var(--fd-space-pagination-button-padding);
     border: var(--fd-border-muted);
     border-radius: var(--fd-radius-button);

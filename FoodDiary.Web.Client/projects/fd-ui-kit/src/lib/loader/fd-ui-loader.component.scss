@@ -10,7 +10,7 @@
 .fd-ui-loader__spinner {
     width: var(--fd-size-control-sm);
     height: var(--fd-size-control-sm);
-    border-radius: 50%;
+    border-radius: var(--fd-radius-pill);
     border: var(--fd-border-width-emphasis) solid var(--fd-color-border-loader);
     border-top-color: var(--fd-color-primary-600);
     animation: fd-ui-loader-spin 0.75s linear infinite;

@@ -111,7 +111,7 @@
         width: var(--fd-button-spinner-size);
         height: var(--fd-button-spinner-size);
         translate: -50% -50%;
-        border-radius: 50%;
+        border-radius: var(--fd-radius-pill);
         border: var(--fd-border-width-strong) solid var(--fd-color-border-button-spinner);
         border-top-color: currentColor;
         animation: fd-ui-button-spin 0.7s linear infinite;

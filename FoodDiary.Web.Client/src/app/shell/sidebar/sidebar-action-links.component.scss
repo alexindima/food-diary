@@ -4,8 +4,8 @@
 
 .sidebar-action-links__badge {
     margin-left: auto;
-    min-width: 22px;
-    height: 22px;
+    min-width: var(--fd-size-pill-height-tiny);
+    height: var(--fd-size-pill-height-tiny);
     padding: 0 var(--fd-space-xs);
     border-radius: var(--fd-radius-pill);
     display: inline-flex;

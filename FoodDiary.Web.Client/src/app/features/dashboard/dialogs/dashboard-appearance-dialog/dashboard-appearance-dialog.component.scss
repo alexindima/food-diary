@@ -121,7 +121,7 @@
     content: '';
     position: absolute;
     inset: auto calc(var(--fd-space-sm) + var(--fd-space-micro)) var(--fd-space-sm);
-    height: 10px;
+    height: var(--fd-size-accent-thickness-active);
     border-radius: var(--dashboard-appearance-preview-line-radius);
     background: color-mix(in srgb, var(--fd-bg-dialog) 88%, transparent);
 }

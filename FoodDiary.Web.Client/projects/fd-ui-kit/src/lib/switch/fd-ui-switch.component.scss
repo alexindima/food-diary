@@ -22,8 +22,8 @@
     }
 
     &__track {
-        width: 44px;
-        height: 26px;
+        width: var(--fd-size-switch-track-width);
+        height: var(--fd-size-switch-track-height);
         border-radius: var(--fd-radius-switch);
         background: var(--fd-bg-control-surface-mixed);
         border: var(--fd-border-default);
@@ -37,8 +37,8 @@
     }
 
     &__thumb {
-        width: 20px;
-        height: 20px;
+        width: var(--fd-size-switch-thumb);
+        height: var(--fd-size-switch-thumb);
         border-radius: var(--fd-radius-switch);
         background: var(--fd-bg-surface);
         box-shadow: var(--fd-shadow-sm);
@@ -46,7 +46,7 @@
     }
 
     &__label {
-        min-width: 28px;
+        min-width: var(--fd-size-switch-label-min-width);
         font-size: var(--fd-text-helper-size);
         font-weight: var(--fd-font-weight-bold);
         line-height: 1;

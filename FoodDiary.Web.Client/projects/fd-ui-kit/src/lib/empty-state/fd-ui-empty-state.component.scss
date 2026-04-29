@@ -30,8 +30,8 @@
 }
 
 :host(.fd-ui-empty-state--compact) .fd-ui-empty-state__icon-wrap {
-    width: 36px;
-    height: 36px;
+    width: var(--fd-size-control-compact);
+    height: var(--fd-size-control-compact);
 }
 
 .fd-ui-empty-state__icon {

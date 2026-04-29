@@ -44,6 +44,7 @@ $fd-size-tokens: (
     control-lg: 48px,
     control-xl: 56px,
     control-xxl: 64px,
+    status-dot: 10px,
     button-icon-xs: 0.9rem,
     button-icon-sm: 1rem,
     button-icon-lg: 1.3rem,
@@ -72,6 +73,12 @@ $fd-size-tokens: (
     checkbox-control: 18px,
     checkbox-checkmark-width: 10px,
     checkbox-checkmark-height: 6px,
+    radio-control: 18px,
+    radio-dot: 8px,
+    switch-track-width: 44px,
+    switch-track-height: 26px,
+    switch-thumb: 20px,
+    switch-label-min-width: 28px,
     form-field-subscript-height: 18px,
     emoji-picker-emoji: 1.7rem,
     emoji-picker-emoji-sm: 1.4rem,
@@ -1838,6 +1845,7 @@ $fd-theme-design-tokens: (
         --fd-size-control-lg: #{fd-token(size, control-lg)};
         --fd-size-control-xl: #{fd-token(size, control-xl)};
         --fd-size-control-xxl: #{fd-token(size, control-xxl)};
+        --fd-size-status-dot: #{fd-token(size, status-dot)};
         --fd-size-button-icon-xs: #{fd-token(size, button-icon-xs)};
         --fd-size-button-icon-sm: #{fd-token(size, button-icon-sm)};
         --fd-size-button-icon-lg: #{fd-token(size, button-icon-lg)};
@@ -1866,6 +1874,12 @@ $fd-theme-design-tokens: (
         --fd-size-checkbox-control: #{fd-token(size, checkbox-control)};
         --fd-size-checkbox-checkmark-width: #{fd-token(size, checkbox-checkmark-width)};
         --fd-size-checkbox-checkmark-height: #{fd-token(size, checkbox-checkmark-height)};
+        --fd-size-radio-control: #{fd-token(size, radio-control)};
+        --fd-size-radio-dot: #{fd-token(size, radio-dot)};
+        --fd-size-switch-track-width: #{fd-token(size, switch-track-width)};
+        --fd-size-switch-track-height: #{fd-token(size, switch-track-height)};
+        --fd-size-switch-thumb: #{fd-token(size, switch-thumb)};
+        --fd-size-switch-label-min-width: #{fd-token(size, switch-label-min-width)};
         --fd-size-form-field-subscript-height: #{fd-token(size, form-field-subscript-height)};
         --fd-size-emoji-picker-emoji: #{fd-token(size, emoji-picker-emoji)};
         --fd-size-emoji-picker-emoji-sm: #{fd-token(size, emoji-picker-emoji-sm)};

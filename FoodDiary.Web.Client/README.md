@@ -32,7 +32,7 @@ The frontend uses:
 
 ## UX Rules
 
-Async and state-handling conventions are documented in [UX_PLAYBOOK.md](C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/UX_PLAYBOOK.md).
+Async and state-handling conventions are documented in [UX_PLAYBOOK.md](UX_PLAYBOOK.md).
 
 Use that guide when implementing:
 
@@ -42,3 +42,15 @@ Use that guide when implementing:
 - retry and error handling
 - autosave feedback
 - destructive actions and confirms
+
+## Style Governance
+
+Frontend styling conventions are documented in [STYLE_GUIDE.md](STYLE_GUIDE.md).
+
+Use that guide when adding or reviewing:
+
+- design tokens
+- utility classes
+- component SCSS
+- UI kit primitives
+- Storybook design-system pages

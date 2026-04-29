@@ -68,8 +68,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: var(--fd-size-radio-control);
+    height: var(--fd-size-radio-control);
     margin-top: calc(var(--fd-space-xxs) / 4);
     border-radius: var(--fd-radius-pill);
     border: var(--fd-border-width-strong) solid var(--fd-color-border-control-radio);
@@ -81,8 +81,8 @@
 }
 
 .fd-ui-radio__dot {
-    width: 8px;
-    height: 8px;
+    width: var(--fd-size-radio-dot);
+    height: var(--fd-size-radio-dot);
     border-radius: var(--fd-radius-pill);
     background: transparent;
     transition: background-color 140ms ease;

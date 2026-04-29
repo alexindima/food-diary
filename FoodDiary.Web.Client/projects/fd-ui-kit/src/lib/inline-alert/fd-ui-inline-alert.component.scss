@@ -93,8 +93,8 @@
 }
 
 .fd-ui-inline-alert__dismiss {
-    width: 36px;
-    height: 36px;
+    width: var(--fd-size-control-compact);
+    height: var(--fd-size-control-compact);
     display: grid;
     place-items: center;
     color: var(--fd-color-text-muted);

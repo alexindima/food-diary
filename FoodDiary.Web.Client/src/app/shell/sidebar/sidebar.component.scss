@@ -18,8 +18,8 @@
     }
 
     &__logo img {
-        width: 42px;
-        height: 42px;
+        width: var(--fd-size-control-md-plus);
+        height: var(--fd-size-control-md-plus);
         object-fit: contain;
     }
 
@@ -72,8 +72,8 @@
         position: absolute;
         top: var(--sidebar-notification-dot-inset);
         right: var(--sidebar-notification-dot-inset);
-        width: 10px;
-        height: 10px;
+        width: var(--fd-size-status-dot);
+        height: var(--fd-size-status-dot);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-danger);
         border: var(--fd-border-width-strong) solid var(--fd-color-surface);
@@ -247,8 +247,8 @@
     }
 
     &__avatar {
-        width: 36px;
-        height: 36px;
+        width: var(--fd-size-control-compact);
+        height: var(--fd-size-control-compact);
         border-radius: var(--fd-radius-button);
         background: var(--fd-bg-brand);
         color: var(--fd-color-on-brand);
@@ -499,8 +499,8 @@
         position: absolute;
         top: var(--fd-space-xs);
         right: calc(50% - var(--fd-space-md));
-        width: 10px;
-        height: 10px;
+        width: var(--fd-size-status-dot);
+        height: var(--fd-size-status-dot);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-danger);
         border: var(--fd-border-width-strong) solid var(--fd-color-white);

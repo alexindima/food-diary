@@ -1,6 +1,33 @@
 # FdUiKit
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.0.
+Shared design system library for Food Diary.
+
+## Style Governance
+
+UI kit changes should keep reusable visual behavior centralized.
+
+- Prefer component APIs, design tokens, and utility classes over consumer-level one-off overrides.
+- Use CSS design tokens for spacing, sizing, typography, radii, colors, backgrounds, borders, shadows, and effects.
+- Do not add fallback values to `var(--fd-...)` token reads.
+- Do not hardcode repeated control sizes, icon sizes, spacing, radii, borders, shadows, or transforms.
+- Keep local hardcoded values only for component-internal geometry that does not represent a reusable system decision.
+- Update Storybook docs when adding shared token groups, utility patterns, or visual primitives.
+
+The full frontend style guide is in [`../../STYLE_GUIDE.md`](../../STYLE_GUIDE.md).
+
+## Storybook
+
+Use Storybook as the visible design-system reference:
+
+```bash
+npm run storybook
+```
+
+Build Storybook before merging documentation or shared component changes when practical:
+
+```bash
+npm run build:storybook
+```
 
 ## Code scaffolding
 
@@ -31,14 +58,15 @@ This command will compile your project, and the build artifacts will be placed i
 Once the project is built, you can publish your library by following these steps:
 
 1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/fd-ui-kit
-   ```
+
+    ```bash
+    cd dist/fd-ui-kit
+    ```
 
 2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
+    ```bash
+    npm publish
+    ```
 
 ## Running unit tests
 
