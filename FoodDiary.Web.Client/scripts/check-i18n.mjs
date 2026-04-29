@@ -4,7 +4,7 @@ import path from 'node:path';
 const rootDir = process.cwd();
 const i18nDir = path.join(rootDir, 'assets', 'i18n');
 const sourceDirs = [path.join(rootDir, 'src'), path.join(rootDir, 'projects', 'fooddiary-admin', 'src')];
-const localeBundles = ['core', 'public', 'app'];
+const localeBundles = ['core', 'landing', 'seo', 'privacy', 'app'];
 
 const mojibakePatterns = [
     /Ð[\u0080-\u00BF]/u,

@@ -6,7 +6,7 @@ import { catchError, forkJoin, map, Observable, of, shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 type TranslationDictionary = TranslationObject;
-type TranslationBundle = 'core' | 'public' | 'app';
+type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
 
 @Injectable()
 export class FoodDiaryTranslationLoader extends TranslateLoader {
@@ -15,10 +15,7 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly cache = new Map<string, Observable<TranslationDictionary>>();
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
-        const bundles: readonly TranslationBundle[] = this.isPublicPath(this.document.location.pathname)
-            ? ['core', 'public']
-            : ['core', 'app'];
-        return this.loadBundles(lang, bundles);
+        return this.loadBundles(lang, this.getInitialBundles(this.document.location.pathname));
     }
 
     public loadApplicationTranslations(lang: string): Observable<TranslationDictionary> {
@@ -53,26 +50,54 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
         return request;
     }
 
-    private isPublicPath(pathname: string): boolean {
-        const normalizedPath = pathname.split(/[?#]/u, 1)[0].toLowerCase();
-        return (
-            normalizedPath === '/' ||
-            normalizedPath.startsWith('/auth') ||
-            normalizedPath === '/privacy-policy' ||
-            normalizedPath === '/food-diary' ||
-            normalizedPath === '/calorie-counter' ||
-            normalizedPath === '/meal-planner' ||
-            normalizedPath === '/macro-tracker' ||
-            normalizedPath === '/intermittent-fasting' ||
-            normalizedPath === '/meal-tracker' ||
-            normalizedPath === '/weight-loss-app' ||
-            normalizedPath === '/dietologist-collaboration' ||
-            normalizedPath === '/nutrition-planner' ||
-            normalizedPath === '/weight-tracker' ||
-            normalizedPath === '/body-progress-tracker' ||
-            normalizedPath === '/shopping-list-for-meal-planning'
-        );
+    private getInitialBundles(pathname: string): readonly TranslationBundle[] {
+        const normalizedPath = normalizePath(pathname);
+        if (this.isLandingPath(normalizedPath)) {
+            return ['core', 'landing'];
+        }
+
+        if (normalizedPath === '/privacy-policy') {
+            return ['core', 'privacy'];
+        }
+
+        if (this.isSeoPath(normalizedPath)) {
+            return ['core', 'seo'];
+        }
+
+        return ['core', 'app'];
     }
+
+    private isPublicPath(pathname: string): boolean {
+        const normalizedPath = normalizePath(pathname);
+        return this.isLandingPath(normalizedPath) || normalizedPath === '/privacy-policy' || this.isSeoPath(normalizedPath);
+    }
+
+    private isLandingPath(normalizedPath: string): boolean {
+        return normalizedPath === '/' || normalizedPath.startsWith('/auth');
+    }
+
+    private isSeoPath(normalizedPath: string): boolean {
+        return SEO_PATHS.has(normalizedPath);
+    }
+}
+
+const SEO_PATHS = new Set([
+    '/food-diary',
+    '/calorie-counter',
+    '/meal-planner',
+    '/macro-tracker',
+    '/intermittent-fasting',
+    '/meal-tracker',
+    '/weight-loss-app',
+    '/dietologist-collaboration',
+    '/nutrition-planner',
+    '/weight-tracker',
+    '/body-progress-tracker',
+    '/shopping-list-for-meal-planning',
+]);
+
+function normalizePath(pathname: string): string {
+    return pathname.split(/[?#]/u, 1)[0].toLowerCase();
 }
 
 function mergeTranslations(parts: readonly TranslationDictionary[]): TranslationDictionary {

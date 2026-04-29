@@ -1,0 +1,353 @@
+{
+    "LANDING_HERO": {
+        "OVERLINE": "Online food diary",
+        "HEADLINE": "Track meals, plan ahead, and see what actually works.",
+        "SUBTITLE": "Food Diary combines meal logging, nutrition planning, progress analytics, focused routines, and specialist collaboration in one product workspace.",
+        "SEARCH": {
+            "ARIA_LABEL": "Food diary use cases",
+            "TITLE": "For people looking for a food diary app, calorie counter, and practical nutrition planner",
+            "TEXT": "Keep an online food diary, log breakfast, lunch, dinner, and snacks, track calories and macros, plan weekly meals, and review how nutrition connects with weight, waist, fasting, and long-term habits.",
+            "ITEMS": {
+                "FOOD_LOG": "Online food diary",
+                "CALORIES": "Calorie and macro tracker",
+                "PLANNING": "Meal planner and weekly menu",
+                "PROGRESS": "Weight and progress tracker"
+            }
+        },
+        "REASSURANCE": "Free to start • No ads • Built for long-term routines",
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "LANGUAGE_LABEL": "Language",
+        "PANEL": {
+            "EYEBROW": "Core workflow",
+            "TITLE": "Nutrition in one place",
+            "BADGE": "Connected features",
+            "DESCRIPTION": "Food Diary brings tracking, planning, analytics, and collaboration into one workflow.",
+            "SECTION_TITLE": "What is already inside",
+            "FEATURE_1": "Meals and food diary",
+            "FEATURE_2": "Planning and meal plans",
+            "FEATURE_3": "Calories, protein, water, and statistics",
+            "FEATURE_4": "Weight history and weekly check-ins",
+            "FEATURE_5": "Dietologist collaboration and shared access",
+            "NOTE_TITLE": "No scattered tools",
+            "NOTE_TEXT": "Entries, plans, and progress stay in one system."
+        },
+        "MOCK_TITLE": "Food Diary Dashboard",
+        "MOCK_CALORIES": "Consumed today",
+        "MOCK_GOAL": "Goal: 1 800 kcal",
+        "MOCK_TREND": "This week",
+        "MOCK_WEEK": "vs last week",
+        "MOCK_MEAL": "Breakfast",
+        "MOCK_CHART": "Progress"
+    },
+    "MEALS_PREVIEW": {
+        "EYEBROW": "See today",
+        "TITLE": "Today's meals preview",
+        "VIEW_ALL": "Open all meals",
+        "PLACEHOLDER": "Add a meal to see it here",
+        "ADD_MANUAL_HINT": "Add manually"
+    },
+    "FEATURES": {
+        "EYEBROW": "Why Food Diary",
+        "TITLE": "More than a calorie diary",
+        "SUBTITLE": "Food Diary already covers planning, tracking, progress, and guided routines, so the landing should show the real breadth of the product.",
+        "CATEGORY_ARIA": "Feature categories",
+        "SUMMARY": {
+            "BADGE": "What is already inside",
+            "TITLE": "A nutrition workspace, not a single-purpose tracker",
+            "TEXT": "Switch between categories to preview how Food Diary supports daily logging, planning, body metrics, focused programs, and long-term motivation."
+        },
+        "CATEGORIES": {
+            "TRACK": {
+                "LABEL": "Track",
+                "EYEBROW": "Daily tracking",
+                "TITLE": "Capture meals without losing context",
+                "DESCRIPTION": "Products, recipes, and meal logs work together so you can record what you ate and keep reusable building blocks close."
+            },
+            "PLAN": {
+                "LABEL": "Plan",
+                "EYEBROW": "Planning",
+                "TITLE": "Build routines before the day gets busy",
+                "DESCRIPTION": "Plan meals, organize ingredients, and connect nutrition goals to the choices you make during the week."
+            },
+            "PROGRESS": {
+                "LABEL": "Progress",
+                "EYEBROW": "Analytics",
+                "TITLE": "See trends, not isolated numbers",
+                "DESCRIPTION": "Charts and check-ins turn raw entries into feedback loops, so it is easier to notice direction and stay consistent."
+            },
+            "SPECIAL": {
+                "LABEL": "Programs",
+                "EYEBROW": "Focused routines",
+                "TITLE": "Support more specific health workflows",
+                "DESCRIPTION": "Use dedicated tools for fasting, cycle tracking, and premium AI-assisted flows when your routine needs more structure."
+            },
+            "MOTIVATION": {
+                "LABEL": "Motivation",
+                "EYEBROW": "Retention",
+                "TITLE": "Stay engaged after the first week",
+                "DESCRIPTION": "Lessons, gamified progress, and account sync help Food Diary feel like an evolving system instead of a static logbook."
+            }
+        },
+        "ITEMS": {
+            "LOG_MEALS": {
+                "KICKER": "Meals",
+                "TITLE": "Meal logging with reusable entries",
+                "DESCRIPTION": "Track breakfasts, lunches, dinners, and snacks while keeping nutrition totals visible across the day."
+            },
+            "PRODUCT_LIBRARY": {
+                "KICKER": "Products",
+                "TITLE": "Your own product library",
+                "DESCRIPTION": "Save favorite foods and quickly add them again instead of rebuilding the same entries every time."
+            },
+            "RECIPE_FLOW": {
+                "KICKER": "Recipes",
+                "TITLE": "Recipes that fit the diary flow",
+                "DESCRIPTION": "Store recipes as structured items and drop them into meals with nutrition already connected."
+            },
+            "MEAL_PLANS": {
+                "KICKER": "Meal plans",
+                "TITLE": "Plan your days in advance",
+                "DESCRIPTION": "Use meal plans to outline future meals and reduce decision fatigue before hunger drives the choice."
+            },
+            "SHOPPING_LISTS": {
+                "KICKER": "Shopping",
+                "TITLE": "Turn plans into shopping lists",
+                "DESCRIPTION": "Move from planned meals to ingredient lists so execution is easier outside the app too."
+            },
+            "GOALS": {
+                "KICKER": "Goals",
+                "TITLE": "Keep targets connected to behavior",
+                "DESCRIPTION": "Tie calorie and nutrition targets to actual routines instead of treating them like static numbers."
+            },
+            "STATISTICS": {
+                "KICKER": "Statistics",
+                "TITLE": "Visual nutrition analytics",
+                "DESCRIPTION": "See calorie, macro, and distribution charts that make weekly patterns easier to understand."
+            },
+            "BODY_HISTORY": {
+                "KICKER": "Body metrics",
+                "TITLE": "Weight and waist trends",
+                "DESCRIPTION": "Track body changes alongside food data to compare behavior with longer-term physical outcomes."
+            },
+            "WEEKLY_CHECKINS": {
+                "KICKER": "Review",
+                "TITLE": "Weekly check-ins and reflection",
+                "DESCRIPTION": "Step back from daily logging and review consistency, changes, and next adjustments."
+            },
+            "FASTING": {
+                "KICKER": "Fasting",
+                "TITLE": "Dedicated fasting workflow",
+                "DESCRIPTION": "Run fasting timers and supporting screens without forcing the feature into the standard meal log."
+            },
+            "CYCLE_TRACKING": {
+                "KICKER": "Cycle tracking",
+                "TITLE": "Cycle-aware tracking",
+                "DESCRIPTION": "Track cycle data in the same product so nutrition, body signals, and timing are easier to compare."
+            },
+            "PREMIUM_AI": {
+                "KICKER": "Premium",
+                "TITLE": "Premium and AI-assisted tools",
+                "DESCRIPTION": "Unlock advanced features and guided flows when you need more automation or deeper support."
+            },
+            "LESSONS": {
+                "KICKER": "Lessons",
+                "TITLE": "Built-in learning content",
+                "DESCRIPTION": "Use lessons to turn the app into an ongoing education tool, not just a place to store entries."
+            },
+            "GAMIFICATION": {
+                "KICKER": "Gamification",
+                "TITLE": "Progress that feels rewarding",
+                "DESCRIPTION": "Streaks and game-like progress cues can help users stay engaged between visible body changes."
+            },
+            "PROFILE_SYNC": {
+                "KICKER": "Account",
+                "TITLE": "A synced personal workspace",
+                "DESCRIPTION": "Keep your profile, history, and progress together so the system grows more useful over time."
+            }
+        }
+    },
+    "LANDING_DIETOLOGIST": {
+        "EYEBROW": "With a dietologist",
+        "TITLE": "Work with a specialist in the same space as your diary",
+        "SUBTITLE": "Invite a dietologist by email, share only the categories you choose, and keep meals, progress, and body metrics in one workflow instead of sending manual reports.",
+        "REGISTER": "Create account",
+        "LOGIN": "Sign in",
+        "STEPS": {
+            "INVITE": {
+                "TITLE": "Invite by email",
+                "TEXT": "Connect a dietologist from your profile without moving the conversation into separate spreadsheets or chat threads."
+            },
+            "SHARE": {
+                "TITLE": "Share selected diary data",
+                "TEXT": "Meals, nutrition statistics, weight, waist, goals, hydration, and fasting access can be enabled only when you want them visible."
+            },
+            "ADJUST": {
+                "TITLE": "Keep control over access",
+                "TEXT": "Update permissions later, cancel a pending invite, or disconnect the relationship if your workflow changes."
+            }
+        },
+        "CARD": {
+            "BADGE": "Shared workspace preview",
+            "TITLE": "Dietologist collaboration, with scoped access",
+            "STATUS": "Access managed by you",
+            "TEXT": "The dietologist flow is built around explicit permissions, so shared care can happen inside the app without exposing everything by default.",
+            "PERMISSIONS": "Examples of shareable categories"
+        },
+        "PERMISSIONS": {
+            "MEALS": "Meals and food diary",
+            "STATISTICS": "Calories and nutrition statistics",
+            "WEIGHT": "Weight history",
+            "GOALS": "Nutrition goals",
+            "FASTING": "Fasting data"
+        },
+        "NOTE": "You decide which data categories are visible to the dietologist, and can revise access later."
+    },
+    "LANDING_PREVIEW_TOUR": {
+        "PREVIEW": {
+            "EYEBROW": "Product tour",
+            "TITLE": "See your day at a glance",
+            "SUBTITLE": "Charts, meals, and trends live together so you always know where you stand.",
+            "BLOCKS": {
+                "MEALS": {
+                    "EYEBROW": "Meals",
+                    "TITLE": "Preview today in one list",
+                    "SUBTITLE": "Add products and recipes to sketch your day before you log."
+                },
+                "SUMMARY": {
+                    "EYEBROW": "Overview",
+                    "TITLE": "Daily totals stay visible",
+                    "SUBTITLE": "Calories and macro balance update as you build a plan."
+                },
+                "NUTRITION": {
+                    "EYEBROW": "Nutrition",
+                    "TITLE": "Tune your macros",
+                    "SUBTITLE": "Trends and distributions show how protein, fats, and carbs split."
+                },
+                "BODY": {
+                    "EYEBROW": "Body",
+                    "TITLE": "Follow body metrics",
+                    "SUBTITLE": "Weight and waist charts highlight long-term progress."
+                }
+            },
+            "CALORIES": "Calories",
+            "WEIGHT": "Weight",
+            "TREND": "Trend",
+            "MEAL": "Meal",
+            "PROGRESS": "Progress"
+        },
+        "TOUR": {
+            "EYEBROW": "Product tour",
+            "TITLE": "Products, recipes and quick add",
+            "SUBTITLE": "Pick items you eat often and drop them into a quick drawer before logging a meal.",
+            "PRODUCTS": "Products",
+            "RECIPES": "Recipes",
+            "CATALOG_TITLE": "Build a meal from familiar products and recipes",
+            "CATALOG_SUBTITLE": "Keep your usual cards close so you can sketch a future meal quickly instead of bouncing between separate screens.",
+            "DRAFT_EYEBROW": "Quick draft",
+            "DRAFT_TITLE": "Assemble the meal first, save it in one step later",
+            "DRAFT_SUBTITLE": "Add products and recipes into one shared draft, adjust the mix before logging, and keep the final meal in one clear flow.",
+            "DRAFT_PILL_ONE": "Products and recipes in one draft",
+            "DRAFT_PILL_TWO": "Reuse common items without manual re-entry",
+            "DRAFT_NOTE": "This makes it easier to sketch routine breakfasts, snacks, and day-ahead plans without losing context between the library and the diary.",
+            "DRAWER_HINT": "Preview: edit and save actions unlock after you sign up."
+        },
+        "PREVIEW_DATA": {
+            "MEAL_COMMENT": "Quinoa salad with chicken and avocado",
+            "PRODUCTS": {
+                "YOGURT": {
+                    "NAME": "Greek yogurt 2%",
+                    "CATEGORY": "Dairy",
+                    "DESCRIPTION": "A classic yogurt for breakfasts."
+                },
+                "GRANOLA": {
+                    "NAME": "Nut granola",
+                    "CATEGORY": "Grains",
+                    "DESCRIPTION": "Crunchy granola for quick snacks."
+                }
+            },
+            "RECIPES": {
+                "BOWL": {
+                    "NAME": "Salmon quinoa bowl",
+                    "DESCRIPTION": "A hearty lunch in 10 minutes.",
+                    "CATEGORY": "Lunch",
+                    "STEP": "Mix quinoa, vegetables, and roasted salmon."
+                },
+                "SALAD": {
+                    "NAME": "Chicken avocado salad",
+                    "DESCRIPTION": "A light dinner with plenty of protein.",
+                    "CATEGORY": "Dinner",
+                    "STEP": "Combine greens, chicken, avocado, and dressing."
+                }
+            },
+            "WEEKDAYS": {
+                "MON": "Mon",
+                "TUE": "Tue",
+                "WED": "Wed",
+                "THU": "Thu",
+                "FRI": "Fri",
+                "SAT": "Sat",
+                "SUN": "Sun"
+            },
+            "NUTRIENTS": {
+                "PROTEINS": "Proteins",
+                "FATS": "Fats",
+                "CARBS": "Carbs",
+                "FIBER": "Fiber"
+            },
+            "NUTRIENTS_SHORT": {
+                "PROTEINS": "P",
+                "FATS": "F",
+                "CARBS": "C"
+            }
+        }
+    },
+    "LANDING_STEPS": {
+        "EYEBROW": "How it works",
+        "TITLE": "Three steps to a clear routine",
+        "SUBTITLE": "From sign-up to tracking in seconds.",
+        "STEP1": {
+            "TITLE": "Create an account",
+            "TEXT": "Answer a few questions so we can tailor your diary."
+        },
+        "STEP2": {
+            "TITLE": "Log meals with products or recipes",
+            "TEXT": "Add portions, scan items, and reuse saved meals."
+        },
+        "STEP3": {
+            "TITLE": "Watch your progress",
+            "TEXT": "Track calories, macros, weight and trends in one place."
+        }
+    },
+    "LANDING_CTA": {
+        "TITLE": "Start with your diary. Grow into your full nutrition workspace.",
+        "SUBTITLE": "Create an account to log meals, plan ahead, review progress, and unlock dietologist collaboration when you need it.",
+        "REGISTER": "Register",
+        "LOGIN": "Login"
+    },
+    "LANDING_FAQ": {
+        "EYEBROW": "FAQ",
+        "TITLE": "Questions before you start",
+        "SUBTITLE": "Short answers about what Food Diary already covers and how it fits into a long-term nutrition routine.",
+        "DETAIL_LINK": "Read the detailed Food Diary page",
+        "GUIDES_TITLE": "Explore dedicated pages for key nutrition use cases",
+        "ITEMS": {
+            "APP_SCOPE": {
+                "QUESTION": "Is Food Diary only a calorie counter?",
+                "ANSWER": "No. Food Diary combines meal logging, calorie and macro tracking, recipes, meal planning, fasting tools, body metrics, weekly reviews, and guided nutrition workflows in one workspace."
+            },
+            "PLANNING": {
+                "QUESTION": "Can I plan meals in advance?",
+                "ANSWER": "Yes. You can build meal plans, turn planned meals into shopping lists, and keep products and recipes ready so future meals are easier to assemble."
+            },
+            "PROGRESS": {
+                "QUESTION": "Can I track long-term progress, not just daily entries?",
+                "ANSWER": "Yes. Food Diary includes charts for calories and macros, body progress such as weight and waist history, and weekly check-ins so you can review trends over time."
+            },
+            "DIETOLOGIST": {
+                "QUESTION": "Can I work with a dietologist inside the app?",
+                "ANSWER": "Yes. You can invite a dietologist by email, share only the data categories you choose, and keep meals, progress, and body metrics in the same workflow."
+            }
+        }
+    }
+}

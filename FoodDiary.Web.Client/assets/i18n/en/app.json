@@ -2134,5 +2134,23 @@
         "SUCCESS": "Report submitted successfully",
         "ALREADY_REPORTED": "You have already reported this content",
         "REASON_LABEL": "Reason"
+    },
+    "DIETOLOGIST_INVITATION": {
+        "TITLE": "Dietologist invitation",
+        "LOADING": "Loading invitation...",
+        "DESCRIPTION": "{{ name }} invited you to become their dietologist. If you accept, you'll get access to their shared diary data.",
+        "EXPIRES": "Invitation expires on {{ date }}",
+        "ACCEPT": "Accept invitation",
+        "DECLINE": "Decline invitation",
+        "SUCCESS_ACCEPT": "Invitation accepted. You can now open your clients workspace.",
+        "SUCCESS_DECLINE": "Invitation declined.",
+        "EXPIRED": "This invitation has expired.",
+        "REVOKED": "This invitation is no longer active.",
+        "OPEN_CLIENTS": "Open my clients",
+        "GO_HOME": "Go home",
+        "ERROR_INVALID": "Invitation link is invalid.",
+        "ERROR_LOAD": "Failed to load invitation details.",
+        "ERROR_ACCEPT": "Failed to accept the invitation.",
+        "ERROR_DECLINE": "Failed to decline the invitation."
     }
 }
