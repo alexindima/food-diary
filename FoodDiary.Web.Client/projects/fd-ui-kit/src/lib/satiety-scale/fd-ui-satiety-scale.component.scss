@@ -100,8 +100,8 @@
     }
 
     &__indicator {
-        width: 32px;
-        height: 32px;
+        width: var(--fd-size-control-sm);
+        height: var(--fd-size-control-sm);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-overlay-subtle);
         display: flex;

@@ -331,7 +331,7 @@
         }
 
         &__feature-chip {
-            min-height: 40px;
+            min-height: var(--fd-size-control-md);
             padding: 0 var(--fd-space-md);
             font-size: 0.86rem;
         }

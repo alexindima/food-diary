@@ -69,8 +69,8 @@
     }
 
     &__icon {
-        width: 44px;
-        height: 44px;
+        width: var(--fd-size-control-touch);
+        height: var(--fd-size-control-touch);
         border-radius: var(--fd-landing-radius-card);
         background: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
         color: var(--fd-color-white);

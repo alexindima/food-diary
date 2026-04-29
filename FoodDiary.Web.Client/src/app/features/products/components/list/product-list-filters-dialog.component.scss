@@ -24,7 +24,7 @@
     &__types {
         --fd-chip-select-font-weight: var(--fd-text-action-weight);
         --fd-chip-select-font-size: var(--fd-text-action-size);
-        --fd-chip-select-item-height: 40px;
+        --fd-chip-select-item-height: var(--fd-size-control-md);
     }
 
     &__footer {

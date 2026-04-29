@@ -175,9 +175,9 @@
 }
 
 .photo-ai-dialog__edit-remove {
-    --fd-button-width: 24px;
-    --fd-button-min-width: 24px;
-    --fd-button-height: 24px;
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
     --fd-button-height-explicit: 24px;
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
@@ -221,9 +221,9 @@
 }
 
 .photo-ai-dialog__action-button {
-    --fd-button-width: 24px;
-    --fd-button-min-width: 24px;
-    --fd-button-height: 24px;
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
     --fd-button-height-explicit: 24px;
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;

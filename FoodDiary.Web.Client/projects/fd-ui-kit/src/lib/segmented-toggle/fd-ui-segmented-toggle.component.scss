@@ -25,7 +25,7 @@
     align-items: center;
     justify-content: center;
     min-width: 54px;
-    min-height: 44px;
+    min-height: var(--fd-size-control-touch);
     padding: var(--fd-space-segmented-toggle-item-padding);
     border: none;
     border-radius: var(--fd-radius-toggle);
@@ -49,8 +49,8 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--fd-color-primary-400);
-        outline-offset: 2px;
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
     }
 
     &.is-active {

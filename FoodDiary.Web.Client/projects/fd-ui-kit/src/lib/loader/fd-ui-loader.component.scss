@@ -2,14 +2,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: var(--fd-size-control-sm);
+    height: var(--fd-size-control-sm);
     padding: 0;
 }
 
 .fd-ui-loader__spinner {
-    width: 32px;
-    height: 32px;
+    width: var(--fd-size-control-sm);
+    height: var(--fd-size-control-sm);
     border-radius: 50%;
     border: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
     border-top-color: var(--fd-color-primary-600);

@@ -4,8 +4,8 @@
 
 .fd-ui-emoji-picker {
     --fd-emoji-picker-gap: var(--fd-space-emoji-picker-gap);
-    --fd-emoji-picker-option-width: 56px;
-    --fd-emoji-picker-option-height: 56px;
+    --fd-emoji-picker-option-width: var(--fd-size-control-xl);
+    --fd-emoji-picker-option-height: var(--fd-size-control-xl);
     --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding);
     --fd-emoji-picker-option-radius: var(--fd-radius-card);
     --fd-emoji-picker-option-bg-default: var(--fd-bg-surface-solid);
@@ -29,8 +29,8 @@
 }
 
 .fd-ui-emoji-picker--size-sm {
-    --fd-emoji-picker-option-width: 48px;
-    --fd-emoji-picker-option-height: 48px;
+    --fd-emoji-picker-option-width: var(--fd-size-control-lg);
+    --fd-emoji-picker-option-height: var(--fd-size-control-lg);
     --fd-emoji-picker-emoji-size: var(--fd-emoji-picker-emoji-size-sm);
     --fd-emoji-picker-option-padding: var(--fd-space-emoji-picker-option-padding-sm);
     --fd-emoji-picker-gap: var(--fd-space-emoji-picker-gap-sm);
@@ -73,8 +73,8 @@
     }
 
     &:focus-visible {
-        outline: 2px solid color-mix(in srgb, var(--fd-color-primary-400) 78%, transparent);
-        outline-offset: 2px;
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
     }
 
     &:disabled {

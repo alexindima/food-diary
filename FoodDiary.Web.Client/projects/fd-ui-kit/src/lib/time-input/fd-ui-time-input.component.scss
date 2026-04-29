@@ -5,7 +5,7 @@
 }
 
 .fd-ui-time-input {
-    --fd-time-height: 40px;
+    --fd-time-height: var(--fd-size-control-md);
     --fd-time-radius: var(--fd-radius-input);
     --fd-time-border: var(--fd-border-default);
     --fd-time-label-bg: var(--fd-bg-surface-raised);
@@ -15,15 +15,15 @@
 }
 
 .fd-ui-time-input--size-sm {
-    --fd-time-height: 32px;
+    --fd-time-height: var(--fd-size-control-sm);
 }
 
 .fd-ui-time-input--size-md {
-    --fd-time-height: 40px;
+    --fd-time-height: var(--fd-size-control-md);
 }
 
 .fd-ui-time-input--size-lg {
-    --fd-time-height: 48px;
+    --fd-time-height: var(--fd-size-control-lg);
 }
 
 .fd-ui-time-input__label {

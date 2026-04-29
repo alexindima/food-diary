@@ -51,7 +51,7 @@
 
 .fd-ui-input__control-wrap {
     --fd-input-control-background: var(--fd-bg-surface-raised);
-    min-height: 40px;
+    min-height: var(--fd-size-control-md);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
     background: var(--fd-input-control-background);
@@ -66,11 +66,11 @@
 }
 
 .fd-ui-input--size-sm .fd-ui-input__control-wrap {
-    min-height: 32px;
+    min-height: var(--fd-size-control-sm);
 }
 
 .fd-ui-input--size-lg .fd-ui-input__control-wrap {
-    min-height: 48px;
+    min-height: var(--fd-size-control-lg);
 }
 
 .fd-ui-input__control-wrap--with-prefix {
@@ -82,7 +82,7 @@
 }
 
 .fd-ui-input__control-wrap--with-prefix .fd-ui-input__label {
-    left: 44px;
+    left: var(--fd-size-control-touch);
     max-width: calc(100% - 58px);
 }
 
@@ -156,8 +156,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: var(--fd-size-control-sm);
+    height: var(--fd-size-control-sm);
     cursor: pointer;
 }
 

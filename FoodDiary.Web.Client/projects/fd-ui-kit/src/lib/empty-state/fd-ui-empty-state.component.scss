@@ -20,8 +20,8 @@
 }
 
 .fd-ui-empty-state__icon-wrap {
-    width: 48px;
-    height: 48px;
+    width: var(--fd-size-control-lg);
+    height: var(--fd-size-control-lg);
     display: grid;
     place-items: center;
     border-radius: var(--fd-radius-pill);

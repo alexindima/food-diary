@@ -90,7 +90,7 @@
     &__chip {
         display: inline-flex;
         align-items: center;
-        min-height: 40px;
+        min-height: var(--fd-size-control-md);
         padding: 0 var(--fd-space-md);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-surface-translucent);

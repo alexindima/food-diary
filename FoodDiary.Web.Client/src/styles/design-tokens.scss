@@ -20,6 +20,16 @@ $fd-spacing-tokens: (
     xxl: clamp(28px, 4vw, 40px),
 );
 
+$fd-size-tokens: (
+    control-xs: 24px,
+    control-sm: 32px,
+    control-md: 40px,
+    control-touch: 44px,
+    control-lg: 48px,
+    control-xl: 56px,
+    control-xxl: 64px,
+);
+
 $fd-typography-tokens: (
     font-family: '"Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
     font-family-monospace: 'ui-monospace, SFMono-Regular, Consolas, monospace',
@@ -196,6 +206,7 @@ $fd-static-design-tokens: (
     colors: $fd-static-color-tokens,
     radius: $fd-radius-tokens,
     spacing: $fd-spacing-tokens,
+    size: $fd-size-tokens,
     typography: $fd-typography-tokens,
     elevation: $fd-elevation-tokens,
     border: $fd-border-tokens,
@@ -1070,6 +1081,9 @@ $fd-theme-design-tokens: (
         --fd-color-border-status-warning: color-mix(in srgb, var(--fd-color-yellow-300) 32%, var(--fd-color-border));
         --fd-color-border-status-danger: color-mix(in srgb, var(--fd-color-danger) 28%, var(--fd-color-border));
         --fd-color-border-status-premium: color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
+        --fd-outline-focus: var(--fd-border-width-strong) solid var(--fd-color-primary-400);
+        --fd-outline-focus-strong: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
+        --fd-outline-offset: var(--fd-border-width-strong);
 
         --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
         --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};
@@ -1091,6 +1105,13 @@ $fd-theme-design-tokens: (
         --fd-space-lg: #{fd-token(spacing, lg)};
         --fd-space-xl: #{fd-token(spacing, xl)};
         --fd-space-xxl: #{fd-token(spacing, xxl)};
+        --fd-size-control-xs: #{fd-token(size, control-xs)};
+        --fd-size-control-sm: #{fd-token(size, control-sm)};
+        --fd-size-control-md: #{fd-token(size, control-md)};
+        --fd-size-control-touch: #{fd-token(size, control-touch)};
+        --fd-size-control-lg: #{fd-token(size, control-lg)};
+        --fd-size-control-xl: #{fd-token(size, control-xl)};
+        --fd-size-control-xxl: #{fd-token(size, control-xxl)};
 
         --fd-layout-header-height: #{fd-theme-token($theme, layout-header, height)};
         --fd-layout-header-background: #{fd-theme-token($theme, layout-header, background)};

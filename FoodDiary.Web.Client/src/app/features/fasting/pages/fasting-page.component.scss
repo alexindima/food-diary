@@ -136,9 +136,9 @@
         }
 
         &--emoji {
-            width: 44px;
-            min-width: 44px;
-            height: 44px;
+            width: var(--fd-size-control-touch);
+            min-width: var(--fd-size-control-touch);
+            height: var(--fd-size-control-touch);
             padding: 0;
             display: inline-flex;
             align-items: center;

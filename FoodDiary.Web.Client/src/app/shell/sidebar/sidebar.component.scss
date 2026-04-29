@@ -46,11 +46,11 @@
     }
 
     &__brand-notifications {
-        --fd-button-host-width: 40px;
-        --fd-button-host-min-width: 40px;
-        --fd-button-width: 40px;
-        --fd-button-min-width: 40px;
-        --fd-button-height: 40px;
+        --fd-button-host-width: var(--fd-size-control-md);
+        --fd-button-host-min-width: var(--fd-size-control-md);
+        --fd-button-width: var(--fd-size-control-md);
+        --fd-button-min-width: var(--fd-size-control-md);
+        --fd-button-height: var(--fd-size-control-md);
         --fd-button-height-explicit: 40px;
         --fd-button-padding-x: 0;
         --fd-button-text-padding-x: 0;
@@ -166,8 +166,8 @@
         letter-spacing: 0.01em;
 
         &:focus-visible {
-            outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
-            outline-offset: 2px;
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
             border-radius: var(--fd-radius-button);
         }
 
@@ -256,8 +256,8 @@
         }
 
         &:focus-visible {
-            outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
-            outline-offset: 2px;
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
         }
     }
 
@@ -377,8 +377,8 @@
         }
 
         &:focus-visible {
-            outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
-            outline-offset: 2px;
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
         }
 
         &.is-active {
@@ -513,8 +513,8 @@
         }
 
         &:focus-visible {
-            outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
-            outline-offset: 2px;
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
         }
 
         &.is-active,
@@ -574,8 +574,8 @@
         z-index: 1190;
 
         &:focus-visible {
-            outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
-            outline-offset: 2px;
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
         }
 
         a,

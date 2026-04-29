@@ -37,7 +37,7 @@
 }
 
 .fd-ui-menu__item:focus-visible {
-    outline: 2px solid var(--fd-color-primary-400);
+    outline: var(--fd-outline-focus);
     outline-offset: -2px;
 }
 

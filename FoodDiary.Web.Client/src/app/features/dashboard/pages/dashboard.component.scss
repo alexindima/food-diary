@@ -260,20 +260,20 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &__push-action {
-            min-width: 44px;
+            min-width: var(--fd-size-control-touch);
             padding-inline: 0;
             --fd-button-label-display: none;
-            --fd-button-width: 44px;
-            --fd-button-min-width: 44px;
+            --fd-button-width: var(--fd-size-control-touch);
+            --fd-button-min-width: var(--fd-size-control-touch);
             --fd-button-padding-x: 0;
         }
 
         &__appearance-action {
-            min-width: 44px;
+            min-width: var(--fd-size-control-touch);
             padding-inline: 0;
             --fd-button-label-display: none;
-            --fd-button-width: 44px;
-            --fd-button-min-width: 44px;
+            --fd-button-width: var(--fd-size-control-touch);
+            --fd-button-min-width: var(--fd-size-control-touch);
             --fd-button-padding-x: 0;
         }
 
@@ -340,11 +340,11 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &__appearance-action {
-            min-width: 44px;
+            min-width: var(--fd-size-control-touch);
             padding-inline: 0;
             --fd-button-label-display: none;
-            --fd-button-width: 44px;
-            --fd-button-min-width: 44px;
+            --fd-button-width: var(--fd-size-control-touch);
+            --fd-button-min-width: var(--fd-size-control-touch);
             --fd-button-padding-x: 0;
         }
 

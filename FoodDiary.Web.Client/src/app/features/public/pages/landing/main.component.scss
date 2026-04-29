@@ -372,7 +372,7 @@
     &__guide-link {
         display: flex;
         align-items: center;
-        min-height: 56px;
+        min-height: var(--fd-size-control-xl);
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
         background: var(--fd-bg-surface-solid);

@@ -192,10 +192,10 @@
 }
 
 .fd-ui-button--appearance-card-action {
-    --fd-button-width: 44px;
-    --fd-button-min-width: 44px;
-    --fd-button-height-explicit: 40px;
-    --fd-button-height: 40px;
+    --fd-button-width: var(--fd-size-control-touch);
+    --fd-button-min-width: var(--fd-size-control-touch);
+    --fd-button-height-explicit: var(--fd-size-control-md);
+    --fd-button-height: var(--fd-size-control-md);
     --fd-button-padding-x: 0;
     --fd-button-background-default: linear-gradient(
         180deg,
@@ -401,7 +401,7 @@
 }
 
 .fd-ui-button--size-sm {
-    --fd-button-height: 32px;
+    --fd-button-height: var(--fd-size-control-sm);
     --fd-button-padding-x: 0.5rem;
     --fd-button-text-padding-x: 0.25rem;
 }
@@ -414,7 +414,7 @@
 }
 
 .fd-ui-button--size-lg {
-    --fd-button-height: 48px;
+    --fd-button-height: var(--fd-size-control-lg);
     --fd-button-padding-x: 1rem;
     --fd-button-text-padding-x: 0.5rem;
 }

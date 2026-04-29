@@ -25,8 +25,8 @@
     &__delete-button {
 
         &--icon {
-            width: 40px;
-            min-width: 40px;
+            width: var(--fd-size-control-md);
+            min-width: var(--fd-size-control-md);
             display: inline-flex;
         }
     }
@@ -95,7 +95,7 @@
     }
 
     &__hero {
-        --fd-product-input-height: 48px;
+        --fd-product-input-height: var(--fd-size-control-lg);
         --fd-product-input-subscript: 18px;
         --fd-product-image-size: calc(
             (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)

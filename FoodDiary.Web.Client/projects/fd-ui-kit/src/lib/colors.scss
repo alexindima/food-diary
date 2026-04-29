@@ -375,7 +375,7 @@ html[data-theme='dark'] {
     --fd-button-shadow-disabled: var(--fd-shadow-none);
     --fd-button-transform-disabled: none;
     --fd-button-label-display: inline;
-    --fd-button-height: 40px;
+    --fd-button-height: var(--fd-size-control-md);
     --fd-button-padding-x: 0.75rem;
     --fd-button-text-padding-x: 0.375rem;
     --fd-button-icon-size: 1rem;
@@ -421,12 +421,12 @@ html[data-theme='dark'] {
     --fd-dialog-body-padding-block: 0.25rem;
     --fd-dialog-scrollbar-width: 10px;
     --fd-dialog-scrollbar-thumb-border-width: 2px;
-    --fd-dialog-close-button-size: 32px;
+    --fd-dialog-close-button-size: var(--fd-size-control-sm);
     --fd-image-preview-max-height: min(90vh, 980px);
     --fd-image-preview-close-inset: 20px;
     --fd-image-preview-close-inset-mobile: 12px;
-    --fd-image-preview-close-size: 48px;
-    --fd-image-preview-close-size-mobile: 44px;
+    --fd-image-preview-close-size: var(--fd-size-control-lg);
+    --fd-image-preview-close-size-mobile: var(--fd-size-control-touch);
     --fd-image-preview-close-icon-size: 2rem;
     --fd-image-preview-max-width: min(100%, 1120px);
     --fd-image-preview-image-max-height: min(72vh, 820px);

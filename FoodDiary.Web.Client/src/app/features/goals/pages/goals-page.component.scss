@@ -15,7 +15,7 @@
     }
 
     &__status {
-        --fd-pill-min-height: 40px;
+        --fd-pill-min-height: var(--fd-size-control-md);
         --fd-pill-padding-inline: var(--fd-space-md);
         --fd-pill-bg: var(--fd-bg-surface-elevated);
         --fd-pill-border: transparent;
@@ -222,8 +222,8 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 32px;
-        height: 32px;
+        width: var(--fd-size-control-sm);
+        height: var(--fd-size-control-sm);
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-surface-raised);
         border: var(--fd-border-width-emphasis) solid var(--goals-accent);

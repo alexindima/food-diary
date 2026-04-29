@@ -135,9 +135,9 @@
     }
 
     &__item-remove {
-        --fd-button-width: 32px;
-        --fd-button-min-width: 32px;
-        --fd-button-height: 32px;
+        --fd-button-width: var(--fd-size-control-sm);
+        --fd-button-min-width: var(--fd-size-control-sm);
+        --fd-button-height: var(--fd-size-control-sm);
         --fd-button-height-explicit: 32px;
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-pill);

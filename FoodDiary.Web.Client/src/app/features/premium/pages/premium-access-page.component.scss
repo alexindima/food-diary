@@ -57,7 +57,7 @@
 }
 
 .premium-access-page__badge {
-    min-height: 32px;
+    min-height: var(--fd-size-control-sm);
     letter-spacing: 0.01em;
 }
 

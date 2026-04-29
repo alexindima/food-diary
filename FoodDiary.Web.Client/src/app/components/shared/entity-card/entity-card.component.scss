@@ -56,11 +56,11 @@
 }
 
 .entity-card__favorite-button {
-    --fd-button-host-width: 24px;
-    --fd-button-host-min-width: 24px;
-    --fd-button-width: 24px;
-    --fd-button-min-width: 24px;
-    --fd-button-height: 24px;
+    --fd-button-host-width: var(--fd-size-control-xs);
+    --fd-button-host-min-width: var(--fd-size-control-xs);
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
     --fd-button-height-explicit: 24px;
     --fd-button-padding-x: 0;
     --fd-button-icon-size: var(--fd-text-section-title-size);
@@ -251,8 +251,8 @@
 }
 
 .entity-card__action-button {
-    width: 44px;
-    height: 40px;
+    width: var(--fd-size-control-touch);
+    height: var(--fd-size-control-md);
     background: transparent;
     color: inherit;
     box-shadow: var(--fd-shadow-none);

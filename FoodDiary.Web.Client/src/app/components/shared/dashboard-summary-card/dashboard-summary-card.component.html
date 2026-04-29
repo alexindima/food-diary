@@ -134,7 +134,7 @@
                                 [style.background]="
                                     bar.target > 0
                                         ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'
-                                        : '#d1d5db'
+                                        : 'var(--fd-color-slate-300)'
                                 "
                                 [style.width.%]="bar.target > 0 ? clampPercent((bar.current / bar.target) * 100) : 100"
                             ></div>

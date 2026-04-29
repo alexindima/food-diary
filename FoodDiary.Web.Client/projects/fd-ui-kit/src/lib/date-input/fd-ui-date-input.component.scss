@@ -5,7 +5,7 @@
 }
 
 .fd-ui-date-input {
-    --fd-date-height: 40px;
+    --fd-date-height: var(--fd-size-control-md);
     --fd-date-radius: var(--fd-radius-input);
     --fd-date-border: var(--fd-border-default);
     --fd-date-label-bg: var(--fd-bg-surface-raised);
@@ -15,15 +15,15 @@
 }
 
 .fd-ui-date-input--size-sm {
-    --fd-date-height: 32px;
+    --fd-date-height: var(--fd-size-control-sm);
 }
 
 .fd-ui-date-input--size-md {
-    --fd-date-height: 40px;
+    --fd-date-height: var(--fd-size-control-md);
 }
 
 .fd-ui-date-input--size-lg {
-    --fd-date-height: 48px;
+    --fd-date-height: var(--fd-size-control-lg);
 }
 
 .fd-ui-date-input__label {

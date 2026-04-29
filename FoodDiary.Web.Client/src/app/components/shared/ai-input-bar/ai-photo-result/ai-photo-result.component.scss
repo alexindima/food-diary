@@ -188,9 +188,9 @@
 }
 
 .ai-photo-result__action-btn {
-    --fd-button-width: 24px;
-    --fd-button-min-width: 24px;
-    --fd-button-height: 24px;
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
     --fd-button-height-explicit: 24px;
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
@@ -281,9 +281,9 @@
 }
 
 .ai-photo-result__edit-remove {
-    --fd-button-width: 24px;
-    --fd-button-min-width: 24px;
-    --fd-button-height: 24px;
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
     --fd-button-height-explicit: 24px;
     --fd-button-padding-x: 0;
     --fd-button-background-default: transparent;
@@ -447,7 +447,7 @@
 }
 
 .ai-photo-result__detail-input {
-    height: 44px;
+    height: var(--fd-size-control-touch);
     padding: 0 var(--fd-space-sm);
 }
 
@@ -513,8 +513,8 @@
 }
 
 .ai-photo-result__satiety-indicator {
-    width: 40px;
-    height: 40px;
+    width: var(--fd-size-control-md);
+    height: var(--fd-size-control-md);
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-surface-translucent);
     display: flex;

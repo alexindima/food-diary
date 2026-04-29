@@ -31,7 +31,7 @@
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0;
-    width: 24px;
+    width: var(--fd-size-control-xs);
     font-size: var(--fd-text-body-size);
     line-height: 20px;
 }

@@ -112,7 +112,7 @@
 }
 
 .stats-summary-card__macro-trend {
-    height: 48px;
+    height: var(--fd-size-control-lg);
 }
 
 @media #{variables.$media-compact} {

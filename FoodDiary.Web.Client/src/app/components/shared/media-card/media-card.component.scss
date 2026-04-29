@@ -9,7 +9,7 @@
 
 :host(:focus-visible) .media-card {
     outline: var(--fd-border-width-strong) solid var(--fd-color-border-status-info);
-    outline-offset: 2px;
+    outline-offset: var(--fd-outline-offset);
 }
 
 .media-card {
@@ -93,7 +93,7 @@
     }
 
     .media-card__media {
-        max-width: 56px;
+        max-width: var(--fd-size-control-xl);
         border-radius: 0;
     }
 
@@ -144,8 +144,8 @@
         }
 
         .media-card__media {
-            inline-size: 56px;
-            min-inline-size: 56px;
+            inline-size: var(--fd-size-control-xl);
+            min-inline-size: var(--fd-size-control-xl);
             border-radius: 0;
         }
 

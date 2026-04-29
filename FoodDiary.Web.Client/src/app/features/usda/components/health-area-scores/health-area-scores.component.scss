@@ -33,8 +33,8 @@
 
 .area-score-ring {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: var(--fd-size-control-lg);
+    height: var(--fd-size-control-lg);
 }
 
 .ring-svg {

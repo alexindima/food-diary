@@ -66,8 +66,8 @@
     }
 
     &__step-index {
-        width: 40px;
-        height: 40px;
+        width: var(--fd-size-control-md);
+        height: var(--fd-size-control-md);
         border-radius: var(--fd-landing-radius-card);
         background: linear-gradient(135deg, var(--fd-color-emerald-500) 0%, var(--fd-color-teal-500) 100%);
         color: var(--fd-color-white);

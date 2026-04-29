@@ -209,7 +209,7 @@
 .notifications-dialog__item-cta {
     margin-top: var(--fd-space-xxs);
     width: fit-content;
-    --fd-pill-min-height: 24px;
+    --fd-pill-min-height: var(--fd-size-control-xs);
     --fd-pill-padding-inline: 0.6rem;
     --fd-pill-bg: var(--fd-bg-category-teal);
     --fd-pill-border: transparent;

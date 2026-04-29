@@ -5,7 +5,7 @@
 }
 
 .fd-ui-datetime-input {
-    --fd-datetime-height: 40px;
+    --fd-datetime-height: var(--fd-size-control-md);
     --fd-datetime-radius: var(--fd-radius-input);
     --fd-datetime-border: var(--fd-border-default);
     --fd-datetime-label-bg: var(--fd-bg-surface-raised);
@@ -15,15 +15,15 @@
 }
 
 .fd-ui-datetime-input--size-sm {
-    --fd-datetime-height: 32px;
+    --fd-datetime-height: var(--fd-size-control-sm);
 }
 
 .fd-ui-datetime-input--size-md {
-    --fd-datetime-height: 40px;
+    --fd-datetime-height: var(--fd-size-control-md);
 }
 
 .fd-ui-datetime-input--size-lg {
-    --fd-datetime-height: 48px;
+    --fd-datetime-height: var(--fd-size-control-lg);
 }
 
 .fd-ui-datetime-input__label {

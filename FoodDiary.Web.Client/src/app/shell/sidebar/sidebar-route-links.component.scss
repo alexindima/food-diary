@@ -38,8 +38,8 @@
 
 .sidebar__link:focus-visible,
 .sidebar-mobile__sheet-link:focus-visible {
-    outline: 3px solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
-    outline-offset: 2px;
+    outline: var(--fd-outline-focus-strong);
+    outline-offset: var(--fd-outline-offset);
 }
 
 .sidebar__link.is-active {

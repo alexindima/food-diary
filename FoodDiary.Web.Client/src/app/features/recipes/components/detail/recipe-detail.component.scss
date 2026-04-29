@@ -107,9 +107,9 @@
     }
 
     &__favorite-btn {
-        --fd-button-width: 40px;
-        --fd-button-min-width: 40px;
-        --fd-button-height: 40px;
+        --fd-button-width: var(--fd-size-control-md);
+        --fd-button-min-width: var(--fd-size-control-md);
+        --fd-button-height: var(--fd-size-control-md);
         --fd-button-height-explicit: 40px;
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-lg);

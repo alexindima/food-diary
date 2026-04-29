@@ -149,7 +149,7 @@
     }
 
     &__card-accent {
-        width: 64px;
+        width: var(--fd-size-control-xxl);
         height: 6px;
         border-radius: var(--fd-radius-pill);
         background: linear-gradient(90deg, var(--fd-color-primary-600) 0%, var(--fd-color-green-500) 100%);

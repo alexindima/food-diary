@@ -63,7 +63,7 @@
     }
 
     &__chart {
-        height: 40px;
+        height: var(--fd-size-control-md);
         margin: var(--fd-space-xxs) calc(var(--fd-space-xs) * -1) var(--fd-space-xxs);
     }
 

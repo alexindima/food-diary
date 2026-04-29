@@ -172,9 +172,9 @@
     }
 
     &__favorite-btn {
-        --fd-button-width: 32px;
-        --fd-button-min-width: 32px;
-        --fd-button-height: 32px;
+        --fd-button-width: var(--fd-size-control-sm);
+        --fd-button-min-width: var(--fd-size-control-sm);
+        --fd-button-height: var(--fd-size-control-sm);
         --fd-button-height-explicit: 32px;
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-md);
@@ -265,16 +265,16 @@
     }
 
     &__off-image {
-        width: 48px;
-        height: 48px;
+        width: var(--fd-size-control-lg);
+        height: var(--fd-size-control-lg);
         border-radius: var(--fd-radius-md);
         object-fit: cover;
         flex-shrink: 0;
     }
 
     &__off-image-placeholder {
-        width: 48px;
-        height: 48px;
+        width: var(--fd-size-control-lg);
+        height: var(--fd-size-control-lg);
         border-radius: var(--fd-radius-md);
         background: var(--fd-bg-muted-tint);
         display: flex;
@@ -380,7 +380,7 @@
 
         &__add-button {
             flex: 0 0 auto;
-            min-width: 44px;
+            min-width: var(--fd-size-control-touch);
         }
     }
 }

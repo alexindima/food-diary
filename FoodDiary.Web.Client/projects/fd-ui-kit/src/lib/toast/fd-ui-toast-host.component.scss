@@ -79,7 +79,7 @@
     justify-content: center;
     gap: var(--fd-space-toast-content-gap);
     padding: var(--fd-space-toast-content-padding);
-    min-height: 56px;
+    min-height: var(--fd-size-control-xl);
 }
 
 .fd-ui-toast-host__message {
