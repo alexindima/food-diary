@@ -958,6 +958,7 @@ $fd-theme-design-tokens: (
         --fd-bg-surface-subtle: color-mix(in srgb, var(--fd-bg-surface-raised) 90%, transparent);
         --fd-bg-surface-elevated: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, transparent);
         --fd-bg-surface-panel: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent);
+        --fd-bg-surface-panel-gradient: linear-gradient(180deg, var(--fd-bg-surface-panel), var(--fd-bg-surface));
         --fd-bg-surface-solid: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
         --fd-bg-surface-glass-minimal: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
         --fd-bg-surface-glass-subtle: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
@@ -1258,6 +1259,7 @@ $fd-theme-design-tokens: (
         --fd-color-border-control-radio: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
         --fd-color-border-loader: color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         --fd-color-border-divider-soft: color-mix(in srgb, var(--fd-color-border) 72%, transparent);
+        --fd-color-border-divider-strong: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
         --fd-color-border-nutrient-good: color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
         --fd-color-border-nutrient-warning: color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
         --fd-color-border-nutrient-danger: color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);

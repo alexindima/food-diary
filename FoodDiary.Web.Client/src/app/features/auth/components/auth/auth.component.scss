@@ -14,7 +14,7 @@
         --fd-tabs-color-hover: color-mix(in srgb, var(--fd-color-primary-300) 72%, var(--fd-color-white));
         --fd-tabs-color-active: var(--fd-color-primary-600);
         --fd-tabs-active-border-color: var(--fd-color-primary-600);
-        --fd-tabs-border-color: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
+        --fd-tabs-border-color: var(--fd-color-border-divider-strong);
         --fd-tabs-label-opacity: 0.72;
         --fd-tabs-label-opacity-active: 1;
         margin-bottom: var(--fd-space-xs);

@@ -226,7 +226,7 @@
 .fd-ui-button--appearance-dashed {
     --fd-button-width: 100%;
     --fd-button-border-style: dashed;
-    --fd-button-border-default: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
+    --fd-button-border-default: var(--fd-color-border-divider-strong);
     --fd-button-background-default: var(--fd-bg-surface-elevated);
     --fd-button-text-default: var(--fd-color-text-muted);
     --fd-button-shadow-default: var(--fd-shadow-none);
