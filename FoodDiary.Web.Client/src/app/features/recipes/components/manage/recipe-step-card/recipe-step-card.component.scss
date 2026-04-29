@@ -13,7 +13,7 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--fd-space-md);
-    background: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, var(--fd-bg-surface));
+    background: var(--fd-bg-surface-raised-blend);
     border-bottom: var(--fd-border-default);
     padding: var(--fd-space-sm) var(--fd-space-lg);
     margin: calc(var(--fd-space-sm) * -1) calc(var(--fd-space-lg) * -1) 0;

@@ -4,59 +4,10 @@
 :host {
     display: flex;
     flex-direction: column;
-    background:
-        radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 22%),
-        radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--fd-color-emerald-500) 4%, transparent), transparent 25%), var(--fd-color-slate-50);
+    background: var(--fd-bg-landing-page);
     --tui-chart-categorical-00: var(--fd-color-chart-proteins);
     --tui-chart-categorical-01: var(--fd-color-chart-fats);
     --tui-chart-categorical-02: var(--fd-color-chart-carbs);
-    --fd-landing-container-max-width: 1180px;
-    --fd-landing-inline-padding: clamp(var(--fd-space-sm), 4vw, var(--fd-space-lg));
-    --fd-landing-section-space: clamp(
-        calc(var(--fd-space-xxl) + var(--fd-space-xs)),
-        4vw,
-        calc(var(--fd-space-xxl) + var(--fd-space-md))
-    );
-    --fd-landing-section-space-relaxed: clamp(var(--fd-space-xxl), 3vw, calc(var(--fd-space-xxl) + var(--fd-space-xs)));
-    --fd-landing-section-space-compact: clamp(var(--fd-space-xl), 2.4vw, calc(var(--fd-space-xl) + calc(var(--fd-space-xs) / 2)));
-    --fd-landing-section-space-tight: clamp(
-        calc(var(--fd-space-sm) + calc(var(--fd-space-xxs) / 2)),
-        2vw,
-        calc(var(--fd-space-lg) - calc(var(--fd-space-xxs) / 2))
-    );
-    --fd-landing-section-space-cta-start: clamp(
-        calc(var(--fd-space-xxl) + calc(var(--fd-space-xxs) / 2)),
-        3vw,
-        calc(var(--fd-space-xxl) + var(--fd-space-xs) + calc(var(--fd-space-xxs) / 2))
-    );
-    --fd-landing-section-space-cta-end: clamp(
-        calc(var(--fd-space-xxl) + var(--fd-space-xs)),
-        4vw,
-        calc(var(--fd-space-xxl) + var(--fd-space-lg))
-    );
-    --fd-landing-surface-padding: clamp(calc(var(--fd-space-md) + calc(var(--fd-space-xxs) / 2)), 2vw, var(--fd-space-lg));
-    --fd-landing-surface-padding-lg: clamp(var(--fd-space-xl), 2.2vw, calc(var(--fd-space-lg) + var(--fd-space-xxs)));
-    --fd-landing-surface-padding-sm: clamp(
-        calc(var(--fd-space-sm) + calc(var(--fd-space-xxs) / 2)),
-        1.8vw,
-        calc(var(--fd-space-md) + calc(var(--fd-space-xxs) / 2))
-    );
-    --fd-landing-copy-padding: clamp(var(--fd-space-xxs), 1vw, calc(var(--fd-space-xs) + calc(var(--fd-space-xxs) / 2)));
-    --fd-landing-grid-gap: clamp(var(--fd-space-md), 3vw, calc(var(--fd-space-xxl) - calc(var(--fd-space-xs) / 2)));
-    --fd-landing-stack-gap: clamp(var(--fd-space-lg), 4vw, calc(var(--fd-space-xxl) + var(--fd-space-xxs)));
-    --fd-landing-cta-margin-top: clamp(var(--fd-space-xl), 3vw, var(--fd-space-xxl));
-    --fd-landing-radius-panel: var(--fd-radius-panel);
-    --fd-landing-radius-card: var(--fd-radius-card);
-    --fd-landing-radius-chip: var(--fd-radius-chip);
-    --fd-landing-border-soft: color-mix(in srgb, var(--fd-color-border) 78%, transparent);
-    --fd-landing-border-strong: color-mix(in srgb, var(--fd-color-border-strong) 36%, transparent);
-    --fd-landing-surface: color-mix(in srgb, var(--fd-color-surface-raised) 82%, transparent);
-    --fd-landing-surface-strong: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
-    --fd-landing-surface-muted: color-mix(in srgb, var(--fd-color-surface) 90%, transparent);
-    --fd-landing-shadow-soft: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
-    --fd-landing-shadow-medium: 0 22px 48px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
-    --fd-landing-shadow-strong: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
-    --fd-landing-dark-border: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
 }
 
 @keyframes landingFadeUp {
@@ -168,18 +119,17 @@
 
     &--faq {
         padding: var(--fd-landing-section-space-relaxed) 0 calc(var(--fd-landing-section-space) + var(--fd-space-xs));
-        background:
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 42%, var(--fd-color-white)), var(--fd-color-white));
+        background: var(--fd-bg-landing-section-soft);
     }
 
     &--tour {
         padding: var(--fd-landing-section-space-relaxed) 0;
-        background: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
+        background: var(--fd-bg-landing-brand-soft);
     }
 
     &__inner--cta {
-        max-width: 1180px;
-        background: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
+        max-width: var(--fd-landing-container-max-width);
+        background: var(--fd-bg-landing-accent-card);
         border-radius: var(--fd-landing-radius-card);
         padding: clamp(var(--fd-space-md), 2.5vw, var(--fd-space-lg));
         border: var(--fd-border-width) solid var(--fd-color-border-primary-strong);
@@ -245,7 +195,7 @@
 
     &__drawer {
         position: relative;
-        background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
+        background: var(--fd-bg-landing-drawer);
         border: var(--fd-border-width) solid var(--fd-color-border-primary-medium);
         border-radius: var(--fd-landing-radius-card);
         padding: var(--fd-space-md);
@@ -281,7 +231,7 @@
         width: 36px;
         height: 36px;
         border-radius: var(--fd-radius-lg);
-        background: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
+        background: var(--fd-bg-landing-icon-soft);
         color: var(--fd-color-primary-600);
         display: inline-flex;
         align-items: center;
@@ -335,7 +285,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+            background: var(--fd-bg-landing-faq-control);
             color: var(--fd-color-primary-700);
             font-size: var(--fd-text-section-title-size);
             line-height: 1;

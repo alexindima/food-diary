@@ -1,12 +1,14 @@
-@mixin dark-panel(
-    $gradient-start: color-mix(in srgb, var(--fd-color-slate-900) 96%, transparent),
-    $gradient-end: color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
-) {
+@mixin dark-panel($gradient-start: null, $gradient-end: null, $background: var(--fd-bg-landing-dark-panel-subtle)) {
     border-radius: var(--fd-landing-radius-panel);
-    background: linear-gradient(160deg, $gradient-start, $gradient-end);
+
+    @if $gradient-start and $gradient-end {
+        background: linear-gradient(160deg, $gradient-start, $gradient-end);
+    } @else {
+        background: $background;
+    }
     border: var(--fd-border-width) solid var(--fd-landing-dark-border);
     box-shadow:
         var(--fd-landing-shadow-strong),
-        inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent);
+        var(--fd-landing-shadow-highlight);
     color: var(--fd-color-slate-50);
 }

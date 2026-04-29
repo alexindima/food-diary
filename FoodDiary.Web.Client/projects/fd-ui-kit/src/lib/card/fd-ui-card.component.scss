@@ -17,7 +17,7 @@
 
     &--subtle {
         box-shadow: var(--fd-shadow-none);
-        border-color: color-mix(in srgb, var(--fd-color-border) 50%, transparent);
+        border-color: var(--fd-color-border-card-subtle);
     }
 
     &--tone-editor {
@@ -27,27 +27,17 @@
 
     &--tone-editor-white {
         background: var(--fd-bg-surface-raised);
-        border-color: color-mix(in srgb, var(--fd-color-border-strong) 42%, transparent);
+        border-color: var(--fd-color-border-card-editor);
         box-shadow: var(--fd-shadow-xl);
     }
 
     &--tone-editor-gradient {
-        background:
-            linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent),
-                var(--fd-color-surface)
-            );
+        background: var(--fd-bg-card-editor-gradient);
         box-shadow: var(--fd-shadow-xl);
     }
 
     &--tone-profile {
-        background:
-            linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent),
-                var(--fd-color-surface)
-            );
+        background: var(--fd-bg-card-profile-gradient);
         box-shadow: var(--fd-shadow-lg);
     }
 
@@ -71,11 +61,11 @@
     }
 
     &--accent-primary {
-        border-color: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
+        border-color: var(--fd-color-border-card-primary);
     }
 
     &--accent-success {
-        border-color: color-mix(in srgb, var(--fd-color-green-500) 18%, transparent);
+        border-color: var(--fd-color-border-card-success);
     }
 
     &__header {
@@ -141,7 +131,7 @@
 }
 
 .fd-ui-card--appearance-product {
-    border-color: color-mix(in srgb, var(--fd-color-sky-500) 25%, transparent);
+    border-color: var(--fd-color-border-card-product);
 }
 
 .fd-ui-card--appearance-product .fd-ui-card__title,
@@ -168,15 +158,15 @@
 }
 
 .fd-ui-card--appearance-recipe {
-    border-color: color-mix(in srgb, var(--fd-color-emerald-500) 25%, transparent);
+    border-color: var(--fd-color-border-card-recipe);
 }
 
 .fd-ui-card--appearance-info {
-    border-color: color-mix(in srgb, var(--fd-color-slate-400) 40%, transparent);
+    border-color: var(--fd-color-border-card-info);
 }
 
 .fd-ui-card--appearance-entry {
-    border-color: color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+    border-color: var(--fd-color-border-card-entry);
 }
 
 .fd-ui-card--appearance-default {

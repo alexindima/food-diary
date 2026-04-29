@@ -960,6 +960,9 @@ $fd-theme-design-tokens: (
         --fd-bg-surface-panel: color-mix(in srgb, var(--fd-bg-surface-raised) 94%, transparent);
         --fd-bg-surface-panel-gradient: linear-gradient(180deg, var(--fd-bg-surface-panel), var(--fd-bg-surface));
         --fd-bg-surface-solid: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+        --fd-bg-card-editor-gradient: linear-gradient(180deg, var(--fd-bg-surface-elevated), var(--fd-bg-surface));
+        --fd-bg-card-profile-gradient: var(--fd-bg-surface-panel-gradient);
+        --fd-bg-surface-raised-blend: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, var(--fd-bg-surface));
         --fd-bg-surface-glass-minimal: color-mix(in srgb, var(--fd-bg-surface-raised) 8%, transparent);
         --fd-bg-surface-glass-subtle: color-mix(in srgb, var(--fd-bg-surface-raised) 10%, transparent);
         --fd-bg-surface-glass-medium: color-mix(in srgb, var(--fd-bg-surface-raised) 12%, transparent);
@@ -975,6 +978,30 @@ $fd-theme-design-tokens: (
             180deg,
             var(--fd-bg-surface-raised) 0%,
             color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised)) 100%
+        );
+        --fd-bg-landing-page:
+            radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 22%),
+            radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--fd-color-emerald-500) 4%, transparent), transparent 25%),
+            var(--fd-color-slate-50);
+        --fd-bg-landing-section-soft: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-50) 42%, var(--fd-color-white)), var(--fd-color-white));
+        --fd-bg-landing-brand-soft: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-surface-raised));
+        --fd-bg-landing-accent-card: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent), color-mix(in srgb, var(--fd-color-emerald-500) 12%, transparent));
+        --fd-bg-landing-drawer: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent), color-mix(in srgb, var(--fd-color-primary-500) 2%, transparent));
+        --fd-bg-landing-icon-soft: color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent);
+        --fd-bg-landing-faq-control: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        --fd-bg-landing-surface-translucent: color-mix(in srgb, var(--fd-bg-surface-raised) 78%, transparent);
+        --fd-bg-landing-surface-glass: color-mix(in srgb, var(--fd-bg-surface-raised) 68%, transparent);
+        --fd-bg-landing-surface-glass-strong: color-mix(in srgb, var(--fd-bg-surface-raised) 62%, transparent);
+        --fd-bg-landing-dark-panel: linear-gradient(
+            140deg,
+            color-mix(in srgb, var(--fd-color-slate-900) 98%, transparent),
+            color-mix(in srgb, var(--fd-color-primary-600) 94%, transparent) 55%,
+            color-mix(in srgb, var(--fd-color-teal-500) 90%, transparent)
+        );
+        --fd-bg-landing-dark-panel-subtle: linear-gradient(
+            160deg,
+            color-mix(in srgb, var(--fd-color-slate-900) 96%, transparent),
+            color-mix(in srgb, var(--fd-color-teal-700) 94%, transparent)
         );
         --fd-bg-border: var(--fd-color-border);
         --fd-bg-border-strong: var(--fd-color-border-strong);
@@ -1234,6 +1261,10 @@ $fd-theme-design-tokens: (
         --fd-shadow-nutrient-danger: inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-danger) 26%, transparent);
         --fd-shadow-accent-color: var(--fd-color-primary-600);
         --fd-shadow-accent: #{fd-token(elevation, accent)};
+        --fd-landing-shadow-soft: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
+        --fd-landing-shadow-medium: 0 22px 48px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
+        --fd-landing-shadow-strong: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
+        --fd-landing-shadow-highlight: inset 0 var(--fd-border-width) 0 color-mix(in srgb, var(--fd-color-white) 6%, transparent);
         --fd-shadow-accent-strong: #{fd-token(elevation, accent-strong)};
         --fd-shadow-accent-glow: #{fd-token(elevation, accent-glow)};
         --fd-shadow-none: #{fd-token(elevation, none)};
@@ -1260,6 +1291,17 @@ $fd-theme-design-tokens: (
         --fd-color-border-loader: color-mix(in srgb, var(--fd-color-primary-600) 18%, transparent);
         --fd-color-border-divider-soft: color-mix(in srgb, var(--fd-color-border) 72%, transparent);
         --fd-color-border-divider-strong: color-mix(in srgb, var(--fd-color-border-strong) 72%, transparent);
+        --fd-color-border-card-subtle: color-mix(in srgb, var(--fd-color-border) 50%, transparent);
+        --fd-color-border-card-editor: color-mix(in srgb, var(--fd-color-border-strong) 42%, transparent);
+        --fd-color-border-card-primary: color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent);
+        --fd-color-border-card-success: color-mix(in srgb, var(--fd-color-green-500) 18%, transparent);
+        --fd-color-border-card-product: color-mix(in srgb, var(--fd-color-sky-500) 25%, transparent);
+        --fd-color-border-card-recipe: color-mix(in srgb, var(--fd-color-emerald-500) 25%, transparent);
+        --fd-color-border-card-info: color-mix(in srgb, var(--fd-color-slate-400) 40%, transparent);
+        --fd-color-border-card-entry: var(--fd-color-border-dark-muted);
+        --fd-landing-border-soft: color-mix(in srgb, var(--fd-color-border) 78%, transparent);
+        --fd-landing-border-strong: color-mix(in srgb, var(--fd-color-border-strong) 36%, transparent);
+        --fd-landing-dark-border: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
         --fd-color-border-nutrient-good: color-mix(in srgb, var(--fd-color-emerald-700) 68%, transparent);
         --fd-color-border-nutrient-warning: color-mix(in srgb, var(--fd-color-orange-500) 68%, transparent);
         --fd-color-border-nutrient-danger: color-mix(in srgb, var(--fd-color-red-700) 64%, transparent);
@@ -1298,6 +1340,47 @@ $fd-theme-design-tokens: (
         --fd-layout-shell-impersonation-banner-height: #{fd-token(layout-shell, impersonation-banner-height)};
         --fd-layout-shell-mobile-viewport-bottom-padding: #{fd-token(layout-shell, mobile-viewport-bottom-padding)};
         --fd-layout-shell-mobile-sheet-bottom: #{fd-token(layout-shell, mobile-sheet-bottom)};
+        --fd-landing-container-max-width: 1180px;
+        --fd-landing-inline-padding: clamp(var(--fd-space-sm), 4vw, var(--fd-space-lg));
+        --fd-landing-section-space: clamp(
+            calc(var(--fd-space-xxl) + var(--fd-space-xs)),
+            4vw,
+            calc(var(--fd-space-xxl) + var(--fd-space-md))
+        );
+        --fd-landing-section-space-relaxed: clamp(var(--fd-space-xxl), 3vw, calc(var(--fd-space-xxl) + var(--fd-space-xs)));
+        --fd-landing-section-space-compact: clamp(var(--fd-space-xl), 2.4vw, calc(var(--fd-space-xl) + calc(var(--fd-space-xs) / 2)));
+        --fd-landing-section-space-tight: clamp(
+            calc(var(--fd-space-sm) + calc(var(--fd-space-xxs) / 2)),
+            2vw,
+            calc(var(--fd-space-lg) - calc(var(--fd-space-xxs) / 2))
+        );
+        --fd-landing-section-space-cta-start: clamp(
+            calc(var(--fd-space-xxl) + calc(var(--fd-space-xxs) / 2)),
+            3vw,
+            calc(var(--fd-space-xxl) + var(--fd-space-xs) + calc(var(--fd-space-xxs) / 2))
+        );
+        --fd-landing-section-space-cta-end: clamp(
+            calc(var(--fd-space-xxl) + var(--fd-space-xs)),
+            4vw,
+            calc(var(--fd-space-xxl) + var(--fd-space-lg))
+        );
+        --fd-landing-surface-padding: clamp(calc(var(--fd-space-md) + calc(var(--fd-space-xxs) / 2)), 2vw, var(--fd-space-lg));
+        --fd-landing-surface-padding-lg: clamp(var(--fd-space-xl), 2.2vw, calc(var(--fd-space-lg) + var(--fd-space-xxs)));
+        --fd-landing-surface-padding-sm: clamp(
+            calc(var(--fd-space-sm) + calc(var(--fd-space-xxs) / 2)),
+            1.8vw,
+            calc(var(--fd-space-md) + calc(var(--fd-space-xxs) / 2))
+        );
+        --fd-landing-copy-padding: clamp(var(--fd-space-xxs), 1vw, calc(var(--fd-space-xs) + calc(var(--fd-space-xxs) / 2)));
+        --fd-landing-grid-gap: clamp(var(--fd-space-md), 3vw, calc(var(--fd-space-xxl) - calc(var(--fd-space-xs) / 2)));
+        --fd-landing-stack-gap: clamp(var(--fd-space-lg), 4vw, calc(var(--fd-space-xxl) + var(--fd-space-xxs)));
+        --fd-landing-cta-margin-top: clamp(var(--fd-space-xl), 3vw, var(--fd-space-xxl));
+        --fd-landing-radius-panel: var(--fd-radius-panel);
+        --fd-landing-radius-card: var(--fd-radius-card);
+        --fd-landing-radius-chip: var(--fd-radius-chip);
+        --fd-landing-surface: color-mix(in srgb, var(--fd-color-surface-raised) 82%, transparent);
+        --fd-landing-surface-strong: color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent);
+        --fd-landing-surface-muted: color-mix(in srgb, var(--fd-color-surface) 90%, transparent);
 
         --fd-space-xxs: #{fd-token(spacing, xxs)};
         --fd-space-xs: #{fd-token(spacing, xs)};
