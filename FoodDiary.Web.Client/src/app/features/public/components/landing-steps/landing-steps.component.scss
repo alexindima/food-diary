@@ -34,16 +34,12 @@
 
     &--steps {
         padding: var(--fd-landing-section-space) 0;
-        background:
-            radial-gradient(circle at top left, var(--fd-bg-brand-tint-subtle), transparent 22%),
-            var(--fd-color-white);
+        background: radial-gradient(circle at top left, var(--fd-bg-brand-tint-subtle), transparent 22%), var(--fd-color-white);
     }
 }
 
 .landing-steps {
-    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--fd-space-md);
     margin-top: var(--fd-space-md);
 
     &__item {
@@ -54,9 +50,6 @@
         padding: var(--fd-landing-surface-padding);
         border: var(--fd-border-width) solid var(--fd-landing-border-soft);
         box-shadow: var(--fd-landing-shadow-soft);
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
         animation: landingFadeUp 820ms ease-out both;
 
         &::before {
@@ -74,9 +67,6 @@
         border-radius: var(--fd-landing-radius-card);
         background: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
         color: var(--fd-color-white);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         font-weight: var(--fd-text-metric-lg-weight);
         box-shadow: var(--fd-shadow-accent);
     }
@@ -91,10 +81,6 @@
 
     &__cta {
         margin-top: var(--fd-landing-cta-margin-top);
-        display: flex;
-        justify-content: space-between;
-        gap: var(--fd-space-md);
-        align-items: center;
         padding: var(--fd-landing-surface-padding-lg);
         border-radius: var(--fd-landing-radius-panel);
         background: var(--fd-bg-landing-dark-panel);
@@ -104,9 +90,6 @@
     }
 
     &__cta-copy {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
         max-width: 620px;
     }
 
@@ -116,13 +99,6 @@
 
     &__cta-text {
         @include landing.marketing-body(1rem, 1.65, var(--fd-color-landing-dark-text-muted));
-    }
-
-    &__cta-actions {
-        display: flex;
-        gap: var(--fd-space-sm);
-        flex-wrap: wrap;
-        justify-content: flex-end;
     }
 
     @media #{variables.$media-tablet} {
@@ -137,7 +113,3 @@
         }
     }
 }
-
-
-
-

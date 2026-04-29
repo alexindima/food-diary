@@ -1,10 +1,10 @@
 <div class="meal-plans-list" fdPageContainer>
     <header class="meal-plans-list__header">
-        <h1 class="meal-plans-list__title">{{ 'MEAL_PLANS.TITLE' | translate }}</h1>
-        <p class="meal-plans-list__subtitle">{{ 'MEAL_PLANS.SUBTITLE' | translate }}</p>
+        <h1 class="meal-plans-list__title fd-ui-display-sm">{{ 'MEAL_PLANS.TITLE' | translate }}</h1>
+        <p class="meal-plans-list__subtitle fd-page-subtitle">{{ 'MEAL_PLANS.SUBTITLE' | translate }}</p>
     </header>
 
-    <div class="meal-plans-list__filters">
+    <div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs">
         <fd-ui-button
             variant="secondary"
             [fill]="facade.dietTypeFilter() === null ? 'solid' : 'outline'"
@@ -29,15 +29,15 @@
         @if (facade.isLoading()) {
             <fd-ui-loader />
         } @else if (facade.plans().length === 0) {
-            <div class="meal-plans-list__empty">
+            <div class="meal-plans-list__empty fd-stack fd-align-center fd-gap-sm">
                 <fd-ui-icon name="restaurant_menu" size="xl" />
                 <span>{{ 'MEAL_PLANS.EMPTY' | translate }}</span>
             </div>
         } @else {
-            <div class="meal-plans-list__grid">
+            <div class="meal-plans-list__grid fd-grid fd-gap-lg">
                 @for (plan of facade.plans(); track plan.id) {
                     <div
-                        class="meal-plan-card"
+                        class="meal-plan-card fd-stack fd-gap-xs"
                         fdCardHover
                         role="button"
                         tabindex="0"
@@ -47,11 +47,11 @@
                         <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                             {{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}
                         </div>
-                        <h3 class="meal-plan-card__name">{{ plan.name }}</h3>
+                        <h3 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h3>
                         @if (plan.description) {
-                            <p class="meal-plan-card__desc">{{ plan.description }}</p>
+                            <p class="meal-plan-card__desc fd-ui-body">{{ plan.description }}</p>
                         }
-                        <div class="meal-plan-card__meta">
+                        <div class="meal-plan-card__meta fd-row fd-wrap fd-gap-sm fd-ui-caption-strong">
                             <span>{{ 'MEAL_PLANS.DAYS' | translate: { count: plan.durationDays } }}</span>
                             <span>{{ 'MEAL_PLANS.RECIPES' | translate: { count: plan.totalRecipes } }}</span>
                             @if (plan.targetCaloriesPerDay) {

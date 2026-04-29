@@ -1,15 +1,6 @@
 @use 'variables' as variables;
 
 .product-select {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-md);
-
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 
     &__title {
         margin: 0;
@@ -21,10 +12,7 @@
     }
 
     &__controls {
-        display: grid;
         grid-template-columns: 1fr auto;
-        gap: var(--fd-space-sm);
-        align-items: center;
 
         @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
@@ -39,17 +27,8 @@
         width: 100%;
     }
 
-    &__list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
     &__item {
-        display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: var(--fd-space-sm);
-        align-items: center;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
         border: var(--fd-border-subtle);
@@ -64,8 +43,6 @@
         height: var(--fd-size-control-touch);
         border-radius: var(--fd-radius-input);
         overflow: hidden;
-        display: grid;
-        place-items: center;
         background: var(--fd-bg-brand-soft);
 
         img {
@@ -75,38 +52,15 @@
         }
     }
 
-    &__info {
-        min-width: 0;
-    }
-
     &__name {
-        font-size: var(--fd-text-body-size);
-        line-height: var(--fd-text-body-line-height);
-        font-weight: var(--fd-text-card-title-weight);
         color: var(--fd-color-text-strong);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     &__meta {
-        font-size: var(--fd-text-body-sm-size);
-        line-height: var(--fd-text-body-sm-line-height);
-        font-weight: var(--fd-text-body-sm-weight);
         color: var(--fd-color-text-muted);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    &__action {
-        display: inline-flex;
-        align-items: center;
     }
 
     &__footer {
-        display: flex;
-        justify-content: flex-end;
         padding-top: var(--fd-space-sm);
     }
 
@@ -117,8 +71,6 @@
     &__no-results {
         text-align: center;
         color: var(--fd-color-text-muted);
-        display: grid;
-        gap: var(--fd-space-xs);
         justify-items: center;
     }
 
@@ -127,7 +79,3 @@
         color: var(--fd-color-danger);
     }
 }
-
-
-
-

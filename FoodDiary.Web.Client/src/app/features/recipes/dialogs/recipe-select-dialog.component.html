@@ -2,12 +2,12 @@
     @if (!embedded()) {
         <div class="recipe-select__header fd-row fd-justify-between">
             <div>
-                <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
+                <h2 class="recipe-select__title fd-ui-section-title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
             </div>
         </div>
     }
 
-    <div class="recipe-select__controls">
+    <div class="recipe-select__controls fd-grid fd-gap-sm fd-align-center">
         <form class="recipe-select__search-form" [formGroup]="searchForm">
             <fd-ui-input
                 class="recipe-select__search-input"
@@ -47,9 +47,9 @@
                                 <fd-ui-icon name="restaurant" />
                             }
                         </div>
-                        <div class="recipe-select__info">
-                            <div class="recipe-select__name">{{ recipe.name }}</div>
-                            <div class="recipe-select__meta">
+                        <div class="recipe-select__info fd-min-w-0">
+                            <div class="recipe-select__name fd-ui-action-text fd-truncate">{{ recipe.name }}</div>
+                            <div class="recipe-select__meta fd-ui-caption fd-truncate">
                                 @if (recipe.category) {
                                     {{ recipe.category }} ·
                                 }
@@ -57,7 +57,7 @@
                                 {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
                             </div>
                         </div>
-                        <span class="recipe-select__action">
+                        <span class="recipe-select__action fd-inline-center">
                             <fd-ui-button
                                 icon="add"
                                 variant="primary"

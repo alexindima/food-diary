@@ -8,9 +8,6 @@
     // stylelint-disable-next-line rule-empty-line-before
     &__header {
         margin: var(--fd-space-lg) 0;
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
     }
 
     &__badge {
@@ -21,51 +18,23 @@
     }
 
     &__title {
-        font-size: var(--fd-text-display-sm-size);
-        line-height: var(--fd-text-display-sm-line-height);
-        font-weight: var(--fd-text-display-sm-weight);
         margin: 0;
     }
 
     &__desc {
         margin: 0;
         color: var(--fd-color-text-muted);
-        line-height: 1.6;
-    }
-
-    &__actions {
-        display: flex;
-        gap: var(--fd-space-sm);
-        flex-wrap: wrap;
-    }
-
-    &__days {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-lg);
     }
 }
 
 .meal-plan-day {
     // stylelint-disable-next-line rule-empty-line-before
     &__title {
-        font-size: var(--fd-text-section-title-size);
-        font-weight: var(--fd-text-section-title-weight);
         margin: 0 0 var(--fd-space-sm);
-        color: var(--fd-color-text);
-    }
-
-    &__meals {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
     }
 }
 
 .meal-plan-meal {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-md);
     padding: var(--fd-space-surface-emphasis-padding);
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-surface-brand);
@@ -73,24 +42,15 @@
 
     &__type {
         min-width: 80px;
-        font-size: var(--fd-text-helper-size);
-        font-weight: var(--fd-text-section-title-weight);
-        text-transform: uppercase;
-        letter-spacing: var(--fd-letter-spacing-wide);
         color: var(--fd-color-sky-600);
     }
 
     &__recipe {
         flex: 1;
-        font-weight: var(--fd-text-section-title-weight);
         color: var(--fd-color-text);
     }
 
     &__nutrition {
-        display: flex;
-        gap: var(--fd-space-xs);
-        font-size: var(--fd-text-caption-size);
-        font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }
 }

@@ -82,10 +82,6 @@
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: var(--fd-space-lg);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--fd-space-xs);
 
         &-icon {
             font-size: 2em;
@@ -119,17 +115,11 @@
     }
 
     &__favorites-grid {
-        display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: var(--fd-space-xs);
         padding: 0 var(--fd-space-sm) var(--fd-space-sm);
     }
 
     &__favorite-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-xs);
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-surface-raised);
@@ -149,22 +139,11 @@
 
     &__favorite-name {
         color: var(--fd-color-text);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     &__favorite-meta {
         color: var(--fd-color-text-muted);
         margin-top: calc(var(--fd-space-xxs) / 2);
-        display: flex;
-        gap: var(--fd-space-xxs);
-        flex-wrap: wrap;
-    }
-
-    &__favorite-actions {
-        display: flex;
-        gap: var(--fd-space-xxs);
     }
 
     &__favorite-btn {
@@ -196,24 +175,6 @@
         --fd-button-text-active: var(--fd-color-danger);
     }
 
-    &__groups {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-profile-gap);
-    }
-
-    &__section {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
-    }
-
-    &__section-header {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
-    }
-
     &__section-label {
         color: var(--fd-color-text);
         white-space: nowrap;
@@ -227,9 +188,7 @@
     }
 
     &__section-grid {
-        display: grid;
         grid-template-columns: 1fr;
-        gap: var(--fd-space-card-profile-gap);
         align-items: start;
 
         fd-product-card {
@@ -237,16 +196,7 @@
         }
     }
 
-    &__off-grid {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-    }
-
     &__off-card {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
         padding: var(--fd-space-sm);
         border-radius: var(--fd-radius-lg);
         background: var(--fd-bg-surface-inset-translucent-solid);
@@ -273,9 +223,6 @@
         height: var(--fd-size-control-lg);
         border-radius: var(--fd-radius-md);
         background: var(--fd-bg-muted-tint);
-        display: flex;
-        align-items: center;
-        justify-content: center;
         flex-shrink: 0;
         color: var(--fd-color-text-muted);
     }

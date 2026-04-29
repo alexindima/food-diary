@@ -5,22 +5,22 @@
             <h2 class="landing-section__title">{{ 'LANDING_STEPS.TITLE' | translate }}</h2>
             <p class="landing-section__subtitle">{{ 'LANDING_STEPS.SUBTITLE' | translate }}</p>
         </div>
-        <div class="landing-steps">
+        <div class="landing-steps fd-grid fd-gap-md">
             @for (stepKey of stepKeys; track stepKey; let index = $index) {
-                <article class="landing-steps__item">
-                    <div class="landing-steps__icon">{{ index + 1 }}</div>
+                <article class="landing-steps__item fd-stack fd-gap-sm">
+                    <div class="landing-steps__icon fd-inline-center">{{ index + 1 }}</div>
                     <h3 class="landing-steps__title">{{ 'LANDING_STEPS.' + stepKey + '.TITLE' | translate }}</h3>
                     <p class="landing-steps__text">{{ 'LANDING_STEPS.' + stepKey + '.TEXT' | translate }}</p>
                 </article>
             }
         </div>
 
-        <div class="landing-steps__cta">
-            <div class="landing-steps__cta-copy">
+        <div class="landing-steps__cta fd-row fd-justify-between fd-gap-md">
+            <div class="landing-steps__cta-copy fd-stack fd-gap-xs">
                 <h3 class="landing-steps__cta-title">{{ 'LANDING_CTA.TITLE' | translate }}</h3>
                 <p class="landing-steps__cta-text">{{ 'LANDING_CTA.SUBTITLE' | translate }}</p>
             </div>
-            <div class="landing-steps__cta-actions">
+            <div class="landing-steps__cta-actions fd-row fd-wrap fd-justify-end fd-gap-sm">
                 <fd-ui-button size="lg" variant="primary" (click)="openAuth('register')">
                     {{ 'LANDING_CTA.REGISTER' | translate }}
                 </fd-ui-button>

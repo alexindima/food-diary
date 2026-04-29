@@ -21,12 +21,6 @@
         @include landing.marketing-body(1.02rem, 1.65, var(--fd-color-landing-dark-text-muted), 620px, 8px 0 0);
     }
 
-    &__actions {
-        display: flex;
-        gap: var(--fd-space-sm);
-        flex-wrap: wrap;
-    }
-
     &--cta {
         padding: var(--fd-landing-section-space) 0 calc(var(--fd-landing-section-space) + var(--fd-space-lg));
     }
@@ -40,10 +34,6 @@
         padding: var(--fd-landing-surface-padding-lg);
         border: var(--fd-border-width) solid var(--fd-color-border-inverse-faint);
         box-shadow: var(--fd-landing-shadow-strong);
-        display: flex;
-        justify-content: space-between;
-        gap: var(--fd-space-md);
-        align-items: center;
         animation: landingFadeUp 780ms ease-out both;
 
         &::before,
@@ -76,5 +66,3 @@
         }
     }
 }
-
-

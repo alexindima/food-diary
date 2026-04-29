@@ -3,17 +3,11 @@
 .recipe-select {
 
     &__title {
-        font-size: var(--fd-text-section-title-size);
-        line-height: var(--fd-text-section-title-line-height);
-        font-weight: var(--fd-text-section-title-weight);
         margin: 0;
     }
 
     &__controls {
-        display: grid;
         grid-template-columns: 1fr auto;
-        gap: var(--fd-space-sm);
-        align-items: center;
 
         @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
@@ -53,33 +47,12 @@
         }
     }
 
-    &__info {
-        min-width: 0;
-    }
-
     &__name {
-        font-size: var(--fd-text-body-size);
-        line-height: var(--fd-text-body-line-height);
-        font-weight: var(--fd-text-card-title-weight);
         color: var(--fd-color-text-strong);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     &__meta {
-        font-size: var(--fd-text-body-sm-size);
-        line-height: var(--fd-text-body-sm-line-height);
-        font-weight: var(--fd-text-body-sm-weight);
         color: var(--fd-color-text-muted);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    &__action {
-        display: inline-flex;
-        align-items: center;
     }
 
     &__footer {

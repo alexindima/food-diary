@@ -12,11 +12,15 @@
                     <span class="lesson-detail__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                         {{ 'LESSONS.CATEGORY.' + lesson.category | translate }}
                     </span>
-                    <span class="lesson-detail__difficulty">{{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}</span>
-                    <span class="lesson-detail__time">{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                    <span class="lesson-detail__difficulty fd-ui-field-label--floating">
+                        {{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}
+                    </span>
+                    <span class="lesson-detail__time fd-ui-field-label--floating">
+                        {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}
+                    </span>
                 </div>
-                <h1 class="lesson-detail__title">{{ lesson.title }}</h1>
-                <div class="lesson-detail__content">{{ lesson.content }}</div>
+                <h1 class="lesson-detail__title fd-ui-display-sm">{{ lesson.title }}</h1>
+                <div class="lesson-detail__content fd-ui-body">{{ lesson.content }}</div>
 
                 <div class="lesson-detail__actions">
                     @if (!lesson.isRead) {

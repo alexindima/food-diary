@@ -10,23 +10,12 @@
 
     &__inner {
         @include landing.section-inner;
-        display: flex;
-        flex-direction: column;
         gap: clamp(var(--fd-space-md), 3vw, var(--fd-space-xxl));
     }
 
     &__header {
-        display: grid;
         grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
-        gap: var(--fd-space-lg);
-        align-items: start;
         animation: landingFadeUp 640ms ease-out both;
-    }
-
-    &__intro {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-md);
     }
 
     &__eyebrow,
@@ -61,8 +50,6 @@
     }
 
     &__category-strip {
-        display: flex;
-        gap: var(--fd-space-sm);
         overflow-x: auto;
         padding-bottom: var(--fd-space-xxs);
         scrollbar-width: thin;
@@ -70,9 +57,6 @@
     }
 
     &__category-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
         border: var(--fd-border-width) solid var(--fd-color-border-slate-strong);
         background: var(--fd-bg-landing-surface-translucent);
         color: var(--fd-color-text);
@@ -103,10 +87,7 @@
     }
 
     &__panel {
-        display: grid;
         grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
-        gap: var(--fd-space-lg);
-        align-items: start;
         background: var(--fd-bg-landing-surface-glass);
         border: var(--fd-border-width) solid var(--fd-color-border-slate-subtle);
         border-radius: var(--fd-landing-radius-panel);
@@ -126,9 +107,7 @@
     }
 
     &__cards {
-        display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: var(--fd-space-md);
         min-width: 0;
     }
 
@@ -141,9 +120,6 @@
         background: var(--fd-landing-surface-strong);
         border: var(--fd-border-width) solid var(--fd-landing-border-soft);
         box-shadow: var(--fd-landing-shadow-soft);
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-sm);
         scroll-snap-align: start;
         animation: landingFadeUp 620ms ease-out both;
     }
@@ -190,7 +166,6 @@
         --fd-layout-page-horizontal-padding: var(--fd-space-md);
 
         &__cards {
-            display: grid;
             grid-auto-flow: column;
             grid-auto-columns: minmax(240px, 82vw);
             overflow-x: auto;
@@ -203,6 +178,3 @@
         }
     }
 }
-
-
-

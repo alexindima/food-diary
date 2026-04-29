@@ -1,6 +1,6 @@
-﻿<div class="product-select" #container>
+﻿<div class="product-select fd-stack fd-gap-md" #container>
     @if (!embedded()) {
-        <div class="product-select__header">
+        <div class="product-select__header fd-row fd-justify-between">
             <div>
                 <h2 class="product-select__title fd-page-title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
                 <p class="product-select__subtitle fd-ui-body-sm">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
@@ -8,7 +8,7 @@
         </div>
     }
 
-    <div class="product-select__controls">
+    <div class="product-select__controls fd-grid fd-gap-sm fd-align-center">
         <form class="product-select__search-form" [formGroup]="searchForm">
             <fd-ui-input
                 class="product-select__search-input"
@@ -36,19 +36,19 @@
         <fd-ui-loader class="product-select__loader" />
     } @else {
         @if (productData.items().length > 0) {
-            <div class="product-select__list">
+            <div class="product-select__list fd-stack fd-gap-sm">
                 @for (product of productData.items(); track product.id) {
-                    <button type="button" class="product-select__item" (click)="onProductClick(product)">
-                        <div class="product-select__thumb">
+                    <button type="button" class="product-select__item fd-grid fd-gap-sm fd-align-center" (click)="onProductClick(product)">
+                        <div class="product-select__thumb fd-place-center">
                             @if (resolveImage(product)) {
                                 <img [src]="resolveImage(product)" [alt]="product.name" />
                             } @else {
                                 <fd-ui-icon name="restaurant" />
                             }
                         </div>
-                        <div class="product-select__info">
-                            <div class="product-select__name fd-ui-action-text">{{ product.name }}</div>
-                            <div class="product-select__meta fd-ui-caption">
+                        <div class="product-select__info fd-min-w-0">
+                            <div class="product-select__name fd-ui-action-text fd-truncate">{{ product.name }}</div>
+                            <div class="product-select__meta fd-ui-caption fd-truncate">
                                 @if (product.brand) {
                                     {{ product.brand }} ·
                                 }
@@ -56,7 +56,7 @@
                                 }}{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                             </div>
                         </div>
-                        <span class="product-select__action">
+                        <span class="product-select__action fd-inline-center">
                             <fd-ui-button
                                 icon="add"
                                 variant="primary"
@@ -70,7 +70,7 @@
                 }
             </div>
         } @else {
-            <div class="product-select__no-results fd-ui-body-sm">
+            <div class="product-select__no-results fd-grid fd-gap-xs fd-ui-body-sm">
                 <fd-ui-icon class="product-select__no-results-icon" name="search_off" size="lg" />
                 {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
             </div>
@@ -88,7 +88,7 @@
     }
 
     @if (!embedded()) {
-        <div class="product-select__footer">
+        <div class="product-select__footer fd-row fd-justify-end">
             <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
                 {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
             </fd-ui-button>

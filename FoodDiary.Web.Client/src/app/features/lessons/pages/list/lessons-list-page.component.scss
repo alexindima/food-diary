@@ -11,14 +11,10 @@
     }
 
     &__title {
-        font-size: var(--fd-text-display-sm-size);
-        line-height: var(--fd-text-display-sm-line-height);
-        font-weight: var(--fd-text-display-sm-weight);
         margin: 0;
     }
 
     &__subtitle {
-        color: var(--fd-color-text-muted);
         margin: var(--fd-space-xxs) 0 0;
     }
 
@@ -47,8 +43,6 @@
     }
 
     &__progress-text {
-        font-size: var(--fd-text-caption-size);
-        font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }
 
@@ -105,17 +99,12 @@
     }
 
     &__title {
-        font-size: var(--fd-text-section-title-size);
-        font-weight: var(--fd-text-metric-lg-weight);
         margin: 0;
-        color: var(--fd-color-text);
     }
 
     &__summary {
         margin: 0;
-        font-size: var(--fd-text-caption-size);
         color: var(--fd-color-text-muted);
-        line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -123,7 +112,6 @@
     }
 
     &__meta {
-        font-size: var(--fd-text-label-floating-size);
         font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }

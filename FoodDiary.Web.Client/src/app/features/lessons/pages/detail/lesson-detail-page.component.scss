@@ -23,21 +23,15 @@
 
     &__difficulty,
     &__time {
-        font-size: var(--fd-text-label-floating-size);
         font-weight: var(--fd-font-weight-bold);
         color: var(--fd-color-text-muted);
     }
 
     &__title {
-        font-size: var(--fd-text-display-sm-size);
-        line-height: var(--fd-text-display-sm-line-height);
-        font-weight: var(--fd-text-display-sm-weight);
         margin: 0 0 var(--fd-space-lg);
     }
 
     &__content {
-        font-size: var(--fd-text-body-size);
-        line-height: 1.8;
         color: var(--fd-color-text);
         white-space: pre-wrap;
     }

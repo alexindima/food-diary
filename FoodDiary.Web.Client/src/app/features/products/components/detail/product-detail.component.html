@@ -1,10 +1,10 @@
 ﻿<fd-ui-dialog [title]="product.name" size="lg">
     <fd-ui-tabs class="product-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
 
-    <div class="product-detail">
+    <div class="product-detail fd-stack fd-gap-lg">
         @switch (activeTab) {
             @case ('summary') {
-                <div class="product-detail__summary">
+                <div class="product-detail__summary fd-grid fd-gap-sm">
                     <fd-ui-accent-surface
                         class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
@@ -67,8 +67,8 @@
                 </div>
             }
             @case ('nutrients') {
-                <div class="product-detail__nutrients">
-                    <div class="product-detail__macro-grid">
+                <div class="product-detail__nutrients fd-grid fd-gap-md">
+                    <div class="product-detail__macro-grid fd-grid fd-gap-sm">
                         @for (macro of macroBlocks; track macro.labelKey) {
                             <fd-ui-accent-surface
                                 class="product-detail__surface fd-ui-summary-surface"
@@ -86,8 +86,8 @@
                             </fd-ui-accent-surface>
                         }
                     </div>
-                    <div class="product-detail__charts">
-                        <div class="product-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                    <div class="product-detail__charts fd-grid fd-gap-sm">
+                        <div class="product-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
                             <canvas
                                 baseChart
                                 [style.width.px]="chartSize"
@@ -98,7 +98,7 @@
                                 [legend]="false"
                             ></canvas>
                         </div>
-                        <div class="product-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                        <div class="product-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
                             <canvas
                                 baseChart
                                 [style.width.px]="chartSize"
@@ -115,7 +115,7 @@
         }
     </div>
 
-    <div fdUiDialogFooter class="product-detail__footer">
+    <div fdUiDialogFooter class="product-detail__footer fd-stack fd-gap-sm">
         @if (warningMessage(); as warningMessageKey) {
             <span class="product-detail__warning fd-ui-body-sm">{{ warningMessageKey | translate }}</span>
         }

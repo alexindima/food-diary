@@ -7,15 +7,15 @@
         @if (facade.isDetailLoading()) {
             <fd-ui-loader />
         } @else if (facade.selectedPlan(); as plan) {
-            <header class="meal-plan-detail__header">
+            <header class="meal-plan-detail__header fd-stack fd-gap-xs">
                 <div class="meal-plan-detail__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                     {{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}
                 </div>
-                <h1 class="meal-plan-detail__title">{{ plan.name }}</h1>
+                <h1 class="meal-plan-detail__title fd-ui-display-sm">{{ plan.name }}</h1>
                 @if (plan.description) {
-                    <p class="meal-plan-detail__desc">{{ plan.description }}</p>
+                    <p class="meal-plan-detail__desc fd-ui-body">{{ plan.description }}</p>
                 }
-                <div class="meal-plan-detail__actions">
+                <div class="meal-plan-detail__actions fd-row fd-wrap fd-gap-sm">
                     @if (plan.isCurated) {
                         <fd-ui-button icon="content_copy" (click)="adopt()">
                             {{ 'MEAL_PLANS.ADOPT' | translate }}
@@ -27,18 +27,20 @@
                 </div>
             </header>
 
-            <div class="meal-plan-detail__days">
+            <div class="meal-plan-detail__days fd-stack fd-gap-lg">
                 @for (day of plan.days; track day.id) {
                     <div class="meal-plan-day">
-                        <h3 class="meal-plan-day__title">{{ 'MEAL_PLANS.DAY' | translate: { number: day.dayNumber } }}</h3>
-                        <div class="meal-plan-day__meals">
+                        <h3 class="meal-plan-day__title fd-ui-section-title">
+                            {{ 'MEAL_PLANS.DAY' | translate: { number: day.dayNumber } }}
+                        </h3>
+                        <div class="meal-plan-day__meals fd-stack fd-gap-xs">
                             @for (meal of day.meals; track meal.id) {
-                                <div class="meal-plan-meal">
-                                    <div class="meal-plan-meal__type">
+                                <div class="meal-plan-meal fd-row fd-gap-md">
+                                    <div class="meal-plan-meal__type fd-ui-overline">
                                         {{ 'MEAL_PLANS.MEAL_TYPE.' + meal.mealType.toUpperCase() | translate }}
                                     </div>
-                                    <div class="meal-plan-meal__recipe">{{ meal.recipeName ?? meal.recipeId }}</div>
-                                    <div class="meal-plan-meal__nutrition">
+                                    <div class="meal-plan-meal__recipe fd-ui-helper-strong">{{ meal.recipeName ?? meal.recipeId }}</div>
+                                    <div class="meal-plan-meal__nutrition fd-row fd-gap-xs fd-ui-caption-strong">
                                         @if (meal.calories) {
                                             <span>{{ meal.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
                                         }

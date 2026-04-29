@@ -107,7 +107,7 @@
         @if (errorKey()) {
             <fd-error-state (retry)="retryLoad()" />
         } @else if (productData.isLoading()) {
-            <div class="product-list__section-grid">
+            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
                 <fd-skeleton-card />
                 <fd-skeleton-card />
                 <fd-skeleton-card />
@@ -125,14 +125,14 @@
                     (toggle)="toggleFavorites()"
                     (loadMore)="loadFavorites()"
                 >
-                    <div class="product-list__favorites-grid">
+                    <div class="product-list__favorites-grid fd-grid fd-gap-xs">
                         @for (favorite of favorites(); track favorite.id) {
-                            <div class="product-list__favorite-card">
+                            <div class="product-list__favorite-card fd-row fd-justify-between fd-gap-xs">
                                 <button type="button" class="product-list__favorite-info" (click)="openFavoriteProduct(favorite)">
-                                    <div class="product-list__favorite-name fd-ui-action-text">
+                                    <div class="product-list__favorite-name fd-ui-action-text fd-truncate">
                                         {{ favorite.name || favorite.productName || ('PRODUCT_LIST.FAVORITE_UNNAMED' | translate) }}
                                     </div>
-                                    <div class="product-list__favorite-meta fd-ui-caption">
+                                    <div class="product-list__favorite-meta fd-ui-caption fd-row fd-wrap fd-gap-xxs">
                                         @if (favorite.brand) {
                                             <span>{{ favorite.brand }}</span>
                                             <span>&middot;</span>
@@ -140,7 +140,7 @@
                                         <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
                                     </div>
                                 </button>
-                                <div class="product-list__favorite-actions">
+                                <div class="product-list__favorite-actions fd-row fd-gap-xxs">
                                     <fd-ui-button
                                         class="product-list__favorite-btn"
                                         variant="secondary"
@@ -176,16 +176,16 @@
             }
 
             @if (hasVisibleProducts()) {
-                <div class="product-list__groups">
+                <div class="product-list__groups fd-stack fd-gap-card-profile">
                     @if (showRecentSection()) {
-                        <div class="product-list__section">
-                            <div class="product-list__section-header">
+                        <div class="product-list__section fd-stack fd-gap-sm">
+                            <div class="product-list__section-header fd-row fd-gap-sm">
                                 <span class="product-list__section-label fd-ui-card-title">
                                     {{ 'PRODUCT_LIST.RECENT_PRODUCTS' | translate }}
                                 </span>
                                 <span class="product-list__section-line"></span>
                             </div>
-                            <div class="product-list__section-grid">
+                            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
                                 @for (product of recentProducts; track product.id) {
                                     <fd-product-card
                                         [product]="product"
@@ -200,14 +200,14 @@
                     }
 
                     @if (allProductsSectionItems().length > 0) {
-                        <div class="product-list__section">
-                            <div class="product-list__section-header">
+                        <div class="product-list__section fd-stack fd-gap-sm">
+                            <div class="product-list__section-header fd-row fd-gap-sm">
                                 <span class="product-list__section-label fd-ui-card-title">
                                     {{ allProductsSectionLabelKey() | translate }}
                                 </span>
                                 <span class="product-list__section-line"></span>
                             </div>
-                            <div class="product-list__section-grid">
+                            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
                                 @for (product of allProductsSectionItems(); track product.id) {
                                     <fd-product-card
                                         [product]="product"
@@ -222,7 +222,7 @@
                     }
                 </div>
             } @else if (isEmptyState()) {
-                <div class="product-list__empty-state">
+                <div class="product-list__empty-state fd-stack fd-align-center fd-gap-xs">
                     <fd-ui-icon class="product-list__no-results-icon" name="inventory_2" size="xl" />
                     <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
                     <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
@@ -231,7 +231,7 @@
                     </fd-ui-button>
                 </div>
             } @else {
-                <div class="product-list__no-results">
+                <div class="product-list__no-results fd-stack fd-align-center fd-gap-xs">
                     <fd-ui-icon class="product-list__no-results-icon" name="search_off" size="xl" />
                     <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
                     <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
@@ -239,17 +239,17 @@
             }
 
             @if (offProducts().length > 0) {
-                <div class="product-list__section product-list__section--off">
-                    <div class="product-list__section-header">
+                <div class="product-list__section product-list__section--off fd-stack fd-gap-sm">
+                    <div class="product-list__section-header fd-row fd-gap-sm">
                         <span class="product-list__section-label fd-ui-card-title">
                             {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
                         </span>
                         <span class="product-list__section-line"></span>
                     </div>
-                    <div class="product-list__off-grid">
+                    <div class="product-list__off-grid fd-stack fd-gap-xs">
                         @for (offProduct of offProducts(); track offProduct.barcode) {
                             <div
-                                class="product-list__off-card"
+                                class="product-list__off-card fd-row fd-gap-sm"
                                 role="button"
                                 tabindex="0"
                                 (click)="onOffProductClick(offProduct)"
@@ -258,7 +258,7 @@
                                 @if (offProduct.imageUrl) {
                                     <img class="product-list__off-image" [src]="offProduct.imageUrl" [alt]="offProduct.name" />
                                 } @else {
-                                    <div class="product-list__off-image-placeholder">
+                                    <div class="product-list__off-image-placeholder fd-center">
                                         <fd-ui-icon name="inventory_2" size="md" />
                                     </div>
                                 }
@@ -279,14 +279,14 @@
                     </div>
                 </div>
             } @else if (offLoading()) {
-                <div class="product-list__section product-list__section--off">
-                    <div class="product-list__section-header">
+                <div class="product-list__section product-list__section--off fd-stack fd-gap-sm">
+                    <div class="product-list__section-header fd-row fd-gap-sm">
                         <span class="product-list__section-label fd-ui-card-title">
                             {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
                         </span>
                         <span class="product-list__section-line"></span>
                     </div>
-                    <div class="product-list__off-grid">
+                    <div class="product-list__off-grid fd-stack fd-gap-xs">
                         <fd-skeleton-card />
                         <fd-skeleton-card />
                     </div>

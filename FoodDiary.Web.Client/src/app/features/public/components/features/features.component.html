@@ -1,7 +1,7 @@
 <section class="features">
-    <div class="features__inner">
-        <header class="features__header">
-            <div class="features__intro">
+    <div class="features__inner fd-stack">
+        <header class="features__header fd-grid fd-gap-lg fd-align-start">
+            <div class="features__intro fd-stack fd-gap-md">
                 <span class="features__eyebrow">{{ 'FEATURES.EYEBROW' | translate }}</span>
                 <div>
                     <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
@@ -16,12 +16,12 @@
             </div>
         </header>
 
-        <div class="features__category-strip" role="tablist" aria-label="{{ 'FEATURES.CATEGORY_ARIA' | translate }}">
+        <div class="features__category-strip fd-row fd-gap-sm" role="tablist" aria-label="{{ 'FEATURES.CATEGORY_ARIA' | translate }}">
             @for (category of categories; track category.key) {
                 <button
                     type="button"
                     role="tab"
-                    class="features__category-chip"
+                    class="features__category-chip fd-inline-center fd-gap-xs"
                     [class.features__category-chip--active]="activeCategoryKey() === category.key"
                     [attr.aria-selected]="activeCategoryKey() === category.key"
                     [attr.aria-controls]="'features-panel-' + category.key"
@@ -36,7 +36,7 @@
 
         @if (activeCategory(); as category) {
             <section
-                class="features__panel"
+                class="features__panel fd-grid fd-gap-lg fd-align-start"
                 role="tabpanel"
                 [attr.id]="'features-panel-' + category.key"
                 [attr.aria-labelledby]="'features-tab-' + category.key"
@@ -47,9 +47,9 @@
                     <p class="features__panel-text">{{ 'FEATURES.CATEGORIES.' + category.key + '.DESCRIPTION' | translate }}</p>
                 </div>
 
-                <div class="features__cards" aria-live="polite">
+                <div class="features__cards fd-grid fd-gap-md" aria-live="polite">
                     @for (itemKey of category.itemKeys; track itemKey) {
-                        <article class="features__card">
+                        <article class="features__card fd-stack fd-gap-sm">
                             <div class="features__card-accent"></div>
                             <p class="features__card-kicker">{{ 'FEATURES.ITEMS.' + itemKey + '.KICKER' | translate }}</p>
                             <h4 class="features__card-title">{{ 'FEATURES.ITEMS.' + itemKey + '.TITLE' | translate }}</h4>
