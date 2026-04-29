@@ -13,7 +13,7 @@
 }
 
 .coverage-badge {
-    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    padding: var(--fd-space-micro) var(--fd-space-xs);
     border-radius: var(--fd-radius-lg);
     background: var(--fd-bg-surface-muted);
     color: var(--fd-color-text-muted);
@@ -57,7 +57,7 @@
 
 .progress-bar {
     --fd-progress-height: 4px;
-    --fd-progress-radius: calc(var(--fd-space-xxs) / 2);
+    --fd-progress-radius: var(--fd-space-micro);
     --fd-progress-track-background: var(--fd-bg-surface-muted);
 }
 

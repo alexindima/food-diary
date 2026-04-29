@@ -43,7 +43,7 @@
 }
 
 .nutrient-badges__unit {
-    margin-left: calc(var(--fd-space-xxs) / 2);
+    margin-left: var(--fd-space-micro);
 }
 
 .nutrient-badges__chip--protein {

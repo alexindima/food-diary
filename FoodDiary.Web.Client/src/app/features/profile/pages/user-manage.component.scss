@@ -324,7 +324,7 @@
     &__privacy-hint {
         font-size: var(--fd-text-caption-size);
         color: var(--fd-color-text-muted);
-        margin-top: calc(var(--fd-space-xxs) / 2);
+        margin-top: var(--fd-space-micro);
     }
 
     &__privacy-status {

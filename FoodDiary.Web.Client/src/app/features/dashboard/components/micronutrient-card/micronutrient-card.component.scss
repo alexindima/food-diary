@@ -27,10 +27,6 @@
         border-radius: var(--fd-radius-sm);
     }
 
-    &__nutrient {
-        gap: calc(var(--fd-space-xxs) / 2);
-    }
-
     &__nutrient-name {
         color: var(--fd-color-text);
     }
@@ -69,7 +65,7 @@
     }
 
     &__score {
-        padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+        padding: var(--fd-space-micro) var(--fd-space-xs);
         border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-slate-400) 10%, transparent);
         color: var(--fd-color-text-muted);

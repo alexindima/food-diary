@@ -267,7 +267,7 @@
         margin-bottom: var(--fd-space-xxs);
 
         &--compact {
-            margin-bottom: calc(var(--fd-space-xxs) / 2);
+            margin-bottom: var(--fd-space-micro);
         }
     }
 
@@ -306,7 +306,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-xxs);
-        padding: calc(var(--fd-space-xxs) / 2) calc(var(--fd-space-xxs) / 2) 0;
+        padding: var(--fd-space-micro) var(--fd-space-micro) 0;
     }
 
     &__personal-summary-text {

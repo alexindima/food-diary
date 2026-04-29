@@ -278,7 +278,7 @@
 }
 
 .ai-photo-result__nutrition-item {
-    gap: calc(var(--fd-space-xxs) / 2);
+    gap: var(--fd-space-micro);
 }
 
 .ai-photo-result__nutrition-label {
@@ -440,7 +440,7 @@
 .ai-photo-result__satiety-text {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--fd-space-xxs) / 2);
+    gap: var(--fd-space-micro);
     flex: 1;
     position: relative;
     z-index: 1;

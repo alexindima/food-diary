@@ -241,7 +241,7 @@
     }
 
     &__user-meta {
-        gap: calc(var(--fd-space-xxs) / 2);
+        gap: var(--fd-space-micro);
         min-width: 0;
     }
 
@@ -557,7 +557,7 @@
         .sidebar-mobile__theme-control {
             display: grid;
             gap: var(--fd-space-xs);
-            padding: var(--fd-space-xs) calc(var(--fd-space-xxs) / 2) var(--fd-space-xxs);
+            padding: var(--fd-space-xs) var(--fd-space-micro) var(--fd-space-xxs);
         }
 
         .sidebar-mobile__theme-label {

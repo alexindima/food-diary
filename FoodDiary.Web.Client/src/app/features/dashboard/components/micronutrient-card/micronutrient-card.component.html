@@ -25,7 +25,7 @@
                         'MICRONUTRIENT_CARD.DEFICIENCIES' | translate
                     }}</span>
                     @for (nutrient of topDeficiencies(); track nutrient.nutrientId) {
-                        <div class="micronutrient-card__nutrient fd-stack">
+                        <div class="micronutrient-card__nutrient fd-stack fd-gap-micro">
                             <div class="micronutrient-card__nutrient-header fd-row fd-justify-between fd-gap-xs">
                                 <span class="micronutrient-card__nutrient-name fd-ui-body-sm">{{ shortenName(nutrient.name) }}</span>
                                 <span class="micronutrient-card__nutrient-value fd-ui-meta-text fd-ui-text-muted"

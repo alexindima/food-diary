@@ -369,7 +369,7 @@
     }
 
     &__ai-summary-more {
-        margin-top: calc(var(--fd-space-xxs) / 2);
+        margin-top: var(--fd-space-micro);
         justify-self: start;
         align-self: flex-start;
         --fd-button-height: auto;
@@ -418,7 +418,7 @@
 
 .consumption-item__remove--inline {
     align-self: center;
-    margin-top: calc(var(--fd-space-lg) - calc(var(--fd-space-xxs) / 2));
+    margin-top: calc(var(--fd-space-lg) - var(--fd-space-micro));
 }
 
 .consumption-item__field {

@@ -340,7 +340,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &__manual-add {
-            padding-left: calc(var(--fd-space-xxs) / 2);
+            padding-left: var(--fd-space-micro);
         }
 
         &__grid {

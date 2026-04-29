@@ -57,6 +57,10 @@
     flex-wrap: wrap;
 }
 
+.fd-gap-micro {
+    gap: var(--fd-space-micro);
+}
+
 .fd-gap-xxs {
     gap: var(--fd-space-xxs);
 }

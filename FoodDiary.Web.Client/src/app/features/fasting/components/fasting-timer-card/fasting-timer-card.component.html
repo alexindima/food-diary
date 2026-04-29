@@ -137,7 +137,7 @@
                         [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - progressPercent() / 100)"
                     />
                 </svg>
-                <div class="fasting-timer-card__ring-content fd-stack fd-center">
+                <div class="fasting-timer-card__ring-content fd-stack fd-center fd-gap-micro">
                     <span class="fasting-timer-card__label fd-ui-meta-text">{{ labelKey() | translate }}</span>
                     @if (stateLabel()) {
                         <span class="fasting-timer-card__state fd-ui-meta-text">{{ stateLabel() }}</span>

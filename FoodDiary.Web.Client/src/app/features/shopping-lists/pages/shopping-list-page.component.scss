@@ -115,7 +115,7 @@
     &__item-body {
         display: flex;
         flex-direction: column;
-        gap: calc(var(--fd-space-xxs) / 2);
+        gap: var(--fd-space-micro);
     }
 
     &__item-name {
@@ -233,7 +233,3 @@
         }
     }
 }
-
-
-
-

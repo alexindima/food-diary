@@ -16,7 +16,7 @@
     }
 
     &__header {
-        margin-bottom: calc(var(--fd-space-xxs) / 2);
+        margin-bottom: var(--fd-space-micro);
     }
 
     &__content {
@@ -43,7 +43,7 @@
 
     &__loading,
     &__empty {
-        padding: calc(var(--fd-space-xxs) / 2) 0;
+        padding: var(--fd-space-micro) 0;
 
         fd-ui-icon {
             color: var(--fd-color-sky-500);

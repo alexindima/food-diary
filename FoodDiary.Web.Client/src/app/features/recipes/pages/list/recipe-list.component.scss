@@ -166,7 +166,7 @@
 
     &__favorite-meta {
         color: var(--fd-color-text-muted);
-        margin-top: calc(var(--fd-space-xxs) / 2);
+        margin-top: var(--fd-space-micro);
     }
 
     &__favorite-btn {

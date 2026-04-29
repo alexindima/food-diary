@@ -209,7 +209,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: calc(var(--fd-space-xxs) / 2);
+        gap: var(--fd-space-micro);
     }
 
     &__wht-pointer-dot {
