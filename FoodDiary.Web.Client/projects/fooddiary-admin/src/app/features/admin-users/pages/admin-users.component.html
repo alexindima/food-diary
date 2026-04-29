@@ -1,5 +1,5 @@
-<div class="admin-users">
-    <div class="toolbar">
+<div class="admin-users fd-grid fd-gap-md">
+    <div class="toolbar fd-row fd-gap-sm">
         <fd-ui-input [ngModel]="search()" (ngModelChange)="onSearchChange($event)" placeholder="Search by email or username" />
 
         <fd-ui-button type="button" [variant]="includeDeleted() ? 'primary' : 'secondary'" (click)="toggleIncludeDeleted()">
@@ -33,7 +33,7 @@
                         <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
                         <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
                         <td>{{ user.deletedAt ? 'Yes' : 'No' }}</td>
-                        <td class="users-table__actions">
+                        <td class="users-table__actions fd-row fd-gap-xs fd-wrap">
                             <fd-ui-button type="button" variant="secondary" (click)="openEdit(user)"> Edit </fd-ui-button>
                             <fd-ui-button
                                 type="button"
@@ -53,7 +53,7 @@
             </tbody>
         </table>
 
-        <div class="pagination">
+        <div class="pagination fd-row fd-gap-sm">
             <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
                 Previous
             </fd-ui-button>
@@ -64,8 +64,8 @@
         </div>
     }
 
-    <section class="admin-users__section">
-        <div class="admin-users__section-header">
+    <section class="admin-users__section fd-grid fd-gap-md">
+        <div class="admin-users__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
             <div>
                 <h2 class="fd-ui-title-sm">Impersonation sessions</h2>
                 <p class="fd-ui-body-xs">Recent admin access sessions started on behalf of users.</p>
@@ -105,7 +105,7 @@
                 </tbody>
             </table>
 
-            <div class="pagination">
+            <div class="pagination fd-row fd-gap-sm">
                 <fd-ui-button
                     type="button"
                     variant="secondary"

@@ -1,6 +1,6 @@
-<div class="admin-mail-inbox">
-    <div class="toolbar">
-        <label class="toolbar__field fd-ui-helper-strong">
+<div class="admin-mail-inbox fd-grid fd-gap-md">
+    <div class="toolbar fd-row fd-gap-sm fd-justify-end fd-wrap">
+        <label class="toolbar__field fd-grid fd-gap-xxs fd-ui-helper-strong">
             <span>Type</span>
             <select [ngModel]="categoryFilter()" (ngModelChange)="setCategoryFilter($event)">
                 <option value="all">All</option>
@@ -12,7 +12,7 @@
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
 
-    <div class="mail-layout">
+    <div class="mail-layout fd-grid fd-gap-md fd-align-start">
         <section class="mail-list" aria-label="Inbound mail messages">
             @if (isLoading()) {
                 <p>Loading messages...</p>
@@ -57,16 +57,16 @@
             }
         </section>
 
-        <section class="mail-details" aria-label="Inbound mail message details">
+        <section class="mail-details fd-grid fd-gap-md" aria-label="Inbound mail message details">
             @if (isDetailsLoading()) {
                 <p>Loading message...</p>
             } @else if (selectedMessage(); as message) {
-                <div class="mail-details__header">
+                <div class="mail-details__header fd-row fd-align-start fd-justify-between fd-gap-md">
                     <div>
                         <div class="mail-details__subject fd-ui-title-sm">{{ message.subject || '(no subject)' }}</div>
                         <div class="mail-details__meta fd-ui-body-xs">{{ message.receivedAtUtc | date: 'medium' }}</div>
                     </div>
-                    <div class="mail-details__badges">
+                    <div class="mail-details__badges fd-row fd-align-start fd-justify-end fd-gap-xs fd-wrap">
                         <span class="mail-badge fd-ui-helper-strong" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
                             {{ formatCategory(message.category) }}
                         </span>
@@ -74,24 +74,24 @@
                     </div>
                 </div>
 
-                <dl class="mail-fields">
-                    <div>
+                <dl class="mail-fields fd-grid fd-gap-sm">
+                    <div class="fd-grid fd-gap-xxs">
                         <dt class="fd-ui-helper-strong">From</dt>
                         <dd>{{ message.fromAddress || '-' }}</dd>
                     </div>
-                    <div>
+                    <div class="fd-grid fd-gap-xxs">
                         <dt class="fd-ui-helper-strong">To</dt>
                         <dd>{{ formatRecipients(message.toRecipients) }}</dd>
                     </div>
-                    <div>
+                    <div class="fd-grid fd-gap-xxs">
                         <dt class="fd-ui-helper-strong">Message ID</dt>
                         <dd>{{ message.messageId || '-' }}</dd>
                     </div>
                 </dl>
 
                 @if (message.dmarcReport; as report) {
-                    <section class="dmarc-report" aria-label="DMARC report summary">
-                        <div class="dmarc-report__header">
+                    <section class="dmarc-report fd-grid fd-gap-sm" aria-label="DMARC report summary">
+                        <div class="dmarc-report__header fd-row fd-align-start fd-justify-between fd-gap-md">
                             <div>
                                 <h3 class="fd-ui-body">DMARC report</h3>
                                 <p class="fd-ui-body-xs">
@@ -100,7 +100,7 @@
                                     {{ report.dateRangeEndUtc | date: 'mediumDate' }}
                                 </p>
                             </div>
-                            <div class="dmarc-report__stats fd-ui-caption-strong">
+                            <div class="dmarc-report__stats fd-row fd-gap-xs fd-justify-end fd-wrap fd-ui-caption-strong">
                                 <span>{{ dmarcTotalMessages() }} messages</span>
                                 <span>{{ dmarcProblemRecords() }} issues</span>
                             </div>
@@ -139,7 +139,7 @@
                     </section>
                 }
 
-                <div class="body-switcher" role="group" aria-label="Message body view">
+                <div class="body-switcher fd-row fd-gap-xs fd-wrap" role="group" aria-label="Message body view">
                     <fd-ui-button
                         type="button"
                         [variant]="selectedBodyMode() === 'text' ? 'primary' : 'secondary'"

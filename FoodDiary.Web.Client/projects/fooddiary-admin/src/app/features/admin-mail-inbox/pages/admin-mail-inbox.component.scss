@@ -1,21 +1,6 @@
 @use 'variables' as variables;
 
-.admin-mail-inbox {
-    display: grid;
-    gap: var(--fd-space-md);
-}
-
-.toolbar {
-    display: flex;
-    gap: var(--fd-space-sm);
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-}
-
 .toolbar__field {
-    display: grid;
-    gap: var(--fd-space-xxs);
     color: var(--fd-color-slate-600);
 }
 
@@ -30,10 +15,7 @@
 }
 
 .mail-layout {
-    display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
-    gap: var(--fd-space-md);
-    align-items: start;
 }
 
 .mail-list,
@@ -64,19 +46,10 @@
 }
 
 .mail-details {
-    display: grid;
-    gap: var(--fd-space-md);
     padding: var(--fd-space-md);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-md);
     background: var(--fd-color-white);
-}
-
-.mail-details__header {
-    display: flex;
-    gap: var(--fd-space-md);
-    align-items: flex-start;
-    justify-content: space-between;
 }
 
 .mail-details__meta {
@@ -88,14 +61,6 @@
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-status-info);
     color: var(--fd-color-primary-700);
-}
-
-.mail-details__badges {
-    display: flex;
-    gap: var(--fd-space-xs);
-    align-items: flex-start;
-    flex-wrap: wrap;
-    justify-content: flex-end;
 }
 
 .mail-badge {
@@ -115,14 +80,7 @@
 }
 
 .mail-fields {
-    display: grid;
-    gap: var(--fd-space-sm);
     margin: 0;
-}
-
-.mail-fields div {
-    display: grid;
-    gap: var(--fd-space-xxs);
 }
 
 .mail-fields dt {
@@ -135,26 +93,11 @@
     overflow-wrap: anywhere;
 }
 
-.body-switcher {
-    display: flex;
-    gap: var(--fd-space-xs);
-    flex-wrap: wrap;
-}
-
 .dmarc-report {
-    display: grid;
-    gap: var(--fd-space-sm);
     padding: var(--fd-space-md);
     border: var(--fd-border-width) solid var(--fd-color-border-status-success);
     border-radius: var(--fd-radius-md);
     background: var(--fd-bg-status-success);
-}
-
-.dmarc-report__header {
-    display: flex;
-    gap: var(--fd-space-md);
-    align-items: flex-start;
-    justify-content: space-between;
 }
 
 .dmarc-report__header h3 {
@@ -167,10 +110,6 @@
 }
 
 .dmarc-report__stats {
-    display: flex;
-    gap: var(--fd-space-xs);
-    flex-wrap: wrap;
-    justify-content: flex-end;
     color: var(--fd-color-primary-800);
 }
 

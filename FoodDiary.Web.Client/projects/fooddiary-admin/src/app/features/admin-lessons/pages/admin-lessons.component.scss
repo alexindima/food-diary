@@ -1,13 +1,3 @@
-.admin-lessons {
-    display: grid;
-    gap: var(--fd-space-md);
-}
-
-.toolbar {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .lessons-table {
     width: 100%;
     border-collapse: collapse;
@@ -18,9 +8,4 @@
     padding: var(--fd-space-sm);
     border-bottom: var(--fd-border-default);
     text-align: left;
-}
-
-.actions {
-    display: flex;
-    gap: var(--fd-space-xs);
 }

@@ -1,16 +1,11 @@
 @use 'variables' as variables;
 
 .email-template-edit-dialog {
-    display: grid;
-    gap: var(--fd-space-md);
     min-width: 0;
 }
 
 .template-meta {
-    display: grid;
     grid-template-columns: minmax(16rem, 1fr) minmax(8rem, 12rem) auto;
-    gap: 0.875rem;
-    align-items: center;
     padding: var(--fd-space-md);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-panel);
@@ -18,10 +13,7 @@
 }
 
 .template-workspace {
-    display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.95fr);
-    gap: var(--fd-space-md);
-    align-items: stretch;
     min-height: 34rem;
 }
 
@@ -34,29 +26,20 @@
 }
 
 .template-editor {
-    display: grid;
-    gap: var(--fd-space-md);
     align-content: start;
     padding: var(--fd-space-md);
 }
 
 .editor-grid {
-    display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--fd-space-md);
 }
 
 .template-preview {
-    display: grid;
     grid-template-rows: auto auto auto minmax(0, 1fr);
     overflow: hidden;
 }
 
 .preview-header {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--fd-space-md);
-    align-items: center;
     padding: var(--fd-space-md);
     border-bottom: var(--fd-border-default);
 }
@@ -77,16 +60,7 @@
     font-weight: var(--fd-text-helper-weight);
 }
 
-.preview-mode,
-.actions {
-    display: flex;
-    gap: var(--fd-space-sm);
-    align-items: center;
-}
-
 .token-list {
-    display: grid;
-    gap: var(--fd-space-xs);
     margin: 0;
     padding: var(--fd-space-sm) var(--fd-space-md);
     border-bottom: var(--fd-border-default);
@@ -94,10 +68,7 @@
 }
 
 .token-list div {
-    display: grid;
     grid-template-columns: 8.5rem minmax(0, 1fr);
-    gap: var(--fd-space-sm);
-    align-items: baseline;
 }
 
 .token-list dt,
@@ -124,10 +95,7 @@
 }
 
 .test-send {
-    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--fd-space-sm);
-    align-items: center;
     padding: var(--fd-space-sm) var(--fd-space-md);
     border-bottom: var(--fd-border-default);
     background: var(--fd-color-surface-raised);
@@ -171,7 +139,6 @@
 }
 
 .actions {
-    justify-content: flex-end;
     width: 100%;
 }
 

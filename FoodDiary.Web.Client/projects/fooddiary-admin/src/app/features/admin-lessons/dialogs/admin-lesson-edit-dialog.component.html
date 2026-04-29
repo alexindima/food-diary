@@ -1,15 +1,15 @@
-<div class="lesson-edit-dialog" [formGroup]="form">
+<div class="lesson-edit-dialog fd-grid fd-gap-md" [formGroup]="form">
     <div class="form-row">
         <fd-ui-input formControlName="title" label="Title" />
     </div>
 
-    <div class="form-row form-row--inline">
+    <div class="form-row form-row--inline fd-row fd-gap-md">
         <fd-ui-select formControlName="locale" label="Locale" [options]="localeOptions" />
         <fd-ui-select formControlName="category" label="Category" [options]="categoryOptions" />
         <fd-ui-select formControlName="difficulty" label="Difficulty" [options]="difficultyOptions" />
     </div>
 
-    <div class="form-row form-row--inline">
+    <div class="form-row form-row--inline fd-row fd-gap-md">
         <fd-ui-input formControlName="estimatedReadMinutes" label="Read minutes" type="number" />
         <fd-ui-input formControlName="sortOrder" label="Sort order" type="number" />
     </div>
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="preview-toggle">
+    <div class="preview-toggle fd-row fd-gap-sm">
         <fd-ui-button type="button" variant="secondary" (click)="togglePreview()">
             {{ showPreview() ? 'Hide preview' : 'Show preview' }}
         </fd-ui-button>
@@ -39,7 +39,7 @@
         <div class="preview" [innerHTML]="previewHtml()"></div>
     }
 
-    <div class="dialog-actions">
+    <div class="dialog-actions fd-row fd-gap-sm">
         <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
         <fd-ui-button type="button" [disabled]="form.invalid || isSaving()" (click)="onSave()">
             {{ isNew ? 'Create' : 'Save' }}

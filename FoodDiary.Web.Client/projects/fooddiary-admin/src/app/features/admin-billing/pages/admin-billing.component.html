@@ -1,5 +1,5 @@
-<div class="admin-billing">
-    <header class="admin-billing__header">
+<div class="admin-billing fd-grid fd-gap-md">
+    <header class="admin-billing__header fd-row fd-align-start fd-justify-between fd-gap-md">
         <div>
             <h1 class="fd-page-title">Billing</h1>
             <p class="fd-page-subtitle">Subscriptions, payments, renewal attempts and webhook events.</p>
@@ -7,24 +7,24 @@
         <fd-ui-button type="button" variant="secondary" (click)="load()"> Refresh </fd-ui-button>
     </header>
 
-    <div class="admin-billing__tabs">
+    <div class="admin-billing__tabs fd-row fd-gap-sm fd-wrap">
         <button type="button" [class.active]="activeTab() === 'subscriptions'" (click)="setTab('subscriptions')">Subscriptions</button>
         <button type="button" [class.active]="activeTab() === 'payments'" (click)="setTab('payments')">Payments</button>
         <button type="button" [class.active]="activeTab() === 'webhook-events'" (click)="setTab('webhook-events')">Webhooks</button>
     </div>
 
-    <section class="admin-billing__filters">
+    <section class="admin-billing__filters fd-row fd-gap-sm fd-wrap">
         <fd-ui-input [ngModel]="search()" (ngModelChange)="search.set($event)" placeholder="Search email or external id" />
         <fd-ui-input [ngModel]="provider()" (ngModelChange)="provider.set($event)" placeholder="Provider" />
         <fd-ui-input [ngModel]="status()" (ngModelChange)="status.set($event)" placeholder="Status" />
         @if (activeTab() === 'payments') {
             <fd-ui-input [ngModel]="kind()" (ngModelChange)="kind.set($event)" placeholder="Kind" />
         }
-        <label>
+        <label class="fd-grid fd-gap-xxs">
             <span>From</span>
             <input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
         </label>
-        <label>
+        <label class="fd-grid fd-gap-xxs">
             <span>To</span>
             <input type="date" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
         </label>
@@ -191,7 +191,7 @@
             </table>
         }
 
-        <div class="admin-billing__pagination">
+        <div class="admin-billing__pagination fd-row fd-gap-sm fd-wrap">
             <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
                 Previous
             </fd-ui-button>
@@ -204,7 +204,7 @@
 
     @if (selectedMetadata(); as metadata) {
         <aside class="admin-billing__metadata">
-            <div class="admin-billing__metadata-header">
+            <div class="admin-billing__metadata-header fd-row fd-justify-between">
                 <strong>Provider metadata</strong>
                 <button type="button" (click)="selectedMetadata.set(null)">Close</button>
             </div>

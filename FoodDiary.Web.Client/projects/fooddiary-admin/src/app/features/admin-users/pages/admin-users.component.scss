@@ -1,26 +1,6 @@
-.admin-users {
-    display: grid;
-    gap: var(--fd-space-md);
-}
-
-.toolbar {
-    display: flex;
-    gap: var(--fd-space-sm);
-    align-items: center;
-}
-
 .admin-users__section {
-    display: grid;
-    gap: var(--fd-space-md);
     padding-top: var(--fd-space-md);
     border-top: var(--fd-border-default);
-}
-
-.admin-users__section-header {
-    display: flex;
-    gap: var(--fd-space-md);
-    align-items: flex-start;
-    justify-content: space-between;
 }
 
 .admin-users__section-header h2 {
@@ -44,21 +24,9 @@
     text-align: left;
 }
 
-.users-table__actions {
-    display: flex;
-    gap: var(--fd-space-xs);
-    flex-wrap: wrap;
-}
-
 .users-table__reason {
     max-width: 320px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.pagination {
-    display: flex;
-    gap: var(--fd-space-sm);
-    align-items: center;
 }

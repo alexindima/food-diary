@@ -1,15 +1,5 @@
-.lesson-edit-dialog {
-    display: grid;
-    gap: var(--fd-space-md);
-}
-
-.form-row--inline {
-    display: flex;
-    gap: var(--fd-space-md);
-
-    > * {
-        flex: 1;
-    }
+.form-row--inline > * {
+    flex: 1;
 }
 
 .content-counter {
@@ -28,12 +18,6 @@
 .content-counter--danger {
     color: var(--fd-color-danger);
     font-weight: var(--fd-text-action-weight);
-}
-
-.preview-toggle,
-.dialog-actions {
-    display: flex;
-    gap: var(--fd-space-sm);
 }
 
 .preview {

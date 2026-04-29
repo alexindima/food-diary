@@ -1,31 +1,10 @@
-.admin-billing {
-    display: grid;
-    gap: var(--fd-space-md);
+.admin-billing__header h1 {
+    margin: 0;
 }
 
-.admin-billing__header {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--fd-space-md);
-    align-items: flex-start;
-
-    h1 {
-        margin: 0;
-    }
-
-    p {
-        margin: var(--fd-space-xxs) 0 0;
-        color: var(--fd-color-text-muted);
-    }
-}
-
-.admin-billing__tabs,
-.admin-billing__filters,
-.admin-billing__pagination {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--fd-space-sm);
-    align-items: center;
+.admin-billing__header p {
+    margin: var(--fd-space-xxs) 0 0;
+    color: var(--fd-color-text-muted);
 }
 
 .admin-billing__tabs button {
@@ -50,8 +29,6 @@
     background: var(--fd-color-white);
 
     label {
-        display: grid;
-        gap: var(--fd-space-xxs);
         font-size: var(--fd-text-label-floating-size);
         color: var(--fd-color-text-muted);
     }
@@ -126,9 +103,6 @@
 }
 
 .admin-billing__metadata-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: var(--fd-space-md);
     border-bottom: var(--fd-border-default);
 

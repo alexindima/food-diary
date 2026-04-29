@@ -3,9 +3,6 @@
 }
 
 .toolbar {
-    display: flex;
-    gap: var(--fd-space-sm);
-    align-items: center;
     margin-bottom: var(--fd-space-md);
 
     select {
@@ -71,15 +68,6 @@
     }
 }
 
-.action-buttons {
-    display: flex;
-    gap: var(--fd-space-control-gap);
-}
-
 .pagination {
-    display: flex;
-    align-items: center;
-    gap: var(--fd-space-sm);
-    justify-content: center;
     margin-top: var(--fd-space-md);
 }

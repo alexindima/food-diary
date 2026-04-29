@@ -1,5 +1,5 @@
-<div class="admin-lessons">
-    <div class="toolbar">
+<div class="admin-lessons fd-grid fd-gap-md">
+    <div class="toolbar fd-row fd-justify-end">
         <fd-ui-button type="button" (click)="openCreate()">Create lesson</fd-ui-button>
     </div>
 
@@ -29,7 +29,7 @@
                         <td>{{ lesson.estimatedReadMinutes }}</td>
                         <td>{{ lesson.sortOrder }}</td>
                         <td>{{ lesson.modifiedOnUtc || lesson.createdOnUtc }}</td>
-                        <td class="actions">
+                        <td class="actions fd-row fd-gap-xs">
                             <fd-ui-button type="button" variant="secondary" (click)="openEdit(lesson)">Edit</fd-ui-button>
                             <fd-ui-button type="button" variant="secondary" (click)="deleteLesson(lesson)">Delete</fd-ui-button>
                         </td>

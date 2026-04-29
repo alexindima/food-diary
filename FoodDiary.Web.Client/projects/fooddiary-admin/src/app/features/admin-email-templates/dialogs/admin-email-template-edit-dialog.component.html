@@ -4,31 +4,31 @@
     size="xl"
     bodyScrollInset="edge"
 >
-    <form class="email-template-edit-dialog" [formGroup]="form" (ngSubmit)="onSave()">
-        <section class="template-meta" aria-label="Template metadata">
+    <form class="email-template-edit-dialog fd-grid fd-gap-md" [formGroup]="form" (ngSubmit)="onSave()">
+        <section class="template-meta fd-grid fd-gap-md fd-align-center" aria-label="Template metadata">
             <fd-ui-input formControlName="key" label="Key" />
             <fd-ui-input formControlName="locale" label="Locale" />
             <fd-ui-checkbox formControlName="isActive">Active</fd-ui-checkbox>
         </section>
 
-        <div class="template-workspace">
-            <section class="template-editor" aria-label="Template editor">
+        <div class="template-workspace fd-grid fd-gap-md">
+            <section class="template-editor fd-grid fd-gap-md" aria-label="Template editor">
                 <fd-ui-input formControlName="subject" label="Subject" />
 
-                <div class="editor-grid">
+                <div class="editor-grid fd-grid fd-gap-md">
                     <fd-ui-textarea formControlName="htmlBody" label="HTML body" [rows]="18" />
                     <fd-ui-textarea formControlName="textBody" label="Text body" [rows]="18" />
                 </div>
             </section>
 
-            <aside class="template-preview" aria-label="Template preview">
-                <div class="preview-header">
+            <aside class="template-preview fd-grid" aria-label="Template preview">
+                <div class="preview-header fd-row fd-justify-between fd-gap-md">
                     <div>
                         <h3 class="preview-title">Preview</h3>
                         <p class="preview-subtitle">Tokens use sample values.</p>
                     </div>
 
-                    <div class="preview-mode" role="group" aria-label="Preview mode">
+                    <div class="preview-mode fd-row fd-gap-sm" role="group" aria-label="Preview mode">
                         <fd-ui-button
                             type="button"
                             [variant]="previewMode() === 'html' ? 'primary' : 'secondary'"
@@ -46,22 +46,22 @@
                     </div>
                 </div>
 
-                <dl class="token-list">
-                    <div>
+                <dl class="token-list fd-grid fd-gap-xs">
+                    <div class="fd-grid fd-gap-sm fd-align-baseline">
                         <dt>{{ '{{brand}}' }}</dt>
                         <dd>{{ previewBrand() }}</dd>
                     </div>
-                    <div>
+                    <div class="fd-grid fd-gap-sm fd-align-baseline">
                         <dt>{{ '{{clientName}}' }}</dt>
                         <dd>{{ previewClientName() }}</dd>
                     </div>
-                    <div>
+                    <div class="fd-grid fd-gap-sm fd-align-baseline">
                         <dt>{{ '{{link}}' }}</dt>
                         <dd>{{ previewLink() }}</dd>
                     </div>
                 </dl>
 
-                <div class="test-send">
+                <div class="test-send fd-grid fd-gap-sm fd-align-center">
                     <fd-ui-input [formControl]="testEmailControl" label="Send test to" />
                     <fd-ui-button
                         type="button"
@@ -87,7 +87,7 @@
         </div>
     </form>
 
-    <div fdUiDialogFooter class="actions">
+    <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
         <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
         <fd-ui-button type="button" [disabled]="form.invalid || isSaving()" (click)="onSave()">Save</fd-ui-button>
     </div>

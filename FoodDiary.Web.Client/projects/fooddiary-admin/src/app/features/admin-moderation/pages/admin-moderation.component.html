@@ -1,5 +1,5 @@
 <div class="admin-moderation">
-    <div class="toolbar">
+    <div class="toolbar fd-row fd-gap-sm">
         <select [ngModel]="statusFilter()" (ngModelChange)="onStatusChange($event)">
             <option value="">All</option>
             <option value="Pending">Pending</option>
@@ -38,7 +38,7 @@
                         <td>{{ report.reviewedAtUtc ? (report.reviewedAtUtc | date: 'short') : '—' }}</td>
                         <td>
                             @if (report.status === 'Pending') {
-                                <div class="action-buttons">
+                                <div class="action-buttons fd-row fd-gap-control">
                                     <fd-ui-button type="button" variant="primary" size="sm" (click)="openAction(report, 'review')">
                                         Review
                                     </fd-ui-button>
@@ -57,7 +57,7 @@
             </tbody>
         </table>
 
-        <div class="pagination">
+        <div class="pagination fd-row fd-gap-sm fd-justify-center">
             <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
                 Previous
             </fd-ui-button>

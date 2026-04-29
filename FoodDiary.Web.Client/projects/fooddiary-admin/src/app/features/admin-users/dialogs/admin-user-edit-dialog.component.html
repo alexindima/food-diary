@@ -1,5 +1,5 @@
 <fd-ui-dialog title="Edit user">
-    <div class="admin-user-edit-dialog" [formGroup]="form">
+    <div class="admin-user-edit-dialog fd-grid fd-gap-md" [formGroup]="form">
         <label>
             <input type="checkbox" formControlName="isActive" />
             Active
@@ -10,7 +10,7 @@
             Email confirmed
         </label>
 
-        <div class="roles">
+        <div class="roles fd-grid fd-gap-xs">
             <div class="roles__title">Roles</div>
             @for (role of roles; track role) {
                 <label>
