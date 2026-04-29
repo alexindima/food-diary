@@ -25,7 +25,8 @@ public sealed class UpdateAdminUserCommandValidator : AbstractValidator<UpdateAd
         When(x => x.Roles is not null, () => {
             RuleForEach(x => x.Roles!)
                 .Must(role => !string.IsNullOrWhiteSpace(role) &&
-                              (string.Equals(role.Trim(), RoleNames.Admin, StringComparison.Ordinal) ||
+                              (string.Equals(role.Trim(), RoleNames.Owner, StringComparison.Ordinal) ||
+                               string.Equals(role.Trim(), RoleNames.Admin, StringComparison.Ordinal) ||
                                string.Equals(role.Trim(), RoleNames.Premium, StringComparison.Ordinal) ||
                                string.Equals(role.Trim(), RoleNames.Support, StringComparison.Ordinal)))
                 .WithMessage("Unknown role.");

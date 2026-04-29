@@ -43,6 +43,13 @@ public class AdminValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
+    [Fact]
+    public async Task UpdateAdminUser_WithValidOwnerRole_NoErrors() {
+        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+            new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "Owner", "Admin" }, null, null, null));
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
     // ── UpsertAdminEmailTemplate (string Key, string Locale, string Subject, string HtmlBody, string TextBody, bool IsActive) ──
 
     [Fact]

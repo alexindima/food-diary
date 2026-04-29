@@ -250,6 +250,131 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithOwnerRoleForNonOwner_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Owner, RoleNames.Admin],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Owner role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal([RoleNames.Admin], user.GetRoleNames().OrderBy(name => name).ToArray());
+    }
+
+    [Fact]
+    public async Task UpdateAdminUserHandler_WithOwnerUserWithoutOwnerRole_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Admin],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name).ToArray());
+    }
+
+    [Fact]
+    public async Task UpdateAdminUserHandler_WithOwnerUserWithoutAdminRole_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Owner],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name).ToArray());
+    }
+
+    [Fact]
+    public async Task UpdateAdminUserHandler_WithOwnerUserKeepingOwnerAndAdmin_UpdatesRoles() {
+        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Support],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(
+            [RoleNames.Admin, RoleNames.Owner, RoleNames.Support],
+            user.GetRoleNames().OrderBy(name => name).ToArray());
+    }
+
+    [Fact]
+    public async Task UpdateAdminUserHandler_WithOwnerUserDeactivation_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: false,
+                IsEmailConfirmed: null,
+                Roles: null,
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Owner user", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(user.IsActive);
+    }
+
+    [Fact]
     public async Task UpdateAdminUserHandler_WithSameRoles_DoesNotSetModifiedOnUtc() {
         var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(

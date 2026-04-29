@@ -17,7 +17,7 @@ public sealed class UpdateAdminUserCommandHandler(
     IAuditLogger auditLogger)
     : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserModel>> {
     private static readonly HashSet<string> AllowedRoles = new(
-        [RoleNames.Admin, RoleNames.Premium, RoleNames.Support],
+        [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support],
         StringComparer.Ordinal);
 
     public async Task<Result<AdminUserModel>> Handle(
@@ -55,6 +55,20 @@ public sealed class UpdateAdminUserCommandHandler(
                     Errors.Validation.Invalid("roles", "Unknown role."));
             }
 
+            var isOwner = user.HasRole(RoleNames.Owner);
+            var requestsOwner = requestedRoles.Contains(RoleNames.Owner, StringComparer.Ordinal);
+            var requestsAdmin = requestedRoles.Contains(RoleNames.Admin, StringComparer.Ordinal);
+
+            if (!isOwner && requestsOwner) {
+                return Result.Failure<AdminUserModel>(
+                    Errors.Validation.Invalid("roles", "Owner role cannot be assigned from the admin user editor."));
+            }
+
+            if (isOwner && (!requestsOwner || !requestsAdmin)) {
+                return Result.Failure<AdminUserModel>(
+                    Errors.Validation.Invalid("roles", "Owner users must keep Owner and Admin roles."));
+            }
+
             roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken);
             if (roleEntities.Count != requestedRoles.Length) {
                 return Result.Failure<AdminUserModel>(
@@ -73,6 +87,11 @@ public sealed class UpdateAdminUserCommandHandler(
             if (command.IsActive.Value) {
                 user.Activate();
             } else {
+                if (user.HasRole(RoleNames.Owner)) {
+                    return Result.Failure<AdminUserModel>(
+                        Errors.Validation.Invalid(nameof(command.IsActive), "Owner user cannot be deactivated."));
+                }
+
                 user.Deactivate();
             }
         }
