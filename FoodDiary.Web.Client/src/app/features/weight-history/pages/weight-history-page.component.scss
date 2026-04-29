@@ -44,6 +44,10 @@
         gap: var(--fd-space-card-header-gap);
     }
 
+    &__placeholder {
+        height: var(--fd-size-defer-placeholder-height);
+    }
+
     &__bmi-note {
         margin: 0 0 var(--fd-space-card-header-gap);
         color: var(--fd-color-text-muted);

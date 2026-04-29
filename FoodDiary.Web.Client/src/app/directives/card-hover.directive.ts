@@ -57,9 +57,8 @@ export class FdCardHoverDirective {
         const styles = getComputedStyle(element);
         const cssTransform = styles.getPropertyValue('--fd-card-hover-transform').trim();
         const cssShadow = styles.getPropertyValue('--fd-card-hover-shadow').trim();
-        const transform = this.fdCardHoverTransform() ?? (cssTransform || 'translateY(-2px)');
-        const boxShadow =
-            this.fdCardHoverShadow() ?? (cssShadow || '0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent)');
+        const transform = this.fdCardHoverTransform() ?? cssTransform;
+        const boxShadow = this.fdCardHoverShadow() ?? cssShadow;
         this.renderer.setStyle(element, 'transform', transform);
         this.renderer.setStyle(element, 'box-shadow', boxShadow);
     }

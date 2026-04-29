@@ -53,6 +53,10 @@
         min-height: 260px;
     }
 
+    &__placeholder {
+        height: var(--fd-size-defer-placeholder-height);
+    }
+
     &__loader,
     &__empty,
     &__empty-chart {

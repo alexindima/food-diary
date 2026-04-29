@@ -8,6 +8,7 @@ const CHART_COLOR_VARIABLES = {
     radarBackground: '--fd-color-chart-radar-background',
     radarBorder: '--fd-color-chart-radar-border',
     primaryLine: '--fd-color-primary-600',
+    primaryFill: '--fd-color-chart-primary-fill',
     warning: '--fd-color-orange-500',
 } as const;
 
@@ -21,6 +22,7 @@ const CHART_COLOR_FALLBACKS: Record<keyof typeof CHART_COLOR_VARIABLES, string> 
     radarBackground: 'rgba(45, 156, 219, 0.2)',
     radarBorder: '#2d9cdb',
     primaryLine: '#2563eb',
+    primaryFill: 'rgba(37, 99, 235, 0.15)',
     warning: '#f97316',
 };
 
@@ -64,6 +66,9 @@ export const CHART_COLORS = {
     },
     get primaryLine(): string {
         return getChartColor('primaryLine');
+    },
+    get primaryFill(): string {
+        return getChartColor('primaryFill');
     },
     get warning(): string {
         return getChartColor('warning');

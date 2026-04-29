@@ -123,16 +123,16 @@ describe('CustomGroupComponent', () => {
     });
 
     describe('titleLeftOffset', () => {
-        it('should return 15px when isAccordion is false', () => {
+        it('should return tokenized offset when isAccordion is false', () => {
             fixture.componentRef.setInput('isAccordion', false);
             fixture.detectChanges();
-            expect(component.titleLeftOffset()).toBe('15px');
+            expect(component.titleLeftOffset()).toBe('calc(var(--fd-space-sm) + var(--fd-border-width-strong) + var(--fd-border-width))');
         });
 
-        it('should return 36px when isAccordion is true', () => {
+        it('should return tokenized offset when isAccordion is true', () => {
             fixture.componentRef.setInput('isAccordion', true);
             fixture.detectChanges();
-            expect(component.titleLeftOffset()).toBe('36px');
+            expect(component.titleLeftOffset()).toBe('calc(var(--fd-size-control-xs) + var(--fd-space-sm))');
         });
     });
 

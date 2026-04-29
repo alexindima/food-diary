@@ -66,9 +66,9 @@ export class MicronutrientCardComponent {
             return 'var(--fd-color-green-500)';
         }
         if (pct >= 50) {
-            return '#eab308';
+            return 'var(--fd-color-amber-500)';
         }
-        return '#ef4444';
+        return 'var(--fd-color-danger)';
     }
 
     public shortenName(name: string): string {

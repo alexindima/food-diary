@@ -38,6 +38,33 @@ $fd-size-tokens: (
     control-lg: 48px,
     control-xl: 56px,
     control-xxl: 64px,
+    emoji-picker-emoji: 1.7rem,
+    emoji-picker-emoji-sm: 1.4rem,
+    dialog-panel-width-offset: 2rem,
+    dialog-panel-width-sm: 400px,
+    dialog-panel-width-md: 640px,
+    dialog-panel-width-lg: 840px,
+    dialog-panel-width-xl: 1120px,
+    dialog-media-width: min(calc(100vw - 3rem), 1200px),
+    dialog-media-max-width: 1200px,
+    dialog-chart-width: min(1440px, calc(100vw - 40px)),
+    dialog-max-height: 80vh,
+    dialog-max-height-detail: 90vh,
+    dialog-vertical-padding: 2.5rem,
+    dialog-vertical-padding-sm: 2rem,
+    dialog-vertical-padding-lg: 3rem,
+    dialog-header-block-default: 4.5rem,
+    dialog-footer-block-default: 4.25rem,
+    image-preview-max-height: min(90vh, 980px),
+    image-preview-close-inset: 20px,
+    image-preview-max-width: min(100%, 1120px),
+    image-preview-image-max-height: min(72vh, 820px),
+    image-preview-image-max-height-mobile: min(68vh, 560px),
+    image-preview-caption-max-width: min(100%, 960px),
+    defer-placeholder-height: 200px,
+    fasting-ring-glow-spread: 10px,
+    fasting-ring-glow-offset-y: 18px,
+    fasting-ring-glow-blur: 36px,
 );
 
 $fd-typography-tokens: (
@@ -180,6 +207,13 @@ $fd-elevation-tokens: (
     accent: 0 10px 24px color-mix(in srgb, var(--fd-shadow-accent-color) 18%, transparent),
     accent-strong: 0 12px 30px color-mix(in srgb, var(--fd-shadow-accent-color) 24%, transparent),
     accent-glow: 0 0 24px color-mix(in srgb, var(--fd-shadow-accent-color) 35%, transparent),
+    card-hover: 0 12px 24px color-mix(in srgb, var(--fd-color-slate-900) 15%, transparent),
+    fasting-overtime-ring:
+        0 0 0 var(--fd-size-fasting-ring-glow-spread)
+        color-mix(in srgb, var(--fd-color-green-500) 14%, transparent),
+    fasting-overtime-ring-depth:
+        0 var(--fd-size-fasting-ring-glow-offset-y) var(--fd-size-fasting-ring-glow-blur)
+        color-mix(in srgb, var(--fd-color-green-500) 12%, transparent),
 );
 
 $fd-border-tokens: (
@@ -1554,7 +1588,15 @@ $fd-theme-design-tokens: (
             0 12px 26px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-shadow-accent-strong: #{fd-token(elevation, accent-strong)};
         --fd-shadow-accent-glow: #{fd-token(elevation, accent-glow)};
+        --fd-shadow-card-hover: #{fd-token(elevation, card-hover)};
+        --fd-shadow-fasting-overtime-ring: #{fd-token(elevation, fasting-overtime-ring)}, #{fd-token(
+                elevation,
+                fasting-overtime-ring-depth
+            )};
         --fd-shadow-none: #{fd-token(elevation, none)};
+        --fd-transform-card-hover: translateY(calc(0px - var(--fd-space-micro)));
+        --fd-card-hover-transform: var(--fd-transform-card-hover);
+        --fd-card-hover-shadow: var(--fd-shadow-card-hover);
 
         --fd-border-none: #{fd-token(border, none)};
         --fd-border-width: #{fd-token(border, width)};
@@ -1745,6 +1787,33 @@ $fd-theme-design-tokens: (
         --fd-size-control-lg: #{fd-token(size, control-lg)};
         --fd-size-control-xl: #{fd-token(size, control-xl)};
         --fd-size-control-xxl: #{fd-token(size, control-xxl)};
+        --fd-size-emoji-picker-emoji: #{fd-token(size, emoji-picker-emoji)};
+        --fd-size-emoji-picker-emoji-sm: #{fd-token(size, emoji-picker-emoji-sm)};
+        --fd-size-dialog-panel-width-offset: #{fd-token(size, dialog-panel-width-offset)};
+        --fd-size-dialog-panel-width-sm: #{fd-token(size, dialog-panel-width-sm)};
+        --fd-size-dialog-panel-width-md: #{fd-token(size, dialog-panel-width-md)};
+        --fd-size-dialog-panel-width-lg: #{fd-token(size, dialog-panel-width-lg)};
+        --fd-size-dialog-panel-width-xl: #{fd-token(size, dialog-panel-width-xl)};
+        --fd-size-dialog-media-width: #{fd-token(size, dialog-media-width)};
+        --fd-size-dialog-media-max-width: #{fd-token(size, dialog-media-max-width)};
+        --fd-size-dialog-chart-width: #{fd-token(size, dialog-chart-width)};
+        --fd-size-dialog-max-height: #{fd-token(size, dialog-max-height)};
+        --fd-size-dialog-max-height-detail: #{fd-token(size, dialog-max-height-detail)};
+        --fd-size-dialog-vertical-padding: #{fd-token(size, dialog-vertical-padding)};
+        --fd-size-dialog-vertical-padding-sm: #{fd-token(size, dialog-vertical-padding-sm)};
+        --fd-size-dialog-vertical-padding-lg: #{fd-token(size, dialog-vertical-padding-lg)};
+        --fd-size-dialog-header-block-default: #{fd-token(size, dialog-header-block-default)};
+        --fd-size-dialog-footer-block-default: #{fd-token(size, dialog-footer-block-default)};
+        --fd-size-image-preview-max-height: #{fd-token(size, image-preview-max-height)};
+        --fd-size-image-preview-close-inset: #{fd-token(size, image-preview-close-inset)};
+        --fd-size-image-preview-max-width: #{fd-token(size, image-preview-max-width)};
+        --fd-size-image-preview-image-max-height: #{fd-token(size, image-preview-image-max-height)};
+        --fd-size-image-preview-image-max-height-mobile: #{fd-token(size, image-preview-image-max-height-mobile)};
+        --fd-size-image-preview-caption-max-width: #{fd-token(size, image-preview-caption-max-width)};
+        --fd-size-defer-placeholder-height: #{fd-token(size, defer-placeholder-height)};
+        --fd-size-fasting-ring-glow-spread: #{fd-token(size, fasting-ring-glow-spread)};
+        --fd-size-fasting-ring-glow-offset-y: #{fd-token(size, fasting-ring-glow-offset-y)};
+        --fd-size-fasting-ring-glow-blur: #{fd-token(size, fasting-ring-glow-blur)};
 
         --fd-layout-header-height: #{fd-theme-token($theme, layout-header, height)};
         --fd-layout-header-background: #{fd-theme-token($theme, layout-header, background)};

@@ -50,7 +50,7 @@ export class FastingTimerCardComponent {
         }
 
         if (this.isOvertime()) {
-            return '0 0 0 10px rgba(34, 197, 94, 0.14), 0 18px 36px color-mix(in srgb, var(--fd-color-green-500) 12%, transparent)';
+            return 'var(--fd-shadow-fasting-overtime-ring)';
         }
 
         const glowColor = this.glowColor();
@@ -58,7 +58,7 @@ export class FastingTimerCardComponent {
             return null;
         }
 
-        return `0 0 0 10px ${glowColor}, 0 18px 36px ${glowColor}`;
+        return `0 0 0 var(--fd-size-fasting-ring-glow-spread) ${glowColor}, 0 var(--fd-size-fasting-ring-glow-offset-y) var(--fd-size-fasting-ring-glow-blur) ${glowColor}`;
     }
 
     public shouldShowStageProgress(): boolean {

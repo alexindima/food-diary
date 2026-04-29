@@ -36,14 +36,14 @@ export class FdUiIconComponent {
 
         switch (size) {
             case 'sm':
-                return '16px';
+                return 'var(--fd-size-icon-sm)';
             case 'lg':
-                return '24px';
+                return 'var(--fd-size-icon-lg)';
             case 'xl':
-                return '28px';
+                return 'var(--fd-size-icon-xl)';
             case 'md':
             default:
-                return '20px';
+                return 'var(--fd-size-icon-md)';
         }
     });
 }

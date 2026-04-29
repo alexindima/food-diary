@@ -37,6 +37,6 @@ export class WeeklyCheckInFacade {
             return 'var(--fd-color-slate-500)';
         }
         const isPositive = invertPositive ? value < 0 : value > 0;
-        return isPositive ? 'var(--fd-color-green-500)' : '#ef4444';
+        return isPositive ? 'var(--fd-color-green-500)' : 'var(--fd-color-danger)';
     }
 }

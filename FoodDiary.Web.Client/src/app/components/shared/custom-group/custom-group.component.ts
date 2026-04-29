@@ -43,7 +43,9 @@ export class CustomGroupComponent {
 
     public isOpen = signal<boolean>(true);
     public titleLeftOffset = computed<string>(() => {
-        return this.isAccordion() ? '36px' : '15px';
+        return this.isAccordion()
+            ? 'calc(var(--fd-size-control-xs) + var(--fd-space-sm))'
+            : 'calc(var(--fd-space-sm) + var(--fd-border-width-strong) + var(--fd-border-width))';
     });
 
     public onCloseButtonClick(): void {

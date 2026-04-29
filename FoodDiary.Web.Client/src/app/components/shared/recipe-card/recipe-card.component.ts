@@ -108,8 +108,8 @@ export class RecipeCardComponent {
 
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
-            width: 'min(calc(100vw - 3rem), 1200px)',
-            maxWidth: '1200px',
+            width: 'var(--fd-size-dialog-media-width)',
+            maxWidth: 'var(--fd-size-dialog-media-max-width)',
             data: {
                 imageUrl,
                 alt: this.translateService.instant('IMAGE_PREVIEW.ALT', { name: this.recipe().name }),

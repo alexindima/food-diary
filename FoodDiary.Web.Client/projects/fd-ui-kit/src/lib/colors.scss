@@ -323,6 +323,7 @@ html[data-theme='dark'] {
     --fd-color-chart-fiber: var(--fd-color-purple-500);
     --fd-color-chart-radar-background: color-mix(in srgb, var(--fd-color-chart-proteins) 20%, transparent);
     --fd-color-chart-radar-border: var(--fd-color-chart-proteins);
+    --fd-color-chart-primary-fill: color-mix(in srgb, var(--fd-color-primary-600) 15%, transparent);
 
     --fd-color-nutrition-calories: var(--fd-color-rose-500);
     --fd-color-nutrition-proteins: var(--fd-color-chart-proteins);
@@ -400,38 +401,38 @@ html[data-theme='dark'] {
     --fd-button-focus-ring-shadow:
         0 0 0 2px color-mix(in srgb, var(--fd-color-surface) 86%, transparent),
         0 0 0 4px color-mix(in srgb, var(--fd-button-focus-ring-color) 64%, transparent);
-    --fd-emoji-picker-emoji-size: 1.7rem;
-    --fd-emoji-picker-emoji-size-sm: 1.4rem;
+    --fd-emoji-picker-emoji-size: var(--fd-size-emoji-picker-emoji);
+    --fd-emoji-picker-emoji-size-sm: var(--fd-size-emoji-picker-emoji-sm);
     --fd-section-state-error-icon-size: var(--fd-size-icon-xxl);
-    --fd-dialog-panel-width-offset: 2rem;
-    --fd-dialog-panel-width-sm: 400px;
-    --fd-dialog-panel-width-md: 640px;
-    --fd-dialog-panel-width-lg: 840px;
-    --fd-dialog-panel-width-xl: 1120px;
-    --fd-dialog-max-height: 80vh;
-    --fd-dialog-max-height-detail: 90vh;
-    --fd-dialog-vertical-padding: 2.5rem;
-    --fd-dialog-vertical-padding-sm: 2rem;
-    --fd-dialog-vertical-padding-lg: 3rem;
+    --fd-dialog-panel-width-offset: var(--fd-size-dialog-panel-width-offset);
+    --fd-dialog-panel-width-sm: var(--fd-size-dialog-panel-width-sm);
+    --fd-dialog-panel-width-md: var(--fd-size-dialog-panel-width-md);
+    --fd-dialog-panel-width-lg: var(--fd-size-dialog-panel-width-lg);
+    --fd-dialog-panel-width-xl: var(--fd-size-dialog-panel-width-xl);
+    --fd-dialog-max-height: var(--fd-size-dialog-max-height);
+    --fd-dialog-max-height-detail: var(--fd-size-dialog-max-height-detail);
+    --fd-dialog-vertical-padding: var(--fd-size-dialog-vertical-padding);
+    --fd-dialog-vertical-padding-sm: var(--fd-size-dialog-vertical-padding-sm);
+    --fd-dialog-vertical-padding-lg: var(--fd-size-dialog-vertical-padding-lg);
     --fd-dialog-header-block: var(--fd-border-none);
-    --fd-dialog-header-block-default: 4.5rem;
+    --fd-dialog-header-block-default: var(--fd-size-dialog-header-block-default);
     --fd-dialog-footer-block: var(--fd-border-none);
-    --fd-dialog-footer-block-default: 4.25rem;
+    --fd-dialog-footer-block-default: var(--fd-size-dialog-footer-block-default);
     --fd-dialog-body-scrollbar-offset: var(--fd-space-sm);
     --fd-dialog-body-padding-block: var(--fd-space-xxs);
     --fd-dialog-scrollbar-width: calc(var(--fd-space-xs) + var(--fd-space-micro));
     --fd-dialog-scrollbar-thumb-border-width: var(--fd-space-micro);
     --fd-dialog-close-button-size: var(--fd-size-control-sm);
-    --fd-image-preview-max-height: min(90vh, 980px);
-    --fd-image-preview-close-inset: 20px;
+    --fd-image-preview-max-height: var(--fd-size-image-preview-max-height);
+    --fd-image-preview-close-inset: var(--fd-size-image-preview-close-inset);
     --fd-image-preview-close-inset-mobile: var(--fd-space-sm);
     --fd-image-preview-close-size: var(--fd-size-control-lg);
     --fd-image-preview-close-size-mobile: var(--fd-size-control-touch);
     --fd-image-preview-close-icon-size: var(--fd-size-icon-xxl);
-    --fd-image-preview-max-width: min(100%, 1120px);
-    --fd-image-preview-image-max-height: min(72vh, 820px);
-    --fd-image-preview-image-max-height-mobile: min(68vh, 560px);
-    --fd-image-preview-caption-max-width: min(100%, 960px);
+    --fd-image-preview-max-width: var(--fd-size-image-preview-max-width);
+    --fd-image-preview-image-max-height: var(--fd-size-image-preview-image-max-height);
+    --fd-image-preview-image-max-height-mobile: var(--fd-size-image-preview-image-max-height-mobile);
+    --fd-image-preview-caption-max-width: var(--fd-size-image-preview-caption-max-width);
 
     --fd-button-outline-background-default: transparent;
     --fd-button-outline-background-hover: var(--fd-color-primary-50);

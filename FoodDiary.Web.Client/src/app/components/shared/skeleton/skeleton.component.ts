@@ -12,9 +12,14 @@ export type SkeletonVariant = 'text' | 'circle' | 'rect';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkeletonComponent {
+    private readonly defaultTextHeight = 'var(--fd-text-body-size)';
+    private readonly defaultRadius = 'var(--fd-radius-xs)';
+    private readonly defaultRectHeight = 'calc((var(--fd-size-control-xl) * 2) + var(--fd-space-xs))';
+    private readonly defaultRectRadius = 'var(--fd-radius-md)';
+
     public readonly width = input<string>('100%');
-    public readonly height = input<string>('16px');
-    public readonly borderRadius = input<string>('4px');
+    public readonly height = input<string>(this.defaultTextHeight);
+    public readonly borderRadius = input<string>(this.defaultRadius);
     public readonly variant = input<SkeletonVariant>('text');
 
     public readonly styles = computed(() => {
@@ -30,8 +35,8 @@ export class SkeletonComponent {
             case 'rect':
                 return {
                     width: this.width(),
-                    height: this.height() !== '16px' ? this.height() : '120px',
-                    'border-radius': this.borderRadius() !== '4px' ? this.borderRadius() : '8px',
+                    height: this.height() !== this.defaultTextHeight ? this.height() : this.defaultRectHeight,
+                    'border-radius': this.borderRadius() !== this.defaultRadius ? this.borderRadius() : this.defaultRectRadius,
                 };
             default:
                 return {

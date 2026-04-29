@@ -141,7 +141,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         position: relative;
         z-index: 2;
         min-width: 0;
-        --fd-card-hover-transform: translateY(-2px);
+        --fd-card-hover-transform: var(--fd-transform-card-hover);
         --fd-card-hover-shadow: var(--fd-shadow-lg);
     }
 

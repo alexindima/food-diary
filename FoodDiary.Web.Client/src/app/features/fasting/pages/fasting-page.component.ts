@@ -421,8 +421,8 @@ export class FastingPageComponent {
             FastingCheckInChartDialogComponent,
             {
                 size: 'lg',
-                width: 'min(1440px, calc(100vw - 40px))',
-                maxWidth: 'min(1440px, calc(100vw - 40px))',
+                width: 'var(--fd-size-dialog-chart-width)',
+                maxWidth: 'var(--fd-size-dialog-chart-width)',
                 panelClass: 'fd-ui-dialog-panel--chart',
                 data: {
                     title: this.translateService.instant('FASTING.CHECK_IN.CHART_TITLE'),
@@ -496,7 +496,7 @@ export class FastingPageComponent {
             case 'Skipped':
                 return 'var(--fd-color-sky-500)';
             case 'Postponed':
-                return '#a855f7';
+                return 'var(--fd-color-ai)';
             default:
                 return 'var(--fd-color-slate-400)';
         }

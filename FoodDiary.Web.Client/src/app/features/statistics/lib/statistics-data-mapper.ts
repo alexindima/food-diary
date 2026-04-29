@@ -376,7 +376,7 @@ export function buildSummarySparklineData(
             {
                 data: stats?.calories ?? [],
                 borderColor: CHART_COLORS.primaryLine,
-                backgroundColor: 'rgba(37, 99, 235, 0.15)',
+                backgroundColor: CHART_COLORS.primaryFill,
                 tension: 0.3,
                 borderWidth: 2,
                 fill: true,
