@@ -26,7 +26,7 @@
 
 .product-ai-dialog__status--loading {
     --fd-pill-color: var(--fd-color-primary-900);
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
+    --fd-pill-border: var(--fd-color-border-ai-loading-pill);
     box-shadow: var(--fd-shadow-accent);
 }
 
@@ -36,19 +36,11 @@
     border-radius: var(--fd-radius-dialog);
     overflow: hidden;
     pointer-events: none;
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent),
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
-    );
+    background: var(--fd-bg-ai-scan-overlay);
 }
 
 .product-ai-dialog__scan-overlay:has(.product-ai-dialog__scan-line--nutrition) {
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-green-500) 8%, transparent),
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
-    );
+    background: var(--fd-bg-ai-scan-overlay-nutrition);
 }
 
 .product-ai-dialog__scan-line {
@@ -57,34 +49,16 @@
     right: 16px;
     height: 7px;
     border-radius: var(--fd-radius-pill);
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
-        var(--fd-color-blue-500),
-        color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-dialog-surface)),
-        var(--fd-color-blue-500),
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
-    );
-    box-shadow:
-        0 0 22px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
-        0 0 40px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-dialog-surface));
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-blue-500) 90%, var(--fd-color-dialog-surface)));
+    background: var(--fd-bg-ai-dialog-scan-line);
+    box-shadow: var(--fd-shadow-ai-dialog-scan-line);
+    filter: var(--fd-shadow-filter-ai-dialog-scan-line);
     animation: product-ai-scan 4s ease-in-out infinite;
 }
 
 .product-ai-dialog__scan-line--nutrition {
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
-        var(--fd-color-green-500),
-        color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-dialog-surface)),
-        var(--fd-color-green-500),
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
-    );
-    box-shadow:
-        0 0 22px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
-        0 0 40px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-dialog-surface));
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-green-500) 90%, var(--fd-color-dialog-surface)));
+    background: var(--fd-bg-ai-dialog-scan-line-nutrition);
+    box-shadow: var(--fd-shadow-ai-dialog-scan-line-nutrition);
+    filter: var(--fd-shadow-filter-ai-dialog-scan-line-nutrition);
 }
 
 @keyframes product-ai-scan {

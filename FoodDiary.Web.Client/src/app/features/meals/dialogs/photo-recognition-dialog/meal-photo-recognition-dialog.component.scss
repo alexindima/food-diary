@@ -5,7 +5,7 @@
     --photo-ai-field-radius: var(--fd-radius-input);
     --photo-ai-surface: var(--fd-color-surface-raised);
     --photo-ai-surface-muted: var(--fd-color-surface);
-    --photo-ai-border: color-mix(in srgb, var(--fd-color-border-strong) 64%, transparent);
+    --photo-ai-border: var(--fd-color-border-photo-ai);
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-lg);
@@ -30,7 +30,7 @@
 
 .photo-ai-dialog__status--loading {
     --fd-pill-color: var(--fd-color-primary-900);
-    --fd-pill-border: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
+    --fd-pill-border: var(--fd-color-border-ai-loading-pill);
     box-shadow: var(--fd-shadow-accent);
 }
 
@@ -40,11 +40,11 @@
     border-radius: var(--fd-radius-dialog);
     overflow: hidden;
     pointer-events: none;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent), color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent));
+    background: var(--fd-bg-ai-scan-overlay);
 }
 
 .photo-ai-dialog__scan-overlay:has(.photo-ai-dialog__scan-line--nutrition) {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--fd-color-green-500) 8%, transparent), color-mix(in srgb, var(--fd-color-green-500) 0%, transparent));
+    background: var(--fd-bg-ai-scan-overlay-nutrition);
 }
 
 .photo-ai-dialog__scan-line {
@@ -53,34 +53,16 @@
     right: 16px;
     height: 7px;
     border-radius: var(--fd-radius-pill);
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
-        var(--fd-color-blue-500),
-        color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-dialog-surface)),
-        var(--fd-color-blue-500),
-        color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
-    );
-    box-shadow:
-        0 0 22px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
-        0 0 40px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-dialog-surface));
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-blue-500) 90%, var(--fd-color-dialog-surface)));
+    background: var(--fd-bg-ai-dialog-scan-line);
+    box-shadow: var(--fd-shadow-ai-dialog-scan-line);
+    filter: var(--fd-shadow-filter-ai-dialog-scan-line);
     animation: photo-ai-scan 4s ease-in-out infinite;
 }
 
 .photo-ai-dialog__scan-line--nutrition {
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
-        var(--fd-color-green-500),
-        color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-dialog-surface)),
-        var(--fd-color-green-500),
-        color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
-    );
-    box-shadow:
-        0 0 22px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
-        0 0 40px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-dialog-surface));
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-green-500) 90%, var(--fd-color-dialog-surface)));
+    background: var(--fd-bg-ai-dialog-scan-line-nutrition);
+    box-shadow: var(--fd-shadow-ai-dialog-scan-line-nutrition);
+    filter: var(--fd-shadow-filter-ai-dialog-scan-line-nutrition);
 }
 
 @keyframes photo-ai-scan {
@@ -194,7 +176,7 @@
     --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 1.125rem;
+    --fd-button-icon-size: var(--fd-size-icon-md);
 }
 
 .photo-ai-dialog__edit-add {
@@ -240,7 +222,7 @@
     --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
-    --fd-button-icon-size: 1.125rem;
+    --fd-button-icon-size: var(--fd-size-icon-md);
 }
 
 .photo-ai-dialog__table {
@@ -326,7 +308,7 @@
     padding: var(--fd-space-sm) var(--fd-space-md);
     border-radius: var(--fd-radius-input);
     border: var(--fd-border-dashed);
-    background: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-dialog));
+    background: var(--fd-bg-nutrition-loading);
     display: flex;
     align-items: center;
     gap: var(--fd-space-sm);
@@ -337,7 +319,7 @@
     width: 160px;
     height: 6px;
     border-radius: var(--fd-radius-pill);
-    background: color-mix(in srgb, var(--fd-color-blue-500) 15%, transparent);
+    background: var(--fd-bg-nutrition-loading-track);
     overflow: hidden;
 }
 
@@ -349,12 +331,7 @@
     width: 45%;
     height: 100%;
     border-radius: var(--fd-radius-pill);
-    background: linear-gradient(
-        90deg,
-        transparent,
-        color-mix(in srgb, var(--fd-color-blue-500) 85%, transparent),
-        transparent
-    );
+    background: var(--fd-bg-nutrition-loading-bar);
     animation: nutrition-progress 1.8s ease-in-out infinite;
 }
 

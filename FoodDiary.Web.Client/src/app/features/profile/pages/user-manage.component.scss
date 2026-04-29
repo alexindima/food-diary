@@ -48,59 +48,31 @@
         width: 38px;
         height: 38px;
         border-radius: var(--fd-radius-button);
-        background: linear-gradient(
-            145deg,
-            color-mix(in srgb, var(--fd-color-primary-100) 70%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-primary-50) 82%, var(--fd-color-white))
-        );
+        background: var(--fd-bg-profile-section-icon);
         box-shadow: var(--fd-shadow-divider-light);
 
         &--account {
-            background: linear-gradient(
-                145deg,
-                color-mix(in srgb, var(--fd-color-primary-100) 82%, var(--fd-color-white)),
-                color-mix(in srgb, var(--fd-color-sky-500) 12%, var(--fd-color-white))
-            );
+            background: var(--fd-bg-profile-section-icon-account);
         }
 
         &--personal {
-            background: linear-gradient(
-                145deg,
-                color-mix(in srgb, var(--fd-color-purple-500) 16%, var(--fd-color-white)),
-                color-mix(in srgb, var(--fd-color-purple-500) 8%, var(--fd-color-white))
-            );
+            background: var(--fd-bg-profile-section-icon-personal);
         }
 
         &--body {
-            background: linear-gradient(
-                145deg,
-                color-mix(in srgb, var(--fd-color-emerald-500) 18%, var(--fd-color-white)),
-                color-mix(in srgb, var(--fd-color-emerald-500) 8%, var(--fd-color-white))
-            );
+            background: var(--fd-bg-profile-section-icon-body);
         }
 
         &--notifications {
-            background: linear-gradient(
-                145deg,
-                color-mix(in srgb, var(--fd-color-primary-500) 18%, var(--fd-color-surface-raised)),
-                color-mix(in srgb, var(--fd-color-primary-400) 8%, var(--fd-color-surface-raised))
-            );
+            background: var(--fd-bg-profile-section-icon-notifications);
         }
 
         &--billing {
-            background: linear-gradient(
-                145deg,
-                color-mix(in srgb, var(--fd-color-emerald-500) 16%, var(--fd-color-white)),
-                color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-white))
-            );
+            background: var(--fd-bg-profile-section-icon-billing);
         }
 
         &--dietologist {
-            background: linear-gradient(
-                145deg,
-                var(--fd-color-yellow-300),
-                color-mix(in srgb, var(--fd-color-yellow-300) 34%, var(--fd-color-white))
-            );
+            background: var(--fd-bg-profile-section-icon-dietologist);
         }
     }
 

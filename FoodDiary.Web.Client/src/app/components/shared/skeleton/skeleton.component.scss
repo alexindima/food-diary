@@ -1,10 +1,5 @@
 .fd-skeleton {
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--fd-color-surface) 78%, var(--fd-color-text-muted) 22%) 0%,
-        color-mix(in srgb, var(--fd-color-surface-raised) 86%, var(--fd-color-text) 14%) 50%,
-        color-mix(in srgb, var(--fd-color-surface) 78%, var(--fd-color-text-muted) 22%) 100%
-    );
+    background: var(--fd-bg-skeleton-shimmer);
     background-size: 200% 100%;
     animation: fd-skeleton-shimmer 1.6s ease-in-out infinite;
 }

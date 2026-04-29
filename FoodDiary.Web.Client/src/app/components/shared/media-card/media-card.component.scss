@@ -57,11 +57,7 @@
     padding: 0 var(--fd-space-lg) 0 0;
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-card);
-    background: linear-gradient(
-        180deg,
-        var(--fd-color-surface-raised) 0%,
-        color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-surface-raised)) 100%
-    );
+    background: var(--fd-bg-media-card-raised);
     box-shadow: var(--fd-shadow-lg);
 
     &:hover {

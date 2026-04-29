@@ -280,7 +280,7 @@
     }
 
     &__satiety-card {
-        --satiety-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
+        --satiety-gradient: var(--fd-bg-satiety-card-gradient);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-md);
@@ -289,11 +289,7 @@
         gap: var(--fd-space-md);
         text-align: left;
         cursor: pointer;
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
-            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
-        );
+        background: var(--fd-bg-card-editor-surface-gradient);
         box-shadow: var(--fd-shadow-sm);
         position: relative;
         overflow: hidden;
@@ -326,7 +322,7 @@
         width: var(--fd-size-control-touch);
         height: var(--fd-size-control-touch);
         border-radius: 50%;
-        background: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, var(--fd-bg-surface-raised) 12%);
+        background: var(--fd-bg-surface-raised);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -383,11 +379,7 @@
         padding: var(--fd-space-md);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-panel);
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
-            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
-        );
+        background: var(--fd-bg-card-editor-surface-gradient);
         box-shadow: var(--fd-shadow-lg);
     }
 
@@ -480,7 +472,7 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1.125rem;
+        --fd-button-icon-size: var(--fd-size-icon-md);
     }
 
     &__ai-summary-action--danger {
@@ -500,7 +492,7 @@
         height: var(--fd-size-control-xxl);
         flex: 0 0 64px;
         border-radius: var(--fd-radius-card);
-        background: color-mix(in srgb, var(--fd-color-slate-400) 12%, transparent);
+        background: var(--fd-bg-muted-tint-subtle);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -635,7 +627,7 @@
     color: var(--fd-color-text-muted);
     padding: 0 var(--fd-space-sm);
     border-radius: var(--fd-radius-badge);
-    background-color: color-mix(in srgb, var(--fd-color-text-muted) 10%, transparent);
+    background-color: var(--fd-bg-text-muted-tint);
 }
 
 .consumption-item__fields {

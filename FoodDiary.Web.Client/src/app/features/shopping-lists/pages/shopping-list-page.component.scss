@@ -70,11 +70,7 @@
         grid-template-columns: minmax(200px, 1.4fr) 110px 140px minmax(160px, 1fr) auto;
         gap: var(--fd-space-sm);
         align-items: end;
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50) 8%),
-            color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
-        );
+        background: var(--fd-bg-skeleton-card);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-panel);
         padding: var(--fd-space-md);
@@ -99,11 +95,7 @@
         align-items: center;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-50) 6%),
-            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-100) 4%)
-        );
+        background: var(--fd-bg-surface-primary-soft);
         border: var(--fd-border-default);
         box-shadow: var(--fd-shadow-sm);
 
@@ -141,7 +133,7 @@
         --fd-button-height-explicit: 32px;
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-pill);
-        --fd-button-background: color-mix(in srgb, var(--fd-color-slate-900) 6%, transparent);
+        --fd-button-background: var(--fd-color-border-dark-faint);
         --fd-button-background-hover: var(--fd-bg-danger-soft);
         --fd-button-background-active: var(--fd-bg-status-danger);
         --fd-button-border-color: transparent;
@@ -155,7 +147,7 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1.125rem;
+        --fd-button-icon-size: var(--fd-size-icon-md);
     }
 
     &__empty,
@@ -171,11 +163,7 @@
     &__empty-state {
         border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent),
-            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-50) 4%)
-        );
+        background: var(--fd-bg-empty-state-surface);
         padding: var(--fd-space-xl) var(--fd-space-lg);
     }
 

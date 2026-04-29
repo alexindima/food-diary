@@ -76,10 +76,10 @@
     --fd-button-secondary-text-border-hover: transparent;
     --fd-button-secondary-text-border-active: transparent;
     --fd-button-secondary-text-border-disabled: transparent;
-    --fd-button-secondary-text-text-default: color-mix(in srgb, var(--fd-color-slate-400) 95%, transparent);
+    --fd-button-secondary-text-text-default: var(--fd-color-favorite-muted);
     --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
     --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
-    --fd-button-secondary-text-text-disabled: color-mix(in srgb, var(--fd-color-slate-400) 95%, transparent);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-favorite-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -113,13 +113,13 @@
 }
 
 .entity-card__title-muted {
-    color: color-mix(in srgb, var(--fd-color-slate-400) 90%, transparent);
+    color: var(--fd-color-text-muted-subtle);
     white-space: nowrap;
     flex-shrink: 0;
 }
 
 .entity-card__description {
-    color: color-mix(in srgb, var(--fd-color-slate-400) 90%, transparent);
+    color: var(--fd-color-text-muted-subtle);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -138,7 +138,7 @@
 }
 
 .entity-card__quality-label {
-    color: color-mix(in srgb, var(--fd-color-slate-500) 92%, transparent);
+    color: var(--fd-color-text-muted-emphasis);
     white-space: nowrap;
 }
 
@@ -157,27 +157,15 @@
     transition: width 0.2s ease;
 
     &--green {
-        background: linear-gradient(
-            90deg,
-            color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-color-white))
-        );
+        background: var(--fd-bg-quality-good-light);
     }
 
     &--yellow {
-        background: linear-gradient(
-            90deg,
-            color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300))
-        );
+        background: var(--fd-bg-quality-warning-light);
     }
 
     &--red {
-        background: linear-gradient(
-            90deg,
-            color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-color-white)),
-            color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-color-white))
-        );
+        background: var(--fd-bg-quality-danger-light);
     }
 }
 
@@ -221,12 +209,7 @@
         height: calc(100% - 2px);
         transform: translateY(-50%);
         border-radius: var(--fd-radius-pill);
-        background: linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent),
-            color-mix(in srgb, var(--fd-color-slate-400) 50%, transparent),
-            color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent)
-        );
+        background: var(--fd-bg-action-divider-vertical);
         pointer-events: none;
     }
 }
@@ -262,7 +245,7 @@
 @container (max-width: 760px) {
 
     .entity-card__thumb {
-        background: color-mix(in srgb, var(--fd-color-primary-100) 45%, var(--fd-bg-surface-raised));
+        background: var(--fd-bg-brand-surface-soft);
     }
 
     .entity-card__content {

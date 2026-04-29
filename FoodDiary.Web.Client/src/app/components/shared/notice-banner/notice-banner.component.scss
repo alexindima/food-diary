@@ -2,7 +2,7 @@
 
 .fd-notice {
     --fd-notice-message: var(--fd-color-text-muted);
-    --fd-notice-icon-bg: color-mix(in srgb, var(--fd-color-primary-500) 82%, var(--fd-color-primary-600));
+    --fd-notice-icon-bg: var(--fd-bg-notice-icon);
     --fd-notice-icon-fg: var(--fd-color-white);
     --fd-notice-action: var(--fd-color-primary-500);
     display: flex;
@@ -69,7 +69,7 @@
     --fd-button-secondary-text-text-default: var(--fd-notice-action);
     --fd-button-secondary-text-text-hover: var(--fd-notice-action);
     --fd-button-secondary-text-text-active: var(--fd-notice-action);
-    --fd-button-secondary-text-text-disabled: color-mix(in srgb, var(--fd-notice-action) 70%, transparent);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-notice-action-disabled);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-shadow-active: var(--fd-shadow-none);
@@ -86,15 +86,15 @@
 }
 
 .fd-ui-notice-surface--warning.fd-notice {
-    --fd-notice-message: color-mix(in srgb, var(--fd-color-amber-400) 48%, var(--fd-color-text-muted));
+    --fd-notice-message: var(--fd-color-notice-warning-message);
     --fd-notice-icon-bg: var(--fd-color-amber-500);
-    --fd-notice-action: color-mix(in srgb, var(--fd-color-amber-400) 72%, var(--fd-color-text));
+    --fd-notice-action: var(--fd-color-notice-warning-action);
 }
 
 .fd-ui-notice-surface--danger.fd-notice {
-    --fd-notice-message: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-color-text-muted));
+    --fd-notice-message: var(--fd-color-notice-danger-message);
     --fd-notice-icon-bg: var(--fd-color-danger);
-    --fd-notice-action: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-text));
+    --fd-notice-action: var(--fd-color-notice-danger-action);
 }
 
 @media #{variables.$media-compact} {

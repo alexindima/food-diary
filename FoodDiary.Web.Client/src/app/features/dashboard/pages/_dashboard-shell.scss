@@ -160,7 +160,7 @@
         --fd-button-shadow-active: var(--fd-shadow-none);
         --fd-button-transform-hover: none;
         --fd-button-transform-active: none;
-        --fd-button-icon-size: 1.125rem;
+        --fd-button-icon-size: var(--fd-size-icon-md);
     }
 
     &__edit-hint {

@@ -13,13 +13,7 @@
 }
 
 .premium-access-page__card--overview {
-    background:
-        radial-gradient(circle at top right, color-mix(in srgb, var(--fd-gradient-premium-end) 18%, transparent), transparent 52%),
-        linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--fd-gradient-premium-start) 10%, var(--fd-color-surface)) 0%,
-            color-mix(in srgb, var(--fd-gradient-premium-end) 7%, var(--fd-color-surface)) 100%
-        );
+    background: var(--fd-bg-premium-page-overview);
 }
 
 .premium-access-page__section-header {
@@ -82,13 +76,8 @@
 }
 
 .premium-access-page__plan--featured {
-    border-color: color-mix(in srgb, var(--fd-gradient-premium-end) 30%, var(--fd-color-border));
-    background:
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-gradient-premium-start) 8%, var(--fd-color-surface-elevated)) 0%,
-            color-mix(in srgb, var(--fd-gradient-premium-end) 8%, var(--fd-color-surface-elevated)) 100%
-        );
+    border-color: var(--fd-color-border-premium-featured);
+    background: var(--fd-bg-premium-plan-featured);
 }
 
 .premium-access-page__plan-copy {

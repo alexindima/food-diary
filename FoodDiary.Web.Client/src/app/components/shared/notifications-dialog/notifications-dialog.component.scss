@@ -44,10 +44,7 @@
     padding: var(--fd-space-inline-alert-notice-padding);
     border-radius: var(--fd-radius-card);
     border: var(--fd-border-width) solid transparent;
-    background:
-        radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-400) 10%, transparent), transparent 52%),
-        radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 44%),
-        var(--fd-color-surface-raised);
+    background: var(--fd-bg-notification-default);
     box-shadow: var(--fd-shadow-ring-inset-brand);
     color: var(--fd-color-text);
     text-align: left;
@@ -59,9 +56,7 @@
 
         &:hover {
             transform: translateY(-1px);
-            box-shadow:
-                var(--fd-shadow-lg),
-                var(--fd-shadow-ring-inset-primary-strong);
+            box-shadow: var(--fd-shadow-notification-hover);
         }
 
     &.is-read {
@@ -74,36 +69,20 @@
     }
 
     &--dietologist {
-        background:
-            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-sky-500) 14%, transparent), transparent 45%),
-            linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--fd-color-teal-500) 8%, var(--fd-color-surface-raised)),
-                var(--fd-color-surface-raised)
-            );
+        background: var(--fd-bg-notification-dietologist);
         box-shadow: var(--fd-shadow-ring-inset-teal);
 
         &:hover {
-            box-shadow:
-                var(--fd-shadow-lg),
-                inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-teal-700) 28%, transparent);
+            box-shadow: var(--fd-shadow-notification-dietologist-hover);
         }
     }
 
     &--security {
-        background:
-            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-amber-400) 16%, transparent), transparent 48%),
-            linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--fd-color-amber-500) 10%, var(--fd-color-surface-raised)),
-                var(--fd-color-surface-raised)
-            );
+        background: var(--fd-bg-notification-security);
         box-shadow: var(--fd-shadow-ring-inset-amber);
 
         &:hover {
-            box-shadow:
-                var(--fd-shadow-lg),
-                inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-amber-700) 28%, transparent);
+            box-shadow: var(--fd-shadow-notification-security-hover);
         }
     }
 }
@@ -178,21 +157,13 @@
     }
 
     &--dietologist {
-        background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--fd-color-teal-500) 18%, transparent),
-            color-mix(in srgb, var(--fd-color-sky-500) 8%, transparent)
-        );
+        background: var(--fd-bg-notification-icon-dietologist);
         color: var(--fd-color-teal-700);
     }
 
     &--security {
-        background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--fd-color-amber-500) 20%, transparent),
-            color-mix(in srgb, var(--fd-color-orange-500) 10%, transparent)
-        );
-        color: var(--fd-color-amber-800);
+        background: var(--fd-bg-notification-icon-security);
+        color: var(--fd-palette-warning-800);
     }
 }
 

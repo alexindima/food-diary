@@ -1041,7 +1041,15 @@ $fd-theme-design-tokens: (
         --fd-bg-scrim: color-mix(in srgb, var(--fd-color-slate-900) 50%, transparent);
         --fd-bg-scrim-strong: color-mix(in srgb, var(--fd-color-slate-900) 85%, transparent);
         --fd-bg-muted-tint: color-mix(in srgb, var(--fd-color-slate-400) 15%, transparent);
+        --fd-bg-muted-tint-subtle: color-mix(in srgb, var(--fd-color-slate-400) 12%, transparent);
         --fd-bg-muted-tint-strong: color-mix(in srgb, var(--fd-color-slate-400) 18%, transparent);
+        --fd-bg-text-muted-tint: color-mix(in srgb, var(--fd-color-text-muted) 10%, transparent);
+        --fd-bg-action-divider-vertical: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent),
+            color-mix(in srgb, var(--fd-color-slate-400) 50%, transparent),
+            color-mix(in srgb, var(--fd-color-slate-400) 0%, transparent)
+        );
         --fd-bg-primary: var(--fd-color-primary-600);
         --fd-bg-danger: var(--fd-color-danger);
         --fd-bg-brand: linear-gradient(135deg, var(--fd-gradient-brand-start), var(--fd-gradient-brand-end));
@@ -1055,6 +1063,53 @@ $fd-theme-design-tokens: (
         --fd-bg-brand-soft-blend: color-mix(in srgb, var(--fd-bg-brand-soft) 58%, var(--fd-bg-surface-raised));
         --fd-bg-sidebar: linear-gradient(180deg, var(--fd-gradient-sidebar-start) 0%, var(--fd-gradient-sidebar-end) 100%);
         --fd-bg-premium: linear-gradient(135deg, var(--fd-gradient-premium-start), var(--fd-gradient-premium-end));
+        --fd-bg-premium-page-overview:
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-gradient-premium-end) 18%, transparent), transparent 52%),
+            linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--fd-gradient-premium-start) 10%, var(--fd-color-surface)) 0%,
+                color-mix(in srgb, var(--fd-gradient-premium-end) 7%, var(--fd-color-surface)) 100%
+            );
+        --fd-bg-premium-plan-featured: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-gradient-premium-start) 8%, var(--fd-color-surface-elevated)) 0%,
+            color-mix(in srgb, var(--fd-gradient-premium-end) 8%, var(--fd-color-surface-elevated)) 100%
+        );
+        --fd-bg-profile-section-icon: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 70%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-50) 82%, var(--fd-color-white))
+        );
+        --fd-bg-profile-section-icon-account: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--fd-color-primary-100) 82%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-sky-500) 12%, var(--fd-color-white))
+        );
+        --fd-bg-profile-section-icon-personal: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--fd-color-purple-500) 16%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-purple-500) 8%, var(--fd-color-white))
+        );
+        --fd-bg-profile-section-icon-body: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--fd-color-emerald-500) 18%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-emerald-500) 8%, var(--fd-color-white))
+        );
+        --fd-bg-profile-section-icon-notifications: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--fd-color-primary-500) 18%, var(--fd-color-surface-raised)),
+            color-mix(in srgb, var(--fd-color-primary-400) 8%, var(--fd-color-surface-raised))
+        );
+        --fd-bg-profile-section-icon-billing: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--fd-color-emerald-500) 16%, var(--fd-color-white)),
+            color-mix(in srgb, var(--fd-color-primary-500) 10%, var(--fd-color-white))
+        );
+        --fd-bg-profile-section-icon-dietologist: linear-gradient(
+            145deg,
+            var(--fd-color-yellow-300),
+            color-mix(in srgb, var(--fd-color-yellow-300) 34%, var(--fd-color-white))
+        );
         --fd-bg-accent-soft: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
         --fd-bg-accent-medium: color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
         --fd-bg-success-soft: color-mix(in srgb, var(--fd-color-success) 14%, var(--fd-bg-surface-raised));
@@ -1093,8 +1148,43 @@ $fd-theme-design-tokens: (
             var(--fd-color-green-500),
             color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
         );
+        --fd-bg-ai-dialog-scan-line: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
+            var(--fd-color-blue-500),
+            color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-dialog-surface)),
+            var(--fd-color-blue-500),
+            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
+        );
+        --fd-bg-ai-dialog-scan-line-nutrition: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
+            var(--fd-color-green-500),
+            color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-dialog-surface)),
+            var(--fd-color-green-500),
+            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
+        );
+        --fd-bg-ai-button-surface: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-bg-surface));
+        --fd-bg-ai-button-surface-hover: color-mix(in srgb, var(--fd-color-ai) 18%, var(--fd-bg-surface));
+        --fd-bg-ai-button-surface-active: color-mix(in srgb, var(--fd-color-ai) 22%, var(--fd-bg-surface));
+        --fd-bg-danger-button-surface: color-mix(in srgb, var(--fd-color-danger) 22%, var(--fd-bg-surface));
+        --fd-bg-danger-button-surface-hover: color-mix(in srgb, var(--fd-color-danger) 32%, var(--fd-bg-surface));
+        --fd-bg-danger-button-surface-active: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-bg-surface));
         --fd-bg-satiety-card-gradient: linear-gradient(135deg, color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)), var(--fd-color-slate-400));
+        --fd-bg-card-editor-surface-gradient: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-white) 4%),
+            color-mix(in srgb, var(--fd-color-surface) 92%, var(--fd-color-slate-900) 8%)
+        );
         --fd-bg-progress-track-strong: color-mix(in srgb, var(--fd-color-border-strong) 72%, var(--fd-bg-surface-raised));
+        --fd-bg-nutrition-loading: color-mix(in srgb, var(--fd-bg-brand-soft) 35%, var(--fd-bg-dialog));
+        --fd-bg-nutrition-loading-track: color-mix(in srgb, var(--fd-color-blue-500) 15%, transparent);
+        --fd-bg-nutrition-loading-bar: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--fd-color-blue-500) 85%, transparent),
+            transparent
+        );
         --fd-bg-list-empty: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent),
@@ -1103,6 +1193,80 @@ $fd-theme-design-tokens: (
         --fd-bg-quality-good: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-bg-surface-raised)));
         --fd-bg-quality-warning: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300)));
         --fd-bg-quality-danger: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-bg-surface-raised)), color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-bg-surface-raised)));
+        --fd-bg-quality-good-light: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-emerald-500) 55%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-emerald-700) 78%, var(--fd-color-white)));
+        --fd-bg-quality-warning-light: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-yellow-300) 82%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-orange-500) 68%, var(--fd-color-yellow-300)));
+        --fd-bg-quality-danger-light: linear-gradient(90deg, color-mix(in srgb, var(--fd-color-danger) 55%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-red-700) 78%, var(--fd-color-white)));
+        --fd-bg-skeleton-shimmer: linear-gradient(
+            90deg,
+            color-mix(in srgb, var(--fd-color-surface) 78%, var(--fd-color-text-muted) 22%) 0%,
+            color-mix(in srgb, var(--fd-color-surface-raised) 86%, var(--fd-color-text) 14%) 50%,
+            color-mix(in srgb, var(--fd-color-surface) 78%, var(--fd-color-text-muted) 22%) 100%
+        );
+        --fd-bg-skeleton-card: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-color-primary-50) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 94%, var(--fd-color-primary-100) 6%)
+        );
+        --fd-bg-surface-primary-soft: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-50) 6%),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-100) 4%)
+        );
+        --fd-bg-empty-state-surface: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, transparent),
+            color-mix(in srgb, var(--fd-color-surface) 96%, var(--fd-color-primary-50) 4%)
+        );
+        --fd-bg-media-card-raised: linear-gradient(
+            180deg,
+            var(--fd-color-surface-raised) 0%,
+            color-mix(in srgb, var(--fd-color-primary-50) 35%, var(--fd-color-surface-raised)) 100%
+        );
+        --fd-bg-stat-tile: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 94%, transparent),
+            var(--fd-color-surface)
+        );
+        --fd-bg-stat-tile-featured: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 94%, var(--fd-color-primary-50) 6%),
+            color-mix(in srgb, var(--fd-color-surface) 97%, transparent)
+        );
+        --fd-bg-stat-tile-accent: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-surface-raised) 92%, var(--fd-accent-color) 8%),
+            color-mix(in srgb, var(--fd-color-surface) 96%, transparent)
+        );
+        --fd-bg-stat-tile-subtle: color-mix(in srgb, var(--fd-bg-surface-raised) 78%, transparent);
+        --fd-bg-notification-default:
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-primary-400) 10%, transparent), transparent 52%),
+            radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-primary-300) 8%, transparent), transparent 44%),
+            var(--fd-color-surface-raised);
+        --fd-bg-notification-dietologist:
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-color-sky-500) 14%, transparent), transparent 45%),
+            linear-gradient(
+                180deg,
+                color-mix(in srgb, var(--fd-color-teal-500) 8%, var(--fd-color-surface-raised)),
+                var(--fd-color-surface-raised)
+            );
+        --fd-bg-notification-security:
+            radial-gradient(circle at top right, color-mix(in srgb, var(--fd-palette-warning-400) 16%, transparent), transparent 48%),
+            linear-gradient(
+                180deg,
+                color-mix(in srgb, var(--fd-color-amber-500) 10%, var(--fd-color-surface-raised)),
+                var(--fd-color-surface-raised)
+            );
+        --fd-bg-notification-icon-dietologist: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--fd-color-teal-500) 18%, transparent),
+            color-mix(in srgb, var(--fd-color-sky-500) 8%, transparent)
+        );
+        --fd-bg-notification-icon-security: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--fd-color-amber-500) 20%, transparent),
+            color-mix(in srgb, var(--fd-color-orange-500) 10%, transparent)
+        );
+        --fd-bg-notice-icon: color-mix(in srgb, var(--fd-color-primary-500) 82%, var(--fd-color-primary-600));
         --fd-bg-status-muted: color-mix(in srgb, var(--fd-bg-surface) 88%, transparent);
         --fd-bg-status-info: color-mix(in srgb, var(--fd-color-primary-500) 12%, var(--fd-bg-surface));
         --fd-bg-status-success: color-mix(in srgb, var(--fd-color-emerald-500) 14%, var(--fd-bg-surface));
@@ -1347,6 +1511,23 @@ $fd-theme-design-tokens: (
         --fd-shadow-ai-scan-line-nutrition:
             0 0 16px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
             0 0 30px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
+        --fd-shadow-ai-dialog-scan-line:
+            0 0 22px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
+            0 0 40px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-dialog-surface));
+        --fd-shadow-ai-dialog-scan-line-nutrition:
+            0 0 22px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
+            0 0 40px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-dialog-surface));
+        --fd-shadow-filter-ai-dialog-scan-line: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-blue-500) 90%, var(--fd-color-dialog-surface)));
+        --fd-shadow-filter-ai-dialog-scan-line-nutrition: drop-shadow(0 0 8px color-mix(in srgb, var(--fd-color-green-500) 90%, var(--fd-color-dialog-surface)));
+        --fd-shadow-notification-hover:
+            var(--fd-shadow-lg),
+            var(--fd-shadow-ring-inset-primary-strong);
+        --fd-shadow-notification-dietologist-hover:
+            var(--fd-shadow-lg),
+            inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-color-teal-700) 28%, transparent);
+        --fd-shadow-notification-security-hover:
+            var(--fd-shadow-lg),
+            inset 0 0 0 var(--fd-border-width) color-mix(in srgb, var(--fd-palette-warning-700) 28%, transparent);
         --fd-landing-shadow-soft: 0 16px 36px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent);
         --fd-landing-shadow-medium: 0 22px 48px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
         --fd-landing-shadow-strong: 0 28px 60px color-mix(in srgb, var(--fd-color-slate-900) 18%, transparent);
@@ -1374,6 +1555,7 @@ $fd-theme-design-tokens: (
         --fd-color-border-status-warning: color-mix(in srgb, var(--fd-color-yellow-300) 32%, var(--fd-color-border));
         --fd-color-border-status-danger: color-mix(in srgb, var(--fd-color-danger) 28%, var(--fd-color-border));
         --fd-color-border-status-premium: color-mix(in srgb, var(--fd-gradient-premium-start) 30%, var(--fd-color-border));
+        --fd-color-border-premium-featured: color-mix(in srgb, var(--fd-gradient-premium-end) 30%, var(--fd-color-border));
         --fd-color-border-control-auth: color-mix(in srgb, var(--fd-color-slate-300) 72%, var(--fd-color-white));
         --fd-color-border-control-auth-hover: color-mix(in srgb, var(--fd-color-slate-400) 55%, var(--fd-color-white));
         --fd-color-border-control-radio: color-mix(in srgb, var(--fd-color-slate-400) 60%, transparent);
@@ -1400,6 +1582,14 @@ $fd-theme-design-tokens: (
         --fd-color-border-emoji-picker-option-selected: color-mix(in srgb, var(--fd-color-primary-500) 68%, transparent);
         --fd-color-border-brand-surface: color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white));
         --fd-color-border-summary-track: color-mix(in srgb, var(--fd-color-border-strong) 68%, var(--fd-color-surface-raised));
+        --fd-color-border-photo-ai: color-mix(in srgb, var(--fd-color-border-strong) 64%, transparent);
+        --fd-color-border-ai-loading-pill: color-mix(in srgb, var(--fd-color-blue-500) 45%, transparent);
+        --fd-color-border-ai-button: color-mix(in srgb, var(--fd-color-ai-strong) 26%, var(--fd-color-border));
+        --fd-color-border-ai-button-hover: color-mix(in srgb, var(--fd-color-ai-strong) 42%, var(--fd-color-border));
+        --fd-color-border-ai-button-active: color-mix(in srgb, var(--fd-color-ai-strong) 50%, var(--fd-color-border));
+        --fd-color-border-danger-button: color-mix(in srgb, var(--fd-color-danger) 40%, var(--fd-color-border));
+        --fd-color-border-danger-button-hover: color-mix(in srgb, var(--fd-color-danger) 58%, var(--fd-color-border));
+        --fd-color-border-danger-button-active: color-mix(in srgb, var(--fd-color-danger) 64%, var(--fd-color-border));
         --fd-landing-border-soft: color-mix(in srgb, var(--fd-color-border) 78%, transparent);
         --fd-landing-border-strong: color-mix(in srgb, var(--fd-color-border-strong) 36%, transparent);
         --fd-landing-dark-border: color-mix(in srgb, var(--fd-color-white) 10%, transparent);
@@ -1434,11 +1624,19 @@ $fd-theme-design-tokens: (
         --fd-color-dialog-scrollbar-track: color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent);
         --fd-color-danger-on-light: color-mix(in srgb, var(--fd-color-danger) 70%, var(--fd-color-white));
         --fd-color-text-muted-soft: color-mix(in srgb, var(--fd-color-text-muted) 80%, transparent);
+        --fd-color-text-muted-subtle: color-mix(in srgb, var(--fd-color-slate-400) 90%, transparent);
+        --fd-color-text-muted-emphasis: color-mix(in srgb, var(--fd-color-slate-500) 92%, transparent);
+        --fd-color-favorite-muted: color-mix(in srgb, var(--fd-color-slate-400) 95%, transparent);
         --fd-color-landing-dark-text-muted: color-mix(in srgb, var(--fd-color-slate-200) 86%, transparent);
         --fd-color-landing-dark-text-soft: color-mix(in srgb, var(--fd-color-slate-100) 94%, transparent);
         --fd-color-landing-dark-overline: color-mix(in srgb, var(--fd-color-slate-200) 78%, transparent);
         --fd-color-landing-dark-description: color-mix(in srgb, var(--fd-color-white) 96%, var(--fd-color-teal-500));
         --fd-color-landing-dark-note: color-mix(in srgb, var(--fd-color-white) 95%, var(--fd-color-teal-500));
+        --fd-color-notice-action-disabled: color-mix(in srgb, var(--fd-notice-action) 70%, transparent);
+        --fd-color-notice-warning-message: color-mix(in srgb, var(--fd-palette-warning-400) 48%, var(--fd-color-text-muted));
+        --fd-color-notice-warning-action: color-mix(in srgb, var(--fd-palette-warning-400) 72%, var(--fd-color-text));
+        --fd-color-notice-danger-message: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-color-text-muted));
+        --fd-color-notice-danger-action: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-text));
 
         --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
         --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};
