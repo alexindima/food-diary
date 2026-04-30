@@ -6,24 +6,17 @@
     position: relative;
     margin-top: calc(var(--fd-features-hero-overlap) * -1);
     padding: calc(var(--fd-landing-section-space) + var(--fd-features-hero-overlap)) 0 var(--fd-landing-section-space-compact);
-    background:
-        radial-gradient(circle at top left, var(--fd-bg-brand-tint), transparent 36%),
-        linear-gradient(
-            180deg,
-            transparent 0%,
-            color-mix(in srgb, var(--fd-color-sky-500) 4%, var(--fd-color-white)) 20%,
-            var(--fd-color-slate-50) 44%,
-            color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-white)) 100%
-        );
+    background: transparent;
     --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
 
     &__inner {
         @include landing.section-inner;
-        gap: var(--fd-landing-grid-gap);
+        gap: var(--fd-space-md);
     }
 
     &__header {
         grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+        margin-bottom: calc(var(--fd-landing-grid-gap) - var(--fd-space-md));
         animation: landingFadeUp 640ms ease-out both;
     }
 
@@ -60,17 +53,22 @@
 
     &__category-strip {
         overflow-x: auto;
-        padding-bottom: var(--fd-space-xxs);
+        padding: var(--fd-space-xs) var(--fd-space-xxs) var(--fd-space-sm);
         scrollbar-width: thin;
         animation: landingFadeUp 760ms ease-out both;
     }
 
     &__category-chip {
+        display: inline-grid;
+        grid-template-columns: var(--fd-size-icon-md) max-content;
+        align-items: center;
+        justify-content: center;
         border: var(--fd-border-width) solid var(--fd-color-border-slate-strong);
         background: var(--fd-bg-landing-surface-translucent);
         color: var(--fd-color-text);
         border-radius: var(--fd-radius-pill);
         padding: var(--fd-space-sm) var(--fd-space-md);
+        min-height: 52px;
         font: inherit;
         font-weight: var(--fd-font-weight-bold);
         white-space: nowrap;
@@ -78,21 +76,26 @@
         transition:
             transform 0.2s ease,
             border-color 0.2s ease,
-            box-shadow 0.2s ease,
             background 0.2s ease;
 
         &:hover {
             transform: translateY(-1px);
             border-color: var(--fd-color-border-primary-prominent);
-            box-shadow: var(--fd-shadow-accent);
         }
 
         &--active {
             background: linear-gradient(135deg, var(--fd-color-primary-600) 0%, var(--fd-color-sky-500) 100%);
             color: var(--fd-color-white);
             border-color: transparent;
-            box-shadow: var(--fd-shadow-accent-strong);
         }
+    }
+
+    &__category-chip fd-ui-icon {
+        display: inline-flex;
+        width: var(--fd-size-icon-md);
+        height: var(--fd-size-icon-md);
+        align-items: center;
+        justify-content: center;
     }
 
     &__panel {
@@ -111,8 +114,12 @@
     }
 
     &__panel-title {
-        margin: var(--fd-space-sm) 0 0;
+        margin: var(--fd-space-lg) 0 0;
         @include landing.marketing-title(var(--fd-landing-title-size-xs), 1.08, -0.02em, var(--fd-color-text));
+    }
+
+    &__panel-eyebrow + &__panel-title {
+        margin-top: var(--fd-space-lg);
     }
 
     &__cards {

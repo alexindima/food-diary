@@ -55,7 +55,7 @@
     }
 
     &__eyebrow {
-        @include landing.section-eyebrow;
+        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent));
     }
 
     &__title {
@@ -311,14 +311,7 @@
     }
 
     &__draft-eyebrow {
-        display: inline-flex;
-        width: fit-content;
-        max-width: 100%;
-        padding: var(--fd-space-xxs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-pill);
-        background: color-mix(in srgb, var(--fd-color-primary-100) 84%, var(--fd-color-white));
-        color: var(--fd-color-primary-800);
-        @include landing.marketing-eyebrow(0.84rem, 0.03em);
+        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent));
     }
 
     &__draft-title {
@@ -358,14 +351,12 @@
     }
 
     .landing-section__title,
-    .landing-section__subtitle,
-    .landing-section__eyebrow {
+    .landing-section__subtitle {
         color: var(--fd-color-slate-900);
     }
 
     .landing-section__eyebrow {
-        background: color-mix(in srgb, var(--fd-color-primary-100) 78%, var(--fd-color-white));
-        color: var(--fd-color-primary-800);
+        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent));
     }
 
     .landing-section__subtitle {

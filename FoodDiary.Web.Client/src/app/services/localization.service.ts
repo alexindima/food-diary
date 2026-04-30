@@ -20,6 +20,7 @@ export class LocalizationService {
     private readonly translationLoader = inject(FoodDiaryTranslationLoader);
     private readonly storageKey = 'fd_language';
     private readonly applicationTranslationLanguages = new Set<string>();
+    private readonly routeTranslationKeys = new Set<string>();
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -34,9 +35,7 @@ export class LocalizationService {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(event => {
-                if (!this.translationLoader.isPublicRoute(event.urlAfterRedirects)) {
-                    void this.loadApplicationTranslations();
-                }
+                void this.loadTranslationsForRoute(event.urlAfterRedirects);
             });
     }
 
@@ -84,6 +83,24 @@ export class LocalizationService {
         });
     }
 
+    public loadTranslationsForRoute(pathname: string): Promise<void> {
+        return this.translationLoader.isPublicRoute(pathname) ? this.loadRouteTranslations(pathname) : this.loadApplicationTranslations();
+    }
+
+    public loadRouteTranslations(pathname: string): Promise<void> {
+        const currentLang = this.getCurrentLanguage();
+        const normalizedPath = this.normalizeRouteKey(pathname);
+        const cacheKey = `${currentLang}:${normalizedPath}`;
+        if (this.routeTranslationKeys.has(cacheKey)) {
+            return Promise.resolve();
+        }
+
+        return firstValueFrom(this.translationLoader.loadRouteTranslations(currentLang, pathname)).then(translations => {
+            this.translateService.setTranslation(currentLang, translations, true);
+            this.routeTranslationKeys.add(cacheKey);
+        });
+    }
+
     public clearStoredLanguage(): void {
         this.storage.removeItem('local', this.storageKey);
     }
@@ -107,6 +124,13 @@ export class LocalizationService {
         }
 
         return 'en';
+    }
+
+    private normalizeRouteKey(pathname: string): string {
+        const withoutHash = pathname.split('#', 1)[0] ?? '/';
+        const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
+
+        return withoutQuery || '/';
     }
 
     private persistLanguage(lang: string): void {

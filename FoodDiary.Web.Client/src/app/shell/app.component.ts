@@ -1,10 +1,11 @@
 import { Component, DestroyRef, Injector, ViewEncapsulation, computed, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, map, mergeMap } from 'rxjs';
+import { filter, from, map, mergeMap } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
 import { SeoService, SeoData } from '../services/seo.service';
+import { LocalizationService } from '../services/localization.service';
 import { QuickConsumptionDrawerComponent } from '../features/meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NotificationRealtimeService } from '../services/notification-realtime.service';
@@ -12,6 +13,7 @@ import { PushNotificationService } from '../services/push-notification.service';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
     selector: 'fd-root',
@@ -25,10 +27,12 @@ export class AppComponent {
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly seoService = inject(SeoService);
+    private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
     private readonly globalLoadingService = inject(GlobalLoadingService);
     private readonly routeLoadingService = inject(RouteLoadingService);
+    private readonly themeService = inject(ThemeService);
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isImpersonating = this.authService.isImpersonating;
@@ -43,8 +47,10 @@ export class AppComponent {
 
         this.router.events
             .pipe(
-                filter(event => event instanceof NavigationEnd),
-                map(() => this.getDeepestRoute(this.activatedRoute)),
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+                mergeMap(event =>
+                    from(this.prepareRoute(event.urlAfterRedirects)).pipe(map(() => this.getDeepestRoute(this.activatedRoute))),
+                ),
                 mergeMap(route => route.data.pipe(map(data => ({ data, url: this.router.url })))),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -73,6 +79,11 @@ export class AppComponent {
             route = route.firstChild;
         }
         return route;
+    }
+
+    private async prepareRoute(url: string): Promise<void> {
+        this.themeService.applyThemeForRoute(url);
+        await this.localizationService.loadTranslationsForRoute(url);
     }
 
     public stopImpersonation(): void {

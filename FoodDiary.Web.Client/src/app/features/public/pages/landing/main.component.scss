@@ -1,7 +1,15 @@
 :host {
     display: flex;
     flex-direction: column;
-    background: var(--fd-bg-landing-page);
+    background:
+        radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-sky-500) 20%, transparent), transparent 28%),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--fd-color-sky-500) 6%, var(--fd-color-white)) 0%,
+            color-mix(in srgb, var(--fd-color-sky-500) 4%, var(--fd-color-white)) 34%,
+            var(--fd-color-slate-50) 62%,
+            color-mix(in srgb, var(--fd-color-primary-500) 7%, var(--fd-color-white)) 100%
+        );
     --tui-chart-categorical-00: var(--fd-color-chart-proteins);
     --tui-chart-categorical-01: var(--fd-color-chart-fats);
     --tui-chart-categorical-02: var(--fd-color-chart-carbs);

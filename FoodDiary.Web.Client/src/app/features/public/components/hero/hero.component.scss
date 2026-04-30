@@ -9,37 +9,16 @@
     flex-direction: column;
     padding: var(--fd-landing-section-space-compact) 0 var(--fd-landing-section-space-tight);
     overflow: hidden;
-    background:
-        radial-gradient(circle at top left, color-mix(in srgb, var(--fd-color-sky-500) 20%, transparent), transparent 32%),
-        radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--fd-color-emerald-500) 16%, transparent), transparent 26%),
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-sky-500) 6%, var(--fd-color-white)) 0%,
-            color-mix(in srgb, var(--fd-color-sky-500) 10%, var(--fd-color-white)) 42%,
-            color-mix(in srgb, var(--fd-color-sky-500) 4%, var(--fd-color-white)) 100%
-        );
+    background: transparent;
     color: var(--fd-color-text);
     --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
 
     &::before {
-        content: '';
-        position: absolute;
-        inset: auto 0 0;
-        z-index: 0;
-        height: clamp(72px, 10vw, 160px);
-        background: linear-gradient(180deg, transparent 0%, var(--fd-color-slate-50) 100%);
-        pointer-events: none;
+        content: none;
     }
 
     &::after {
-        content: '';
-        position: absolute;
-        inset: auto -10% -18% auto;
-        width: 420px;
-        height: 420px;
-        background: radial-gradient(circle, var(--fd-bg-brand-tint-strong), transparent 68%);
-        filter: blur(12px);
-        pointer-events: none;
+        content: none;
     }
 
     &__language-toggle {
@@ -69,13 +48,7 @@
     }
 
     &__eyebrow {
-        @include landing.section-eyebrow;
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        @include landing.marketing-eyebrow(0.85rem, 0.03em);
-        background: color-mix(in srgb, var(--fd-color-white) 68%, var(--fd-color-primary-50));
-        border-color: color-mix(in srgb, var(--fd-color-primary-500) 16%, transparent);
-        color: var(--fd-color-slate-600);
-        box-shadow: var(--fd-shadow-none);
+        @include landing.section-eyebrow(color-mix(in srgb, var(--fd-color-blue-500) 12%, transparent));
     }
 
     &__title {
@@ -119,12 +92,12 @@
         max-width: 100%;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-landing-radius-card);
-        background: color-mix(in srgb, var(--fd-color-slate-900) 68%, var(--fd-color-slate-700));
-        border: var(--fd-border-width) solid var(--fd-color-border-dark-strong);
-        box-shadow: var(--fd-landing-shadow-soft);
+        background: color-mix(in srgb, var(--fd-color-white) 82%, var(--fd-color-primary-500));
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-primary-500) 18%, transparent);
+        box-shadow: var(--fd-shadow-none);
         font-size: var(--fd-text-body-comfort-size);
         font-weight: var(--fd-font-weight-bold);
-        color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-slate-200));
+        color: var(--fd-color-slate-800);
         animation: landingFadeUp 920ms ease-out both;
     }
 
@@ -163,10 +136,7 @@
         }
 
         &--secondary {
-            inset: auto 0 10% auto;
-            width: 220px;
-            height: 220px;
-            background: radial-gradient(circle, color-mix(in srgb, var(--fd-color-teal-500) 18%, transparent), transparent 70%);
+            display: none;
         }
     }
 
@@ -180,20 +150,14 @@
         );
         padding: var(--fd-landing-surface-padding-sm);
         backdrop-filter: blur(18px);
+        box-shadow: var(--fd-landing-shadow-highlight);
         color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
         display: grid;
         gap: var(--fd-space-sm);
         animation: landingFadeUp 900ms ease-out both;
 
         &::before {
-            content: '';
-            position: absolute;
-            inset: auto -10% -14% auto;
-            width: 220px;
-            height: 220px;
-            border-radius: var(--fd-radius-pill);
-            background: radial-gradient(circle, color-mix(in srgb, var(--fd-color-teal-500) 22%, transparent), transparent 68%);
-            pointer-events: none;
+            content: none;
         }
     }
 

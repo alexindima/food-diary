@@ -22,6 +22,10 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
         return this.loadBundles(lang, ['app']);
     }
 
+    public loadRouteTranslations(lang: string, pathname: string): Observable<TranslationDictionary> {
+        return this.loadBundles(lang, this.getInitialBundles(pathname));
+    }
+
     public isPublicRoute(pathname: string): boolean {
         return this.isPublicPath(pathname);
     }

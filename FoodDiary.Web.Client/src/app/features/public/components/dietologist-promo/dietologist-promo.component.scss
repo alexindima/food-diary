@@ -8,13 +8,7 @@
 
 .dietologist-promo {
     padding: var(--fd-landing-section-space-compact) 0;
-    background:
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--fd-color-white) 0%, transparent) 0%,
-            color-mix(in srgb, var(--fd-color-emerald-500) 10%, var(--fd-color-white)) 100%
-        ),
-        var(--fd-color-white);
+    background: transparent;
 
     &__inner {
         @include landing.section-inner;
@@ -38,8 +32,12 @@
     }
 
     &__title {
-        margin: var(--fd-space-sm) 0 0;
+        margin: var(--fd-space-lg) 0 0;
         @include landing.marketing-title(var(--fd-landing-title-size), 1.08, -0.02em, var(--fd-color-text));
+    }
+
+    &__eyebrow + &__title {
+        margin-top: var(--fd-space-lg);
     }
 
     &__subtitle,
@@ -80,8 +78,15 @@
     &__step-title,
     &__card-title {
         margin: 0;
-        color: var(--fd-color-text);
         font-size: var(--fd-text-title-xs-size);
+    }
+
+    &__step-title {
+        color: var(--fd-color-text);
+    }
+
+    &__card-title {
+        color: var(--fd-color-slate-50);
     }
 
     &__step-text {
@@ -117,24 +122,6 @@
         color: color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent);
         text-transform: uppercase;
         @include landing.marketing-eyebrow(0.76rem, 0.08em);
-    }
-
-    &__status {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-xs);
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-pill);
-        background: var(--fd-bg-surface-glass);
-        color: color-mix(in srgb, var(--fd-color-white) 92%, var(--fd-color-teal-500));
-        font-size: var(--fd-text-stat-value-size);
-        white-space: nowrap;
-
-        fd-ui-icon {
-            width: var(--fd-size-icon-md);
-            height: var(--fd-size-icon-md);
-            font-size: var(--fd-size-icon-md);
-        }
     }
 
     &__card-text {

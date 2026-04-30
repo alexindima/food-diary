@@ -22,7 +22,7 @@ export class FeaturesComponent {
         },
         {
             key: 'PROGRESS',
-            icon: 'monitoring',
+            icon: 'bar_chart',
             itemKeys: ['STATISTICS', 'BODY_HISTORY', 'WEEKLY_CHECKINS'],
         },
         {

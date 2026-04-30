@@ -45,13 +45,54 @@ describe('ThemeService', () => {
         localStorage.setItem('fd_theme', 'leaf');
         localStorage.setItem('fd_ui_style', 'modern');
 
-        service.initializeTheme();
+        service.applyThemeForRoute('/dashboard');
 
         expect(service.theme()).toBe('leaf');
         expect(service.uiStyle()).toBe('modern');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
         expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
         expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
+    });
+
+    it('should use default theme on public routes without overwriting stored preferences', () => {
+        localStorage.setItem('fd_theme', 'leaf');
+        localStorage.setItem('fd_ui_style', 'modern');
+
+        service.applyThemeForRoute('/auth/login');
+
+        expect(service.theme()).toBe('ocean');
+        expect(service.uiStyle()).toBe('classic');
+        expect(documentRef.documentElement.getAttribute('data-theme')).toBe('ocean');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('classic');
+        expect(localStorage.getItem('fd_theme')).toBe('leaf');
+        expect(localStorage.getItem('fd_ui_style')).toBe('modern');
+    });
+
+    it('should restore stored theme after leaving public routes', () => {
+        localStorage.setItem('fd_theme', 'leaf');
+        localStorage.setItem('fd_ui_style', 'modern');
+
+        service.applyThemeForRoute('/auth/login');
+
+        service.applyThemeForRoute('/dashboard');
+
+        expect(service.theme()).toBe('leaf');
+        expect(service.uiStyle()).toBe('modern');
+        expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
+    });
+
+    it('should persist user preferences without applying them while current route is public', () => {
+        service.initializeTheme();
+
+        service.syncWithUserPreferences('leaf', 'modern');
+
+        expect(localStorage.getItem('fd_theme')).toBe('leaf');
+        expect(localStorage.getItem('fd_ui_style')).toBe('modern');
+        expect(service.theme()).toBe('ocean');
+        expect(service.uiStyle()).toBe('classic');
+        expect(documentRef.documentElement.getAttribute('data-theme')).toBe('ocean');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('classic');
     });
 
     it('should apply dark color scheme for the dark theme', () => {

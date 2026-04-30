@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { LocalizationService } from './localization.service';
@@ -49,6 +49,7 @@ describe('LocalizationService', () => {
         translateSpy.getBrowserLang.mockReturnValue('en');
         translationLoaderSpy = {
             isPublicRoute: vi.fn().mockReturnValue(true),
+            loadRouteTranslations: vi.fn().mockReturnValue(of({ SEO_PAGE: { TRUST_TITLE: 'Trust' } })),
             loadApplicationTranslations: vi.fn().mockReturnValue(of({ DASHBOARD: { TITLE: 'Dashboard' } })),
         } as any;
         routerEventsSubject = new Subject<unknown>();
@@ -169,5 +170,28 @@ describe('LocalizationService', () => {
 
         expect(translationLoaderSpy.loadApplicationTranslations).toHaveBeenCalledWith('en');
         expect(translateSpy.setTranslation).toHaveBeenCalledWith('en', { DASHBOARD: { TITLE: 'Dashboard' } }, true);
+    });
+
+    it('should extend current language with public route translations', async () => {
+        await service.loadRouteTranslations('/calorie-counter');
+
+        expect(translationLoaderSpy.loadRouteTranslations).toHaveBeenCalledWith('en', '/calorie-counter');
+        expect(translateSpy.setTranslation).toHaveBeenCalledWith('en', { SEO_PAGE: { TRUST_TITLE: 'Trust' } }, true);
+    });
+
+    it('should load public route translations on public navigation', async () => {
+        routerEventsSubject.next(new NavigationEnd(1, '/calorie-counter', '/calorie-counter'));
+        await Promise.resolve();
+
+        expect(translationLoaderSpy.loadRouteTranslations).toHaveBeenCalledWith('en', '/calorie-counter');
+    });
+
+    it('should load application translations on private navigation', async () => {
+        translationLoaderSpy.isPublicRoute.mockReturnValue(false);
+
+        routerEventsSubject.next(new NavigationEnd(1, '/dashboard', '/dashboard'));
+        await Promise.resolve();
+
+        expect(translationLoaderSpy.loadApplicationTranslations).toHaveBeenCalledWith('en');
     });
 });

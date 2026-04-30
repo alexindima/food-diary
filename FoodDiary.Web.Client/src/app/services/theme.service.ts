@@ -14,6 +14,25 @@ import {
     isAppUiStyleName,
 } from '../theme/app-theme.config';
 
+const PUBLIC_SEO_PATHS = new Set([
+    '/food-diary',
+    '/calorie-counter',
+    '/meal-planner',
+    '/macro-tracker',
+    '/intermittent-fasting',
+    '/meal-tracker',
+    '/weight-loss-app',
+    '/dietologist-collaboration',
+    '/nutrition-planner',
+    '/weight-tracker',
+    '/body-progress-tracker',
+    '/shopping-list-for-meal-planning',
+    '/nutrition-tracker',
+    '/food-log',
+    '/protein-tracker',
+    '/meal-prep-planner',
+]);
+
 @Injectable({
     providedIn: 'root',
 })
@@ -33,11 +52,16 @@ export class ThemeService {
     public readonly activeUiStyleDefinition = computed(() => this.getUiStyleDefinition(this.uiStyleState()));
 
     public initializeTheme(): void {
-        const storedTheme = this.getStoredTheme();
-        const storedUiStyle = this.getStoredUiStyle();
+        this.applyThemeForRoute(this.document.location.pathname);
+    }
 
-        this.applyTheme(storedTheme ?? DEFAULT_APP_THEME, false);
-        this.applyUiStyle(storedUiStyle ?? DEFAULT_APP_UI_STYLE, false);
+    public applyThemeForRoute(pathname: string): void {
+        if (this.isPublicRoute(pathname)) {
+            this.applyDefaultPublicTheme();
+            return;
+        }
+
+        this.applyStoredTheme();
     }
 
     public setTheme(theme: string): void {
@@ -57,8 +81,30 @@ export class ThemeService {
     }
 
     public syncWithUserPreferences(theme: string | null | undefined, uiStyle: string | null | undefined): void {
-        this.applyTheme(this.resolveTheme(theme), true);
-        this.applyUiStyle(this.resolveUiStyle(uiStyle), true);
+        const resolvedTheme = this.resolveTheme(theme);
+        const resolvedUiStyle = this.resolveUiStyle(uiStyle);
+
+        if (this.isPublicRoute(this.document.location.pathname)) {
+            this.persistThemePreference(resolvedTheme);
+            this.persistUiStylePreference(resolvedUiStyle);
+            return;
+        }
+
+        this.applyTheme(resolvedTheme, true);
+        this.applyUiStyle(resolvedUiStyle, true);
+    }
+
+    private applyDefaultPublicTheme(): void {
+        this.applyTheme(DEFAULT_APP_THEME, false);
+        this.applyUiStyle(DEFAULT_APP_UI_STYLE, false);
+    }
+
+    private applyStoredTheme(): void {
+        const storedTheme = this.getStoredTheme();
+        const storedUiStyle = this.getStoredUiStyle();
+
+        this.applyTheme(storedTheme ?? DEFAULT_APP_THEME, false);
+        this.applyUiStyle(storedUiStyle ?? DEFAULT_APP_UI_STYLE, false);
     }
 
     private applyTheme(theme: AppThemeName, persist: boolean): void {
@@ -71,7 +117,7 @@ export class ThemeService {
         this.updateBrowserThemeColor(this.getThemeDefinition(theme).browserThemeColor);
 
         if (persist) {
-            this.localStorageRef?.setItem(this.themeStorageKey, theme);
+            this.persistThemePreference(theme);
         }
     }
 
@@ -80,8 +126,16 @@ export class ThemeService {
         this.document.documentElement.setAttribute('data-ui-style', uiStyle);
 
         if (persist) {
-            this.localStorageRef?.setItem(this.uiStyleStorageKey, uiStyle);
+            this.persistUiStylePreference(uiStyle);
         }
+    }
+
+    private persistThemePreference(theme: AppThemeName): void {
+        this.localStorageRef?.setItem(this.themeStorageKey, theme);
+    }
+
+    private persistUiStylePreference(uiStyle: AppUiStyleName): void {
+        this.localStorageRef?.setItem(this.uiStyleStorageKey, uiStyle);
     }
 
     private getStoredTheme(): AppThemeName | null {
@@ -116,6 +170,16 @@ export class ThemeService {
 
     private resolveUiStyle(uiStyle: string | null | undefined): AppUiStyleName {
         return isAppUiStyleName(uiStyle) ? uiStyle : DEFAULT_APP_UI_STYLE;
+    }
+
+    private isPublicRoute(pathname: string): boolean {
+        const normalizedPath = pathname.split(/[?#]/u, 1)[0].toLowerCase();
+        return (
+            normalizedPath === '/' ||
+            normalizedPath.startsWith('/auth') ||
+            normalizedPath === '/privacy-policy' ||
+            PUBLIC_SEO_PATHS.has(normalizedPath)
+        );
     }
 
     private updateBrowserThemeColor(color: string): void {
