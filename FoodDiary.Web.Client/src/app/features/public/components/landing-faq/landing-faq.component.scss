@@ -1,0 +1,130 @@
+@use '../landing-section.mixins' as landing;
+
+:host {
+    display: block;
+}
+
+.landing-section {
+
+    &__inner {
+        @include landing.section-inner;
+    }
+
+    &__copy {
+        display: flex;
+        flex-direction: column;
+        gap: var(--fd-space-xs);
+    }
+
+    &__eyebrow {
+        display: inline-flex;
+        padding: var(--fd-space-xxs) var(--fd-space-sm);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-landing-eyebrow-info);
+        color: var(--fd-color-primary-600);
+        @include landing.marketing-eyebrow;
+    }
+
+    &__title {
+        @include landing.marketing-title(var(--fd-landing-title-size-md), 1.08, -0.01em, var(--fd-color-text));
+    }
+
+    &__subtitle {
+        @include landing.marketing-body(1.02rem, 1.65, var(--fd-color-text-muted), 620px, 6px 0 0);
+    }
+
+    &--faq {
+        padding: var(--fd-landing-section-space-relaxed) 0 calc(var(--fd-landing-section-space) + var(--fd-space-xs));
+        background: var(--fd-bg-landing-section-soft);
+    }
+}
+
+.landing-faq {
+    display: grid;
+    gap: var(--fd-space-sm);
+    margin-top: var(--fd-space-md);
+
+    &__item {
+        background: var(--fd-bg-surface-solid);
+        border: var(--fd-border-width) solid var(--fd-color-border-primary-soft);
+        border-radius: var(--fd-landing-radius-panel);
+        box-shadow: var(--fd-landing-shadow-soft);
+        padding: 0;
+        overflow: hidden;
+    }
+
+    &__question {
+        list-style: none;
+        cursor: pointer;
+        padding: var(--fd-space-md) var(--fd-space-lg);
+        @include landing.marketing-title(1.02rem, 1.35, -0.01em, var(--fd-color-text), 800);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &::after {
+            content: '+';
+            flex: 0 0 auto;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--fd-radius-pill);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--fd-bg-landing-faq-control);
+            color: var(--fd-color-primary-700);
+            font-size: var(--fd-text-section-title-size);
+            line-height: 1;
+        }
+    }
+
+    &__item[open] &__question::after {
+        content: '-';
+    }
+
+    &__answer {
+        margin: 0;
+        padding: 0 var(--fd-space-lg) var(--fd-space-lg);
+        @include landing.marketing-body(1rem, 1.65, var(--fd-color-text-muted), 760px);
+    }
+
+    &__guides {
+        display: grid;
+        gap: var(--fd-space-sm);
+        margin-top: var(--fd-space-md);
+    }
+
+    &__guides-title {
+        margin: 0;
+        @include landing.marketing-title(1rem, 1.4, -0.01em, var(--fd-color-text), 800);
+    }
+
+    &__guides-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: var(--fd-space-sm);
+    }
+
+    &__guide-link {
+        display: flex;
+        align-items: center;
+        min-height: var(--fd-size-control-xl);
+        padding: var(--fd-space-sm) var(--fd-space-md);
+        border-radius: var(--fd-landing-radius-card);
+        background: var(--fd-bg-surface-solid);
+        border: var(--fd-border-width) solid var(--fd-color-border-primary-subtle);
+        box-shadow: var(--fd-landing-shadow-soft);
+        color: var(--fd-color-primary-700);
+        font-weight: var(--fd-text-metric-lg-weight);
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

@@ -1,36 +1,12 @@
 <fd-hero />
 <main class="landing-main">
-    @defer (on viewport) {
+    <fd-features />
+    @defer (on viewport; prefetch on idle; on timer(5s)) {
         <fd-landing-preview-tour />
     } @placeholder {
         <div class="landing-main__preview-placeholder" aria-hidden="true"></div>
     }
-    <fd-features />
     <fd-dietologist-promo />
     <fd-landing-steps />
-    <section class="landing-section landing-section--faq">
-        <div class="landing-section__inner">
-            <div class="landing-section__copy">
-                <span class="landing-section__eyebrow">{{ 'LANDING_FAQ.EYEBROW' | translate }}</span>
-                <h2 class="landing-section__title">{{ 'LANDING_FAQ.TITLE' | translate }}</h2>
-                <p class="landing-section__subtitle">{{ 'LANDING_FAQ.SUBTITLE' | translate }}</p>
-            </div>
-            <div class="landing-faq">
-                @for (item of faqItems; track item.questionKey) {
-                    <details class="landing-faq__item">
-                        <summary class="landing-faq__question">{{ item.questionKey | translate }}</summary>
-                        <p class="landing-faq__answer">{{ item.answerKey | translate }}</p>
-                    </details>
-                }
-            </div>
-            <div class="landing-faq__guides">
-                <p class="landing-faq__guides-title">{{ 'LANDING_FAQ.GUIDES_TITLE' | translate }}</p>
-                <div class="landing-faq__guides-grid">
-                    @for (guide of seoGuides; track guide.path) {
-                        <a class="landing-faq__guide-link" [routerLink]="guide.path">{{ guide.labelKey | translate }}</a>
-                    }
-                </div>
-            </div>
-        </div>
-    </section>
+    <fd-landing-faq [questions]="faqItems" [guides]="seoGuides" />
 </main>

@@ -22,7 +22,6 @@ export class HeroComponent {
         { label: 'EN', value: 'en' },
         { label: 'RU', value: 'ru' },
     ];
-    protected readonly searchIntentKeys = ['FOOD_LOG', 'CALORIES', 'PLANNING', 'PROGRESS'] as const;
 
     protected language = this.getCurrentLanguage();
     protected currentLanguage = this.language;

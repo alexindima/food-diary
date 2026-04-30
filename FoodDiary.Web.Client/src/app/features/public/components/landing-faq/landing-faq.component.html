@@ -1,0 +1,27 @@
+<section class="landing-section landing-section--faq">
+    <div class="landing-section__inner">
+        <div class="landing-section__copy">
+            <span class="landing-section__eyebrow">{{ eyebrowKey() | translate }}</span>
+            <h2 class="landing-section__title">{{ titleKey() | translate }}</h2>
+            <p class="landing-section__subtitle">{{ subtitleKey() | translate }}</p>
+        </div>
+        <div class="landing-faq">
+            @for (item of questions(); track item.questionKey) {
+                <details class="landing-faq__item">
+                    <summary class="landing-faq__question">{{ item.questionKey | translate }}</summary>
+                    <p class="landing-faq__answer">{{ item.answerKey | translate }}</p>
+                </details>
+            }
+        </div>
+        @if (guides().length) {
+            <div class="landing-faq__guides">
+                <p class="landing-faq__guides-title">{{ guidesTitleKey() | translate }}</p>
+                <div class="landing-faq__guides-grid">
+                    @for (guide of guides(); track guide.path) {
+                        <a class="landing-faq__guide-link" [routerLink]="guide.path">{{ guide.labelKey | translate }}</a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

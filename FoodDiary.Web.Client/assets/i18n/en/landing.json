@@ -1,8 +1,8 @@
 {
     "LANDING_HERO": {
-        "OVERLINE": "Food diary, calorie counter, and nutrition planner",
-        "HEADLINE": "Food Diary helps you log meals, track calories, and understand progress in one place",
-        "SUBTITLE": "Keep an online food diary, add meals and recipes, track calories and macros, plan weekly menus, and compare nutrition with weight, waist, and weekly trends.",
+        "OVERLINE": "Food diary and calorie counter",
+        "HEADLINE": "Nutrition and progress — without spreadsheets or chaos",
+        "SUBTITLE": "Log meals, count calories, and track weight without Excel or complicated apps.",
         "SEARCH": {
             "ARIA_LABEL": "Food diary use cases",
             "TITLE": "For people who need more than a basic calorie counter",
@@ -14,9 +14,9 @@
                 "PROGRESS": "Weight, waist, and progress"
             }
         },
-        "REASSURANCE": "Free to start ? No ads ? No quick-result promises",
-        "LOGIN": "Login",
-        "REGISTER": "Register",
+        "REASSURANCE": "Meal plans, macros, recipes, shopping lists, and body trends stay in one clear workspace.",
+        "LOGIN": "Already have an account? Sign in",
+        "REGISTER": "Start free",
         "LANGUAGE_LABEL": "Language",
         "PANEL": {
             "EYEBROW": "Core workflow",

@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { FeaturesComponent } from '../../components/features/features.component';
 import { LandingPreviewTourComponent } from '../../components/landing-preview-tour/landing-preview-tour.component';
 import { LandingStepsComponent } from '../../components/landing-steps/landing-steps.component';
 import { DietologistPromoComponent } from '../../components/dietologist-promo/dietologist-promo.component';
+import { LandingFaqComponent } from '../../components/landing-faq/landing-faq.component';
 
 @Component({
     selector: 'fd-main',
@@ -17,8 +16,7 @@ import { DietologistPromoComponent } from '../../components/dietologist-promo/di
         LandingPreviewTourComponent,
         LandingStepsComponent,
         DietologistPromoComponent,
-        TranslatePipe,
-        RouterLink,
+        LandingFaqComponent,
     ],
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],

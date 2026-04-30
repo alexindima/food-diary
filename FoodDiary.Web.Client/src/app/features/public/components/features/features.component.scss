@@ -2,10 +2,19 @@
 @use '../landing-section.mixins' as landing;
 
 .features {
-    padding: var(--fd-landing-section-space) 0 var(--fd-landing-section-space-compact);
+    --fd-features-hero-overlap: clamp(64px, 8vw, 128px);
+    position: relative;
+    margin-top: calc(var(--fd-features-hero-overlap) * -1);
+    padding: calc(var(--fd-landing-section-space) + var(--fd-features-hero-overlap)) 0 var(--fd-landing-section-space-compact);
     background:
-        radial-gradient(circle at top left, var(--fd-bg-brand-tint), transparent 32%),
-        linear-gradient(180deg, var(--fd-color-slate-50) 0%, color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-white)) 100%);
+        radial-gradient(circle at top left, var(--fd-bg-brand-tint), transparent 36%),
+        linear-gradient(
+            180deg,
+            transparent 0%,
+            color-mix(in srgb, var(--fd-color-sky-500) 4%, var(--fd-color-white)) 20%,
+            var(--fd-color-slate-50) 44%,
+            color-mix(in srgb, var(--fd-color-primary-500) 8%, var(--fd-color-white)) 100%
+        );
     --fd-layout-page-horizontal-padding: var(--fd-landing-inline-padding);
 
     &__inner {

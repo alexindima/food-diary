@@ -1,29 +1,9 @@
 <section class="hero">
-    <div class="hero__top">
-        <fd-ui-segmented-toggle
-            class="hero__language-toggle"
-            [options]="languageOptions"
-            [(selectedValue)]="language"
-            (selectedValueChange)="updateLanguage()"
-            [ariaLabel]="'LANDING_HERO.LANGUAGE_LABEL' | translate"
-            [shrinkItems]="true"
-        />
-    </div>
     <div class="hero__grid">
         <div class="hero__copy">
             <span class="hero__eyebrow">{{ 'LANDING_HERO.OVERLINE' | translate }}</span>
             <h1 class="hero__title">{{ 'LANDING_HERO.HEADLINE' | translate }}</h1>
             <p class="hero__subtitle">{{ 'LANDING_HERO.SUBTITLE' | translate }}</p>
-
-            <section class="hero__search-intent" [attr.aria-label]="'LANDING_HERO.SEARCH.ARIA_LABEL' | translate">
-                <h2 class="hero__search-title">{{ 'LANDING_HERO.SEARCH.TITLE' | translate }}</h2>
-                <p class="hero__search-text">{{ 'LANDING_HERO.SEARCH.TEXT' | translate }}</p>
-                <div class="hero__search-tags" aria-hidden="true">
-                    @for (key of searchIntentKeys; track key) {
-                        <span class="hero__search-tag">{{ 'LANDING_HERO.SEARCH.ITEMS.' + key | translate }}</span>
-                    }
-                </div>
-            </section>
 
             <div class="hero__actions">
                 <fd-ui-button
@@ -40,20 +20,35 @@
                 </fd-ui-button>
             </div>
 
+            <section class="hero__search-intent" [attr.aria-label]="'LANDING_HERO.SEARCH.ARIA_LABEL' | translate">
+                <h2 class="hero__search-title">{{ 'LANDING_HERO.SEARCH.TITLE' | translate }}</h2>
+                <p class="hero__search-text">{{ 'LANDING_HERO.SEARCH.TEXT' | translate }}</p>
+            </section>
+
             <p class="hero__reassurance">{{ 'LANDING_HERO.REASSURANCE' | translate }}</p>
         </div>
 
-        <div class="hero__visual" aria-hidden="true">
-            <div class="hero__blob hero__blob--primary"></div>
-            <div class="hero__blob hero__blob--secondary"></div>
+        <div class="hero__visual">
+            <div class="hero__visual-toolbar">
+                <fd-ui-segmented-toggle
+                    class="hero__language-toggle"
+                    [options]="languageOptions"
+                    [(selectedValue)]="language"
+                    (selectedValueChange)="updateLanguage()"
+                    [ariaLabel]="'LANDING_HERO.LANGUAGE_LABEL' | translate"
+                    [shrinkItems]="true"
+                />
+            </div>
 
-            <article class="hero__feature-panel">
+            <div class="hero__blob hero__blob--primary" aria-hidden="true"></div>
+            <div class="hero__blob hero__blob--secondary" aria-hidden="true"></div>
+
+            <article class="hero__feature-panel" aria-hidden="true">
                 <div class="hero__feature-head">
                     <div>
                         <p class="hero__glass-label">{{ 'LANDING_HERO.PANEL.EYEBROW' | translate }}</p>
                         <h2 class="hero__feature-title">{{ 'LANDING_HERO.PANEL.TITLE' | translate }}</h2>
                     </div>
-                    <span class="hero__feature-badge">{{ 'LANDING_HERO.PANEL.BADGE' | translate }}</span>
                 </div>
 
                 <p class="hero__feature-description">{{ 'LANDING_HERO.PANEL.DESCRIPTION' | translate }}</p>
