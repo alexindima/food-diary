@@ -24,7 +24,9 @@ export class FrontendObservabilityService {
 
         this.initialized = true;
         this.observeRouteTimings();
-        this.observeWebVitals();
+        if (!this.isPublicRoute(window.location.pathname)) {
+            this.observeWebVitals();
+        }
     }
 
     public recordClientError(error: { message: string; stack?: string; location?: string; details?: Record<string, unknown> }): void {
@@ -224,16 +226,22 @@ export class FrontendObservabilityService {
                 const durationMs = performance.now() - startedAt;
 
                 if (event instanceof NavigationEnd) {
-                    this.recordRouteTiming(event.urlAfterRedirects, durationMs, 'success');
+                    if (!this.isPublicRoute(event.urlAfterRedirects)) {
+                        this.recordRouteTiming(event.urlAfterRedirects, durationMs, 'success');
+                    }
                     return;
                 }
 
                 if (event instanceof NavigationCancel) {
-                    this.recordRouteTiming(event.url, durationMs, 'cancelled');
+                    if (!this.isPublicRoute(event.url)) {
+                        this.recordRouteTiming(event.url, durationMs, 'cancelled');
+                    }
                     return;
                 }
 
-                this.recordRouteTiming(event.url, durationMs, 'error');
+                if (!this.isPublicRoute(event.url)) {
+                    this.recordRouteTiming(event.url, durationMs, 'error');
+                }
             });
     }
 
@@ -334,4 +342,24 @@ export class FrontendObservabilityService {
     private round(value: number): number {
         return Math.round(value * 10) / 10;
     }
+
+    private isPublicRoute(url: string): boolean {
+        const path = url.split(/[?#]/u, 1)[0].toLowerCase();
+        return path === '/' || path.startsWith('/auth') || path === '/privacy-policy' || PUBLIC_SEO_PATHS.has(path);
+    }
 }
+
+const PUBLIC_SEO_PATHS = new Set([
+    '/food-diary',
+    '/calorie-counter',
+    '/meal-planner',
+    '/macro-tracker',
+    '/intermittent-fasting',
+    '/meal-tracker',
+    '/weight-loss-app',
+    '/dietologist-collaboration',
+    '/nutrition-planner',
+    '/weight-tracker',
+    '/body-progress-tracker',
+    '/shopping-list-for-meal-planning',
+]);
