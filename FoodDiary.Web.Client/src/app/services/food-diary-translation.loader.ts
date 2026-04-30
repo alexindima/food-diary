@@ -94,6 +94,10 @@ const SEO_PATHS = new Set([
     '/weight-tracker',
     '/body-progress-tracker',
     '/shopping-list-for-meal-planning',
+    '/nutrition-tracker',
+    '/food-log',
+    '/protein-tracker',
+    '/meal-prep-planner',
 ]);
 
 function normalizePath(pathname: string): string {

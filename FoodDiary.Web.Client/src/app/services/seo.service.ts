@@ -206,7 +206,7 @@ export class SeoService {
     }
 
     private getLandingFaqEntity(currentUrl: string): Record<string, unknown> {
-        const faqItems = ['APP_SCOPE', 'PLANNING', 'PROGRESS', 'DIETOLOGIST'] as const;
+        const faqItems = ['APP_SCOPE', 'PLANNING', 'PROGRESS', 'DIETOLOGIST', 'TRACKING', 'SAFETY'] as const;
 
         return {
             '@type': 'FAQPage',

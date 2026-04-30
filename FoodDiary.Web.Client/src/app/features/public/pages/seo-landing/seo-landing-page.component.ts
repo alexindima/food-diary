@@ -15,7 +15,11 @@ type SeoPageSlug =
     | 'nutrition-planner'
     | 'weight-tracker'
     | 'body-progress-tracker'
-    | 'shopping-list-for-meal-planning';
+    | 'shopping-list-for-meal-planning'
+    | 'nutrition-tracker'
+    | 'food-log'
+    | 'protein-tracker'
+    | 'meal-prep-planner';
 
 interface SeoLandingPageData {
     baseKey: string;
@@ -38,6 +42,10 @@ const PAGE_LABEL_KEYS: Record<SeoPageSlug, string> = {
     'weight-tracker': 'SEO.WEIGHT_TRACKER_PAGE',
     'body-progress-tracker': 'SEO.BODY_PROGRESS_TRACKER_PAGE',
     'shopping-list-for-meal-planning': 'SEO.SHOPPING_LIST_MEAL_PLANNER_PAGE',
+    'nutrition-tracker': 'SEO.NUTRITION_TRACKER_PAGE',
+    'food-log': 'SEO.FOOD_LOG_PAGE',
+    'protein-tracker': 'SEO.PROTEIN_TRACKER_PAGE',
+    'meal-prep-planner': 'SEO.MEAL_PREP_PLANNER_PAGE',
 };
 
 @Component({
