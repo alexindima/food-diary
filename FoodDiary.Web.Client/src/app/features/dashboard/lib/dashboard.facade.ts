@@ -2,21 +2,22 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, fromEvent } from 'rxjs';
-import { HydrationService } from '../../hydration/api/hydration.service';
+
+import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import { CyclesService } from '../../cycle-tracking/api/cycles.service';
+import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
+import { FastingSession } from '../../fasting/models/fasting.data';
+import { GoalsService } from '../../goals/api/goals.service';
+import { HydrationService } from '../../hydration/api/hydration.service';
+import { Meal } from '../../meals/models/meal.data';
 import { UsdaService } from '../../usda/api/usda.service';
 import { DailyMicronutrientSummary } from '../../usda/models/usda.data';
-import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
-import { Meal } from '../../meals/models/meal.data';
-import { GoalsService } from '../../goals/api/goals.service';
 import { DashboardService } from '../api/dashboard.service';
 import { TdeeService } from '../api/tdee.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
 import { TdeeInsight } from '../models/tdee-insight.data';
-import { FastingSession } from '../../fasting/models/fasting.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DashboardLayoutService } from './dashboard-layout.service';
-import { createWeightTrendSignals, createWaistTrendSignals } from './dashboard-trend.utils';
 import {
     createConsumptionRingSignal,
     createMealPreviewSignal,
@@ -24,7 +25,7 @@ import {
     placeholderIcon,
     placeholderLabel,
 } from './dashboard-nutrition.utils';
-import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
+import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
 
 @Injectable()
 export class DashboardFacade {

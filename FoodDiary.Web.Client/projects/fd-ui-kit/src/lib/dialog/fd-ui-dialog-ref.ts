@@ -1,7 +1,7 @@
 import { DialogCloseOptions, DialogRef } from '@angular/cdk/dialog';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { ComponentRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OverlayRef } from '@angular/cdk/overlay';
 
 export class FdUiDialogRef<T = unknown, R = unknown> {
     public constructor(private readonly dialogRef: DialogRef<R, T>) {}

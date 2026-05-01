@@ -1,6 +1,7 @@
-import { DestroyRef, computed, inject, Injectable, resource, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
+
 import { MealPlanService } from '../api/meal-plan.service';
 import { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 

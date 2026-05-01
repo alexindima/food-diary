@@ -1,9 +1,10 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormGroupControls } from '../../../../../shared/lib/common.data';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+
+import { FormGroupControls } from '../../../../../shared/lib/common.data';
 import { StepFormData, StepFormValues } from '../recipe-manage.types';
 import { RecipeStepCardComponent } from '../recipe-step-card/recipe-step-card.component';
 

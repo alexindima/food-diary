@@ -1,13 +1,14 @@
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { finalize, of, switchMap } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
+import { finalize, of, switchMap } from 'rxjs';
+
+import { QualityGrade } from '../../../features/products/models/product.data';
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
 import { AuthService } from '../../../services/auth.service';
-import { QualityGrade } from '../../../features/products/models/product.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface RecipeCardStep {

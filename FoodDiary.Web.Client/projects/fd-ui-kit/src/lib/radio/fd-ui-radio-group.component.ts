@@ -34,7 +34,7 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     public readonly orientation = input<'vertical' | 'horizontal'>('vertical');
     public readonly options = input<FdUiRadioOption<T>[]>([]);
 
-    protected disabled = model(false);
+    protected readonly disabled = model(false);
     protected internalValue: T | null = null;
 
     private onChange: (value: T | null) => void = () => undefined;

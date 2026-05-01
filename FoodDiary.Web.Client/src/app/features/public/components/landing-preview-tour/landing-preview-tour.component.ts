@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
-import { Meal } from '../../../meals/models/meal.data';
-import { QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
-import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
-import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../../../products/models/product.data';
-import { Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
-import { MealsPreviewComponent, MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview.component';
 import {
     DashboardSummaryCardComponent,
     NutrientBar,
 } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import { MealPreviewEntry, MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { AuthService } from '../../../../services/auth.service';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
+import { QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
+import { Meal } from '../../../meals/models/meal.data';
+import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
+import { Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 
 @Component({
     selector: 'fd-landing-preview-tour',

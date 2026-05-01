@@ -1,9 +1,10 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { MeasurementUnit } from '../features/products/models/product.data';
 import { BrowserStorageService } from './browser-storage.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';

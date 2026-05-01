@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
-import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
-import { MediaCardComponent } from '../media-card/media-card.component';
+
 import { QualityGrade } from '../../../features/products/models/product.data';
+import { MediaCardComponent } from '../media-card/media-card.component';
+import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 
 export interface EntityCardNutrition {
     proteins: number;

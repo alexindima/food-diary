@@ -1,5 +1,5 @@
 import { AriaLivePoliteness } from '@angular/cdk/a11y';
-import { Injectable, computed, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 export type FdUiToastAppearance = 'default' | 'positive' | 'negative' | 'warning' | 'info';

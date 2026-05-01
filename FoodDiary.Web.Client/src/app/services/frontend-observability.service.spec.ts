@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { environment } from '../../environments/environment';
 import { FrontendObservabilityService } from './frontend-observability.service';
 import { LoggingApiService } from './logging-api.service';
-import { environment } from '../../environments/environment';
 
 describe('FrontendObservabilityService', () => {
     let service: FrontendObservabilityService;

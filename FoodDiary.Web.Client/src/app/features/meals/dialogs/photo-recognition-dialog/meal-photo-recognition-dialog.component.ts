@@ -1,20 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
+import { catchError, of } from 'rxjs';
+
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealAiSessionManageDto } from '../../models/meal.data';
-import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, of } from 'rxjs';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 type PhotoAiDialogData = {
     initialSelection?: ImageSelection | null;

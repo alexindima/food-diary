@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { FormControl, FormGroup } from '@angular/forms';
+import { describe, expect, it } from 'vitest';
+
 import { matchFieldValidator } from './match-field.validator';
 
 describe('matchFieldValidator', () => {

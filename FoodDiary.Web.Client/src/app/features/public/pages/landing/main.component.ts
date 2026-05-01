@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { HeroComponent } from '../../components/hero/hero.component';
+
+import { DietologistPromoComponent } from '../../components/dietologist-promo/dietologist-promo.component';
 import { FeaturesComponent } from '../../components/features/features.component';
+import { HeroComponent } from '../../components/hero/hero.component';
+import { LandingFaqComponent } from '../../components/landing-faq/landing-faq.component';
 import { LandingPreviewTourComponent } from '../../components/landing-preview-tour/landing-preview-tour.component';
 import { LandingStepsComponent } from '../../components/landing-steps/landing-steps.component';
-import { DietologistPromoComponent } from '../../components/dietologist-promo/dietologist-promo.component';
-import { LandingFaqComponent } from '../../components/landing-faq/landing-faq.component';
 
 @Component({
     selector: 'fd-main',

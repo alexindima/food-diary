@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/angular';
 import { signal } from '@angular/core';
+import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiEmojiPickerComponent } from './fd-ui-emoji-picker.component';
 
 const meta: Meta<FdUiEmojiPickerComponent> = {

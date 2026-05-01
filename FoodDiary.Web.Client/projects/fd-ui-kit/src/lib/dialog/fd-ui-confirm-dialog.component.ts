@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
-import { FdUiDialogRef } from './fd-ui-dialog-ref';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiDialogComponent } from './fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
+
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
+import { FdUiDialogComponent } from './fd-ui-dialog.component';
+import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
+import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export interface FdUiConfirmDialogData {
     title?: string;

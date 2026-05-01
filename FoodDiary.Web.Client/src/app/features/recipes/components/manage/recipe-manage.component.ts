@@ -1,39 +1,40 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../products/models/product.data';
-import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
-import { NutrientData } from '../../../../shared/models/charts.data';
-import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../models/recipe.data';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+
+import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
-import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
-import { RecipeStepsListComponent, StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
+import { NutrientData } from '../../../../shared/models/charts.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
+import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
+import { Recipe, RecipeDto, RecipeIngredient, RecipeVisibility } from '../../models/recipe.data';
+import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
 import {
+    CalorieMismatchWarning,
+    IngredientFormData,
+    IngredientFormValues,
+    MacroBarState,
+    MacroKey,
+    NutritionMode,
+    NutritionScaleMode,
     RecipeFormData,
     RecipeFormValues,
     StepFormData,
     StepFormValues,
-    IngredientFormData,
-    IngredientFormValues,
-    CalorieMismatchWarning,
-    NutritionMode,
-    NutritionScaleMode,
-    MacroKey,
-    MacroBarState,
 } from './recipe-manage.types';
+import { RecipeStepsListComponent, StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -74,11 +75,11 @@ export class RecipeManageComponent {
 
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
 
-    public recipe = input<Recipe | null>(null);
-    public totalCalories = signal<number>(0);
-    public totalFiber = signal<number>(0);
-    public totalAlcohol = signal<number>(0);
-    public nutrientChartData = signal<NutrientData>({
+    public readonly recipe = input<Recipe | null>(null);
+    public readonly totalCalories = signal<number>(0);
+    public readonly totalFiber = signal<number>(0);
+    public readonly totalAlcohol = signal<number>(0);
+    public readonly nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,

@@ -1,7 +1,8 @@
-import { DestroyRef, Directive, ElementRef, ViewContainerRef, effect, inject, input } from '@angular/core';
 import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { DestroyRef, Directive, effect, ElementRef, inject, input, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
+
 import { FdUiMenuComponent } from './fd-ui-menu.component';
 
 @Directive({

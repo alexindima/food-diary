@@ -1,11 +1,12 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { PeriodFilterComponent } from './period-filter.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { PeriodFilterComponent } from './period-filter.component';
 
 @Component({
     standalone: true,

@@ -1,12 +1,12 @@
-import { DestroyRef, Injectable, WritableSignal, computed, inject, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
-import { FastingService } from '../api/fasting.service';
+
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
-import { FastingPromptStateStore } from './fasting-prompt-state.store';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
+import { FastingService } from '../api/fasting.service';
 import {
     FASTING_PROTOCOLS,
     FastingInsights,
@@ -18,6 +18,7 @@ import {
     FastingSession,
     FastingStats,
 } from '../models/fasting.data';
+import { FastingPromptStateStore } from './fasting-prompt-state.store';
 
 interface FastingPromptState {
     dismissed?: boolean;

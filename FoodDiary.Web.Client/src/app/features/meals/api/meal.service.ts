@@ -7,20 +7,20 @@ import { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, Product } from '../../products/models/product.data';
 import { Recipe } from '../../recipes/models/recipe.data';
 import {
+    Consumption,
     ConsumptionAiSession,
     ConsumptionAiSessionResponseDto,
-    Consumption,
-    ConsumptionOverview,
     ConsumptionItem,
     ConsumptionItemResponseDto,
+    ConsumptionOverview,
     ConsumptionResponseDto,
     ConsumptionSourceType,
+    createEmptyProductSnapshot,
+    createEmptyRecipeSnapshot,
     Meal,
     MealFilters,
     MealManageDto,
     MealOverview,
-    createEmptyProductSnapshot,
-    createEmptyRecipeSnapshot,
 } from '../models/meal.data';
 
 @Injectable({

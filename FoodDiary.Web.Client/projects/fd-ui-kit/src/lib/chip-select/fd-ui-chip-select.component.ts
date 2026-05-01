@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 
 export interface FdUiChipSelectOption {

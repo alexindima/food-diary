@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 export type FdUiInlineAlertSeverity = 'info' | 'warning' | 'success' | 'danger';

@@ -1,4 +1,4 @@
-import { Directive, DestroyRef, ElementRef, Renderer2, inject, input } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, inject, input, Renderer2 } from '@angular/core';
 
 @Directive({
     selector: '[fdCardHover]',
@@ -14,10 +14,10 @@ export class FdCardHoverDirective {
     public readonly fdCardHoverShadow = input<string | null>(null);
     public readonly fdCardHoverTransform = input<string | null>(null);
 
-    private originalTransform: string | null = null;
-    private originalBoxShadow: string | null = null;
-    private originalCursor: string | null = null;
-    private originalTransition: string | null = null;
+    private readonly originalTransform: string | null = null;
+    private readonly originalBoxShadow: string | null = null;
+    private readonly originalCursor: string | null = null;
+    private readonly originalTransition: string | null = null;
 
     private readonly elementRef = inject(ElementRef<HTMLElement>);
     private readonly renderer = inject(Renderer2);

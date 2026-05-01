@@ -1,12 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { NavigationService } from '../../../services/navigation.service';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from '../../../services/auth.service';
-import { ProductManageFacade } from './product-manage.facade';
+import { NavigationService } from '../../../services/navigation.service';
 import { ProductService } from '../api/product.service';
-import { ProductVisibility, ProductType, MeasurementUnit } from '../models/product.data';
+import { MeasurementUnit, ProductType, ProductVisibility } from '../models/product.data';
+import { ProductManageFacade } from './product-manage.facade';
 
 describe('ProductManageFacade', () => {
     let facade: ProductManageFacade;

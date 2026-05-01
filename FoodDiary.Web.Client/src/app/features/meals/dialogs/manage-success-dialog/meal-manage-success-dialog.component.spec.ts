@@ -1,10 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { TranslateModule } from '@ngx-translate/core';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { MealManageSuccessDialogComponent, ConsumptionManageSuccessDialogData } from './meal-manage-success-dialog.component';
+import { describe, expect, it, vi } from 'vitest';
+
+import { ConsumptionManageSuccessDialogData, MealManageSuccessDialogComponent } from './meal-manage-success-dialog.component';
 
 describe('MealManageSuccessDialogComponent', () => {
     let component: MealManageSuccessDialogComponent;

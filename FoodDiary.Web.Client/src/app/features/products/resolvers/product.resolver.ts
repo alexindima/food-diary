@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { catchError, of } from 'rxjs';
+
 import { NavigationService } from '../../../services/navigation.service';
 import { ProductService } from '../api/product.service';
 import { Product } from '../models/product.data';

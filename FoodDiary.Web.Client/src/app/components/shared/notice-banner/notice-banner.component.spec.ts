@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { NoticeBannerComponent } from './notice-banner.component';
 
 describe('NoticeBannerComponent', () => {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { toEmailVerificationHubUrl } from './email-verification-realtime.service';
 
 describe('toEmailVerificationHubUrl', () => {

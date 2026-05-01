@@ -1,12 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { CalorieGoalDialogComponent, CalorieGoalDialogData } from './calorie-goal-dialog.component';
+import { describe, expect, it, vi } from 'vitest';
+
 import { GoalsService } from '../../api/goals.service';
+import { CalorieGoalDialogComponent, CalorieGoalDialogData } from './calorie-goal-dialog.component';
 
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;

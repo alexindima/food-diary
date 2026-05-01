@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, input, model, output, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, input, model, output, viewChildren, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 export interface FdUiTab {

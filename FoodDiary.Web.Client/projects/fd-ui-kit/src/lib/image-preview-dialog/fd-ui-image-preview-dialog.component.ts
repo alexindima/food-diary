@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { FdUiDialogComponent } from '../dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from '../dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from '../dialog/fd-ui-dialog-ref';
-import { FdUiDialogComponent } from '../dialog/fd-ui-dialog.component';
 
 export interface FdUiImagePreviewDialogData {
     imageUrl: string;

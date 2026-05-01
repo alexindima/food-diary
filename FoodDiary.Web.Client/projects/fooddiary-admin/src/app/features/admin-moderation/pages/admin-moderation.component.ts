@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+
 import { AdminModerationService } from '../api/admin-moderation.service';
-import { AdminContentReport } from '../models/admin-moderation.data';
 import {
     AdminModerationActionDialogComponent,
     AdminModerationActionDialogData,
     AdminModerationActionDialogResult,
 } from '../dialogs/admin-moderation-action-dialog.component';
+import { AdminContentReport } from '../models/admin-moderation.data';
 
 @Component({
     selector: 'fd-admin-moderation',

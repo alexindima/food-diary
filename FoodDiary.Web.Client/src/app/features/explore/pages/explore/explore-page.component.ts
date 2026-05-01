@@ -2,23 +2,24 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
+
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ExploreService } from '../../api/explore.service';
-import { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
-import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { Recipe } from '../../../recipes/models/recipe.data';
+import { ExploreService } from '../../api/explore.service';
+import { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
 
 @Component({
     selector: 'fd-explore-page',

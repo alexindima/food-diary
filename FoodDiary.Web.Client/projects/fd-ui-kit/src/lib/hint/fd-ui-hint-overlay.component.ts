@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input, TemplateRef } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 
 @Component({

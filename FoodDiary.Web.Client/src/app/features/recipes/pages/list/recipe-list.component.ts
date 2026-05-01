@@ -1,33 +1,34 @@
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
-import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
-import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
-import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
+
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
+import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ViewportService } from '../../../../services/viewport.service';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
+import type { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
 import {
     RecipeListFiltersDialogComponent,
     RecipeListFiltersDialogResult,
 } from '../../components/list/recipe-list-filters-dialog.component';
-import { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import { ViewportService } from '../../../../services/viewport.service';
-import type { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
+import { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-list',

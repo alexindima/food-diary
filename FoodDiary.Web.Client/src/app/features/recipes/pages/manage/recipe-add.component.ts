@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { RecipeManageComponent } from '../../components/manage/recipe-manage.component';
 
 @Component({

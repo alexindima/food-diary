@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { ProductType } from '../../../products/models/product.data';
+
 import { resolveProductImageUrl } from '../../../products/lib/product-image.util';
+import { ProductType } from '../../../products/models/product.data';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 

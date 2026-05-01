@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
-import { AdminUserEditDialogComponent } from './admin-user-edit-dialog.component';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminUsersService } from '../api/admin-users.service';
+import { AdminUserEditDialogComponent } from './admin-user-edit-dialog.component';
 
 describe('AdminUserEditDialogComponent', () => {
     let component: AdminUserEditDialogComponent;

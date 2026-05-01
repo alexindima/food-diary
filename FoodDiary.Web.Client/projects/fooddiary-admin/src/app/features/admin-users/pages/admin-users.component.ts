@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+
+import { environment } from '../../../../environments/environment';
+import { AdminImpersonationSession, AdminImpersonationStart, AdminUser, AdminUsersService } from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
-import { AdminImpersonationSession, AdminImpersonationStart, AdminUser, AdminUsersService } from '../api/admin-users.service';
-import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'fd-admin-users',

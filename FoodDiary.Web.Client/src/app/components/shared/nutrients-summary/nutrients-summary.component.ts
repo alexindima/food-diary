@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BaseChartDirective } from 'ng2-charts';
 import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 import { distinctUntilChanged, fromEvent, map } from 'rxjs';
+
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { NutrientData } from '../../../shared/models/charts.data';
 import { RecursivePartial } from '../../../shared/lib/common.data';
+import { NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({
@@ -23,14 +24,14 @@ export class NutrientsSummaryComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
 
-    public calories = input.required<number>();
-    public nutrientChartData = input.required<NutrientData>();
-    public fiberValue = input<number | null>(null);
-    public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
-    public alcoholValue = input<number | null>(null);
-    public alcoholUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
-    public bare = input<boolean>(false);
-    public showBarChart = input<boolean>(false);
+    public readonly calories = input.required<number>();
+    public readonly nutrientChartData = input.required<NutrientData>();
+    public readonly fiberValue = input<number | null>(null);
+    public readonly fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
+    public readonly alcoholValue = input<number | null>(null);
+    public readonly alcoholUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
+    public readonly bare = input<boolean>(false);
+    public readonly showBarChart = input<boolean>(false);
 
     public readonly config = input<NutrientsSummaryConfig>({});
     public readonly mergedConfig = computed(() => this.mergeConfig(this.config()));

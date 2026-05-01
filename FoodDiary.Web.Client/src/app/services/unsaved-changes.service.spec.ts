@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { UnsavedChangesService, UnsavedChangesHandler } from './unsaved-changes.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { UnsavedChangesHandler, UnsavedChangesService } from './unsaved-changes.service';
 
 describe('UnsavedChangesService', () => {
     let service: UnsavedChangesService;

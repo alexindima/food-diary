@@ -1,10 +1,11 @@
 ﻿import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, input, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiFieldSize } from '../types/field-size.type';
+import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
+import { FdUiFieldSize } from '../types/field-size.type';
 
 export interface FdUiDateRangeValue {
     start: Date | null;

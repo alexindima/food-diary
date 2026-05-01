@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { UnauthorizedComponent } from './unauthorized.component';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
+import { UnauthorizedComponent } from './unauthorized.component';
 
 describe('UnauthorizedComponent', () => {
     let component: UnauthorizedComponent;

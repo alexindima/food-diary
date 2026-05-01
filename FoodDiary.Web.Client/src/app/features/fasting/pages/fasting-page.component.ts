@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -10,21 +11,25 @@ import {
     FdUiSegmentedToggleComponent,
     FdUiSegmentedToggleOption,
 } from 'fd-ui-kit';
-import { EMPTY, Observable } from 'rxjs';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiInlineAlertComponent, FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, Observable } from 'rxjs';
+
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { LocalizationService } from '../../../services/localization.service';
-import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
+import {
+    FastingCheckInChartDialogComponent,
+    FastingCheckInChartDialogData,
+} from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
 import {
     FastingEndConfirmDialogComponent,
     FastingEndConfirmDialogData,
@@ -35,27 +40,23 @@ import {
     FastingSafetyDialogData,
     FastingSafetyDialogResult,
 } from '../components/fasting-safety-dialog/fasting-safety-dialog.component';
-import {
-    FastingCheckInChartDialogComponent,
-    FastingCheckInChartDialogData,
-} from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
 import {
-    FastingEmojiScaleOption,
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HARD_STOP_THRESHOLD_HOURS,
     FASTING_HUNGER_EMOJI_SCALE,
     FASTING_MOOD_EMOJI_SCALE,
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
     FASTING_WARNING_THRESHOLD_HOURS,
+    FastingEmojiScaleOption,
 } from '../lib/fasting-page.constants';
 import { FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
 import {
     CYCLIC_PRESETS,
-    FastingCheckIn,
     FASTING_PROTOCOLS,
     FASTING_SYMPTOM_OPTIONS,
+    FastingCheckIn,
     FastingMessage,
     FastingMode,
     FastingProtocol,

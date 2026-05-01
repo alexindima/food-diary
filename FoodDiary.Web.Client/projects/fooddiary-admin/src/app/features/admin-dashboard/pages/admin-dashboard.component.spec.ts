@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { AdminDashboardComponent } from './admin-dashboard.component';
-import { AdminDashboardService } from '../api/admin-dashboard.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
+import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminTelemetryService } from '../api/admin-telemetry.service';
+import { AdminDashboardComponent } from './admin-dashboard.component';
 
 describe('AdminDashboardComponent', () => {
     let component: AdminDashboardComponent;

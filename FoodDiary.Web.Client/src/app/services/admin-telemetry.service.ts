@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { ApiService } from './api.service';
-import { FastingTelemetrySummary } from '../shared/models/admin-telemetry.data';
 import { fallbackApiError } from '../shared/lib/api-error.utils';
+import { FastingTelemetrySummary } from '../shared/models/admin-telemetry.data';
+import { ApiService } from './api.service';
 
 @Injectable({
     providedIn: 'root',

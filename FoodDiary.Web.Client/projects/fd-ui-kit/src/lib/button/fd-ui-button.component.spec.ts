@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { FdUiButtonComponent } from './fd-ui-button.component';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
+import { FdUiButtonComponent } from './fd-ui-button.component';
 
 describe('FdUiButtonComponent', () => {
     let component: FdUiButtonComponent;

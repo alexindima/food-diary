@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 @Component({
     selector: 'fd-weight-summary-card',

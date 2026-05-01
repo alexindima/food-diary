@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { FdUiLoaderComponent } from './fd-ui-loader.component';
 
 describe('FdUiLoaderComponent', () => {

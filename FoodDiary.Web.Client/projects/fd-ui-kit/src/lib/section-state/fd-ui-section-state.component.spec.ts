@@ -2,7 +2,8 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { describe, expect, it } from 'vitest';
-import { FdUiSectionStateComponent, type FdUiSectionState } from './fd-ui-section-state.component';
+
+import { type FdUiSectionState, FdUiSectionStateComponent } from './fd-ui-section-state.component';
 
 @Component({
     standalone: true,

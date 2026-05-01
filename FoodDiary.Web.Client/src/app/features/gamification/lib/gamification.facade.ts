@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, resource } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+
 import { GamificationService } from '../api/gamification.service';
 import { Badge, GamificationData } from '../models/gamification.data';
 

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
 import { DashboardWidgetHeaderComponent } from '../dashboard-widget-header/dashboard-widget-header.component';
 
 @Component({

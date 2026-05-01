@@ -1,26 +1,27 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { finalize, firstValueFrom } from 'rxjs';
 import { catchError, of } from 'rxjs';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AiFoodService } from '../../../shared/api/ai-food.service';
-import { UserService } from '../../../shared/api/user.service';
-import { LocalizationService } from '../../../services/localization.service';
-import { AuthService } from '../../../services/auth.service';
-import { NavigationService } from '../../../services/navigation.service';
+
 import { MealService } from '../../../features/meals/api/meal.service';
 import { Meal } from '../../../features/meals/models/meal.data';
+import { AuthService } from '../../../services/auth.service';
+import { LocalizationService } from '../../../services/localization.service';
+import { NavigationService } from '../../../services/navigation.service';
+import { AiFoodService } from '../../../shared/api/ai-food.service';
+import { UserService } from '../../../shared/api/user.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
-import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog.component';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog.component';
-import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
-import { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
+import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog.component';
 import { buildMealManageDtoFromAiResult, mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
-import { WritableSignal } from '@angular/core';
+import { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
+import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 
 interface AiInputBarChannelState {
     analyzing: WritableSignal<boolean>;

@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FdUiSatietyScaleComponent, DEFAULT_SATIETY_LEVELS } from './fd-ui-satiety-scale.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { DEFAULT_SATIETY_LEVELS, FdUiSatietyScaleComponent } from './fd-ui-satiety-scale.component';
 
 describe('FdUiSatietyScaleComponent', () => {
     let component: FdUiSatietyScaleComponent;

@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DailyProgressCardComponent } from './daily-progress-card.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { DailyProgressCardComponent } from './daily-progress-card.component';
 
 describe('DailyProgressCardComponent', () => {
     let component: DailyProgressCardComponent;

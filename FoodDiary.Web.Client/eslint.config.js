@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import parser from '@typescript-eslint/parser';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import prettierPlugin from 'eslint-plugin-prettier';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import templateParser from '@angular-eslint/template-parser';
+import angularPlugin from '@angular-eslint/eslint-plugin';
 import templatePlugin from '@angular-eslint/eslint-plugin-template';
+import templateParser from '@angular-eslint/template-parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import parser from '@typescript-eslint/parser';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
+import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 
 const getTemplateAttributes = node => [...(node.attributes ?? []), ...(node.inputs ?? [])];
 
 const hasTemplateAttribute = (node, name) => getTemplateAttributes(node).some(attribute => attribute.name === name);
 
 const isAriaHidden = node =>
-    getTemplateAttributes(node).some(attribute => attribute.name === 'aria-hidden' && (attribute.value === 'true' || attribute.value?.source === 'true'));
+    getTemplateAttributes(node).some(
+        attribute => attribute.name === 'aria-hidden' && (attribute.value === 'true' || attribute.value?.source === 'true'),
+    );
 
 const hasProjectedText = nodes =>
     (nodes ?? []).some(node => {
@@ -60,7 +64,11 @@ const localTemplatePlugin = {
                             });
                         }
 
-                        if (hasTemplateAttribute(node, 'icon') && !hasTemplateAttribute(node, 'ariaLabel') && !hasProjectedText(node.children)) {
+                        if (
+                            hasTemplateAttribute(node, 'icon') &&
+                            !hasTemplateAttribute(node, 'ariaLabel') &&
+                            !hasProjectedText(node.children)
+                        ) {
                             context.report({
                                 node,
                                 messageId: 'missingName',
@@ -75,24 +83,10 @@ const localTemplatePlugin = {
 
 export default [
     {
-        ignores: [
-            '**/node_modules/**',
-            '**/dist/**',
-            '**/dist-admin/**',
-            '**/dist-storybook/**',
-            '**/.angular/**',
-            '**/*.min.js',
-        ],
+        ignores: ['**/node_modules/**', '**/dist/**', '**/dist-admin/**', '**/dist-storybook/**', '**/.angular/**', '**/*.min.js'],
     },
     {
-        ignores: [
-            '**/node_modules/**',
-            '**/dist/**',
-            '**/dist-admin/**',
-            '**/dist-storybook/**',
-            '**/.angular/**',
-            '**/*.min.js',
-        ],
+        ignores: ['**/node_modules/**', '**/dist/**', '**/dist-admin/**', '**/dist-storybook/**', '**/.angular/**', '**/*.min.js'],
         files: ['**/*.js', '**/*.ts'],
         languageOptions: {
             parser,
@@ -106,10 +100,13 @@ export default [
         },
         plugins: {
             '@typescript-eslint': tsPlugin,
+            '@angular-eslint': angularPlugin,
             prettier: prettierPlugin,
+            'simple-import-sort': simpleImportSortPlugin,
         },
         rules: {
             ...eslintConfigPrettier.rules,
+            'no-console': 'warn',
             'object-shorthand': ['error', 'always'],
             curly: ['error', 'all'],
             'no-redeclare': 'error',
@@ -118,6 +115,8 @@ export default [
             'prefer-const': 'error',
             eqeqeq: ['error', 'always'],
             'no-unreachable': 'error',
+            'simple-import-sort/imports': 'error',
+            'simple-import-sort/exports': 'error',
             '@typescript-eslint/explicit-member-accessibility': [
                 'error',
                 {
@@ -142,6 +141,7 @@ export default [
                     objectLiteralTypeAssertions: 'never',
                 },
             ],
+            '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
@@ -158,13 +158,42 @@ export default [
     },
     {
         files: ['**/*.ts'],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+        rules: {
+            '@typescript-eslint/no-floating-promises': [
+                'warn',
+                {
+                    ignoreVoid: true,
+                },
+            ],
+            '@typescript-eslint/no-misused-promises': [
+                'warn',
+                {
+                    checksVoidReturn: {
+                        attributes: false,
+                    },
+                },
+            ],
+            '@typescript-eslint/prefer-readonly': 'warn',
+        },
+    },
+    {
+        files: ['**/*.ts'],
         ignores: ['**/*.spec.ts', '**/*.stories.ts'],
         rules: {
+            '@angular-eslint/prefer-signals': 'warn',
+            '@angular-eslint/prefer-on-push-component-change-detection': 'warn',
             'no-restricted-syntax': [
                 'error',
                 {
                     selector: 'Decorator[expression.callee.name="HostListener"]',
-                    message: 'Use the host metadata property or fromEvent() instead of @HostListener(). See: https://angular.dev/api/core/HostListener',
+                    message:
+                        'Use the host metadata property or fromEvent() instead of @HostListener(). See: https://angular.dev/api/core/HostListener',
                 },
                 {
                     selector: 'Decorator[expression.callee.name="HostBinding"]',
@@ -265,12 +294,14 @@ export default [
                 },
                 {
                     selector: 'Decorator[expression.callee.name="ContentChildren"]',
-                    message: 'Use contentChildren() signal query instead of @ContentChildren(). See: https://angular.dev/guide/signals/queries',
+                    message:
+                        'Use contentChildren() signal query instead of @ContentChildren(). See: https://angular.dev/guide/signals/queries',
                 },
                 {
                     selector:
                         'Decorator[expression.callee.name="Component"] CallExpression[callee.name="Component"] > ObjectExpression > Property[key.name="template"]',
-                    message: 'Use templateUrl with a dedicated .html file instead of inline component templates. Specs may keep inline templates.',
+                    message:
+                        'Use templateUrl with a dedicated .html file instead of inline component templates. Specs may keep inline templates.',
                 },
                 {
                     selector:
@@ -378,12 +409,7 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../../features/**',
-                                '../../../features/**',
-                                '../../../../features/**',
-                                'src/app/features/**',
-                            ],
+                            group: ['../../features/**', '../../../features/**', '../../../../features/**', 'src/app/features/**'],
                             message: 'components/shared should stay feature-agnostic shared UI.',
                         },
                     ],
@@ -400,12 +426,7 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../**/*.routes',
-                                '../../**/*.routes',
-                                '../../../**/*.routes',
-                                '../../../../**/*.routes',
-                            ],
+                            group: ['../**/*.routes', '../../**/*.routes', '../../../**/*.routes', '../../../../**/*.routes'],
                             message: 'Feature code should depend on feature-local API/models/components, not on route configuration files.',
                         },
                     ],
@@ -415,22 +436,14 @@ export default [
     },
     {
         files: ['src/app/features/**/*.ts'],
-        ignores: [
-            'src/app/features/**/*.routes.ts',
-            'src/app/features/public/**/*.ts',
-            'src/app/features/**/*.spec.ts',
-        ],
+        ignores: ['src/app/features/**/*.routes.ts', 'src/app/features/public/**/*.ts', 'src/app/features/**/*.spec.ts'],
         rules: {
             'no-restricted-imports': [
                 'error',
                 {
                     patterns: [
                         {
-                            group: [
-                                '../../*/pages/**',
-                                '../../../*/pages/**',
-                                '../../../../*/pages/**',
-                            ],
+                            group: ['../../*/pages/**', '../../../*/pages/**', '../../../../*/pages/**'],
                             message: 'Import feature-local models/api/components instead of another feature page.',
                         },
                     ],
@@ -446,12 +459,9 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../../../!(shared)/api/**',
-                                '../../../../!(shared)/api/**',
-                                '../../../../../!(shared)/api/**',
-                            ],
-                            message: 'Feature dialogs should use shared APIs or same-feature APIs, not reach into another feature API directly.',
+                            group: ['../../../!(shared)/api/**', '../../../../!(shared)/api/**', '../../../../../!(shared)/api/**'],
+                            message:
+                                'Feature dialogs should use shared APIs or same-feature APIs, not reach into another feature API directly.',
                         },
                     ],
                 },
@@ -466,12 +476,9 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../../../!(shared)/api/**',
-                                '../../../../!(shared)/api/**',
-                                '../../../../../!(shared)/api/**',
-                            ],
-                            message: 'Feature components should use shared APIs or same-feature APIs, not reach into another feature API directly.',
+                            group: ['../../../!(shared)/api/**', '../../../../!(shared)/api/**', '../../../../../!(shared)/api/**'],
+                            message:
+                                'Feature components should use shared APIs or same-feature APIs, not reach into another feature API directly.',
                         },
                     ],
                 },
@@ -486,11 +493,7 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../../!(shared)/api/**',
-                                '../../../!(shared)/api/**',
-                                '../../../../!(shared)/api/**',
-                            ],
+                            group: ['../../!(shared)/api/**', '../../../!(shared)/api/**', '../../../../!(shared)/api/**'],
                             message: 'Feature lib and resolver code should stay within shared APIs or same-feature APIs.',
                         },
                     ],
@@ -534,13 +537,9 @@ export default [
                             message: 'Import from the public fd-ui-kit barrel instead of deep-linking into UI-kit internals.',
                         },
                         {
-                            group: [
-                                '../guards/**',
-                                '../../guards/**',
-                                '../../../guards/**',
-                                'src/app/guards/**',
-                            ],
-                            message: 'Guards belong to the routing layer and should only be imported from app.routes.ts or feature *.routes.ts files.',
+                            group: ['../guards/**', '../../guards/**', '../../../guards/**', 'src/app/guards/**'],
+                            message:
+                                'Guards belong to the routing layer and should only be imported from app.routes.ts or feature *.routes.ts files.',
                         },
                     ],
                 },
@@ -556,12 +555,7 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../**/*.routes',
-                                '../../**/*.routes',
-                                '../../../**/*.routes',
-                                '../../../../**/*.routes',
-                            ],
+                            group: ['../**/*.routes', '../../**/*.routes', '../../../**/*.routes', '../../../../**/*.routes'],
                             message: 'Admin feature code should depend on feature-local API/models/components, not on route files.',
                         },
                     ],
@@ -582,11 +576,7 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../../*/pages/**',
-                                '../../../*/pages/**',
-                                '../../../../*/pages/**',
-                            ],
+                            group: ['../../*/pages/**', '../../../*/pages/**', '../../../../*/pages/**'],
                             message: 'Admin features should import another feature API/models/components instead of a page.',
                         },
                     ],
@@ -618,7 +608,8 @@ export default [
                         },
                         {
                             group: ['@angular/cdk/dialog', '@angular/cdk/overlay', '@angular/cdk/portal'],
-                            message: 'Use fd-ui-kit dialog/menu/date primitives instead of low-level CDK overlay APIs in admin feature code.',
+                            message:
+                                'Use fd-ui-kit dialog/menu/date primitives instead of low-level CDK overlay APIs in admin feature code.',
                         },
                         {
                             group: ['projects/fd-ui-kit/src/lib/**', 'fd-ui-kit/src/lib/**'],
@@ -633,7 +624,8 @@ export default [
                                 '../../services/**',
                                 '../../../services/**',
                             ],
-                            message: 'Admin code should use feature-local routes/pages/api or the explicit admin-auth boundary, not legacy global pages/services buckets.',
+                            message:
+                                'Admin code should use feature-local routes/pages/api or the explicit admin-auth boundary, not legacy global pages/services buckets.',
                         },
                     ],
                 },
@@ -653,13 +645,9 @@ export default [
                 {
                     patterns: [
                         {
-                            group: [
-                                '../guards/**',
-                                '../../guards/**',
-                                '../../../guards/**',
-                                'projects/fooddiary-admin/src/app/guards/**',
-                            ],
-                            message: 'Admin guards belong to the routing layer and should only be imported from app.routes.ts or admin feature *.routes.ts files.',
+                            group: ['../guards/**', '../../guards/**', '../../../guards/**', 'projects/fooddiary-admin/src/app/guards/**'],
+                            message:
+                                'Admin guards belong to the routing layer and should only be imported from app.routes.ts or admin feature *.routes.ts files.',
                         },
                     ],
                 },

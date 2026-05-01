@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { AdminBillingComponent } from './admin-billing.component';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminBillingService } from '../api/admin-billing.service';
+import { AdminBillingComponent } from './admin-billing.component';
 
 describe('AdminBillingComponent', () => {
     let component: AdminBillingComponent;

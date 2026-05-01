@@ -1,6 +1,7 @@
-﻿import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 

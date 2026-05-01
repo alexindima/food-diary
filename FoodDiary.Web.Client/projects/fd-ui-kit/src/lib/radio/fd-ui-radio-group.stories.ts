@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/angular';
 import { FormsModule } from '@angular/forms';
+import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+
 import { FdUiRadioGroupComponent } from './fd-ui-radio-group.component';
 
 const meta: Meta<FdUiRadioGroupComponent<string>> = {

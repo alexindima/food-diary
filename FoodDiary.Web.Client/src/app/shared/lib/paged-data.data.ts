@@ -1,9 +1,10 @@
 import { signal } from '@angular/core';
+
 import { PageOf } from '../models/page-of.data';
 
 export class PagedData<T> {
-    public items = signal<T[]>([]);
-    public isLoading = signal<boolean>(false);
+    public readonly items = signal<T[]>([]);
+    public readonly isLoading = signal<boolean>(false);
     public currentPage = 1;
     public totalPages: number = 0;
     public totalItems: number = 0;

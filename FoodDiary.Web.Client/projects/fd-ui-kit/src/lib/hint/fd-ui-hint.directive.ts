@@ -1,7 +1,8 @@
-import { DestroyRef, Directive, ElementRef, TemplateRef, booleanAttribute, input, inject } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, TemplateRef } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
 import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay.component';
 
 type HintContent = string | TemplateRef<unknown> | null;

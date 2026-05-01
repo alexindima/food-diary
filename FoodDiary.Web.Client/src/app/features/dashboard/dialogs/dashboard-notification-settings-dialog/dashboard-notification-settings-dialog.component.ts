@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { finalize } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiHintDirective } from 'fd-ui-kit/hint/fd-ui-hint.directive';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { finalize } from 'rxjs';
+
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { NotificationService } from '../../../../services/notification.service';

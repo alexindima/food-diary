@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
-import { adminAuthGuard } from './admin-auth.guard';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminAuthService } from '../features/admin-auth/lib/admin-auth.service';
+import { adminAuthGuard } from './admin-auth.guard';
 
 describe('adminAuthGuard', () => {
     let authService: {

@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
+
 import { DESIGN_TOKEN_VALUES } from './design-tokens';
 
 type TokenSwatch = { name: string; value: string };

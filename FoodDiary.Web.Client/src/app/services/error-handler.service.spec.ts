@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { GlobalErrorHandler } from './error-handler.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 

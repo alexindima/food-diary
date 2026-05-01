@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, inject } from '@angular/core';
+import { Directive, inject, TemplateRef } from '@angular/core';
 
 @Directive({
     selector: '[fdUiEntityCardHeader]',

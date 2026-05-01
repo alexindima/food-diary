@@ -1,14 +1,15 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { catchError, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';
-import { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 import { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
+import { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
 @Injectable()
 export class RecipeListFacade {

@@ -2,32 +2,32 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
+import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+
+import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
-import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { StatisticsBodyComponent } from '../../../components/shared/statistics-body/statistics-body.component';
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
 import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { ExportFormat, ExportService } from '../../meals/api/export.service';
+import { StatisticsFacade } from '../lib/statistics.facade';
 import {
+    barChartOptions,
+    bodyChartOptions,
     createCaloriesLineChartOptions,
     createPieChartOptions,
     nutrientsLineChartOptions,
     radarChartOptions,
-    barChartOptions,
-    bodyChartOptions,
     summarySparklineOptions,
 } from '../lib/statistics-chart-config';
 import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
-import { StatisticsFacade } from '../lib/statistics.facade';
-import { ExportFormat, ExportService } from '../../meals/api/export.service';
 
 @Component({
     selector: 'fd-statistics',

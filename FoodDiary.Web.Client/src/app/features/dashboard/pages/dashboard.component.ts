@@ -1,33 +1,33 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, inject, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { NavigationService } from '../../../services/navigation.service';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+
+import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { DashboardSummaryCardComponent } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import { MealsPreviewComponent } from '../../../components/shared/meals-preview/meals-preview.component';
+import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { DashboardSummaryCardComponent } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
-import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
-import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
-import { MealsPreviewComponent } from '../../../components/shared/meals-preview/meals-preview.component';
-import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
-import { TdeeInsightCardComponent } from '../components/tdee-insight-card/tdee-insight-card.component';
-import { MicronutrientCardComponent } from '../components/micronutrient-card/micronutrient-card.component';
-import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
+import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
-import { DashboardLayoutService } from '../lib/dashboard-layout.service';
-import { DashboardFacade } from '../lib/dashboard.facade';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
-import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
+import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
 import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
+import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
+import { MicronutrientCardComponent } from '../components/micronutrient-card/micronutrient-card.component';
+import { TdeeInsightCardComponent } from '../components/tdee-insight-card/tdee-insight-card.component';
+import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
+import { DashboardFacade } from '../lib/dashboard.facade';
 import {
     formatDashboardFastingDuration,
     getDashboardCyclicPhaseProgressLabel,
@@ -35,6 +35,7 @@ import {
     getDashboardFastingOccurrenceLabel,
     getDashboardFastingProtocolBaseLabel,
 } from '../lib/dashboard-fasting.utils';
+import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 
 @Component({
     selector: 'fd-dashboard',

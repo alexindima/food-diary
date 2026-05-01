@@ -1,8 +1,9 @@
 import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { SwPush } from '@angular/service-worker';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { firstValueFrom, take } from 'rxjs';
 import { Router } from '@angular/router';
+import { SwPush } from '@angular/service-worker';
+import { firstValueFrom, take } from 'rxjs';
+
 import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
 import { NotificationService, WebPushSubscriptionRequest } from './notification.service';

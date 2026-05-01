@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
     selector: 'fd-dynamic-progress-bar',
@@ -13,7 +13,7 @@ export class DynamicProgressBarComponent {
     public readonly max = input.required<number>();
     public readonly unit = input<string>('');
 
-    public progress = computed<number>(() => {
+    public readonly progress = computed<number>(() => {
         const maxValue = this.max();
         if (maxValue <= 0) {
             return 0;
@@ -21,9 +21,9 @@ export class DynamicProgressBarComponent {
         return Math.round((this.current() / maxValue) * 100);
     });
 
-    public progressBarWidth = computed<string>(() => Math.min(this.progress(), 100) + '%');
+    public readonly progressBarWidth = computed<string>(() => Math.min(this.progress(), 100) + '%');
 
-    public maxPosition = computed(() => {
+    public readonly maxPosition = computed(() => {
         const maxValue = this.max();
         const currentValue = this.current();
         if (maxValue <= 0 || currentValue <= 0) {
@@ -32,7 +32,7 @@ export class DynamicProgressBarComponent {
         return currentValue > maxValue ? (maxValue / currentValue) * 100 : 100;
     });
 
-    public textPosition = computed<string>(() => {
+    public readonly textPosition = computed<string>(() => {
         let position;
         if (this.max() <= 0) {
             position = 50;
@@ -48,7 +48,7 @@ export class DynamicProgressBarComponent {
 
         return position + '%';
     });
-    public barColor = computed(() => {
+    public readonly barColor = computed(() => {
         if (this.progress() <= 100) {
             const greenIntensity = Math.round((this.progress() / 100) * 100);
             return this.toHex([80, 150 + greenIntensity, 80]);
@@ -60,7 +60,7 @@ export class DynamicProgressBarComponent {
             return this.toHex([255, 100 - redIntensity, 80 - redIntensity / 2]);
         }
     });
-    public textColorClass = computed(() => (this.progress() < 100 * 0.5 ? 'text-black' : 'text-white'));
+    public readonly textColorClass = computed(() => (this.progress() < 100 * 0.5 ? 'text-black' : 'text-white'));
 
     private toHex(channels: number[]): string {
         return `#${channels

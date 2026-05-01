@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiSectionStateComponent } from './fd-ui-section-state.component';
 
 const meta: Meta<FdUiSectionStateComponent> = {

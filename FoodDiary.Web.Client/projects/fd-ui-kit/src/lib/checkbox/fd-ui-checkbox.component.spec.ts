@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { FdUiCheckboxComponent } from './fd-ui-checkbox.component';
 
 describe('FdUiCheckboxComponent', () => {

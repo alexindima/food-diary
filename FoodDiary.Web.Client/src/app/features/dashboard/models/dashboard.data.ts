@@ -1,10 +1,10 @@
+import { DashboardLayoutSettings } from '../../../shared/models/user.data';
+import { FastingSession } from '../../fasting/models/fasting.data';
 import { HydrationDaily } from '../../hydration/models/hydration.data';
 import { Meal } from '../../meals/models/meal.data';
-import { DailyAdvice } from './daily-advice.data';
-import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
-import { FastingSession } from '../../fasting/models/fasting.data';
+import { DailyAdvice } from './daily-advice.data';
 
 export interface DashboardSnapshot {
     date: string;

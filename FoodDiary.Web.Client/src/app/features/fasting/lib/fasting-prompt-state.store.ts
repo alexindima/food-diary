@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 import { BrowserStorageService } from '../../../services/browser-storage.service';
 
 interface FastingPromptState {

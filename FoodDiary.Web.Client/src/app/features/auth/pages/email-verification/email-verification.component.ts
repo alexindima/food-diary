@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type VerificationState = 'pending' | 'success' | 'error';
 

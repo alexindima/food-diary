@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+
 import { environment } from '../../environments/environment';
 import { SKIP_OBSERVABILITY } from '../constants/observability-context.tokens';
 import { FrontendObservabilityService } from '../services/frontend-observability.service';

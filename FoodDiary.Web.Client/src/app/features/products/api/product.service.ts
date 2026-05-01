@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
+
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { CreateProductRequest, Product, ProductFilters, ProductOverview, UpdateProductRequest } from '../models/product.data';
 import { PageOf } from '../../../shared/models/page-of.data';
+import { CreateProductRequest, Product, ProductFilters, ProductOverview, UpdateProductRequest } from '../models/product.data';
 
 @Injectable({
     providedIn: 'root',

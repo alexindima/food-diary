@@ -1,19 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, FactoryProvider, effect, inject, input, signal } from '@angular/core';
-import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility } from '../../models/product.data';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, FactoryProvider, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { NavigationService } from '../../../../services/navigation.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
-import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+
+import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
+import { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { NavigationService } from '../../../../services/navigation.service';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     calculateCalorieMismatchWarning,
@@ -22,18 +24,17 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
-import { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import {
     ProductAiRecognitionDialogComponent,
     ProductAiRecognitionResult,
 } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
-import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { ProductManageFacade } from '../../lib/product-manage.facade';
+import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
+import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductBasicInfoComponent } from './product-basic-info/product-basic-info.component';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
-import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { ProductManageFacade } from '../../lib/product-manage.facade';
-import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -73,10 +74,10 @@ export class BaseProductManageComponent {
     private readonly productManageFacade = inject(ProductManageFacade);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
 
-    public product = input<Product | null>();
-    public globalError = signal<string | null>(null);
-    public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
-    public macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
+    public readonly product = input<Product | null>();
+    public readonly globalError = signal<string | null>(null);
+    public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    public readonly macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
     private formInitialized = false;
     public readonly isDeleting = signal(false);
     public readonly isSubmitting = signal(false);

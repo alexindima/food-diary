@@ -1,12 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DietologistInvitationPageComponent } from './dietologist-invitation-page.component';
-import { DietologistService } from '../../api/dietologist.service';
-import { NavigationService } from '../../../../services/navigation.service';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from '../../../../services/auth.service';
+import { NavigationService } from '../../../../services/navigation.service';
+import { DietologistService } from '../../api/dietologist.service';
+import { DietologistInvitationPageComponent } from './dietologist-invitation-page.component';
 
 describe('DietologistInvitationPageComponent', () => {
     let fixture: ComponentFixture<DietologistInvitationPageComponent>;

@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid' | 'error';
 

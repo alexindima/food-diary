@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiEmptyStateComponent } from './fd-ui-empty-state.component';
 
 const meta: Meta<FdUiEmptyStateComponent> = {

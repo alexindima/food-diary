@@ -1,7 +1,7 @@
-import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../products/models/product.data';
-import { Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
-import { QualityGrade } from '../../products/models/product.data';
 import { PageOf } from '../../../shared/models/page-of.data';
+import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../products/models/product.data';
+import { QualityGrade } from '../../products/models/product.data';
+import { Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 
 export interface Consumption {
     id: string;

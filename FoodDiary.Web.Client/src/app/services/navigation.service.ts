@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { AuthMode } from '../features/auth/models/auth.data';
 
 @Injectable({

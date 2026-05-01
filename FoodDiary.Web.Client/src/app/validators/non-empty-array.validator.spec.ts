@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { FormControl } from '@angular/forms';
+import { describe, expect, it } from 'vitest';
+
 import { nonEmptyArrayValidator } from './non-empty-array.validator';
 
 describe('nonEmptyArrayValidator', () => {

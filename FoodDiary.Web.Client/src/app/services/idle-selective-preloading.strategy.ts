@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { Route, PreloadingStrategy } from '@angular/router';
+import { PreloadingStrategy, Route } from '@angular/router';
 import { EMPTY, from, Observable, switchMap } from 'rxjs';
+
 import { AuthService } from './auth.service';
 
 type IdleCapableGlobal = typeof globalThis & {

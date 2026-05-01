@@ -1,27 +1,28 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { CHART_COLORS } from '../../../../constants/chart-colors';
-import { ProductService } from '../../api/product.service';
-import { FavoriteProductService } from '../../api/favorite-product.service';
-import { Product } from '../../models/product.data';
-import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
-import { NutrientData } from '../../../../shared/models/charts.data';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
+
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { CHART_COLORS } from '../../../../constants/chart-colors';
+import { NutrientData } from '../../../../shared/models/charts.data';
+import { FavoriteProductService } from '../../api/favorite-product.service';
+import { ProductService } from '../../api/product.service';
+import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
+import { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-detail',

@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+
 import { AdminLessonsService } from '../api/admin-lessons.service';
-import { AdminLesson } from '../models/admin-lesson.data';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog.component';
+import { AdminLesson } from '../models/admin-lesson.data';
 
 @Component({
     selector: 'fd-admin-lessons',

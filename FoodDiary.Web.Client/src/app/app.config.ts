@@ -1,3 +1,4 @@
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import {
     ApplicationConfig,
     ErrorHandler,
@@ -8,27 +9,27 @@ import {
     provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
-import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LocalizationService } from './services/localization.service';
-import { AuthService } from './services/auth.service';
-import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
-import { RetryInterceptor } from './interceptor/retry.interceptor';
-import { AuthInterceptor } from './interceptor/auth.interceptor';
-import { GlobalLoadingInterceptor } from './interceptor/global-loading.interceptor';
-import { FrontendObservabilityService } from './services/frontend-observability.service';
-import { LoggingApiService } from './services/logging-api.service';
-import { provideServiceWorker } from '@angular/service-worker';
-import { UserService } from './shared/api/user.service';
-import { firstValueFrom } from 'rxjs';
-import { environment } from '../environments/environment';
-import { GlobalErrorHandler } from './services/error-handler.service';
-import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { ThemeService } from './services/theme.service';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+
+import { environment } from '../environments/environment';
+import { routes } from './app.routes';
+import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
+import { GlobalLoadingInterceptor } from './interceptor/global-loading.interceptor';
+import { RetryInterceptor } from './interceptor/retry.interceptor';
+import { AuthService } from './services/auth.service';
+import { GlobalErrorHandler } from './services/error-handler.service';
 import { FoodDiaryTranslationLoader } from './services/food-diary-translation.loader';
+import { FrontendObservabilityService } from './services/frontend-observability.service';
+import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
+import { LocalizationService } from './services/localization.service';
+import { LoggingApiService } from './services/logging-api.service';
+import { ThemeService } from './services/theme.service';
+import { UserService } from './shared/api/user.service';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
 

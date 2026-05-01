@@ -1,20 +1,21 @@
-import { describe, expect, it, vi } from 'vitest';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { UserManageComponent } from './user-manage.component';
+import { of } from 'rxjs';
+import { describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from '../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
+import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
+import { UserManageComponent } from './user-manage.component';
 
 describe('UserManageComponent dietologist section', () => {
     let fixture: ComponentFixture<UserManageComponent>;

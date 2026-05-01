@@ -1,10 +1,11 @@
-import { Injectable, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, map, Observable } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { finalize, map, Observable } from 'rxjs';
+
 import { NavigationService } from '../../../services/navigation.service';
 import {
     ItemSelectDialogComponent,

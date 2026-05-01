@@ -1,13 +1,14 @@
-import { describe, it, expect } from 'vitest';
 import { signal } from '@angular/core';
+import { describe, expect, it } from 'vitest';
+
+import { DashboardSnapshot, DashboardStatistics } from '../models/dashboard.data';
 import {
-    placeholderIcon,
-    placeholderLabel,
-    createNutrientBarsSignal,
     createConsumptionRingSignal,
     createMealPreviewSignal,
+    createNutrientBarsSignal,
+    placeholderIcon,
+    placeholderLabel,
 } from './dashboard-nutrition.utils';
-import { DashboardSnapshot, DashboardStatistics } from '../models/dashboard.data';
 
 function buildSnapshot(
     overrides: { statistics: Partial<DashboardStatistics> } & Partial<Omit<DashboardSnapshot, 'statistics'>>,

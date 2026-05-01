@@ -1,7 +1,7 @@
 import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { Product } from '../../../products/models/product.data';
 import { RecipeVisibility } from '../../models/recipe.data';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
 
 export interface RecipeFormValues {
     name: string;

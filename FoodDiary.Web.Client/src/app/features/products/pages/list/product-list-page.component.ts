@@ -3,22 +3,23 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { finalize } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
+import { finalize } from 'rxjs';
+
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { Product } from '../../models/product.data';
 import type { ProductDetailActionResult } from '../../components/detail/product-detail.component';
+import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
+import { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-list-page',

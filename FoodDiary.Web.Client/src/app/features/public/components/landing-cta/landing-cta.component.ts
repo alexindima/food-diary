@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
+import { inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { inject } from '@angular/core';
 
 @Component({
     selector: 'fd-landing-cta',

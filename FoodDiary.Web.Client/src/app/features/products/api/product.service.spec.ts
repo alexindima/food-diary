@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { ProductService } from './product.service';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../models/product.data';
+import { ProductService } from './product.service';
 
 describe('ProductService', () => {
     let service: ProductService;

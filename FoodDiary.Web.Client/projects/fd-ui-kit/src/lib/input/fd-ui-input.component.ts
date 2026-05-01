@@ -1,9 +1,10 @@
-﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
+﻿import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { DestroyRef, ElementRef, afterNextRender, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
+import { afterNextRender, DestroyRef, ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AutofillMonitor } from '@angular/cdk/text-field';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiFieldSize } from '../types/field-size.type';
 

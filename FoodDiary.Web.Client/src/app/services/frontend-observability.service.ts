@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
+
 import { environment } from '../../environments/environment';
 import { ClientTelemetryEvent, LoggingApiService } from './logging-api.service';
 
@@ -15,7 +16,7 @@ export class FrontendObservabilityService {
     private readonly loggingApiService = inject(LoggingApiService);
     private readonly navigationStarts = new Map<number, number>();
     private initialized = false;
-    private reportedVitals = new Set<string>();
+    private readonly reportedVitals = new Set<string>();
 
     public initialize(): void {
         if (this.initialized || !environment.enableClientObservability || typeof window === 'undefined') {

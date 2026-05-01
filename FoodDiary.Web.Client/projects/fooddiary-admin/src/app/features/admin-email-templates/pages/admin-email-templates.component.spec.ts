@@ -1,9 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
-import { AdminEmailTemplatesComponent } from './admin-email-templates.component';
-import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { of, Subject } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
+import { AdminEmailTemplatesComponent } from './admin-email-templates.component';
 
 describe('AdminEmailTemplatesComponent', () => {
     let component: AdminEmailTemplatesComponent;

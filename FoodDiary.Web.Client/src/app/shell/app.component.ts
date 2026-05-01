@@ -1,19 +1,19 @@
-import { Component, DestroyRef, Injector, ViewEncapsulation, computed, inject } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
+import { Component, computed, DestroyRef, inject, Injector, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
+import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { filter, from, map, mergeMap } from 'rxjs';
 
-import { AuthService } from '../services/auth.service';
-import { SeoService, SeoData } from '../services/seo.service';
-import { LocalizationService } from '../services/localization.service';
 import { QuickConsumptionDrawerComponent } from '../features/meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
+import { AuthService } from '../services/auth.service';
+import { GlobalLoadingService } from '../services/global-loading.service';
+import { LocalizationService } from '../services/localization.service';
 import { NotificationRealtimeService } from '../services/notification-realtime.service';
 import { PushNotificationService } from '../services/push-notification.service';
-import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
-import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
+import { SeoData, SeoService } from '../services/seo.service';
 import { ThemeService } from '../services/theme.service';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @Component({
     selector: 'fd-root',

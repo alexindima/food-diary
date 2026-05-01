@@ -5,8 +5,8 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { Product } from '../../products/models/product.data';
 import { Recipe } from '../../recipes/models/recipe.data';
-import { MealManageDto, MealSourceType } from '../models/meal.data';
 import { MealService } from '../api/meal.service';
+import { MealManageDto, MealSourceType } from '../models/meal.data';
 
 export type QuickMealItemType = 'product' | 'recipe';
 

@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { ApiService } from '../../../services/api.service';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { BillingOverview, BillingPlan, BillingProvider, CheckoutSessionResponse, PortalSessionResponse } from '../models/billing.models';
 
 @Injectable({

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
+
 import { DashboardWidgetFrameComponent } from '../../../features/dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
+import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
 
 export interface NutrientBar {
     id: string;

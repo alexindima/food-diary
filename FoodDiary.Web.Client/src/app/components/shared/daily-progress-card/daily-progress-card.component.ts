@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
+
+import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
 
 @Component({
     selector: 'fd-daily-progress-card',

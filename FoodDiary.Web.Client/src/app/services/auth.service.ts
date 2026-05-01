@@ -1,5 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, finalize, firstValueFrom, map, Observable, of, shareReplay, tap } from 'rxjs';
+
+import { environment } from '../../environments/environment';
 import {
     AuthResponse,
     ConfirmPasswordResetRequest,
@@ -10,18 +13,16 @@ import {
     TelegramAuthRequest,
     TelegramLoginWidgetRequest,
 } from '../features/auth/models/auth.data';
-import { environment } from '../../environments/environment';
-import { ApiService } from './api.service';
-import { NavigationService } from './navigation.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
 import { QuickMealService } from '../features/meals/lib/quick-meal.service';
-import { LocalizationService } from './localization.service';
-import { TokenStorageService } from './token-storage.service';
-import { JwtDecoderService } from './jwt-decoder.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
-import { ThemeService } from './theme.service';
+import { ApiService } from './api.service';
 import { FrontendLoggerService } from './frontend-logger.service';
+import { JwtDecoderService } from './jwt-decoder.service';
+import { LocalizationService } from './localization.service';
+import { NavigationService } from './navigation.service';
+import { ThemeService } from './theme.service';
+import { TokenStorageService } from './token-storage.service';
 
 @Injectable({
     providedIn: 'root',
@@ -36,12 +37,12 @@ export class AuthService extends ApiService {
     private readonly logger = inject(FrontendLoggerService);
     protected readonly baseUrl = environment.apiUrls.auth;
 
-    private authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
-    private userSignal = signal<string | null>(this.tokenStorage.loadUserId());
-    private emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
+    private readonly authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
+    private readonly userSignal = signal<string | null>(this.tokenStorage.loadUserId());
+    private readonly emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
     private refreshInFlight$: Observable<string | null> | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
-    private authReadySignal = signal(false);
+    private readonly authReadySignal = signal(false);
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);

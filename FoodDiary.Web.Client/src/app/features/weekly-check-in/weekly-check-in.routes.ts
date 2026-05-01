@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { WeeklyCheckInPageComponent } from './pages/weekly-check-in-page.component';
 
 const routes: Routes = [

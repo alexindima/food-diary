@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { GamificationPageComponent } from './pages/gamification-page.component';
 
 const routes: Routes = [

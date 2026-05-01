@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { loggedInGuard } from './logged-in.guard';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
-import { signal } from '@angular/core';
+import { loggedInGuard } from './logged-in.guard';
 
 describe('loggedInGuard', () => {
     let authServiceMock: {

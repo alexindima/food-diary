@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
+
 import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.routes';
+import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
 import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
 import { adminLessonsRoutes } from './features/admin-lessons/admin-lessons.routes';

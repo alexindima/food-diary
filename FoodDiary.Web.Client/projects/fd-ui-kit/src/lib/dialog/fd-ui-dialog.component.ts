@@ -3,17 +3,18 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ViewEncapsulation,
     computed,
+    contentChild,
     inject,
     input,
-    contentChild,
+    ViewEncapsulation,
 } from '@angular/core';
-import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
-import { FdUiDialogRef } from './fd-ui-dialog-ref';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
+import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
+import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 let nextDialogId = 0;
 

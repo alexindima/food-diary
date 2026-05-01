@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { signal } from '@angular/core';
-import { createWeightTrendSignals, createWaistTrendSignals } from './dashboard-trend.utils';
+import { describe, expect, it } from 'vitest';
+
+import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
 
 describe('dashboard-trend.utils', () => {
     describe('createWeightTrendSignals', () => {

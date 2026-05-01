@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiAccentSurfaceComponent } from './fd-ui-accent-surface.component';
 
 const meta: Meta<FdUiAccentSurfaceComponent> = {

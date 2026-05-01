@@ -1,6 +1,7 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable, finalize } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { finalize, Observable } from 'rxjs';
+
 import { FORCE_GLOBAL_LOADING, SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens';
 import { GlobalLoadingService } from '../services/global-loading.service';
 

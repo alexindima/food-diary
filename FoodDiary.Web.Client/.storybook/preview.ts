@@ -1,6 +1,6 @@
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import type { Preview } from '@storybook/angular';
 import { applicationConfig } from '@storybook/angular';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 const preview: Preview = {
     decorators: [

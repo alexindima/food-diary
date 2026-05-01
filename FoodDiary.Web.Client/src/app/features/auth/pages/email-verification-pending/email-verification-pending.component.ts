@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { UserService } from '../../../../shared/api/user.service';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserService } from '../../../../shared/api/user.service';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
 
 @Component({

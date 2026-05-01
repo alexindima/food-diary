@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { AdminAiUsageComponent } from './admin-ai-usage.component';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminAiUsageService } from '../api/admin-ai-usage.service';
+import { AdminAiUsageComponent } from './admin-ai-usage.component';
 
 describe('AdminAiUsageComponent', () => {
     let component: AdminAiUsageComponent;

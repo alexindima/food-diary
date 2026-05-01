@@ -1,12 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
-import { of, throwError } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { ChangePasswordDialogComponent } from './change-password-dialog.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { UserService } from '../../../../shared/api/user.service';
+import { ChangePasswordDialogComponent } from './change-password-dialog.component';
 
 describe('ChangePasswordDialogComponent', () => {
     let component: ChangePasswordDialogComponent;

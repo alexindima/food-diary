@@ -1,35 +1,36 @@
-import { DestroyRef, Injectable, computed, effect, inject, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
+
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
-import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
+import { MappedStatistics, StatisticsMapper } from '../models/statistics.data';
 import {
-    type StatisticsRange,
-    type NutritionChartTab,
     type BodyChartTab,
-    type DateRange,
-    getQuantizationDays,
-    normalizeStartOfDay,
-    normalizeEndOfDay,
-    getCurrentDateRange,
+    buildBodyChartData,
     buildCaloriesLineChartData,
+    buildMacroSparklineData,
+    buildNutrientsBarChartData,
     buildNutrientsLineChartData,
     buildNutrientsPieChartData,
     buildNutrientsRadarChartData,
-    buildNutrientsBarChartData,
-    buildBodyChartData,
     buildSummaryMetrics,
-    buildMacroSparklineData,
     buildSummarySparklineData,
+    type DateRange,
+    getCurrentDateRange,
+    getQuantizationDays,
+    normalizeEndOfDay,
+    normalizeStartOfDay,
+    type NutritionChartTab,
+    type StatisticsRange,
 } from './statistics-data-mapper';
-import { MappedStatistics, StatisticsMapper } from '../models/statistics.data';
 
 @Injectable()
 export class StatisticsFacade {

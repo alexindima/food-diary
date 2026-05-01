@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/angular';
 import { signal } from '@angular/core';
+import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiTabsComponent } from './fd-ui-tabs.component';
 
 const meta: Meta<FdUiTabsComponent> = {

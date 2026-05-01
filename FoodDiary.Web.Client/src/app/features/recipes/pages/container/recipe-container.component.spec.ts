@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { RecipeContainerComponent } from './recipe-container.component';
 
 describe('RecipeContainerComponent', () => {

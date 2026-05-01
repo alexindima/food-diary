@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
-import { MealCardComponent, MealCardItem } from '../meal-card/meal-card.component';
+
 import { AiInputBarComponent } from '../ai-input-bar/ai-input-bar.component';
+import { MealCardComponent, MealCardItem } from '../meal-card/meal-card.component';
 
 export interface MealPreviewEntry {
     meal?: MealCardItem | null;

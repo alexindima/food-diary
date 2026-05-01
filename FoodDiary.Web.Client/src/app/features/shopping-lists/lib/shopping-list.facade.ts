@@ -1,11 +1,12 @@
-import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+
+import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
-import { MeasurementUnit } from '../../products/models/product.data';
-import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 
 export type ShoppingListDraftItem = {
     name: string;

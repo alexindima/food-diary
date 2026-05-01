@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
 type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';

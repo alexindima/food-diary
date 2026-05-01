@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
-import { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplateEditDialogComponent } from '../dialogs/admin-email-template-edit-dialog.component';
+import { AdminEmailTemplate } from '../models/admin-email-template.data';
 
 @Component({
     selector: 'fd-admin-email-templates',

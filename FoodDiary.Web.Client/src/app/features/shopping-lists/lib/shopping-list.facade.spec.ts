@@ -1,11 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { ShoppingListFacade } from './shopping-list.facade';
-import { ShoppingListService } from '../api/shopping-list.service';
+import { of } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { MeasurementUnit } from '../../products/models/product.data';
+import { ShoppingListService } from '../api/shopping-list.service';
+import { ShoppingListFacade } from './shopping-list.facade';
 
 describe('ShoppingListFacade', () => {
     let facade: ShoppingListFacade;

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
+
 import { environment } from '../../../../environments/environment';
-import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import { ApiService } from '../../../services/api.service';
+import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 
 @Injectable({

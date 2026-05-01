@@ -1,9 +1,10 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
+import { CommonModule } from '@angular/common';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
+import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 
 @Component({
     selector: 'fd-ui-date-picker-button',

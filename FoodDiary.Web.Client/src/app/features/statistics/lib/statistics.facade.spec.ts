@@ -1,12 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { StatisticsFacade } from './statistics.facade';
-import { StatisticsService } from '../api/statistics.service';
-import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
-import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { UserService } from '../../../shared/api/user.service';
+import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
+import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
+import { StatisticsService } from '../api/statistics.service';
+import { StatisticsFacade } from './statistics.facade';
 
 describe('StatisticsFacade', () => {
     let facade: StatisticsFacade;

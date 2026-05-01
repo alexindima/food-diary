@@ -36,15 +36,15 @@ export interface NutritionMismatchWarning {
     styleUrls: ['./nutrition-editor.component.scss'],
 })
 export class NutritionEditorComponent {
-    public formGroup = input.required<FormGroup>();
-    public controlNames = input.required<NutritionControlNames>();
-    public macroState = input.required<NutritionMacroState>();
-    public readonly = input(false);
-    public caloriesError = input<string | null>(null);
-    public macrosError = input<string | null>(null);
-    public showManualHint = input(false);
-    public manualHintKey = input('');
-    public warning = input<NutritionMismatchWarning | null>(null);
+    public readonly formGroup = input.required<FormGroup>();
+    public readonly controlNames = input.required<NutritionControlNames>();
+    public readonly macroState = input.required<NutritionMacroState>();
+    public readonly readonly = input(false);
+    public readonly caloriesError = input<string | null>(null);
+    public readonly macrosError = input<string | null>(null);
+    public readonly showManualHint = input(false);
+    public readonly manualHintKey = input('');
+    public readonly warning = input<NutritionMismatchWarning | null>(null);
 
     public readonly nutrientFillColors = {
         calories: 'var(--fd-color-nutrition-calories-fill)',

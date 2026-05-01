@@ -1,7 +1,7 @@
 ﻿import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
-import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
+import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 type DateRangeValue = { start: Date | null; end: Date | null } | null;
 

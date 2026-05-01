@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/angular';
 import { signal } from '@angular/core';
+import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiSegmentedToggleComponent } from './fd-ui-segmented-toggle.component';
 
 const meta: Meta<FdUiSegmentedToggleComponent> = {

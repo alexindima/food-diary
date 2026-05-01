@@ -1,11 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { productResolver } from './product.resolver';
-import { ProductService } from '../api/product.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { NavigationService } from '../../../services/navigation.service';
+import { ProductService } from '../api/product.service';
 import { Product } from '../models/product.data';
+import { productResolver } from './product.resolver';
 
 describe('productResolver', () => {
     let productServiceSpy: { getById: ReturnType<typeof vi.fn> };

@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { LocalizedDatePipe } from './localized-date.pipe';
 
 describe('LocalizedDatePipe', () => {

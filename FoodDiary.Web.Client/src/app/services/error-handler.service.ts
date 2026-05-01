@@ -1,6 +1,7 @@
-import { Injectable, ErrorHandler, inject } from '@angular/core';
-import { FrontendObservabilityService } from './frontend-observability.service';
+import { ErrorHandler, inject, Injectable } from '@angular/core';
+
 import { FrontendLoggerService } from './frontend-logger.service';
+import { FrontendObservabilityService } from './frontend-observability.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {

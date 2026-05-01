@@ -1,14 +1,15 @@
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, LOCALE_ID, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, LOCALE_ID, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { finalize, of, switchMap } from 'rxjs';
-import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
+import { finalize, of, switchMap } from 'rxjs';
+
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
-import { AuthService } from '../../../services/auth.service';
 import { QualityGrade } from '../../../features/products/models/product.data';
+import { AuthService } from '../../../services/auth.service';
+import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface MealCardItem {

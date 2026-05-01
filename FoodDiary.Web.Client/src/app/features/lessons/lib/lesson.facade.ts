@@ -1,7 +1,8 @@
-import { DestroyRef, computed, inject, Injectable, resource, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+
 import { LessonService } from '../api/lesson.service';
 import { LessonDetail, LessonSummary } from '../models/lesson.data';
 

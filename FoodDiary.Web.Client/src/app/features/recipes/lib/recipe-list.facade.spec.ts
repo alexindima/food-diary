@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { NavigationService } from '../../../services/navigation.service';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';

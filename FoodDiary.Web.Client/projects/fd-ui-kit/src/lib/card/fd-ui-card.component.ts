@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input, contentChild, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, contentChild, input } from '@angular/core';
+
 import { FdUiCardActionsDirective } from './fd-ui-card-actions.directive';
 
 export type FdUiCardAppearance = 'default' | 'product' | 'recipe' | 'info' | 'general' | 'entry';

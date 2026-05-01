@@ -11,50 +11,50 @@ import {
     PLATFORM_ID,
     signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
-
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
-import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { finalize } from 'rxjs';
+
 import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
-import { DietologistService } from '../../dietologist/api/dietologist.service';
-import { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
-import { PremiumBillingService } from '../../premium/api/premium-billing.service';
-import { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
+import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { FormGroupControls } from '../../../shared/lib/common.data';
 import {
     FASTING_REMINDER_PRESETS,
     FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
-import { FormGroupControls } from '../../../shared/lib/common.data';
-import { ActivityLevelOption, Gender, UpdateUserDto, UiStyleOption, User } from '../../../shared/models/user.data';
-import { ProfileManageFacade } from '../lib/profile-manage.facade';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
+import { ActivityLevelOption, Gender, UiStyleOption, UpdateUserDto, User } from '../../../shared/models/user.data';
 import { APP_THEMES, APP_UI_STYLES, AppThemeName, AppUiStyleName, isAppThemeName, isAppUiStyleName } from '../../../theme/app-theme.config';
+import { DietologistService } from '../../dietologist/api/dietologist.service';
+import { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
+import { PremiumBillingService } from '../../premium/api/premium-billing.service';
+import { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
+import { ProfileManageFacade } from '../lib/profile-manage.facade';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

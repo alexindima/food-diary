@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { RecipeLookupService } from './recipe-lookup.service';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { environment } from '../../../environments/environment';
 import { RecipeLookup } from '../models/recipe-lookup.data';
+import { RecipeLookupService } from './recipe-lookup.service';
 
 describe('RecipeLookupService', () => {
     let service: RecipeLookupService;

@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { MealService } from './meal.service';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { PageOf } from '../../../shared/models/page-of.data';
 import { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../models/meal.data';
+import { MealService } from './meal.service';
 
 describe('MealService', () => {
     let service: MealService;

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, catchError } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {

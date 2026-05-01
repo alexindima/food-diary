@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, contentChildren, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChildren, output, TemplateRef, viewChild } from '@angular/core';
+
 import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
 
 @Component({

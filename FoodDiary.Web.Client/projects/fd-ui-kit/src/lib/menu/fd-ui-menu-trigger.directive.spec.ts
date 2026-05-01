@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { FdUiMenuComponent } from './fd-ui-menu.component';
 import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
 import { FdUiMenuTriggerDirective } from './fd-ui-menu-trigger.directive';

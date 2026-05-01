@@ -1,17 +1,18 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { of } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { NavigationService } from '../../../services/navigation.service';
+import { of } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from '../../../services/auth.service';
+import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
+import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { MealService } from '../api/meal.service';
+import { ConsumptionFormData, ConsumptionItemFormData } from '../components/manage/base-meal-manage.types';
+import { ConsumptionSourceType } from '../models/meal.data';
 import { MealManageFacade } from './meal-manage.facade';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
-import { ConsumptionSourceType } from '../models/meal.data';
-import { ConsumptionFormData, ConsumptionItemFormData } from '../components/manage/base-meal-manage.types';
-import { ImageSelection } from '../../../shared/models/image-upload.data';
 
 describe('MealManageFacade', () => {
     let facade: MealManageFacade;

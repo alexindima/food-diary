@@ -1,9 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
 import { DietologistService } from '../../api/dietologist.service';
 import { ClientSummary } from '../../models/dietologist.data';
-import { DatePipe } from '@angular/common';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 @Component({
     selector: 'fd-dietologist-clients-page',

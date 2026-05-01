@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
 import { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';

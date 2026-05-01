@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { AdminUserImpersonationDialogComponent } from './admin-user-impersonation-dialog.component';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminUsersService } from '../api/admin-users.service';
+import { AdminUserImpersonationDialogComponent } from './admin-user-impersonation-dialog.component';
 
 describe('AdminUserImpersonationDialogComponent', () => {
     let component: AdminUserImpersonationDialogComponent;

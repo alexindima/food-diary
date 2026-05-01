@@ -1,9 +1,10 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
-import { GoalsService } from '../api/goals.service';
+
 import { AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { GoalsService } from '../api/goals.service';
 import { UpdateGoalsRequest } from '../models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';

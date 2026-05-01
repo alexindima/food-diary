@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
 import { AdminAiUsageSummary } from '../../admin-ai-usage/models/admin-ai-usage.data';
 import { AdminDashboardService } from '../api/admin-dashboard.service';

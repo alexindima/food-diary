@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
-import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog.component';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
+import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog.component';
 
 describe('AdminEmailTemplateEditDialogComponent', () => {
     let component: AdminEmailTemplateEditDialogComponent;

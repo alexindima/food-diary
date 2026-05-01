@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
 import { FdUiMenuComponent } from './fd-ui-menu.component';
 
 @Component({

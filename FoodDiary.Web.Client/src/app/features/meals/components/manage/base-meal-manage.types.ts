@@ -1,8 +1,8 @@
 import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { Product } from '../../../products/models/product.data';
 import { Recipe } from '../../../recipes/models/recipe.data';
 import { ConsumptionSourceType } from '../../models/meal.data';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
 
 export type ConsumptionFormValues = {
     date: string;

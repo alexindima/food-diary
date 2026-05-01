@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
 import { DashboardWidgetFrameComponent } from '../../../dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
 
 @Component({

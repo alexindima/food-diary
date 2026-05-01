@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 @Component({

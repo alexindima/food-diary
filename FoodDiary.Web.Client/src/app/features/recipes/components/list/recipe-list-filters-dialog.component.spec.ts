@@ -1,9 +1,10 @@
-import { describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { TranslateModule } from '@ngx-translate/core';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { describe, expect, it, vi } from 'vitest';
+
 import { RecipeListFiltersDialogComponent, RecipeListFiltersDialogData } from './recipe-list-filters-dialog.component';
 
 describe('RecipeListFiltersDialogComponent', () => {

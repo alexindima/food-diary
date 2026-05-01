@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { GlobalLoadingService } from './global-loading.service';
 
 describe('GlobalLoadingService', () => {

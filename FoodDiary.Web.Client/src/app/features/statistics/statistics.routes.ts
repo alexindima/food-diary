@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { StatisticsComponent } from './pages/statistics.component';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+
+import { StatisticsComponent } from './pages/statistics.component';
 
 const routes: Routes = [
     {

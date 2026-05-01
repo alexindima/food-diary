@@ -1,5 +1,5 @@
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -10,18 +10,19 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { FormGroupControls } from '../../../shared/lib/common.data';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../services/viewport.service';
+import { FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
-import { ShoppingListItem } from '../models/shopping-list.data';
 import { ShoppingListFacade } from '../lib/shopping-list.facade';
+import { ShoppingListItem } from '../models/shopping-list.data';
 
 @Component({
     selector: 'fd-shopping-list-page',

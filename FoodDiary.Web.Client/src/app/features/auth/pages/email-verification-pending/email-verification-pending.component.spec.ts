@@ -1,13 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { EmailVerificationPendingComponent } from './email-verification-pending.component';
-import { UserService } from '../../../../shared/api/user.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { UserService } from '../../../../shared/api/user.service';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
+import { EmailVerificationPendingComponent } from './email-verification-pending.component';
 
 describe('EmailVerificationPendingComponent', () => {
     let userServiceMock: { getInfo: ReturnType<typeof vi.fn> };

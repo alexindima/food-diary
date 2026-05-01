@@ -1,11 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-    normalizeDate,
     getDashboardDateUtc,
     getHydrationDateUtc,
-    normalizeStartOfDayUtc,
-    normalizeEndOfDayUtc,
     getWeightTrendRange,
+    normalizeDate,
+    normalizeEndOfDayUtc,
+    normalizeStartOfDayUtc,
 } from './dashboard-date.utils';
 
 describe('dashboard-date.utils', () => {

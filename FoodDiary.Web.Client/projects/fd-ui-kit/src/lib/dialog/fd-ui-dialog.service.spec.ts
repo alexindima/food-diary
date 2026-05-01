@@ -1,8 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
 import { Dialog } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { describe, expect, it, vi } from 'vitest';
+
 import { FdUiDialogService } from './fd-ui-dialog.service';
 
 class DummyDialogComponent {}

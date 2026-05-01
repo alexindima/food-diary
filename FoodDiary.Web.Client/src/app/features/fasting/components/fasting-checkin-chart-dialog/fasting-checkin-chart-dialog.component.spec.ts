@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { LocalizationService } from '../../../../services/localization.service';
 import { FastingCheckInChartDialogComponent } from './fasting-checkin-chart-dialog.component';
 

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, ElementRef, LOCALE_ID, computed, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, output, signal } from '@angular/core';
+
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 
 interface FdUiCalendarCell {

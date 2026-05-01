@@ -3,17 +3,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
-
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { firstValueFrom } from 'rxjs';
 
+import { environment } from '../../../../environments/environment';
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
-import { environment } from '../../../../environments/environment';
 import { PremiumBillingService } from '../api/premium-billing.service';
 import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
 import { BillingOverview, BillingPlan, BillingProvider } from '../models/billing.models';

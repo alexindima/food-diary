@@ -1,7 +1,8 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { finalize, firstValueFrom } from 'rxjs';
+
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
@@ -12,9 +13,9 @@ import { NavigationService } from '../../../services/navigation.service';
 import { NotificationPreferences, NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { ThemeService } from '../../../services/theme.service';
 import { UserService } from '../../../shared/api/user.service';
-import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
-import { UpdateUserDto, User } from '../../../shared/models/user.data';
 import { AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { UpdateUserDto, User } from '../../../shared/models/user.data';
+import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';

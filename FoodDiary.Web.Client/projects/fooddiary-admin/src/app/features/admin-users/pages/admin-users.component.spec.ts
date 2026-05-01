@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
-import { AdminUsersComponent } from './admin-users.component';
-import { AdminUsersService } from '../api/admin-users.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { of, Subject } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
+import { AdminUsersComponent } from './admin-users.component';
 
 describe('AdminUsersComponent', () => {
     let component: AdminUsersComponent;

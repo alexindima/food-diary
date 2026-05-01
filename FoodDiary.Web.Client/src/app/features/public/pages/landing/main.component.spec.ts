@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { MainComponent } from './main.component';
 
 describe('MainComponent', () => {

@@ -1,9 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { AdminAuthService } from './admin-auth.service';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { environment } from '../../../../environments/environment';
+import { AdminAuthService } from './admin-auth.service';
 
 describe('AdminAuthService', () => {
     let service: AdminAuthService;

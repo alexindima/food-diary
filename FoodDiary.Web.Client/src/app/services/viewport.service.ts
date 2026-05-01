@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Injectable, PLATFORM_ID, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser } from '@angular/common';
+import { computed, inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
 
 export const MOBILE_VIEWPORT_QUERY = '(max-width: 768px)';

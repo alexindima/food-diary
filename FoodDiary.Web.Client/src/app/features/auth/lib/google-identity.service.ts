@@ -31,7 +31,7 @@ declare global {
 })
 export class GoogleIdentityService {
     private readonly scriptUrl = 'https://accounts.google.com/gsi/client';
-    private scriptLoaded = signal<boolean>(false);
+    private readonly scriptLoaded = signal<boolean>(false);
     private initializationPromise: Promise<void> | null = null;
     private initializedClientId: string | null = null;
     private callback: ((credential: string) => void) | null = null;

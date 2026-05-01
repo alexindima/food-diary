@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NutrientBadgesComponent } from './nutrient-badges.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { NutrientBadgesComponent } from './nutrient-badges.component';
 
 describe('NutrientBadgesComponent', () => {
     let component: NutrientBadgesComponent;

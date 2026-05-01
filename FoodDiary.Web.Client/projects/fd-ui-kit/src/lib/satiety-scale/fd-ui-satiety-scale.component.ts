@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { FdUiAccentSurfaceComponent } from '../accent-surface/fd-ui-accent-surface.component';
 
 export interface FdUiSatietyScaleLevel {

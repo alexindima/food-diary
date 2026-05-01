@@ -1,22 +1,23 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, output, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { Recipe, RecipeFilters } from '../models/recipe.data';
-import { RecipeService } from '../api/recipe.service';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
-import { PagedData } from '../../../shared/lib/paged-data.data';
-import { FormGroupControls } from '../../../shared/lib/common.data';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+
+import { FormGroupControls } from '../../../shared/lib/common.data';
+import { PagedData } from '../../../shared/lib/paged-data.data';
+import { RecipeService } from '../api/recipe.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
+import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
+import { Recipe, RecipeFilters } from '../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-select-dialog',

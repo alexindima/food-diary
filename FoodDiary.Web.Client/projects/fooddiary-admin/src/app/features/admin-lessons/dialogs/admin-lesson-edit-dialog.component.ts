@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+
 import { AdminLessonsService } from '../api/admin-lessons.service';
 import { AdminLesson, CONTENT_MAX_LENGTH, LESSON_CATEGORIES, LESSON_DIFFICULTIES, LESSON_LOCALES } from '../models/admin-lesson.data';
 

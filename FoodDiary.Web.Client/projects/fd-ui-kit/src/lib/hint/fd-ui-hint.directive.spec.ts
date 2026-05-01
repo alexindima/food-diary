@@ -1,9 +1,11 @@
 import '@angular/compiler';
-import { Component } from '@angular/core';
+
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { FdUiHintDirective } from './fd-ui-hint.directive';
 
 @Component({

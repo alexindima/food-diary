@@ -1,5 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import {
     HTTP_INTERCEPTORS,
     HttpClient,
@@ -9,10 +7,13 @@ import {
     withInterceptorsFromDi,
 } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { AuthInterceptor } from './auth.interceptor';
-import { AuthService } from '../services/auth.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { SKIP_AUTH } from '../constants/http-context.tokens';
+import { AuthService } from '../services/auth.service';
+import { AuthInterceptor } from './auth.interceptor';
 
 describe('AuthInterceptor', () => {
     let http: HttpClient;

@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { inject, Injectable } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 const DEFAULT_TITLE = 'Food Diary';

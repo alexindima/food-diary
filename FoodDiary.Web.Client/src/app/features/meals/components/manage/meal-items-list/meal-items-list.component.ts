@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { FormArray, FormGroup, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+
 import { ConsumptionSourceType } from '../../../models/meal.data';
 import { ConsumptionItemFormData } from '../base-meal-manage.types';
 

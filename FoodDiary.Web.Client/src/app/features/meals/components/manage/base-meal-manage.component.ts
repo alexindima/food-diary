@@ -1,7 +1,35 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, computed, inject, input, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, FactoryProvider, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
+
+import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
+import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
+import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
+import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
+import { NutrientData } from '../../../../shared/models/charts.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import {
+    MealSatietyLevelDialogComponent,
+    SatietyLevelDialogData,
+} from '../../dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
+import { MealManageFacade } from '../../lib/meal-manage.facade';
+import { QuickMealItem } from '../../lib/quick-meal.service';
 import {
     Consumption,
     ConsumptionAiSessionManageDto,
@@ -9,45 +37,18 @@ import {
     ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
-import { HttpErrorResponse } from '@angular/common/http';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NutrientData } from '../../../../shared/models/charts.data';
-import { FdUiIconComponent } from 'fd-ui-kit';
-import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
-import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import {
-    MealSatietyLevelDialogComponent,
-    SatietyLevelDialogData,
-} from '../../dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
-import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
-import { ActivatedRoute, Router } from '@angular/router';
-import { QuickMealItem } from '../../lib/quick-meal.service';
-import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
-import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
-import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
-import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
-import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
-import {
+    CalorieMismatchWarning,
     ConsumptionFormData,
     ConsumptionItemFormData,
-    NutritionMode,
     MacroBarState,
     MacroKey,
-    CalorieMismatchWarning,
     MealNutritionSummaryState,
+    NutritionMode,
 } from './base-meal-manage.types';
-import { MealManageFacade } from '../../lib/meal-manage.facade';
+import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
+import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
+import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
 
 export type { ConsumptionFormData, ConsumptionItemFormData } from './base-meal-manage.types';
 
@@ -105,21 +106,21 @@ export class BaseMealManageComponent {
         alcohol: 'manualAlcohol',
     };
 
-    public consumption = input<Consumption | null>();
-    public totalCalories = signal<number>(0);
-    public totalFiber = signal<number>(0);
-    public totalAlcohol = signal<number>(0);
-    public nutrientChartData = signal<NutrientData>({
+    public readonly consumption = input<Consumption | null>();
+    public readonly totalCalories = signal<number>(0);
+    public readonly totalFiber = signal<number>(0);
+    public readonly totalAlcohol = signal<number>(0);
+    public readonly nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,
     });
-    public globalError = signal<string | null>(null);
-    public aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
-    public aiUsage = signal<UserAiUsageResponse | null>(null);
+    public readonly globalError = signal<string | null>(null);
+    public readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
+    public readonly aiUsage = signal<UserAiUsageResponse | null>(null);
     public nutritionMode: NutritionMode = 'auto';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
-    public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
 
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
@@ -143,7 +144,7 @@ export class BaseMealManageComponent {
         };
     });
 
-    public aiQuotaExceeded = computed(() => {
+    public readonly aiQuotaExceeded = computed(() => {
         const usage = this.aiUsage();
         if (!usage) {
             return false;

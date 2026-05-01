@@ -1,35 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { FavoriteProductService } from '../../api/favorite-product.service';
-import { ProductService } from '../../api/product.service';
-import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
-import { FavoriteProduct, Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
-import { QuickMealService } from '../../../meals/lib/quick-meal.service';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
+import { QuickMealService } from '../../../meals/lib/quick-meal.service';
+import { FavoriteProductService } from '../../api/favorite-product.service';
+import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
+import { ProductService } from '../../api/product.service';
 import { resolveProductImageUrl } from '../../lib/product-image.util';
+import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
+import { FavoriteProduct, Product, ProductFilters, ProductType } from '../../models/product.data';
 import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
 
 @Component({

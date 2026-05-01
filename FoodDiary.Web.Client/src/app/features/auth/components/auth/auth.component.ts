@@ -1,38 +1,39 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
-    FactoryProvider,
-    input,
-    ElementRef,
-    viewChild,
-    inject,
-    signal,
     effect,
-    afterNextRender,
+    ElementRef,
+    FactoryProvider,
+    inject,
+    input,
+    signal,
+    viewChild,
 } from '@angular/core';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { matchFieldValidator } from '../../../../validators/match-field.validator';
-import { NavigationService } from '../../../../services/navigation.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
-import { LoginRequest, RegisterRequest, RestoreAccountRequest, PasswordResetRequest } from '../../models/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { GoogleIdentityService } from '../../lib/google-identity.service';
-import { LocalizationService } from '../../../../services/localization.service';
-import { environment } from '../../../../../environments/environment';
-import { GoogleLoginRequest } from '../../models/google-auth.data';
 import { firstValueFrom } from 'rxjs';
+
+import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../services/auth.service';
+import { LocalizationService } from '../../../../services/localization.service';
+import { NavigationService } from '../../../../services/navigation.service';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { GoogleIdentityService } from '../../lib/google-identity.service';
+import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
+import { GoogleLoginRequest } from '../../models/google-auth.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -91,16 +92,16 @@ export class AuthComponent {
     public loginForm: FormGroup<LoginFormGroup>;
     public registerForm: FormGroup<RegisterFormGroup>;
     public passwordResetForm: FormGroup<PasswordResetFormGroup>;
-    public globalError = signal<string | null>(null);
-    public isSubmitting = signal<boolean>(false);
-    public googleReady = signal<boolean>(false);
-    public showRestoreAction = signal<boolean>(false);
-    public isRestoring = signal<boolean>(false);
-    public showPasswordReset = signal<boolean>(false);
-    public isPasswordResetting = signal<boolean>(false);
-    public passwordResetSent = signal<boolean>(false);
-    public passwordResetCooldownSeconds = signal<number>(0);
-    public loginAutofillDetected = signal<boolean>(false);
+    public readonly globalError = signal<string | null>(null);
+    public readonly isSubmitting = signal<boolean>(false);
+    public readonly googleReady = signal<boolean>(false);
+    public readonly showRestoreAction = signal<boolean>(false);
+    public readonly isRestoring = signal<boolean>(false);
+    public readonly showPasswordReset = signal<boolean>(false);
+    public readonly isPasswordResetting = signal<boolean>(false);
+    public readonly passwordResetSent = signal<boolean>(false);
+    public readonly passwordResetCooldownSeconds = signal<number>(0);
+    public readonly loginAutofillDetected = signal<boolean>(false);
     private passwordResetCooldownTimerId: number | null = null;
     private loginAutofillCheckTimerIds: number[] = [];
     private hasLoginNativeInteraction = false;

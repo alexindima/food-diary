@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { FdUiSelectComponent, FdUiSelectOption } from './fd-ui-select.component';
 
 describe('FdUiSelectComponent', () => {

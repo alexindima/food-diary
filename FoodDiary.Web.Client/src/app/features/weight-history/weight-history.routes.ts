@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { WeightHistoryPageComponent } from './pages/weight-history-page.component';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+
+import { WeightHistoryPageComponent } from './pages/weight-history-page.component';
 
 const routes: Routes = [
     {

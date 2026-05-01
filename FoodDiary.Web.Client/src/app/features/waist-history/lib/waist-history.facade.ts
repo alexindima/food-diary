@@ -1,9 +1,10 @@
-import { DestroyRef, Injectable, computed, effect, inject, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
+
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import {

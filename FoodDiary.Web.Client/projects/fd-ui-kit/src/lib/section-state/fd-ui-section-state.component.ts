@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
-import { FdUiEmptyStateComponent, type FdUiEmptyStateAppearance } from '../empty-state/fd-ui-empty-state.component';
+import { type FdUiEmptyStateAppearance, FdUiEmptyStateComponent } from '../empty-state/fd-ui-empty-state.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from '../loader/fd-ui-loader.component';
 

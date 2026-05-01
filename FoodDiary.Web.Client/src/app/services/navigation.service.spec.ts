@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { NavigationService } from './navigation.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthMode } from '../features/auth/models/auth.data';
+import { NavigationService } from './navigation.service';
 
 describe('NavigationService', () => {
     let service: NavigationService;

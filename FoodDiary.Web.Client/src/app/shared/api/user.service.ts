@@ -1,23 +1,23 @@
-import { Injectable, signal } from '@angular/core';
 import { HttpContext } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
+import { DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
 import { ApiService } from '../../services/api.service';
 import { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
-import { DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {
     ChangePasswordRequest,
     DashboardLayoutSettings,
     DesiredWaistResponse,
     DesiredWeightResponse,
-    UpdateUserAppearanceDto,
     SetPasswordRequest,
+    UpdateUserAppearanceDto,
     UpdateUserDto,
     User,
 } from '../models/user.data';
-import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 
 export interface UserProfileOverview {
     user: User;

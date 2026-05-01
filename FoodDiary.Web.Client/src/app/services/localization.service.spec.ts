@@ -1,11 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
+import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subject, of } from 'rxjs';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { LocalizationService } from './localization.service';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { of, Subject } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
+import { LocalizationService } from './localization.service';
 
 describe('LocalizationService', () => {
     let service: LocalizationService;

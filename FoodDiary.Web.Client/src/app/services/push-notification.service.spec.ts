@@ -1,12 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { Subject, of } from 'rxjs';
 import { SwPush } from '@angular/service-worker';
-import { PushNotificationService } from './push-notification.service';
+import { of, Subject } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
 import { NotificationService } from './notification.service';
+import { PushNotificationService } from './push-notification.service';
 
 describe('PushNotificationService', () => {
     let service: PushNotificationService;

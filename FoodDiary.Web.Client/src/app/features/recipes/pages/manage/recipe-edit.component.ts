@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
 import { RecipeManageComponent } from '../../components/manage/recipe-manage.component';
 import { Recipe } from '../../models/recipe.data';
 
@@ -10,5 +11,5 @@ import { Recipe } from '../../models/recipe.data';
     imports: [RecipeManageComponent],
 })
 export class RecipeEditComponent {
-    public recipe = input<Recipe | null>(null);
+    public readonly recipe = input<Recipe | null>(null);
 }

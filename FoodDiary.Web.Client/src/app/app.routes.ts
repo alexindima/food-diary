@@ -1,10 +1,11 @@
 import { Type } from '@angular/core';
 import { Route, Routes } from '@angular/router';
-import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+
+import { authRoutes } from './features/auth/auth.routes';
 import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
-import { authRoutes } from './features/auth/auth.routes';
 import { loggedInGuard } from './guards/logged-in.guard';
+import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 
 const publicSeoLanding = (
     path: string,

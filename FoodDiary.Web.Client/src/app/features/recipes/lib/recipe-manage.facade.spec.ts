@@ -1,13 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, of, throwError } from 'rxjs';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { firstValueFrom, of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { NavigationService } from '../../../services/navigation.service';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
-import { IngredientFormData, StepFormData } from '../components/manage/recipe-manage.types';
 import { RecipeService } from '../api/recipe.service';
+import { IngredientFormData, StepFormData } from '../components/manage/recipe-manage.types';
 import { RecipeVisibility } from '../models/recipe.data';
 import { RecipeManageFacade } from './recipe-manage.facade';
 

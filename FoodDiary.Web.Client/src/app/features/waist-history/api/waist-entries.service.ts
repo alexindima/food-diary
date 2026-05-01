@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError, Observable } from 'rxjs';
 
-import { ApiService } from '../../../services/api.service';
 import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import {
     CreateWaistEntryPayload,

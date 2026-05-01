@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiLoaderComponent } from './fd-ui-loader.component';
 
 const meta: Meta<FdUiLoaderComponent> = {

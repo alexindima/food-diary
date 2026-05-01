@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ApiService } from '../../../services/api.service';
+
 import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { WearableAuthUrl, WearableConnection, WearableDailySummary } from '../models/wearable.data';
 

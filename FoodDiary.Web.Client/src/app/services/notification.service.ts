@@ -1,10 +1,11 @@
-import { DestroyRef, Injectable, effect, inject, signal, untracked } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
+import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, Observable, shareReplay, tap } from 'rxjs';
+
+import { environment } from '../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens';
+import { AuthService } from './auth.service';
 
 export interface NotificationItem {
     id: string;

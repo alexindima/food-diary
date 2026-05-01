@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { BaseProductManageComponent } from '../../components/manage/base-product-manage.component';
 
 @Component({

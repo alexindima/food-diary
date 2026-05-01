@@ -1,13 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { AuthService } from './auth.service';
-import { NavigationService } from './navigation.service';
-import { LocalizationService } from './localization.service';
-import { QuickMealService } from '../features/meals/lib/quick-meal.service';
-import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../features/auth/models/auth.data';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { environment } from '../../environments/environment';
+import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../features/auth/models/auth.data';
+import { QuickMealService } from '../features/meals/lib/quick-meal.service';
+import { AuthService } from './auth.service';
+import { LocalizationService } from './localization.service';
+import { NavigationService } from './navigation.service';
 
 function createFakeJwt(payload: Record<string, unknown>): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));

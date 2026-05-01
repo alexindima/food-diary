@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
+
 import { FdUiFormErrorComponent } from './fd-ui-form-error.component';
 
 @Component({

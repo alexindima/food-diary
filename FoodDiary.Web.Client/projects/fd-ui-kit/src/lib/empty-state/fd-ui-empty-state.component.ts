@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 export type FdUiEmptyStateAppearance = 'default' | 'compact';

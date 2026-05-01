@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ImageUploadService } from './image-upload.service';
-import { SKIP_AUTH } from '../../constants/http-context.tokens';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { environment } from '../../../environments/environment';
+import { SKIP_AUTH } from '../../constants/http-context.tokens';
+import { ImageUploadService } from './image-upload.service';
 
 describe('ImageUploadService', () => {
     let service: ImageUploadService;

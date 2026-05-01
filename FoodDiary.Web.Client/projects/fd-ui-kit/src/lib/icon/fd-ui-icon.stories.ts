@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/angular';
+
 import { FdUiIconComponent } from './fd-ui-icon.component';
 
 const meta: Meta<FdUiIconComponent> = {

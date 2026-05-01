@@ -1,11 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { FastingFacade } from './fasting.facade';
-import { FastingService } from '../api/fasting.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
+import { FastingService } from '../api/fasting.service';
 import { FastingOverview, FastingSession } from '../models/fasting.data';
+import { FastingFacade } from './fasting.facade';
 
 describe('FastingFacade', () => {
     let facade: FastingFacade;

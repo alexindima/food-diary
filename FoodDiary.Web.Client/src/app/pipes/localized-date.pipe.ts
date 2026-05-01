@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { DestroyRef, Pipe, PipeTransform, inject } from '@angular/core';
+import { DestroyRef, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { FdUiHintDirective } from './fd-ui-hint.directive';
+
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
+import { FdUiHintDirective } from './fd-ui-hint.directive';
 
 const meta: Meta = {
     title: 'Components/Hint',

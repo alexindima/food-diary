@@ -1,11 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { Subject, of, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { DashboardFacade } from './dashboard.facade';
-import { DashboardService } from '../api/dashboard.service';
-import { HydrationService } from '../../hydration/api/hydration.service';
+import { of, Subject, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { CyclesService } from '../../cycle-tracking/api/cycles.service';
+import { HydrationService } from '../../hydration/api/hydration.service';
+import { DashboardService } from '../api/dashboard.service';
+import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
 
 describe('DashboardFacade', () => {

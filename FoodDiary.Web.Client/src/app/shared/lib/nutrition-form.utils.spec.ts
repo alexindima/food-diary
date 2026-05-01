@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { calculateCaloriesFromMacros, calculateCalorieMismatchWarning, calculateMacroBarState } from './nutrition-form.utils';
+
+import { calculateCalorieMismatchWarning, calculateCaloriesFromMacros, calculateMacroBarState } from './nutrition-form.utils';
 
 describe('nutrition-form.utils', () => {
     describe('calculateCaloriesFromMacros', () => {

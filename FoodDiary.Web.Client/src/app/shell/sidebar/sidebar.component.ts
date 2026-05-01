@@ -1,26 +1,27 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, DestroyRef, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { SlicePipe, UpperCasePipe } from '@angular/common';
+import { Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
-import { AuthService } from '../../services/auth.service';
-import { NotificationService } from '../../services/notification.service';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { UserService } from '../../shared/api/user.service';
-import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { UnsavedChangesService } from '../../services/unsaved-changes.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { firstValueFrom } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 import {
     UnsavedChangesDialogComponent,
     UnsavedChangesDialogResult,
 } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
-import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
+import { UnsavedChangesService } from '../../services/unsaved-changes.service';
+import { UserService } from '../../shared/api/user.service';
+import { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
 import { SidebarActionLinksComponent } from './sidebar-action-links.component';
 import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
-import { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
 
 const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
     { id: 'meals', icon: 'restaurant_menu', labelKey: 'SIDEBAR.FOOD_DIARY', route: '/meals' },
@@ -129,7 +130,7 @@ export class SidebarComponent {
         return 'SIDEBAR.STATUS_USER';
     });
     protected readonly openDesktopSection = signal<DesktopSectionId>('food');
-    protected isUserMenuOpen = signal(false);
+    protected readonly isUserMenuOpen = signal(false);
     protected readonly mobileSheet = signal<MobileSheetId>(null);
     protected readonly isFoodTrackingOpen = computed(() => this.openDesktopSection() === 'food');
     protected readonly isBodyTrackingOpen = computed(() => this.openDesktopSection() === 'body');
