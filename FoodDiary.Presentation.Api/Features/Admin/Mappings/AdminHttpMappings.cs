@@ -1,6 +1,7 @@
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
+using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
@@ -110,6 +111,20 @@ public static class AdminHttpMappings {
             Difficulty: request.Difficulty,
             EstimatedReadMinutes: request.EstimatedReadMinutes,
             SortOrder: request.SortOrder);
+    }
+
+    public static ImportAdminLessonsCommand ToImportCommand(this AdminLessonsImportHttpRequest request) {
+        return new ImportAdminLessonsCommand(
+            Version: request.Version,
+            Lessons: request.Lessons.Select(static lesson => new ImportAdminLessonItem(
+                Title: lesson.Title,
+                Content: lesson.Content,
+                Summary: lesson.Summary,
+                Locale: lesson.Locale,
+                Category: lesson.Category,
+                Difficulty: lesson.Difficulty,
+                EstimatedReadMinutes: lesson.EstimatedReadMinutes,
+                SortOrder: lesson.SortOrder)).ToList());
     }
 
     public static DeleteAdminLessonCommand ToDeleteCommand(this Guid id) {

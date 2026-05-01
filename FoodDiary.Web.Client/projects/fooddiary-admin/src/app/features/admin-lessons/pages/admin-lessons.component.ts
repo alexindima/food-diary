@@ -6,7 +6,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import { AdminLessonsService } from '../api/admin-lessons.service';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog.component';
-import { AdminLesson } from '../models/admin-lesson.data';
+import { AdminLesson, AdminLessonCreateRequest, AdminLessonsImportRequest } from '../models/admin-lesson.data';
 
 @Component({
     selector: 'fd-admin-lessons',
@@ -23,6 +23,8 @@ export class AdminLessonsComponent {
 
     public readonly lessons = signal<AdminLesson[]>([]);
     public readonly isLoading = signal(false);
+    public readonly isImporting = signal(false);
+    public readonly importMessage = signal<string | null>(null);
 
     public constructor() {
         this.loadLessons();
@@ -101,5 +103,105 @@ export class AdminLessonsComponent {
             .subscribe({
                 next: () => this.loadLessons(),
             });
+    }
+
+    public exportLessons(): void {
+        const payload: AdminLessonsImportRequest = {
+            version: 1,
+            lessons: this.lessons().map(lesson => this.toImportLesson(lesson)),
+        };
+        const fileName = `fooddiary-lessons-${new Date().toISOString().slice(0, 10)}.json`;
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = fileName;
+        anchor.click();
+        URL.revokeObjectURL(url);
+    }
+
+    public importLessons(event: Event): void {
+        const input = event.target instanceof HTMLInputElement ? event.target : null;
+        const file = input?.files?.[0];
+        if (!file || this.isImporting()) {
+            return;
+        }
+
+        this.importMessage.set(null);
+        this.isImporting.set(true);
+        void this.importLessonsFile(file, input);
+    }
+
+    private async importLessonsFile(file: File, input: HTMLInputElement): Promise<void> {
+        try {
+            const payload = JSON.parse(await file.text()) as unknown;
+            if (!this.isImportPayload(payload)) {
+                this.importMessage.set('Import file has an invalid lesson format.');
+                this.isImporting.set(false);
+                input.value = '';
+                return;
+            }
+
+            this.lessonsService
+                .importLessons(payload)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
+                    next: response => {
+                        this.importMessage.set(`Imported ${response.importedCount} lessons.`);
+                        this.isImporting.set(false);
+                        input.value = '';
+                        this.loadLessons();
+                    },
+                    error: () => {
+                        this.importMessage.set('Lesson import failed.');
+                        this.isImporting.set(false);
+                        input.value = '';
+                    },
+                });
+        } catch {
+            this.importMessage.set('Import file is not valid JSON.');
+            this.isImporting.set(false);
+            input.value = '';
+        }
+    }
+
+    private toImportLesson(lesson: AdminLesson): AdminLessonCreateRequest {
+        return {
+            title: lesson.title,
+            content: lesson.content,
+            summary: lesson.summary,
+            locale: lesson.locale,
+            category: lesson.category,
+            difficulty: lesson.difficulty,
+            estimatedReadMinutes: lesson.estimatedReadMinutes,
+            sortOrder: lesson.sortOrder,
+        };
+    }
+
+    private isImportPayload(value: unknown): value is AdminLessonsImportRequest {
+        if (!this.isRecord(value) || value['version'] !== 1 || !Array.isArray(value['lessons'])) {
+            return false;
+        }
+
+        return value['lessons'].every(lesson => {
+            if (!this.isRecord(lesson)) {
+                return false;
+            }
+
+            return (
+                typeof lesson['title'] === 'string' &&
+                typeof lesson['content'] === 'string' &&
+                (typeof lesson['summary'] === 'string' || lesson['summary'] === null) &&
+                typeof lesson['locale'] === 'string' &&
+                typeof lesson['category'] === 'string' &&
+                typeof lesson['difficulty'] === 'string' &&
+                typeof lesson['estimatedReadMinutes'] === 'number' &&
+                typeof lesson['sortOrder'] === 'number'
+            );
+        });
+    }
+
+    private isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === 'object' && value !== null;
     }
 }

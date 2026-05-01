@@ -1,3 +1,16 @@
+.toolbar {
+    flex-wrap: wrap;
+}
+
+.import-input {
+    display: none;
+}
+
+.import-message {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}
+
 .lessons-table {
     width: 100%;
     border-collapse: collapse;

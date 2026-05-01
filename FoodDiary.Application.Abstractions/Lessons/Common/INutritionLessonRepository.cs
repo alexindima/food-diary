@@ -38,6 +38,10 @@ public interface INutritionLessonRepository {
         NutritionLesson lesson,
         CancellationToken cancellationToken = default);
 
+    Task AddRangeAsync(
+        IReadOnlyCollection<NutritionLesson> lessons,
+        CancellationToken cancellationToken = default);
+
     Task UpdateAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default);

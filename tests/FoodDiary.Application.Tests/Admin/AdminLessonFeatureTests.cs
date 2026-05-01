@@ -301,6 +301,11 @@ public class AdminLessonFeatureTests {
             return Task.CompletedTask;
         }
 
+        public Task AddRangeAsync(IReadOnlyCollection<NutritionLesson> lessons, CancellationToken cancellationToken = default) {
+            _lessons.AddRange(lessons);
+            return Task.CompletedTask;
+        }
+
         public Task UpdateAsync(NutritionLesson lesson, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 

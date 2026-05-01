@@ -184,6 +184,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/lessons/import",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/lessons/{id}",
       "Operations": [
         {

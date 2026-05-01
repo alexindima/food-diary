@@ -77,6 +77,12 @@ public static class AdminHttpResponseMappings {
         );
     }
 
+    public static AdminLessonsImportHttpResponse ToLessonsImportHttpResponse(this AdminLessonsImportModel model) {
+        return new AdminLessonsImportHttpResponse(
+            model.ImportedCount,
+            model.Lessons.Select(static item => item.ToLessonHttpResponse()).ToList());
+    }
+
     public static AdminEmailTemplateHttpResponse ToHttpResponse(this AdminEmailTemplateModel model) {
         return new AdminEmailTemplateHttpResponse(
             model.Id,

@@ -84,6 +84,13 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         await context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task AddRangeAsync(
+        IReadOnlyCollection<NutritionLesson> lessons,
+        CancellationToken cancellationToken = default) {
+        context.Set<NutritionLesson>().AddRange(lessons);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task UpdateAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {

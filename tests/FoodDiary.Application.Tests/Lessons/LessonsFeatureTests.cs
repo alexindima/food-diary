@@ -80,6 +80,7 @@ public class LessonsFeatureTests {
         public Task<NutritionLesson?> GetByIdTrackingAsync(NutritionLessonId id, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task AddAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task AddRangeAsync(IReadOnlyCollection<NutritionLesson> lessons, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
         public Task DeleteAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
     }

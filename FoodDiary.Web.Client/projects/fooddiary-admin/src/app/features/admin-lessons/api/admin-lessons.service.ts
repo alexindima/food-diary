@@ -3,7 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { AdminLesson, AdminLessonCreateRequest, AdminLessonUpdateRequest } from '../models/admin-lesson.data';
+import {
+    AdminLesson,
+    AdminLessonCreateRequest,
+    AdminLessonsImportRequest,
+    AdminLessonsImportResponse,
+    AdminLessonUpdateRequest,
+} from '../models/admin-lesson.data';
 
 @Injectable({ providedIn: 'root' })
 export class AdminLessonsService {
@@ -20,6 +26,10 @@ export class AdminLessonsService {
 
     public update(id: string, request: AdminLessonUpdateRequest): Observable<AdminLesson> {
         return this.http.put<AdminLesson>(`${this.baseUrl}/${id}`, request);
+    }
+
+    public importLessons(request: AdminLessonsImportRequest): Observable<AdminLessonsImportResponse> {
+        return this.http.post<AdminLessonsImportResponse>(`${this.baseUrl}/import`, request);
     }
 
     public delete(id: string): Observable<void> {

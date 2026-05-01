@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
@@ -139,6 +140,49 @@ public sealed class PresentationBoundaryIntegrationTests(
         var response = await client.GetAsync("/api/v1/admin/dashboard");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AdminLessonsImport_WithAdminRole_CreatesLessons() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
+        var title = $"Imported lesson {Guid.NewGuid():N}";
+
+        var response = await client.PostAsJsonAsync(
+            "/api/v1/admin/lessons/import",
+            new AdminLessonsImportHttpRequest(
+                Version: 1,
+                Lessons: [
+                    new AdminLessonImportItemHttpRequest(
+                        Title: title,
+                        Content: "<h2>Balanced plate</h2><p>Use a practical structure.</p>",
+                        Summary: "A short practical lesson.",
+                        Locale: "en",
+                        Category: "NutritionBasics",
+                        Difficulty: "Beginner",
+                        EstimatedReadMinutes: 3,
+                        SortOrder: 10)
+                ]));
+        using var importJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(1, importJson.RootElement.GetProperty("importedCount").GetInt32());
+        Assert.Equal(title, importJson.RootElement.GetProperty("lessons")[0].GetProperty("title").GetString());
+
+        var getResponse = await client.GetAsync("/api/v1/admin/lessons");
+        using var listJson = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
+        var importedLesson = listJson.RootElement.EnumerateArray()
+            .SingleOrDefault(lesson => string.Equals(
+                lesson.GetProperty("title").GetString(),
+                title,
+                StringComparison.Ordinal));
+
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+        Assert.Equal(title, importedLesson.GetProperty("title").GetString());
+        Assert.Equal("en", importedLesson.GetProperty("locale").GetString());
+        Assert.Equal("NutritionBasics", importedLesson.GetProperty("category").GetString());
     }
 
     [Fact]

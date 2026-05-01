@@ -34,6 +34,16 @@ export type AdminLessonUpdateRequest = {
     sortOrder: number;
 };
 
+export type AdminLessonsImportRequest = {
+    version: 1;
+    lessons: AdminLessonCreateRequest[];
+};
+
+export type AdminLessonsImportResponse = {
+    importedCount: number;
+    lessons: AdminLesson[];
+};
+
 export const LESSON_CATEGORIES = [
     'NutritionBasics',
     'Macronutrients',

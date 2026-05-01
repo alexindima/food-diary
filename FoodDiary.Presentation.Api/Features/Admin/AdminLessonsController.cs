@@ -27,6 +27,12 @@ public sealed class AdminLessonsController(ISender mediator) : BaseApiController
     public Task<IActionResult> Create([FromBody] AdminLessonCreateHttpRequest request) =>
         HandleCreated(request.ToCreateCommand(), static value => value.ToLessonHttpResponse());
 
+    [HttpPost("import")]
+    [ProducesResponseType<AdminLessonsImportHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> Import([FromBody] AdminLessonsImportHttpRequest request) =>
+        HandleOk(request.ToImportCommand(), static value => value.ToLessonsImportHttpResponse());
+
     [HttpPut("{id:guid}")]
     [ProducesResponseType<AdminLessonHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

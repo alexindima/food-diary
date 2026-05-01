@@ -1,7 +1,18 @@
 <div class="admin-lessons fd-grid fd-gap-md">
-    <div class="toolbar fd-row fd-justify-end">
+    <div class="toolbar fd-row fd-gap-sm fd-justify-end">
+        <input #lessonImportInput class="import-input" type="file" accept="application/json,.json" (change)="importLessons($event)" />
+        <fd-ui-button type="button" variant="secondary" [disabled]="lessons().length === 0" (click)="exportLessons()"
+            >Export JSON</fd-ui-button
+        >
+        <fd-ui-button type="button" variant="secondary" [disabled]="isImporting()" (click)="lessonImportInput.click()">
+            {{ isImporting() ? 'Importing...' : 'Import JSON' }}
+        </fd-ui-button>
         <fd-ui-button type="button" (click)="openCreate()">Create lesson</fd-ui-button>
     </div>
+
+    @if (importMessage(); as message) {
+        <p class="import-message">{{ message }}</p>
+    }
 
     @if (isLoading()) {
         <p>Loading lessons...</p>
