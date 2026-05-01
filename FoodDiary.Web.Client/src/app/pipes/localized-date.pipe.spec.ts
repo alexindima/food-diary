@@ -1,9 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizedDatePipe } from './localized-date.pipe';
+
+type TranslateServiceStub = {
+    getCurrentLang: ReturnType<typeof vi.fn<() => string>>;
+    onLangChange: Observable<LangChangeEvent>;
+};
 
 describe('LocalizedDatePipe', () => {
     let pipe: LocalizedDatePipe;
@@ -12,10 +17,10 @@ describe('LocalizedDatePipe', () => {
     beforeEach(() => {
         onLangChange = new Subject<LangChangeEvent>();
 
-        const translateSpy = {
+        const translateSpy: TranslateServiceStub = {
             getCurrentLang: vi.fn(),
             onLangChange: onLangChange.asObservable(),
-        } as any;
+        };
         translateSpy.getCurrentLang.mockReturnValue('en');
 
         TestBed.configureTestingModule({

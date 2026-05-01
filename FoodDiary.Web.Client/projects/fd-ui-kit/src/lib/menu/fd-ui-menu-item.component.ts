@@ -16,7 +16,7 @@ export class FdUiMenuItemComponent {
     private readonly parentMenu = inject(FdUiMenuComponent, { optional: true });
 
     public readonly type = input<'button' | 'submit' | 'reset'>('button');
-    public readonly routerLink = input<string | any[] | null>();
+    public readonly routerLink = input<string | unknown[] | null>();
     public readonly queryParams = input<Record<string, unknown>>();
     public readonly fragment = input<string>();
     public readonly disabled = input(false);

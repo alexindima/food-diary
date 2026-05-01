@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminBillingService } from '../api/admin-billing.service';
+import { AdminBillingService, AdminBillingSubscription } from '../api/admin-billing.service';
 import { AdminBillingComponent } from './admin-billing.component';
 
 describe('AdminBillingComponent', () => {
@@ -31,6 +31,12 @@ describe('AdminBillingComponent', () => {
         limit: 20,
         totalPages: 2,
         totalItems: 21,
+    } satisfies {
+        items: AdminBillingSubscription[];
+        page: number;
+        limit: number;
+        totalPages: number;
+        totalItems: number;
     };
 
     beforeEach(async () => {
@@ -96,7 +102,7 @@ describe('AdminBillingComponent', () => {
             fromUtc: null,
             toUtc: null,
         });
-        expect(component.subscriptions()).toEqual(subscriptionsPage.items as any);
+        expect(component.subscriptions()).toEqual(subscriptionsPage.items);
         expect(component.totalPages()).toBe(2);
         expect(component.totalItems()).toBe(21);
         expect(component.isLoading()).toBe(false);

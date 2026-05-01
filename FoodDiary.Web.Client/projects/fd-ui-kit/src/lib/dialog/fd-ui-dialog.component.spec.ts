@@ -28,7 +28,7 @@ describe('FdUiDialogComponent', () => {
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     function createComponent(data: FdUiDialogData): void {
-        dialogRefSpy = { close: vi.fn() } as any;
+        dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
             imports: [FdUiDialogComponent],

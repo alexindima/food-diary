@@ -13,6 +13,10 @@ describe('SeoService', () => {
     let translateService: { instant: ReturnType<typeof vi.fn>; currentLang: string };
     let document: Document;
 
+    type SeoServiceInternals = {
+        getCurrentSiteUrl(): string;
+    };
+
     beforeEach(() => {
         translateService = {
             instant: vi.fn((key: string) => key),
@@ -79,7 +83,7 @@ describe('SeoService', () => {
         });
 
         it('should use current russian domain for canonical and og:url', () => {
-            vi.spyOn(service as any, 'getCurrentSiteUrl').mockReturnValue('https://xn--b1adbcbrouc8l.xn--p1ai');
+            vi.spyOn(service as unknown as SeoServiceInternals, 'getCurrentSiteUrl').mockReturnValue('https://xn--b1adbcbrouc8l.xn--p1ai');
 
             service.update({ path: '/meals' });
 

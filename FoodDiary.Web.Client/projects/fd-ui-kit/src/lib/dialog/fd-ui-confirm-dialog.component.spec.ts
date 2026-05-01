@@ -13,7 +13,7 @@ describe('FdUiConfirmDialogComponent', () => {
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     function createComponent(data: FdUiConfirmDialogData): void {
-        dialogRefSpy = { close: vi.fn() } as any;
+        dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
             imports: [FdUiConfirmDialogComponent, TranslateModule.forRoot()],

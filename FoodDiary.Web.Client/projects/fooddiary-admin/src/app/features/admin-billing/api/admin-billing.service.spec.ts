@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { AdminBillingService } from './admin-billing.service';
+import { AdminBillingPayment, AdminBillingService } from './admin-billing.service';
 
 describe('AdminBillingService', () => {
     let service: AdminBillingService;
@@ -45,6 +45,12 @@ describe('AdminBillingService', () => {
             limit: 20,
             totalPages: 4,
             totalItems: 61,
+        } satisfies {
+            data: AdminBillingPayment[];
+            page: number;
+            limit: number;
+            totalPages: number;
+            totalItems: number;
         };
 
         service
@@ -57,7 +63,7 @@ describe('AdminBillingService', () => {
                 toUtc: '2026-04-30T23:59:59.999Z',
             })
             .subscribe(result => {
-                expect(result.items).toEqual(response.data as any);
+                expect(result.items).toEqual(response.data);
                 expect(result.page).toBe(2);
                 expect(result.totalItems).toBe(61);
             });

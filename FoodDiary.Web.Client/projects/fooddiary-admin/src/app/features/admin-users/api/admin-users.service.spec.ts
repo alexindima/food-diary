@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { AdminUsersService } from './admin-users.service';
+import { AdminUser, AdminUsersService } from './admin-users.service';
 
 describe('AdminUsersService', () => {
     let service: AdminUsersService;
@@ -41,10 +41,16 @@ describe('AdminUsersService', () => {
             limit: 20,
             totalPages: 3,
             totalItems: 41,
+        } satisfies {
+            data: AdminUser[];
+            page: number;
+            limit: number;
+            totalPages: number;
+            totalItems: number;
         };
 
         service.getUsers(2, 20, 'alex', true).subscribe(result => {
-            expect(result.items).toEqual(response.data as any);
+            expect(result.items).toEqual(response.data);
             expect(result.page).toBe(2);
             expect(result.limit).toBe(20);
             expect(result.totalPages).toBe(3);

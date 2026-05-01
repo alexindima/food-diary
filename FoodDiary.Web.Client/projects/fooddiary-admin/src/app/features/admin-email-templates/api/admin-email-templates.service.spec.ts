@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesService } from './admin-email-templates.service';
 
 describe('AdminEmailTemplatesService', () => {
@@ -26,7 +27,7 @@ describe('AdminEmailTemplatesService', () => {
     });
 
     it('should request all templates', () => {
-        const templates = [
+        const templates: AdminEmailTemplate[] = [
             {
                 id: 't1',
                 key: 'email_verification',
@@ -41,7 +42,7 @@ describe('AdminEmailTemplatesService', () => {
         ];
 
         service.getAll().subscribe(result => {
-            expect(result).toEqual(templates as any);
+            expect(result).toEqual(templates);
         });
 
         const req = httpMock.expectOne(baseUrl);
