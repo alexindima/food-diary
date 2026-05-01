@@ -2064,6 +2064,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/products/suggestions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/products/{id}",
       "Operations": [
         {

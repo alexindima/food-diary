@@ -2,11 +2,17 @@ using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
+using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
+using FoodDiary.Presentation.Api.Features.Products.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
 
 public static class ProductHttpMappings {
+    public static SearchProductSuggestionsQuery ToSuggestionsQuery(string search, int limit) =>
+        new(search, limit);
+
     public static DeleteProductCommand ToDeleteCommand(this Guid productId, Guid userId) =>
         new(userId, productId);
 
@@ -69,4 +75,20 @@ public static class ProductHttpMappings {
             AlcoholPerBase: request.AlcoholPerBase,
             Visibility: request.Visibility);
     }
+
+    public static IReadOnlyList<ProductSearchSuggestionHttpResponse> ToHttpResponse(
+        this IReadOnlyList<ProductSearchSuggestionModel> models) =>
+        models.Select(m => new ProductSearchSuggestionHttpResponse(
+            m.Source,
+            m.Name,
+            m.Brand,
+            m.Category,
+            m.Barcode,
+            m.UsdaFdcId,
+            m.ImageUrl,
+            m.CaloriesPer100G,
+            m.ProteinsPer100G,
+            m.FatsPer100G,
+            m.CarbsPer100G,
+            m.FiberPer100G)).ToList();
 }

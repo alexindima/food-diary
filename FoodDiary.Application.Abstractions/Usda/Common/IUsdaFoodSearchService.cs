@@ -7,4 +7,8 @@ public interface IUsdaFoodSearchService {
         string query,
         int limit = 20,
         CancellationToken cancellationToken = default);
+
+    Task<UsdaFoodDetailModel?> GetFoodDetailAsync(
+        int fdcId,
+        CancellationToken cancellationToken = default);
 }

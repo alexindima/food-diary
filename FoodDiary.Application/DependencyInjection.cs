@@ -19,6 +19,8 @@ using FoodDiary.Application.Notifications.Services;
 using FluentValidation;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application;
@@ -49,6 +51,8 @@ public static class DependencyInjection {
         services.AddScoped<BillingRenewalService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
+        services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
 
         return services;
     }
