@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 import { GoalsService } from './goals.service';
 
 describe('GoalsService', () => {
@@ -26,10 +27,14 @@ describe('GoalsService', () => {
     });
 
     it('should get goals', () => {
-        const mockGoals = { calories: 2000, protein: 150 };
+        const mockGoals: GoalsResponse = {
+            dailyCalorieTarget: 2000,
+            proteinTarget: 150,
+            calorieCyclingEnabled: false,
+        };
 
         service.getGoals().subscribe(result => {
-            expect(result).toEqual(mockGoals as any);
+            expect(result).toEqual(mockGoals);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);
@@ -47,11 +52,18 @@ describe('GoalsService', () => {
     });
 
     it('should update goals', () => {
-        const request = { calories: 2500, protein: 180 };
-        const mockResponse = { calories: 2500, protein: 180 };
+        const request: UpdateGoalsRequest = {
+            dailyCalorieTarget: 2500,
+            proteinTarget: 180,
+        };
+        const mockResponse: GoalsResponse = {
+            dailyCalorieTarget: 2500,
+            proteinTarget: 180,
+            calorieCyclingEnabled: false,
+        };
 
-        service.updateGoals(request as any).subscribe(result => {
-            expect(result).toEqual(mockResponse as any);
+        service.updateGoals(request).subscribe(result => {
+            expect(result).toEqual(mockResponse);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);
@@ -61,9 +73,9 @@ describe('GoalsService', () => {
     });
 
     it('should return null on updateGoals error', () => {
-        const request = { calories: 2500 };
+        const request: UpdateGoalsRequest = { dailyCalorieTarget: 2500 };
 
-        service.updateGoals(request as any).subscribe(result => {
+        service.updateGoals(request).subscribe(result => {
             expect(result).toBeNull();
         });
 

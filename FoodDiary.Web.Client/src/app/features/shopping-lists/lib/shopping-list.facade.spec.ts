@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
+import { ShoppingList } from '../models/shopping-list.data';
 import { ShoppingListFacade } from './shopping-list.facade';
 
 describe('ShoppingListFacade', () => {
@@ -19,7 +20,7 @@ describe('ShoppingListFacade', () => {
     };
     let toastService: { open: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
-    const list = {
+    const list: ShoppingList = {
         id: 'list-1',
         name: 'Main list',
         createdAt: '2026-01-01T00:00:00Z',
@@ -38,9 +39,9 @@ describe('ShoppingListFacade', () => {
         };
 
         shoppingListService.getAll.mockReturnValue(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }]));
-        shoppingListService.getById.mockReturnValue(of(list as any));
-        shoppingListService.create.mockReturnValue(of(list as any));
-        shoppingListService.update.mockReturnValue(of(list as any));
+        shoppingListService.getById.mockReturnValue(of(list));
+        shoppingListService.create.mockReturnValue(of(list));
+        shoppingListService.update.mockReturnValue(of(list));
         shoppingListService.deleteById.mockReturnValue(of(undefined));
         toastService = { open: vi.fn(), error: vi.fn() };
 
