@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
+import { ChangePasswordRequest, UpdateUserDto, User } from '../models/user.data';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -13,12 +14,19 @@ describe('UserService', () => {
 
     const baseUrl = environment.apiUrls.users;
 
-    const mockUser = {
+    const mockUser: User = {
         id: 'user-1',
         email: 'test@example.com',
         hasPassword: true,
-        name: 'Test User',
+        username: 'test-user',
         calories: 2000,
+        pushNotificationsEnabled: true,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: true,
+        fastingCheckInReminderHours: 12,
+        fastingCheckInFollowUpReminderHours: 20,
+        isActive: true,
+        isEmailConfirmed: true,
     };
 
     beforeEach(() => {
@@ -36,14 +44,14 @@ describe('UserService', () => {
 
     it('should get user info and update signal', () => {
         service.getInfo().subscribe(result => {
-            expect(result).toEqual(mockUser as any);
+            expect(result).toEqual(mockUser);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/info`);
         expect(req.request.method).toBe('GET');
         req.flush(mockUser);
 
-        expect(service.user()).toEqual(mockUser as any);
+        expect(service.user()).toEqual(mockUser);
     });
 
     it('should return null on getInfo error', () => {
@@ -59,7 +67,7 @@ describe('UserService', () => {
 
     it('should get user info silently when requested', () => {
         service.getInfoSilently().subscribe(result => {
-            expect(result).toEqual(mockUser as any);
+            expect(result).toEqual(mockUser);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/info`);
@@ -69,11 +77,11 @@ describe('UserService', () => {
     });
 
     it('should update user and update signal', () => {
-        const updateData = { name: 'Updated User' };
-        const updatedUser = { ...mockUser, name: 'Updated User' };
+        const updateData = new UpdateUserDto({ username: 'updated-user' });
+        const updatedUser: User = { ...mockUser, username: 'updated-user' };
 
-        service.update(updateData as any).subscribe(result => {
-            expect(result).toEqual(updatedUser as any);
+        service.update(updateData).subscribe(result => {
+            expect(result).toEqual(updatedUser);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/info`);
@@ -81,7 +89,7 @@ describe('UserService', () => {
         expect(req.request.body).toEqual(updateData);
         req.flush(updatedUser);
 
-        expect(service.user()).toEqual(updatedUser as any);
+        expect(service.user()).toEqual(updatedUser);
     });
 
     it('should clear user signal', () => {
@@ -89,7 +97,7 @@ describe('UserService', () => {
         service.getInfo().subscribe();
         const req = httpMock.expectOne(`${baseUrl}/info`);
         req.flush(mockUser);
-        expect(service.user()).toEqual(mockUser as any);
+        expect(service.user()).toEqual(mockUser);
 
         // Now clear
         service.clearUser();
@@ -97,9 +105,9 @@ describe('UserService', () => {
     });
 
     it('should change password', () => {
-        const request = { currentPassword: 'old', newPassword: 'new' };
+        const request: ChangePasswordRequest = { currentPassword: 'old', newPassword: 'new' };
 
-        service.changePassword(request as any).subscribe(result => {
+        service.changePassword(request).subscribe(result => {
             expect(result).toBe(true);
         });
 
@@ -110,9 +118,9 @@ describe('UserService', () => {
     });
 
     it('should return false on changePassword error', () => {
-        const request = { currentPassword: 'old', newPassword: 'new' };
+        const request: ChangePasswordRequest = { currentPassword: 'old', newPassword: 'new' };
 
-        service.changePassword(request as any).subscribe(result => {
+        service.changePassword(request).subscribe(result => {
             expect(result).toBe(false);
         });
 
@@ -142,7 +150,7 @@ describe('UserService', () => {
         service.getInfo().subscribe();
         const infoReq = httpMock.expectOne(`${baseUrl}/info`);
         infoReq.flush(mockUser);
-        expect(service.user()).toEqual(mockUser as any);
+        expect(service.user()).toEqual(mockUser);
 
         // Delete
         service.deleteCurrentUser().subscribe(result => {

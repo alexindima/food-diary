@@ -6,18 +6,38 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { User } from '../../../../shared/models/user.data';
+import { AuthResponse } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset.component';
 
 describe('PasswordResetComponent', () => {
     let component: PasswordResetComponent;
     let fixture: ComponentFixture<PasswordResetComponent>;
-    let authServiceSpy: any;
-    let navigationServiceSpy: any;
-    let translateServiceSpy: any;
+    let authServiceSpy: { confirmPasswordReset: ReturnType<typeof vi.fn> };
+    let navigationServiceSpy: { navigateToHome: ReturnType<typeof vi.fn>; navigateToAuth: ReturnType<typeof vi.fn> };
+    let translateServiceSpy: TranslateService;
+
+    const user: User = {
+        id: 'user-1',
+        email: 'user@example.com',
+        hasPassword: true,
+        pushNotificationsEnabled: true,
+        fastingPushNotificationsEnabled: true,
+        socialPushNotificationsEnabled: true,
+        fastingCheckInReminderHours: 12,
+        fastingCheckInFollowUpReminderHours: 20,
+        isActive: true,
+        isEmailConfirmed: true,
+    };
+    const authResponse: AuthResponse = {
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+        user,
+    };
 
     function createComponent(queryParams: Record<string, string> = { userId: 'user-1', token: 'tok-abc' }): void {
-        authServiceSpy = { confirmPasswordReset: vi.fn() } as any;
-        navigationServiceSpy = { navigateToHome: vi.fn(), navigateToAuth: vi.fn() } as any;
+        authServiceSpy = { confirmPasswordReset: vi.fn() };
+        navigationServiceSpy = { navigateToHome: vi.fn(), navigateToAuth: vi.fn() };
         navigationServiceSpy.navigateToHome.mockReturnValue(Promise.resolve());
         navigationServiceSpy.navigateToAuth.mockReturnValue(Promise.resolve());
 
@@ -38,7 +58,7 @@ describe('PasswordResetComponent', () => {
         });
 
         translateServiceSpy = TestBed.inject(TranslateService);
-        vi.spyOn(translateServiceSpy, 'instant').mockImplementation(((key: string | string[]) => key as string) as any);
+        vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
 
         fixture = TestBed.createComponent(PasswordResetComponent);
         component = fixture.componentInstance;
@@ -89,7 +109,7 @@ describe('PasswordResetComponent', () => {
 
     it('should call confirmPasswordReset on submit', () => {
         createComponent();
-        authServiceSpy.confirmPasswordReset.mockReturnValue(of({} as any));
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(authResponse));
 
         component.form.controls.password.setValue('newPassword123');
         component.form.controls.confirmPassword.setValue('newPassword123');
@@ -104,7 +124,7 @@ describe('PasswordResetComponent', () => {
 
     it('should navigate to home on successful submit', () => {
         createComponent();
-        authServiceSpy.confirmPasswordReset.mockReturnValue(of({} as any));
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(authResponse));
 
         component.form.controls.password.setValue('newPassword123');
         component.form.controls.confirmPassword.setValue('newPassword123');
@@ -142,7 +162,7 @@ describe('PasswordResetComponent', () => {
 
     it('should not submit when already submitting', () => {
         createComponent();
-        authServiceSpy.confirmPasswordReset.mockReturnValue(of({} as any));
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(authResponse));
 
         component.form.controls.password.setValue('newPassword123');
         component.form.controls.confirmPassword.setValue('newPassword123');

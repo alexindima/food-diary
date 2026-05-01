@@ -20,9 +20,16 @@ function createFakeJwt(payload: Record<string, unknown>): string {
 describe('AuthService', () => {
     let service: AuthService;
     let httpMock: HttpTestingController;
-    let navigationServiceSpy: any;
-    let localizationServiceSpy: any;
-    let quickMealServiceSpy: any;
+    let navigationServiceSpy: {
+        navigateToAuth: ReturnType<typeof vi.fn>;
+        navigateToHome: ReturnType<typeof vi.fn>;
+        navigateToLanding: ReturnType<typeof vi.fn>;
+    };
+    let localizationServiceSpy: {
+        applyLanguagePreference: ReturnType<typeof vi.fn>;
+        clearStoredLanguage: ReturnType<typeof vi.fn>;
+    };
+    let quickMealServiceSpy: { exitPreview: ReturnType<typeof vi.fn> };
 
     const authBaseUrl = environment.apiUrls.auth;
 
@@ -34,7 +41,7 @@ describe('AuthService', () => {
             navigateToAuth: vi.fn(),
             navigateToHome: vi.fn(),
             navigateToLanding: vi.fn(),
-        } as any;
+        };
         navigationServiceSpy.navigateToAuth.mockReturnValue(Promise.resolve());
         navigationServiceSpy.navigateToHome.mockReturnValue(Promise.resolve());
         navigationServiceSpy.navigateToLanding.mockReturnValue(Promise.resolve());
@@ -42,10 +49,10 @@ describe('AuthService', () => {
         localizationServiceSpy = {
             applyLanguagePreference: vi.fn(),
             clearStoredLanguage: vi.fn(),
-        } as any;
+        };
         localizationServiceSpy.applyLanguagePreference.mockReturnValue(Promise.resolve());
 
-        quickMealServiceSpy = { exitPreview: vi.fn() } as any;
+        quickMealServiceSpy = { exitPreview: vi.fn() };
 
         TestBed.configureTestingModule({
             providers: [

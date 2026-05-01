@@ -2,18 +2,36 @@ import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { of, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 import { LocalizationService } from './localization.service';
 
+type TranslateServiceMock = {
+    addLangs: ReturnType<typeof vi.fn>;
+    setDefaultLang: ReturnType<typeof vi.fn>;
+    use: ReturnType<typeof vi.fn>;
+    getBrowserLang: ReturnType<typeof vi.fn>;
+    getDefaultLang: ReturnType<typeof vi.fn>;
+    instant: ReturnType<typeof vi.fn>;
+    setTranslation: ReturnType<typeof vi.fn>;
+    currentLang: string;
+    onLangChange: Observable<LangChangeEvent>;
+};
+
+type TranslationLoaderMock = {
+    isPublicRoute: ReturnType<typeof vi.fn>;
+    loadRouteTranslations: ReturnType<typeof vi.fn>;
+    loadApplicationTranslations: ReturnType<typeof vi.fn>;
+};
+
 describe('LocalizationService', () => {
     let service: LocalizationService;
-    let translateSpy: any;
+    let translateSpy: TranslateServiceMock;
     let langChangeSubject: Subject<LangChangeEvent>;
     let mockDocument: Document;
-    let translationLoaderSpy: any;
+    let translationLoaderSpy: TranslationLoaderMock;
     let routerEventsSubject: Subject<unknown>;
     let documentLang: string | null;
     let currentLangValue: string;
@@ -30,7 +48,9 @@ describe('LocalizationService', () => {
             getDefaultLang: vi.fn(),
             instant: vi.fn(),
             setTranslation: vi.fn(),
-        } as any;
+            currentLang: currentLangValue,
+            onLangChange: langChangeSubject.asObservable(),
+        };
 
         Object.defineProperty(translateSpy, 'onLangChange', {
             get: () => langChangeSubject.asObservable(),
@@ -45,14 +65,14 @@ describe('LocalizationService', () => {
             configurable: true,
         });
 
-        translateSpy.use.mockReturnValue(of({} as any));
+        translateSpy.use.mockReturnValue(of({}));
         translateSpy.getDefaultLang.mockReturnValue('en');
         translateSpy.getBrowserLang.mockReturnValue('en');
         translationLoaderSpy = {
             isPublicRoute: vi.fn().mockReturnValue(true),
             loadRouteTranslations: vi.fn().mockReturnValue(of({ SEO_PAGE: { TRUST_TITLE: 'Trust' } })),
             loadApplicationTranslations: vi.fn().mockReturnValue(of({ DASHBOARD: { TITLE: 'Dashboard' } })),
-        } as any;
+        };
         routerEventsSubject = new Subject<unknown>();
 
         documentLang = null;

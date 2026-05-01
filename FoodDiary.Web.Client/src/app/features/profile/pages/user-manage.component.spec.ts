@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -10,10 +10,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../services/localization.service';
-import { NotificationService } from '../../../services/notification.service';
+import { NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { User } from '../../../shared/models/user.data';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
+import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage.component';
 
@@ -35,9 +37,9 @@ describe('UserManageComponent dietologist section', () => {
     };
 
     async function createComponent(
-        relationship: any,
+        relationship: DietologistRelationship | null,
         dialogResult = false,
-        user: any = null,
+        user: User | null = null,
         queryParams: Record<string, string> = {},
     ): Promise<void> {
         facade = createFacadeMock(relationship, user);
@@ -350,6 +352,7 @@ describe('UserManageComponent dietologist section', () => {
         await createComponent(null, false, {
             id: 'u1',
             email: 'user@example.com',
+            hasPassword: true,
             username: 'alexi',
             firstName: 'Alex',
             lastName: 'User',
@@ -402,17 +405,17 @@ describe('UserManageComponent dietologist section', () => {
 });
 
 function createFacadeMock(
-    relationship: any,
-    user: any = null,
+    relationship: DietologistRelationship | null,
+    user: User | null = null,
 ): {
-    user: ReturnType<typeof signal<any>>;
+    user: WritableSignal<User | null>;
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
     isSavingProfile: ReturnType<typeof signal<boolean>>;
     isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
-    webPushSubscriptions: ReturnType<typeof signal<never[]>>;
-    dietologistRelationship: ReturnType<typeof signal<any>>;
+    webPushSubscriptions: WritableSignal<WebPushSubscriptionItem[]>;
+    dietologistRelationship: WritableSignal<DietologistRelationship | null>;
     isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
     removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     initialize: ReturnType<typeof vi.fn>;
@@ -429,14 +432,14 @@ function createFacadeMock(
     openAdminPanel: ReturnType<typeof vi.fn>;
 } {
     return {
-        user: signal<any>(user),
+        user: signal(user),
         globalError: signal<string | null>(null),
         isDeleting: signal(false),
         isSavingProfile: signal(false),
         isRevokingAiConsent: signal(false),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
-        dietologistRelationship: signal<any>(relationship),
+        dietologistRelationship: signal(relationship),
         isLoadingWebPushSubscriptions: signal(false),
         removingWebPushSubscriptionEndpoint: signal<string | null>(null),
         initialize: vi.fn(),

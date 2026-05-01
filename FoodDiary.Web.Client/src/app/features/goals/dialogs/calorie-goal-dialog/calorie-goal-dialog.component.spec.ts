@@ -7,17 +7,18 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { GoalsService } from '../../api/goals.service';
+import { GoalsResponse } from '../../models/goals.data';
 import { CalorieGoalDialogComponent, CalorieGoalDialogData } from './calorie-goal-dialog.component';
 
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;
     let fixture: ComponentFixture<CalorieGoalDialogComponent>;
-    let goalsServiceSpy: any;
-    let dialogRefSpy: any;
+    let goalsServiceSpy: { updateGoals: ReturnType<typeof vi.fn> };
+    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     function createComponent(data: CalorieGoalDialogData | null = { dailyCalorieTarget: 2000 }): void {
-        goalsServiceSpy = { updateGoals: vi.fn() } as any;
-        dialogRefSpy = { close: vi.fn() } as any;
+        goalsServiceSpy = { updateGoals: vi.fn() };
+        dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
             imports: [CalorieGoalDialogComponent, TranslateModule.forRoot()],
@@ -62,7 +63,8 @@ describe('CalorieGoalDialogComponent', () => {
 
     it('should submit updated goal', () => {
         createComponent();
-        goalsServiceSpy.updateGoals.mockReturnValue(of({ dailyCalorieTarget: 1800 } as any));
+        const updatedGoals: GoalsResponse = { dailyCalorieTarget: 1800, calorieCyclingEnabled: false };
+        goalsServiceSpy.updateGoals.mockReturnValue(of(updatedGoals));
 
         component.form.controls.dailyCalorieTarget.setValue(1800);
         component.save();
@@ -96,7 +98,8 @@ describe('CalorieGoalDialogComponent', () => {
 
     it('should submit null when calorie target is cleared', () => {
         createComponent();
-        goalsServiceSpy.updateGoals.mockReturnValue(of({ dailyCalorieTarget: null } as any));
+        const updatedGoals: GoalsResponse = { dailyCalorieTarget: null, calorieCyclingEnabled: false };
+        goalsServiceSpy.updateGoals.mockReturnValue(of(updatedGoals));
 
         component.form.controls.dailyCalorieTarget.setValue(null);
         component.save();

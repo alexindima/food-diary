@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { ProductService } from '../api/product.service';
-import { MeasurementUnit, ProductType, ProductVisibility } from '../models/product.data';
+import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility } from '../models/product.data';
 import { ProductManageFacade } from './product-manage.facade';
 
 describe('ProductManageFacade', () => {
@@ -20,13 +20,35 @@ describe('ProductManageFacade', () => {
     };
     let authService: { isPremium: ReturnType<typeof vi.fn> };
 
-    const product = {
+    const product: Product = {
         id: 'p1',
         name: 'Test product',
+        barcode: null,
+        brand: null,
+        productType: ProductType.Unknown,
+        category: null,
+        description: null,
+        comment: null,
+        imageUrl: null,
+        imageAssetId: null,
+        baseUnit: MeasurementUnit.G,
+        baseAmount: 100,
+        defaultPortionAmount: 100,
+        caloriesPerBase: 100,
+        proteinsPerBase: 10,
+        fatsPerBase: 5,
+        carbsPerBase: 12,
+        fiberPerBase: 1,
+        alcoholPerBase: 0,
+        usageCount: 0,
+        visibility: ProductVisibility.Private,
+        createdAt: new Date('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
+        qualityScore: 80,
+        qualityGrade: 'green',
     };
 
-    const request = {
+    const request: CreateProductRequest = {
         name: 'Test product',
         barcode: null,
         brand: null,
@@ -46,7 +68,7 @@ describe('ProductManageFacade', () => {
         fiberPerBase: 1,
         alcoholPerBase: 0,
         visibility: ProductVisibility.Private,
-    } as const;
+    };
 
     beforeEach(() => {
         productService = {
@@ -70,8 +92,8 @@ describe('ProductManageFacade', () => {
         navigationService.navigateToProductList.mockResolvedValue(true);
         navigationService.navigateToPremiumAccess.mockResolvedValue(true);
         dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
-        productService.create.mockReturnValue(of(product as any));
-        productService.update.mockReturnValue(of(product as any));
+        productService.create.mockReturnValue(of(product));
+        productService.update.mockReturnValue(of(product));
         productService.deleteById.mockReturnValue(of(undefined));
         authService.isPremium.mockReturnValue(true);
 
@@ -92,12 +114,12 @@ describe('ProductManageFacade', () => {
         const result = await facade.submitProduct(null, request, true);
 
         expect(productService.create).toHaveBeenCalledWith(request);
-        expect(result.product).toEqual(product as any);
+        expect(result.product).toEqual(product);
         expect(result.error).toBeNull();
     });
 
     it('should update product on submit when editing existing product', async () => {
-        const result = await facade.submitProduct(product as any, request, true);
+        const result = await facade.submitProduct(product, request, true);
 
         expect(productService.update).toHaveBeenCalledWith(
             'p1',
@@ -107,7 +129,7 @@ describe('ProductManageFacade', () => {
                 clearBrand: true,
             }),
         );
-        expect(result.product).toEqual(product as any);
+        expect(result.product).toEqual(product);
         expect(result.error).toBeNull();
     });
 
@@ -123,7 +145,7 @@ describe('ProductManageFacade', () => {
     it('should delete product and navigate after confirmation', async () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
 
-        const result = await facade.deleteProduct(product as any, {
+        const result = await facade.deleteProduct(product, {
             title: 'Delete',
             message: 'Confirm',
         });

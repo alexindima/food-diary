@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
 import { ShoppingListService } from './shopping-list.service';
 
 describe('ShoppingListService', () => {
@@ -30,10 +31,10 @@ describe('ShoppingListService', () => {
     });
 
     it('should get current shopping list', () => {
-        const mockList = { id: '1', name: 'Current List', items: [] };
+        const mockList: ShoppingList = { id: '1', name: 'Current List', createdAt: '2026-01-01T00:00:00Z', items: [] };
 
         service.getCurrent().subscribe(result => {
-            expect(result).toEqual(mockList as any);
+            expect(result).toEqual(mockList);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/current`);
@@ -42,13 +43,13 @@ describe('ShoppingListService', () => {
     });
 
     it('should get all shopping lists', () => {
-        const mockLists = [
-            { id: '1', name: 'List 1' },
-            { id: '2', name: 'List 2' },
+        const mockLists: ShoppingListSummary[] = [
+            { id: '1', name: 'List 1', createdAt: '2026-01-01T00:00:00Z', itemsCount: 0 },
+            { id: '2', name: 'List 2', createdAt: '2026-01-02T00:00:00Z', itemsCount: 1 },
         ];
 
         service.getAll().subscribe(result => {
-            expect(result).toEqual(mockLists as any);
+            expect(result).toEqual(mockLists);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);
@@ -57,10 +58,10 @@ describe('ShoppingListService', () => {
     });
 
     it('should get shopping list by id', () => {
-        const mockList = { id: 'abc-123', name: 'My List', items: [] };
+        const mockList: ShoppingList = { id: 'abc-123', name: 'My List', createdAt: '2026-01-01T00:00:00Z', items: [] };
 
         service.getById('abc-123').subscribe(result => {
-            expect(result).toEqual(mockList as any);
+            expect(result).toEqual(mockList);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/abc-123`);
@@ -69,11 +70,11 @@ describe('ShoppingListService', () => {
     });
 
     it('should create shopping list', () => {
-        const createData = { name: 'New List' };
-        const mockResponse = { id: 'new-1', name: 'New List', items: [] };
+        const createData: ShoppingListCreateDto = { name: 'New List' };
+        const mockResponse: ShoppingList = { id: 'new-1', name: 'New List', createdAt: '2026-01-01T00:00:00Z', items: [] };
 
-        service.create(createData as any).subscribe(result => {
-            expect(result).toEqual(mockResponse as any);
+        service.create(createData).subscribe(result => {
+            expect(result).toEqual(mockResponse);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);
@@ -83,11 +84,11 @@ describe('ShoppingListService', () => {
     });
 
     it('should update shopping list', () => {
-        const updateData = { name: 'Updated List' };
-        const mockResponse = { id: 'abc-123', name: 'Updated List', items: [] };
+        const updateData: ShoppingListUpdateDto = { name: 'Updated List' };
+        const mockResponse: ShoppingList = { id: 'abc-123', name: 'Updated List', createdAt: '2026-01-01T00:00:00Z', items: [] };
 
-        service.update('abc-123', updateData as any).subscribe(result => {
-            expect(result).toEqual(mockResponse as any);
+        service.update('abc-123', updateData).subscribe(result => {
+            expect(result).toEqual(mockResponse);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/abc-123`);

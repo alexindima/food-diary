@@ -7,10 +7,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
+import { UserAiUsageResponse } from '../../../shared/models/ai.data';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { MealService } from '../api/meal.service';
 import { ConsumptionFormData, ConsumptionItemFormData } from '../components/manage/base-meal-manage.types';
-import { ConsumptionSourceType } from '../models/meal.data';
+import {
+    Consumption,
+    ConsumptionAiSessionManageDto,
+    ConsumptionManageDto,
+    ConsumptionSourceType,
+    createEmptyProductSnapshot,
+    createEmptyRecipeSnapshot,
+} from '../models/meal.data';
 import { MealManageFacade } from './meal-manage.facade';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
@@ -27,8 +35,24 @@ describe('MealManageFacade', () => {
     let dialogService: { open: ReturnType<typeof vi.fn> };
     let recipeWeightService: { loadServingWeight: ReturnType<typeof vi.fn>; convertGramsToServings: ReturnType<typeof vi.fn> };
 
-    const consumption = { id: 'c1' };
-    const usage = {
+    const consumption: Consumption = {
+        id: 'c1',
+        date: '2026-04-02T12:00:00Z',
+        totalCalories: 0,
+        totalProteins: 0,
+        totalFats: 0,
+        totalCarbs: 0,
+        totalFiber: 0,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: true,
+        items: [],
+    };
+    const consumptionData: ConsumptionManageDto = {
+        date: new Date('2026-04-02T12:00:00Z'),
+        items: [],
+        isNutritionAutoCalculated: true,
+    };
+    const usage: UserAiUsageResponse = {
         inputLimit: 1000,
         outputLimit: 1000,
         inputUsed: 100,
@@ -60,9 +84,9 @@ describe('MealManageFacade', () => {
             convertGramsToServings: vi.fn(),
         };
 
-        mealService.create.mockReturnValue(of(consumption as any));
-        mealService.update.mockReturnValue(of(consumption as any));
-        aiFoodService.getUsageSummary.mockReturnValue(of(usage as any));
+        mealService.create.mockReturnValue(of(consumption));
+        mealService.update.mockReturnValue(of(consumption));
+        aiFoodService.getUsageSummary.mockReturnValue(of(usage));
         authService.isPremium.mockReturnValue(true);
         dialogService.open.mockReturnValue({ afterClosed: () => of('ConsumptionList') });
         recipeWeightService.loadServingWeight.mockReturnValue(of(50));
@@ -87,21 +111,21 @@ describe('MealManageFacade', () => {
     });
 
     it('should load ai usage summary', async () => {
-        await expect(facade.loadAiUsage()).resolves.toEqual(usage as any);
+        await expect(facade.loadAiUsage()).resolves.toEqual(usage);
     });
 
     it('should create consumption when original consumption is null', async () => {
-        const result = await facade.submitConsumption(null, { items: [] } as any);
+        const result = await facade.submitConsumption(null, consumptionData);
 
         expect(mealService.create).toHaveBeenCalled();
-        expect(result).toEqual(consumption as any);
+        expect(result).toEqual(consumption);
     });
 
     it('should update consumption when editing existing consumption', async () => {
-        const result = await facade.submitConsumption(consumption as any, { items: [] } as any);
+        const result = await facade.submitConsumption(consumption, consumptionData);
 
-        expect(mealService.update).toHaveBeenCalledWith('c1', { items: [] });
-        expect(result).toEqual(consumption as any);
+        expect(mealService.update).toHaveBeenCalledWith('c1', consumptionData);
+        expect(result).toEqual(consumption);
     });
 
     it('should redirect after success dialog choice', async () => {
@@ -111,24 +135,36 @@ describe('MealManageFacade', () => {
     });
 
     it('should append ai session', () => {
-        const sessions = [{ id: 's1' }] as any;
-        const next = facade.addAiSession(sessions, { id: 's2' } as any);
+        const sessions: ConsumptionAiSessionManageDto[] = [{ notes: 's1', items: [] }];
+        const next = facade.addAiSession(sessions, { notes: 's2', items: [] });
 
-        expect(next).toEqual([{ id: 's1' }, { id: 's2' }] as any);
+        expect(next).toEqual([
+            { notes: 's1', items: [] },
+            { notes: 's2', items: [] },
+        ]);
     });
 
     it('should remove ai session by index', () => {
-        const sessions = [{ id: 's1' }, { id: 's2' }] as any;
+        const sessions: ConsumptionAiSessionManageDto[] = [
+            { notes: 's1', items: [] },
+            { notes: 's2', items: [] },
+        ];
         const next = facade.removeAiSession(sessions, 0);
 
-        expect(next).toEqual([{ id: 's2' }] as any);
+        expect(next).toEqual([{ notes: 's2', items: [] }]);
     });
 
     it('should replace ai session by index', () => {
-        const sessions = [{ id: 's1' }, { id: 's2' }] as any;
-        const next = facade.replaceAiSession(sessions, 1, { id: 's3' } as any);
+        const sessions: ConsumptionAiSessionManageDto[] = [
+            { notes: 's1', items: [] },
+            { notes: 's2', items: [] },
+        ];
+        const next = facade.replaceAiSession(sessions, 1, { notes: 's3', items: [] });
 
-        expect(next).toEqual([{ id: 's1' }, { id: 's3' }] as any);
+        expect(next).toEqual([
+            { notes: 's1', items: [] },
+            { notes: 's3', items: [] },
+        ]);
     });
 
     it('should create product-based consumption item form group', () => {
@@ -139,9 +175,10 @@ describe('MealManageFacade', () => {
     });
 
     it('should enable amount and set recipe weight for recipe item', () => {
-        const group = facade.createConsumptionItem(null, { id: 'r1' } as any, 2, ConsumptionSourceType.Recipe);
+        const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
+        const group = facade.createConsumptionItem(null, recipe, 2, ConsumptionSourceType.Recipe);
 
-        facade.ensureRecipeWeightForExistingItem(group, 2, { id: 'r1' } as any);
+        facade.ensureRecipeWeightForExistingItem(group, 2, recipe);
 
         expect(recipeWeightService.loadServingWeight).toHaveBeenCalled();
         expect(group.controls.amount.value).toBe(100);
@@ -155,38 +192,32 @@ describe('MealManageFacade', () => {
 
     it('should calculate nutrition summary from manual items and ai sessions', () => {
         recipeWeightService.loadServingWeight.mockReturnValue(of(50));
+        const product = {
+            ...createEmptyProductSnapshot(),
+            id: 'p1',
+            baseAmount: 100,
+            caloriesPerBase: 250,
+            proteinsPerBase: 10,
+            fatsPerBase: 5,
+            carbsPerBase: 20,
+            fiberPerBase: 3,
+            alcoholPerBase: 1,
+        };
+        const recipe = {
+            ...createEmptyRecipeSnapshot(),
+            id: 'r1',
+            servings: 2,
+            totalCalories: 600,
+            totalProteins: 30,
+            totalFats: 20,
+            totalCarbs: 50,
+            totalFiber: 8,
+            totalAlcohol: 0,
+        };
 
         const items = new FormArray<FormGroup<ConsumptionItemFormData>>([
-            facade.createConsumptionItem(
-                {
-                    id: 'p1',
-                    baseAmount: 100,
-                    caloriesPerBase: 250,
-                    proteinsPerBase: 10,
-                    fatsPerBase: 5,
-                    carbsPerBase: 20,
-                    fiberPerBase: 3,
-                    alcoholPerBase: 1,
-                } as any,
-                null,
-                200,
-                ConsumptionSourceType.Product,
-            ),
-            facade.createConsumptionItem(
-                null,
-                {
-                    id: 'r1',
-                    servings: 2,
-                    totalCalories: 600,
-                    totalProteins: 30,
-                    totalFats: 20,
-                    totalCarbs: 50,
-                    totalFiber: 8,
-                    totalAlcohol: 0,
-                } as any,
-                100,
-                ConsumptionSourceType.Recipe,
-            ),
+            facade.createConsumptionItem(product, null, 200, ConsumptionSourceType.Product),
+            facade.createConsumptionItem(null, recipe, 100, ConsumptionSourceType.Recipe),
         ]);
 
         const form = new FormGroup<ConsumptionFormData>({
@@ -213,10 +244,30 @@ describe('MealManageFacade', () => {
             [
                 {
                     items: [
-                        { calories: 40, proteins: 2, fats: 1, carbs: 5, fiber: 0, alcohol: 0 },
-                        { calories: 20, proteins: 1, fats: 0, carbs: 2, fiber: 1, alcohol: 0 },
+                        {
+                            nameEn: 'Apple',
+                            amount: 100,
+                            unit: 'g',
+                            calories: 40,
+                            proteins: 2,
+                            fats: 1,
+                            carbs: 5,
+                            fiber: 0,
+                            alcohol: 0,
+                        },
+                        {
+                            nameEn: 'Berry',
+                            amount: 50,
+                            unit: 'g',
+                            calories: 20,
+                            proteins: 1,
+                            fats: 0,
+                            carbs: 2,
+                            fiber: 1,
+                            alcohol: 0,
+                        },
                     ],
-                } as any,
+                },
             ],
             0.2,
         );

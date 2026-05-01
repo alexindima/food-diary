@@ -7,18 +7,18 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../../shared/api/user.service';
-import { ChangePasswordDialogComponent } from './change-password-dialog.component';
+import { ChangePasswordDialogComponent, ChangePasswordDialogData } from './change-password-dialog.component';
 
 describe('ChangePasswordDialogComponent', () => {
     let component: ChangePasswordDialogComponent;
     let fixture: ComponentFixture<ChangePasswordDialogComponent>;
-    let userServiceSpy: any;
-    let dialogRefSpy: any;
+    let userServiceSpy: { changePassword: ReturnType<typeof vi.fn>; setPassword: ReturnType<typeof vi.fn> };
+    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
     let translateServiceSpy: TranslateService;
 
-    function configureComponent(dialogData: any = null): void {
-        userServiceSpy = { changePassword: vi.fn(), setPassword: vi.fn() } as any;
-        dialogRefSpy = { close: vi.fn() } as any;
+    function configureComponent(dialogData: ChangePasswordDialogData | null = null): void {
+        userServiceSpy = { changePassword: vi.fn(), setPassword: vi.fn() };
+        dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
             imports: [ChangePasswordDialogComponent, TranslateModule.forRoot()],
@@ -31,7 +31,7 @@ describe('ChangePasswordDialogComponent', () => {
         });
 
         translateServiceSpy = TestBed.inject(TranslateService);
-        vi.spyOn(translateServiceSpy, 'instant').mockImplementation(((key: string | string[]) => key as string) as any);
+        vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
 
         fixture = TestBed.createComponent(ChangePasswordDialogComponent);
         component = fixture.componentInstance;

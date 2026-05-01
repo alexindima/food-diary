@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../services/localization.service';
 import { FastingFacade } from '../lib/fasting.facade';
+import { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
 import { FastingPageComponent } from './fasting-page.component';
 
 describe('FastingPageComponent', () => {
@@ -229,19 +230,19 @@ function createFacadeMock(): {
     isReducing: ReturnType<typeof signal<boolean>>;
     isUpdatingCycle: ReturnType<typeof signal<boolean>>;
     isSavingCheckIn: ReturnType<typeof signal<boolean>>;
-    currentSession: ReturnType<typeof signal<any>>;
-    stats: ReturnType<typeof signal<any>>;
-    history: ReturnType<typeof signal<any[]>>;
+    currentSession: WritableSignal<FastingSession | null>;
+    stats: WritableSignal<FastingStats | null>;
+    history: WritableSignal<FastingSession[]>;
     historyPage: ReturnType<typeof signal<number>>;
     historyTotalPages: ReturnType<typeof signal<number>>;
     isLoadingMoreHistory: ReturnType<typeof signal<boolean>>;
-    insightsData: ReturnType<typeof signal<{ alerts: never[]; insights: never[] }>>;
+    insightsData: WritableSignal<FastingInsights>;
     checkInSavedVersion: ReturnType<typeof signal<number>>;
     selectedMode: ReturnType<typeof signal<'intermittent' | 'extended' | 'cyclic'>>;
-    selectedProtocol: ReturnType<typeof signal<any>>;
+    selectedProtocol: WritableSignal<FastingProtocol>;
     customHours: ReturnType<typeof signal<number>>;
     customIntermittentFastHours: ReturnType<typeof signal<number>>;
-    cyclicEatDayProtocol: ReturnType<typeof signal<any>>;
+    cyclicEatDayProtocol: WritableSignal<FastingProtocol>;
     cyclicFastDays: ReturnType<typeof signal<number>>;
     cyclicEatDays: ReturnType<typeof signal<number>>;
     cyclicUsesCustomPreset: ReturnType<typeof signal<boolean>>;
@@ -298,19 +299,19 @@ function createFacadeMock(): {
         isReducing: signal(false),
         isUpdatingCycle: signal(false),
         isSavingCheckIn: signal(false),
-        currentSession: signal<any>(null),
-        stats: signal<any>(null),
-        history: signal<any[]>([]),
+        currentSession: signal<FastingSession | null>(null),
+        stats: signal<FastingStats | null>(null),
+        history: signal<FastingSession[]>([]),
         historyPage: signal(1),
         historyTotalPages: signal(1),
         isLoadingMoreHistory: signal(false),
-        insightsData: signal({ alerts: [], insights: [] }),
+        insightsData: signal<FastingInsights>({ alerts: [], insights: [] }),
         checkInSavedVersion: signal(0),
         selectedMode: signal<'intermittent' | 'extended' | 'cyclic'>('intermittent'),
-        selectedProtocol: signal<any>('F16_8'),
+        selectedProtocol: signal<FastingProtocol>('F16_8'),
         customHours: signal(16),
         customIntermittentFastHours: signal(16),
-        cyclicEatDayProtocol: signal<any>('F16_8'),
+        cyclicEatDayProtocol: signal<FastingProtocol>('F16_8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),
@@ -331,33 +332,7 @@ function createFacadeMock(): {
     };
 }
 
-function createSession(): {
-    id: string;
-    startedAtUtc: string;
-    endedAtUtc: null;
-    initialPlannedDurationHours: number;
-    addedDurationHours: number;
-    plannedDurationHours: number;
-    protocol: string;
-    planType: string;
-    occurrenceKind: string;
-    cyclicFastDays: null;
-    cyclicEatDays: null;
-    cyclicEatDayFastHours: null;
-    cyclicEatDayEatingWindowHours: null;
-    cyclicPhaseDayNumber: null;
-    cyclicPhaseDayTotal: null;
-    isCompleted: boolean;
-    status: string;
-    notes: null;
-    checkInAtUtc: null;
-    hungerLevel: null;
-    energyLevel: null;
-    moodLevel: null;
-    symptoms: never[];
-    checkInNotes: null;
-    checkIns: never[];
-} {
+function createSession(): FastingSession {
     return {
         id: 'session-1',
         startedAtUtc: '2026-04-12T06:00:00Z',
@@ -387,7 +362,7 @@ function createSession(): {
     };
 }
 
-function createHistorySession(id: string, checkInCount: number): any {
+function createHistorySession(id: string, checkInCount: number): FastingSession {
     const checkIns = Array.from({ length: checkInCount }, (_, index) => ({
         id: `${id}-checkin-${index + 1}`,
         checkedInAtUtc: `2026-04-12T${String(10 + index).padStart(2, '0')}:00:00Z`,
