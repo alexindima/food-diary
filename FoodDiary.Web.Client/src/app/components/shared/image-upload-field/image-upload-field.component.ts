@@ -58,6 +58,8 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly cropSize = input<number | null>(512);
     public readonly cropMaxSize = input<number>(1024);
     public readonly cropAspectRatio = input<number | null>(1);
+    public readonly resizeMaxDimension = input<number | null>(null);
+    public readonly resizeQuality = input<number>(0.86);
     public readonly deleteOnClear = input<boolean>(false);
     public readonly initialSelection = input<ImageSelection | null>(null);
     public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
@@ -213,6 +215,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     public handleIncomingFile(file: File): void {
+        void this.handleIncomingFileAsync(file);
+    }
+
+    private async handleIncomingFileAsync(file: File): Promise<void> {
         if (this.disabled || this.isUploading) {
             return;
         }
@@ -225,19 +231,95 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
 
         const maxBytes = this.maxSizeMb() * 1024 * 1024;
-        if (!this.cropEnabled() && file.size > maxBytes) {
-            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
-                maxSizeMb: this.maxSizeMb(),
-            });
-            this.cdr.markForCheck();
-            return;
-        }
 
         if (this.cropEnabled()) {
             this.startCropping(file);
         } else {
-            this.uploadFile(file);
+            const uploadFile = await this.resizeFileIfNeeded(file);
+            if (uploadFile.size > maxBytes) {
+                this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
+                    maxSizeMb: this.maxSizeMb(),
+                });
+                this.cdr.markForCheck();
+                return;
+            }
+
+            this.uploadFile(uploadFile);
         }
+    }
+
+    private async resizeFileIfNeeded(file: File): Promise<File> {
+        const maxDimension = this.resizeMaxDimension();
+        if (!maxDimension || maxDimension <= 0 || !this.canResizeFile(file)) {
+            return file;
+        }
+
+        try {
+            const image = await this.loadImage(file);
+            const largestSide = Math.max(image.naturalWidth, image.naturalHeight);
+            if (largestSide <= maxDimension) {
+                return file;
+            }
+
+            const scale = maxDimension / largestSide;
+            const targetWidth = Math.max(1, Math.round(image.naturalWidth * scale));
+            const targetHeight = Math.max(1, Math.round(image.naturalHeight * scale));
+            const canvas = document.createElement('canvas');
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                return file;
+            }
+
+            if (file.type === 'image/jpeg') {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, targetWidth, targetHeight);
+            }
+
+            ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+            const blob = await this.canvasToBlob(canvas, file.type, this.resizeQuality());
+            return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
+        } catch (err) {
+            this.logger.warn('Failed to resize image before upload', err);
+            return file;
+        }
+    }
+
+    private canResizeFile(file: File): boolean {
+        return ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+    }
+
+    private loadImage(file: File): Promise<HTMLImageElement> {
+        return new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const image = new Image();
+            image.onload = (): void => {
+                URL.revokeObjectURL(url);
+                resolve(image);
+            };
+            image.onerror = (): void => {
+                URL.revokeObjectURL(url);
+                reject(new Error('Image load failed'));
+            };
+            image.src = url;
+        });
+    }
+
+    private canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            canvas.toBlob(
+                blob => {
+                    if (blob) {
+                        resolve(blob);
+                    } else {
+                        reject(new Error('Canvas export failed'));
+                    }
+                },
+                type,
+                quality,
+            );
+        });
     }
 
     private startCropping(file: File): void {

@@ -98,6 +98,14 @@
     --fd-pill-color: var(--fd-color-primary-700);
 }
 
+.product-ai-dialog__portion-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+    @media #{variables.$media-mobile} {
+        grid-template-columns: 1fr;
+    }
+}
+
 .product-ai-dialog__note {
     margin: 0;
 }

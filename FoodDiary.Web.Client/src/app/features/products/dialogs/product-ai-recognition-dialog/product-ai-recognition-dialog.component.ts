@@ -27,6 +27,7 @@ type ProductAiDialogData = {
 export type ProductAiRecognitionResult = {
     name: string;
     description?: string | null;
+    image: ImageSelection | null;
     baseAmount: number;
     baseUnit: MeasurementUnit;
     caloriesPerBase: number;
@@ -77,6 +78,7 @@ export class ProductAiRecognitionDialogComponent {
     public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
     public readonly resultForm = new FormGroup({
         name: new FormControl('', { nonNullable: true }),
+        portionAmount: new FormControl(100, { nonNullable: true }),
         baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true }),
         caloriesPerBase: new FormControl(0, { nonNullable: true }),
         proteinsPerBase: new FormControl(0, { nonNullable: true }),
@@ -161,12 +163,14 @@ export class ProductAiRecognitionDialogComponent {
 
         const name = this.resultForm.controls.name.value.trim();
         const baseUnit = this.resultForm.controls.baseUnit.value;
-        const baseAmount = this.getDefaultBaseAmount(baseUnit);
+        const baseAmount = this.getNumber(this.resultForm.controls.portionAmount.value) || this.getRecognizedAmount(baseUnit);
+        const image = this.selection();
 
         const result: ProductAiRecognitionResult = {
             name: name || this.getFallbackName(),
             description: this.getDescription() || null,
-            baseAmount: baseAmount > 0 ? baseAmount : 100,
+            image: image ? { ...image } : null,
+            baseAmount,
             baseUnit,
             caloriesPerBase: this.getNumber(this.resultForm.controls.caloriesPerBase.value),
             proteinsPerBase: this.getNumber(this.resultForm.controls.proteinsPerBase.value),
@@ -176,7 +180,6 @@ export class ProductAiRecognitionDialogComponent {
             alcoholPerBase: this.getNumber(this.resultForm.controls.alcoholPerBase.value),
         };
 
-        this.cleanupAsset();
         this.dialogRef?.close(result);
     }
 
@@ -264,6 +267,7 @@ export class ProductAiRecognitionDialogComponent {
         const baseUnit = this.resolveUnit(primary?.unit);
         this.resultForm.patchValue({
             name,
+            portionAmount: this.getRecognizedAmount(baseUnit),
             baseUnit,
             caloriesPerBase: nutrition.calories ?? 0,
             proteinsPerBase: nutrition.protein ?? 0,
@@ -295,12 +299,25 @@ export class ProductAiRecognitionDialogComponent {
         return unit === MeasurementUnit.PCS ? 1 : 100;
     }
 
+    private getRecognizedAmount(unit: MeasurementUnit): number {
+        const compatibleAmounts = this.results()
+            .filter(item => this.resolveUnit(item.unit) === unit)
+            .map(item => this.getNumber(item.amount))
+            .filter(amount => amount > 0);
+
+        if (compatibleAmounts.length) {
+            return compatibleAmounts.reduce((total, amount) => total + amount, 0);
+        }
+
+        return this.getDefaultBaseAmount(unit);
+    }
+
     private normalizeItemsForNutrition(items: FoodVisionItem[]): FoodVisionItem[] {
-        const isSingleItem = items.length === 1;
         return items.map(item => {
             const baseUnit = this.resolveUnit(item.unit);
             const normalizedUnit = baseUnit === MeasurementUnit.PCS ? 'pcs' : baseUnit.toLowerCase();
-            const normalizedAmount = baseUnit === MeasurementUnit.PCS ? 1 : isSingleItem ? 100 : item.amount;
+            const amount = this.getNumber(item.amount);
+            const normalizedAmount = amount > 0 ? amount : this.getDefaultBaseAmount(baseUnit);
 
             return {
                 ...item,

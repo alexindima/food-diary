@@ -43,6 +43,13 @@ public class CachedProductRepository(
         return product;
     }
 
+    public Task<Product?> GetByIdForUpdateAsync(
+        ProductId id,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default) =>
+        inner.GetByIdForUpdateAsync(id, userId, includePublic, cancellationToken);
+
     public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
         IEnumerable<ProductId> ids,
         UserId userId,

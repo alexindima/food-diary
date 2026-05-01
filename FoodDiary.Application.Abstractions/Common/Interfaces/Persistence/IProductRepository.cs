@@ -22,6 +22,13 @@ public interface IProductRepository {
         bool includePublic = true,
         CancellationToken cancellationToken = default);
 
+    Task<Product?> GetByIdForUpdateAsync(
+        ProductId id,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default) =>
+        GetByIdAsync(id, userId, includePublic, cancellationToken);
+
     Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
         IEnumerable<ProductId> ids,
         UserId userId,

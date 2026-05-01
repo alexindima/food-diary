@@ -19,12 +19,12 @@
     justify-content: flex-start;
     padding: var(--fd-space-sm) var(--fd-space-md);
     border-radius: var(--fd-radius-card);
-    border: var(--fd-border-muted);
-    background: var(--fd-bg-surface-inset-translucent);
+    border: var(--fd-border-width) solid var(--fd-color-border-ai-button);
+    background: var(--fd-bg-ai-result-surface);
 }
 
 .product-manage__ai-title {
-    color: var(--fd-color-text);
+    color: var(--fd-color-text-strong);
 }
 
 .product-manage__ai-subtitle {

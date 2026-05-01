@@ -460,6 +460,8 @@
         "BASE_AMOUNT": "Базовое количество",
         "BASE_AMOUNT_PLACEHOLDER": "например, 100",
         "BASE_UNIT": "Базовая единица",
+        "PORTION_AMOUNT": "Вес порции",
+        "PORTION_UNIT": "Единица порции",
         "CANCEL": "Отмена",
         "APPLY": "Применить значения"
     },

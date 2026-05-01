@@ -625,11 +625,15 @@ export class BaseProductManageComponent {
 
     private normalizeNutritionValues(values: NutritionValues, sourceAmount: number | null, targetAmount: number): NutritionValues {
         if (!sourceAmount || sourceAmount <= 0 || sourceAmount === targetAmount) {
-            return values;
+            return this.roundNutritionValues(values, 1);
         }
 
         const factor = targetAmount / sourceAmount;
 
+        return this.roundNutritionValues(values, factor);
+    }
+
+    private roundNutritionValues(values: NutritionValues, factor: number): NutritionValues {
         return {
             caloriesPerBase: this.roundOptional(values.caloriesPerBase, factor),
             proteinsPerBase: this.roundOptional(values.proteinsPerBase, factor),
@@ -648,7 +652,7 @@ export class BaseProductManageComponent {
     }
 
     private roundValue(value: number): number {
-        return Math.round(value * 1000) / 1000;
+        return Math.round(value * 10) / 10;
     }
 
     private getUnitLabel(baseUnit: MeasurementUnit | null): string {
@@ -715,44 +719,27 @@ export class BaseProductManageComponent {
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
-        const defaultPortionControl = this.productForm.controls.defaultPortionAmount;
         const targetBaseAmount = this.getDefaultBaseAmount(result.baseUnit);
-        const shouldUpdatePortion =
-            defaultPortionControl.pristine ||
-            defaultPortionControl.value === this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
-        const normalizedNutrition = this.normalizeNutritionValues(
-            {
-                caloriesPerBase: result.caloriesPerBase,
-                proteinsPerBase: result.proteinsPerBase,
-                fatsPerBase: result.fatsPerBase,
-                carbsPerBase: result.carbsPerBase,
-                fiberPerBase: result.fiberPerBase,
-                alcoholPerBase: result.alcoholPerBase,
-            },
-            result.baseAmount,
-            targetBaseAmount,
-        );
+        const portionAmount = result.baseAmount > 0 ? result.baseAmount : targetBaseAmount;
 
         this.productForm.patchValue({
             name: result.name || this.productForm.controls.name.value,
             description: result.description ?? this.productForm.controls.description.value,
+            imageUrl: result.image ?? this.productForm.controls.imageUrl.value,
             baseAmount: targetBaseAmount,
             baseUnit: result.baseUnit,
-            caloriesPerBase: normalizedNutrition.caloriesPerBase,
-            proteinsPerBase: normalizedNutrition.proteinsPerBase,
-            fatsPerBase: normalizedNutrition.fatsPerBase,
-            carbsPerBase: normalizedNutrition.carbsPerBase,
-            fiberPerBase: normalizedNutrition.fiberPerBase,
-            alcoholPerBase: normalizedNutrition.alcoholPerBase,
-            defaultPortionAmount: shouldUpdatePortion ? targetBaseAmount : defaultPortionControl.value,
+            caloriesPerBase: this.roundNullableNutritionValue(result.caloriesPerBase),
+            proteinsPerBase: this.roundNullableNutritionValue(result.proteinsPerBase),
+            fatsPerBase: this.roundNullableNutritionValue(result.fatsPerBase),
+            carbsPerBase: this.roundNullableNutritionValue(result.carbsPerBase),
+            fiberPerBase: this.roundNullableNutritionValue(result.fiberPerBase),
+            alcoholPerBase: this.roundNullableNutritionValue(result.alcoholPerBase),
+            defaultPortionAmount: portionAmount,
         });
 
-        if (this.nutritionMode === 'portion') {
-            const portionAmount = this.getNumberValue(defaultPortionControl);
-            if (portionAmount > 0) {
-                this.convertNutritionControls(portionAmount / targetBaseAmount);
-            }
-        }
+        this.nutritionMode = 'portion';
+        this.buildNutritionModeOptions();
+        this.updateCalorieWarning();
         this.updateMacroDistribution();
     }
 
@@ -768,6 +755,10 @@ export class BaseProductManageComponent {
 
     private setGlobalError(errorKey: string): void {
         this.globalError.set(this.translateService.instant(errorKey));
+    }
+
+    private roundNullableNutritionValue(value: number | null): number | null {
+        return value === null || value === undefined ? null : this.roundValue(value);
     }
 
     private clearGlobalError(): void {

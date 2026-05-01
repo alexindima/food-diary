@@ -4,10 +4,8 @@
     size="lg"
 >
     <fd-image-upload-field
-        [cropEnabled]="true"
-        [cropSize]="null"
-        [cropMaxSize]="1024"
-        [cropAspectRatio]="null"
+        [cropEnabled]="false"
+        [resizeMaxDimension]="1536"
         [deleteOnClear]="true"
         (imageChanged)="onImageChanged($event)"
     />

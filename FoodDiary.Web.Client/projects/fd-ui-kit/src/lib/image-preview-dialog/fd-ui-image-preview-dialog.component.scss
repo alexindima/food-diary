@@ -94,6 +94,7 @@
     max-height: var(--fd-image-preview-image-max-height);
     display: block;
     object-fit: contain;
+    object-position: center center;
     user-select: none;
     box-shadow: var(--fd-shadow-xl);
     border-radius: var(--fd-radius-card);

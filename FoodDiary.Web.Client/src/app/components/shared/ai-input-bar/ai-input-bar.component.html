@@ -2,10 +2,8 @@
     <fd-image-upload-field
         class="ai-input-bar__hidden-upload"
         appearance="hidden"
-        [cropEnabled]="true"
-        [cropSize]="null"
-        [cropMaxSize]="1024"
-        [cropAspectRatio]="null"
+        [cropEnabled]="false"
+        [resizeMaxDimension]="1536"
         [deleteOnClear]="true"
         (imageChanged)="onPhotoSelected($event)"
     />

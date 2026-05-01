@@ -139,6 +139,7 @@ public class ProductsFeatureTests {
         var result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+        Assert.True(repository.GetByIdForUpdateCalled);
         Assert.True(repository.DeleteCalled);
         Assert.Equal([assetId], cleanup.RequestedAssetIds);
     }
@@ -242,6 +243,7 @@ public class ProductsFeatureTests {
         var result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+        Assert.True(repository.GetByIdForUpdateCalled);
         Assert.True(repository.UpdateCalled);
         Assert.Equal(newAssetId, product.ImageAssetId);
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
@@ -527,6 +529,7 @@ public class ProductsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+        Assert.True(repository.GetByIdForUpdateCalled);
         Assert.False(repository.UpdateCalled);
         Assert.Empty(cleanup.RequestedAssetIds);
     }
@@ -669,6 +672,7 @@ public class ProductsFeatureTests {
     private sealed class SingleProductRepository(Product product) : IProductRepository {
         public bool DeleteCalled { get; private set; }
         public bool UpdateCalled { get; private set; }
+        public bool GetByIdForUpdateCalled { get; private set; }
         public Product? LastAddedProduct { get; private set; }
 
         public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
@@ -691,6 +695,15 @@ public class ProductsFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Product?>(id == product.Id && userId == product.UserId ? product : null);
+
+        public Task<Product?> GetByIdForUpdateAsync(
+            ProductId id,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) {
+            GetByIdForUpdateCalled = true;
+            return GetByIdAsync(id, userId, includePublic, cancellationToken);
+        }
 
         public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
             IEnumerable<ProductId> ids,

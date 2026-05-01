@@ -496,6 +496,8 @@
         "BASE_AMOUNT": "Base amount",
         "BASE_AMOUNT_PLACEHOLDER": "e.g. 100",
         "BASE_UNIT": "Base unit",
+        "PORTION_AMOUNT": "Portion weight",
+        "PORTION_UNIT": "Portion unit",
         "CANCEL": "Cancel",
         "APPLY": "Apply values"
     },

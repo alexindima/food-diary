@@ -20,7 +20,7 @@ public class LinkProductToUsdaFoodCommandHandler(
         }
 
         var productId = (ProductId)command.ProductId;
-        var product = await productRepository.GetByIdAsync(
+        var product = await productRepository.GetByIdForUpdateAsync(
             productId, userIdResult.Value, includePublic: false, cancellationToken);
 
         if (product is null) {

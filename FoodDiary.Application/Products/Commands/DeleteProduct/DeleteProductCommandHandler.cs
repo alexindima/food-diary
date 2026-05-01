@@ -29,7 +29,7 @@ public class DeleteProductCommandHandler(
 
         var productId = new ProductId(command.ProductId);
 
-        var product = await productRepository.GetByIdAsync(
+        var product = await productRepository.GetByIdForUpdateAsync(
             productId,
             userId,
             includePublic: false,

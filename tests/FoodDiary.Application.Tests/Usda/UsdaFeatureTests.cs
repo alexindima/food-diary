@@ -24,6 +24,7 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+        Assert.True(productRepo.GetByIdForUpdateCalled);
         Assert.True(productRepo.UpdateCalled);
     }
 
@@ -67,6 +68,7 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+        Assert.True(productRepo.GetByIdForUpdateCalled);
         Assert.True(productRepo.UpdateCalled);
     }
 
@@ -94,9 +96,15 @@ public class UsdaFeatureTests {
 
     private sealed class StubProductRepository(Product? product) : IProductRepository {
         public bool UpdateCalled { get; private set; }
+        public bool GetByIdForUpdateCalled { get; private set; }
 
         public Task<Product?> GetByIdAsync(ProductId id, UserId userId, bool includePublic = true, CancellationToken ct = default) =>
             Task.FromResult(product);
+
+        public Task<Product?> GetByIdForUpdateAsync(ProductId id, UserId userId, bool includePublic = true, CancellationToken ct = default) {
+            GetByIdForUpdateCalled = true;
+            return GetByIdAsync(id, userId, includePublic, ct);
+        }
 
         public Task UpdateAsync(Product p, CancellationToken ct = default) {
             UpdateCalled = true;

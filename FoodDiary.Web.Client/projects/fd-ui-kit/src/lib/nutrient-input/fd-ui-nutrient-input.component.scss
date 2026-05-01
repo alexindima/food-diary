@@ -6,6 +6,8 @@
     --fd-nutrient-tint: color-mix(in srgb, var(--fd-color-slate-400) 20%, transparent);
     --fd-nutrient-text-color: var(--fd-color-text-muted);
     --fd-nutrient-label-text-gap: calc(var(--fd-space-xxs) / 2);
+    --fd-nutrient-control-font-size: var(--fd-text-metric-lg-size);
+    --fd-nutrient-control-min-font-size: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-nutrient-input-gap);
@@ -15,6 +17,7 @@
     box-shadow: var(--fd-shadow-lg);
     border: var(--fd-border-subtle);
     cursor: default;
+    container-type: inline-size;
 }
 
 .fd-ui-nutrient-input__label {
@@ -57,7 +60,12 @@
     border: none;
     background: transparent;
     font-weight: var(--fd-text-metric-hero-weight);
-    font-size: var(--fd-text-metric-lg-size);
+    font-size: clamp(
+        var(--fd-nutrient-control-min-font-size),
+        22cqi,
+        var(--fd-nutrient-control-font-size)
+    );
+    line-height: 1;
     color: var(--fd-nutrient-text-color);
     outline: none;
     padding: 0;
@@ -66,6 +74,7 @@
     min-width: 0;
     cursor: text;
     caret-color: var(--fd-nutrient-text-color);
+    font-variant-numeric: tabular-nums;
 }
 
 .fd-ui-nutrient-input__control::placeholder {
@@ -83,21 +92,33 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--lg {
+    --fd-nutrient-control-font-size: var(--fd-text-metric-hero-size);
+    --fd-nutrient-control-min-font-size: 2rem;
     padding: var(--fd-space-nutrient-input-padding-lg);
     border-radius: var(--fd-radius-panel);
 }
 
 .fd-ui-nutrient-input--lg .fd-ui-nutrient-input__control {
-    font-size: var(--fd-text-metric-hero-size);
+    font-size: clamp(
+        var(--fd-nutrient-control-min-font-size),
+        18cqi,
+        var(--fd-nutrient-control-font-size)
+    );
 }
 
 .fd-ui-nutrient-input--sm {
+    --fd-nutrient-control-font-size: var(--fd-text-card-title-size);
+    --fd-nutrient-control-min-font-size: 1rem;
     padding: var(--fd-space-nutrient-input-padding-sm);
     border-radius: var(--fd-radius-button);
 }
 
 .fd-ui-nutrient-input--sm .fd-ui-nutrient-input__control {
-    font-size: var(--fd-text-card-title-size);
+    font-size: clamp(
+        var(--fd-nutrient-control-min-font-size),
+        20cqi,
+        var(--fd-nutrient-control-font-size)
+    );
 }
 
 .fd-ui-nutrient-input--error {

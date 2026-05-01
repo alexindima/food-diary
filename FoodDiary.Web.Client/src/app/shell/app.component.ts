@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injec
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
-import { filter, from, map, mergeMap } from 'rxjs';
+import { filter, from, mergeMap } from 'rxjs';
 
 import { QuickConsumptionDrawerComponent } from '../features/meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
 import { AuthService } from '../services/auth.service';
@@ -49,15 +49,12 @@ export class AppComponent {
         this.router.events
             .pipe(
                 filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-                mergeMap(event =>
-                    from(this.prepareRoute(event.urlAfterRedirects)).pipe(map(() => this.getDeepestRoute(this.activatedRoute))),
-                ),
-                mergeMap(route => route.data.pipe(map(data => ({ data, url: this.router.url })))),
+                mergeMap(event => from(this.prepareRoute(event.urlAfterRedirects))),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(({ data, url }) => {
-                const seo: SeoData = data['seo'] ?? {};
-                this.seoService.update({ ...seo, path: url });
+            .subscribe(() => {
+                const seo = this.getMergedSeoData(this.activatedRoute);
+                this.seoService.update({ ...seo, path: this.router.url });
             });
 
         this.router.events
@@ -80,6 +77,15 @@ export class AppComponent {
             route = route.firstChild;
         }
         return route;
+    }
+
+    private getMergedSeoData(route: ActivatedRoute): SeoData {
+        const deepestRoute = this.getDeepestRoute(route);
+
+        return deepestRoute.pathFromRoot.reduce<SeoData>((seo, routePart) => {
+            const routeSeo = routePart.snapshot.data['seo'] as SeoData | undefined;
+            return routeSeo ? { ...seo, ...routeSeo } : seo;
+        }, {});
     }
 
     private async prepareRoute(url: string): Promise<void> {

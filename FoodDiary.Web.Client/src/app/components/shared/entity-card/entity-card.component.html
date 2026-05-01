@@ -11,6 +11,7 @@
     <div
         fdMediaCardMedia
         class="entity-card__thumb fd-place-center"
+        [class.entity-card__thumb--has-image]="!!imageUrl()"
         [class.entity-card__thumb--previewable]="hasPreviewImage()"
         [fdUiHint]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
         [fdUiHintDisabled]="!hasPreviewImage()"

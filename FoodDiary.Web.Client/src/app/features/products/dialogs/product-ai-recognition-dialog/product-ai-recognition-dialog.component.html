@@ -6,10 +6,8 @@
                 [label]="'PRODUCT_AI_DIALOG.IMAGE_LABEL' | translate"
                 [description]="'PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION' | translate"
                 [recommendedSize]="'1024 x 1024'"
-                [cropEnabled]="true"
-                [cropSize]="null"
-                [cropMaxSize]="1024"
-                [cropAspectRatio]="null"
+                [cropEnabled]="false"
+                [resizeMaxDimension]="1536"
                 [deleteOnClear]="true"
                 (imageChanged)="onImageChanged($event)"
             />
@@ -42,8 +40,9 @@
             @if (hasAnalyzed()) {
                 <fd-ui-button
                     type="button"
+                    appearance="ai-action"
                     variant="primary"
-                    fill="outline"
+                    fill="solid"
                     icon="auto_awesome"
                     [disabled]="!selection() || isLoading() || isNutritionLoading()"
                     (click)="reanalyze()"
@@ -53,8 +52,9 @@
             } @else {
                 <fd-ui-button
                     type="button"
+                    appearance="ai-action"
                     variant="primary"
-                    fill="outline"
+                    fill="solid"
                     icon="auto_awesome"
                     [disabled]="!selection() || isLoading() || isNutritionLoading()"
                     (click)="startAnalysis()"
@@ -109,7 +109,18 @@
                         [label]="'PRODUCT_AI_DIALOG.NAME' | translate"
                         [placeholder]="'PRODUCT_AI_DIALOG.NAME_PLACEHOLDER' | translate"
                     />
-                    <fd-ui-select formControlName="baseUnit" [label]="'PRODUCT_AI_DIALOG.BASE_UNIT' | translate" [options]="unitOptions" />
+                    <div class="product-ai-dialog__portion-grid fd-grid fd-gap-md">
+                        <fd-ui-input
+                            formControlName="portionAmount"
+                            type="number"
+                            [label]="'PRODUCT_AI_DIALOG.PORTION_AMOUNT' | translate"
+                        />
+                        <fd-ui-select
+                            formControlName="baseUnit"
+                            [label]="'PRODUCT_AI_DIALOG.PORTION_UNIT' | translate"
+                            [options]="unitOptions"
+                        />
+                    </div>
                 </div>
 
                 <div class="product-ai-dialog__nutrition-grid fd-grid fd-gap-md">

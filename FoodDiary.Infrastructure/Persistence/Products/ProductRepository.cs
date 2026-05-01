@@ -78,6 +78,22 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                     : p.UserId == userId),
                 cancellationToken);
 
+    public async Task<Product?> GetByIdForUpdateAsync(
+        ProductId id,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default) =>
+        await context.Products
+            .AsTracking()
+            .AsSplitQuery()
+            .Include(p => p.MealItems)
+            .Include(p => p.RecipeIngredients)
+            .FirstOrDefaultAsync(
+                p => p.Id == id && (includePublic
+                    ? p.UserId == userId || p.Visibility == Visibility.Public
+                    : p.UserId == userId),
+                cancellationToken);
+
     public async Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
         IEnumerable<ProductId> ids,
         UserId userId,
