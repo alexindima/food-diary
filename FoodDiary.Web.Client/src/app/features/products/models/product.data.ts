@@ -26,8 +26,26 @@ export interface Product {
     isOwnedByCurrentUser: boolean;
     qualityScore: number;
     qualityGrade: QualityGrade;
+    usdaFdcId?: number | null;
     isFavorite?: boolean;
     favoriteProductId?: string | null;
+}
+
+export type ProductSearchSuggestionSource = 'openFoodFacts' | 'usda';
+
+export interface ProductSearchSuggestion {
+    source: ProductSearchSuggestionSource;
+    name: string;
+    brand?: string | null;
+    category?: string | null;
+    barcode?: string | null;
+    usdaFdcId?: number | null;
+    imageUrl?: string | null;
+    caloriesPer100G?: number | null;
+    proteinsPer100G?: number | null;
+    fatsPer100G?: number | null;
+    carbsPer100G?: number | null;
+    fiberPer100G?: number | null;
 }
 
 export type QualityGrade = 'green' | 'yellow' | 'red';

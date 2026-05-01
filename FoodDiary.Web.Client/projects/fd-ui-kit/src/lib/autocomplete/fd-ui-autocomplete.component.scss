@@ -1,0 +1,226 @@
+:host {
+    display: block;
+}
+
+.fd-ui-autocomplete {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-control-gap);
+}
+
+.fd-ui-autocomplete__label {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-label-size);
+    font-weight: var(--fd-text-label-weight);
+    line-height: var(--fd-text-label-line-height);
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: var(--fd-space-control-label-inset-inline);
+    transform: translateY(-50%);
+    transition:
+        transform 0.15s ease,
+        top 0.15s ease,
+        font-size 0.15s ease;
+    background: var(--fd-bg-surface-raised);
+    padding: 0 var(--fd-space-field-label-padding-x);
+    border-radius: var(--fd-radius-field-label);
+    pointer-events: none;
+}
+
+.fd-ui-autocomplete__required {
+    margin-left: 0;
+    color: var(--fd-color-danger);
+}
+
+.fd-ui-autocomplete__control-wrap {
+    min-height: var(--fd-size-control-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-input);
+    background: var(--fd-bg-surface-raised);
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 var(--fd-space-control-affix-padding-x) 0 var(--fd-space-control-padding-x);
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.fd-ui-autocomplete--size-lg .fd-ui-autocomplete__control-wrap {
+    min-height: var(--fd-size-control-lg);
+}
+
+.fd-ui-autocomplete__control {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--fd-color-text);
+    font: inherit;
+    font-size: var(--fd-text-body-size);
+    line-height: var(--fd-text-body-line-height);
+}
+
+.fd-ui-autocomplete__control::placeholder {
+    color: var(--fd-color-text-muted);
+}
+
+.fd-ui-autocomplete__control-wrap:focus-within {
+    border-color: var(--fd-color-primary-500);
+    box-shadow: var(--fd-shadow-focus);
+}
+
+.fd-ui-autocomplete__suffix {
+    position: absolute;
+    right: var(--fd-space-control-suffix-inset-inline);
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--fd-size-control-sm);
+    height: var(--fd-size-control-sm);
+    color: var(--fd-color-text-muted);
+}
+
+.fd-ui-autocomplete__suffix--button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.fd-ui-autocomplete__suffix--button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.fd-ui-autocomplete__suffix--button:hover:not(:disabled) {
+    color: var(--fd-color-text);
+}
+
+.fd-ui-autocomplete--has-error .fd-ui-autocomplete__control-wrap {
+    border-color: var(--fd-color-danger);
+}
+
+.fd-ui-autocomplete--has-error .fd-ui-autocomplete__control-wrap:focus-within {
+    box-shadow: var(--fd-shadow-focus-danger);
+}
+
+.fd-ui-autocomplete--floating .fd-ui-autocomplete__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: var(--fd-text-label-floating-size);
+}
+
+.fd-ui-autocomplete--floating .fd-ui-autocomplete__control-wrap {
+    padding-top: var(--fd-space-control-floating-padding-top);
+    padding-bottom: var(--fd-space-control-floating-padding-bottom);
+}
+
+.fd-ui-autocomplete__error {
+    color: var(--fd-color-danger);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    margin-top: calc(var(--fd-space-xxs) / 2);
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.fd-ui-autocomplete__menu {
+    width: 100%;
+    min-width: 100%;
+    max-height: min(320px, 60vh);
+    overflow-y: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-menu-gap);
+    padding: var(--fd-space-menu-padding);
+    border-radius: var(--fd-radius-menu);
+    background: var(--fd-bg-surface-raised);
+    border: var(--fd-border-subtle);
+    box-shadow: var(--fd-shadow-xl);
+}
+
+.fd-ui-autocomplete__menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+    color: var(--fd-color-text);
+    font: inherit;
+    cursor: pointer;
+    border-radius: var(--fd-radius-menu-item);
+    min-height: var(--fd-space-menu-item-min-height);
+    line-height: var(--fd-text-body-sm-line-height);
+    padding: var(--fd-space-menu-item-padding);
+}
+
+.fd-ui-autocomplete__menu-item:hover,
+.fd-ui-autocomplete__menu-item--active {
+    background: var(--fd-bg-brand-tint);
+}
+
+.fd-ui-autocomplete__menu-item:focus-visible {
+    outline: var(--fd-outline-focus);
+    outline-offset: -2px;
+}
+
+.fd-ui-autocomplete__option-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fd-space-xs);
+    min-width: 0;
+}
+
+.fd-ui-autocomplete__option-label,
+.fd-ui-autocomplete__option-hint {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-ui-autocomplete__option-label {
+    min-width: 0;
+}
+
+.fd-ui-autocomplete__option-badge {
+    flex: 0 0 auto;
+    border-radius: var(--fd-radius-pill);
+    border: var(--fd-border-subtle);
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    padding: 0 var(--fd-space-xs);
+}
+
+.fd-ui-autocomplete__option-hint {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+}
+
+.fd-ui-autocomplete__state {
+    min-height: var(--fd-space-menu-item-min-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    padding: var(--fd-space-menu-item-padding);
+    text-align: center;
+}

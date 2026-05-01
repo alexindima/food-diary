@@ -20,13 +20,20 @@
             />
         </div>
         <div class="product-manage__hero-field fd-stack fd-gap-xs">
-            <fd-ui-input
+            <fd-ui-autocomplete
                 [formControl]="formGroup().controls.name"
                 size="lg"
                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
                 [required]="true"
                 [error]="getControlError()('name')"
+                [options]="nameOptions()"
+                [loading]="isNameSearchLoading()"
+                [emptyText]="'PRODUCT_MANAGE.NAME_NO_SUGGESTIONS' | translate"
+                [showEmptyState]="false"
+                [displayWith]="displayNameValue"
+                (queryChange)="nameQueryChange.emit($event)"
+                (optionSelected)="onNameOptionSelected($event)"
             />
         </div>
         <div class="product-manage__hero-field fd-stack fd-gap-xs">

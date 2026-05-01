@@ -391,6 +391,7 @@
             "CALORIES_REQUIRED": "Калорийность должна быть больше 0.",
             "MACROS_REQUIRED": "Укажите хотя бы один макрос (белки, жиры, углеводы или алкоголь)."
         },
+        "NAME_NO_SUGGESTIONS": "Подходящие продукты не найдены",
         "DEFAULT_SERVING": "Стандартная порция",
         "DEFAULT_SERVING_WITH_UNIT": "Стандартная порция ({{unit}})",
         "DEFAULT_SERVING_UNIT": "Единица измерения порции",

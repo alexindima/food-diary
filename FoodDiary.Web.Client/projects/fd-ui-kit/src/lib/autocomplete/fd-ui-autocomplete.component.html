@@ -1,0 +1,113 @@
+<div
+    class="fd-ui-autocomplete"
+    [ngClass]="[sizeClass, error() ? 'fd-ui-autocomplete--has-error' : '', shouldFloatLabel ? 'fd-ui-autocomplete--floating' : '']"
+>
+    <div
+        #controlWrap
+        cdkOverlayOrigin
+        #origin="cdkOverlayOrigin"
+        class="fd-ui-autocomplete__control-wrap"
+        [style.background]="fillColor() || null"
+        role="presentation"
+    >
+        @if (label()) {
+            <label class="fd-ui-autocomplete__label" [attr.for]="id()">
+                <span class="fd-ui-autocomplete__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-autocomplete__required">*</span>
+                }
+            </label>
+        }
+
+        <input
+            #control
+            class="fd-ui-autocomplete__control"
+            type="text"
+            autocomplete="off"
+            role="combobox"
+            [id]="id()"
+            [value]="queryText"
+            [required]="required()"
+            [disabled]="disabled"
+            [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-invalid]="error() ? 'true' : null"
+            [attr.aria-expanded]="isOpen"
+            [attr.aria-controls]="id() + '-listbox'"
+            [attr.aria-activedescendant]="activeOptionId"
+            (input)="onInput($any($event.target).value)"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            (keydown)="onControlKeydown($event)"
+        />
+
+        @if (hasSelectedValue || queryText) {
+            <button
+                class="fd-ui-autocomplete__suffix fd-ui-autocomplete__suffix--button"
+                type="button"
+                aria-label="Clear"
+                [disabled]="disabled"
+                (click)="clearValue($event)"
+            >
+                <fd-ui-icon name="close"></fd-ui-icon>
+            </button>
+        } @else {
+            <span class="fd-ui-autocomplete__suffix" aria-hidden="true">
+                <fd-ui-icon name="search"></fd-ui-icon>
+            </span>
+        }
+
+        <ng-template
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="origin"
+            [cdkConnectedOverlayOpen]="shouldOpenOverlay"
+            [cdkConnectedOverlayHasBackdrop]="true"
+            [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+            [cdkConnectedOverlayMinWidth]="overlayMinWidth"
+            [cdkConnectedOverlayPositions]="[
+                { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
+                { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
+            ]"
+            (attach)="onMenuAttached()"
+            (backdropClick)="closeMenu()"
+            (detach)="closeMenu()"
+        >
+            <div #listbox class="fd-ui-autocomplete__menu" [id]="id() + '-listbox'" role="listbox">
+                @if (loading()) {
+                    <div class="fd-ui-autocomplete__state">
+                        <fd-ui-loader />
+                    </div>
+                } @else if (options().length > 0) {
+                    @for (option of options(); track getOptionTrack(option, index); let index = $index) {
+                        <button
+                            type="button"
+                            [id]="getOptionId(index)"
+                            class="fd-ui-autocomplete__menu-item"
+                            [class.fd-ui-autocomplete__menu-item--active]="index === activeIndex"
+                            role="option"
+                            tabindex="-1"
+                            [attr.aria-selected]="isEqual(option.value, internalValue)"
+                            (click)="selectOption(option)"
+                        >
+                            <span class="fd-ui-autocomplete__option-main">
+                                <span class="fd-ui-autocomplete__option-label">{{ option.label }}</span>
+                                @if (option.badge) {
+                                    <span class="fd-ui-autocomplete__option-badge">{{ option.badge }}</span>
+                                }
+                            </span>
+                            @if (option.hint) {
+                                <span class="fd-ui-autocomplete__option-hint">{{ option.hint }}</span>
+                            }
+                        </button>
+                    }
+                } @else if (emptyText()) {
+                    <div class="fd-ui-autocomplete__state">{{ emptyText() }}</div>
+                }
+            </div>
+        </ng-template>
+    </div>
+
+    @if (error()) {
+        <div class="fd-ui-autocomplete__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+    }
+</div>

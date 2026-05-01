@@ -6,7 +6,14 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { PageOf } from '../../../shared/models/page-of.data';
-import { CreateProductRequest, Product, ProductFilters, ProductOverview, UpdateProductRequest } from '../models/product.data';
+import {
+    CreateProductRequest,
+    Product,
+    ProductFilters,
+    ProductOverview,
+    ProductSearchSuggestion,
+    UpdateProductRequest,
+} from '../models/product.data';
 
 @Injectable({
     providedIn: 'root',
@@ -70,6 +77,12 @@ export class ProductService extends ApiService {
         const params: Record<string, string | number | boolean> = { limit, includePublic };
         return this.get<Product[]>('recent', params).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Get recent products error', error, [])),
+        );
+    }
+
+    public searchSuggestions(search: string, limit = 5): Observable<ProductSearchSuggestion[]> {
+        return this.get<ProductSearchSuggestion[]>('suggestions', { search, limit }).pipe(
+            catchError((error: HttpErrorResponse) => fallbackApiError('Search product suggestions error', error, [])),
         );
     }
 

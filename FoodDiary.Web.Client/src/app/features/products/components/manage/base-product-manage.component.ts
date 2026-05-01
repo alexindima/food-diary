@@ -9,6 +9,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { catchError, debounceTime, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
@@ -25,15 +26,29 @@ import {
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { UsdaService } from '../../../usda/api/usda.service';
+import { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
 import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
+import { ProductService } from '../../api/product.service';
 import {
     ProductAiRecognitionDialogComponent,
     ProductAiRecognitionResult,
 } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
 import { ProductManageFacade } from '../../lib/product-manage.facade';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
-import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility } from '../../models/product.data';
-import { ProductBasicInfoComponent } from './product-basic-info/product-basic-info.component';
+import {
+    CreateProductRequest,
+    MeasurementUnit,
+    Product,
+    ProductSearchSuggestion,
+    ProductType,
+    ProductVisibility,
+} from '../../models/product.data';
+import {
+    ProductBasicInfoComponent,
+    ProductNameAutocompleteOption,
+    ProductNameSuggestion,
+} from './product-basic-info/product-basic-info.component';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -73,6 +88,8 @@ export class BaseProductManageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly productManageFacade = inject(ProductManageFacade);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
+    private readonly productService = inject(ProductService);
+    private readonly usdaService = inject(UsdaService);
 
     public readonly product = input<Product | null>();
     public readonly globalError = signal<string | null>(null);
@@ -90,6 +107,10 @@ export class BaseProductManageComponent {
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
     public nutritionMode: NutritionMode = 'base';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
+    public readonly nameOptions = signal<ProductNameAutocompleteOption[]>([]);
+    public readonly isNameSearchLoading = signal(false);
+    private readonly nameSearchDebounceMs = 600;
+    private readonly nameSearchMinLength = 3;
     public readonly nutritionControlNames = {
         calories: 'caloriesPerBase',
         proteins: 'proteinsPerBase',
@@ -98,6 +119,7 @@ export class BaseProductManageComponent {
         fiber: 'fiberPerBase',
         alcohol: 'alcoholPerBase',
     };
+    private readonly nameQuery$ = new Subject<string>();
 
     public readonly getControlErrorFn = (controlName: keyof ProductFormData): string | null => {
         return this.getControlError(controlName);
@@ -125,6 +147,7 @@ export class BaseProductManageComponent {
             fiberPerBase: new FormControl(null, [Validators.min(0)]),
             alcoholPerBase: new FormControl(null, [Validators.min(0)]),
             visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
+            usdaFdcId: new FormControl<number | null>(null),
         });
 
         this.buildUnitOptions();
@@ -157,6 +180,29 @@ export class BaseProductManageComponent {
             this.updateCalorieWarning();
             this.updateMacroDistribution();
         });
+        this.nameQuery$
+            .pipe(
+                debounceTime(this.nameSearchDebounceMs),
+                switchMap(query => {
+                    const trimmed = query.trim();
+                    if (trimmed.length < this.nameSearchMinLength) {
+                        this.isNameSearchLoading.set(false);
+                        this.nameOptions.set([]);
+                        return of<ProductNameAutocompleteOption[]>([]);
+                    }
+
+                    this.isNameSearchLoading.set(true);
+                    return this.productService
+                        .searchSuggestions(trimmed, 5)
+                        .pipe(map(suggestions => suggestions.map(suggestion => this.toProductNameOption(suggestion))))
+                        .pipe(catchError(() => of<ProductNameAutocompleteOption[]>([])));
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(options => {
+                this.nameOptions.set(options);
+                this.isNameSearchLoading.set(false);
+            });
 
         if (!this.product()) {
             const offProduct = history.state?.offProduct as OpenFoodFactsProduct | undefined;
@@ -232,7 +278,7 @@ export class BaseProductManageComponent {
             });
     }
 
-    private prefillFromOffProduct(offProduct: OpenFoodFactsProduct): void {
+    private prefillFromOffProduct(offProduct: OpenFoodFactsProduct | ProductSearchSuggestion): void {
         const controls = this.productForm.controls;
         if (offProduct.barcode) {
             controls.barcode.setValue(offProduct.barcode);
@@ -263,6 +309,53 @@ export class BaseProductManageComponent {
         if (fib !== undefined && fib !== null) {
             controls.fiberPerBase.setValue(Math.round(fib * 10) / 10);
         }
+    }
+
+    private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail): void {
+        const controls = this.productForm.controls;
+        const nutrients = detail.nutrients;
+        const calories = this.getUsdaNutrientAmount(nutrients, [1008], [/^energy$/i]);
+        const proteins = this.getUsdaNutrientAmount(nutrients, [1003], [/^protein$/i]);
+        const fats = this.getUsdaNutrientAmount(nutrients, [1004], [/total lipid/i, /^fat$/i]);
+        const carbs = this.getUsdaNutrientAmount(nutrients, [1005], [/carbohydrate/i]);
+        const fiber = this.getUsdaNutrientAmount(nutrients, [1079], [/fiber/i]);
+        const alcohol = this.getUsdaNutrientAmount(nutrients, [1018], [/alcohol/i]);
+
+        controls.name.setValue(detail.description);
+        controls.usdaFdcId.setValue(detail.fdcId);
+        controls.baseUnit.setValue(MeasurementUnit.G);
+        controls.baseAmount.setValue(100);
+
+        if (calories !== null) {
+            controls.caloriesPerBase.setValue(Math.round(calories));
+        }
+        if (proteins !== null) {
+            controls.proteinsPerBase.setValue(Math.round(proteins * 10) / 10);
+        }
+        if (fats !== null) {
+            controls.fatsPerBase.setValue(Math.round(fats * 10) / 10);
+        }
+        if (carbs !== null) {
+            controls.carbsPerBase.setValue(Math.round(carbs * 10) / 10);
+        }
+        if (fiber !== null) {
+            controls.fiberPerBase.setValue(Math.round(fiber * 10) / 10);
+        }
+        if (alcohol !== null) {
+            controls.alcoholPerBase.setValue(Math.round(alcohol * 10) / 10);
+        }
+    }
+
+    private getUsdaNutrientAmount(nutrients: Micronutrient[], nutrientIds: number[], namePatterns: RegExp[]): number | null {
+        const nutrient =
+            nutrients.find(item => nutrientIds.includes(item.nutrientId)) ??
+            nutrients.find(item => namePatterns.some(pattern => pattern.test(item.name)));
+
+        if (!nutrient) {
+            return null;
+        }
+
+        return nutrient.unit.toLowerCase() === 'kj' ? nutrient.amountPer100g * 0.239005736 : nutrient.amountPer100g;
     }
 
     public openAiRecognitionDialog(): void {
@@ -372,9 +465,16 @@ export class BaseProductManageComponent {
                 visibility: this.productForm.value.visibility!,
             };
             const product = this.product();
+            const nextUsdaFdcId = this.productForm.controls.usdaFdcId.value;
+            const previousUsdaFdcId = product?.usdaFdcId ?? null;
 
             try {
-                const result = await this.productManageFacade.submitProduct(product ?? null, productData, this.skipConfirmDialog);
+                const result = await this.productManageFacade.submitProduct(
+                    product ?? null,
+                    productData,
+                    this.skipConfirmDialog,
+                    savedProduct => this.syncUsdaLink(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
+                );
                 if (result.error) {
                     this.handleSubmitError(result.error);
                 }
@@ -402,6 +502,43 @@ export class BaseProductManageComponent {
         }
 
         this.nutritionMode = resolvedMode;
+    }
+
+    public onNameQueryChange(query: string): void {
+        this.nameQuery$.next(query);
+    }
+
+    public onNameSuggestionSelected(suggestion: ProductNameSuggestion): void {
+        if (suggestion.source === 'usda') {
+            const fdcId = suggestion.usdaFdcId;
+            if (!fdcId) {
+                return;
+            }
+
+            this.productForm.patchValue({
+                name: suggestion.name,
+                barcode: null,
+                brand: null,
+                usdaFdcId: fdcId,
+            });
+            this.nameOptions.set([this.toProductNameOption(suggestion)]);
+            this.usdaService
+                .getFoodDetail(fdcId)
+                .pipe(
+                    catchError(() => of<UsdaFoodDetail | null>(null)),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe(detail => {
+                    if (detail) {
+                        this.prefillFromUsdaFoodDetail(detail);
+                    }
+                });
+            return;
+        }
+
+        this.prefillFromOffProduct(suggestion);
+        this.productForm.controls.usdaFdcId.setValue(null);
+        this.nameOptions.set([this.toProductNameOption(suggestion)]);
     }
 
     public caloriesError(): string | null {
@@ -568,6 +705,7 @@ export class BaseProductManageComponent {
                 fiberPerBase: normalizedNutrition.fiberPerBase,
                 alcoholPerBase: normalizedNutrition.alcoholPerBase,
                 visibility: normalizedVisibility,
+                usdaFdcId: product.usdaFdcId ?? null,
             },
             { emitEvent: false },
         );
@@ -677,6 +815,35 @@ export class BaseProductManageComponent {
         ];
     }
 
+    private async syncUsdaLink(savedProduct: Product, nextFdcId: number | null, previousFdcId: number | null): Promise<void> {
+        if (nextFdcId === previousFdcId) {
+            return;
+        }
+
+        if (nextFdcId) {
+            await firstValueFrom(this.usdaService.linkProduct(savedProduct.id, nextFdcId));
+            return;
+        }
+
+        if (previousFdcId) {
+            await firstValueFrom(this.usdaService.unlinkProduct(savedProduct.id));
+        }
+    }
+
+    private toProductNameOption(suggestion: ProductSearchSuggestion): ProductNameAutocompleteOption {
+        return {
+            id:
+                suggestion.source === 'usda'
+                    ? `usda:${suggestion.usdaFdcId ?? suggestion.name}`
+                    : `open-food-facts:${suggestion.barcode ?? suggestion.name}`,
+            value: suggestion.name,
+            label: suggestion.name,
+            hint: suggestion.brand || suggestion.category || suggestion.barcode,
+            badge: suggestion.source === 'usda' ? 'USDA' : 'Open Food Facts',
+            data: suggestion,
+        };
+    }
+
     private normalizeVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
         if (typeof value !== 'string') {
             return ProductVisibility.Private;
@@ -726,6 +893,7 @@ export interface ProductFormValues {
     fiberPerBase: number | null;
     alcoholPerBase: number | null;
     visibility: ProductVisibility;
+    usdaFdcId: number | null;
 }
 
 export type NutritionMode = 'base' | 'portion';

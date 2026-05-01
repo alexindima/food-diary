@@ -1,4 +1,5 @@
 export * from './accent-surface/fd-ui-accent-surface.component';
+export * from './autocomplete/fd-ui-autocomplete.component';
 export * from './button/fd-ui-button.component';
 export * from './calendar/fd-ui-calendar.component';
 export * from './card/fd-ui-card.component';

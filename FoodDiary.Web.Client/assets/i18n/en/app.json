@@ -434,6 +434,7 @@
             "PRIVATE": "Only me",
             "PUBLIC": "Public"
         },
+        "NAME_NO_SUGGESTIONS": "No matching products found",
         "DEFAULT_SERVING": "Default Serving",
         "DEFAULT_SERVING_WITH_UNIT": "Default Serving ({{unit}})",
         "DEFAULT_SERVING_UNIT": "Serving Unit",

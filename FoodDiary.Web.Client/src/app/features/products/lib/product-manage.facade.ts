@@ -74,11 +74,14 @@ export class ProductManageFacade {
         product: Product | null,
         productData: CreateProductRequest,
         skipConfirmDialog: boolean,
+        afterSave?: (product: Product) => Promise<void>,
     ): Promise<{ product: Product | null; error: HttpErrorResponse | null }> {
         try {
             const savedProduct = product
                 ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
                 : await firstValueFrom(this.productService.create(productData));
+
+            await afterSave?.(savedProduct);
 
             if (!skipConfirmDialog) {
                 await this.showConfirmDialog(Boolean(product));

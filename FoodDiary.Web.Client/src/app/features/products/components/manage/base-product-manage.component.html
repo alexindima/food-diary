@@ -20,9 +20,13 @@
                     [unitOptions]="unitOptions"
                     [productTypeOptions]="productTypeSelectOptions"
                     [visibilityOptions]="visibilitySelectOptions"
+                    [nameOptions]="nameOptions()"
+                    [isNameSearchLoading]="isNameSearchLoading()"
                     [getControlError]="getControlErrorFn"
                     (openBarcodeScanner)="openBarcodeScanner()"
                     (openAiRecognition)="openAiRecognitionDialog()"
+                    (nameQueryChange)="onNameQueryChange($event)"
+                    (nameSuggestionSelected)="onNameSuggestionSelected($event)"
                 />
             </div>
 
