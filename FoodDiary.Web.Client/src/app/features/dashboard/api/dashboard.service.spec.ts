@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
+import { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardService } from './dashboard.service';
 
 describe('DashboardService', () => {
@@ -12,6 +13,34 @@ describe('DashboardService', () => {
     let httpMock: HttpTestingController;
 
     const baseUrl = environment.apiUrls.dashboard;
+
+    const mockSnapshot: DashboardSnapshot = {
+        date: '2026-03-15',
+        dailyGoal: 2200,
+        weeklyCalorieGoal: 15400,
+        statistics: {
+            totalCalories: 2000,
+            averageProteins: 120,
+            averageFats: 70,
+            averageCarbs: 210,
+            averageFiber: 25,
+        },
+        weeklyCalories: [],
+        weight: {
+            latest: null,
+            previous: null,
+            desired: null,
+        },
+        waist: {
+            latest: null,
+            previous: null,
+            desired: null,
+        },
+        meals: {
+            items: [],
+            total: 0,
+        },
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -32,10 +61,9 @@ describe('DashboardService', () => {
 
     it('should get snapshot with date param', () => {
         const date = new Date('2026-03-15T00:00:00.000Z');
-        const mockSnapshot = { totalCalories: 2000 };
 
         service.getSnapshot(date).subscribe(result => {
-            expect(result).toEqual(mockSnapshot as any);
+            expect(result).toEqual(mockSnapshot);
         });
 
         const req = httpMock.expectOne(
@@ -51,10 +79,9 @@ describe('DashboardService', () => {
 
     it('should include optional params', () => {
         const date = new Date('2026-03-15T00:00:00.000Z');
-        const mockSnapshot = { totalCalories: 2000 };
 
         service.getSnapshot(date, 2, 20, 'en', 7).subscribe(result => {
-            expect(result).toEqual(mockSnapshot as any);
+            expect(result).toEqual(mockSnapshot);
         });
 
         const req = httpMock.expectOne(

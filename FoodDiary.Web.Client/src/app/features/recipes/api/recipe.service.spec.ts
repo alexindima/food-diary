@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { PageOf } from '../../../shared/models/page-of.data';
-import { Recipe, RecipeVisibility } from '../models/recipe.data';
+import { Recipe, RecipeDto, RecipeVisibility } from '../models/recipe.data';
 import { RecipeService } from './recipe.service';
 
 describe('RecipeService', () => {
@@ -105,7 +105,15 @@ describe('RecipeService', () => {
     });
 
     it('should create recipe', () => {
-        const createData = { name: 'New Recipe', servings: 4 } as any;
+        const createData: RecipeDto = {
+            name: 'New Recipe',
+            prepTime: 10,
+            cookTime: 20,
+            servings: 4,
+            visibility: RecipeVisibility.Private,
+            calculateNutritionAutomatically: true,
+            steps: [],
+        };
 
         service.create(createData).subscribe(result => {
             expect(result).toEqual(mockRecipe);
@@ -118,7 +126,15 @@ describe('RecipeService', () => {
     });
 
     it('should update recipe via PATCH', () => {
-        const updateData = { name: 'Updated Recipe' } as any;
+        const updateData: RecipeDto = {
+            name: 'Updated Recipe',
+            prepTime: 10,
+            cookTime: 20,
+            servings: 4,
+            visibility: RecipeVisibility.Private,
+            calculateNutritionAutomatically: true,
+            steps: [],
+        };
 
         service.update('r1', updateData).subscribe(result => {
             expect(result).toEqual(mockRecipe);

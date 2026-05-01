@@ -4,12 +4,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GlobalErrorHandler } from './error-handler.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 
+type FrontendObservabilityServiceMock = {
+    recordClientError: ReturnType<typeof vi.fn<FrontendObservabilityService['recordClientError']>>;
+};
+
 describe('GlobalErrorHandler', () => {
     let handler: GlobalErrorHandler;
-    let observabilitySpy: any;
+    let observabilitySpy: FrontendObservabilityServiceMock;
 
     beforeEach(() => {
-        observabilitySpy = { recordClientError: vi.fn() } as any;
+        observabilitySpy = { recordClientError: vi.fn() };
 
         TestBed.configureTestingModule({
             providers: [GlobalErrorHandler, { provide: FrontendObservabilityService, useValue: observabilitySpy }],

@@ -8,20 +8,26 @@ import {
 } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
 import { AuthInterceptor } from './auth.interceptor';
 
+type AuthServiceMock = {
+    getToken: ReturnType<typeof vi.fn<() => string | null>>;
+    refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
+    onLogout: ReturnType<typeof vi.fn<(skipRedirect?: boolean) => Promise<void>>>;
+};
+
 describe('AuthInterceptor', () => {
     let http: HttpClient;
     let httpTesting: HttpTestingController;
-    let authServiceSpy: any;
+    let authServiceSpy: AuthServiceMock;
 
     beforeEach(() => {
-        authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogout: vi.fn() } as any;
+        authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogout: vi.fn() };
         authServiceSpy.onLogout.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({

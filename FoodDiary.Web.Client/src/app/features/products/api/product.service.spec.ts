@@ -4,7 +4,14 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { PageOf } from '../../../shared/models/page-of.data';
-import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../models/product.data';
+import {
+    CreateProductRequest,
+    MeasurementUnit,
+    Product,
+    ProductType,
+    ProductVisibility,
+    UpdateProductRequest,
+} from '../models/product.data';
 import { ProductService } from './product.service';
 
 describe('ProductService', () => {
@@ -111,7 +118,20 @@ describe('ProductService', () => {
     });
 
     it('should create product', () => {
-        const createData = { name: 'New Product', caloriesPerBase: 100 } as any;
+        const createData: CreateProductRequest = {
+            name: 'New Product',
+            productType: ProductType.Other,
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 100,
+            proteinsPerBase: 10,
+            fatsPerBase: 2,
+            carbsPerBase: 12,
+            fiberPerBase: 1,
+            alcoholPerBase: 0,
+            visibility: ProductVisibility.Private,
+        };
 
         service.create(createData).subscribe(result => {
             expect(result).toEqual(mockProduct);
@@ -124,7 +144,7 @@ describe('ProductService', () => {
     });
 
     it('should update product via PATCH', () => {
-        const updateData = { name: 'Updated Product' } as any;
+        const updateData: UpdateProductRequest = { name: 'Updated Product' };
 
         service.update('p1', updateData).subscribe(result => {
             expect(result).toEqual(mockProduct);

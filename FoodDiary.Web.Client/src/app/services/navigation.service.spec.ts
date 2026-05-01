@@ -5,12 +5,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthMode } from '../features/auth/models/auth.data';
 import { NavigationService } from './navigation.service';
 
+type RouterMock = {
+    navigate: ReturnType<typeof vi.fn<Router['navigate']>>;
+    navigateByUrl: ReturnType<typeof vi.fn<Router['navigateByUrl']>>;
+};
+
 describe('NavigationService', () => {
     let service: NavigationService;
-    let routerSpy: any;
+    let routerSpy: RouterMock;
 
     beforeEach(() => {
-        routerSpy = { navigate: vi.fn(), navigateByUrl: vi.fn() } as any;
+        routerSpy = { navigate: vi.fn(), navigateByUrl: vi.fn() };
         routerSpy.navigate.mockReturnValue(Promise.resolve(true));
         routerSpy.navigateByUrl.mockReturnValue(Promise.resolve(true));
 
