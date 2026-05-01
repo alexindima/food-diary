@@ -4,6 +4,7 @@ import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
+import { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates.component';
 
 describe('AdminEmailTemplatesComponent', () => {
@@ -12,7 +13,7 @@ describe('AdminEmailTemplatesComponent', () => {
     let templatesService: { getAll: ReturnType<typeof vi.fn> };
     let dialogService: { open: ReturnType<typeof vi.fn> };
 
-    const templates = [
+    const templates: AdminEmailTemplate[] = [
         {
             id: 't1',
             key: 'email_verification',
@@ -54,7 +55,7 @@ describe('AdminEmailTemplatesComponent', () => {
 
     it('should load templates on init', () => {
         expect(templatesService.getAll).toHaveBeenCalledTimes(1);
-        expect(component.templates()).toEqual(templates as any);
+        expect(component.templates()).toEqual(templates);
         expect(component.isLoading()).toBe(false);
     });
 
@@ -64,7 +65,7 @@ describe('AdminEmailTemplatesComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.openEdit(templates[0] as any);
+        component.openEdit(templates[0]);
         close$.next(true);
         close$.complete();
 

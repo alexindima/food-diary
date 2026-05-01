@@ -5,6 +5,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GoalsService } from '../api/goals.service';
+import { GoalsResponse } from '../models/goals.data';
 import { GoalsFacade } from './goals.facade';
 
 describe('GoalsFacade', () => {
@@ -122,7 +123,7 @@ describe('GoalsFacade', () => {
     });
 
     it('queues the latest autosave payload while a save is in flight', async () => {
-        const inFlightUpdate = new Subject<any>();
+        const inFlightUpdate = new Subject<GoalsResponse | null>();
         goalsService.updateGoals.mockReturnValueOnce(inFlightUpdate.asObservable());
 
         facade.updateCalories(1800);
@@ -132,7 +133,7 @@ describe('GoalsFacade', () => {
         facade.updateWaterValue(2500);
         expect(goalsService.updateGoals).toHaveBeenCalledTimes(1);
 
-        inFlightUpdate.next({});
+        inFlightUpdate.next({ calorieCyclingEnabled: false });
         inFlightUpdate.complete();
         await Promise.resolve();
         await vi.advanceTimersByTimeAsync(700);
@@ -148,7 +149,7 @@ describe('GoalsFacade', () => {
     });
 
     it('preserves the latest queued payload when the in-flight autosave fails', async () => {
-        const inFlightUpdate = new Subject<any>();
+        const inFlightUpdate = new Subject<GoalsResponse | null>();
         goalsService.updateGoals.mockReturnValueOnce(inFlightUpdate.asObservable()).mockReturnValue(of({}));
 
         facade.updateCalories(1800);

@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CyclesService } from '../../cycle-tracking/api/cycles.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { DashboardService } from '../api/dashboard.service';
+import { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
 
@@ -17,11 +18,19 @@ describe('DashboardFacade', () => {
     let layout: { initializeLayout: ReturnType<typeof vi.fn>; updateViewportWidth: ReturnType<typeof vi.fn> };
     let translateService: { currentLang: string; getDefaultLang: ReturnType<typeof vi.fn>; onLangChange: Subject<unknown> };
 
-    const snapshot = {
+    const snapshot: DashboardSnapshot = {
+        date: '2026-03-15',
         dailyGoal: 2100,
-        statistics: { totalCalories: 1200 },
-        meals: { items: [] },
-        hydration: { totalMl: 500, goalMl: 2000 },
+        weeklyCalorieGoal: 14700,
+        statistics: {
+            totalCalories: 1200,
+            averageProteins: 90,
+            averageFats: 45,
+            averageCarbs: 140,
+            averageFiber: 20,
+        },
+        meals: { items: [], total: 0 },
+        hydration: { dateUtc: '2026-03-15T00:00:00.000Z', totalMl: 500, goalMl: 2000 },
         weeklyCalories: [],
         weight: { latest: null, previous: null, desired: null },
         waist: { latest: null, previous: null, desired: null },
@@ -42,7 +51,7 @@ describe('DashboardFacade', () => {
             onLangChange: new Subject(),
         };
 
-        dashboardService.getSnapshot.mockReturnValue(of(snapshot as any));
+        dashboardService.getSnapshot.mockReturnValue(of(snapshot));
         hydrationService.addEntry.mockReturnValue(of(undefined));
         cyclesService.getCurrent.mockReturnValue(of(null));
 
@@ -65,7 +74,7 @@ describe('DashboardFacade', () => {
 
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(1);
         expect(cyclesService.getCurrent).toHaveBeenCalledTimes(1);
-        expect(facade.snapshot()).toEqual(snapshot as any);
+        expect(facade.snapshot()).toEqual(snapshot);
         expect(layout.initializeLayout).toHaveBeenCalledWith(snapshot.dashboardLayout);
     });
 
