@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
@@ -12,6 +13,10 @@ internal sealed class OpenFoodFactsService(
     HttpClient httpClient,
     IOptions<OpenFoodFactsApiOptions> options,
     ILogger<OpenFoodFactsService> logger) : IOpenFoodFactsService {
+    private static readonly TimeSpan SearchCacheTtl = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan StaleSearchCacheTtl = TimeSpan.FromHours(6);
+    private static readonly ConcurrentDictionary<string, CachedSearchResult> SearchCache = new(StringComparer.Ordinal);
+
     public async Task<OpenFoodFactsProductModel?> GetByBarcodeAsync(
         string barcode,
         CancellationToken cancellationToken = default) {
@@ -56,6 +61,11 @@ internal sealed class OpenFoodFactsService(
         string query,
         int limit = 10,
         CancellationToken cancellationToken = default) {
+        var cacheKey = GetSearchCacheKey(query, limit);
+        if (TryGetCachedSearch(cacheKey, SearchCacheTtl, out var freshProducts)) {
+            return freshProducts;
+        }
+
         try {
             var baseUrl = options.Value.BaseUrl.TrimEnd('/');
             var encodedQuery = Uri.EscapeDataString(query);
@@ -71,7 +81,7 @@ internal sealed class OpenFoodFactsService(
                 return [];
             }
 
-            return result.Products
+            var products = result.Products
                 .Where(p => !string.IsNullOrWhiteSpace(p.ProductName) && !string.IsNullOrWhiteSpace(p.Code))
                 .Select(p => new OpenFoodFactsProductModel(
                     p.Code!,
@@ -85,7 +95,14 @@ internal sealed class OpenFoodFactsService(
                     p.Nutriments?.Carbohydrates100G,
                     p.Nutriments?.Fiber100G))
                 .ToList();
+            SearchCache[cacheKey] = new CachedSearchResult(DateTimeOffset.UtcNow, products);
+            return products;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
+            if (TryGetCachedSearch(cacheKey, StaleSearchCacheTtl, out var staleProducts)) {
+                logger.LogWarning(ex, "Open Food Facts text search failed for query '{Query}', returning cached result", query);
+                return staleProducts;
+            }
+
             logger.LogWarning(ex, "Open Food Facts text search failed for query '{Query}'", query);
             return [];
         }
@@ -93,6 +110,27 @@ internal sealed class OpenFoodFactsService(
 
     private static string? NullIfEmpty(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+
+    private static string GetSearchCacheKey(string query, int limit) =>
+        $"{query.Trim().ToLowerInvariant()}:{limit}";
+
+    private static bool TryGetCachedSearch(
+        string cacheKey,
+        TimeSpan maxAge,
+        out IReadOnlyList<OpenFoodFactsProductModel> products) {
+        if (SearchCache.TryGetValue(cacheKey, out var cached) &&
+            DateTimeOffset.UtcNow - cached.CachedAt <= maxAge) {
+            products = cached.Products;
+            return true;
+        }
+
+        products = [];
+        return false;
+    }
+
+    private sealed record CachedSearchResult(
+        DateTimeOffset CachedAt,
+        IReadOnlyList<OpenFoodFactsProductModel> Products);
 
     private sealed class OffApiResponse {
         [JsonPropertyName("status")]

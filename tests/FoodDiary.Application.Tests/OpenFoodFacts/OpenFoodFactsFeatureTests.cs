@@ -47,7 +47,8 @@ public class OpenFoodFactsFeatureTests {
             CreateProduct("222"),
         };
         var service = new StubOpenFoodFactsService(null, products);
-        var handler = new SearchOpenFoodFactsQueryHandler(service);
+        var cache = new StubOpenFoodFactsProductCacheRepository();
+        var handler = new SearchOpenFoodFactsQueryHandler(service, cache);
 
         var result = await handler.Handle(
             new SearchOpenFoodFactsQuery("test", 10),
@@ -57,12 +58,13 @@ public class OpenFoodFactsFeatureTests {
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("111", result.Value[0].Barcode);
         Assert.Equal("222", result.Value[1].Barcode);
+        Assert.Equal(2, cache.UpsertedProducts.Count);
     }
 
     [Fact]
     public async Task SearchProducts_WhenNoResults_ReturnsEmptyList() {
         var service = new StubOpenFoodFactsService(null, []);
-        var handler = new SearchOpenFoodFactsQueryHandler(service);
+        var handler = new SearchOpenFoodFactsQueryHandler(service, new StubOpenFoodFactsProductCacheRepository());
 
         var result = await handler.Handle(
             new SearchOpenFoodFactsQuery("nonexistent", 10),
@@ -70,6 +72,27 @@ public class OpenFoodFactsFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
+    }
+
+    [Fact]
+    public async Task SearchProducts_WhenCacheHasEnoughResults_DoesNotCallExternalSearch() {
+        var cachedProducts = new List<OpenFoodFactsProductModel> {
+            CreateProduct("cached-1"),
+            CreateProduct("cached-2"),
+        };
+        var service = new StubOpenFoodFactsService(null, [CreateProduct("external")]);
+        var handler = new SearchOpenFoodFactsQueryHandler(
+            service,
+            new StubOpenFoodFactsProductCacheRepository(cachedProducts));
+
+        var result = await handler.Handle(
+            new SearchOpenFoodFactsQuery("test", 2),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Equal("cached-1", result.Value[0].Barcode);
+        Assert.Equal(0, service.SearchCallCount);
     }
 
     private sealed class StubOpenFoodFactsService(
@@ -80,7 +103,29 @@ public class OpenFoodFactsFeatureTests {
             Task.FromResult(barcodeResult);
 
         public Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
-            string query, int limit = 10, CancellationToken cancellationToken = default) =>
-            Task.FromResult(searchResults ?? (IReadOnlyList<OpenFoodFactsProductModel>)[]);
+            string query, int limit = 10, CancellationToken cancellationToken = default) {
+            SearchCallCount++;
+            return Task.FromResult(searchResults ?? (IReadOnlyList<OpenFoodFactsProductModel>)[]);
+        }
+
+        public int SearchCallCount { get; private set; }
+    }
+
+    private sealed class StubOpenFoodFactsProductCacheRepository(
+        IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) : IOpenFoodFactsProductCacheRepository {
+        public IReadOnlyList<OpenFoodFactsProductModel> UpsertedProducts { get; private set; } = [];
+
+        public Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
+            string query,
+            int limit = 10,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult((cachedProducts ?? []).Take(limit).ToList() as IReadOnlyList<OpenFoodFactsProductModel>);
+
+        public Task UpsertAsync(
+            IReadOnlyCollection<OpenFoodFactsProductModel> products,
+            CancellationToken cancellationToken = default) {
+            UpsertedProducts = products.ToList();
+            return Task.CompletedTask;
+        }
     }
 }

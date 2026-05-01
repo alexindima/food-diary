@@ -153,7 +153,18 @@ public static class DependencyInjection {
 
         services.Configure<OpenFoodFactsApiOptions>(configuration.GetSection(OpenFoodFactsApiOptions.SectionName));
         services.AddHttpClient<IOpenFoodFactsService, OpenFoodFactsService>(client => {
+            var openFoodFactsOptions = configuration
+                .GetSection(OpenFoodFactsApiOptions.SectionName)
+                .Get<OpenFoodFactsApiOptions>() ?? new OpenFoodFactsApiOptions();
             client.Timeout = TimeSpan.FromSeconds(10);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(openFoodFactsOptions.UserAgent);
+        })
+        .AddResilienceHandler("open-food-facts-retry", builder => {
+            builder.AddRetry(new HttpRetryStrategyOptions {
+                MaxRetryAttempts = 2,
+                Delay = TimeSpan.FromMilliseconds(250),
+                BackoffType = DelayBackoffType.Exponential,
+            });
         });
 
         services.Configure<FitbitOptions>(configuration.GetSection(FitbitOptions.SectionName));

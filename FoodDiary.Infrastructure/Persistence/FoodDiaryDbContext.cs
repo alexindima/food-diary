@@ -10,6 +10,7 @@ using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
@@ -57,6 +58,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<WebPushSubscription> WebPushSubscriptions => Set<WebPushSubscription>();
+    public DbSet<OpenFoodFactsProduct> OpenFoodFactsProducts => Set<OpenFoodFactsProduct>();
     public DbSet<FastingPlan> FastingPlans => Set<FastingPlan>();
     public DbSet<FastingOccurrence> FastingOccurrences => Set<FastingOccurrence>();
     public DbSet<FastingCheckIn> FastingCheckIns => Set<FastingCheckIn>();

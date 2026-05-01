@@ -211,6 +211,32 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task SearchAsync_WhenRepeatedWithinCacheWindow_ReturnsCachedResultWithoutSecondRequest() {
+        var json = """
+            {
+              "products": [
+                {
+                  "code": "5449000054227",
+                  "product_name": "Fanta",
+                  "brands": "Coca-Cola",
+                  "nutriments": {}
+                }
+              ]
+            }
+            """;
+        var handler = new CountingHttpMessageHandler(json);
+        var service = CreateService(handler);
+
+        var firstResult = await service.SearchAsync("cached-fanta");
+        var secondResult = await service.SearchAsync("cached-fanta");
+
+        Assert.Single(firstResult);
+        Assert.Single(secondResult);
+        Assert.Equal("Fanta", secondResult[0].Name);
+        Assert.Equal(1, handler.RequestCount);
+    }
+
     private static OpenFoodFactsService CreateService(HttpMessageHandler handler) {
         var httpClient = new HttpClient(handler);
         return new OpenFoodFactsService(
@@ -237,5 +263,17 @@ public sealed class OpenFoodFactsServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromResult(new HttpResponseMessage(statusCode));
+    }
+
+    private sealed class CountingHttpMessageHandler(string json) : HttpMessageHandler {
+        public int RequestCount { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken) {
+            RequestCount++;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+            });
+        }
     }
 }
