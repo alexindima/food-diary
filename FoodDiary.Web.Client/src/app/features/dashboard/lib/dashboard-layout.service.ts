@@ -5,8 +5,8 @@ import { UserService } from '../../../shared/api/user.service';
 import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 
 const DEFAULT_LAYOUT: DashboardLayoutSettings = {
-    web: ['summary', 'meals', 'fasting', 'hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
-    mobile: ['summary', 'meals', 'fasting', 'hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
+    web: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
+    mobile: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
 };
 
 @Injectable()
@@ -31,7 +31,7 @@ export class DashboardLayoutService {
 
     public readonly hasAsideBlocks = computed(() => {
         const blocks = this.visibleBlocks();
-        return blocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
+        return blocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
 
     public readonly hasLayoutChanges = computed(() => {

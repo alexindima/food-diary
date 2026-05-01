@@ -10,8 +10,6 @@ import { FastingSession } from '../../fasting/models/fasting.data';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { Meal } from '../../meals/models/meal.data';
-import { UsdaService } from '../../usda/api/usda.service';
-import { DailyMicronutrientSummary } from '../../usda/models/usda.data';
 import { DashboardService } from '../api/dashboard.service';
 import { TdeeService } from '../api/tdee.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
@@ -35,7 +33,6 @@ export class DashboardFacade {
     private readonly cyclesService = inject(CyclesService);
     private readonly tdeeService = inject(TdeeService);
     private readonly goalsService = inject(GoalsService);
-    private readonly usdaService = inject(UsdaService);
     private readonly translateService = inject(TranslateService);
     public readonly layout = inject(DashboardLayoutService);
 
@@ -56,8 +53,6 @@ export class DashboardFacade {
     public readonly isCycleLoading = signal(false);
     public readonly tdeeInsight = signal<TdeeInsight | null>(null);
     public readonly isTdeeLoading = signal(false);
-    public readonly micronutrients = signal<DailyMicronutrientSummary | null>(null);
-    public readonly isMicronutrientsLoading = signal(false);
 
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
@@ -132,7 +127,6 @@ export class DashboardFacade {
         this.loadDashboardSnapshot();
         this.loadCycle();
         this.loadTdeeInsight();
-        this.loadMicronutrients();
 
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadDashboardSnapshot(false));
 
@@ -151,7 +145,6 @@ export class DashboardFacade {
 
         this.selectedDate.set(normalized);
         this.loadDashboardSnapshot();
-        this.loadMicronutrients();
     }
 
     public addHydration(amount: number): void {
@@ -173,7 +166,6 @@ export class DashboardFacade {
 
     public reload(showLoader = true): void {
         this.loadDashboardSnapshot(showLoader);
-        this.loadMicronutrients();
     }
 
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
@@ -215,14 +207,6 @@ export class DashboardFacade {
         runTrackedRequest(this.destroyRef, this.isTdeeLoading, this.tdeeService.getInsight(), {
             next: insight => this.tdeeInsight.set(insight),
             error: () => this.tdeeInsight.set(null),
-        });
-    }
-
-    private loadMicronutrients(): void {
-        const targetDate = getDashboardDateUtc(this.selectedDate()).toISOString();
-        runTrackedRequest(this.destroyRef, this.isMicronutrientsLoading, this.usdaService.getDailyMicronutrients(targetDate), {
-            next: summary => this.micronutrients.set(summary),
-            error: () => this.micronutrients.set(null),
         });
     }
 

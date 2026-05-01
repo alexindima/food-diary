@@ -150,7 +150,7 @@
 </aside>
 
 <nav class="sidebar-mobile" aria-label="Mobile navigation">
-    @if (isAuthenticated()) {
+    @if (isAuthenticated() && isMobileViewport() && !isDashboardRoute()) {
         <section class="sidebar-mobile__progress" aria-live="polite">
             <div class="sidebar-mobile__progress-head">
                 <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>

@@ -1861,13 +1861,6 @@
         "CALORIES_TITLE": "Calorie goal missing",
         "CALORIES_BODY": "Set your daily calorie target to see progress rings and weekly status."
     },
-    "MICRONUTRIENT_CARD": {
-        "TITLE": "Micronutrients",
-        "EMPTY": "Link products to USDA to see micronutrient data",
-        "COVERAGE": "{{linked}} of {{total}} products linked to USDA",
-        "DEFICIENCIES": "Top deficiencies",
-        "SUFFICIENT": "Well covered"
-    },
     "HYDRATION_CARD": {
         "TITLE": "Hydration",
         "GOAL_TITLE": "Hydration goal missing",

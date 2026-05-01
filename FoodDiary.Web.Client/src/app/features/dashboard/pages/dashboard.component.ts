@@ -24,7 +24,6 @@ import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycl
 import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
 import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
 import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
-import { MicronutrientCardComponent } from '../components/micronutrient-card/micronutrient-card.component';
 import { TdeeInsightCardComponent } from '../components/tdee-insight-card/tdee-insight-card.component';
 import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
 import { DashboardFacade } from '../lib/dashboard.facade';
@@ -54,7 +53,6 @@ import { DashboardLayoutService } from '../lib/dashboard-layout.service';
         DailyAdviceCardComponent,
         CycleSummaryCardComponent,
         TdeeInsightCardComponent,
-        MicronutrientCardComponent,
         MealsPreviewComponent,
         NoticeBannerComponent,
         FdUiLoaderComponent,
@@ -106,8 +104,6 @@ export class DashboardComponent {
     public readonly isCycleLoading = this.facade.isCycleLoading;
     public readonly tdeeInsight = this.facade.tdeeInsight;
     public readonly isTdeeLoading = this.facade.isTdeeLoading;
-    public readonly micronutrients = this.facade.micronutrients;
-    public readonly isMicronutrientsLoading = this.facade.isMicronutrientsLoading;
     public readonly weightTrend = this.facade.weightTrend;
     public readonly waistTrend = this.facade.waistTrend;
     public readonly nutrientBars = this.facade.nutrientBars;
@@ -232,7 +228,7 @@ export class DashboardComponent {
         }
 
         const visibleBlocks = this.layout.visibleBlocks();
-        return visibleBlocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
+        return visibleBlocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
 
     public constructor() {

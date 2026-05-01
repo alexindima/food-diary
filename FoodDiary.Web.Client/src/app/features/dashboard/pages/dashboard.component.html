@@ -266,31 +266,6 @@
                                 }
                             </div>
                         }
-                        @if (layout.shouldRenderBlock('micronutrients')) {
-                            <div
-                                class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('micronutrients')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('micronutrients') : null"
-                                (click)="layout.toggleBlock('micronutrients')"
-                                (keydown.enter)="layout.toggleBlock('micronutrients')"
-                            >
-                                @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
-                                        <fd-micronutrient-card
-                                            class="dashboard__card dashboard__card--micronutrients"
-                                            [summary]="micronutrients()"
-                                            [isLoading]="isMicronutrientsLoading()"
-                                        />
-                                    </fd-dashboard-card-shell>
-                                } @placeholder {
-                                    <fd-ui-loader />
-                                } @loading (minimum 300ms) {
-                                    <fd-ui-loader />
-                                }
-                            </div>
-                        }
                         @if (layout.shouldRenderBlock('cycle')) {
                             <div
                                 class="dashboard__block"

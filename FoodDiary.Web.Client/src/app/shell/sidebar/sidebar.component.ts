@@ -140,6 +140,12 @@ export class SidebarComponent {
     protected readonly isMobileReportsOpen = computed(() => this.mobileSheet() === 'reports');
     protected readonly isMobileUserOpen = computed(() => this.mobileSheet() === 'user');
     protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
+    protected readonly isMobileViewport = signal(this.getIsMobileViewport());
+    protected readonly currentPath = signal(this.getCurrentPath());
+    protected readonly isDashboardRoute = computed(() => {
+        const path = this.currentPath();
+        return path === '/' || path === '/dashboard';
+    });
     protected readonly pendingRoute = signal<string | null>(null);
     protected readonly activeMobileSheetLabelKey = computed(() => {
         switch (this.mobileSheet()) {
@@ -238,7 +244,7 @@ export class SidebarComponent {
     });
 
     private readonly progressSync = effect(() => {
-        if (!this.isAuthenticated()) {
+        if (!this.isAuthenticated() || !this.isMobileViewport() || this.isDashboardRoute()) {
             this.dailyConsumedKcal.set(0);
             this.dailyGoalKcal.set(0);
             return;
@@ -273,8 +279,20 @@ export class SidebarComponent {
     });
 
     public constructor() {
+        const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia('(max-width: 767px)');
+        const updateMobileViewport = (): void => this.isMobileViewport.set(this.getIsMobileViewport());
+
+        mobileMediaQuery?.addEventListener('change', updateMobileViewport);
+        this.destroyRef.onDestroy(() => mobileMediaQuery?.removeEventListener('change', updateMobileViewport));
+
         this.router.events.subscribe(event => {
-            if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+            if (event instanceof NavigationEnd) {
+                this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
+                this.pendingRoute.set(null);
+                return;
+            }
+
+            if (event instanceof NavigationCancel || event instanceof NavigationError) {
                 this.pendingRoute.set(null);
             }
         });
@@ -322,6 +340,18 @@ export class SidebarComponent {
             this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
             this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
         });
+    }
+
+    private getIsMobileViewport(): boolean {
+        if (typeof window === 'undefined') {
+            return false;
+        }
+
+        return window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    private getCurrentPath(url = this.router.url): string {
+        return url.split('?')[0].split('#')[0] || '/';
     }
 
     protected toggleFoodTracking(): void {
