@@ -141,7 +141,7 @@ export default [
                     objectLiteralTypeAssertions: 'never',
                 },
             ],
-            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
@@ -166,28 +166,28 @@ export default [
         },
         rules: {
             '@typescript-eslint/no-floating-promises': [
-                'warn',
+                'error',
                 {
                     ignoreVoid: true,
                 },
             ],
             '@typescript-eslint/no-misused-promises': [
-                'warn',
+                'error',
                 {
                     checksVoidReturn: {
                         attributes: false,
                     },
                 },
             ],
-            '@typescript-eslint/prefer-readonly': 'warn',
+            '@typescript-eslint/prefer-readonly': 'error',
         },
     },
     {
         files: ['**/*.ts'],
         ignores: ['**/*.spec.ts', '**/*.stories.ts'],
         rules: {
-            '@angular-eslint/prefer-signals': 'warn',
-            '@angular-eslint/prefer-on-push-component-change-detection': 'warn',
+            '@angular-eslint/prefer-signals': 'error',
+            '@angular-eslint/prefer-on-push-component-change-detection': 'error',
             'no-restricted-syntax': [
                 'error',
                 {
