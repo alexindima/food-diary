@@ -140,6 +140,7 @@
     "keys": [
       "advice",
       "caloriesBurned",
+      "currentCycle",
       "currentFastingSession",
       "dailyGoal",
       "dashboardLayout",
@@ -147,6 +148,7 @@
       "hydration",
       "meals",
       "statistics",
+      "tdeeInsight",
       "waist",
       "waistTrend",
       "weeklyCalorieGoal",

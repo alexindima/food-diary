@@ -67,7 +67,7 @@
                             <span class="tdee-card__suggestion-text fd-ui-meta-text">
                                 {{ 'TDEE_CARD.SUGGESTED_GOAL' | translate: { value: insight()!.suggestedCalorieTarget | number: '1.0-0' } }}
                             </span>
-                            <fd-ui-button variant="primary" fill="outline" size="sm" (click)="onApplyGoal()">
+                            <fd-ui-button variant="primary" fill="outline" size="sm" (click)="onApplyGoal($event)">
                                 {{ 'TDEE_CARD.APPLY' | translate }}
                             </fd-ui-button>
                         </div>

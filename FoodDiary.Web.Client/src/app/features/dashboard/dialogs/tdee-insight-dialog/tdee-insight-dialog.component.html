@@ -1,0 +1,144 @@
+<fd-ui-dialog [title]="'TDEE_DIALOG.TITLE' | translate" size="md" bodyScrollInset="edge">
+    <div class="tdee-dialog fd-stack fd-gap-md">
+        <section class="tdee-dialog__summary fd-stack fd-gap-sm" aria-labelledby="tdee-dialog-summary-title">
+            <div class="tdee-dialog__summary-header fd-row fd-align-start fd-gap-sm">
+                <span class="tdee-dialog__summary-icon fd-inline-center" aria-hidden="true">
+                    <fd-ui-icon name="local_fire_department"></fd-ui-icon>
+                </span>
+                <div class="tdee-dialog__summary-copy fd-stack fd-gap-xxs fd-min-w-0">
+                    <div id="tdee-dialog-summary-title" class="tdee-dialog__state fd-ui-overline">
+                        {{ stateKey | translate }}
+                    </div>
+                    @if (effectiveTdee) {
+                        <div class="tdee-dialog__value fd-row fd-align-baseline fd-gap-xs">
+                            <span class="tdee-dialog__number fd-ui-metric-lg">{{ effectiveTdee | number: '1.0-0' }}</span>
+                            <span class="tdee-dialog__unit fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.KCAL_DAY' | translate }}</span>
+                        </div>
+                    } @else {
+                        <div class="tdee-dialog__empty-title fd-ui-card-title">{{ 'TDEE_DIALOG.EMPTY_TITLE' | translate }}</div>
+                    }
+                    <p class="tdee-dialog__summary-text fd-ui-body-sm fd-ui-text-muted">{{ summaryKey | translate }}</p>
+                </div>
+            </div>
+
+            @if (insight) {
+                <div class="tdee-dialog__confidence fd-row fd-wrap fd-gap-xs">
+                    <span class="tdee-dialog__pill fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                        <fd-ui-icon name="verified"></fd-ui-icon>
+                        {{ confidenceKey | translate }}
+                    </span>
+                    <span class="tdee-dialog__pill fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                        <fd-ui-icon name="calendar_month"></fd-ui-icon>
+                        {{ 'TDEE_DIALOG.DATA_DAYS' | translate: { days: insight.dataDaysUsed } }}
+                    </span>
+                </div>
+            }
+        </section>
+
+        @if (insight) {
+            <section class="tdee-dialog__metrics" aria-label="TDEE metrics">
+                @if (insight.estimatedTdee) {
+                    <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+                        <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{
+                            'TDEE_CARD.FORMULA_ESTIMATE' | translate
+                        }}</span>
+                        <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                            >{{ insight.estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                        >
+                    </div>
+                }
+                @if (insight.adaptiveTdee) {
+                    <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+                        <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{
+                            'TDEE_DIALOG.ADAPTIVE' | translate
+                        }}</span>
+                        <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                            >{{ insight.adaptiveTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                        >
+                    </div>
+                }
+                @if (insight.bmr) {
+                    <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+                        <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.BMR' | translate }}</span>
+                        <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                            >{{ insight.bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                        >
+                    </div>
+                }
+                @if (weightTrendFormatted) {
+                    <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+                        <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{
+                            'TDEE_CARD.WEIGHT_TREND' | translate
+                        }}</span>
+                        <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                            >{{ weightTrendFormatted }} {{ 'TDEE_CARD.KG_WEEK' | translate }}</span
+                        >
+                    </div>
+                }
+            </section>
+        }
+
+        <section class="tdee-dialog__setup fd-stack fd-gap-sm" aria-labelledby="tdee-dialog-setup-title">
+            <div class="tdee-dialog__section-header fd-stack fd-gap-xxs">
+                <h3 id="tdee-dialog-setup-title" class="tdee-dialog__section-title fd-ui-card-title">
+                    {{ 'TDEE_DIALOG.SETUP.TITLE' | translate }}
+                </h3>
+                <p class="tdee-dialog__section-copy fd-ui-body-sm fd-ui-text-muted">{{ 'TDEE_DIALOG.SETUP.SUBTITLE' | translate }}</p>
+            </div>
+
+            <div class="tdee-dialog__setup-list fd-stack fd-gap-xs">
+                @for (item of setupItems; track item.key) {
+                    <div
+                        class="tdee-dialog__setup-item fd-row fd-align-start fd-gap-sm"
+                        [class.tdee-dialog__setup-item--complete]="item.complete"
+                    >
+                        <span class="tdee-dialog__setup-icon fd-inline-center" aria-hidden="true">
+                            <fd-ui-icon [name]="item.complete ? 'check_circle' : item.icon"></fd-ui-icon>
+                        </span>
+                        <div class="tdee-dialog__setup-copy fd-stack fd-gap-xxs fd-min-w-0">
+                            <div class="tdee-dialog__setup-title fd-ui-action-text">{{ item.titleKey | translate }}</div>
+                            <div class="tdee-dialog__setup-text fd-ui-body-sm fd-ui-text-muted">{{ item.textKey | translate }}</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+
+        @if (hintKey || showSuggestion) {
+            <section class="tdee-dialog__hint fd-row fd-align-start fd-gap-sm">
+                <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
+                <div class="tdee-dialog__hint-copy fd-stack fd-gap-xxs">
+                    @if (hintKey) {
+                        <p class="tdee-dialog__hint-text fd-ui-body-sm">{{ hintKey | translate }}</p>
+                    }
+                    @if (showSuggestion && insight?.suggestedCalorieTarget) {
+                        <p class="tdee-dialog__hint-text fd-ui-body-sm">
+                            {{ 'TDEE_DIALOG.SUGGESTED_TARGET' | translate: { value: insight!.suggestedCalorieTarget | number: '1.0-0' } }}
+                        </p>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+
+    <div fdUiDialogFooter class="tdee-dialog__footer fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button type="button" variant="secondary" fill="outline" icon="person" (click)="close({ type: 'profile' })">
+            {{ 'TDEE_DIALOG.ACTIONS.PROFILE' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" fill="outline" icon="monitor_weight" (click)="close({ type: 'weight' })">
+            {{ 'TDEE_DIALOG.ACTIONS.WEIGHT' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" fill="outline" icon="restaurant" (click)="close({ type: 'meal' })">
+            {{ 'TDEE_DIALOG.ACTIONS.MEAL' | translate }}
+        </fd-ui-button>
+        @if (showSuggestion) {
+            <fd-ui-button type="button" variant="primary" icon="done" (click)="applySuggestion()">
+                {{ 'TDEE_CARD.APPLY' | translate }}
+            </fd-ui-button>
+        } @else {
+            <fd-ui-button type="button" variant="primary" icon="flag" (click)="close({ type: 'goals' })">
+                {{ 'TDEE_DIALOG.ACTIONS.GOALS' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+</fd-ui-dialog>

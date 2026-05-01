@@ -63,7 +63,9 @@ export class TdeeInsightCardComponent {
         return Math.abs(data.suggestedCalorieTarget - data.currentCalorieTarget) > 50;
     });
 
-    public onApplyGoal(): void {
+    public onApplyGoal(event?: Event): void {
+        event?.stopPropagation();
+
         const target = this.insight()?.suggestedCalorieTarget;
         if (target) {
             this.applyGoal.emit(target);

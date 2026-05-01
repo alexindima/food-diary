@@ -358,18 +358,20 @@
                             <div
                                 class="dashboard__block"
                                 [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('tdee')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
+                                [attr.role]="'button'"
+                                [attr.tabindex]="0"
                                 [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('tdee') : null"
-                                (click)="layout.toggleBlock('tdee')"
-                                (keydown.enter)="layout.toggleBlock('tdee')"
+                                [attr.aria-label]="'TDEE_CARD.TITLE' | translate"
+                                (click)="handleTdeeCardClick($event)"
+                                (keydown.enter)="handleTdeeCardClick($event)"
+                                (keydown.space)="$event.preventDefault(); handleTdeeCardClick($event)"
                             >
                                 @defer (on viewport) {
                                     <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                         <fd-tdee-insight-card
                                             class="dashboard__card dashboard__card--tdee"
                                             [insight]="tdeeInsight()"
-                                            [isLoading]="isTdeeLoading()"
+                                            [isLoading]="isLoading()"
                                             (applyGoal)="applyTdeeGoal($event)"
                                         />
                                     </fd-dashboard-card-shell>

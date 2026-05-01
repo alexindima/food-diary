@@ -238,6 +238,8 @@ services:
     restart: unless-stopped
     environment:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
+      MailRelayClient__BaseUrl: http://mail-relay:5088
+      MailInboxClient__BaseUrl: http://mail-inbox:5098
     env_file:
       - .env
     depends_on:

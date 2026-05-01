@@ -47,7 +47,7 @@ export class PushNotificationService {
                 void this.router.navigateByUrl(this.toAppUrl(targetUrl));
             }
 
-            this.notificationService.fetchUnreadCount();
+            this.notificationService.fetchUnreadCount({ force: true });
             this.notificationService.notifyNotificationsChanged();
         });
 

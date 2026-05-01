@@ -8,12 +8,14 @@ using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
+using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -109,6 +111,9 @@ public class DashboardSnapshotBuilder(
         var caloriesBurned = await exerciseEntryRepository.GetTotalCaloriesBurnedAsync(
             userId, dayStart, cancellationToken);
 
+        var tdeeInsightResult = await sender.Send(new GetTdeeInsightQuery(request.UserId), cancellationToken);
+        var currentCycleResult = await sender.Send(new GetCurrentCycleQuery(request.UserId), cancellationToken);
+
         return Result.Success(new DashboardSnapshotModel(
             request.Date,
             currentUser.GetCalorieTargetForDate(request.Date) ?? 0,
@@ -124,7 +129,9 @@ public class DashboardSnapshotBuilder(
             weightTrendResult.IsSuccess ? weightTrendResult.Value : [],
             waistTrendResult.IsSuccess ? waistTrendResult.Value : [],
             layout,
-            Math.Round(caloriesBurned, 1)));
+            Math.Round(caloriesBurned, 1),
+            tdeeInsightResult.IsSuccess ? tdeeInsightResult.Value : null,
+            currentCycleResult.IsSuccess ? currentCycleResult.Value : null));
     }
 
     private DashboardLayoutModel? ParseDashboardLayout(string? json, UserId userId) {

@@ -69,7 +69,7 @@ export class NotificationRealtimeService {
         });
 
         this.connection.onreconnected(() => {
-            this.notificationService.fetchUnreadCount();
+            this.notificationService.fetchUnreadCount({ force: true });
             this.notificationService.refreshNotifications();
             this.connectedSignal.set(true);
         });

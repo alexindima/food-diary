@@ -1,5 +1,7 @@
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;
+using FoodDiary.Presentation.Api.Features.Cycles.Responses;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
+using FoodDiary.Presentation.Api.Features.Tdee.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
@@ -21,4 +23,6 @@ public sealed record DashboardSnapshotHttpResponse(
     IReadOnlyList<WeightEntrySummaryHttpResponse>? WeightTrend = null,
     IReadOnlyList<WaistEntrySummaryHttpResponse>? WaistTrend = null,
     DashboardLayoutHttpModel? DashboardLayout = null,
-    double CaloriesBurned = 0);
+    double CaloriesBurned = 0,
+    TdeeInsightHttpResponse? TdeeInsight = null,
+    CycleHttpResponse? CurrentCycle = null);

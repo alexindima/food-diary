@@ -85,6 +85,32 @@ describe('NotificationService', () => {
         expect(service.unreadCount()).toBe(7);
     });
 
+    it('should not refetch unread count after it has been loaded', () => {
+        service.fetchUnreadCount();
+
+        const req = httpMock.expectOne(`${baseUrl}/unread-count`);
+        req.flush({ count: 3 });
+
+        service.fetchUnreadCount();
+
+        httpMock.expectNone(`${baseUrl}/unread-count`);
+        expect(service.unreadCount()).toBe(3);
+    });
+
+    it('should refetch unread count when forced', () => {
+        service.fetchUnreadCount();
+
+        const firstReq = httpMock.expectOne(`${baseUrl}/unread-count`);
+        firstReq.flush({ count: 3 });
+
+        service.fetchUnreadCount({ force: true });
+
+        const secondReq = httpMock.expectOne(`${baseUrl}/unread-count`);
+        secondReq.flush({ count: 5 });
+
+        expect(service.unreadCount()).toBe(5);
+    });
+
     it('should reset unread count when unauthenticated', () => {
         authService.isAuthenticated.mockReturnValue(false);
 

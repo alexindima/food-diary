@@ -4,16 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { auditTime, fromEvent } from 'rxjs';
 
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { CyclesService } from '../../cycle-tracking/api/cycles.service';
 import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import { FastingSession } from '../../fasting/models/fasting.data';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
-import { TdeeService } from '../api/tdee.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
-import { TdeeInsight } from '../models/tdee-insight.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import {
@@ -30,8 +27,6 @@ export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);
     private readonly hydrationService = inject(HydrationService);
-    private readonly cyclesService = inject(CyclesService);
-    private readonly tdeeService = inject(TdeeService);
     private readonly goalsService = inject(GoalsService);
     private readonly translateService = inject(TranslateService);
     public readonly layout = inject(DashboardLayoutService);
@@ -49,10 +44,9 @@ export class DashboardFacade {
     });
     public readonly snapshot = signal<DashboardSnapshot | null>(null);
     public readonly isLoading = signal(false);
-    public readonly cycle = signal<CycleResponse | null>(null);
-    public readonly isCycleLoading = signal(false);
-    public readonly tdeeInsight = signal<TdeeInsight | null>(null);
-    public readonly isTdeeLoading = signal(false);
+    public readonly cycle = computed<CycleResponse | null>(() => this.snapshot()?.currentCycle ?? null);
+    public readonly isCycleLoading = computed(() => this.isLoading());
+    public readonly tdeeInsight = computed(() => this.snapshot()?.tdeeInsight ?? null);
 
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
@@ -125,8 +119,6 @@ export class DashboardFacade {
 
         this.initialized.set(true);
         this.loadDashboardSnapshot();
-        this.loadCycle();
-        this.loadTdeeInsight();
 
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadDashboardSnapshot(false));
 
@@ -160,7 +152,6 @@ export class DashboardFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.loadDashboardSnapshot(false);
-                this.loadTdeeInsight();
             });
     }
 
@@ -193,20 +184,6 @@ export class DashboardFacade {
                     this.isHydrationUpdating.set(false);
                 }
             },
-        });
-    }
-
-    private loadCycle(): void {
-        runTrackedRequest(this.destroyRef, this.isCycleLoading, this.cyclesService.getCurrent(), {
-            next: cycle => this.cycle.set(cycle),
-            error: () => this.cycle.set(null),
-        });
-    }
-
-    private loadTdeeInsight(): void {
-        runTrackedRequest(this.destroyRef, this.isTdeeLoading, this.tdeeService.getInsight(), {
-            next: insight => this.tdeeInsight.set(insight),
-            error: () => this.tdeeInsight.set(null),
         });
     }
 

@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CyclesService } from '../../cycle-tracking/api/cycles.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { DashboardService } from '../api/dashboard.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
@@ -14,7 +13,6 @@ describe('DashboardFacade', () => {
     let facade: DashboardFacade;
     let dashboardService: { getSnapshot: ReturnType<typeof vi.fn> };
     let hydrationService: { addEntry: ReturnType<typeof vi.fn> };
-    let cyclesService: { getCurrent: ReturnType<typeof vi.fn> };
     let layout: { initializeLayout: ReturnType<typeof vi.fn>; updateViewportWidth: ReturnType<typeof vi.fn> };
     let translateService: { currentLang: string; getDefaultLang: ReturnType<typeof vi.fn>; onLangChange: Subject<unknown> };
 
@@ -43,7 +41,6 @@ describe('DashboardFacade', () => {
     beforeEach(() => {
         dashboardService = { getSnapshot: vi.fn() };
         hydrationService = { addEntry: vi.fn() };
-        cyclesService = { getCurrent: vi.fn() };
         layout = { initializeLayout: vi.fn(), updateViewportWidth: vi.fn() };
         translateService = {
             currentLang: 'en',
@@ -53,14 +50,12 @@ describe('DashboardFacade', () => {
 
         dashboardService.getSnapshot.mockReturnValue(of(snapshot));
         hydrationService.addEntry.mockReturnValue(of(undefined));
-        cyclesService.getCurrent.mockReturnValue(of(null));
 
         TestBed.configureTestingModule({
             providers: [
                 DashboardFacade,
                 { provide: DashboardService, useValue: dashboardService },
                 { provide: HydrationService, useValue: hydrationService },
-                { provide: CyclesService, useValue: cyclesService },
                 { provide: DashboardLayoutService, useValue: layout },
                 { provide: TranslateService, useValue: translateService },
             ],
@@ -69,11 +64,10 @@ describe('DashboardFacade', () => {
         facade = TestBed.inject(DashboardFacade);
     });
 
-    it('should load snapshot and cycle on initialize', () => {
+    it('should load snapshot on initialize', () => {
         facade.initialize();
 
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(1);
-        expect(cyclesService.getCurrent).toHaveBeenCalledTimes(1);
         expect(facade.snapshot()).toEqual(snapshot);
         expect(layout.initializeLayout).toHaveBeenCalledWith(snapshot.dashboardLayout);
     });

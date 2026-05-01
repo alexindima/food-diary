@@ -26,6 +26,11 @@ import { DashboardCardShellComponent } from '../components/dashboard-card-shell/
 import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
 import { TdeeInsightCardComponent } from '../components/tdee-insight-card/tdee-insight-card.component';
 import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
+import type {
+    TdeeInsightDialogAction,
+    TdeeInsightDialogComponent as TdeeInsightDialogComponentType,
+    TdeeInsightDialogData,
+} from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import {
     formatDashboardFastingDuration,
@@ -103,7 +108,6 @@ export class DashboardComponent {
     public readonly cycle = this.facade.cycle;
     public readonly isCycleLoading = this.facade.isCycleLoading;
     public readonly tdeeInsight = this.facade.tdeeInsight;
-    public readonly isTdeeLoading = this.facade.isTdeeLoading;
     public readonly weightTrend = this.facade.weightTrend;
     public readonly waistTrend = this.facade.waistTrend;
     public readonly nutrientBars = this.facade.nutrientBars;
@@ -263,6 +267,10 @@ export class DashboardComponent {
         await this.navigationService.navigateToGoals();
     }
 
+    public async openProfile(): Promise<void> {
+        await this.navigationService.navigateToProfile();
+    }
+
     public async openCalorieGoalDialog(): Promise<void> {
         const { CalorieGoalDialogComponent } = await import('../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component');
         this.dialogService
@@ -333,6 +341,50 @@ export class DashboardComponent {
 
     public applyTdeeGoal(target: number): void {
         this.facade.applyTdeeGoal(target);
+    }
+
+    public handleTdeeCardClick(event?: Event): void {
+        event?.stopPropagation();
+
+        if (this.layout.isEditingLayout()) {
+            this.layout.toggleBlock('tdee');
+            return;
+        }
+
+        void this.openTdeeDetails();
+    }
+
+    public async openTdeeDetails(): Promise<void> {
+        const { TdeeInsightDialogComponent } = await import('../dialogs/tdee-insight-dialog/tdee-insight-dialog.component');
+
+        this.dialogService
+            .open<TdeeInsightDialogComponentType, TdeeInsightDialogData, TdeeInsightDialogAction | undefined>(TdeeInsightDialogComponent, {
+                size: 'md',
+                data: {
+                    insight: this.tdeeInsight(),
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(action => {
+                switch (action?.type) {
+                    case 'profile':
+                        void this.openProfile();
+                        break;
+                    case 'meal':
+                        void this.addConsumption();
+                        break;
+                    case 'weight':
+                        void this.openWeightHistory();
+                        break;
+                    case 'goals':
+                        void this.openGoals();
+                        break;
+                    case 'applyGoal':
+                        this.applyTdeeGoal(action.target);
+                        break;
+                }
+            });
     }
 
     public handleFastingCardClick(): void {

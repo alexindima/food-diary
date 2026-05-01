@@ -332,6 +332,10 @@ export class SidebarComponent {
     }
 
     private syncCurrentUser(): void {
+        if (this.currentUser()) {
+            return;
+        }
+
         this.userService.getInfoSilently().subscribe();
     }
 

@@ -1,9 +1,11 @@
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
+using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
+using FoodDiary.Presentation.Api.Features.Tdee.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
@@ -30,7 +32,9 @@ public static class DashboardHttpResponseMappings {
             model.DashboardLayout is null
                 ? null
                 : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile),
-            model.CaloriesBurned
+            model.CaloriesBurned,
+            model.TdeeInsight?.ToHttpResponse(),
+            model.CurrentCycle?.ToHttpResponse()
         );
     }
 

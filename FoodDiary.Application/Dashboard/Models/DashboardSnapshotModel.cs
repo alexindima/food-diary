@@ -1,6 +1,8 @@
 using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
@@ -22,4 +24,6 @@ public sealed record DashboardSnapshotModel(
     IReadOnlyList<WeightEntrySummaryModel>? WeightTrend = null,
     IReadOnlyList<WaistEntrySummaryModel>? WaistTrend = null,
     DashboardLayoutModel? DashboardLayout = null,
-    double CaloriesBurned = 0);
+    double CaloriesBurned = 0,
+    TdeeInsightModel? TdeeInsight = null,
+    CycleModel? CurrentCycle = null);

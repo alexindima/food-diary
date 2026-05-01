@@ -71,6 +71,10 @@ export interface UpdateNotificationPreferencesRequest {
     fastingCheckInFollowUpReminderHours?: number;
 }
 
+interface FetchUnreadCountOptions {
+    force?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
     private readonly http = inject(HttpClient);
@@ -85,6 +89,7 @@ export class NotificationService {
     public readonly notificationsLoading = signal(false);
     public readonly notificationsLoaded = signal(false);
     public readonly notificationsChangedVersion = signal(0);
+    private readonly unreadCountLoaded = signal(false);
     private unreadCountRequest$: Observable<{ count: number }> | null = null;
 
     public constructor() {
@@ -95,6 +100,7 @@ export class NotificationService {
 
             untracked(() => {
                 this.unreadCount.set(0);
+                this.unreadCountLoaded.set(false);
                 this.notifications.set([]);
                 this.notificationsLoading.set(false);
                 this.notificationsLoaded.set(false);
@@ -102,9 +108,14 @@ export class NotificationService {
         });
     }
 
-    public fetchUnreadCount(): void {
+    public fetchUnreadCount(options: FetchUnreadCountOptions = {}): void {
         if (!this.authService.isAuthenticated()) {
             this.unreadCount.set(0);
+            this.unreadCountLoaded.set(false);
+            return;
+        }
+
+        if (this.unreadCountRequest$ || (this.unreadCountLoaded() && !options.force)) {
             return;
         }
 
@@ -117,13 +128,19 @@ export class NotificationService {
                     finalize(() => {
                         this.unreadCountRequest$ = null;
                     }),
-                    shareReplay(1),
+                    shareReplay({ bufferSize: 1, refCount: false }),
                 );
         }
 
         this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: response => this.unreadCount.set(response.count),
-            error: () => this.unreadCount.set(0),
+            next: response => {
+                this.unreadCount.set(response.count);
+                this.unreadCountLoaded.set(true);
+            },
+            error: () => {
+                this.unreadCount.set(0);
+                this.unreadCountLoaded.set(false);
+            },
         });
     }
 
@@ -201,6 +218,7 @@ export class NotificationService {
 
     public updateCount(count: number): void {
         this.unreadCount.set(count);
+        this.unreadCountLoaded.set(true);
     }
 
     public notifyNotificationsChanged(): void {

@@ -2049,6 +2049,42 @@
             "REVIEW_GOALS": "Review your calorie target based on your current goals."
         }
     },
+    "TDEE_DIALOG": {
+        "TITLE": "Energy expenditure",
+        "EMPTY_TITLE": "TDEE is not ready yet",
+        "ADAPTIVE": "Adaptive TDEE",
+        "DATA_DAYS": "{{ days }} days used",
+        "STATE": {
+            "EMPTY": "Setup required",
+            "ESTIMATED": "Formula estimate",
+            "ADAPTIVE": "Adaptive estimate"
+        },
+        "SUMMARY": {
+            "EMPTY": "TDEE needs profile data plus logged food and body measurements before it can become useful.",
+            "ESTIMATED": "This is a formula-based estimate from your profile. Keep logging meals and weight to switch to adaptive TDEE.",
+            "ADAPTIVE": "This estimate uses your logged intake and body trend, so it should track your real maintenance level better than a formula alone."
+        },
+        "CONFIDENCE": {
+            "NONE": "No confidence yet"
+        },
+        "SETUP": {
+            "TITLE": "What is needed",
+            "SUBTITLE": "Adaptive TDEE works best with a profile, consistent food logs, and regular weight entries.",
+            "PROFILE_TITLE": "Profile data",
+            "PROFILE_TEXT": "Sex, age, height, current weight, and activity level are used for the formula estimate.",
+            "MEALS_TITLE": "Food diary",
+            "MEALS_TEXT": "About two weeks of logged calories gives the model enough intake data.",
+            "WEIGHT_TITLE": "Weight trend",
+            "WEIGHT_TEXT": "Several weight entries let the app compare intake against body changes."
+        },
+        "SUGGESTED_TARGET": "Suggested calorie target: {{ value }} kcal.",
+        "ACTIONS": {
+            "PROFILE": "Profile",
+            "WEIGHT": "Weight",
+            "MEAL": "Add meal",
+            "GOALS": "Goals"
+        }
+    },
     "MICRONUTRIENTS": {
         "TITLE": "Micronutrients",
         "VITAMINS": "Vitamins",
