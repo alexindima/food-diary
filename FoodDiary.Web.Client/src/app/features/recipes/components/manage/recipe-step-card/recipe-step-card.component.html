@@ -28,7 +28,7 @@
                     icon="edit"
                     class="recipe-step-card__edit"
                     [fdUiHint]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
-                    [attr.aria-label]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
+                    [ariaLabel]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
                     (click)="toggleStepTitleEdit()"
                 >
                 </fd-ui-button>
@@ -40,7 +40,7 @@
                     fill="text"
                     [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
                     [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
-                    [attr.aria-label]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
+                    [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"
                 >
                 </fd-ui-button>

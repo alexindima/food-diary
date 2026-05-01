@@ -1,9 +1,77 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import parser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import prettierPlugin from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import templateParser from '@angular-eslint/template-parser';
 import templatePlugin from '@angular-eslint/eslint-plugin-template';
+
+const getTemplateAttributes = node => [...(node.attributes ?? []), ...(node.inputs ?? [])];
+
+const hasTemplateAttribute = (node, name) => getTemplateAttributes(node).some(attribute => attribute.name === name);
+
+const isAriaHidden = node =>
+    getTemplateAttributes(node).some(attribute => attribute.name === 'aria-hidden' && (attribute.value === 'true' || attribute.value?.source === 'true'));
+
+const hasProjectedText = nodes =>
+    (nodes ?? []).some(node => {
+        if (node.type === 'Text') {
+            return Boolean(node.value?.trim());
+        }
+
+        if (node.type === 'BoundText') {
+            return true;
+        }
+
+        if ((node.type === 'Element' || node.type === 'Template') && !isAriaHidden(node)) {
+            return hasProjectedText(node.children);
+        }
+
+        return false;
+    });
+
+const localTemplatePlugin = {
+    rules: {
+        'fd-ui-button-accessible-name': {
+            meta: {
+                type: 'problem',
+                docs: {
+                    description: 'Require accessible names to be passed through the fd-ui-button ariaLabel input.',
+                },
+                messages: {
+                    hostAriaLabel: 'Use the fd-ui-button `ariaLabel` input instead of setting `aria-label` on the component host.',
+                    missingName: 'Icon-only fd-ui-button needs an `ariaLabel` input or visible projected text.',
+                },
+                schema: [],
+            },
+            create(context) {
+                return {
+                    Element(node) {
+                        if (node.name !== 'fd-ui-button') {
+                            return;
+                        }
+
+                        const hostAriaLabel = getTemplateAttributes(node).find(attribute => attribute.name === 'aria-label');
+
+                        if (hostAriaLabel) {
+                            context.report({
+                                node: hostAriaLabel,
+                                messageId: 'hostAriaLabel',
+                            });
+                        }
+
+                        if (hasTemplateAttribute(node, 'icon') && !hasTemplateAttribute(node, 'ariaLabel') && !hasProjectedText(node.children)) {
+                            context.report({
+                                node,
+                                messageId: 'missingName',
+                            });
+                        }
+                    },
+                };
+            },
+        },
+    },
+};
 
 export default [
     {
@@ -607,6 +675,7 @@ export default [
         },
         plugins: {
             '@angular-eslint/template': templatePlugin,
+            local: localTemplatePlugin,
         },
         rules: {
             '@angular-eslint/template/alt-text': 'error',
@@ -618,6 +687,7 @@ export default [
             '@angular-eslint/template/no-positive-tabindex': 'error',
             '@angular-eslint/template/label-has-associated-control': 'warn',
             '@angular-eslint/template/no-autofocus': 'warn',
+            'local/fd-ui-button-accessible-name': 'error',
         },
     },
 ];

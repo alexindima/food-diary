@@ -1,5 +1,5 @@
 <fd-hero />
-<main class="landing-main">
+<div class="landing-main">
     <fd-features />
     @defer (on viewport; prefetch on idle; on timer(5s)) {
         <fd-landing-preview-tour />
@@ -9,4 +9,4 @@
     <fd-dietologist-promo />
     <fd-landing-steps />
     <fd-landing-faq [questions]="faqItems" [guides]="seoGuides" />
-</main>
+</div>

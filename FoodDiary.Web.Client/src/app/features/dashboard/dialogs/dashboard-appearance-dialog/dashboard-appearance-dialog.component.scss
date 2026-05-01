@@ -5,25 +5,18 @@
     --dashboard-appearance-option-radius: var(--fd-radius-card);
     --dashboard-appearance-preview-radius: var(--fd-radius-input);
     --dashboard-appearance-preview-line-radius: var(--fd-radius-button);
-    --dashboard-preview-ocean-start: var(--fd-color-primary-700);
-    --dashboard-preview-ocean-mid: var(--fd-color-sky-400);
-    --dashboard-preview-ocean-end: color-mix(in srgb, var(--fd-color-sky-200) 72%, var(--fd-color-dialog-surface));
-    --dashboard-preview-leaf-start: var(--fd-color-teal-700);
-    --dashboard-preview-leaf-mid: var(--fd-color-teal-400);
-    --dashboard-preview-leaf-end: color-mix(in srgb, var(--fd-color-teal-100) 72%, var(--fd-color-dialog-surface));
-    --dashboard-preview-dark-start: var(--fd-color-slate-900);
-    --dashboard-preview-dark-mid: var(--fd-color-slate-800);
-    --dashboard-preview-dark-end: var(--fd-color-slate-500);
-    --dashboard-style-classic-surface-start: color-mix(in srgb, var(--fd-color-slate-50) 84%, var(--fd-color-dialog-surface));
-    --dashboard-style-classic-surface-end: color-mix(in srgb, var(--fd-color-slate-100) 88%, var(--fd-color-dialog-surface));
-    --dashboard-style-classic-line-strong: var(--fd-color-primary-700);
-    --dashboard-style-classic-line-mid: var(--fd-color-slate-400);
-    --dashboard-style-classic-line-soft: var(--fd-color-slate-300);
-    --dashboard-style-modern-surface-start: color-mix(in srgb, var(--fd-color-amber-50) 88%, var(--fd-color-dialog-surface));
-    --dashboard-style-modern-surface-end: color-mix(in srgb, var(--fd-color-amber-100) 84%, var(--fd-color-dialog-surface));
-    --dashboard-style-modern-line-strong: var(--fd-color-orange-500);
-    --dashboard-style-modern-line-mid: var(--fd-color-orange-400);
-    --dashboard-style-modern-line-soft: var(--fd-color-amber-200);
+    --dashboard-preview-light-surface: var(--fd-color-white);
+    --dashboard-preview-ocean-line: linear-gradient(90deg, var(--fd-color-blue-500), var(--fd-color-sky-500));
+    --dashboard-preview-leaf-line: linear-gradient(90deg, var(--fd-color-teal-700), var(--fd-color-green-500));
+    --dashboard-preview-dark-surface: linear-gradient(135deg, var(--fd-color-slate-900), var(--fd-color-slate-800));
+    --dashboard-preview-dark-line: linear-gradient(
+        110deg,
+        var(--fd-color-white) 0 50%,
+        var(--fd-color-green-500) 50% 100%
+    );
+    --dashboard-style-preview-line-strong: var(--fd-color-primary);
+    --dashboard-style-preview-line-mid: color-mix(in srgb, var(--fd-color-text-muted) 72%, var(--fd-color-surface-raised));
+    --dashboard-style-preview-line-soft: color-mix(in srgb, var(--fd-color-border-strong) 82%, var(--fd-color-surface-raised));
 }
 
 .dashboard-appearance-dialog__intro {
@@ -123,39 +116,33 @@
     inset: auto calc(var(--fd-space-sm) + var(--fd-space-micro)) var(--fd-space-sm);
     height: var(--fd-size-accent-thickness-active);
     border-radius: var(--dashboard-appearance-preview-line-radius);
-    background: color-mix(in srgb, var(--fd-bg-dialog) 88%, transparent);
+    background: var(--dashboard-preview-line);
 }
 
 .dashboard-appearance-dialog__swatch--ocean {
-    background: linear-gradient(
-        135deg,
-        var(--dashboard-preview-ocean-start),
-        var(--dashboard-preview-ocean-mid) 58%,
-        var(--dashboard-preview-ocean-end)
-    );
+    --dashboard-preview-line: var(--dashboard-preview-ocean-line);
+    background: var(--dashboard-preview-light-surface);
 }
 
 .dashboard-appearance-dialog__swatch--leaf {
-    background: linear-gradient(
-        135deg,
-        var(--dashboard-preview-leaf-start),
-        var(--dashboard-preview-leaf-mid) 56%,
-        var(--dashboard-preview-leaf-end)
-    );
+    --dashboard-preview-line: var(--dashboard-preview-leaf-line);
+    background: var(--dashboard-preview-light-surface);
 }
 
 .dashboard-appearance-dialog__swatch--dark {
-    background: linear-gradient(
-        135deg,
-        var(--dashboard-preview-dark-start),
-        var(--dashboard-preview-dark-mid) 55%,
-        var(--dashboard-preview-dark-end)
-    );
+    --dashboard-preview-line: var(--dashboard-preview-dark-line);
+    background: var(--dashboard-preview-dark-surface);
 }
 
 .dashboard-appearance-dialog__style-preview {
     --dashboard-style-preview-surface-radius: 14px;
     --dashboard-style-preview-line-radius: 999px;
+    --dashboard-style-preview-line-gap: var(--fd-space-xxs);
+    --dashboard-style-preview-surface: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--fd-color-surface-raised) 72%, var(--fd-color-surface-muted)),
+        color-mix(in srgb, var(--fd-color-surface-muted) 72%, var(--fd-color-surface-raised))
+    );
     display: grid;
     width: 100%;
     aspect-ratio: 16 / 5;
@@ -163,7 +150,8 @@
     border-radius: var(--dashboard-style-preview-surface-radius);
     padding: var(--fd-space-sm);
     align-content: center;
-    gap: var(--fd-space-xxs);
+    gap: var(--dashboard-style-preview-line-gap);
+    background: var(--dashboard-style-preview-surface);
     box-shadow: var(--fd-shadow-highlight-inset-dialog), var(--fd-shadow-ring-inset-muted);
 }
 
@@ -176,43 +164,42 @@
 .dashboard-appearance-dialog__style-preview--classic {
     --dashboard-style-preview-surface-radius: 20px;
     --dashboard-style-preview-line-radius: 12px;
-    background: linear-gradient(180deg, var(--dashboard-style-classic-surface-start), var(--dashboard-style-classic-surface-end));
+    --dashboard-style-preview-line-gap: var(--fd-space-xs);
 }
 
 .dashboard-appearance-dialog__style-preview--classic span:nth-child(1) {
     width: 72%;
-    background: var(--dashboard-style-classic-line-strong);
+    background: var(--dashboard-style-preview-line-strong);
 }
 
 .dashboard-appearance-dialog__style-preview--classic span:nth-child(2) {
     width: 88%;
-    background: var(--dashboard-style-classic-line-mid);
+    background: var(--dashboard-style-preview-line-mid);
 }
 
 .dashboard-appearance-dialog__style-preview--classic span:nth-child(3) {
     width: 58%;
-    background: var(--dashboard-style-classic-line-soft);
+    background: var(--dashboard-style-preview-line-soft);
 }
 
 .dashboard-appearance-dialog__style-preview--modern {
     --dashboard-style-preview-surface-radius: 8px;
     --dashboard-style-preview-line-radius: 6px;
-    background: linear-gradient(135deg, var(--dashboard-style-modern-surface-start), var(--dashboard-style-modern-surface-end));
 }
 
 .dashboard-appearance-dialog__style-preview--modern span:nth-child(1) {
     width: 82%;
-    background: var(--dashboard-style-modern-line-strong);
+    background: var(--dashboard-style-preview-line-strong);
 }
 
 .dashboard-appearance-dialog__style-preview--modern span:nth-child(2) {
     width: 64%;
-    background: var(--dashboard-style-modern-line-mid);
+    background: var(--dashboard-style-preview-line-mid);
 }
 
 .dashboard-appearance-dialog__style-preview--modern span:nth-child(3) {
     width: 92%;
-    background: var(--dashboard-style-modern-line-soft);
+    background: var(--dashboard-style-preview-line-soft);
 }
 
 .dashboard-appearance-dialog__error {

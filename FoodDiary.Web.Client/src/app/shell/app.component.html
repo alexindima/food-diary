@@ -9,7 +9,7 @@
             <div class="fd-root__sidebar fd-root__sidebar--placeholder" aria-hidden="true"></div>
         }
     }
-    <div class="fd-root__main" id="main-content" tabindex="-1">
+    <main class="fd-root__main" id="main-content" tabindex="-1">
         @if (isImpersonating()) {
             <div class="fd-impersonation-banner" role="status" aria-live="polite">
                 <span>Impersonation mode</span>
@@ -22,6 +22,6 @@
         <div class="fd-root__viewport">
             <router-outlet class="fd-root__content" />
         </div>
-    </div>
+    </main>
 </div>
 <fd-ui-toast-host />
