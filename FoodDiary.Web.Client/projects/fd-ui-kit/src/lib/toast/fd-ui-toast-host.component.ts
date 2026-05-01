@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { FdUiToastHorizontalPosition, FdUiToastInstance, FdUiToastService, FdUiToastVerticalPosition } from './fd-ui-toast.service';
 
@@ -13,6 +13,7 @@ interface FdUiToastViewport {
     selector: 'fd-ui-toast-host',
     templateUrl: './fd-ui-toast-host.component.html',
     styleUrl: './fd-ui-toast-host.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiToastHostComponent {
     private readonly toastService = inject(FdUiToastService);

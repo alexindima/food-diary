@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 /**
@@ -10,6 +10,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
     imports: [NgStyle, FdUiButtonComponent],
     templateUrl: './custom-group.component.html',
     styleUrl: './custom-group.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomGroupComponent {
     /**

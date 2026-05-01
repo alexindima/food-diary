@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -12,12 +12,14 @@ import { LocalizationService } from '../../../../services/localization.service';
     imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected readonly languageOptions: FdUiSegmentedToggleOption[] = [
         { label: 'EN', value: 'en' },
@@ -31,6 +33,7 @@ export class HeroComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             this.currentLanguage = event.lang;
             this.language = event.lang;
+            this.changeDetectorRef.markForCheck();
         });
     }
 

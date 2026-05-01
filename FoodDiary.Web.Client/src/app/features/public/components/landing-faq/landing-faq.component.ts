@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -17,6 +17,7 @@ export interface LandingFaqGuide {
     imports: [RouterLink, TranslatePipe],
     templateUrl: './landing-faq.component.html',
     styleUrls: ['./landing-faq.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingFaqComponent {
     public readonly eyebrowKey = input('LANDING_FAQ.EYEBROW');

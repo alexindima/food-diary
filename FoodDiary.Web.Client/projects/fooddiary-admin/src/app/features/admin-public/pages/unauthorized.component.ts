@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
@@ -11,6 +11,7 @@ import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
     imports: [FdUiButtonComponent],
     templateUrl: './unauthorized.component.html',
     styleUrl: './unauthorized.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnauthorizedComponent {
     private readonly route = inject(ActivatedRoute);

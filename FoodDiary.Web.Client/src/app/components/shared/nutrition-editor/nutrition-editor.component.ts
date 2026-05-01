@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
@@ -34,6 +34,7 @@ export interface NutritionMismatchWarning {
     imports: [CommonModule, ReactiveFormsModule, TranslatePipe, FdUiNutrientInputComponent],
     templateUrl: './nutrition-editor.component.html',
     styleUrls: ['./nutrition-editor.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutritionEditorComponent {
     public readonly formGroup = input.required<FormGroup>();

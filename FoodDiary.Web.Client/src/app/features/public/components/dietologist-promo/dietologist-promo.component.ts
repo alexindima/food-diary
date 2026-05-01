@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -8,6 +8,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
     imports: [TranslateModule, FdUiButtonComponent, FdUiIconComponent],
     templateUrl: './dietologist-promo.component.html',
     styleUrl: './dietologist-promo.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DietologistPromoComponent {
     private readonly fdDialogService = inject(FdUiDialogService);

@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
@@ -7,6 +7,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
     imports: [TranslateModule, FdUiIconComponent],
     templateUrl: './features.component.html',
     styleUrl: './features.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeaturesComponent {
     protected readonly categories: FeatureCategory[] = [

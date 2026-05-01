@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
@@ -21,6 +21,7 @@ import { LandingStepsComponent } from '../../components/landing-steps/landing-st
     ],
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
     private readonly fdDialogService = inject(FdUiDialogService);

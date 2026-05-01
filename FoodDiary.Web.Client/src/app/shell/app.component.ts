@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, Injector, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
@@ -20,6 +20,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     imports: [RouterOutlet, SidebarComponent, QuickConsumptionDrawerComponent, FdUiToastHostComponent, FdUiTopLoaderComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {

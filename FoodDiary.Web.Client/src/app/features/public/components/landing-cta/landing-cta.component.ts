@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -10,6 +9,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
     imports: [TranslateModule, FdUiButtonComponent],
     templateUrl: './landing-cta.component.html',
     styleUrls: ['./landing-cta.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingCtaComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
