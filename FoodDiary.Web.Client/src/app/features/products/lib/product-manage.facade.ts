@@ -46,7 +46,7 @@ export class ProductManageFacade {
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed) {
-                    this.navigationService.navigateToPremiumAccess();
+                    void this.navigationService.navigateToPremiumAccess();
                 }
             });
         return false;

@@ -44,12 +44,12 @@ export class HeroComponent {
         void this.localizationService.applyLanguagePreference(target);
     }
 
-    public async goToLogin(): Promise<void> {
-        this.openAuthDialog('login');
+    public goToLogin(): void {
+        void this.openAuthDialog('login');
     }
 
-    public async goToRegister(): Promise<void> {
-        await this.openAuthDialog('register');
+    public goToRegister(): void {
+        void this.openAuthDialog('register');
     }
 
     private async openAuthDialog(mode: 'login' | 'register'): Promise<void> {

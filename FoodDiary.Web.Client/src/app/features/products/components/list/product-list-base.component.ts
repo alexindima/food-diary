@@ -159,8 +159,8 @@ export class ProductListBaseComponent {
         this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
     }
 
-    public async onAddProductClick(): Promise<void> {
-        await this.navigationService.navigateToProductAdd();
+    public onAddProductClick(): void {
+        void this.navigationService.navigateToProductAdd();
     }
 
     public openBarcodeScanner(): void {
@@ -302,7 +302,7 @@ export class ProductListBaseComponent {
     }
 
     public onOffProductClick(offProduct: OpenFoodFactsProduct): void {
-        this.navigationService.navigateToProductAdd({
+        void this.navigationService.navigateToProductAdd({
             state: {
                 barcode: offProduct.barcode,
                 offProduct,
@@ -314,7 +314,7 @@ export class ProductListBaseComponent {
         this.header().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    protected onProductClick(_product: Product): void {}
+    protected onProductClick(_product: Product): void | Promise<void> {}
 
     public onAddToMeal(product: Product): void {
         this.quickConsumptionService.addProduct(product);
@@ -344,7 +344,7 @@ export class ProductListBaseComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(product => {
                 if (product) {
-                    this.onProductClick(product);
+                    void this.onProductClick(product);
                 }
             });
     }

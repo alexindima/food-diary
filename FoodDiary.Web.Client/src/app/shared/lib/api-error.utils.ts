@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 
 function logApiError(message: string, error: unknown): void {
     if (!environment.enableGlobalErrorHandler) {
+        // eslint-disable-next-line no-console -- Fallback logging when the global handler is disabled.
         console.error(message, error);
     }
 }

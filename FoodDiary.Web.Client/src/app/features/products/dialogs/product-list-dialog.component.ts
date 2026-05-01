@@ -37,7 +37,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductListDialogComponent, Product | null>, {
         optional: true,
     });
-    public override async onAddProductClick(): Promise<void> {
+    public override onAddProductClick(): void {
         this.fdDialogService
             .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                 preset: 'fullscreen',
@@ -50,7 +50,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
             });
     }
 
-    protected override async onProductClick(product: Product): Promise<void> {
+    protected override onProductClick(product: Product): void {
         this.handleSelection(product);
     }
 

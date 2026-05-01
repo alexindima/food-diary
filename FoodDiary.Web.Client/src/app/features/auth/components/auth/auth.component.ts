@@ -226,10 +226,9 @@ export class AuthComponent {
         this.isSubmitting.set(true);
 
         this.authService.login(loginRequest).subscribe({
-            next: async () => {
+            next: () => {
                 this.isSubmitting.set(false);
-                await this.completeAuthenticatedNavigation();
-                this.closeDialogIfAny();
+                this.completeAuthenticatedNavigationAndClose();
             },
             error: (error: HttpErrorResponse) => {
                 this.isSubmitting.set(false);
@@ -258,10 +257,9 @@ export class AuthComponent {
         this.isRestoring.set(true);
 
         this.authService.restoreAccount(restoreRequest, rememberMe).subscribe({
-            next: async () => {
+            next: () => {
                 this.isRestoring.set(false);
-                await this.completeAuthenticatedNavigation();
-                this.closeDialogIfAny();
+                this.completeAuthenticatedNavigationAndClose();
             },
             error: () => {
                 this.isRestoring.set(false);
@@ -285,7 +283,7 @@ export class AuthComponent {
         this.authService.register(registerRequest).subscribe({
             next: () => {
                 this.isSubmitting.set(false);
-                this.navigationService.navigateToEmailVerificationPending();
+                void this.navigationService.navigateToEmailVerificationPending();
                 this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
@@ -306,7 +304,7 @@ export class AuthComponent {
                 callback: credential => this.onGoogleCredential(credential),
             });
             this.googleReady.set(true);
-            this.googleIdentityService.prompt();
+            void this.googleIdentityService.prompt();
         } catch {
             this.googleReady.set(false);
         }
@@ -332,10 +330,9 @@ export class AuthComponent {
         const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
         const request: GoogleLoginRequest = { credential, rememberMe: !!rememberMe };
         this.authService.loginWithGoogle(request).subscribe({
-            next: async () => {
+            next: () => {
                 this.isSubmitting.set(false);
-                await this.completeAuthenticatedNavigation();
-                this.closeDialogIfAny();
+                this.completeAuthenticatedNavigationAndClose();
             },
             error: () => {
                 this.isSubmitting.set(false);
@@ -414,6 +411,12 @@ export class AuthComponent {
 
     private closeDialogIfAny(): void {
         this.dialogRef?.close();
+    }
+
+    private completeAuthenticatedNavigationAndClose(): void {
+        void this.completeAuthenticatedNavigation()
+            .then(() => this.closeDialogIfAny())
+            .catch(() => this.setGlobalError('FORM_ERRORS.UNKNOWN'));
     }
 
     private async completeAuthenticatedNavigation(): Promise<void> {

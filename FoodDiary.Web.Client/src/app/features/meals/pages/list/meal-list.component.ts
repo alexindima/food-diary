@@ -212,7 +212,7 @@ export class MealListComponent {
                 }
 
                 if (data.action === 'Edit') {
-                    this.navigationService.navigateToConsumptionEdit(data.id);
+                    void this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Repeat') {
                     const today = new Date().toISOString().slice(0, 10);
                     this.mealService.repeat(data.id, today).subscribe({

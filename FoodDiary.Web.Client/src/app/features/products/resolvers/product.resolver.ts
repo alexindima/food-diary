@@ -12,13 +12,13 @@ export const productResolver: ResolveFn<Product | null> = route => {
 
     const productId = route.paramMap.get('id');
     if (!productId) {
-        navigationService.navigateToProductList();
+        void navigationService.navigateToProductList();
         return of(null);
     }
 
     return productService.getById(productId).pipe(
         catchError(() => {
-            navigationService.navigateToProductList();
+            void navigationService.navigateToProductList();
             return of(null);
         }),
     );

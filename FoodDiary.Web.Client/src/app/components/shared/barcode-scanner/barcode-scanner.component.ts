@@ -48,7 +48,7 @@ export class BarcodeScannerComponent {
                 'aztec',
             ],
         });
-        this.startCamera();
+        void this.startCamera();
         this.destroyRef.onDestroy(() => this.stopCamera());
     }
 
@@ -67,7 +67,7 @@ export class BarcodeScannerComponent {
                 const video = this.videoRef()?.nativeElement;
                 if (video) {
                     video.srcObject = this.stream;
-                    video.play();
+                    void video.play();
                     this.isCameraReady.set(true);
                     this.scanLoop();
                 }
@@ -83,21 +83,25 @@ export class BarcodeScannerComponent {
             return;
         }
 
-        this.animationFrameId = requestAnimationFrame(async () => {
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                try {
-                    const barcodes = await this.detector!.detect(video);
-                    if (barcodes.length > 0) {
-                        this.stopCamera();
-                        this.dialogRef.close(barcodes[0].rawValue);
-                        return;
-                    }
-                } catch {
-                    /* ignore detection errors */
-                }
-            }
-            this.scanLoop();
+        this.animationFrameId = requestAnimationFrame(() => {
+            void this.scanFrame(video);
         });
+    }
+
+    private async scanFrame(video: HTMLVideoElement): Promise<void> {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            try {
+                const barcodes = await this.detector!.detect(video);
+                if (barcodes.length > 0) {
+                    this.stopCamera();
+                    this.dialogRef.close(barcodes[0].rawValue);
+                    return;
+                }
+            } catch {
+                /* ignore detection errors */
+            }
+        }
+        this.scanLoop();
     }
 
     private stopCamera(): void {

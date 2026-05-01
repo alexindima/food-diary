@@ -29,7 +29,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
 
                 const reason = error.status === 403 ? 'forbidden' : 'unauthenticated';
                 const returnUrl = router.url;
-                router.navigate(['/unauthorized'], {
+                void router.navigate(['/unauthorized'], {
                     queryParams: { reason, returnUrl },
                 });
             }

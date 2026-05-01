@@ -496,7 +496,9 @@ export class BaseMealManageComponent {
         };
 
         const consumption = this.consumption();
-        consumption ? this.updateConsumption(consumptionData) : this.addConsumption(consumptionData);
+        void (consumption ? this.updateConsumption(consumptionData) : this.addConsumption(consumptionData)).catch(error =>
+            this.handleSubmitError(error as HttpErrorResponse),
+        );
     }
 
     // --- Private methods ---

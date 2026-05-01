@@ -15,6 +15,7 @@ export class FrontendLoggerService {
             return;
         }
 
+        // eslint-disable-next-line no-console -- This service is the controlled console logging boundary.
         console.warn(message, error);
     }
 
@@ -23,6 +24,7 @@ export class FrontendLoggerService {
             return;
         }
 
+        // eslint-disable-next-line no-console -- This service is the controlled console logging boundary.
         console.error(message, error);
     }
 

@@ -149,6 +149,9 @@ export class EmailVerificationPendingComponent {
                 this.destroyRef.onDestroy(() => {
                     void this.realtimeService.disconnect();
                 });
+            })
+            .catch(() => {
+                // Realtime verification is best effort; manual refresh and resend remain available.
             });
     }
 }

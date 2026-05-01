@@ -7,4 +7,7 @@ import { AppComponent } from './app/shell/app.component';
 
 registerLocaleData(localeRu);
 
-bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+bootstrapApplication(AppComponent, appConfig).catch(err => {
+    // eslint-disable-next-line no-console -- Bootstrap failures happen before app logging is available.
+    console.error(err);
+});

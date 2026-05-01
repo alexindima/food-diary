@@ -248,7 +248,7 @@ export class SidebarComponent {
 
     private readonly notificationSync = effect(() => {
         if (this.isAuthenticated()) {
-            this.notificationService.fetchUnreadCount();
+            void this.notificationService.fetchUnreadCount();
             this.notificationService.ensureNotificationsLoaded();
         }
     });
@@ -287,7 +287,7 @@ export class SidebarComponent {
                 this.openAdminPanel();
                 break;
             case 'openNotifications':
-                this.openNotifications();
+                void this.openNotifications();
                 break;
             case 'logout':
                 void this.logout();
