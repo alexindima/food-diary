@@ -62,9 +62,12 @@ function createMockStorage(): Storage {
 
 function installCssParseWarningFilter(): void {
     const ignoredMessage = 'Could not parse CSS stylesheet';
+    // eslint-disable-next-line no-console
     const originalConsoleError = console.error.bind(console);
+    // eslint-disable-next-line no-console
     const originalConsoleWarn = console.warn.bind(console);
 
+    // eslint-disable-next-line no-console
     console.error = (...args: unknown[]): void => {
         if (shouldIgnoreCssParseWarning(args, ignoredMessage)) {
             return;
@@ -73,6 +76,7 @@ function installCssParseWarningFilter(): void {
         originalConsoleError(...args);
     };
 
+    // eslint-disable-next-line no-console
     console.warn = (...args: unknown[]): void => {
         if (shouldIgnoreCssParseWarning(args, ignoredMessage)) {
             return;
