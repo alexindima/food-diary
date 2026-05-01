@@ -8,8 +8,8 @@ import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { NotificationService } from '../../../services/notification.service';
-import { UserService } from '../../../shared/api/user.service';
-import { UpdateUserDto } from '../../../shared/models/user.data';
+import { UserProfileOverview, UserService } from '../../../shared/api/user.service';
+import { UpdateUserDto, User } from '../../../shared/models/user.data';
 import { ProfileManageFacade } from './profile-manage.facade';
 
 describe('ProfileManageFacade', () => {
@@ -28,43 +28,48 @@ describe('ProfileManageFacade', () => {
     let localizationService: { applyLanguagePreference: ReturnType<typeof vi.fn> };
     let navigationService: { navigateToHome: ReturnType<typeof vi.fn> };
 
-    const user = {
+    const user: User = {
         id: 'u1',
         email: 'test@example.com',
         hasPassword: false,
         language: 'ru',
         isActive: true,
         isEmailConfirmed: true,
+        pushNotificationsEnabled: true,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: true,
+        fastingCheckInReminderHours: 12,
+        fastingCheckInFollowUpReminderHours: 20,
+    };
+
+    const overview: UserProfileOverview = {
+        user,
+        notificationPreferences: {
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: false,
+            socialPushNotificationsEnabled: true,
+            fastingCheckInReminderHours: 12,
+            fastingCheckInFollowUpReminderHours: 20,
+        },
+        webPushSubscriptions: [
+            {
+                endpoint: 'https://push.example.com/subscriptions/current',
+                endpointHost: 'push.example.com',
+                expirationTimeUtc: null,
+                locale: 'en',
+                userAgent: 'Chrome',
+                createdAtUtc: '2026-04-10T10:00:00Z',
+                updatedAtUtc: null,
+            },
+        ],
+        dietologistRelationship: null,
     };
 
     beforeEach(() => {
         vi.useFakeTimers();
         userService = {
-            getOverview: vi.fn().mockReturnValue(
-                of({
-                    user,
-                    notificationPreferences: {
-                        pushNotificationsEnabled: true,
-                        fastingPushNotificationsEnabled: false,
-                        socialPushNotificationsEnabled: true,
-                        fastingCheckInReminderHours: 12,
-                        fastingCheckInFollowUpReminderHours: 20,
-                    },
-                    webPushSubscriptions: [
-                        {
-                            endpoint: 'https://push.example.com/subscriptions/current',
-                            endpointHost: 'push.example.com',
-                            expirationTimeUtc: null,
-                            locale: 'en',
-                            userAgent: 'Chrome',
-                            createdAtUtc: '2026-04-10T10:00:00Z',
-                            updatedAtUtc: null,
-                        },
-                    ],
-                    dietologistRelationship: null,
-                }),
-            ),
-            update: vi.fn().mockReturnValue(of(user as any)),
+            getOverview: vi.fn().mockReturnValue(of(overview)),
+            update: vi.fn().mockReturnValue(of(user)),
             deleteCurrentUser: vi.fn().mockReturnValue(of(true)),
         };
         notificationService = {
@@ -124,7 +129,7 @@ describe('ProfileManageFacade', () => {
         facade.initialize();
 
         expect(userService.getOverview).toHaveBeenCalledTimes(1);
-        expect(facade.user()).toEqual(expect.objectContaining(user as any));
+        expect(facade.user()).toEqual(expect.objectContaining(user));
         expect(localizationService.applyLanguagePreference).toHaveBeenCalledWith('ru');
         expect(facade.user()?.pushNotificationsEnabled).toBe(true);
         expect(facade.webPushSubscriptions()).toHaveLength(1);
@@ -151,7 +156,7 @@ describe('ProfileManageFacade', () => {
 
     it('opens password success dialog after successful password dialog close', () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of(undefined) });
-        facade.user.set(user as any);
+        facade.user.set(user);
 
         facade.openChangePasswordDialog();
 
@@ -233,7 +238,7 @@ describe('ProfileManageFacade', () => {
     it('queues the latest autosave payload while a save is in flight', async () => {
         facade.initialize();
 
-        const inFlightUpdate = new Subject<any>();
+        const inFlightUpdate = new Subject<User | null>();
         userService.update.mockReturnValueOnce(inFlightUpdate.asObservable());
 
         facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alex' }));

@@ -3,7 +3,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminUsersService } from '../api/admin-users.service';
+import { AdminImpersonationSession, AdminUser, AdminUsersService, PagedResponse } from '../api/admin-users.service';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 import { AdminUsersComponent } from './admin-users.component';
 
@@ -16,7 +16,7 @@ describe('AdminUsersComponent', () => {
     };
     let dialogService: { open: ReturnType<typeof vi.fn> };
 
-    const pagedUsers = {
+    const pagedUsers: PagedResponse<AdminUser> = {
         items: [
             {
                 id: 'u1',
@@ -34,7 +34,7 @@ describe('AdminUsersComponent', () => {
         totalItems: 21,
     };
 
-    const pagedSessions = {
+    const pagedSessions: PagedResponse<AdminImpersonationSession> = {
         items: [
             {
                 id: 's1',
@@ -86,7 +86,7 @@ describe('AdminUsersComponent', () => {
 
     it('should load users on init', () => {
         expect(usersService.getUsers).toHaveBeenCalledWith(1, 20, null, false);
-        expect(component.users()).toEqual(pagedUsers.items as any);
+        expect(component.users()).toEqual(pagedUsers.items);
         expect(component.totalPages()).toBe(2);
         expect(component.totalItems()).toBe(21);
         expect(component.isLoading()).toBe(false);
@@ -94,7 +94,7 @@ describe('AdminUsersComponent', () => {
 
     it('should load impersonation sessions on init', () => {
         expect(usersService.getImpersonationSessions).toHaveBeenCalledWith(1, 20, null);
-        expect(component.sessions()).toEqual(pagedSessions.items as any);
+        expect(component.sessions()).toEqual(pagedSessions.items);
         expect(component.sessionsTotalPages()).toBe(1);
         expect(component.sessionsTotalItems()).toBe(1);
         expect(component.isSessionsLoading()).toBe(false);
@@ -160,7 +160,7 @@ describe('AdminUsersComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.openEdit(pagedUsers.items[0] as any);
+        component.openEdit(pagedUsers.items[0]);
         close$.next(true);
         close$.complete();
 
@@ -175,7 +175,7 @@ describe('AdminUsersComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.startImpersonation(pagedUsers.items[0] as any);
+        component.startImpersonation(pagedUsers.items[0]);
         close$.next({
             accessToken: 'token',
             expiresAtUtc: '2026-01-01T00:10:00Z',
