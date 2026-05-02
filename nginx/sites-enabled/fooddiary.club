@@ -55,6 +55,42 @@ server {
         try_files $uri =404;
     }
 
+    location = /index.html {
+        expires -1;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+        try_files $uri =404;
+    }
+
+    location = /index.csr.html {
+        expires -1;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+        try_files $uri =404;
+    }
+
+    location = /ngsw.json {
+        expires -1;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+        try_files $uri =404;
+    }
+
+    location = /ngsw-worker.js {
+        expires -1;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
+    location = /safety-worker.js {
+        expires -1;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
+    location = /worker-basic.min.js {
+        expires -1;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
@@ -119,6 +155,13 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
+
+    location = /index.html {
+        root /var/www/admin.fooddiary.club;
+        expires -1;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+        try_files $uri =404;
+    }
 
     location /assets/ {
         root /var/www/admin.fooddiary.club;
