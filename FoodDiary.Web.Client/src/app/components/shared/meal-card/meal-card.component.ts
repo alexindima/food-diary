@@ -28,7 +28,7 @@ export interface MealCardItem {
     isFavorite?: boolean;
     favoriteMealId?: string | null;
     items?: Array<unknown> | null;
-    aiSessions?: Array<{ items?: Array<unknown> | null } | null> | null;
+    aiSessions?: Array<{ imageUrl?: string | null; items?: Array<unknown> | null } | null> | null;
 }
 
 @Component({
@@ -78,7 +78,7 @@ export class MealCardComponent {
     private favoriteMealId: string | null = null;
 
     public readonly coverImage = computed(() => {
-        const image = this.meal().imageUrl?.trim();
+        const image = this.resolvePreviewImage();
         const resolved = resolveMealImageUrl(image ?? undefined, this.meal().mealType ?? undefined) ?? image;
         return resolved ?? this.fallbackMealImage;
     });
@@ -106,11 +106,11 @@ export class MealCardComponent {
     }
 
     public hasPreviewImage(): boolean {
-        return Boolean(this.meal().imageUrl?.trim());
+        return Boolean(this.resolvePreviewImage());
     }
 
     public handlePreview(): void {
-        const imageUrl = this.meal().imageUrl?.trim();
+        const imageUrl = this.resolvePreviewImage();
         if (!imageUrl) {
             return;
         }
@@ -195,5 +195,16 @@ export class MealCardComponent {
                     this.favoriteChanged.emit(false);
                 },
             });
+    }
+
+    private resolvePreviewImage(): string | undefined {
+        const mealImage = this.meal().imageUrl?.trim();
+        if (mealImage) {
+            return mealImage;
+        }
+
+        return this.meal()
+            .aiSessions?.map(session => session?.imageUrl?.trim())
+            .find(Boolean);
     }
 }

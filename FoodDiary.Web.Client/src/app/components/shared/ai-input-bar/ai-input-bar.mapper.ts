@@ -1,4 +1,5 @@
 import { MealManageDto } from '../../../features/meals/models/meal.data';
+import { normalizeMealType, resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import { AiInputBarResult, AiInputBarResultItem } from './ai-input-bar.types';
 
@@ -29,11 +30,14 @@ export function mapNutritionItemsToAiInputBarItems(nutrition: FoodNutritionRespo
 
 export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDate?: Date): MealManageDto {
     const resolvedMealDate = mealDate ?? (result.date && result.time ? new Date(`${result.date}T${result.time}`) : new Date());
+    const resolvedMealType = normalizeMealType(result.mealType) ?? resolveMealTypeByTime(resolvedMealDate);
 
     return {
         date: resolvedMealDate,
-        mealType: result.mealType ?? undefined,
+        mealType: resolvedMealType,
         comment: result.comment ?? undefined,
+        imageAssetId: result.imageAssetId ?? undefined,
+        imageUrl: result.imageUrl ?? undefined,
         isNutritionAutoCalculated: false,
         manualCalories: sumItems(result.items, item => item.calories),
         manualProteins: sumItems(result.items, item => item.proteins),

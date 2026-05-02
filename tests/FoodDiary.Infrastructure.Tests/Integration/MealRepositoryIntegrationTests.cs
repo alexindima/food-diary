@@ -39,4 +39,93 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         Assert.Equal(2, totalItems);
         Assert.Equal(newerMeal.Id, item.Id);
     }
+
+    [RequiresDockerFact]
+    public async Task GetPagedAsync_IncludesMealsThroughoutDateToDay() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-time-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var morningMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 2, 8, 15, 0, DateTimeKind.Utc));
+        var eveningMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 2, 21, 30, 0, DateTimeKind.Utc));
+        var nextDayMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 3, 0, 0, 0, DateTimeKind.Utc));
+
+        context.Meals.AddRange(morningMeal, eveningMeal, nextDayMeal);
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+
+        var (items, totalItems) = await repository.GetPagedAsync(
+            user.Id,
+            page: 1,
+            limit: 10,
+            dateFrom: new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc),
+            dateTo: new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc));
+
+        Assert.Equal(2, totalItems);
+        Assert.Collection(
+            items,
+            item => Assert.Equal(eveningMeal.Id, item.Id),
+            item => Assert.Equal(morningMeal.Id, item.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task GetDistinctMealDatesAsync_ReturnsDistinctDaysForTimedMeals() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-dates-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        context.Meals.AddRange(
+            Meal.Create(user.Id, new DateTime(2026, 5, 2, 8, 15, 0, DateTimeKind.Utc)),
+            Meal.Create(user.Id, new DateTime(2026, 5, 2, 21, 30, 0, DateTimeKind.Utc)),
+            Meal.Create(user.Id, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc)));
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+
+        var dates = await repository.GetDistinctMealDatesAsync(
+            user.Id,
+            new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc));
+
+        Assert.Collection(
+            dates,
+            date => Assert.Equal(new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc), date),
+            date => Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), date));
+    }
+
+    [RequiresDockerFact]
+    public async Task GetWithItemsAndProductsAsync_FindsMealsByDayWhenDateHasTime() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-products-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var meal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 2, 13, 45, 0, DateTimeKind.Utc));
+        var otherDayMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 3, 0, 0, 0, DateTimeKind.Utc));
+
+        context.Meals.AddRange(meal, otherDayMeal);
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+
+        var meals = await repository.GetWithItemsAndProductsAsync(
+            user.Id,
+            new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc));
+
+        var actualMeal = Assert.Single(meals);
+        Assert.Equal(meal.Id, actualMeal.Id);
+    }
 }

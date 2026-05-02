@@ -15,7 +15,7 @@ describe('MealService', () => {
     const mockConsumptionDto: ConsumptionResponseDto = {
         id: 'm1',
         date: '2026-03-28',
-        mealType: 'lunch',
+        mealType: 'Lunch',
         comment: null,
         imageUrl: null,
         imageAssetId: null,
@@ -117,7 +117,7 @@ describe('MealService', () => {
             expect(result).not.toBeNull();
             expect(result!.id).toBe('m1');
             expect(result!.date).toBe('2026-03-28');
-            expect(result!.mealType).toBe('lunch');
+            expect(result!.mealType).toBe('LUNCH');
         });
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);
@@ -151,6 +151,15 @@ describe('MealService', () => {
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(createData);
         req.flush(mockConsumptionDto);
+    });
+
+    it('should normalize API meal type casing', () => {
+        service.getById('m1').subscribe(result => {
+            expect(result?.mealType).toBe('LUNCH');
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/m1`);
+        req.flush({ ...mockConsumptionDto, mealType: 'Lunch' });
     });
 
     it('should return null on create error', () => {

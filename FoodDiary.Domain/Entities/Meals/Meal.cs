@@ -361,11 +361,10 @@ public sealed class Meal : AggregateRoot<MealId> {
 
     private static DateTime NormalizeDate(DateTime value) {
         if (value.Kind == DateTimeKind.Unspecified) {
-            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
+            return DateTime.SpecifyKind(value, DateTimeKind.Utc);
         }
 
-        var utc = value.ToUniversalTime();
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
+        return DateTime.SpecifyKind(value.ToUniversalTime(), DateTimeKind.Utc);
     }
 
     private static double RequireNonNegative(double value, string paramName) {

@@ -37,9 +37,9 @@ public class MealInvariantTests {
     }
 
     [Fact]
-    public void Create_WithLocalDate_NormalizesToUtcDate() {
+    public void Create_WithLocalDate_NormalizesToUtcDateTime() {
         var localDate = new DateTime(2026, 3, 27, 23, 30, 0, DateTimeKind.Local);
-        var expectedDate = DateTime.SpecifyKind(localDate.ToUniversalTime().Date, DateTimeKind.Utc);
+        var expectedDate = DateTime.SpecifyKind(localDate.ToUniversalTime(), DateTimeKind.Utc);
 
         var meal = Meal.Create(UserId.New(), localDate);
 
@@ -48,21 +48,21 @@ public class MealInvariantTests {
     }
 
     [Fact]
-    public void Create_WithUnspecifiedDate_TreatsItAsUtcDateOnly() {
+    public void Create_WithUnspecifiedDate_TreatsItAsUtcDateTime() {
         var unspecifiedDate = new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified);
 
         var meal = Meal.Create(UserId.New(), unspecifiedDate);
 
-        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), meal.Date);
+        Assert.Equal(new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Utc), meal.Date);
     }
 
     [Fact]
-    public void UpdateDate_WithUnspecifiedDate_TreatsItAsUtcDateOnly() {
+    public void UpdateDate_WithUnspecifiedDate_TreatsItAsUtcDateTime() {
         var meal = Meal.Create(UserId.New(), new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc));
 
         meal.UpdateDate(new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified));
 
-        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), meal.Date);
+        Assert.Equal(new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Utc), meal.Date);
     }
 
     [Fact]

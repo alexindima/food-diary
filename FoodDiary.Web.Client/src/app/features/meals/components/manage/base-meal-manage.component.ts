@@ -1,5 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, FactoryProvider, inject, input, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    FactoryProvider,
+    inject,
+    input,
+    signal,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +31,7 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
+import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { NutrientData } from '../../../../shared/models/charts.data';
@@ -121,6 +133,7 @@ export class BaseMealManageComponent {
     public nutritionMode: NutritionMode = 'auto';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    private populatedConsumptionId: string | null = null;
 
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
@@ -153,7 +166,7 @@ export class BaseMealManageComponent {
     });
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
-    public readonly mealTypeOptions = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', 'OTHER'] as const;
+    public readonly mealTypeOptions = MEAL_TYPE_OPTIONS;
     public mealTypeSelectOptions: FdUiSelectOption<string>[] = [];
 
     public constructor() {
@@ -213,12 +226,24 @@ export class BaseMealManageComponent {
 
         this.prefillFromNavigationState();
 
-        const consumption = this.consumption();
-        if (consumption) {
-            this.populateForm(consumption);
-            this.updateItemValidationRules();
-            this.updateSummary();
-        }
+        effect(() => {
+            const consumption = this.consumption();
+            untracked(() => {
+                if (!consumption) {
+                    this.populatedConsumptionId = null;
+                    return;
+                }
+
+                if (this.populatedConsumptionId === consumption.id) {
+                    return;
+                }
+
+                this.populatedConsumptionId = consumption.id;
+                this.populateForm(consumption);
+                this.updateItemValidationRules();
+                this.updateSummary();
+            });
+        });
 
         if (!presetMealType && !this.consumption()) {
             this.consumptionForm.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -506,12 +531,7 @@ export class BaseMealManageComponent {
     private resolvePresetMealType(): string | null {
         const stateMealType = (this.router.getCurrentNavigation()?.extras.state as { mealType?: string } | undefined)?.mealType;
         const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
-        const raw = (stateMealType ?? queryMealType)?.toUpperCase();
-        if (!raw) {
-            return null;
-        }
-        const isValid = this.mealTypeOptions.includes(raw as (typeof this.mealTypeOptions)[number]);
-        return isValid ? raw : null;
+        return normalizeMealType(stateMealType ?? queryMealType);
     }
 
     private setAutoMealTypeFromDate(): void {
@@ -529,21 +549,7 @@ export class BaseMealManageComponent {
             return;
         }
 
-        mealTypeControl.setValue(this.resolveMealTypeByTime(date), { emitEvent: false });
-    }
-
-    private resolveMealTypeByTime(date: Date): string {
-        const totalMinutes = date.getHours() * 60 + date.getMinutes();
-        if (totalMinutes >= 300 && totalMinutes < 660) {
-            return 'BREAKFAST';
-        }
-        if (totalMinutes >= 660 && totalMinutes < 1020) {
-            return 'LUNCH';
-        }
-        if (totalMinutes >= 1020 && totalMinutes < 1320) {
-            return 'DINNER';
-        }
-        return 'SNACK';
+        mealTypeControl.setValue(resolveMealTypeByTime(date), { emitEvent: false });
     }
 
     private prefillFromNavigationState(): void {
@@ -605,7 +611,7 @@ export class BaseMealManageComponent {
         this.consumptionForm.patchValue({
             date: this.getDateInputValue(new Date(consumption.date)),
             time: this.getTimeInputValue(new Date(consumption.date)),
-            mealType: consumption.mealType ?? null,
+            mealType: normalizeMealType(consumption.mealType),
             comment: consumption.comment || null,
             imageUrl: {
                 url: consumption.imageUrl ?? null,
@@ -750,7 +756,7 @@ export class BaseMealManageComponent {
                 this.consumptionForm.reset({
                     date: this.getDateInputValue(new Date()),
                     time: this.getTimeInputValue(new Date()),
-                    mealType: null,
+                    mealType: resolveMealTypeByTime(new Date()),
                     comment: null,
                     isNutritionAutoCalculated: true,
                     manualCalories: null,

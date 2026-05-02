@@ -3,6 +3,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, Product } from '../../products/models/product.data';
 import { Recipe } from '../../recipes/models/recipe.data';
@@ -113,7 +114,7 @@ export class MealService extends ApiService {
         return {
             id: response.id,
             date: response.date,
-            mealType: response.mealType,
+            mealType: normalizeMealType(response.mealType),
             comment: response.comment,
             imageUrl: response.imageUrl ?? null,
             imageAssetId: response.imageAssetId ?? null,

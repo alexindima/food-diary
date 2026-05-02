@@ -119,6 +119,17 @@ describe('MealCardComponent', () => {
         expect(component.coverImage()).toBe('assets/images/stubs/meals/lunch.svg');
     });
 
+    it('should use AI session image when meal imageUrl is empty', () => {
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            imageUrl: null,
+            aiSessions: [{ imageUrl: 'https://example.com/ai-meal.jpg', items: [{}] }],
+        });
+        fixture.detectChanges();
+        expect(component.coverImage()).toBe('https://example.com/ai-meal.jpg');
+        expect(component.hasPreviewImage()).toBe(true);
+    });
+
     it('should compute coverImage as fallback when no imageUrl and no mealType', () => {
         fixture.componentRef.setInput('meal', { ...mockMeal, imageUrl: null, mealType: null });
         fixture.detectChanges();

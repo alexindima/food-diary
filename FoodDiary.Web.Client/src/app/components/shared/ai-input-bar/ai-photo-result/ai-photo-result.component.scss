@@ -13,7 +13,7 @@
 }
 
 .ai-photo-result__header {
-    color: var(--fd-color-purple-500);
+    color: var(--fd-color-text-muted);
 }
 
 .ai-photo-result__dismiss {
@@ -29,7 +29,7 @@
     --fd-button-border-default: transparent;
     --fd-button-border-hover: transparent;
     --fd-button-border-active: transparent;
-    --fd-button-text-default: var(--fd-color-slate-400);
+    --fd-button-text-default: var(--fd-color-text-muted);
     --fd-button-text-hover: var(--fd-color-danger);
     --fd-button-text-active: var(--fd-color-danger);
     --fd-button-shadow-default: var(--fd-shadow-none);
@@ -45,7 +45,7 @@
     border-radius: var(--fd-radius-lg);
     overflow: hidden;
     max-height: 200px;
-    background: var(--fd-color-slate-100);
+    background: var(--fd-bg-surface-muted);
 }
 
 .ai-photo-result__preview {
@@ -66,11 +66,11 @@
 }
 
 .ai-photo-result__text-preview-label {
-    color: var(--fd-color-purple-500);
+    color: var(--fd-color-ai-strong);
 }
 
 .ai-photo-result__text-preview-value {
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
     word-break: break-word;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -154,9 +154,9 @@
     --fd-button-border-default: transparent;
     --fd-button-border-hover: transparent;
     --fd-button-border-active: transparent;
-    --fd-button-text-default: var(--fd-color-slate-400);
-    --fd-button-text-hover: var(--fd-color-slate-500);
-    --fd-button-text-active: var(--fd-color-slate-500);
+    --fd-button-text-default: var(--fd-color-text-muted);
+    --fd-button-text-hover: var(--fd-color-text);
+    --fd-button-text-active: var(--fd-color-text);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-shadow-active: var(--fd-shadow-none);
@@ -173,11 +173,11 @@
 }
 
 .ai-photo-result__item-name {
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
 }
 
 .ai-photo-result__item-amount {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
     font-variant-numeric: tabular-nums;
 }
 
@@ -193,7 +193,7 @@
 
 .ai-photo-result__edit-handle {
     cursor: grab;
-    color: var(--fd-color-slate-400);
+    color: var(--fd-color-text-muted);
 
     fd-ui-icon {
         font-size: var(--fd-text-section-title-size);
@@ -228,7 +228,7 @@
     --fd-button-border-default: transparent;
     --fd-button-border-hover: transparent;
     --fd-button-border-active: transparent;
-    --fd-button-text-default: var(--fd-color-slate-400);
+    --fd-button-text-default: var(--fd-color-text-muted);
     --fd-button-text-hover: var(--fd-color-danger);
     --fd-button-text-active: var(--fd-color-danger);
     --fd-button-shadow-default: var(--fd-shadow-none);
@@ -248,12 +248,12 @@
     --fd-button-padding-x: var(--fd-space-md);
     --fd-button-font-size: var(--fd-text-caption-size);
     --fd-button-font-weight: var(--fd-text-action-weight);
-    --fd-button-secondary-text-default: var(--fd-color-slate-500);
-    --fd-button-secondary-text-hover: var(--fd-color-slate-700);
-    --fd-button-secondary-text-active: var(--fd-color-slate-700);
+    --fd-button-secondary-text-default: var(--fd-color-text-muted);
+    --fd-button-secondary-text-hover: var(--fd-color-text);
+    --fd-button-secondary-text-active: var(--fd-color-text);
     --fd-button-secondary-border-default: var(--fd-color-border-brand-surface);
-    --fd-button-secondary-border-hover: var(--fd-color-slate-400);
-    --fd-button-secondary-border-active: var(--fd-color-slate-400);
+    --fd-button-secondary-border-hover: var(--fd-color-border-strong);
+    --fd-button-secondary-border-active: var(--fd-color-border-strong);
     --fd-button-secondary-background-default: var(--fd-bg-brand-surface-soft);
     --fd-button-secondary-background-hover: var(--fd-bg-brand-surface-medium);
     --fd-button-secondary-background-active: var(--fd-bg-brand-surface-strong);
@@ -282,11 +282,11 @@
 }
 
 .ai-photo-result__nutrition-label {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
 }
 
 .ai-photo-result__nutrition-value {
-    color: var(--fd-color-slate-800);
+    color: var(--fd-color-text);
     font-variant-numeric: tabular-nums;
 }
 
@@ -297,6 +297,10 @@
 
 .ai-photo-result__actions > span {
     min-width: 1px;
+}
+
+.ai-photo-result__submit-action {
+    justify-self: end;
 }
 
 .ai-photo-result__details-toggle {
@@ -314,9 +318,9 @@
     --fd-button-secondary-border-default: transparent;
     --fd-button-secondary-border-hover: transparent;
     --fd-button-secondary-border-active: transparent;
-    --fd-button-secondary-text-default: var(--fd-color-slate-500);
-    --fd-button-secondary-text-hover: var(--fd-color-slate-600);
-    --fd-button-secondary-text-active: var(--fd-color-slate-600);
+    --fd-button-secondary-text-default: var(--fd-color-text);
+    --fd-button-secondary-text-hover: var(--fd-color-text-strong);
+    --fd-button-secondary-text-active: var(--fd-color-text-strong);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-shadow-active: var(--fd-shadow-none);
@@ -357,7 +361,7 @@
 }
 
 .ai-photo-result__detail-label {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
 }
 
 .ai-photo-result__detail-input,
@@ -366,7 +370,7 @@
     border: var(--fd-border-muted);
     border-radius: var(--fd-radius-lg);
     background: var(--fd-bg-surface-raised);
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
     font: inherit;
 }
 
@@ -388,7 +392,7 @@
 
 .ai-photo-result__satiety-label {
     margin: 0;
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
 }
 
 .ai-photo-result__satiety-card {
@@ -422,7 +426,7 @@
     fd-ui-icon {
         position: relative;
         z-index: 1;
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text);
     }
 }
 
@@ -432,7 +436,7 @@
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-surface-translucent);
     font-weight: var(--fd-text-action-weight);
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
     position: relative;
     z-index: 1;
 }
@@ -447,11 +451,11 @@
 }
 
 .ai-photo-result__satiety-title {
-    color: var(--fd-color-slate-900);
+    color: var(--fd-color-text);
 }
 
 .ai-photo-result__satiety-description {
-    color: var(--fd-color-slate-500);
+    color: var(--fd-color-text-muted);
 }
 
 @media #{variables.$media-tablet} {

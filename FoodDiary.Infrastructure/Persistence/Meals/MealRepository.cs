@@ -6,6 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
 public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
+    private static DateTime StartOfUtcDay(DateTime value) =>
+        DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
+
+    private static DateTime StartOfNextUtcDay(DateTime value) =>
+        DateTime.SpecifyKind(value.Date.AddDays(1), DateTimeKind.Utc);
+
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
         await context.Meals.AddAsync(meal, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
@@ -70,11 +76,13 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .Where(m => m.UserId == userId);
 
         if (dateFrom.HasValue) {
-            filteredQuery = filteredQuery.Where(m => m.Date >= dateFrom.Value);
+            var from = StartOfUtcDay(dateFrom.Value);
+            filteredQuery = filteredQuery.Where(m => m.Date >= from);
         }
 
         if (dateTo.HasValue) {
-            filteredQuery = filteredQuery.Where(m => m.Date <= dateTo.Value);
+            var toExclusive = StartOfNextUtcDay(dateTo.Value);
+            filteredQuery = filteredQuery.Where(m => m.Date < toExclusive);
         }
 
         var totalItems = await filteredQuery.CountAsync(cancellationToken);
@@ -106,9 +114,12 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
+        var from = StartOfUtcDay(dateFrom);
+        var toExclusive = StartOfNextUtcDay(dateTo);
+
         return await context.Meals
             .AsNoTracking()
-            .Where(m => m.UserId == userId && m.Date >= dateFrom && m.Date <= dateTo)
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
             .ToListAsync(cancellationToken);
@@ -119,10 +130,13 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
+        var from = StartOfUtcDay(dateFrom);
+        var toExclusive = StartOfNextUtcDay(dateTo);
+
         return await context.Meals
             .AsNoTracking()
-            .Where(m => m.UserId == userId && m.Date >= dateFrom && m.Date <= dateTo)
-            .Select(m => m.Date)
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
+            .Select(m => m.Date.Date)
             .Distinct()
             .OrderByDescending(d => d)
             .ToListAsync(cancellationToken);
@@ -140,12 +154,15 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default) {
+        var from = StartOfUtcDay(date);
+        var toExclusive = StartOfNextUtcDay(date);
+
         return await context.Meals
             .AsNoTracking()
             .AsSplitQuery()
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
-            .Where(m => m.UserId == userId && m.Date == date)
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
             .ToListAsync(cancellationToken);
     }
 }
