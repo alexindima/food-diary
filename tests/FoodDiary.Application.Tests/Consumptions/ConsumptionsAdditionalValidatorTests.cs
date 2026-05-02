@@ -85,13 +85,13 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void SatietyLevel_WithValidLevels_ReturnsSuccess() {
-        var result = SatietyLevelValidator.Validate(3, 7);
+        var result = SatietyLevelValidator.Validate(3, 5);
         Assert.True(result.IsSuccess);
     }
 
     [Fact]
     public void SatietyLevel_WithOutOfRangePre_ReturnsFailure() {
-        var result = SatietyLevelValidator.Validate(10, 5);
+        var result = SatietyLevelValidator.Validate(6, 5);
         Assert.True(result.IsFailure);
     }
 

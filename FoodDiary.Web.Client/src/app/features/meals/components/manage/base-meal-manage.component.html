@@ -84,61 +84,23 @@
                             <p class="consumption-manage__satiety-picker-label fd-ui-action-text">
                                 {{ 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' | translate }}
                             </p>
-                            @let beforeMeta = getSatietyLevelMeta(consumptionForm.controls.preMealSatietyLevel.value);
-                            <button
-                                type="button"
-                                class="consumption-manage__satiety-card fd-row fd-gap-md"
-                                (click)="openSatietyDialog('preMealSatietyLevel')"
-                                [style.--satiety-gradient]="beforeMeta.gradient"
-                                [attr.aria-label]="getSatietyButtonAriaLabel('preMealSatietyLevel')"
-                            >
-                                <div class="consumption-manage__satiety-card-indicator fd-center">
-                                    {{
-                                        (consumptionForm.controls.preMealSatietyLevel.value ?? 0) > 0
-                                            ? consumptionForm.controls.preMealSatietyLevel.value
-                                            : '?'
-                                    }}
-                                </div>
-                                <div class="consumption-manage__satiety-card-text fd-stack fd-gap-xxs">
-                                    <span class="consumption-manage__satiety-card-title fd-ui-action-text">
-                                        {{ beforeMeta.label }}
-                                    </span>
-                                    <span class="consumption-manage__satiety-card-description fd-ui-body-sm">
-                                        {{ beforeMeta.description }}
-                                    </span>
-                                </div>
-                                <fd-ui-icon name="tune"></fd-ui-icon>
-                            </button>
+                            <fd-ui-emoji-picker
+                                [options]="satietyEmojiOptions"
+                                [selectedValue]="consumptionForm.controls.preMealSatietyLevel.value"
+                                [ariaLabel]="getSatietyButtonAriaLabel('preMealSatietyLevel')"
+                                (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
+                            />
                         </div>
                         <div class="consumption-manage__satiety-field fd-stack fd-gap-xs">
                             <p class="consumption-manage__satiety-picker-label fd-ui-action-text">
                                 {{ 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL' | translate }}
                             </p>
-                            @let afterMeta = getSatietyLevelMeta(consumptionForm.controls.postMealSatietyLevel.value);
-                            <button
-                                type="button"
-                                class="consumption-manage__satiety-card fd-row fd-gap-md"
-                                (click)="openSatietyDialog('postMealSatietyLevel')"
-                                [style.--satiety-gradient]="afterMeta.gradient"
-                                [attr.aria-label]="getSatietyButtonAriaLabel('postMealSatietyLevel')"
-                            >
-                                <div class="consumption-manage__satiety-card-indicator fd-center">
-                                    {{
-                                        (consumptionForm.controls.postMealSatietyLevel.value ?? 0) > 0
-                                            ? consumptionForm.controls.postMealSatietyLevel.value
-                                            : '?'
-                                    }}
-                                </div>
-                                <div class="consumption-manage__satiety-card-text fd-stack fd-gap-xxs">
-                                    <span class="consumption-manage__satiety-card-title fd-ui-action-text">
-                                        {{ afterMeta.label }}
-                                    </span>
-                                    <span class="consumption-manage__satiety-card-description fd-ui-body-sm">
-                                        {{ afterMeta.description }}
-                                    </span>
-                                </div>
-                                <fd-ui-icon name="tune"></fd-ui-icon>
-                            </button>
+                            <fd-ui-emoji-picker
+                                [options]="satietyEmojiOptions"
+                                [selectedValue]="consumptionForm.controls.postMealSatietyLevel.value"
+                                [ariaLabel]="getSatietyButtonAriaLabel('postMealSatietyLevel')"
+                                (selectedValueChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
+                            />
                         </div>
                     </div>
                 </fd-ui-card>

@@ -6,6 +6,7 @@ import { FdUiAccentSurfaceComponent } from '../accent-surface/fd-ui-accent-surfa
 
 export interface FdUiSatietyScaleLevel {
     value: number;
+    emoji: string;
     titleKey: string;
     descriptionKey: string;
     gradient: string;
@@ -13,69 +14,39 @@ export interface FdUiSatietyScaleLevel {
 
 export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     {
-        value: 0,
-        titleKey: 'HUNGER_SCALE.LEVEL_0.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_0.DESCRIPTION',
-        gradient:
-            'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
-    },
-    {
         value: 1,
+        emoji: '😣',
         titleKey: 'HUNGER_SCALE.LEVEL_1.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_1.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-700), var(--fd-color-danger))',
     },
     {
         value: 2,
+        emoji: '😟',
         titleKey: 'HUNGER_SCALE.LEVEL_2.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_2.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))',
     },
     {
         value: 3,
+        emoji: '😐',
         titleKey: 'HUNGER_SCALE.LEVEL_3.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_3.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
     },
     {
         value: 4,
+        emoji: '🙂',
         titleKey: 'HUNGER_SCALE.LEVEL_4.TITLE',
         descriptionKey: 'HUNGER_SCALE.LEVEL_4.DESCRIPTION',
-        gradient:
-            'linear-gradient(135deg, var(--fd-color-yellow-300), color-mix(in srgb, var(--fd-color-yellow-300) 70%, var(--fd-color-white)))',
-    },
-    {
-        value: 5,
-        titleKey: 'HUNGER_SCALE.LEVEL_5.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_5.DESCRIPTION',
-        gradient:
-            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-yellow-300) 70%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)))',
-    },
-    {
-        value: 6,
-        titleKey: 'HUNGER_SCALE.LEVEL_6.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_6.DESCRIPTION',
         gradient:
             'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)))',
     },
     {
-        value: 7,
-        titleKey: 'HUNGER_SCALE.LEVEL_7.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_7.DESCRIPTION',
-        gradient:
-            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)), color-mix(in srgb, var(--fd-color-teal-500) 65%, var(--fd-color-green-500)))',
-    },
-    {
-        value: 8,
-        titleKey: 'HUNGER_SCALE.LEVEL_8.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_8.DESCRIPTION',
-        gradient:
-            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-teal-500) 65%, var(--fd-color-green-500)), color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)))',
-    },
-    {
-        value: 9,
-        titleKey: 'HUNGER_SCALE.LEVEL_9.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_9.DESCRIPTION',
+        value: 5,
+        emoji: '😌',
+        titleKey: 'HUNGER_SCALE.LEVEL_5.TITLE',
+        descriptionKey: 'HUNGER_SCALE.LEVEL_5.DESCRIPTION',
         gradient:
             'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)), var(--fd-color-sky-500))',
     },

@@ -95,7 +95,7 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 [new ConsumptionItemHttpRequest(productId, null, 220)],
                 IsNutritionAutoCalculated: true,
                 PreMealSatietyLevel: 2,
-                PostMealSatietyLevel: 8));
+                PostMealSatietyLevel: 4));
         updateResponse.EnsureSuccessStatusCode();
 
         var getResponse = await client.GetAsync($"/api/v1/consumptions/{mealId}");
@@ -105,7 +105,7 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
         Assert.Equal("Dinner", json.RootElement.GetProperty("mealType").GetString());
         Assert.Equal("Updated meal", json.RootElement.GetProperty("comment").GetString());
         Assert.Equal(2, json.RootElement.GetProperty("preMealSatietyLevel").GetInt32());
-        Assert.Equal(8, json.RootElement.GetProperty("postMealSatietyLevel").GetInt32());
+        Assert.Equal(4, json.RootElement.GetProperty("postMealSatietyLevel").GetInt32());
     }
 
     [Fact]

@@ -50,8 +50,8 @@ public sealed class Meal : AggregateRoot<MealId> {
         string? comment = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
-        int preMealSatietyLevel = 0,
-        int postMealSatietyLevel = 0) {
+        int preMealSatietyLevel = 3,
+        int postMealSatietyLevel = 3) {
         EnsureUserId(userId);
 
         var meal = new Meal {
@@ -284,8 +284,8 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateSatietyLevels(int? preMealLevel, int? postMealLevel) {
-        var normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 0);
-        var normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 0);
+        var normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 3);
+        var normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 3);
         var state = GetDetailsState();
 
         if (state.PreMealSatietyLevel == normalizedPre && state.PostMealSatietyLevel == normalizedPost) {
@@ -354,8 +354,12 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     private static int NormalizeSatietyLevel(int level) {
-        return level is < 0 or > 9
-            ? throw new ArgumentOutOfRangeException(nameof(level), "Satiety level must be in range [0, 9].")
+        if (level == 0) {
+            return 3;
+        }
+
+        return level is < 1 or > 5
+            ? throw new ArgumentOutOfRangeException(nameof(level), "Satiety level must be in range [1, 5].")
             : level;
     }
 

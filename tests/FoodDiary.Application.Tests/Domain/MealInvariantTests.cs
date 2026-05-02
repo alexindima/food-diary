@@ -16,7 +16,7 @@ public class MealInvariantTests {
 
     [Theory]
     [InlineData(-1)]
-    [InlineData(10)]
+    [InlineData(6)]
     public void Create_WithOutOfRangeSatiety_Throws(int satietyLevel) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             Meal.Create(
@@ -25,6 +25,19 @@ public class MealInvariantTests {
                 MealType.Breakfast,
                 preMealSatietyLevel: satietyLevel,
                 postMealSatietyLevel: 5));
+    }
+
+    [Fact]
+    public void Create_WithLegacyZeroSatiety_NormalizesToNeutral() {
+        var meal = Meal.Create(
+            UserId.New(),
+            DateTime.UtcNow,
+            MealType.Breakfast,
+            preMealSatietyLevel: 0,
+            postMealSatietyLevel: 0);
+
+        Assert.Equal(3, meal.PreMealSatietyLevel);
+        Assert.Equal(3, meal.PostMealSatietyLevel);
     }
 
     [Fact]
@@ -183,7 +196,7 @@ public class MealInvariantTests {
     public void UpdateSatietyLevels_WithOutOfRangeValue_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => meal.UpdateSatietyLevels(10, 5));
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.UpdateSatietyLevels(6, 5));
     }
 
     [Fact]

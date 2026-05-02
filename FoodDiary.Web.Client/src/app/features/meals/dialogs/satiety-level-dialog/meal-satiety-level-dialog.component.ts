@@ -30,7 +30,7 @@ export class MealSatietyLevelDialogComponent {
     public readonly selectedValue = signal<number | null>(null);
 
     public constructor() {
-        this.selectedValue.set(this.data.value ?? 0);
+        this.selectedValue.set(this.data.value ?? 3);
     }
 
     public onValueSelected(level: number): void {
@@ -47,10 +47,6 @@ export class MealSatietyLevelDialogComponent {
 
     public getSelectionLabel(): string {
         const value = this.selectedValue();
-        if (!value) {
-            return this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_NOT_SELECTED');
-        }
-
         const title = this.translateService.instant(`HUNGER_SCALE.LEVEL_${value}.TITLE`);
         return `${value} - ${title}`;
     }

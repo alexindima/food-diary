@@ -250,46 +250,26 @@
                             <p class="ai-photo-result__satiety-label fd-ui-field-label fd-ui-field-label--floating">
                                 {{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}
                             </p>
-                            @let beforeMeta = getSatietyLevelMeta(preMealSatietyLevel());
-                            <button
-                                type="button"
-                                class="ai-photo-result__satiety-card fd-row fd-gap-sm"
-                                (click)="openSatietyDialog('before')"
-                                [attr.aria-label]="getSatietyButtonAriaLabel('before')"
-                                [style.--satiety-gradient]="beforeMeta.gradient"
-                            >
-                                <div class="ai-photo-result__satiety-indicator fd-center">
-                                    {{ (preMealSatietyLevel() ?? 0) > 0 ? preMealSatietyLevel() : '?' }}
-                                </div>
-                                <div class="ai-photo-result__satiety-text">
-                                    <span class="ai-photo-result__satiety-title fd-ui-action-text">{{ beforeMeta.label }}</span>
-                                    <span class="ai-photo-result__satiety-description fd-ui-caption">{{ beforeMeta.description }}</span>
-                                </div>
-                                <fd-ui-icon name="tune"></fd-ui-icon>
-                            </button>
+                            <fd-ui-emoji-picker
+                                size="sm"
+                                [options]="satietyEmojiOptions"
+                                [selectedValue]="preMealSatietyLevel()"
+                                [ariaLabel]="getSatietyButtonAriaLabel('before')"
+                                (selectedValueChange)="onSatietyLevelChange('before', $event)"
+                            />
                         </div>
 
                         <div class="ai-photo-result__satiety-field fd-stack fd-gap-xxs">
                             <p class="ai-photo-result__satiety-label fd-ui-field-label fd-ui-field-label--floating">
                                 {{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}
                             </p>
-                            @let afterMeta = getSatietyLevelMeta(postMealSatietyLevel());
-                            <button
-                                type="button"
-                                class="ai-photo-result__satiety-card fd-row fd-gap-sm"
-                                (click)="openSatietyDialog('after')"
-                                [attr.aria-label]="getSatietyButtonAriaLabel('after')"
-                                [style.--satiety-gradient]="afterMeta.gradient"
-                            >
-                                <div class="ai-photo-result__satiety-indicator fd-center">
-                                    {{ (postMealSatietyLevel() ?? 0) > 0 ? postMealSatietyLevel() : '?' }}
-                                </div>
-                                <div class="ai-photo-result__satiety-text">
-                                    <span class="ai-photo-result__satiety-title fd-ui-action-text">{{ afterMeta.label }}</span>
-                                    <span class="ai-photo-result__satiety-description fd-ui-caption">{{ afterMeta.description }}</span>
-                                </div>
-                                <fd-ui-icon name="tune"></fd-ui-icon>
-                            </button>
+                            <fd-ui-emoji-picker
+                                size="sm"
+                                [options]="satietyEmojiOptions"
+                                [selectedValue]="postMealSatietyLevel()"
+                                [ariaLabel]="getSatietyButtonAriaLabel('after')"
+                                (selectedValueChange)="onSatietyLevelChange('after', $event)"
+                            />
                         </div>
                     </div>
                 </div>

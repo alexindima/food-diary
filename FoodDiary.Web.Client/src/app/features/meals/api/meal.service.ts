@@ -111,6 +111,8 @@ export class MealService extends ApiService {
     }
 
     private mapConsumption(response: ConsumptionResponseDto): Consumption {
+        const isNutritionAutoCalculated = this.resolveIsNutritionAutoCalculated(response);
+
         return {
             id: response.id,
             date: response.date,
@@ -124,15 +126,15 @@ export class MealService extends ApiService {
             totalCarbs: response.totalCarbs,
             totalFiber: response.totalFiber,
             totalAlcohol: response.totalAlcohol ?? 0,
-            isNutritionAutoCalculated: response.isNutritionAutoCalculated ?? true,
+            isNutritionAutoCalculated,
             manualCalories: response.manualCalories ?? null,
             manualProteins: response.manualProteins ?? null,
             manualFats: response.manualFats ?? null,
             manualCarbs: response.manualCarbs ?? null,
             manualFiber: response.manualFiber ?? null,
             manualAlcohol: response.manualAlcohol ?? null,
-            preMealSatietyLevel: response.preMealSatietyLevel ?? 0,
-            postMealSatietyLevel: response.postMealSatietyLevel ?? 0,
+            preMealSatietyLevel: this.normalizeSatietyLevel(response.preMealSatietyLevel),
+            postMealSatietyLevel: this.normalizeSatietyLevel(response.postMealSatietyLevel),
             qualityScore: response.qualityScore ?? null,
             qualityGrade: response.qualityGrade ?? null,
             isFavorite: response.isFavorite ?? false,
@@ -140,6 +142,70 @@ export class MealService extends ApiService {
             items: response.items.map(item => this.mapConsumptionItem(item)),
             aiSessions: response.aiSessions?.map(session => this.mapAiSession(session)) ?? [],
         };
+    }
+
+    private resolveIsNutritionAutoCalculated(response: ConsumptionResponseDto): boolean {
+        const isAuto = response.isNutritionAutoCalculated ?? true;
+        if (isAuto || response.items.length > 0 || !this.hasAiItems(response)) {
+            return isAuto;
+        }
+
+        const aiTotals = this.calculateAiTotals(response);
+        return (
+            this.areClose(response.manualCalories ?? response.totalCalories, aiTotals.calories) &&
+            this.areClose(response.manualProteins ?? response.totalProteins, aiTotals.proteins) &&
+            this.areClose(response.manualFats ?? response.totalFats, aiTotals.fats) &&
+            this.areClose(response.manualCarbs ?? response.totalCarbs, aiTotals.carbs) &&
+            this.areClose(response.manualFiber ?? response.totalFiber, aiTotals.fiber) &&
+            this.areClose(response.manualAlcohol ?? response.totalAlcohol ?? 0, aiTotals.alcohol)
+        );
+    }
+
+    private normalizeSatietyLevel(value: number | null | undefined): number {
+        if (!value) {
+            return 3;
+        }
+
+        if (value > 5) {
+            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        }
+
+        return Math.max(1, value);
+    }
+
+    private hasAiItems(response: ConsumptionResponseDto): boolean {
+        return response.aiSessions?.some(session => session.items.length > 0) ?? false;
+    }
+
+    private calculateAiTotals(response: ConsumptionResponseDto): {
+        calories: number;
+        proteins: number;
+        fats: number;
+        carbs: number;
+        fiber: number;
+        alcohol: number;
+    } {
+        return (
+            response.aiSessions?.reduce(
+                (totals, session) =>
+                    session.items.reduce(
+                        (sessionTotals, item) => ({
+                            calories: sessionTotals.calories + item.calories,
+                            proteins: sessionTotals.proteins + item.proteins,
+                            fats: sessionTotals.fats + item.fats,
+                            carbs: sessionTotals.carbs + item.carbs,
+                            fiber: sessionTotals.fiber + item.fiber,
+                            alcohol: sessionTotals.alcohol + item.alcohol,
+                        }),
+                        totals,
+                    ),
+                { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
+            ) ?? { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
+        );
+    }
+
+    private areClose(left: number, right: number): boolean {
+        return Math.abs(left - right) <= 0.000001;
     }
 
     private mapConsumptionItem(response: ConsumptionItemResponseDto): ConsumptionItem {

@@ -31,7 +31,7 @@ public sealed class ConsumptionHttpMappingsTests {
                 new(productId, null, 150),
             },
             PreMealSatietyLevel: 3,
-            PostMealSatietyLevel: 7);
+            PostMealSatietyLevel: 4);
 
         var command = request.ToCommand(userId);
 
@@ -43,7 +43,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal(productId, command.Items[0].ProductId);
         Assert.Equal(150, command.Items[0].Amount);
         Assert.Equal(3, command.PreMealSatietyLevel);
-        Assert.Equal(7, command.PostMealSatietyLevel);
+        Assert.Equal(4, command.PostMealSatietyLevel);
     }
 
     [Fact]
@@ -153,7 +153,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var model = new ConsumptionModel(
             id, date, "Breakfast", "Comment", null, null,
             500, 30, 20, 60, 5, 0, true, null, null, null, null, null, null,
-            3, 7, 72, "green", false, null, [], []);
+            3, 4, 72, "green", false, null, [], []);
 
         var response = model.ToHttpResponse();
 
@@ -162,7 +162,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal("Breakfast", response.MealType);
         Assert.Equal(500, response.TotalCalories);
         Assert.Equal(3, response.PreMealSatietyLevel);
-        Assert.Equal(7, response.PostMealSatietyLevel);
+        Assert.Equal(4, response.PostMealSatietyLevel);
         Assert.Equal(72, response.QualityScore);
         Assert.Equal("green", response.QualityGrade);
         Assert.True(response.IsNutritionAutoCalculated);

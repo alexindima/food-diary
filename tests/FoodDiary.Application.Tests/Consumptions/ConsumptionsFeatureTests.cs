@@ -181,7 +181,7 @@ public class ConsumptionsFeatureTests {
             5,
             0,
             3,
-            7);
+            4);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
@@ -219,7 +219,7 @@ public class ConsumptionsFeatureTests {
             5,
             0,
             3,
-            7);
+            4);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
@@ -263,7 +263,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -304,7 +304,7 @@ public class ConsumptionsFeatureTests {
                 ManualFiber: 5,
                 ManualAlcohol: 0,
                 PreMealSatietyLevel: 3,
-                PostMealSatietyLevel: 7),
+                PostMealSatietyLevel: 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -341,7 +341,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -378,7 +378,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -421,7 +421,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -464,7 +464,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -514,7 +514,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -555,7 +555,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -600,7 +600,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 null,
                 3,
-                7),
+                 4),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);

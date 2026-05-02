@@ -546,10 +546,10 @@
         "DETAIL_DATE": "Дата",
         "DETAIL_TIME": "Время",
         "DETAIL_COMMENT": "Комментарий",
-        "DETAIL_SATIETY_BEFORE": "Сытность до",
-        "DETAIL_SATIETY_AFTER": "Сытность после",
-        "SATIETY_PLACEHOLDER_TITLE": "Не выбрано",
-        "SATIETY_PLACEHOLDER_DESCRIPTION": "Выберите уровень",
+        "DETAIL_SATIETY_BEFORE": "Голод до",
+        "DETAIL_SATIETY_AFTER": "Сытость после",
+        "SATIETY_PLACEHOLDER_TITLE": "Нейтрально",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Можно изменить уровень",
         "TEXT_ERROR_PREMIUM": "Распознавание по тексту и голосу доступно только для пользователей Premium.",
         "TEXT_ERROR_QUOTA": "Лимит ИИ на месяц исчерпан. Попробуйте позже или обновите план.",
         "TEXT_ERROR_GENERIC": "Не удалось распознать приём пищи по тексту. Пожалуйста, попробуйте ещё раз.",
@@ -709,17 +709,17 @@
         "SATIETY_SECTION_HINT": "Отметьте ощущения до и после приёма пищи, чтобы отслеживать осознанность.",
         "HUNGER_BEFORE_LABEL": "Уровень голода перед приёмом",
         "HUNGER_AFTER_LABEL": "Уровень сытости после приёма",
-        "SATIETY_HINT": "Нажмите на карточку, чтобы выбрать один из девяти уровней.",
+        "SATIETY_HINT": "Нажмите на карточку, чтобы выбрать один из пяти уровней.",
         "SATIETY_PICKER_BUTTON": "→ Выбрать уровень",
-        "SATIETY_NOT_SELECTED": "❗ Не выбран",
+        "SATIETY_NOT_SELECTED": "😐 Нейтрально",
         "SATIETY_DIALOG_HINT": "Осознанное питание",
         "SATIETY_DIALOG_SUBHINT": "Нажмите на плитку, чтобы сразу выбрать уровень.",
         "SATIETY_DIALOG_CANCEL": "Отменить",
         "SATIETY_DIALOG_APPLY": "Подтвердить",
         "HUNGER_BEFORE_DIALOG_TITLE": "Уровень голода перед приёмом",
         "HUNGER_AFTER_DIALOG_TITLE": "Уровень сытости после приёма",
-        "SATIETY_PLACEHOLDER_TITLE": "Пока не выбран",
-        "SATIETY_PLACEHOLDER_DESCRIPTION": "Нажмите, чтобы выбрать уровень.",
+        "SATIETY_PLACEHOLDER_TITLE": "Нейтрально",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Можно изменить уровень.",
         "ITEMS_ADDED_TITLE": "Добавленные позиции",
         "ITEMS_AI_TITLE": "Распознано по фото",
         "ITEMS_AI_HINT": "Загрузите фото приёма пищи, чтобы распознать позиции автоматически.",
@@ -736,24 +736,24 @@
             "DESCRIPTION": "Используйте, если ощущение не записано."
         },
         "LEVEL_1": {
-            "TITLE": "Умираю с голода",
-            "DESCRIPTION": "Головокружение, слабость."
+            "TITLE": "Очень голодна",
+            "DESCRIPTION": "Сильный голод, сложно ждать."
         },
         "LEVEL_2": {
-            "TITLE": "Сильно голодна",
-            "DESCRIPTION": "Готовность съесть что угодно."
+            "TITLE": "Голодна",
+            "DESCRIPTION": "Хочется поесть в ближайшее время."
         },
         "LEVEL_3": {
-            "TITLE": "Голодна",
-            "DESCRIPTION": "Урчит живот, концентрация снижена."
+            "TITLE": "Нейтрально",
+            "DESCRIPTION": "Комфортно: не голодна и не сыта."
         },
         "LEVEL_4": {
-            "TITLE": "Слегка голодна",
-            "DESCRIPTION": "Пустой живот, мысли о еде."
+            "TITLE": "Сыта",
+            "DESCRIPTION": "Приятное насыщение без тяжести."
         },
         "LEVEL_5": {
-            "TITLE": "Ни голодна, ни сыта",
-            "DESCRIPTION": "Комфортное состояние."
+            "TITLE": "Очень сыта",
+            "DESCRIPTION": "Ощущается сильная наполненность."
         },
         "LEVEL_6": {
             "TITLE": "Скорее сыт",

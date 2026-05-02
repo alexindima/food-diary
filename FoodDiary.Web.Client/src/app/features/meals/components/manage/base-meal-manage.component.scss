@@ -153,6 +153,7 @@
 
     &__satiety-grid {
         grid-template-columns: 1fr;
+        max-width: max-content;
     }
 
     &__satiety-note {
@@ -163,70 +164,6 @@
     &__satiety-picker-label {
         margin: 0;
         color: var(--fd-color-text);
-    }
-
-    &__satiety-card {
-        --satiety-gradient: var(--fd-bg-satiety-card-gradient);
-        border: var(--fd-border-default);
-        border-radius: var(--fd-radius-card);
-        padding: var(--fd-space-md);
-        align-items: center;
-        text-align: left;
-        cursor: pointer;
-        background: var(--fd-bg-card-editor-surface-gradient);
-        box-shadow: var(--fd-shadow-sm);
-        position: relative;
-        overflow: hidden;
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
-
-        &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--satiety-gradient);
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--fd-shadow-lg);
-        }
-
-        fd-ui-icon {
-            color: var(--fd-color-text);
-            position: relative;
-            z-index: 1;
-        }
-    }
-
-    &__satiety-card-indicator {
-        width: var(--fd-size-control-touch);
-        height: var(--fd-size-control-touch);
-        border-radius: var(--fd-radius-pill);
-        background: var(--fd-bg-surface-raised);
-        font-size: var(--fd-text-card-title-size);
-        line-height: var(--fd-text-card-title-line-height);
-        font-weight: var(--fd-text-card-title-weight);
-        color: var(--fd-color-text);
-        position: relative;
-        z-index: 1;
-    }
-
-    &__satiety-card-text {
-        position: relative;
-        z-index: 1;
-        flex: 1;
-    }
-
-    &__satiety-card-title {
-        color: var(--fd-color-text);
-    }
-
-    &__satiety-card-description {
-        color: var(--fd-color-text-muted);
     }
 
     &__items-header {

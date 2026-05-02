@@ -38,15 +38,9 @@ export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDat
         comment: result.comment ?? undefined,
         imageAssetId: result.imageAssetId ?? undefined,
         imageUrl: result.imageUrl ?? undefined,
-        isNutritionAutoCalculated: false,
-        manualCalories: sumItems(result.items, item => item.calories),
-        manualProteins: sumItems(result.items, item => item.proteins),
-        manualFats: sumItems(result.items, item => item.fats),
-        manualCarbs: sumItems(result.items, item => item.carbs),
-        manualFiber: sumItems(result.items, item => item.fiber),
-        manualAlcohol: sumItems(result.items, item => item.alcohol),
-        preMealSatietyLevel: result.preMealSatietyLevel ?? undefined,
-        postMealSatietyLevel: result.postMealSatietyLevel ?? undefined,
+        isNutritionAutoCalculated: true,
+        preMealSatietyLevel: normalizeSatietyLevel(result.preMealSatietyLevel),
+        postMealSatietyLevel: normalizeSatietyLevel(result.postMealSatietyLevel),
         items: [],
         aiSessions: [
             {
@@ -61,6 +55,14 @@ export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDat
     };
 }
 
-function sumItems(items: AiInputBarResultItem[], selector: (item: AiInputBarResultItem) => number): number {
-    return items.reduce((sum, item) => sum + selector(item), 0);
+function normalizeSatietyLevel(value: number | null | undefined): number {
+    if (!value) {
+        return 3;
+    }
+
+    if (value > 5) {
+        return Math.min(5, Math.max(1, Math.round(value / 2)));
+    }
+
+    return Math.max(1, value);
 }

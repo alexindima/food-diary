@@ -39,22 +39,22 @@ describe('MealSatietyLevelDialogComponent', () => {
         expect(component.selectedValue()).toBe(5);
     });
 
-    it('should initialize with 0 when data value is null', () => {
+    it('should initialize with neutral value when data value is null', () => {
         createComponent({ titleKey: 'TITLE', value: null });
-        expect(component.selectedValue()).toBe(0);
+        expect(component.selectedValue()).toBe(3);
     });
 
     it('should update selectedValue on selection', () => {
         createComponent();
-        component.onValueSelected(7);
-        expect(component.selectedValue()).toBe(7);
+        component.onValueSelected(4);
+        expect(component.selectedValue()).toBe(4);
     });
 
     it('should close with selected value', () => {
         createComponent({ titleKey: 'TITLE', value: 3 });
-        component.onValueSelected(8);
+        component.onValueSelected(5);
         component.closeWithValue();
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(8);
+        expect(dialogRefSpy.close).toHaveBeenCalledWith(5);
     });
 
     it('should close with null on dismiss', () => {

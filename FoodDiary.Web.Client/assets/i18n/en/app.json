@@ -582,10 +582,10 @@
         "DETAIL_DATE": "Date",
         "DETAIL_TIME": "Time",
         "DETAIL_COMMENT": "Comment",
-        "DETAIL_SATIETY_BEFORE": "Satiety before",
+        "DETAIL_SATIETY_BEFORE": "Hunger before",
         "DETAIL_SATIETY_AFTER": "Satiety after",
-        "SATIETY_PLACEHOLDER_TITLE": "Not selected",
-        "SATIETY_PLACEHOLDER_DESCRIPTION": "Choose a level",
+        "SATIETY_PLACEHOLDER_TITLE": "Neutral",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to change the level",
         "TEXT_ERROR_PREMIUM": "Text and voice recognition are available for Premium users.",
         "TEXT_ERROR_QUOTA": "Monthly AI limit reached. Try again later or upgrade your plan.",
         "TEXT_ERROR_GENERIC": "Failed to recognize the meal from text. Please try again.",
@@ -745,17 +745,17 @@
         "SATIETY_SECTION_HINT": "Mark how you felt before and after the meal to track mindful eating.",
         "HUNGER_BEFORE_LABEL": "Hunger level before the meal",
         "HUNGER_AFTER_LABEL": "Satiety level after the meal",
-        "SATIETY_HINT": "Tap a card to choose one of nine intuitive eating levels.",
+        "SATIETY_HINT": "Tap a card to choose one of five intuitive eating levels.",
         "SATIETY_PICKER_BUTTON": "→ Choose level",
-        "SATIETY_NOT_SELECTED": "❗ Not selected",
+        "SATIETY_NOT_SELECTED": "😐 Neutral",
         "SATIETY_DIALOG_HINT": "Mindful eating",
         "SATIETY_DIALOG_SUBHINT": "Tap any tile to instantly set a level.",
         "SATIETY_DIALOG_CANCEL": "Cancel",
         "SATIETY_DIALOG_APPLY": "Apply",
         "HUNGER_BEFORE_DIALOG_TITLE": "Hunger level before the meal",
         "HUNGER_AFTER_DIALOG_TITLE": "Satiety level after the meal",
-        "SATIETY_PLACEHOLDER_TITLE": "Not selected",
-        "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to set a level.",
+        "SATIETY_PLACEHOLDER_TITLE": "Neutral",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to change the level.",
         "ITEMS_ADDED_TITLE": "Added items",
         "ITEMS_AI_TITLE": "Recognized from photo",
         "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically.",
@@ -772,24 +772,24 @@
             "DESCRIPTION": "Use this when no feeling was captured."
         },
         "LEVEL_1": {
-            "TITLE": "Ravenous",
-            "DESCRIPTION": "Dizzy, shaky, urgently need food."
+            "TITLE": "Very hungry",
+            "DESCRIPTION": "Strong hunger, hard to wait."
         },
         "LEVEL_2": {
-            "TITLE": "Very hungry",
-            "DESCRIPTION": "Strong hunger, stomach growling."
+            "TITLE": "Hungry",
+            "DESCRIPTION": "Ready to eat soon."
         },
         "LEVEL_3": {
-            "TITLE": "Hungry",
-            "DESCRIPTION": "Ready to eat soon, low energy."
-        },
-        "LEVEL_4": {
-            "TITLE": "Peckish",
-            "DESCRIPTION": "Mild hunger, mind drifts to food."
-        },
-        "LEVEL_5": {
             "TITLE": "Neutral",
             "DESCRIPTION": "Comfortable, neither hungry nor full."
+        },
+        "LEVEL_4": {
+            "TITLE": "Full",
+            "DESCRIPTION": "Pleasantly satisfied without heaviness."
+        },
+        "LEVEL_5": {
+            "TITLE": "Very full",
+            "DESCRIPTION": "Strong fullness is noticeable."
         },
         "LEVEL_6": {
             "TITLE": "Satisfied",

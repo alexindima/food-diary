@@ -26,14 +26,14 @@ public class CreateConsumptionCommandValidator : AbstractValidator<CreateConsump
             .WithMessage("At least one item or AI session with items is required.");
 
         RuleFor(c => c.PreMealSatietyLevel)
-            .InclusiveBetween(0, 9)
+            .Must(level => level == 0 || level is >= 1 and <= 5)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Satiety level must be between 0 and 9.");
+            .WithMessage("Satiety level must be between 1 and 5.");
 
         RuleFor(c => c.PostMealSatietyLevel)
-            .InclusiveBetween(0, 9)
+            .Must(level => level == 0 || level is >= 1 and <= 5)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Satiety level must be between 0 and 9.");
+            .WithMessage("Satiety level must be between 1 and 5.");
 
         RuleForEach(c => c.Items).ChildRules(item => {
             item.RuleFor(i => i)

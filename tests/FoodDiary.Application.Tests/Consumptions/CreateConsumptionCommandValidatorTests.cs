@@ -135,7 +135,7 @@ public class CreateConsumptionCommandValidatorTests {
         double? manualCarbs = null,
         double? manualFiber = null,
         int preMealSatiety = 3,
-        int postMealSatiety = 7) {
+        int postMealSatiety = 4) {
         return new CreateConsumptionCommand(
             useNullUserId ? null : (userId ?? DefaultUserId),
             DateTime.UtcNow,

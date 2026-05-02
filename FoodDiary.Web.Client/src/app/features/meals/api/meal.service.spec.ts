@@ -33,7 +33,7 @@ describe('MealService', () => {
         manualFiber: null,
         manualAlcohol: null,
         preMealSatietyLevel: 3,
-        postMealSatietyLevel: 7,
+        postMealSatietyLevel: 4,
         items: [],
         aiSessions: [],
     };
@@ -90,7 +90,7 @@ describe('MealService', () => {
             expect(meal.totalAlcohol).toBe(0);
             expect(meal.isNutritionAutoCalculated).toBe(true);
             expect(meal.preMealSatietyLevel).toBe(3);
-            expect(meal.postMealSatietyLevel).toBe(7);
+            expect(meal.postMealSatietyLevel).toBe(4);
             expect(meal.items).toEqual([]);
             expect(meal.aiSessions).toEqual([]);
         });
@@ -160,6 +160,95 @@ describe('MealService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);
         req.flush({ ...mockConsumptionDto, mealType: 'Lunch' });
+    });
+
+    it('should treat legacy AI-only nutrition matching AI totals as automatic', () => {
+        service.getById('m1').subscribe(result => {
+            expect(result?.isNutritionAutoCalculated).toBe(true);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/m1`);
+        req.flush({
+            ...mockConsumptionDto,
+            items: [],
+            isNutritionAutoCalculated: false,
+            totalCalories: 319.2,
+            totalProteins: 9.9,
+            totalFats: 4.8,
+            totalCarbs: 67.09,
+            totalFiber: 13.79,
+            totalAlcohol: 0,
+            manualCalories: 319.2,
+            manualProteins: 9.9,
+            manualFats: 4.8,
+            manualCarbs: 67.09,
+            manualFiber: 13.79,
+            manualAlcohol: 0,
+            aiSessions: [
+                {
+                    id: 's1',
+                    consumptionId: 'm1',
+                    recognizedAtUtc: '2026-05-03T00:29:00Z',
+                    items: [
+                        {
+                            id: 'ai1',
+                            sessionId: 's1',
+                            nameEn: 'Banana porridge',
+                            amount: 1,
+                            unit: 'serving',
+                            calories: 319.2,
+                            proteins: 9.9,
+                            fats: 4.8,
+                            carbs: 67.09,
+                            fiber: 13.79,
+                            alcohol: 0,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('should keep manual mode when AI meal nutrition differs from AI totals', () => {
+        service.getById('m1').subscribe(result => {
+            expect(result?.isNutritionAutoCalculated).toBe(false);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/m1`);
+        req.flush({
+            ...mockConsumptionDto,
+            items: [],
+            isNutritionAutoCalculated: false,
+            totalCalories: 350,
+            manualCalories: 350,
+            manualProteins: 9.9,
+            manualFats: 4.8,
+            manualCarbs: 67.09,
+            manualFiber: 13.79,
+            manualAlcohol: 0,
+            aiSessions: [
+                {
+                    id: 's1',
+                    consumptionId: 'm1',
+                    recognizedAtUtc: '2026-05-03T00:29:00Z',
+                    items: [
+                        {
+                            id: 'ai1',
+                            sessionId: 's1',
+                            nameEn: 'Banana porridge',
+                            amount: 1,
+                            unit: 'serving',
+                            calories: 319.2,
+                            proteins: 9.9,
+                            fats: 4.8,
+                            carbs: 67.09,
+                            fiber: 13.79,
+                            alcohol: 0,
+                        },
+                    ],
+                },
+            ],
+        });
     });
 
     it('should return null on create error', () => {

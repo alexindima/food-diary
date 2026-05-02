@@ -94,9 +94,7 @@
 
     &__option--selected {
         border-color: color-mix(in srgb, var(--fd-color-primary-500) 50%, transparent);
-        box-shadow:
-            var(--fd-shadow-accent-strong),
-            var(--fd-shadow-accent-glow);
+        box-shadow: var(--fd-shadow-accent-strong), var(--fd-shadow-accent-glow);
     }
 
     &__indicator {
@@ -115,8 +113,9 @@
             color 0.25s ease;
     }
 
-    &__number {
-        font-size: var(--fd-text-body-sm-size);
+    &__emoji {
+        font-size: var(--fd-text-body-lg-size);
+        line-height: 1;
     }
 
     &__text {
@@ -161,5 +160,3 @@
         color: color-mix(in srgb, var(--fd-color-text) 85%, transparent);
     }
 }
-
-

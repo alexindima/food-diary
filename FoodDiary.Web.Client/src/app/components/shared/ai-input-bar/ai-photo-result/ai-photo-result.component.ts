@@ -2,13 +2,9 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiEmojiPickerComponent, FdUiEmojiPickerOption, FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
-import {
-    MealSatietyLevelDialogComponent,
-    SatietyLevelDialogData,
-} from '../../../../features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import { AiInputBarMealDetails } from '../ai-input-bar.types';
 
@@ -37,14 +33,13 @@ type EditChangeSummary = {
 @Component({
     selector: 'fd-ai-photo-result',
     standalone: true,
-    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, DragDropModule],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, FdUiEmojiPickerComponent, DragDropModule],
     templateUrl: './ai-photo-result.component.html',
     styleUrls: ['./ai-photo-result.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AiPhotoResultComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
 
     public readonly titleKey = input<string>('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE');
@@ -71,8 +66,16 @@ export class AiPhotoResultComponent {
     public readonly detailsDate = signal(this.getDateInputValue(new Date()));
     public readonly detailsTime = signal(this.getTimeInputValue(new Date()));
     public readonly detailsComment = signal('');
-    public readonly preMealSatietyLevel = signal<number | null>(null);
-    public readonly postMealSatietyLevel = signal<number | null>(null);
+    public readonly preMealSatietyLevel = signal<number | null>(3);
+    public readonly postMealSatietyLevel = signal<number | null>(3);
+    public readonly satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = DEFAULT_SATIETY_LEVELS.map(level => ({
+        value: level.value,
+        emoji: level.emoji,
+        label: this.translateService.instant(level.titleKey),
+        description: this.translateService.instant(level.descriptionKey),
+        ariaLabel: `${level.value}. ${this.translateService.instant(level.titleKey)}. ${this.translateService.instant(level.descriptionKey)}`,
+        hint: `${level.value}. ${this.translateService.instant(level.titleKey)}`,
+    }));
     public readonly editItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
 
@@ -236,58 +239,33 @@ export class AiPhotoResultComponent {
             date: this.detailsDate(),
             time: this.detailsTime(),
             comment: this.detailsComment().trim() || null,
-            preMealSatietyLevel: this.preMealSatietyLevel(),
-            postMealSatietyLevel: this.postMealSatietyLevel(),
+            preMealSatietyLevel: this.normalizeSatietyLevel(this.preMealSatietyLevel()),
+            postMealSatietyLevel: this.normalizeSatietyLevel(this.postMealSatietyLevel()),
         });
     }
 
-    public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
-        if (!value) {
-            return {
-                label: this.translateService.instant('AI_INPUT_BAR.SATIETY_PLACEHOLDER_TITLE'),
-                description: this.translateService.instant('AI_INPUT_BAR.SATIETY_PLACEHOLDER_DESCRIPTION'),
-                gradient:
-                    'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
-            };
-        }
-
-        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
+    public getSatietyLevelMeta(value: number | null): { emoji: string; label: string; description: string; gradient: string } {
+        const normalizedValue = this.normalizeSatietyLevel(value);
+        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === normalizedValue);
         return {
-            label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
+            emoji: config?.emoji ?? '😐',
+            label: `${normalizedValue} - ${this.translateService.instant(config?.titleKey ?? '')}`,
             description: this.translateService.instant(config?.descriptionKey ?? ''),
-            gradient:
-                config?.gradient ??
-                'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
+            gradient: config?.gradient ?? 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
         };
     }
 
-    public openSatietyDialog(kind: 'before' | 'after'): void {
-        const currentValue = kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel();
-        const titleKey =
-            kind === 'before' ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE' : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
-        const dialogRef = this.fdDialogService.open<MealSatietyLevelDialogComponent, SatietyLevelDialogData, number>(
-            MealSatietyLevelDialogComponent,
-            {
-                size: 'lg',
-                data: {
-                    titleKey,
-                    subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
-                    value: currentValue,
-                },
-            },
-        );
+    public onSatietyLevelChange(kind: 'before' | 'after', value: FdUiEmojiPickerValue | null): void {
+        if (typeof value !== 'number') {
+            return;
+        }
 
-        dialogRef.afterClosed().subscribe(value => {
-            if (typeof value !== 'number') {
-                return;
-            }
-
-            if (kind === 'before') {
-                this.preMealSatietyLevel.set(value);
-            } else {
-                this.postMealSatietyLevel.set(value);
-            }
-        });
+        const normalized = this.normalizeSatietyLevel(value);
+        if (kind === 'before') {
+            this.preMealSatietyLevel.set(normalized);
+        } else {
+            this.postMealSatietyLevel.set(normalized);
+        }
     }
 
     private resolveUnitKey(unit?: string | null): string | null {
@@ -342,6 +320,18 @@ export class AiPhotoResultComponent {
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         return `${hours}:${minutes}`;
+    }
+
+    private normalizeSatietyLevel(value: number | null): number {
+        if (!value) {
+            return 3;
+        }
+
+        if (value > 5) {
+            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        }
+
+        return Math.max(1, value);
     }
 
     private analyzeEditChanges(source: EditableAiItem[], edited: EditableAiItem[]): EditChangeSummary {

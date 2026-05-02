@@ -22,10 +22,10 @@ describe('FdUiSatietyScaleComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should render 10 levels', () => {
+    it('should render 5 levels', () => {
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        expect(buttons.length).toBe(10);
-        expect(DEFAULT_SATIETY_LEVELS.length).toBe(10);
+        expect(buttons.length).toBe(5);
+        expect(DEFAULT_SATIETY_LEVELS.length).toBe(5);
     });
 
     it('should write value via CVA', () => {
@@ -35,7 +35,7 @@ describe('FdUiSatietyScaleComponent', () => {
         expect(component['value']).toBe(5);
 
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        const selectedButton = buttons[5] as HTMLButtonElement;
+        const selectedButton = buttons[4] as HTMLButtonElement;
         expect(selectedButton.classList).toContain('satiety-scale__option--selected');
     });
 
@@ -47,17 +47,17 @@ describe('FdUiSatietyScaleComponent', () => {
         (buttons[3] as HTMLButtonElement).click();
         fixture.detectChanges();
 
-        expect(onChangeSpy).toHaveBeenCalledWith(3);
-        expect(component['value']).toBe(3);
+        expect(onChangeSpy).toHaveBeenCalledWith(4);
+        expect(component['value']).toBe(4);
     });
 
     it('should mark selected level', () => {
-        component.writeValue(7);
+        component.writeValue(4);
         fixture.detectChanges();
 
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
         for (let i = 0; i < buttons.length; i++) {
-            if (i === 7) {
+            if (i === 3) {
                 expect(buttons[i].classList).toContain('satiety-scale__option--selected');
             } else {
                 expect(buttons[i].classList).not.toContain('satiety-scale__option--selected');
@@ -110,7 +110,7 @@ describe('FdUiSatietyScaleComponent', () => {
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
         (buttons[4] as HTMLButtonElement).click();
 
-        expect(emitSpy).toHaveBeenCalledWith(4);
+        expect(emitSpy).toHaveBeenCalledWith(5);
     });
 
     it('should write null value via CVA', () => {

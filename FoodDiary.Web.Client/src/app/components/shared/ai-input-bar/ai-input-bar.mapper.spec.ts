@@ -31,6 +31,10 @@ describe('buildMealManageDtoFromAiResult', () => {
 
         expect(dto.imageAssetId).toBe('asset-1');
         expect(dto.imageUrl).toBe('https://example.com/photo.jpg');
+        expect(dto.isNutritionAutoCalculated).toBe(true);
+        expect(dto.manualCalories).toBeUndefined();
+        expect(dto.preMealSatietyLevel).toBe(3);
+        expect(dto.postMealSatietyLevel).toBe(3);
         expect(dto.aiSessions?.[0].imageAssetId).toBe('asset-1');
         expect(dto.aiSessions?.[0].imageUrl).toBe('https://example.com/photo.jpg');
     });

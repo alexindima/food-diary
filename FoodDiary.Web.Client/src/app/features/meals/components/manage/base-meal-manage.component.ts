@@ -15,10 +15,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiEmojiPickerComponent, FdUiEmojiPickerOption, FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
@@ -36,10 +35,6 @@ import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nut
 import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { NutrientData } from '../../../../shared/models/charts.data';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
-import {
-    MealSatietyLevelDialogComponent,
-    SatietyLevelDialogData,
-} from '../../dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
 import { QuickMealItem } from '../../lib/quick-meal.service';
 import {
@@ -86,11 +81,11 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         FdUiCardComponent,
-        FdUiIconComponent,
         FdUiDateInputComponent,
         FdUiTimeInputComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
+        FdUiEmojiPickerComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
@@ -103,7 +98,6 @@ export class BaseMealManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly mealManageFacade = inject(MealManageFacade);
@@ -132,6 +126,7 @@ export class BaseMealManageComponent {
     public readonly aiUsage = signal<UserAiUsageResponse | null>(null);
     public nutritionMode: NutritionMode = 'auto';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
+    public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     private populatedConsumptionId: string | null = null;
 
@@ -193,16 +188,18 @@ export class BaseMealManageComponent {
             manualCarbs: new FormControl<number | null>(null),
             manualFiber: new FormControl<number | null>(null),
             manualAlcohol: new FormControl<number | null>(null, [Validators.min(0)]),
-            preMealSatietyLevel: new FormControl<number | null>(null),
-            postMealSatietyLevel: new FormControl<number | null>(null),
+            preMealSatietyLevel: new FormControl<number | null>(3),
+            postMealSatietyLevel: new FormControl<number | null>(3),
         });
 
         this.buildMealTypeOptions();
         this.buildNutritionModeOptions();
+        this.buildSatietyEmojiOptions();
         this.nutritionMode = this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual';
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
             this.buildNutritionModeOptions();
+            this.buildSatietyEmojiOptions();
         });
 
         this.updateManualNutritionValidators(true);
@@ -381,23 +378,14 @@ export class BaseMealManageComponent {
 
     // --- Satiety ---
 
-    public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
-        if (!value) {
-            return {
-                label: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_TITLE'),
-                description: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_DESCRIPTION'),
-                gradient:
-                    'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
-            };
-        }
-
-        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
+    public getSatietyLevelMeta(value: number | null): { emoji: string; label: string; description: string; gradient: string } {
+        const normalizedValue = this.normalizeSatietyLevel(value);
+        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === normalizedValue);
         return {
-            label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
+            emoji: config?.emoji ?? '😐',
+            label: `${normalizedValue} - ${this.translateService.instant(config?.titleKey ?? '')}`,
             description: this.translateService.instant(config?.descriptionKey ?? ''),
-            gradient:
-                config?.gradient ??
-                'linear-gradient(135deg, var(--fd-color-slate-200), color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white)))',
+            gradient: config?.gradient ?? 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
         };
     }
 
@@ -410,39 +398,15 @@ export class BaseMealManageComponent {
         return `${sectionLabel}. ${meta.label}. ${meta.description}`;
     }
 
-    public openSatietyDialog(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): void {
-        const control = this.consumptionForm.controls[controlName];
-        if (!control) {
+    public onSatietyLevelChange(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel', value: FdUiEmojiPickerValue | null): void {
+        if (typeof value !== 'number') {
             return;
         }
 
-        const titleKey =
-            controlName === 'preMealSatietyLevel'
-                ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE'
-                : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
-
-        const dialogRef = this.fdDialogService.open<MealSatietyLevelDialogComponent, SatietyLevelDialogData, number>(
-            MealSatietyLevelDialogComponent,
-            {
-                size: 'lg',
-                data: {
-                    titleKey,
-                    subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
-                    value: control.value ?? null,
-                },
-            },
-        );
-
-        dialogRef
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                if (typeof value === 'number') {
-                    control.setValue(value);
-                    control.markAsDirty();
-                    control.markAsTouched();
-                }
-            });
+        const control = this.consumptionForm.controls[controlName];
+        control.setValue(this.normalizeSatietyLevel(value));
+        control.markAsDirty();
+        control.markAsTouched();
     }
 
     // --- Form control helpers ---
@@ -516,8 +480,8 @@ export class BaseMealManageComponent {
             manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
             manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
             manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
-            preMealSatietyLevel: preMealSatietyLevel ?? undefined,
-            postMealSatietyLevel: postMealSatietyLevel ?? undefined,
+            preMealSatietyLevel: this.normalizeSatietyLevel(preMealSatietyLevel),
+            postMealSatietyLevel: this.normalizeSatietyLevel(postMealSatietyLevel),
         };
 
         const consumption = this.consumption();
@@ -624,8 +588,8 @@ export class BaseMealManageComponent {
             manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
             manualFiber: consumption.manualFiber ?? consumption.totalFiber,
             manualAlcohol: consumption.manualAlcohol ?? consumption.totalAlcohol,
-            preMealSatietyLevel: consumption.preMealSatietyLevel ?? null,
-            postMealSatietyLevel: consumption.postMealSatietyLevel ?? null,
+            preMealSatietyLevel: this.normalizeSatietyLevel(consumption.preMealSatietyLevel ?? null),
+            postMealSatietyLevel: this.normalizeSatietyLevel(consumption.postMealSatietyLevel ?? null),
         });
         this.aiSessions.set(consumption.aiSessions ?? []);
 
@@ -740,6 +704,21 @@ export class BaseMealManageComponent {
         ];
     }
 
+    private buildSatietyEmojiOptions(): void {
+        this.satietyEmojiOptions = DEFAULT_SATIETY_LEVELS.map(level => {
+            const label = this.translateService.instant(level.titleKey);
+            const description = this.translateService.instant(level.descriptionKey);
+            return {
+                value: level.value,
+                emoji: level.emoji,
+                label,
+                description,
+                ariaLabel: `${level.value}. ${label}. ${description}`,
+                hint: `${level.value}. ${label}`,
+            };
+        });
+    }
+
     private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
         const response = await this.mealManageFacade.submitConsumption(null, consumptionData);
         await this.handleSubmitResponse(response);
@@ -765,6 +744,8 @@ export class BaseMealManageComponent {
                     manualCarbs: null,
                     manualFiber: null,
                     manualAlcohol: null,
+                    preMealSatietyLevel: 3,
+                    postMealSatietyLevel: 3,
                 });
                 this.items.clear();
                 this.items.push(this.mealManageFacade.createConsumptionItem());
@@ -811,6 +792,18 @@ export class BaseMealManageComponent {
         const hours = this.padNumber(date.getHours());
         const minutes = this.padNumber(date.getMinutes());
         return `${hours}:${minutes}`;
+    }
+
+    private normalizeSatietyLevel(value: number | null): number {
+        if (!value) {
+            return 3;
+        }
+
+        if (value > 5) {
+            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        }
+
+        return Math.max(1, value);
     }
 
     private buildDateTime(): Date {
