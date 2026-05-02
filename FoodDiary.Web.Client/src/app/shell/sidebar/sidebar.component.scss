@@ -17,10 +17,13 @@
         box-shadow: var(--fd-shadow-md);
     }
 
-    &__logo img {
+    &__logo-mark {
+        display: block;
         width: var(--fd-size-control-md-plus);
         height: var(--fd-size-control-md-plus);
-        object-fit: contain;
+        background: var(--fd-color-primary-600);
+        -webkit-mask: url('/assets/images/header/logo-mask.svg') center / contain no-repeat;
+        mask: url('/assets/images/header/logo-mask.svg') center / contain no-repeat;
     }
 
     &__brand-text {
