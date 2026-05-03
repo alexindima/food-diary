@@ -9,6 +9,8 @@ import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
 
+const DEFAULT_DIALOG_TOP_OFFSET = '40px';
+
 export interface FdUiDialogConfig<D = unknown> extends Omit<DialogConfig<D>, 'providers' | 'container'> {
     preset?: FdUiDialogPreset;
     size?: FdUiDialogSize;
@@ -45,7 +47,12 @@ export class FdUiDialogService {
         ]);
         const backdropClass = this.mergeClasses(config.backdropClass, [...presetBackdropClasses, 'fd-ui-dialog-backdrop']);
         const positionStrategy =
-            config.positionStrategy ?? (isEdgeMobile ? this.overlay.position().global().centerHorizontally().bottom('0') : undefined);
+            config.positionStrategy ??
+            (isFullscreen
+                ? undefined
+                : isEdgeMobile
+                  ? this.overlay.position().global().centerHorizontally().bottom('0')
+                  : this.overlay.position().global().centerHorizontally().top(DEFAULT_DIALOG_TOP_OFFSET));
         const baseProviders = config.providers ?? [];
 
         const dialogConfig: DialogConfig<D, import('@angular/cdk/dialog').DialogRef<R, T>> = {
