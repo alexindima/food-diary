@@ -38,7 +38,7 @@ export class FdUiTabsComponent {
     }
 
     protected selectIndex(index: number): void {
-        const tab = this.tabs()[index];
+        const tab = this.tabs().at(index);
         if (!tab) {
             return;
         }

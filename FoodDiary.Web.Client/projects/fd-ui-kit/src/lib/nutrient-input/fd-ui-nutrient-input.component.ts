@@ -52,7 +52,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     public writeValue(value: string | number | null): void {
-        this.value = value === null || value === undefined ? '' : String(value);
+        this.value = value === null ? '' : String(value);
         this.updateInputMeasure(this.value);
         this.cdr.markForCheck();
     }

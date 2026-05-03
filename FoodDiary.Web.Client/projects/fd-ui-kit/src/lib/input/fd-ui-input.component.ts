@@ -135,12 +135,12 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     protected get shouldFloatLabel(): boolean {
-        const text = String(this.internalValue ?? '').trim();
+        const text = String(this.internalValue).trim();
         return this.isFocused || text.length > 0;
     }
 
     protected get shouldShowPlaceholder(): boolean {
-        const text = String(this.internalValue ?? '').trim();
+        const text = String(this.internalValue).trim();
         return this.isFocused && text.length === 0;
     }
 
@@ -176,7 +176,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     private syncValue(value: string): void {
-        if (value === String(this.internalValue ?? '')) {
+        if (value === String(this.internalValue)) {
             return;
         }
 

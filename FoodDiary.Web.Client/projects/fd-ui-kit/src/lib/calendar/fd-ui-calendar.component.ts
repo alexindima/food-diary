@@ -38,7 +38,7 @@ export class FdUiCalendarComponent {
     public readonly displayMonthChange = output<Date>();
 
     protected readonly visibleMonth = computed(() => {
-        const month = this.displayMonth() ?? this.value() ?? this.activeDate() ?? this.today;
+        const month = this.displayMonth() ?? this.value() ?? this.activeDate();
         return this.startOfMonth(month);
     });
 
@@ -60,8 +60,8 @@ export class FdUiCalendarComponent {
     protected readonly weeks = computed(() => {
         const monthStart = this.visibleMonth();
         const gridStart = this.startOfWeek(monthStart);
-        const selectedIso = this.toIsoDate(this.value());
-        const activeIso = this.toIsoDate(this.activeDate()) ?? selectedIso ?? this.toIsoDate(this.today);
+        const selectedIso = this.value() ? this.toIsoDate(this.value()) : null;
+        const activeIso = this.toIsoDate(this.activeDate());
 
         return Array.from({ length: 6 }, (_, weekIndex) =>
             Array.from({ length: 7 }, (_, dayIndex) => {

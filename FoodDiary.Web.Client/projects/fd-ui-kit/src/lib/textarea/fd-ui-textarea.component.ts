@@ -47,7 +47,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     }
 
     public writeValue(value: string | number | null): void {
-        this.internalValue = value === null || value === undefined ? '' : String(value);
+        this.internalValue = value === null ? '' : String(value);
         this.cdr.markForCheck();
     }
 

@@ -99,7 +99,7 @@ export class FdUiEmojiPickerComponent {
             case ' ':
             case 'Enter': {
                 event.preventDefault();
-                const option = this.options()[index];
+                const option = this.options().at(index);
                 if (option) {
                     this.select(option);
                 }
@@ -127,7 +127,8 @@ export class FdUiEmojiPickerComponent {
 
         let index = startIndex;
         while (index >= 0 && index < options.length) {
-            if (!options[index]?.disabled) {
+            const option = options.at(index);
+            if (option && !option.disabled) {
                 return index;
             }
             index += direction;
@@ -141,7 +142,7 @@ export class FdUiEmojiPickerComponent {
             return;
         }
 
-        const option = this.options()[index];
+        const option = this.options().at(index);
         if (!option || option.disabled) {
             return;
         }

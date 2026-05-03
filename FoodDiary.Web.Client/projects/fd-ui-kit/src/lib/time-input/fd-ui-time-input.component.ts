@@ -109,7 +109,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
             return;
         }
         control.focus();
-        control.showPicker?.();
+        (control as { showPicker?: () => void }).showPicker?.();
     }
 
     protected onFocusOut(): void {

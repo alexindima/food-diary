@@ -40,7 +40,8 @@ describe('FdUiEntityCardComponent', () => {
 
     it('should display title', () => {
         const titleEl = hostEl.querySelector('.fd-ui-entity-card__title');
-        expect(titleEl?.textContent?.trim()).toBe('Test Title');
+        expect(titleEl).toBeTruthy();
+        expect(titleEl!.textContent.trim()).toBe('Test Title');
     });
 
     it('should display meta when provided', () => {
@@ -51,7 +52,8 @@ describe('FdUiEntityCardComponent', () => {
         fixture.detectChanges();
 
         const metaEl = hostEl.querySelector('.fd-ui-entity-card__meta');
-        expect(metaEl?.textContent?.trim()).toBe('100 kcal');
+        expect(metaEl).toBeTruthy();
+        expect(metaEl!.textContent.trim()).toBe('100 kcal');
     });
 
     it('should render image when imageUrl provided', () => {
@@ -67,6 +69,6 @@ describe('FdUiEntityCardComponent', () => {
     it('should project content', () => {
         const projected = hostEl.querySelector('.projected-content');
         expect(projected).toBeTruthy();
-        expect(projected?.textContent?.trim()).toBe('Body content');
+        expect(projected!.textContent.trim()).toBe('Body content');
     });
 });
