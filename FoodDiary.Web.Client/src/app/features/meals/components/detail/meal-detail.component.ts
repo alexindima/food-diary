@@ -104,12 +104,12 @@ export class MealDetailComponent {
         this.initialFavoriteState = this.consumption.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteMealId = this.consumption.favoriteMealId ?? null;
-        this.calories = data.totalCalories ?? 0;
-        this.proteins = data.totalProteins ?? 0;
-        this.fats = data.totalFats ?? 0;
-        this.carbs = data.totalCarbs ?? 0;
-        this.fiber = data.totalFiber ?? 0;
-        this.alcohol = data.totalAlcohol ?? 0;
+        this.calories = data.totalCalories;
+        this.proteins = data.totalProteins;
+        this.fats = data.totalFats;
+        this.carbs = data.totalCarbs;
+        this.fiber = data.totalFiber;
+        this.alcohol = data.totalAlcohol;
         this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.itemsCount = data.items.length;

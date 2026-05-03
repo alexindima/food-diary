@@ -226,7 +226,7 @@ export class MealListComponent {
                             this.reloadCurrentPage();
                         },
                     });
-                } else if (data.action === 'Delete') {
+                } else {
                     this.mealService.deleteById(data.id).subscribe({
                         next: () => {
                             this.scrollToTop();

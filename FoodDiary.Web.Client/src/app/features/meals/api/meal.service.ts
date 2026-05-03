@@ -125,7 +125,7 @@ export class MealService extends ApiService {
             totalFats: response.totalFats,
             totalCarbs: response.totalCarbs,
             totalFiber: response.totalFiber,
-            totalAlcohol: response.totalAlcohol ?? 0,
+            totalAlcohol: response.totalAlcohol,
             isNutritionAutoCalculated,
             manualCalories: response.manualCalories ?? null,
             manualProteins: response.manualProteins ?? null,
@@ -145,7 +145,7 @@ export class MealService extends ApiService {
     }
 
     private resolveIsNutritionAutoCalculated(response: ConsumptionResponseDto): boolean {
-        const isAuto = response.isNutritionAutoCalculated ?? true;
+        const isAuto = response.isNutritionAutoCalculated;
         if (isAuto || response.items.length > 0 || !this.hasAiItems(response)) {
             return isAuto;
         }
@@ -157,7 +157,7 @@ export class MealService extends ApiService {
             this.areClose(response.manualFats ?? response.totalFats, aiTotals.fats) &&
             this.areClose(response.manualCarbs ?? response.totalCarbs, aiTotals.carbs) &&
             this.areClose(response.manualFiber ?? response.totalFiber, aiTotals.fiber) &&
-            this.areClose(response.manualAlcohol ?? response.totalAlcohol ?? 0, aiTotals.alcohol)
+            this.areClose(response.manualAlcohol ?? response.totalAlcohol, aiTotals.alcohol)
         );
     }
 

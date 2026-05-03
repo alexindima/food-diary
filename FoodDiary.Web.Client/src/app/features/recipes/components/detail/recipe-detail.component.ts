@@ -221,7 +221,7 @@ export class RecipeDetailComponent {
 
     private buildIngredientPreview(): { name: string; amount: number; unitKey: string | null }[] {
         return this.recipe.steps
-            .flatMap(step => step.ingredients ?? [])
+            .flatMap(step => step.ingredients)
             .slice(0, 6)
             .map(ingredient => ({
                 name:
@@ -294,7 +294,7 @@ export class RecipeDetailComponent {
     }
 
     private computeFiberFromSteps(): number | null {
-        if (!this.recipe.steps?.length) {
+        if (!this.recipe.steps.length) {
             return null;
         }
 
@@ -325,7 +325,7 @@ export class RecipeDetailComponent {
     }
 
     private computeAlcoholFromSteps(): number | null {
-        if (!this.recipe.steps?.length) {
+        if (!this.recipe.steps.length) {
             return null;
         }
 
@@ -356,11 +356,11 @@ export class RecipeDetailComponent {
     }
 
     private computeIngredientCount(): number {
-        if (!this.recipe?.steps?.length) {
+        if (!this.recipe.steps.length) {
             return 0;
         }
 
-        return this.recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
+        return this.recipe.steps.reduce((total, step) => total + step.ingredients.length, 0);
     }
 
     private resolveNutrientValue(value?: number | null, manual?: number | null): number {

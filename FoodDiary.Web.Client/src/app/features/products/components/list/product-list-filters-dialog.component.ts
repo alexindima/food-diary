@@ -46,7 +46,7 @@ export class ProductListFiltersDialogComponent {
     ];
 
     public visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
-    public readonly selectedTypeValues = signal<ProductType[]>([...(this.data.productTypes ?? [])]);
+    public readonly selectedTypeValues = signal<ProductType[]>([...this.data.productTypes]);
 
     public readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
         type => type !== ProductType.Unknown,

@@ -194,7 +194,7 @@ export class ProductAiRecognitionDialogComponent {
 
     public itemNames(): string[] {
         return this.results()
-            .map(item => this.capitalizeName(item.nameLocal?.trim() || item.nameEn?.trim() || ''))
+            .map(item => this.capitalizeName(item.nameLocal?.trim() || item.nameEn.trim() || ''))
             .filter(Boolean);
     }
 
@@ -227,7 +227,7 @@ export class ProductAiRecognitionDialogComponent {
                 if (!response) {
                     return;
                 }
-                const items = response.items ?? [];
+                const items = response.items;
                 this.results.set(items);
                 if (items.length) {
                     this.runNutrition(items);
@@ -262,19 +262,19 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private applyNutritionToForm(items: FoodVisionItem[], nutrition: FoodNutritionResponse): void {
-        const primary = items[0];
-        const name = this.capitalizeName(primary?.nameLocal?.trim() || primary?.nameEn?.trim() || '');
+        const primary = (items as Array<FoodVisionItem | undefined>)[0];
+        const name = this.capitalizeName(primary?.nameLocal?.trim() || primary?.nameEn.trim() || '');
         const baseUnit = this.resolveUnit(primary?.unit);
         this.resultForm.patchValue({
             name,
             portionAmount: this.getRecognizedAmount(baseUnit),
             baseUnit,
-            caloriesPerBase: nutrition.calories ?? 0,
-            proteinsPerBase: nutrition.protein ?? 0,
-            fatsPerBase: nutrition.fat ?? 0,
-            carbsPerBase: nutrition.carbs ?? 0,
-            fiberPerBase: nutrition.fiber ?? 0,
-            alcoholPerBase: nutrition.alcohol ?? 0,
+            caloriesPerBase: nutrition.calories,
+            proteinsPerBase: nutrition.protein,
+            fatsPerBase: nutrition.fat,
+            carbsPerBase: nutrition.carbs,
+            fiberPerBase: nutrition.fiber,
+            alcoholPerBase: nutrition.alcohol,
         });
     }
 
@@ -328,7 +328,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private getDescription(): string | null {
-        const value = this.descriptionControl.value?.trim();
+        const value = this.descriptionControl.value.trim();
         return value ? value : null;
     }
 

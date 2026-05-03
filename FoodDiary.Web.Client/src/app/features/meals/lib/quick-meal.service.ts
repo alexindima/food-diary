@@ -36,7 +36,7 @@ export class QuickMealService {
     public readonly isSaving = computed(() => this.isSavingSignal());
 
     public addProduct(product: Product): void {
-        if (!product?.id) {
+        if (!product.id) {
             return;
         }
 
@@ -57,7 +57,7 @@ export class QuickMealService {
     }
 
     public addRecipe(recipe: Recipe): void {
-        if (!recipe?.id) {
+        if (!recipe.id) {
             return;
         }
 

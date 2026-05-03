@@ -29,7 +29,7 @@ export class MealAiSessionsComponent {
     public readonly expandedAiSessions = signal<Set<number>>(new Set());
 
     public formatAiAmount(amount: number, unit: string): string {
-        const normalized = unit?.trim().toLowerCase();
+        const normalized = unit.trim().toLowerCase();
         const unitMap: Record<string, string> = {
             g: 'GENERAL.UNITS.G',
             gram: 'GENERAL.UNITS.G',
@@ -81,12 +81,12 @@ export class MealAiSessionsComponent {
     public getAiSessionTotals(session: ConsumptionAiSessionManageDto): NutritionTotals {
         return session.items.reduce(
             (totals, item) => ({
-                calories: totals.calories + (item.calories ?? 0),
-                proteins: totals.proteins + (item.proteins ?? 0),
-                fats: totals.fats + (item.fats ?? 0),
-                carbs: totals.carbs + (item.carbs ?? 0),
-                fiber: totals.fiber + (item.fiber ?? 0),
-                alcohol: totals.alcohol + (item.alcohol ?? 0),
+                calories: totals.calories + item.calories,
+                proteins: totals.proteins + item.proteins,
+                fats: totals.fats + item.fats,
+                carbs: totals.carbs + item.carbs,
+                fiber: totals.fiber + item.fiber,
+                alcohol: totals.alcohol + item.alcohol,
             }),
             { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );

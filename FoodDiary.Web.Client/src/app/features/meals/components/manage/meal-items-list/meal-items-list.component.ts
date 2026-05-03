@@ -114,7 +114,8 @@ export class MealItemsListComponent {
     }
 
     public getAmountControlError(index: number): string | null {
-        return this.resolveControlError(this.formArray().at(index)?.controls.amount ?? null);
+        const group = (this.formArray().controls as Array<FormGroup<ConsumptionItemFormData> | undefined>)[index];
+        return this.resolveControlError(group?.controls.amount ?? null);
     }
 
     public onAddItem(): void {

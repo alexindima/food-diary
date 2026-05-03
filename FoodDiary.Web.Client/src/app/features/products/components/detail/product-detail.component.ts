@@ -112,8 +112,8 @@ export class ProductDetailComponent {
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteProductId = this.product.favoriteProductId ?? null;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
-        this.qualityScore = Math.round(Math.min(100, Math.max(0, this.product.qualityScore ?? 50)));
-        this.qualityGrade = this.product.qualityGrade ?? 'yellow';
+        this.qualityScore = Math.round(Math.min(100, Math.max(0, this.product.qualityScore)));
+        this.qualityGrade = this.product.qualityGrade;
 
         this.calories = this.product.caloriesPerBase;
         this.nutrientChartData = {

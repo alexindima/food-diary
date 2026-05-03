@@ -137,9 +137,9 @@ export class BaseMealManageComponent {
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
         const entries: Array<{ key: MacroKey; value: number }> = [
-            { key: 'proteins', value: nutrients.proteins ?? 0 },
-            { key: 'fats', value: nutrients.fats ?? 0 },
-            { key: 'carbs', value: nutrients.carbs ?? 0 },
+            { key: 'proteins', value: nutrients.proteins },
+            { key: 'fats', value: nutrients.fats },
+            { key: 'carbs', value: nutrients.carbs },
         ];
         const positive = entries.filter(entry => entry.value > 0);
         if (positive.length === 0) {
@@ -286,7 +286,7 @@ export class BaseMealManageComponent {
 
     public onItemSourceClick(index: number): void {
         const group = this.items.at(index);
-        const initialType = group.controls.sourceType.value ?? ConsumptionSourceType.Product;
+        const initialType = group.controls.sourceType.value;
         void this.mealManageFacade
             .openItemSelectionDialog(group, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product')
             .then(() => {
@@ -329,7 +329,7 @@ export class BaseMealManageComponent {
             return;
         }
 
-        const session = this.aiSessions()[index];
+        const session = (this.aiSessions() as Array<ConsumptionAiSessionManageDto | undefined>)[index];
         if (!session) {
             return;
         }
@@ -540,7 +540,7 @@ export class BaseMealManageComponent {
         this.items.clear();
         draftItems.forEach(item => {
             const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
-            const amount = item.amount ?? 0;
+            const amount = item.amount;
             this.items.push(
                 this.mealManageFacade.createConsumptionItem(
                     sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
@@ -608,10 +608,10 @@ export class BaseMealManageComponent {
         }
 
         consumption.items.forEach(item => {
-            const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
+            const sourceType = item.sourceType;
             const initialAmount =
                 sourceType === ConsumptionSourceType.Recipe
-                    ? this.mealManageFacade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount ?? 0)
+                    ? this.mealManageFacade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount)
                     : item.amount;
 
             itemsArray.push(
@@ -625,7 +625,7 @@ export class BaseMealManageComponent {
 
             if (sourceType === ConsumptionSourceType.Recipe) {
                 const currentIndex = itemsArray.length - 1;
-                this.mealManageFacade.ensureRecipeWeightForExistingItem(itemsArray.at(currentIndex), item.amount ?? 0, item.recipe ?? null);
+                this.mealManageFacade.ensureRecipeWeightForExistingItem(itemsArray.at(currentIndex), item.amount, item.recipe ?? null);
             }
         });
 
@@ -815,8 +815,8 @@ export class BaseMealManageComponent {
     private buildDateTime(): Date {
         const dateValue = this.consumptionForm.controls.date.value;
         const timeValue = this.consumptionForm.controls.time.value;
-        const datePart = dateValue ?? this.getDateInputValue(new Date());
-        const timePart = timeValue ?? this.getTimeInputValue(new Date());
+        const datePart = dateValue;
+        const timePart = timeValue;
         const combined = `${datePart}T${timePart}`;
         const parsed = new Date(combined);
         return Number.isNaN(parsed.getTime()) ? new Date() : parsed;

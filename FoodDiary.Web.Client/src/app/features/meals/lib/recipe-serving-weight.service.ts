@@ -66,13 +66,13 @@ export class RecipeServingWeightService {
     }
 
     private calculateRecipeWeight(recipe: Recipe | RecipeLookup): number | null {
-        if (!recipe.steps || recipe.steps.length === 0) {
+        if (recipe.steps.length === 0) {
             return null;
         }
 
         let total = 0;
         recipe.steps.forEach(step => {
-            step.ingredients?.forEach(ingredient => {
+            step.ingredients.forEach(ingredient => {
                 const weight = this.calculateIngredientWeight(ingredient);
                 if (weight) {
                     total += weight;
@@ -84,7 +84,7 @@ export class RecipeServingWeightService {
     }
 
     private calculateIngredientWeight(ingredient: RecipeIngredient | RecipeLookupIngredient): number | null {
-        const amount = ingredient.amount ?? 0;
+        const amount = ingredient.amount;
         if (amount <= 0) {
             return null;
         }

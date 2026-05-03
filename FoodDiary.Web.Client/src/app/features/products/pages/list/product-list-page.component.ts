@@ -75,7 +75,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
                     return;
                 }
 
-                if (result.action === 'Delete') {
+                {
                     if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
                         return;
                     }

@@ -97,7 +97,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public formatAmount(item: FoodVisionItem): string {
-        const amount = item.amount ?? '';
+        const amount = item.amount;
         const unitKey = this.resolveUnitKey(item.unit);
         const unitLabel = unitKey ? this.translateService.instant(unitKey) : item.unit;
         return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
@@ -196,22 +196,21 @@ export class MealPhotoRecognitionDialogComponent {
         }
 
         const assetId = this.selection()?.assetId ?? null;
-        const items =
-            nutrition.items?.map(item => {
-                const match = this.findVisionMatch(item.name);
-                return {
-                    nameEn: match?.nameEn ?? item.name,
-                    nameLocal: match?.nameLocal ?? null,
-                    amount: item.amount,
-                    unit: item.unit,
-                    calories: item.calories,
-                    proteins: item.protein,
-                    fats: item.fat,
-                    carbs: item.carbs,
-                    fiber: item.fiber,
-                    alcohol: item.alcohol,
-                };
-            }) ?? [];
+        const items = nutrition.items.map(item => {
+            const match = this.findVisionMatch(item.name);
+            return {
+                nameEn: match?.nameEn ?? item.name,
+                nameLocal: match?.nameLocal ?? null,
+                amount: item.amount,
+                unit: item.unit,
+                calories: item.calories,
+                proteins: item.protein,
+                fats: item.fat,
+                carbs: item.carbs,
+                fiber: item.fiber,
+                alcohol: item.alcohol,
+            };
+        });
 
         return {
             imageAssetId: assetId,
@@ -230,7 +229,7 @@ export class MealPhotoRecognitionDialogComponent {
         const normalized = name.trim().toLowerCase();
         return (
             this.results().find(
-                item => item.nameEn?.trim().toLowerCase() === normalized || item.nameLocal?.trim().toLowerCase() === normalized,
+                item => item.nameEn.trim().toLowerCase() === normalized || item.nameLocal?.trim().toLowerCase() === normalized,
             ) ?? null
         );
     }
@@ -257,7 +256,7 @@ export class MealPhotoRecognitionDialogComponent {
                 if (!response) {
                     return;
                 }
-                const items = response.items ?? [];
+                const items = response.items;
                 this.results.set(items);
                 if (items.length) {
                     this.runNutrition(items);
@@ -305,7 +304,7 @@ export class MealPhotoRecognitionDialogComponent {
     public startEditing(): void {
         const items = this.results().length
             ? this.results()
-            : (this.nutrition()?.items?.map(item => ({
+            : (this.nutrition()?.items.map(item => ({
                   nameEn: item.name,
                   nameLocal: null,
                   amount: item.amount,
@@ -329,7 +328,7 @@ export class MealPhotoRecognitionDialogComponent {
     public applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
         const normalized = edited.map(item => ({
-            nameEn: item.nameEn?.trim() || item.name.trim(),
+            nameEn: item.nameEn.trim() || item.name.trim(),
             nameLocal: item.nameLocal && item.nameLocal.trim().length ? item.nameLocal.trim() : null,
             amount: item.amount,
             unit: item.unit,
@@ -407,7 +406,8 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private createEditId(): string {
-        return crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+        const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+        return cryptoLike?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
     }
 
     private applyInitialSession(session: MealAiSessionManageDto): void {
@@ -439,12 +439,12 @@ export class MealPhotoRecognitionDialogComponent {
     private buildNutritionFromSession(items: MealAiSessionManageDto['items']): FoodNutritionResponse {
         const totals = items.reduce(
             (acc, item) => ({
-                calories: acc.calories + (item.calories ?? 0),
-                protein: acc.protein + (item.proteins ?? 0),
-                fat: acc.fat + (item.fats ?? 0),
-                carbs: acc.carbs + (item.carbs ?? 0),
-                fiber: acc.fiber + (item.fiber ?? 0),
-                alcohol: acc.alcohol + (item.alcohol ?? 0),
+                calories: acc.calories + item.calories,
+                protein: acc.protein + item.proteins,
+                fat: acc.fat + item.fats,
+                carbs: acc.carbs + item.carbs,
+                fiber: acc.fiber + item.fiber,
+                alcohol: acc.alcohol + item.alcohol,
             }),
             { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );

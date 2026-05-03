@@ -169,7 +169,7 @@ describe('MealListComponent', () => {
         fixture.detectChanges();
 
         // Mock scrollIntoView on the container element
-        const containerEl = fixture.nativeElement.querySelector('[fdpagecontainer]') as HTMLElement;
+        const containerEl = fixture.nativeElement.querySelector('[fdpagecontainer]') as HTMLElement | null;
         if (containerEl) {
             containerEl.scrollIntoView = vi.fn();
         }

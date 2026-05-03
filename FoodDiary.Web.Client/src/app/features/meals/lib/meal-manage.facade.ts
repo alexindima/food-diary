@@ -262,7 +262,7 @@ export class MealManageFacade {
     public createItemsValidator(getAiSessions: () => ConsumptionAiSessionManageDto[]): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value as ConsumptionItemFormValues[] | null;
-            const hasManualItems = Array.isArray(value) ? value.some(item => Boolean(item?.product) || Boolean(item?.recipe)) : false;
+            const hasManualItems = Array.isArray(value) ? value.some(item => Boolean(item.product) || Boolean(item.recipe)) : false;
             const hasAiItems = getAiSessions().length > 0;
             return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
         };
@@ -380,8 +380,8 @@ export class MealManageFacade {
                     totals.proteins += food.proteinsPerBase * multiplier;
                     totals.fats += food.fatsPerBase * multiplier;
                     totals.carbs += food.carbsPerBase * multiplier;
-                    totals.fiber += (food.fiberPerBase ?? 0) * multiplier;
-                    totals.alcohol += (food.alcoholPerBase ?? 0) * multiplier;
+                    totals.fiber += food.fiberPerBase * multiplier;
+                    totals.alcohol += food.alcoholPerBase * multiplier;
                     return totals;
                 }
 
@@ -415,12 +415,12 @@ export class MealManageFacade {
             (totals, session) =>
                 session.items.reduce(
                     (sessionTotals, item) => ({
-                        calories: sessionTotals.calories + (item.calories ?? 0),
-                        proteins: sessionTotals.proteins + (item.proteins ?? 0),
-                        fats: sessionTotals.fats + (item.fats ?? 0),
-                        carbs: sessionTotals.carbs + (item.carbs ?? 0),
-                        fiber: sessionTotals.fiber + (item.fiber ?? 0),
-                        alcohol: sessionTotals.alcohol + (item.alcohol ?? 0),
+                        calories: sessionTotals.calories + item.calories,
+                        proteins: sessionTotals.proteins + item.proteins,
+                        fats: sessionTotals.fats + item.fats,
+                        carbs: sessionTotals.carbs + item.carbs,
+                        fiber: sessionTotals.fiber + item.fiber,
+                        alcohol: sessionTotals.alcohol + item.alcohol,
                     }),
                     totals,
                 ),

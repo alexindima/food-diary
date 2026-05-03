@@ -56,7 +56,7 @@ export class RecipeStepCardComponent {
     }
 
     public get descriptionSummary(): string {
-        const description = this.stepFormGroup().controls.description.value?.trim() ?? '';
+        const description = this.stepFormGroup().controls.description.value.trim();
         if (!description) {
             return this.translateService.instant('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
         }

@@ -21,5 +21,5 @@ export function resolveProductImageUrl(imageUrl: string | null | undefined, type
     if (!type) {
         return PRODUCT_STUBS[ProductType.Unknown];
     }
-    return PRODUCT_STUBS[type] ?? PRODUCT_STUBS[ProductType.Unknown];
+    return PRODUCT_STUBS[type];
 }

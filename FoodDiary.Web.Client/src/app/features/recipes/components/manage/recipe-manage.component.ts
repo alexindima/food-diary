@@ -89,9 +89,9 @@ export class RecipeManageComponent {
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
         const entries: Array<{ key: MacroKey; value: number }> = [
-            { key: 'proteins', value: nutrients.proteins ?? 0 },
-            { key: 'fats', value: nutrients.fats ?? 0 },
-            { key: 'carbs', value: nutrients.carbs ?? 0 },
+            { key: 'proteins', value: nutrients.proteins },
+            { key: 'fats', value: nutrients.fats },
+            { key: 'carbs', value: nutrients.carbs },
         ];
         const positive = entries.filter(entry => entry.value > 0);
         if (positive.length === 0) {
@@ -359,7 +359,7 @@ export class RecipeManageComponent {
             prepTime: formValue.prepTime ?? 0,
             cookTime: formValue.cookTime ?? 0,
             servings: formValue.servings,
-            visibility: formValue.visibility ?? RecipeVisibility.Private,
+            visibility: formValue.visibility,
             calculateNutritionAutomatically: formValue.calculateNutritionAutomatically,
             manualCalories: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCalories),
             manualProteins: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualProteins),
@@ -440,7 +440,7 @@ export class RecipeManageComponent {
     }
 
     private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
-        const ingredientValues = step?.ingredients?.length
+        const ingredientValues = step?.ingredients.length
             ? step.ingredients
             : [{ food: null, amount: null, foodName: null, nestedRecipeId: null, nestedRecipeName: null }];
 

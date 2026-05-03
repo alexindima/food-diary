@@ -143,7 +143,7 @@ export class RecipeSelectDialogComponent {
     }
 
     public isPrivateVisibility(visibility: Recipe['visibility']): boolean {
-        return visibility?.toString().toUpperCase() === 'PRIVATE';
+        return visibility.toString().toUpperCase() === 'PRIVATE';
     }
 }
 

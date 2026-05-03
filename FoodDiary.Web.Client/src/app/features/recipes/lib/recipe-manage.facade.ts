@@ -49,7 +49,7 @@ export class RecipeManageFacade {
     public applyItemSelection(foodGroup: FormGroup<IngredientFormData>, selection: ItemSelection): void {
         if (selection.type === 'Product') {
             const food = selection.product;
-            const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
+            const defaultAmount = food.defaultPortionAmount;
             foodGroup.patchValue({
                 food,
                 foodName: food.name,
@@ -93,7 +93,7 @@ export class RecipeManageFacade {
     }
 
     public calculateAutoSummary(stepsArray: FormArray<FormGroup<StepFormData>>): RecipeNutritionSummary {
-        if (!stepsArray || stepsArray.length === 0) {
+        if (stepsArray.length === 0) {
             return {
                 calories: 0,
                 proteins: 0,
@@ -123,12 +123,12 @@ export class RecipeManageFacade {
                 const baseAmount = food.baseAmount || 1;
                 const multiplier = amount / baseAmount;
 
-                calories += (food.caloriesPerBase ?? 0) * multiplier;
-                proteins += (food.proteinsPerBase ?? 0) * multiplier;
-                fats += (food.fatsPerBase ?? 0) * multiplier;
-                carbs += (food.carbsPerBase ?? 0) * multiplier;
-                fiber += (food.fiberPerBase ?? 0) * multiplier;
-                alcohol += (food.alcoholPerBase ?? 0) * multiplier;
+                calories += food.caloriesPerBase * multiplier;
+                proteins += food.proteinsPerBase * multiplier;
+                fats += food.fatsPerBase * multiplier;
+                carbs += food.carbsPerBase * multiplier;
+                fiber += food.fiberPerBase * multiplier;
+                alcohol += food.alcoholPerBase * multiplier;
             });
         });
 

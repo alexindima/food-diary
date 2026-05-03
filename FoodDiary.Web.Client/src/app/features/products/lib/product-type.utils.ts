@@ -1,6 +1,6 @@
 import { ProductType } from '../models/product.data';
 
-const PRODUCT_TYPE_ALIASES: Record<string, ProductType> = {
+const PRODUCT_TYPE_ALIASES: Partial<Record<string, ProductType>> = {
     VEGETABLES: ProductType.Vegetable,
     FRUITS: ProductType.Fruit,
     MEATS: ProductType.Meat,
@@ -21,7 +21,7 @@ export function normalizeProductType(value?: ProductType | string | null): Produ
 
     const upper = value.toString().trim().toUpperCase();
     const alias = PRODUCT_TYPE_ALIASES[upper];
-    if (alias) {
+    if (alias !== undefined) {
         return alias;
     }
 

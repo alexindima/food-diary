@@ -165,9 +165,6 @@ export class BaseProductManageComponent {
         this.buildVisibilityOptions();
         this.buildNutritionModeOptions();
         this.productForm.controls.baseUnit.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(unit => {
-            if (!unit) {
-                return;
-            }
             this.productForm.controls.baseAmount.setValue(this.getDefaultBaseAmount(unit));
             this.buildNutritionModeOptions();
         });
@@ -570,7 +567,7 @@ export class BaseProductManageComponent {
     public getControlError(controlName: keyof ProductFormData): string | null {
         const control = this.productForm.controls[controlName];
 
-        if (!control || (!control.touched && !control.dirty)) {
+        if (!control.touched && !control.dirty) {
             return null;
         }
 
@@ -655,7 +652,7 @@ export class BaseProductManageComponent {
     }
 
     private roundOptional(value: number | null, factor: number): number | null {
-        if (value === null || value === undefined) {
+        if (value === null) {
             return null;
         }
         return this.roundValue(value * factor);
@@ -768,7 +765,7 @@ export class BaseProductManageComponent {
     }
 
     private roundNullableNutritionValue(value: number | null): number | null {
-        return value === null || value === undefined ? null : this.roundValue(value);
+        return value === null ? null : this.roundValue(value);
     }
 
     private clearGlobalError(): void {

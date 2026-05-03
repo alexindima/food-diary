@@ -145,7 +145,7 @@ export class ProductListBaseComponent {
     }
 
     protected isPrivateVisibility(visibility: Product['visibility']): boolean {
-        return visibility?.toString().toUpperCase() === 'PRIVATE';
+        return visibility.toString().toUpperCase() === 'PRIVATE';
     }
 
     public retryLoad(): void {

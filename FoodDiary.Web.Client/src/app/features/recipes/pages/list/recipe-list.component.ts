@@ -320,7 +320,7 @@ export class RecipeListComponent {
     }
 
     private scrollToTop(): void {
-        this.container()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     private reloadCurrentPage(): void {
