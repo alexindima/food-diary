@@ -7,7 +7,12 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import { environment } from '../../../../environments/environment';
-import { AdminImpersonationSession, AdminImpersonationStart, AdminUser, AdminUsersService } from '../api/admin-users.service';
+import {
+    type AdminImpersonationSession,
+    type AdminImpersonationStart,
+    type AdminUser,
+    AdminUsersService,
+} from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 

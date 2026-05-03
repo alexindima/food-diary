@@ -8,8 +8,8 @@ import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { NotificationService } from '../../../services/notification.service';
-import { UserProfileOverview, UserService } from '../../../shared/api/user.service';
-import { UpdateUserDto, User } from '../../../shared/models/user.data';
+import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
+import { UpdateUserDto, type User } from '../../../shared/models/user.data';
 import { ProfileManageFacade } from './profile-manage.facade';
 
 describe('ProfileManageFacade', () => {

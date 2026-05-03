@@ -1,18 +1,18 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { PageOf } from '../../../shared/models/page-of.data';
+import { type PageOf } from '../../../shared/models/page-of.data';
 import {
-    CreateProductRequest,
-    Product,
-    ProductFilters,
-    ProductOverview,
-    ProductSearchSuggestion,
-    UpdateProductRequest,
+    type CreateProductRequest,
+    type Product,
+    type ProductFilters,
+    type ProductOverview,
+    type ProductSearchSuggestion,
+    type UpdateProductRequest,
 } from '../models/product.data';
 
 @Injectable({

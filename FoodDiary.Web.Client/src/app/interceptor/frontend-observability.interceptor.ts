@@ -1,6 +1,13 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+    HttpErrorResponse,
+    type HttpEvent,
+    type HttpHandler,
+    type HttpInterceptor,
+    type HttpRequest,
+    HttpResponse,
+} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { type Observable, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { SKIP_OBSERVABILITY } from '../constants/observability-context.tokens';

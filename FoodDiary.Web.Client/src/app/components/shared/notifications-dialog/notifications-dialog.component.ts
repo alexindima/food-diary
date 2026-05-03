@@ -8,7 +8,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { NotificationItem, NotificationService } from '../../../services/notification.service';
+import { type NotificationItem, NotificationService } from '../../../services/notification.service';
 
 @Component({
     selector: 'fd-notifications-dialog',
@@ -51,8 +51,12 @@ export class NotificationsDialogComponent {
             .markAsRead(notification.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: () => navigate(),
-                error: () => navigate(),
+                next: () => {
+                    navigate();
+                },
+                error: () => {
+                    navigate();
+                },
             });
     }
 

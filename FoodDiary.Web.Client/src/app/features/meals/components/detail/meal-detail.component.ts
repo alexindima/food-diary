@@ -11,20 +11,20 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 import {
     ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
+    type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import {
-    NutritionControlNames,
+    type NutritionControlNames,
     NutritionEditorComponent,
-    NutritionMacroState,
+    type NutritionMacroState,
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import { Meal } from '../../models/meal.data';
+import { type Meal } from '../../models/meal.data';
 
 @Component({
     selector: 'fd-meal-detail',
@@ -238,7 +238,9 @@ export class MealDetailComponent {
                         this.favoriteMealId = null;
                         this.isFavoriteLoading.set(false);
                     },
-                    error: () => this.isFavoriteLoading.set(false),
+                    error: () => {
+                        this.isFavoriteLoading.set(false);
+                    },
                 });
             } else {
                 this.favoriteMealService.getAll().subscribe({
@@ -251,14 +253,18 @@ export class MealDetailComponent {
                                     this.favoriteMealId = null;
                                     this.isFavoriteLoading.set(false);
                                 },
-                                error: () => this.isFavoriteLoading.set(false),
+                                error: () => {
+                                    this.isFavoriteLoading.set(false);
+                                },
                             });
                         } else {
                             this.isFavorite.set(false);
                             this.isFavoriteLoading.set(false);
                         }
                     },
-                    error: () => this.isFavoriteLoading.set(false),
+                    error: () => {
+                        this.isFavoriteLoading.set(false);
+                    },
                 });
             }
         } else {
@@ -268,7 +274,9 @@ export class MealDetailComponent {
                     this.favoriteMealId = favorite.id;
                     this.isFavoriteLoading.set(false);
                 },
-                error: () => this.isFavoriteLoading.set(false),
+                error: () => {
+                    this.isFavoriteLoading.set(false);
+                },
             });
         }
     }

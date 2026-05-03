@@ -3,10 +3,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { NavigationService } from '../../../services/navigation.service';
-import { Product } from '../../products/models/product.data';
-import { Recipe } from '../../recipes/models/recipe.data';
+import { type Product } from '../../products/models/product.data';
+import { type Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
-import { MealManageDto, MealSourceType } from '../models/meal.data';
+import { type MealManageDto, MealSourceType } from '../models/meal.data';
 
 export type QuickMealItemType = 'product' | 'recipe';
 
@@ -89,14 +89,18 @@ export class QuickMealService {
             return;
         }
 
-        const items = this.consumeItems();
+        const items = this.itemsSignal();
         if (!items.length) {
             return;
         }
 
-        await this.navigationService.navigateToConsumptionAdd(undefined, {
-            state: { quickConsumptionItems: items },
+        const navigated = await this.navigationService.navigateToConsumptionAdd(undefined, {
+            state: { quickConsumptionItems: [...items] },
         });
+
+        if (navigated) {
+            this.clear();
+        }
     }
 
     public saveDraft(): void {
@@ -110,10 +114,20 @@ export class QuickMealService {
         }
 
         const payload = this.toMealDto(items);
+        if (!payload.items.length) {
+            this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
+            return;
+        }
+
         this.isSavingSignal.set(true);
         this.mealService.create(payload).subscribe({
-            next: () => {
+            next: meal => {
                 this.isSavingSignal.set(false);
+                if (!meal) {
+                    this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
+                    return;
+                }
+
                 this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.SAVE_SUCCESS'));
                 this.clear();
             },
@@ -122,10 +136,6 @@ export class QuickMealService {
                 this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
             },
         });
-    }
-
-    public getPrefillItems(): QuickMealItem[] {
-        return this.itemsSignal();
     }
 
     public setPreviewItems(items: QuickMealItem[]): void {
@@ -141,12 +151,6 @@ export class QuickMealService {
 
         this.clear();
         this.isPreviewMode = false;
-    }
-
-    private consumeItems(): QuickMealItem[] {
-        const items = this.itemsSignal();
-        this.clear();
-        return items;
     }
 
     private resolveProductAmount(product: Product): number {

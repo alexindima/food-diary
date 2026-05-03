@@ -1,4 +1,4 @@
-import { ImageSelection } from './image-upload.data';
+import { type ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
 export type UiStyleOption = 'classic' | 'modern';

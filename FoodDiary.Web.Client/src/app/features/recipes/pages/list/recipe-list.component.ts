@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type ElementRef,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -18,17 +28,17 @@ import { RecipeCardComponent } from '../../../../components/shared/recipe-card/r
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import type { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
 import {
     RecipeListFiltersDialogComponent,
-    RecipeListFiltersDialogResult,
+    type RecipeListFiltersDialogResult,
 } from '../../components/list/recipe-list-filters-dialog.component';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { type FavoriteRecipe, type Recipe, type RecipeVisibility } from '../../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -254,7 +264,9 @@ export class RecipeListComponent {
             .getAll()
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.recipeListFacade.isFavoritesLoadingMore.set(false)),
+                finalize(() => {
+                    this.recipeListFacade.isFavoritesLoadingMore.set(false);
+                }),
             )
             .subscribe(favorites => {
                 this.favorites.set(favorites);

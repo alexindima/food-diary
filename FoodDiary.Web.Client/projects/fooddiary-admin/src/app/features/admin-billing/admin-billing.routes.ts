@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { type Routes } from '@angular/router';
 
 import { AdminBillingComponent } from './pages/admin-billing.component';
 

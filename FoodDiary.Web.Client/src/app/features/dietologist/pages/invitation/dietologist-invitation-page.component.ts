@@ -11,7 +11,7 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { DietologistService } from '../../api/dietologist.service';
-import { DietologistInvitationForCurrentUser } from '../../models/dietologist.data';
+import { type DietologistInvitationForCurrentUser } from '../../models/dietologist.data';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
 
@@ -49,7 +49,9 @@ export class DietologistInvitationPageComponent {
         this.dietologistService
             .acceptInvitationForCurrentUser(invitationId)
             .pipe(
-                finalize(() => this.isSubmitting.set(false)),
+                finalize(() => {
+                    this.isSubmitting.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
@@ -83,7 +85,9 @@ export class DietologistInvitationPageComponent {
         this.dietologistService
             .declineInvitationForCurrentUser(invitationId)
             .pipe(
-                finalize(() => this.isSubmitting.set(false)),
+                finalize(() => {
+                    this.isSubmitting.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({

@@ -1,11 +1,11 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
-import { GamificationData } from '../models/gamification.data';
+import { type GamificationData } from '../models/gamification.data';
 
 @Injectable({
     providedIn: 'root',

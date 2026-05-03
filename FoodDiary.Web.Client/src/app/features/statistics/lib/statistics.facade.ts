@@ -2,16 +2,16 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartConfiguration } from 'chart.js';
+import { type ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
-import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import { type WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
-import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import { type WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
-import { MappedStatistics, StatisticsMapper } from '../models/statistics.data';
+import { type MappedStatistics, StatisticsMapper } from '../models/statistics.data';
 import {
     type BodyChartTab,
     buildBodyChartData,
@@ -224,7 +224,9 @@ export class StatisticsFacade {
                 quantizationDays,
             })
             .pipe(
-                finalize(() => this.isLoading.set(false)),
+                finalize(() => {
+                    this.isLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
@@ -259,7 +261,9 @@ export class StatisticsFacade {
             }),
         })
             .pipe(
-                finalize(() => this.isBodyLoading.set(false)),
+                finalize(() => {
+                    this.isBodyLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({

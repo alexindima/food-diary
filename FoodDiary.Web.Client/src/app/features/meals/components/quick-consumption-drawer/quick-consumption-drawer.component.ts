@@ -7,7 +7,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { resolveProductImageUrl } from '../../../products/lib/product-image.util';
 import { ProductType } from '../../../products/models/product.data';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
-import { QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
+import { type QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 
 @Component({
     selector: 'fd-quick-consumption-drawer',

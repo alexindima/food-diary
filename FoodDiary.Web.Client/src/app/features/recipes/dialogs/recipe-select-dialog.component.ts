@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -10,14 +10,14 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
-import { FormGroupControls } from '../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../shared/lib/common.data';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { RecipeService } from '../api/recipe.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
 import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
-import { Recipe, RecipeFilters } from '../models/recipe.data';
+import { type Recipe, type RecipeFilters } from '../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -96,7 +96,9 @@ export class RecipeSelectDialogComponent {
                 this.recipeData.clearData();
                 return of(void 0);
             }),
-            finalize(() => this.recipeData.setLoading(false)),
+            finalize(() => {
+                this.recipeData.setLoading(false);
+            }),
         );
     }
 

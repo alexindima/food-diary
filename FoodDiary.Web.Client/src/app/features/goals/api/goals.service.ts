@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
-import { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
+import { type GoalsResponse, type UpdateGoalsRequest } from '../models/goals.data';
 
 @Injectable({
     providedIn: 'root',

@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
@@ -56,9 +56,9 @@ export class PasswordResetComponent {
 
     public constructor() {
         this.resolveToken();
-        this.form.controls.password.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.form.controls.confirmPassword.updateValueAndValidity());
+        this.form.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.form.controls.confirmPassword.updateValueAndValidity();
+        });
     }
 
     public onSubmit(): void {

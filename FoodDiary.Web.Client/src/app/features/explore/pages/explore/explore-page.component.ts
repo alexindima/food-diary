@@ -17,9 +17,9 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail.component';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
-import { Recipe } from '../../../recipes/models/recipe.data';
+import { type Recipe } from '../../../recipes/models/recipe.data';
 import { ExploreService } from '../../api/explore.service';
-import { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
+import { type ExploreFilters, type ExploreRecipe } from '../../models/explore.data';
 
 @Component({
     selector: 'fd-explore-page',
@@ -92,9 +92,13 @@ export class ExplorePageComponent {
         this.exploreService
             .query(this.currentPageIndex() + 1, this.pageSize, filters)
             .pipe(
-                finalize(() => this.recipeData.setLoading(false)),
+                finalize(() => {
+                    this.recipeData.setLoading(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(data => this.recipeData.setData(data));
+            .subscribe(data => {
+                this.recipeData.setData(data);
+            });
     }
 }

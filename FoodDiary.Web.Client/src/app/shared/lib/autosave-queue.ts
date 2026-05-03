@@ -14,7 +14,9 @@ export class AutosaveQueue<T> {
         private readonly isBusy: () => boolean,
         private readonly persist: (value: T) => void,
     ) {
-        this.queue.pipe(debounceTime(this.debounceMs), takeUntilDestroyed(destroyRef)).subscribe(() => this.flush());
+        this.queue.pipe(debounceTime(this.debounceMs), takeUntilDestroyed(destroyRef)).subscribe(() => {
+            this.flush();
+        });
     }
 
     public schedule(value: T): void {

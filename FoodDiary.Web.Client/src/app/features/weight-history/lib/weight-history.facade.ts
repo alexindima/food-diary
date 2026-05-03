@@ -2,17 +2,17 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartConfiguration } from 'chart.js';
+import { type ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import {
-    CreateWeightEntryPayload,
-    WeightEntry,
-    WeightEntryFilters,
-    WeightEntrySummaryFilters,
-    WeightEntrySummaryPoint,
+    type CreateWeightEntryPayload,
+    type WeightEntry,
+    type WeightEntryFilters,
+    type WeightEntrySummaryFilters,
+    type WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
 
 export type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
@@ -213,7 +213,9 @@ export class WeightHistoryFacade {
         this.isSaving.set(true);
         request$
             .pipe(
-                finalize(() => this.isSaving.set(false)),
+                finalize(() => {
+                    this.isSaving.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -250,7 +252,9 @@ export class WeightHistoryFacade {
         this.weightEntriesService
             .remove(entry.id)
             .pipe(
-                finalize(() => this.isSaving.set(false)),
+                finalize(() => {
+                    this.isSaving.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -277,7 +281,9 @@ export class WeightHistoryFacade {
         this.userService
             .updateDesiredWeight(parsedValue)
             .pipe(
-                finalize(() => this.isDesiredWeightSaving.set(false)),
+                finalize(() => {
+                    this.isDesiredWeightSaving.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(value => {
@@ -322,7 +328,9 @@ export class WeightHistoryFacade {
         this.weightEntriesService
             .getEntries(entriesParams)
             .pipe(
-                finalize(() => this.isLoading.set(false)),
+                finalize(() => {
+                    this.isLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(entries => {
@@ -362,7 +370,9 @@ export class WeightHistoryFacade {
         this.weightEntriesService
             .getSummary(filters)
             .pipe(
-                finalize(() => this.isSummaryLoading.set(false)),
+                finalize(() => {
+                    this.isSummaryLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(points => {

@@ -6,7 +6,7 @@ import { firstValueFrom, take } from 'rxjs';
 
 import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
-import { NotificationService, WebPushSubscriptionRequest } from './notification.service';
+import { NotificationService, type WebPushSubscriptionRequest } from './notification.service';
 
 export type PushNotificationEnableResult = 'subscribed' | 'already-subscribed' | 'unsupported' | 'blocked' | 'unavailable';
 

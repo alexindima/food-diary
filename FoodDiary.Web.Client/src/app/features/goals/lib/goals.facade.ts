@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 
-import { AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { GoalsService } from '../api/goals.service';
-import { UpdateGoalsRequest } from '../models/goals.data';
+import { type UpdateGoalsRequest } from '../models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -137,7 +137,9 @@ export class GoalsFacade {
     private readonly autosaveQueue: AutosaveQueue<UpdateGoalsRequest> = createAutosaveQueue({
         debounceMs: 700,
         isBusy: () => this.isSavingGoals(),
-        persist: request => this.persistGoals(request),
+        persist: request => {
+            this.persistGoals(request);
+        },
     });
 
     public readonly minCalories = 0;
@@ -390,7 +392,11 @@ export class GoalsFacade {
         this.hasLoadError.set(false);
         this.goalsService
             .getGoals()
-            .pipe(finalize(() => this.isLoadingGoals.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isLoadingGoals.set(false);
+                }),
+            )
             .subscribe({
                 next: goals => {
                     this.selectedPreset.set('custom');
@@ -467,7 +473,11 @@ export class GoalsFacade {
         this.isSavingGoals.set(true);
         this.goalsService
             .updateGoals(request)
-            .pipe(finalize(() => this.isSavingGoals.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingGoals.set(false);
+                }),
+            )
             .subscribe({
                 next: goals => {
                     if (!goals) {

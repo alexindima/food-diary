@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
-import { catchError, forkJoin, map, Observable, of, shareReplay } from 'rxjs';
+import { catchError, forkJoin, map, type Observable, of, shareReplay } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 

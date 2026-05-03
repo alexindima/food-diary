@@ -1,4 +1,4 @@
-import { MeasurementUnit } from '../../products/models/product.data';
+import { type MeasurementUnit } from '../../products/models/product.data';
 
 export interface ShoppingList {
     id: string;

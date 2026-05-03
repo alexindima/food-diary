@@ -1,8 +1,8 @@
-import { computed, Signal } from '@angular/core';
+import { computed, type Signal } from '@angular/core';
 
-import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
-import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
-import { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
+import { type WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import { type WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import { type WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
 import { getWeightTrendRange } from './dashboard-date.utils';
 
 function buildFallbackTrend(latestValue: number | null, selectedDate: Date, trendDays: number): WeightTrendPoint[] {

@@ -4,7 +4,7 @@ import {
     Component,
     computed,
     effect,
-    ElementRef,
+    type ElementRef,
     forwardRef,
     inject,
     input,
@@ -12,7 +12,7 @@ import {
     viewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type Cropper from 'cropperjs';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -21,7 +21,7 @@ import { finalize, map, switchMap } from 'rxjs/operators';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import { ImageSelection } from '../../../shared/models/image-upload.data';
+import { type ImageSelection } from '../../../shared/models/image-upload.data';
 
 @Component({
     selector: 'fd-image-upload-field',
@@ -165,7 +165,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         if (this.deleteOnClear() && assetId) {
             this.imageUploadService.deleteAsset(assetId).subscribe({
-                error: err => this.logger.warn('Failed to delete orphan image asset', err),
+                error: err => {
+                    this.logger.warn('Failed to delete orphan image asset', err);
+                },
             });
         }
     }

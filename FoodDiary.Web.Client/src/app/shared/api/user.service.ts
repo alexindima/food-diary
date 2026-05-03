@@ -1,22 +1,22 @@
 import { HttpContext } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, tap } from 'rxjs';
+import { catchError, map, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
-import { DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
+import { type DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
 import { ApiService } from '../../services/api.service';
-import { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
+import { type NotificationPreferences, type WebPushSubscriptionItem } from '../../services/notification.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {
-    ChangePasswordRequest,
-    DashboardLayoutSettings,
-    DesiredWaistResponse,
-    DesiredWeightResponse,
-    SetPasswordRequest,
+    type ChangePasswordRequest,
+    type DashboardLayoutSettings,
+    type DesiredWaistResponse,
+    type DesiredWeightResponse,
+    type SetPasswordRequest,
     UpdateUserAppearanceDto,
-    UpdateUserDto,
-    User,
+    type UpdateUserDto,
+    type User,
 } from '../models/user.data';
 
 export interface UserProfileOverview {
@@ -45,7 +45,9 @@ export class UserService extends ApiService {
 
     public getOverview(): Observable<UserProfileOverview | null> {
         return this.get<UserProfileOverview>('overview').pipe(
-            tap(overview => this.userSignal.set(overview?.user ?? null)),
+            tap(overview => {
+                this.userSignal.set(overview?.user ?? null);
+            }),
             catchError(error => {
                 this.userSignal.set(null);
                 return fallbackApiError('Get user overview error', error, null);
@@ -55,7 +57,9 @@ export class UserService extends ApiService {
 
     public getInfo(): Observable<User | null> {
         return this.get<User>('info').pipe(
-            tap(user => this.userSignal.set(user ?? null)),
+            tap(user => {
+                this.userSignal.set(user ?? null);
+            }),
             catchError(error => {
                 this.userSignal.set(null);
                 return fallbackApiError('Get user info error', error, null);
@@ -65,7 +69,9 @@ export class UserService extends ApiService {
 
     public getInfoSilently(): Observable<User | null> {
         return this.get<User>('info', undefined, undefined, this.silentLoadingContext).pipe(
-            tap(user => this.userSignal.set(user ?? null)),
+            tap(user => {
+                this.userSignal.set(user ?? null);
+            }),
             catchError(error => {
                 this.userSignal.set(null);
                 return fallbackApiError('Get user info error', error, null);
@@ -163,7 +169,9 @@ export class UserService extends ApiService {
 
     public deleteCurrentUser(): Observable<boolean> {
         return this.delete<void>('').pipe(
-            tap(() => this.userSignal.set(null)),
+            tap(() => {
+                this.userSignal.set(null);
+            }),
             map(() => true),
             catchError(error => fallbackApiError('Delete user error', error, false)),
         );

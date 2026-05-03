@@ -1,12 +1,16 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiEmojiPickerComponent, FdUiEmojiPickerOption, FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
+import {
+    FdUiEmojiPickerComponent,
+    type FdUiEmojiPickerOption,
+    type FdUiEmojiPickerValue,
+} from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
-import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
-import { AiInputBarMealDetails } from '../ai-input-bar.types';
+import { type FoodNutritionResponse, type FoodVisionItem } from '../../../../shared/models/ai.data';
+import { type AiInputBarMealDetails } from '../ai-input-bar.types';
 
 type EditableAiItem = {
     id: string;

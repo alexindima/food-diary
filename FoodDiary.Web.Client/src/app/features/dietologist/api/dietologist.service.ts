@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import {
-    ClientSummary,
-    DietologistInfo,
-    DietologistInvitationForCurrentUser,
-    DietologistPermissions,
-    DietologistRelationship,
-    InviteDietologistRequest,
+    type ClientSummary,
+    type DietologistInfo,
+    type DietologistInvitationForCurrentUser,
+    type DietologistPermissions,
+    type DietologistRelationship,
+    type InviteDietologistRequest,
 } from '../models/dietologist.data';
 
 @Injectable({ providedIn: 'root' })

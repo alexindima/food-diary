@@ -139,13 +139,17 @@ export class DashboardSummaryCardComponent {
         effect(onCleanup => {
             const target = this.dailyPercent();
             this.startAnimation(this.animatedDailyPercent, target);
-            onCleanup(() => this.stopAnimation(this.animatedDailyPercent));
+            onCleanup(() => {
+                this.stopAnimation(this.animatedDailyPercent);
+            });
         });
 
         effect(onCleanup => {
             const target = this.weeklyPercent();
             this.startAnimation(this.animatedWeeklyPercent, target);
-            onCleanup(() => this.stopAnimation(this.animatedWeeklyPercent));
+            onCleanup(() => {
+                this.stopAnimation(this.animatedWeeklyPercent);
+            });
         });
     }
 

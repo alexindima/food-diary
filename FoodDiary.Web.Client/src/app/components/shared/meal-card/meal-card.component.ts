@@ -7,10 +7,10 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 import { finalize, of, switchMap } from 'rxjs';
 
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
-import { QualityGrade } from '../../../features/products/models/product.data';
+import { type QualityGrade } from '../../../features/products/models/product.data';
 import { AuthService } from '../../../services/auth.service';
 import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
-import { EntityCardCollageImage, EntityCardComponent } from '../entity-card/entity-card.component';
+import { type EntityCardCollageImage, EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface MealCardItem {
     id: string;
@@ -168,7 +168,9 @@ export class MealCardComponent {
             .add(this.meal().id)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoriteLoading.set(false)),
+                finalize(() => {
+                    this.isFavoriteLoading.set(false);
+                }),
             )
             .subscribe({
                 next: favorite => {
@@ -185,7 +187,9 @@ export class MealCardComponent {
                 .remove(this.favoriteMealId)
                 .pipe(
                     takeUntilDestroyed(this.destroyRef),
-                    finalize(() => this.isFavoriteLoading.set(false)),
+                    finalize(() => {
+                        this.isFavoriteLoading.set(false);
+                    }),
                 )
                 .subscribe({
                     next: () => {
@@ -209,7 +213,9 @@ export class MealCardComponent {
                     return this.favoriteMealService.remove(match.id);
                 }),
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoriteLoading.set(false)),
+                finalize(() => {
+                    this.isFavoriteLoading.set(false);
+                }),
             )
             .subscribe({
                 next: () => {

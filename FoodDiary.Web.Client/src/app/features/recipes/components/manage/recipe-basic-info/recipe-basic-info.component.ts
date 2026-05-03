@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type AbstractControl, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { RecipeVisibility } from '../../../models/recipe.data';
-import { RecipeFormData } from '../recipe-manage.types';
+import { type RecipeVisibility } from '../../../models/recipe.data';
+import { type RecipeFormData } from '../recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-basic-info',

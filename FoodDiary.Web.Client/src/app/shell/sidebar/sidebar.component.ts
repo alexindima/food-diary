@@ -1,6 +1,16 @@
 import { DOCUMENT } from '@angular/common';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type ElementRef,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,14 +23,14 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
     UnsavedChangesDialogComponent,
-    UnsavedChangesDialogResult,
+    type UnsavedChangesDialogResult,
 } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
-import { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
+import { type SidebarActionItem, type SidebarNavItem, type SidebarRouteItem } from './sidebar.models';
 import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
 
 const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
@@ -233,7 +243,9 @@ export class SidebarComponent {
 
     public constructor() {
         const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia('(max-width: 767px)');
-        const updateMobileViewport = (): void => this.isMobileViewport.set(this.getIsMobileViewport());
+        const updateMobileViewport = (): void => {
+            this.isMobileViewport.set(this.getIsMobileViewport());
+        };
 
         mobileMediaQuery?.addEventListener('change', updateMobileViewport);
         this.destroyRef.onDestroy(() => mobileMediaQuery?.removeEventListener('change', updateMobileViewport));
@@ -250,7 +262,9 @@ export class SidebarComponent {
             }
         });
         this.document.addEventListener('keydown', this.handleDocumentKeydown);
-        this.destroyRef.onDestroy(() => this.document.removeEventListener('keydown', this.handleDocumentKeydown));
+        this.destroyRef.onDestroy(() => {
+            this.document.removeEventListener('keydown', this.handleDocumentKeydown);
+        });
     }
 
     protected onPrimaryAction(action: SidebarActionItem['action']): void {

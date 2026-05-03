@@ -1,12 +1,12 @@
 import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
-import { DashboardSnapshot } from '../models/dashboard.data';
+import { type DashboardSnapshot } from '../models/dashboard.data';
 
 @Injectable({
     providedIn: 'root',

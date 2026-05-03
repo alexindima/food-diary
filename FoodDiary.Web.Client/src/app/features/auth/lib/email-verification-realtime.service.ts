@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 
 import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../../services/auth.service';
+import { type AuthService } from '../../../services/auth.service';
 
 export function toEmailVerificationHubUrl(authBaseUrl: string): string {
     return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/email-verification`;

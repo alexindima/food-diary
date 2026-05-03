@@ -2,18 +2,18 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartConfiguration } from 'chart.js';
+import { type ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import {
-    CreateWaistEntryPayload,
-    UpdateWaistEntryPayload,
-    WaistEntry,
-    WaistEntryFilters,
-    WaistEntrySummaryFilters,
-    WaistEntrySummaryPoint,
+    type CreateWaistEntryPayload,
+    type UpdateWaistEntryPayload,
+    type WaistEntry,
+    type WaistEntryFilters,
+    type WaistEntrySummaryFilters,
+    type WaistEntrySummaryPoint,
 } from '../models/waist-entry.data';
 
 export type WaistHistoryRange = 'week' | 'month' | 'year' | 'custom';
@@ -208,7 +208,9 @@ export class WaistHistoryFacade {
         this.isSaving.set(true);
         request$
             .pipe(
-                finalize(() => this.isSaving.set(false)),
+                finalize(() => {
+                    this.isSaving.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -245,7 +247,9 @@ export class WaistHistoryFacade {
         this.waistEntriesService
             .remove(entry.id)
             .pipe(
-                finalize(() => this.isSaving.set(false)),
+                finalize(() => {
+                    this.isSaving.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -272,7 +276,9 @@ export class WaistHistoryFacade {
         this.userService
             .updateDesiredWaist(parsedValue)
             .pipe(
-                finalize(() => this.isDesiredWaistSaving.set(false)),
+                finalize(() => {
+                    this.isDesiredWaistSaving.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(value => {
@@ -321,7 +327,9 @@ export class WaistHistoryFacade {
         this.waistEntriesService
             .getEntries(entriesParams)
             .pipe(
-                finalize(() => this.isLoading.set(false)),
+                finalize(() => {
+                    this.isLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(entries => {
@@ -336,7 +344,9 @@ export class WaistHistoryFacade {
         this.waistEntriesService
             .getSummary(filters)
             .pipe(
-                finalize(() => this.isSummaryLoading.set(false)),
+                finalize(() => {
+                    this.isSummaryLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(points => {

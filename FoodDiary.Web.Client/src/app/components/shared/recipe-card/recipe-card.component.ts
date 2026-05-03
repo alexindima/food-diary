@@ -5,9 +5,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { finalize, of, switchMap } from 'rxjs';
 
-import { QualityGrade } from '../../../features/products/models/product.data';
+import { type QualityGrade } from '../../../features/products/models/product.data';
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
-import { FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
+import { type FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
 import { AuthService } from '../../../services/auth.service';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 
@@ -162,7 +162,9 @@ export class RecipeCardComponent {
             .add(recipeId, this.recipe().name)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoriteLoading.set(false)),
+                finalize(() => {
+                    this.isFavoriteLoading.set(false);
+                }),
             )
             .subscribe({
                 next: favorite => {
@@ -179,7 +181,9 @@ export class RecipeCardComponent {
                 .remove(this.favoriteRecipeId)
                 .pipe(
                     takeUntilDestroyed(this.destroyRef),
-                    finalize(() => this.isFavoriteLoading.set(false)),
+                    finalize(() => {
+                        this.isFavoriteLoading.set(false);
+                    }),
                 )
                 .subscribe({
                     next: () => {
@@ -203,7 +207,9 @@ export class RecipeCardComponent {
                     return this.favoriteRecipeService.remove(match.id);
                 }),
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoriteLoading.set(false)),
+                finalize(() => {
+                    this.isFavoriteLoading.set(false);
+                }),
             )
             .subscribe({
                 next: () => {

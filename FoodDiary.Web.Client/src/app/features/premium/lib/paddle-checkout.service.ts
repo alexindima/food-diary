@@ -115,8 +115,20 @@ export class PaddleCheckoutService {
                     return;
                 }
 
-                existingScript.addEventListener('load', () => resolve(), { once: true });
-                existingScript.addEventListener('error', () => reject(new Error('Failed to load Paddle.js')), { once: true });
+                existingScript.addEventListener(
+                    'load',
+                    () => {
+                        resolve();
+                    },
+                    { once: true },
+                );
+                existingScript.addEventListener(
+                    'error',
+                    () => {
+                        reject(new Error('Failed to load Paddle.js'));
+                    },
+                    { once: true },
+                );
                 return;
             }
 
@@ -124,8 +136,12 @@ export class PaddleCheckoutService {
             script.src = this.scriptUrl;
             script.async = true;
             script.defer = true;
-            script.onload = (): void => resolve();
-            script.onerror = (): void => reject(new Error('Failed to load Paddle.js'));
+            script.onload = (): void => {
+                resolve();
+            };
+            script.onerror = (): void => {
+                reject(new Error('Failed to load Paddle.js'));
+            };
             document.head.appendChild(script);
         });
 

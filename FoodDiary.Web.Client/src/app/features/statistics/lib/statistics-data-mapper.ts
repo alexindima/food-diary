@@ -1,8 +1,8 @@
-import { ChartConfiguration } from 'chart.js';
+import { type ChartConfiguration } from 'chart.js';
 
-import { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
+import { type SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { MappedStatistics } from '../models/statistics.data';
+import { type MappedStatistics } from '../models/statistics.data';
 import { applyAlpha } from './statistics-chart-config';
 
 // ── Types ──────────────────────────────────────────────────────────────

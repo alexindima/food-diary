@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import { ShoppingList } from '../models/shopping-list.data';
+import { type ShoppingList } from '../models/shopping-list.data';
 import { ShoppingListFacade } from './shopping-list.facade';
 
 describe('ShoppingListFacade', () => {

@@ -141,6 +141,13 @@ export default [
                     objectLiteralTypeAssertions: 'never',
                 },
             ],
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                {
+                    prefer: 'type-imports',
+                    fixStyle: 'inline-type-imports',
+                },
+            ],
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-unused-vars': [
                 'error',
@@ -179,6 +186,9 @@ export default [
                     },
                 },
             ],
+            '@typescript-eslint/no-unnecessary-condition': 'warn',
+            '@typescript-eslint/no-confusing-void-expression': 'warn',
+            '@typescript-eslint/require-await': 'warn',
             '@typescript-eslint/prefer-readonly': 'error',
         },
     },

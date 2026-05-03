@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, type FormControl, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { AdminUser, AdminUsersService, AdminUserUpdate } from '../api/admin-users.service';
+import { type AdminUser, AdminUsersService, type AdminUserUpdate } from '../api/admin-users.service';
 
 type AdminUserForm = {
     isActive: FormControl<boolean>;
@@ -61,8 +61,12 @@ export class AdminUserEditDialogComponent {
         }
 
         this.usersService.updateUser(this.user.id, payload).subscribe({
-            next: () => this.dialogRef.close(true),
-            error: () => this.dialogRef.close(false),
+            next: () => {
+                this.dialogRef.close(true);
+            },
+            error: () => {
+                this.dialogRef.close(false);
+            },
         });
     }
 

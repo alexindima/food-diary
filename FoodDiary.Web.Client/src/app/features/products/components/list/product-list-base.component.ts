@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
@@ -22,16 +22,16 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../../meals/lib/quick-meal.service';
 import { FavoriteProductService } from '../../api/favorite-product.service';
-import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
+import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
 import { resolveProductImageUrl } from '../../lib/product-image.util';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
-import { FavoriteProduct, Product, ProductFilters, ProductType } from '../../models/product.data';
-import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
+import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
+import { ProductListFiltersDialogComponent, type ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -253,7 +253,9 @@ export class ProductListBaseComponent {
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
-            finalize(() => this.productData.setLoading(false)),
+            finalize(() => {
+                this.productData.setLoading(false);
+            }),
         );
     }
 
@@ -280,7 +282,9 @@ export class ProductListBaseComponent {
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
-            finalize(() => this.productData.setLoading(false)),
+            finalize(() => {
+                this.productData.setLoading(false);
+            }),
         );
     }
 
@@ -296,9 +300,13 @@ export class ProductListBaseComponent {
             .search(trimmed, 5)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.offLoading.set(false)),
+                finalize(() => {
+                    this.offLoading.set(false);
+                }),
             )
-            .subscribe(products => this.offProducts.set(products));
+            .subscribe(products => {
+                this.offProducts.set(products);
+            });
     }
 
     public onOffProductClick(offProduct: OpenFoodFactsProduct): void {
@@ -326,7 +334,9 @@ export class ProductListBaseComponent {
             .getAll()
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoritesLoadingMore.set(false)),
+                finalize(() => {
+                    this.isFavoritesLoadingMore.set(false);
+                }),
             )
             .subscribe(favorites => {
                 this.favorites.set(favorites);

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, InjectionToken, input } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { type AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { merge } from 'rxjs';
 
@@ -48,9 +48,13 @@ export class FdUiFormErrorComponent {
             return;
         }
 
-        const subscription = merge(control.statusChanges, control.valueChanges).subscribe(() => this.cdr.markForCheck());
+        const subscription = merge(control.statusChanges, control.valueChanges).subscribe(() => {
+            this.cdr.markForCheck();
+        });
 
-        onCleanup((): void => subscription.unsubscribe());
+        onCleanup((): void => {
+            subscription.unsubscribe();
+        });
     });
 
     public get message(): string | null {

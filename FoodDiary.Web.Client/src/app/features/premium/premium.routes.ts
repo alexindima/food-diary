@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { type Routes } from '@angular/router';
 
 import { PremiumAccessPageComponent } from './pages/premium-access-page.component';
 

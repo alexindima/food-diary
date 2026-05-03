@@ -1,22 +1,32 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, FactoryProvider, inject, input, signal } from '@angular/core';
+import { type HttpErrorResponse } from '@angular/common/http';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type FactoryProvider,
+    inject,
+    input,
+    signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { catchError, debounceTime, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
-import { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { type ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     calculateCalorieMismatchWarning,
@@ -25,29 +35,29 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { type ImageSelection } from '../../../../shared/models/image-upload.data';
 import { UsdaService } from '../../../usda/api/usda.service';
-import { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
-import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
+import { type Micronutrient, type UsdaFoodDetail } from '../../../usda/models/usda.data';
+import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
 import {
     ProductAiRecognitionDialogComponent,
-    ProductAiRecognitionResult,
+    type ProductAiRecognitionResult,
 } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
 import { ProductManageFacade } from '../../lib/product-manage.facade';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import {
-    CreateProductRequest,
+    type CreateProductRequest,
     MeasurementUnit,
-    Product,
-    ProductSearchSuggestion,
+    type Product,
+    type ProductSearchSuggestion,
     ProductType,
     ProductVisibility,
 } from '../../models/product.data';
 import {
     ProductBasicInfoComponent,
-    ProductNameAutocompleteOption,
-    ProductNameSuggestion,
+    type ProductNameAutocompleteOption,
+    type ProductNameSuggestion,
 } from './product-basic-info/product-basic-info.component';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
 

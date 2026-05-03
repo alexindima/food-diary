@@ -11,7 +11,7 @@ import { LocalizationService } from '../services/localization.service';
 import { NotificationRealtimeService } from '../services/notification-realtime.service';
 import { PushNotificationService } from '../services/push-notification.service';
 import { RouteLoadingService } from '../services/route-loading.service';
-import { SeoData, SeoService } from '../services/seo.service';
+import { type SeoData, SeoService } from '../services/seo.service';
 import { ThemeService } from '../services/theme.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
 

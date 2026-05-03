@@ -1,14 +1,14 @@
 import { signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { Observable, of } from 'rxjs';
+import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // eslint-disable-next-line no-restricted-imports
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
 import { AuthService } from '../../../services/auth.service';
-import { MealCardComponent, MealCardItem } from './meal-card.component';
+import { MealCardComponent, type MealCardItem } from './meal-card.component';
 
 describe('MealCardComponent', () => {
     let component: MealCardComponent;

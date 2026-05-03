@@ -1,12 +1,12 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
     effect,
-    ElementRef,
-    FactoryProvider,
+    type ElementRef,
+    type FactoryProvider,
     inject,
     input,
     signal,
@@ -14,26 +14,26 @@ import {
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../../services/auth.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
-import { GoogleLoginRequest } from '../../models/google-auth.data';
+import { type GoogleLoginRequest } from '../../models/google-auth.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -156,7 +156,9 @@ export class AuthComponent {
             this.registerForm.controls.confirmPassword.updateValueAndValidity();
         });
 
-        effect(() => this.renderGoogleButton());
+        effect(() => {
+            this.renderGoogleButton();
+        });
         effect(() => {
             const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
@@ -176,7 +178,9 @@ export class AuthComponent {
 
             void this.completeAuthenticatedNavigation();
         });
-        afterNextRender(() => this.startLoginAutofillDetection());
+        afterNextRender(() => {
+            this.startLoginAutofillDetection();
+        });
         void this.initializeGoogle();
     }
 
@@ -301,7 +305,9 @@ export class AuthComponent {
         try {
             await this.googleIdentityService.initialize({
                 clientId,
-                callback: credential => this.onGoogleCredential(credential),
+                callback: credential => {
+                    this.onGoogleCredential(credential);
+                },
             });
             this.googleReady.set(true);
             void this.googleIdentityService.prompt();
@@ -415,8 +421,12 @@ export class AuthComponent {
 
     private completeAuthenticatedNavigationAndClose(): void {
         void this.completeAuthenticatedNavigation()
-            .then(() => this.closeDialogIfAny())
-            .catch(() => this.setGlobalError('FORM_ERRORS.UNKNOWN'));
+            .then(() => {
+                this.closeDialogIfAny();
+            })
+            .catch(() => {
+                this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            });
     }
 
     private async completeAuthenticatedNavigation(): Promise<void> {
@@ -555,11 +565,15 @@ export class AuthComponent {
     private startLoginAutofillDetection(): void {
         this.updateLoginAutofillState();
         this.loginAutofillCheckTimerIds = [100, 300, 700, 1500, 3000, 5000].map(delay =>
-            window.setTimeout(() => this.updateLoginAutofillState(), delay),
+            window.setTimeout(() => {
+                this.updateLoginAutofillState();
+            }, delay),
         );
 
         this.destroyRef.onDestroy(() => {
-            this.loginAutofillCheckTimerIds.forEach(timerId => window.clearTimeout(timerId));
+            this.loginAutofillCheckTimerIds.forEach(timerId => {
+                window.clearTimeout(timerId);
+            });
             this.loginAutofillCheckTimerIds = [];
         });
     }

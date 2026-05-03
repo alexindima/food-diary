@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
-import { WritableSignal } from '@angular/core';
+import { type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -8,19 +8,19 @@ import { finalize, firstValueFrom } from 'rxjs';
 import { catchError, of } from 'rxjs';
 
 import { MealService } from '../../../features/meals/api/meal.service';
-import { Meal } from '../../../features/meals/models/meal.data';
+import { type Meal } from '../../../features/meals/models/meal.data';
 import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { UserService } from '../../../shared/api/user.service';
-import { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
-import { ImageSelection } from '../../../shared/models/image-upload.data';
+import { type FoodNutritionResponse, type FoodVisionItem } from '../../../shared/models/ai.data';
+import { type ImageSelection } from '../../../shared/models/image-upload.data';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog.component';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
 import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog.component';
 import { buildMealManageDtoFromAiResult, mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
-import { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
+import { type AiInputBarMealDetails, type AiInputBarMode, type AiInputBarResult, type AiRecognitionSource } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 
 interface AiInputBarChannelState {
@@ -318,7 +318,9 @@ export class AiInputBarComponent {
         this.mealService
             .create(buildMealManageDtoFromAiResult(result, mealDate))
             .pipe(
-                finalize(() => this.isSubmittingMeal.set(false)),
+                finalize(() => {
+                    this.isSubmittingMeal.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
@@ -342,7 +344,9 @@ export class AiInputBarComponent {
                 quota: 'AI_INPUT_BAR.TEXT_ERROR_QUOTA',
                 generic: 'AI_INPUT_BAR.TEXT_ERROR_GENERIC',
             },
-            items => this.runTextNutrition(items),
+            items => {
+                this.runTextNutrition(items);
+            },
         );
     }
 
@@ -362,7 +366,9 @@ export class AiInputBarComponent {
                 quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
                 generic: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC',
             },
-            items => this.runPhotoNutrition(items),
+            items => {
+                this.runPhotoNutrition(items);
+            },
         );
     }
 

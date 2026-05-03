@@ -3,7 +3,13 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { CyclesService } from '../api/cycles.service';
-import { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
+import {
+    type CreateCyclePayload,
+    type CycleDay,
+    type CyclePredictions,
+    type CycleResponse,
+    type DailySymptoms,
+} from '../models/cycle.data';
 
 @Injectable()
 export class CycleTrackingFacade {
@@ -69,7 +75,11 @@ export class CycleTrackingFacade {
         this.isSavingCycle.set(true);
         this.cyclesService
             .create(payload)
-            .pipe(finalize(() => this.isSavingCycle.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingCycle.set(false);
+                }),
+            )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
             });
@@ -111,7 +121,11 @@ export class CycleTrackingFacade {
                 symptoms,
                 notes: formValue.notes ?? undefined,
             })
-            .pipe(finalize(() => this.isSavingDay.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingDay.set(false);
+                }),
+            )
             .subscribe(day => {
                 const current = this.cycle();
                 if (!current) {
@@ -130,7 +144,11 @@ export class CycleTrackingFacade {
         this.isLoading.set(true);
         this.cyclesService
             .getCurrent()
-            .pipe(finalize(() => this.isLoading.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isLoading.set(false);
+                }),
+            )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
             });

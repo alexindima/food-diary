@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -9,8 +9,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import { UserService } from '../../../../shared/api/user.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
-import { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import { type ChangePasswordRequest, type SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 
 export interface ChangePasswordDialogData {

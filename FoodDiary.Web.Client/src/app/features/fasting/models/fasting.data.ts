@@ -1,4 +1,4 @@
-import { PageOf } from '../../../shared/models/page-of.data';
+import { type PageOf } from '../../../shared/models/page-of.data';
 
 export type FastingProtocol = 'F16_8' | 'F18_6' | 'F20_4' | 'F24_0' | 'F36_0' | 'F72_0' | 'Custom' | 'CustomIntermittent';
 export type FastingSessionStatus = 'Active' | 'Completed' | 'Interrupted' | 'Skipped' | 'Postponed';

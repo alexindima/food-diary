@@ -12,7 +12,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { BaseProductManageComponent } from '../components/manage/base-product-manage.component';
 import { ProductBasicInfoComponent } from '../components/manage/product-basic-info/product-basic-info.component';
 import { ProductNutritionEditorComponent } from '../components/manage/product-nutrition-editor/product-nutrition-editor.component';
-import { Product } from '../models/product.data';
+import { type Product } from '../models/product.data';
 
 @Component({
     selector: 'fd-product-add-dialog',

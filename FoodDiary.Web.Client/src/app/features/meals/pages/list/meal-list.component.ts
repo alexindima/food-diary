@@ -1,15 +1,15 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiDateRangeValue } from 'fd-ui-kit';
+import { type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { catchError, debounceTime, finalize, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, debounceTime, finalize, map, type Observable, of, switchMap } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
@@ -22,13 +22,13 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
 import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
-import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
-import { MealListFiltersDialogComponent, MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
+import { type FavoriteMeal, type Meal, type MealFilters } from '../../models/meal.data';
+import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-meal-list',
@@ -103,7 +103,9 @@ export class MealListComponent {
             .getAll()
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoritesLoadingMore.set(false)),
+                finalize(() => {
+                    this.isFavoritesLoadingMore.set(false);
+                }),
             )
             .subscribe(favorites => {
                 this.favorites.set(favorites);
@@ -127,7 +129,9 @@ export class MealListComponent {
 
     public removeFavorite(favorite: FavoriteMeal): void {
         this.favoriteMealService.remove(favorite.id).subscribe({
-            next: () => this.favorites.update(list => list.filter(f => f.id !== favorite.id)),
+            next: () => {
+                this.favorites.update(list => list.filter(f => f.id !== favorite.id));
+            },
         });
     }
 

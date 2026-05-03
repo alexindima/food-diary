@@ -1,13 +1,13 @@
 import { signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
+import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // eslint-disable-next-line no-restricted-imports
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { AuthService } from '../../../services/auth.service';
-import { RecipeCardComponent, RecipeCardItem } from './recipe-card.component';
+import { RecipeCardComponent, type RecipeCardItem } from './recipe-card.component';
 
 describe('RecipeCardComponent', () => {
     let component: RecipeCardComponent;

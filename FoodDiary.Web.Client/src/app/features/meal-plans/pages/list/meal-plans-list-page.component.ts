@@ -10,7 +10,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
-import { DIET_TYPES, DietType } from '../../models/meal-plan.data';
+import { DIET_TYPES, type DietType } from '../../models/meal-plan.data';
 
 @Component({
     selector: 'fd-meal-plans-list-page',

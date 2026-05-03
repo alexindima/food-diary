@@ -2,13 +2,13 @@ import {
     HTTP_INTERCEPTORS,
     HttpClient,
     HttpContext,
-    HttpErrorResponse,
+    type HttpErrorResponse,
     provideHttpClient,
     withInterceptorsFromDi,
 } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { type Observable, of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SKIP_AUTH } from '../constants/http-context.tokens';

@@ -1,6 +1,6 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -9,8 +9,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { FormGroupControls } from '../../../../../shared/lib/common.data';
-import { IngredientFormValues, StepFormData } from '../recipe-manage.types';
+import { type FormGroupControls } from '../../../../../shared/lib/common.data';
+import { type IngredientFormValues, type StepFormData } from '../recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-step-card',

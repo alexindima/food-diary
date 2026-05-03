@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { type ActivatedRouteSnapshot, type RouterStateSnapshot } from '@angular/router';
+import { type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { MealService } from '../api/meal.service';
-import { Meal } from '../models/meal.data';
+import { type Meal } from '../models/meal.data';
 import { mealResolver } from './meal.resolver';
 
 describe('mealResolver', () => {

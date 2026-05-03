@@ -10,23 +10,23 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 import {
     ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
+    type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import {
-    NutritionControlNames,
+    type NutritionControlNames,
     NutritionEditorComponent,
-    NutritionMacroState,
+    type NutritionMacroState,
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
-import { NutrientData } from '../../../../shared/models/charts.data';
+import { type NutrientData } from '../../../../shared/models/charts.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
-import { Product } from '../../models/product.data';
+import { type Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-detail',
@@ -284,7 +284,9 @@ export class ProductDetailComponent {
                         this.favoriteProductId = null;
                         this.isFavoriteLoading.set(false);
                     },
-                    error: () => this.isFavoriteLoading.set(false),
+                    error: () => {
+                        this.isFavoriteLoading.set(false);
+                    },
                 });
                 return;
             }
@@ -299,14 +301,18 @@ export class ProductDetailComponent {
                                 this.favoriteProductId = null;
                                 this.isFavoriteLoading.set(false);
                             },
-                            error: () => this.isFavoriteLoading.set(false),
+                            error: () => {
+                                this.isFavoriteLoading.set(false);
+                            },
                         });
                     } else {
                         this.isFavorite.set(false);
                         this.isFavoriteLoading.set(false);
                     }
                 },
-                error: () => this.isFavoriteLoading.set(false),
+                error: () => {
+                    this.isFavoriteLoading.set(false);
+                },
             });
         } else {
             this.favoriteProductService.add(this.product.id).subscribe({
@@ -315,7 +321,9 @@ export class ProductDetailComponent {
                     this.favoriteProductId = favorite.id;
                     this.isFavoriteLoading.set(false);
                 },
-                error: () => this.isFavoriteLoading.set(false),
+                error: () => {
+                    this.isFavoriteLoading.set(false);
+                },
             });
         }
     }

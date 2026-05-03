@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FdUiSelectComponent, FdUiSelectOption } from './fd-ui-select.component';
+import { FdUiSelectComponent, type FdUiSelectOption } from './fd-ui-select.component';
 
 describe('FdUiSelectComponent', () => {
     let component: FdUiSelectComponent<string>;

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -9,7 +9,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.co
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import { ConsumptionItemFormData } from '../base-meal-manage.types';
+import { type ConsumptionItemFormData } from '../base-meal-manage.types';
 
 @Component({
     selector: 'fd-meal-items-list',

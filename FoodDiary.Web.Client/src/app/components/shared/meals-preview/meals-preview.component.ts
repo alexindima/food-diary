@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import { AiInputBarComponent } from '../ai-input-bar/ai-input-bar.component';
-import { MealCardComponent, MealCardItem } from '../meal-card/meal-card.component';
+import { MealCardComponent, type MealCardItem } from '../meal-card/meal-card.component';
 
 export interface MealPreviewEntry {
     meal?: MealCardItem | null;

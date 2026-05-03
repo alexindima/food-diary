@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
@@ -6,8 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { User } from '../../../../shared/models/user.data';
-import { AuthResponse } from '../../models/auth.data';
+import { type User } from '../../../../shared/models/user.data';
+import { type AuthResponse } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset.component';
 
 describe('PasswordResetComponent', () => {

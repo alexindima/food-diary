@@ -6,7 +6,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProductType } from '../../models/product.data';
-import { ProductListFiltersDialogComponent, ProductListFiltersDialogData } from './product-list-filters-dialog.component';
+import { ProductListFiltersDialogComponent, type ProductListFiltersDialogData } from './product-list-filters-dialog.component';
 
 describe('ProductListFiltersDialogComponent', () => {
     let component: ProductListFiltersDialogComponent;

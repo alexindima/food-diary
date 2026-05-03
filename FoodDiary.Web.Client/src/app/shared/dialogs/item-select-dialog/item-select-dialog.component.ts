@@ -6,14 +6,14 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog.component';
 import { ProductListDialogComponent } from '../../../features/products/dialogs/product-list-dialog.component';
-import { Product } from '../../../features/products/models/product.data';
+import { type Product } from '../../../features/products/models/product.data';
 import { RecipeManageComponent } from '../../../features/recipes/components/manage/recipe-manage.component';
 import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/recipe-select-dialog.component';
-import { Recipe } from '../../../features/recipes/models/recipe.data';
+import { type Recipe } from '../../../features/recipes/models/recipe.data';
 
 export type ItemSelection = { type: 'Product'; product: Product } | { type: 'Recipe'; recipe: Recipe };
 

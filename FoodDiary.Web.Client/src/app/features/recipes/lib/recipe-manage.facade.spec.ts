@@ -8,7 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NavigationService } from '../../../services/navigation.service';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
-import { IngredientFormData, StepFormData } from '../components/manage/recipe-manage.types';
+import { type IngredientFormData, type StepFormData } from '../components/manage/recipe-manage.types';
 import { RecipeVisibility } from '../models/recipe.data';
 import { RecipeManageFacade } from './recipe-manage.facade';
 

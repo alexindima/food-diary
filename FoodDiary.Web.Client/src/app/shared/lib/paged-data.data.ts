@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 
-import { PageOf } from '../models/page-of.data';
+import { type PageOf } from '../models/page-of.data';
 
 export class PagedData<T> {
     public readonly items = signal<T[]>([]);

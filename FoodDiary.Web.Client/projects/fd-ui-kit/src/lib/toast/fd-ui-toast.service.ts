@@ -1,6 +1,6 @@
-import { AriaLivePoliteness } from '@angular/cdk/a11y';
+import { type AriaLivePoliteness } from '@angular/cdk/a11y';
 import { computed, Injectable, signal } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { type Observable, Subject } from 'rxjs';
 
 export type FdUiToastAppearance = 'default' | 'positive' | 'negative' | 'warning' | 'info';
 export type FdUiToastHorizontalPosition = 'start' | 'center' | 'end';
@@ -116,7 +116,9 @@ export class FdUiToastService {
             leaving: false,
         };
 
-        const ref = new FdUiToastRef(() => this.dismiss(id));
+        const ref = new FdUiToastRef(() => {
+            this.dismiss(id);
+        });
         this.refs.set(id, ref);
         this.toastState.update(current => [...current, toast]);
         this.scheduleDismiss(id, toast.duration);
@@ -157,7 +159,9 @@ export class FdUiToastService {
     }
 
     public dismissAll(): void {
-        this.toastState().forEach(toast => this.dismiss(toast.id));
+        this.toastState().forEach(toast => {
+            this.dismiss(toast.id);
+        });
     }
 
     public triggerAction(id: string): void {
@@ -186,7 +190,9 @@ export class FdUiToastService {
             return;
         }
 
-        const timer = setTimeout(() => this.dismiss(id), duration + this.enterAnimationMs);
+        const timer = setTimeout(() => {
+            this.dismiss(id);
+        }, duration + this.enterAnimationMs);
         this.dismissTimers.set(id, timer);
     }
 

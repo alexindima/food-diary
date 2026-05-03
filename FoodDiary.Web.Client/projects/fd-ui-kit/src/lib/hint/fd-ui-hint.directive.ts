@@ -1,7 +1,7 @@
-import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, TemplateRef } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 
 import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay.component';
 

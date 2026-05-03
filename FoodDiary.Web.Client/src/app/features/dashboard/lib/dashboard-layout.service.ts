@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UserService } from '../../../shared/api/user.service';
-import { DashboardLayoutSettings } from '../../../shared/models/user.data';
+import { type DashboardLayoutSettings } from '../../../shared/models/user.data';
 
 const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     web: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],

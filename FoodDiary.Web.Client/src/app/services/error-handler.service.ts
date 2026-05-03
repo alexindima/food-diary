@@ -1,4 +1,4 @@
-import { ErrorHandler, inject, Injectable } from '@angular/core';
+import { type ErrorHandler, inject, Injectable } from '@angular/core';
 
 import { FrontendLoggerService } from './frontend-logger.service';
 import { FrontendObservabilityService } from './frontend-observability.service';

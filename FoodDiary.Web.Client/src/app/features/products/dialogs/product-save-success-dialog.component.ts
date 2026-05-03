@@ -5,7 +5,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { RedirectAction } from '../lib/product-manage.facade';
+import { type RedirectAction } from '../lib/product-manage.facade';
 
 export interface ProductSaveSuccessDialogData {
     isEdit: boolean;

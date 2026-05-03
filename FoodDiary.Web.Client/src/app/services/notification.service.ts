@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, Observable, shareReplay, tap } from 'rxjs';
+import { finalize, type Observable, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens';

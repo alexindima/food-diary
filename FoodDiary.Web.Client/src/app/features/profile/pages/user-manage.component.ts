@@ -6,14 +6,14 @@ import {
     computed,
     DestroyRef,
     effect,
-    FactoryProvider,
+    type FactoryProvider,
     inject,
     PLATFORM_ID,
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -22,10 +22,10 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -38,22 +38,29 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { AuthService } from '../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../services/localization.service';
-import { NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import { FormGroupControls } from '../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../shared/lib/common.data';
 import {
     FASTING_REMINDER_PRESETS,
-    FastingReminderPreset,
+    type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
-import { ImageSelection } from '../../../shared/models/image-upload.data';
-import { ActivityLevelOption, Gender, UiStyleOption, UpdateUserDto, User } from '../../../shared/models/user.data';
-import { APP_THEMES, APP_UI_STYLES, AppThemeName, AppUiStyleName, isAppThemeName, isAppUiStyleName } from '../../../theme/app-theme.config';
+import { type ImageSelection } from '../../../shared/models/image-upload.data';
+import { type ActivityLevelOption, Gender, type UiStyleOption, UpdateUserDto, type User } from '../../../shared/models/user.data';
+import {
+    APP_THEMES,
+    APP_UI_STYLES,
+    type AppThemeName,
+    type AppUiStyleName,
+    isAppThemeName,
+    isAppUiStyleName,
+} from '../../../theme/app-theme.config';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
-import { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
+import { type DietologistPermissions, type DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { PremiumBillingService } from '../../premium/api/premium-billing.service';
-import { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
+import { type BillingOverview, type BillingPlan, type BillingProvider } from '../../premium/models/billing.models';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -281,7 +288,9 @@ export class UserManageComponent {
         });
 
         this.buildSelectOptions();
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.buildSelectOptions());
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.buildSelectOptions();
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             this.pendingPasswordSetupIntent.set(params.get('intent') === 'set-password');
         });
@@ -341,7 +350,9 @@ export class UserManageComponent {
             this.facade.clearGlobalError();
             this.queueUserAutosave();
         });
-        this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.dietologistError.set(null));
+        this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.dietologistError.set(null);
+        });
 
         this.facade.initialize();
         this.loadBillingOverview();
@@ -630,7 +641,11 @@ export class UserManageComponent {
                 dietologistEmail: this.dietologistForm.controls.email.getRawValue(),
                 permissions: this.getDietologistPermissions(),
             })
-            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingDietologist.set(false);
+                }),
+            )
             .subscribe({
                 next: () => {
                     this.toastService.success(this.translateService.instant('USER_MANAGE.DIETOLOGIST_INVITE_SUCCESS'));
@@ -660,7 +675,11 @@ export class UserManageComponent {
         this.isSavingDietologist.set(true);
         this.dietologistService
             .updatePermissions(this.getDietologistPermissions())
-            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingDietologist.set(false);
+                }),
+            )
             .subscribe({
                 next: () => {
                     this.dietologistError.set(null);
@@ -865,7 +884,11 @@ export class UserManageComponent {
         this.isOpeningBillingPortal.set(true);
         this.billingService
             .createPortalSession()
-            .pipe(finalize(() => this.isOpeningBillingPortal.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isOpeningBillingPortal.set(false);
+                }),
+            )
             .subscribe({
                 next: session => {
                     if (!session.url) {
@@ -909,7 +932,11 @@ export class UserManageComponent {
         this.isLoadingDietologist.set(true);
         this.dietologistService
             .getRelationship()
-            .pipe(finalize(() => this.isLoadingDietologist.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isLoadingDietologist.set(false);
+                }),
+            )
             .subscribe({
                 next: relationship => {
                     this.facade.dietologistRelationship.set(relationship);
@@ -926,7 +953,11 @@ export class UserManageComponent {
         this.billingError.set(null);
         this.billingService
             .getOverview()
-            .pipe(finalize(() => this.isLoadingBilling.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isLoadingBilling.set(false);
+                }),
+            )
             .subscribe({
                 next: overview => {
                     this.billingOverview.set(overview);
@@ -1032,7 +1063,11 @@ export class UserManageComponent {
         this.isSavingDietologist.set(true);
         this.dietologistService
             .revokeRelationship()
-            .pipe(finalize(() => this.isSavingDietologist.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingDietologist.set(false);
+                }),
+            )
             .subscribe({
                 next: () => {
                     this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));

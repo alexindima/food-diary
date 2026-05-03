@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -49,7 +49,9 @@ export class BarcodeScannerComponent {
             ],
         });
         void this.startCamera();
-        this.destroyRef.onDestroy(() => this.stopCamera());
+        this.destroyRef.onDestroy(() => {
+            this.stopCamera();
+        });
     }
 
     public close(): void {
@@ -106,7 +108,9 @@ export class BarcodeScannerComponent {
 
     private stopCamera(): void {
         cancelAnimationFrame(this.animationFrameId);
-        this.stream?.getTracks().forEach(track => track.stop());
+        this.stream?.getTracks().forEach(track => {
+            track.stop();
+        });
         this.stream = null;
     }
 }

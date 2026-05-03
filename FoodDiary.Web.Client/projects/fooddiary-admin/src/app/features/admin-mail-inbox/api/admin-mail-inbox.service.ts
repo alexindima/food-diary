@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
+import { type AdminMailInboxMessageDetails, type AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
 @Injectable({ providedIn: 'root' })
 export class AdminMailInboxService {

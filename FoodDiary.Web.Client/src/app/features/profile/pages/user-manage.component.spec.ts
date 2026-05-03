@@ -1,5 +1,5 @@
-import { signal, WritableSignal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal, type WritableSignal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -10,12 +10,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../services/localization.service';
-import { NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import { User } from '../../../shared/models/user.data';
+import { type User } from '../../../shared/models/user.data';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
-import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
+import { type DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage.component';
 

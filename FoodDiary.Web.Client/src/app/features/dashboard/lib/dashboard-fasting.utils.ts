@@ -1,4 +1,4 @@
-import { FASTING_PROTOCOLS, FastingOccurrenceKind, FastingSession } from '../../fasting/models/fasting.data';
+import { FASTING_PROTOCOLS, type FastingOccurrenceKind, type FastingSession } from '../../fasting/models/fasting.data';
 
 type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 

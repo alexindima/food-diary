@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from './fd-ui-segmented-toggle.component';
+import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from './fd-ui-segmented-toggle.component';
 
 describe('FdUiSegmentedToggleComponent', () => {
     let component: FdUiSegmentedToggleComponent;

@@ -49,7 +49,9 @@ export class LikeButtonComponent {
                     this.totalLikes.set(status.totalLikes);
                     this.isToggling.set(false);
                 },
-                error: () => this.isToggling.set(false),
+                error: () => {
+                    this.isToggling.set(false);
+                },
             });
     }
 }

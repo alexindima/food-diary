@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -11,11 +11,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { PageOf } from '../../../../shared/models/page-of.data';
+import { type PageOf } from '../../../../shared/models/page-of.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
-import { Meal } from '../../models/meal.data';
-import { MealOverview } from '../../models/meal.data';
+import { type Meal } from '../../models/meal.data';
+import { type MealOverview } from '../../models/meal.data';
 import { MealListComponent } from './meal-list.component';
 
 function createMockMeal(overrides: Partial<Meal> = {}): Meal {

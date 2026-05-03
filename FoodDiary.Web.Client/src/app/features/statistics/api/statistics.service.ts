@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import { AggregatedStatistics, GetStatisticsDto } from '../models/statistics.data';
+import { type AggregatedStatistics, type GetStatisticsDto } from '../models/statistics.data';
 
 @Injectable({
     providedIn: 'root',

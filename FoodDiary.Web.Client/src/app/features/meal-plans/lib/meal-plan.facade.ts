@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
 import { MealPlanService } from '../api/meal-plan.service';
-import { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import { type DietType, type MealPlan, type MealPlanSummary } from '../models/meal-plan.data';
 
 @Injectable()
 export class MealPlanFacade {
@@ -46,13 +46,21 @@ export class MealPlanFacade {
         this.service
             .adopt(id)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({ next: () => onSuccess() });
+            .subscribe({
+                next: () => {
+                    onSuccess();
+                },
+            });
     }
 
     public generateShoppingList(id: string, onSuccess: () => void): void {
         this.service
             .generateShoppingList(id)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({ next: () => onSuccess() });
+            .subscribe({
+                next: () => {
+                    onSuccess();
+                },
+            });
     }
 }

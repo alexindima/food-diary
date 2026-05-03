@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, type Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
-import { PageOf } from '../../../shared/models/page-of.data';
-import { MeasurementUnit, Product } from '../../products/models/product.data';
-import { Recipe } from '../../recipes/models/recipe.data';
+import { type PageOf } from '../../../shared/models/page-of.data';
+import { MeasurementUnit, type Product } from '../../products/models/product.data';
+import { type Recipe } from '../../recipes/models/recipe.data';
 import {
-    Consumption,
-    ConsumptionAiSession,
-    ConsumptionAiSessionResponseDto,
-    ConsumptionItem,
-    ConsumptionItemResponseDto,
-    ConsumptionOverview,
-    ConsumptionResponseDto,
+    type Consumption,
+    type ConsumptionAiSession,
+    type ConsumptionAiSessionResponseDto,
+    type ConsumptionItem,
+    type ConsumptionItemResponseDto,
+    type ConsumptionOverview,
+    type ConsumptionResponseDto,
     ConsumptionSourceType,
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
-    Meal,
-    MealFilters,
-    MealManageDto,
-    MealOverview,
+    type Meal,
+    type MealFilters,
+    type MealManageDto,
+    type MealOverview,
 } from '../models/meal.data';
 
 @Injectable({

@@ -8,7 +8,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { catchError, of } from 'rxjs';
 
@@ -16,8 +16,8 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
-import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { type FoodNutritionResponse, type FoodVisionItem } from '../../../../shared/models/ai.data';
+import { type ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../models/product.data';
 
 type ProductAiDialogData = {
@@ -355,7 +355,9 @@ export class ProductAiRecognitionDialogComponent {
         }
 
         this.imageUploadService.deleteAsset(assetId).subscribe({
-            error: err => this.logger.warn('Failed to delete AI product image asset', err),
+            error: err => {
+                this.logger.warn('Failed to delete AI product image asset', err);
+            },
         });
     }
 }

@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { AdminUser, AdminUsersService } from './admin-users.service';
+import { type AdminUser, AdminUsersService } from './admin-users.service';
 
 describe('AdminUsersService', () => {
     let service: AdminUsersService;

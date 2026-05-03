@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { type Routes } from '@angular/router';
 
 import { loggedInGuard } from '../../guards/logged-in.guard';
 

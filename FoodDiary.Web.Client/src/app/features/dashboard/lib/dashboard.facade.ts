@@ -4,13 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { auditTime, fromEvent } from 'rxjs';
 
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
-import { FastingSession } from '../../fasting/models/fasting.data';
+import { type CycleResponse } from '../../cycle-tracking/models/cycle.data';
+import { type FastingSession } from '../../fasting/models/fasting.data';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
-import { Meal } from '../../meals/models/meal.data';
+import { type Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
-import { DashboardSnapshot } from '../models/dashboard.data';
+import { type DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import {
@@ -120,12 +120,16 @@ export class DashboardFacade {
         this.initialized.set(true);
         this.loadDashboardSnapshot();
 
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadDashboardSnapshot(false));
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.loadDashboardSnapshot(false);
+        });
 
         if (typeof window !== 'undefined') {
             fromEvent(window, 'resize')
                 .pipe(auditTime(150), takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.layout.updateViewportWidth(window.innerWidth));
+                .subscribe(() => {
+                    this.layout.updateViewportWidth(window.innerWidth);
+                });
         }
     }
 
@@ -142,7 +146,9 @@ export class DashboardFacade {
     public addHydration(amount: number): void {
         const targetDate = getHydrationDateUtc(this.selectedDate());
         runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.addEntry(amount, targetDate), {
-            next: () => this.loadDashboardSnapshot(false, true),
+            next: () => {
+                this.loadDashboardSnapshot(false, true);
+            },
         });
     }
 
@@ -208,8 +214,12 @@ export class DashboardFacade {
         }
 
         this.now.set(new Date());
-        this.timerInterval = setInterval(() => this.now.set(new Date()), 1000);
-        this.destroyRef.onDestroy(() => this.stopFastingTimer());
+        this.timerInterval = setInterval(() => {
+            this.now.set(new Date());
+        }, 1000);
+        this.destroyRef.onDestroy(() => {
+            this.stopFastingTimer();
+        });
     }
 
     private stopFastingTimer(): void {

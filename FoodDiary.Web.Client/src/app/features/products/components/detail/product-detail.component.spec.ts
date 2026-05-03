@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -10,7 +10,7 @@ import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ProductService } from '../../api/product.service';
-import { MeasurementUnit, Product, ProductVisibility } from '../../models/product.data';
+import { MeasurementUnit, type Product, ProductVisibility } from '../../models/product.data';
 import { ProductDetailComponent } from './product-detail.component';
 
 const mockProduct: Product = {

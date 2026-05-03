@@ -1,4 +1,13 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    type ElementRef,
+    inject,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -17,9 +26,9 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
-import { UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
-import { FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
+import { type FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
 import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
 import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
 import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
@@ -237,14 +246,22 @@ export class DashboardComponent {
 
     public constructor() {
         this.facade.initialize();
-        afterNextRender(() => this.observeDashboardWidth());
+        afterNextRender(() => {
+            this.observeDashboardWidth();
+        });
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.layout.hasLayoutChanges(),
-            save: () => this.layout.save(),
-            discard: () => this.layout.discard(),
+            save: () => {
+                this.layout.save();
+            },
+            discard: () => {
+                this.layout.discard();
+            },
         };
         this.unsavedChangesService.register(handler);
-        this.destroyRef.onDestroy(() => this.unsavedChangesService.clear(handler));
+        this.destroyRef.onDestroy(() => {
+            this.unsavedChangesService.clear(handler);
+        });
     }
 
     public handleDateChange(value: Date): void {

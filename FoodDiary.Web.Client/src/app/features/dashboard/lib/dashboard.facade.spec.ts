@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { DashboardService } from '../api/dashboard.service';
-import { DashboardSnapshot } from '../models/dashboard.data';
+import { type DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
 

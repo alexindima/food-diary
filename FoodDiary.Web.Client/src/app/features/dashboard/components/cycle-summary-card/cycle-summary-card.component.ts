@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
-import { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
+import { type CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 
 @Component({

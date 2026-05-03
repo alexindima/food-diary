@@ -1,14 +1,14 @@
-import { signal, WritableSignal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal, type WritableSignal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { Observable, of } from 'rxjs';
+import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../services/localization.service';
 import { FastingFacade } from '../lib/fasting.facade';
-import { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
+import { type FastingInsights, type FastingProtocol, type FastingSession, type FastingStats } from '../models/fasting.data';
 import { FastingPageComponent } from './fasting-page.component';
 
 describe('FastingPageComponent', () => {

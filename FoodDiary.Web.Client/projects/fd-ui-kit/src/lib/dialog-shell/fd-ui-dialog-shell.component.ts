@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 
-import { FdUiDialogBodyScrollInset, FdUiDialogComponent, FdUiDialogSize } from '../dialog/fd-ui-dialog.component';
+import { type FdUiDialogBodyScrollInset, FdUiDialogComponent, type FdUiDialogSize } from '../dialog/fd-ui-dialog.component';
 
 @Component({
     selector: 'fd-ui-dialog-shell',

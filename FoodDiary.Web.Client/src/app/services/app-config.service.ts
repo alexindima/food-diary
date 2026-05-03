@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, type Observable, tap } from 'rxjs';
 
 import { rethrowApiError } from '../shared/lib/api-error.utils';
-import { AppConfig } from '../types/app.data';
+import { type AppConfig } from '../types/app.data';
 
 @Injectable({
     providedIn: 'root',

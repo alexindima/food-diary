@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminBillingService, AdminBillingSubscription } from '../api/admin-billing.service';
+import { AdminBillingService, type AdminBillingSubscription } from '../api/admin-billing.service';
 import { AdminBillingComponent } from './admin-billing.component';
 
 describe('AdminBillingComponent', () => {

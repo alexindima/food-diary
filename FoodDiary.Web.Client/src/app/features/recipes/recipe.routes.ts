@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { type Routes } from '@angular/router';
 
 import { RecipeContainerComponent } from './pages/container/recipe-container.component';
 import { recipeResolver } from './resolvers/recipe.resolver';

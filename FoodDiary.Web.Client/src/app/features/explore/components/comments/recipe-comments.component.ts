@@ -11,7 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { finalize } from 'rxjs';
 
 import { CommentService } from '../../api/comment.service';
-import { RecipeComment } from '../../models/comment.data';
+import { type RecipeComment } from '../../models/comment.data';
 
 @Component({
     selector: 'fd-recipe-comments',
@@ -62,7 +62,9 @@ export class RecipeCommentsComponent {
 
         operation
             .pipe(
-                finalize(() => this.isSubmitting.set(false)),
+                finalize(() => {
+                    this.isSubmitting.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -98,7 +100,9 @@ export class RecipeCommentsComponent {
                     this.commentService
                         .deleteComment(this.recipeId(), comment.id)
                         .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => this.loadComments());
+                        .subscribe(() => {
+                            this.loadComments();
+                        });
                 }
             });
     }
@@ -114,7 +118,9 @@ export class RecipeCommentsComponent {
         this.commentService
             .getComments(this.recipeId(), page, this.pageSize)
             .pipe(
-                finalize(() => this.isLoading.set(false)),
+                finalize(() => {
+                    this.isLoading.set(false);
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(data => {

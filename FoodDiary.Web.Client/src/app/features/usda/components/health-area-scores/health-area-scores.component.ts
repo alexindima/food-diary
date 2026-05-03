@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { HealthAreaScores } from '../../models/usda.data';
+import { type HealthAreaScores } from '../../models/usda.data';
 
 interface HealthAreaDisplay {
     key: string;

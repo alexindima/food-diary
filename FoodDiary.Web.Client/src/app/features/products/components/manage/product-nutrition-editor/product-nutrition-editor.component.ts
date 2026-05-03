@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
 import {
-    NutritionControlNames,
+    type NutritionControlNames,
     NutritionEditorComponent,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import {
-    NutritionMacroState,
-    NutritionMismatchWarning,
+    type NutritionMacroState,
+    type NutritionMismatchWarning,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { NutritionMode, ProductFormData } from '../base-product-manage.component';
+import { type NutritionMode, type ProductFormData } from '../base-product-manage.component';
 
 @Component({
     selector: 'fd-product-nutrition-editor',

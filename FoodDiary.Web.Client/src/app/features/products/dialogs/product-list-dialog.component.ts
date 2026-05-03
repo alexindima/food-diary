@@ -10,7 +10,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
 import { ProductListBaseComponent } from '../components/list/product-list-base.component';
-import { Product } from '../models/product.data';
+import { type Product } from '../models/product.data';
 import { ProductAddDialogComponent } from './product-add-dialog.component';
 
 @Component({

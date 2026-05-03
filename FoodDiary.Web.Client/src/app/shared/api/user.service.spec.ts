@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
-import { ChangePasswordRequest, UpdateUserDto, User } from '../models/user.data';
+import { type ChangePasswordRequest, UpdateUserDto, type User } from '../models/user.data';
 import { UserService } from './user.service';
 
 describe('UserService', () => {

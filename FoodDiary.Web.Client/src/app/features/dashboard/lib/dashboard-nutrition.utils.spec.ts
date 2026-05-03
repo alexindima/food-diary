@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { describe, expect, it } from 'vitest';
 
-import { DashboardSnapshot, DashboardStatistics } from '../models/dashboard.data';
+import { type DashboardSnapshot, type DashboardStatistics } from '../models/dashboard.data';
 import {
     createConsumptionRingSignal,
     createMealPreviewSignal,

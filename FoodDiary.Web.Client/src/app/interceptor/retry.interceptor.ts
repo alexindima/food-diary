@@ -1,6 +1,6 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, retry, timer } from 'rxjs';
+import { type Observable, retry, timer } from 'rxjs';
 
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {

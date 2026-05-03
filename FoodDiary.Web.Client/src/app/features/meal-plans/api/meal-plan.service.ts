@@ -1,12 +1,12 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
-import { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import { type ShoppingList } from '../../shopping-lists/models/shopping-list.data';
+import { type MealPlan, type MealPlanSummary } from '../models/meal-plan.data';
 
 @Injectable({
     providedIn: 'root',

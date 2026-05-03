@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { DailyMicronutrient } from '../../models/usda.data';
+import { type DailyMicronutrient } from '../../models/usda.data';
 
 @Component({
     selector: 'fd-daily-micronutrient-card',

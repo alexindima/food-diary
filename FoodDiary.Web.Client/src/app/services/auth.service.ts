@@ -1,19 +1,19 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, finalize, firstValueFrom, map, Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import {
-    AuthResponse,
-    ConfirmPasswordResetRequest,
-    LoginRequest,
-    PasswordResetRequest,
-    RegisterRequest,
-    RestoreAccountRequest,
-    TelegramAuthRequest,
-    TelegramLoginWidgetRequest,
+    type AuthResponse,
+    type ConfirmPasswordResetRequest,
+    type LoginRequest,
+    type PasswordResetRequest,
+    type RegisterRequest,
+    type RestoreAccountRequest,
+    type TelegramAuthRequest,
+    type TelegramLoginWidgetRequest,
 } from '../features/auth/models/auth.data';
-import { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
+import { type GoogleLoginRequest } from '../features/auth/models/google-auth.data';
 import { QuickMealService } from '../features/meals/lib/quick-meal.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
 import { ApiService } from './api.service';

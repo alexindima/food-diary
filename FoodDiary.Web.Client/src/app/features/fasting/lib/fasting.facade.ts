@@ -1,6 +1,6 @@
-import { computed, DestroyRef, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -9,14 +9,14 @@ import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import { FastingService } from '../api/fasting.service';
 import {
     FASTING_PROTOCOLS,
-    FastingInsights,
-    FastingMessage,
-    FastingMode,
-    FastingOverview,
-    FastingPlanType,
-    FastingProtocol,
-    FastingSession,
-    FastingStats,
+    type FastingInsights,
+    type FastingMessage,
+    type FastingMode,
+    type FastingOverview,
+    type FastingPlanType,
+    type FastingProtocol,
+    type FastingSession,
+    type FastingStats,
 } from '../models/fasting.data';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 
@@ -127,7 +127,9 @@ export class FastingFacade {
     });
 
     public initialize(): void {
-        this.trackRequest(this.isLoading, this.fastingService.getOverview(), overview => this.applyOverview(overview));
+        this.trackRequest(this.isLoading, this.fastingService.getOverview(), overview => {
+            this.applyOverview(overview);
+        });
     }
 
     public loadMoreHistory(): void {
@@ -285,7 +287,9 @@ export class FastingFacade {
     public extendByHours(hours: number): void {
         const additionalHours = Math.max(1, Math.min(168, hours));
         runTrackedRequest(this.destroyRef, this.isExtending, this.fastingService.extend({ additionalHours }), {
-            next: session => this.applyCurrentSessionUpdate(session),
+            next: session => {
+                this.applyCurrentSessionUpdate(session);
+            },
         });
     }
 
@@ -392,8 +396,12 @@ export class FastingFacade {
     private startTimer(): void {
         this.stopTimer();
         this.now.set(new Date());
-        this.timerInterval = setInterval(() => this.now.set(new Date()), 1000);
-        this.destroyRef.onDestroy(() => this.stopTimer());
+        this.timerInterval = setInterval(() => {
+            this.now.set(new Date());
+        }, 1000);
+        this.destroyRef.onDestroy(() => {
+            this.stopTimer();
+        });
     }
 
     private stopTimer(): void {
@@ -407,7 +415,9 @@ export class FastingFacade {
         this.fastingService
             .getOverview()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(overview => this.applyOverview(overview));
+            .subscribe(overview => {
+                this.applyOverview(overview);
+            });
     }
 
     private applyOverview(overview: FastingOverview): void {

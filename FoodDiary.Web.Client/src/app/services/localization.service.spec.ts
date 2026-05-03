@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { Observable, of, Subject } from 'rxjs';
+import { type LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { type Observable, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';

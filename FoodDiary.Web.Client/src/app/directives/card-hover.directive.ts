@@ -33,7 +33,9 @@ export class FdCardHoverDirective {
 
         this.renderer.setStyle(element, 'cursor', 'pointer');
         this.renderer.setStyle(element, 'transition', 'transform 0.2s ease, box-shadow 0.2s ease');
-        this.destroyRef.onDestroy(() => this.cleanupStyles());
+        this.destroyRef.onDestroy(() => {
+            this.cleanupStyles();
+        });
     }
 
     public onMouseEnter(): void {

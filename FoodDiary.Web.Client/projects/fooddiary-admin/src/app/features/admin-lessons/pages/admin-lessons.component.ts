@@ -6,7 +6,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import { AdminLessonsService } from '../api/admin-lessons.service';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog.component';
-import { AdminLesson, AdminLessonCreateRequest, AdminLessonsImportRequest } from '../models/admin-lesson.data';
+import { type AdminLesson, type AdminLessonCreateRequest, type AdminLessonsImportRequest } from '../models/admin-lesson.data';
 
 @Component({
     selector: 'fd-admin-lessons',
@@ -101,7 +101,9 @@ export class AdminLessonsComponent {
             .delete(lesson.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: () => this.loadLessons(),
+                next: () => {
+                    this.loadLessons();
+                },
             });
     }
 

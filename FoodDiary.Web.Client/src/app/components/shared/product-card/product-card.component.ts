@@ -6,7 +6,7 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 import { finalize, of, switchMap } from 'rxjs';
 
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
-import { FavoriteProduct, QualityGrade } from '../../../features/products/models/product.data';
+import { type FavoriteProduct, type QualityGrade } from '../../../features/products/models/product.data';
 import { AuthService } from '../../../services/auth.service';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 
@@ -129,7 +129,9 @@ export class ProductCardComponent {
             .add(productId, this.product().name)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoriteLoading.set(false)),
+                finalize(() => {
+                    this.isFavoriteLoading.set(false);
+                }),
             )
             .subscribe({
                 next: favorite => {
@@ -146,7 +148,9 @@ export class ProductCardComponent {
                 .remove(this.favoriteProductId)
                 .pipe(
                     takeUntilDestroyed(this.destroyRef),
-                    finalize(() => this.isFavoriteLoading.set(false)),
+                    finalize(() => {
+                        this.isFavoriteLoading.set(false);
+                    }),
                 )
                 .subscribe({
                     next: () => {
@@ -170,7 +174,9 @@ export class ProductCardComponent {
                     return this.favoriteProductService.remove(match.id);
                 }),
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => this.isFavoriteLoading.set(false)),
+                finalize(() => {
+                    this.isFavoriteLoading.set(false);
+                }),
             )
             .subscribe({
                 next: () => {

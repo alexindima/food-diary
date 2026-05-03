@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthMode } from '../features/auth/models/auth.data';
+import { type AuthMode } from '../features/auth/models/auth.data';
 
 @Injectable({
     providedIn: 'root',
@@ -47,14 +47,14 @@ export class NavigationService {
         await this.router.navigate(['/meals']);
     }
 
-    public async navigateToConsumptionAdd(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<void> {
+    public async navigateToConsumptionAdd(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
         const navigationExtras = mealType
             ? {
                   state: { mealType, ...(extras?.state ?? {}) },
                   queryParams: { mealType },
               }
             : { state: extras?.state };
-        await this.router.navigate(['/meals/add'], navigationExtras);
+        return await this.router.navigate(['/meals/add'], navigationExtras);
     }
 
     public async navigateToConsumptionEdit(id: string): Promise<void> {

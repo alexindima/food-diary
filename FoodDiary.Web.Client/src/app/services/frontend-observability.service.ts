@@ -3,7 +3,7 @@ import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Rout
 import { filter } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { ClientTelemetryEvent, LoggingApiService } from './logging-api.service';
+import { type ClientTelemetryEvent, LoggingApiService } from './logging-api.service';
 
 type HttpOutcome = 'success' | 'client_error' | 'server_error' | 'network_error';
 type RouteOutcome = 'success' | 'cancelled' | 'error';

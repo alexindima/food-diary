@@ -2,13 +2,13 @@ import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
+import { type ChartData, type ChartOptions, type ChartTypeRegistry, type TooltipItem } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { distinctUntilChanged, fromEvent, map } from 'rxjs';
 
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { RecursivePartial } from '../../../shared/lib/common.data';
-import { NutrientData } from '../../../shared/models/charts.data';
+import { type RecursivePartial } from '../../../shared/lib/common.data';
+import { type NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({
@@ -123,7 +123,9 @@ export class NutrientsSummaryComponent {
                 distinctUntilChanged(),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(width => this.viewportWidth.set(width));
+            .subscribe(width => {
+                this.viewportWidth.set(width);
+            });
     }
 
     private mergeConfig(userConfig: Partial<NutrientsSummaryConfig>): NutrientsSummaryConfigInternal {

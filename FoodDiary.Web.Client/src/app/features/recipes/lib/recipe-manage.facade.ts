@@ -1,20 +1,20 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { type FormArray, type FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { finalize, map, Observable } from 'rxjs';
+import { finalize, map, type Observable } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import {
     ItemSelectDialogComponent,
-    ItemSelectDialogData,
-    ItemSelection,
+    type ItemSelectDialogData,
+    type ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { RecipeService } from '../api/recipe.service';
-import { IngredientFormData, NutritionScaleMode, StepFormData } from '../components/manage/recipe-manage.types';
-import { Recipe, RecipeDto } from '../models/recipe.data';
+import { type IngredientFormData, type NutritionScaleMode, type StepFormData } from '../components/manage/recipe-manage.types';
+import { type Recipe, type RecipeDto } from '../models/recipe.data';
 
 export interface RecipeNutritionSummary {
     calories: number;
@@ -176,10 +176,16 @@ export class RecipeManageFacade {
         this.isSubmitting.set(true);
         this.recipeService
             .create(recipeData)
-            .pipe(finalize(() => this.isSubmitting.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSubmitting.set(false);
+                }),
+            )
             .subscribe({
                 next: recipe => void this.handleSubmitResponse(recipe),
-                error: error => this.handleSubmitError(error),
+                error: error => {
+                    this.handleSubmitError(error);
+                },
             });
     }
 
@@ -187,10 +193,16 @@ export class RecipeManageFacade {
         this.isSubmitting.set(true);
         this.recipeService
             .update(id, recipeData)
-            .pipe(finalize(() => this.isSubmitting.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSubmitting.set(false);
+                }),
+            )
             .subscribe({
                 next: recipe => void this.handleSubmitResponse(recipe),
-                error: error => this.handleSubmitError(error),
+                error: error => {
+                    this.handleSubmitError(error);
+                },
             });
     }
 

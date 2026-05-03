@@ -48,8 +48,12 @@ export class CalorieGoalDialogComponent {
         };
 
         this.goalsService.updateGoals(payload).subscribe({
-            next: result => this.dialogRef.close(result !== null),
-            error: () => this.dialogRef.close(false),
+            next: result => {
+                this.dialogRef.close(result !== null);
+            },
+            error: () => {
+                this.dialogRef.close(false);
+            },
         });
     }
 

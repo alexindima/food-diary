@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
 import {
-    NutritionControlNames,
+    type NutritionControlNames,
     NutritionEditorComponent,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { Consumption } from '../../../models/meal.data';
-import { CalorieMismatchWarning, ConsumptionFormData, MacroBarState, NutritionMode } from '../base-meal-manage.types';
+import { type Consumption } from '../../../models/meal.data';
+import { type CalorieMismatchWarning, type ConsumptionFormData, type MacroBarState, type NutritionMode } from '../base-meal-manage.types';
 
 @Component({
     selector: 'fd-meal-nutrition-sidebar',

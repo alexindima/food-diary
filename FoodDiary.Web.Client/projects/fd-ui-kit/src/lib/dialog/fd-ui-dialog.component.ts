@@ -7,7 +7,7 @@ import {
     computed,
     contentChild,
     DestroyRef,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     signal,

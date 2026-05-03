@@ -1,10 +1,10 @@
-import { Dialog, DialogConfig } from '@angular/cdk/dialog';
+import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
-import { ComponentType } from '@angular/cdk/portal';
+import { type ComponentType } from '@angular/cdk/portal';
 import { inject, Injectable } from '@angular/core';
-import { StaticProvider } from '@angular/core';
+import { type StaticProvider } from '@angular/core';
 
-import { FdUiDialogSize } from './fd-ui-dialog.component';
+import { type FdUiDialogSize } from './fd-ui-dialog.component';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
@@ -55,7 +55,7 @@ export class FdUiDialogService {
                   : this.overlay.position().global().centerHorizontally().top(DEFAULT_DIALOG_TOP_OFFSET));
         const baseProviders = config.providers ?? [];
 
-        const dialogConfig: DialogConfig<D, import('@angular/cdk/dialog').DialogRef<R, T>> = {
+        const dialogConfig: DialogConfig<D, DialogRef<R, T>> = {
             ...config,
             width: config.width ?? (isEdgeMobile ? '100vw' : undefined),
             maxWidth: config.maxWidth ?? (isEdgeMobile ? '100vw' : undefined),

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AuthMode } from '../features/auth/models/auth.data';
+import { type AuthMode } from '../features/auth/models/auth.data';
 import { NavigationService } from './navigation.service';
 
 type RouterMock = {

@@ -1,5 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+    type AbstractControl,
+    type FormArray,
+    FormControl,
+    FormGroup,
+    type ValidationErrors,
+    type ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -9,30 +17,35 @@ import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import {
     ItemSelectDialogComponent,
-    ItemSelectDialogData,
-    ItemSelection,
+    type ItemSelectDialogData,
+    type ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { calculateCalorieMismatchWarning, getControlNumericValue, roundNutrient } from '../../../shared/lib/nutrition-form.utils';
-import { UserAiUsageResponse } from '../../../shared/models/ai.data';
-import { ImageSelection } from '../../../shared/models/image-upload.data';
-import { Product } from '../../products/models/product.data';
-import { Recipe } from '../../recipes/models/recipe.data';
+import { type UserAiUsageResponse } from '../../../shared/models/ai.data';
+import { type ImageSelection } from '../../../shared/models/image-upload.data';
+import { type Product } from '../../products/models/product.data';
+import { type Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
 import {
-    CalorieMismatchWarning,
-    ConsumptionFormData,
-    ConsumptionItemFormData,
-    ConsumptionItemFormValues,
-    MealNutritionSummaryState,
-    NutritionTotals,
+    type CalorieMismatchWarning,
+    type ConsumptionFormData,
+    type ConsumptionItemFormData,
+    type ConsumptionItemFormValues,
+    type MealNutritionSummaryState,
+    type NutritionTotals,
 } from '../components/manage/base-meal-manage.types';
 import {
-    ConsumptionManageRedirectAction,
-    ConsumptionManageSuccessDialogData,
+    type ConsumptionManageRedirectAction,
+    type ConsumptionManageSuccessDialogData,
     MealManageSuccessDialogComponent,
 } from '../dialogs/manage-success-dialog/meal-manage-success-dialog.component';
 import type { MealPhotoRecognitionDialogComponent } from '../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
-import { Consumption, ConsumptionAiSessionManageDto, ConsumptionManageDto, ConsumptionSourceType } from '../models/meal.data';
+import {
+    type Consumption,
+    type ConsumptionAiSessionManageDto,
+    type ConsumptionManageDto,
+    ConsumptionSourceType,
+} from '../models/meal.data';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
 @Injectable({ providedIn: 'root' })

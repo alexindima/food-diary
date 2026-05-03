@@ -5,20 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FdUiChipSelectComponent,
-    FdUiChipSelectOption,
+    type FdUiChipSelectOption,
     FdUiEmojiPickerComponent,
-    FdUiEmojiPickerOption,
+    type FdUiEmojiPickerOption,
     FdUiSegmentedToggleComponent,
-    FdUiSegmentedToggleOption,
+    type FdUiSegmentedToggleOption,
 } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInlineAlertComponent, FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
+import { FdUiInlineAlertComponent, type FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, type Observable } from 'rxjs';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
@@ -28,17 +28,17 @@ import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { LocalizationService } from '../../../services/localization.service';
 import {
     FastingCheckInChartDialogComponent,
-    FastingCheckInChartDialogData,
+    type FastingCheckInChartDialogData,
 } from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
 import {
     FastingEndConfirmDialogComponent,
-    FastingEndConfirmDialogData,
-    FastingEndConfirmDialogResult,
+    type FastingEndConfirmDialogData,
+    type FastingEndConfirmDialogResult,
 } from '../components/fasting-end-confirm-dialog/fasting-end-confirm-dialog.component';
 import {
     FastingSafetyDialogComponent,
-    FastingSafetyDialogData,
-    FastingSafetyDialogResult,
+    type FastingSafetyDialogData,
+    type FastingSafetyDialogResult,
 } from '../components/fasting-safety-dialog/fasting-safety-dialog.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
@@ -49,20 +49,20 @@ import {
     FASTING_MOOD_EMOJI_SCALE,
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
     FASTING_WARNING_THRESHOLD_HOURS,
-    FastingEmojiScaleOption,
+    type FastingEmojiScaleOption,
 } from '../lib/fasting-page.constants';
-import { FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
+import { type FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
 import {
     CYCLIC_PRESETS,
     FASTING_PROTOCOLS,
     FASTING_SYMPTOM_OPTIONS,
-    FastingCheckIn,
-    FastingMessage,
-    FastingMode,
-    FastingProtocol,
-    FastingSession,
-    FastingSessionStatus,
-    FastingStats,
+    type FastingCheckIn,
+    type FastingMessage,
+    type FastingMode,
+    type FastingProtocol,
+    type FastingSession,
+    type FastingSessionStatus,
+    type FastingStats,
 } from '../models/fasting.data';
 
 @Component({
@@ -475,7 +475,9 @@ export class FastingPageComponent {
             this.getSkipCycleConfirmTitleKey(),
             this.getSkipCycleConfirmMessageKey(),
             this.getSkipCycleActionLabelKey(),
-            () => this.facade.skipCyclicDay(),
+            () => {
+                this.facade.skipCyclicDay();
+            },
         );
     }
 
@@ -484,7 +486,9 @@ export class FastingPageComponent {
             this.getPostponeCycleConfirmTitleKey(),
             this.getPostponeCycleConfirmMessageKey(),
             this.getPostponeCycleActionLabelKey(),
-            () => this.facade.postponeCyclicDay(),
+            () => {
+                this.facade.postponeCyclicDay();
+            },
         );
     }
 

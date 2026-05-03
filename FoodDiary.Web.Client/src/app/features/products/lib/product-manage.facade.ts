@@ -1,18 +1,18 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
+    type ConfirmDeleteDialogData,
 } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { PremiumRequiredDialogComponent } from '../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { ProductService } from '../api/product.service';
-import { ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog.component';
-import { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
+import { ProductSaveSuccessDialogComponent, type ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog.component';
+import { type CreateProductRequest, type Product, type UpdateProductRequest } from '../models/product.data';
 
 export type RedirectAction = 'Home' | 'ProductList';
 

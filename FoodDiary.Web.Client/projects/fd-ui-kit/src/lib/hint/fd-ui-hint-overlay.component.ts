@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, TemplateRef } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, input, type TemplateRef } from '@angular/core';
+import { type SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'fd-ui-hint-overlay',

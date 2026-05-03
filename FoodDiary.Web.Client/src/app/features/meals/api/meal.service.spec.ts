@@ -3,8 +3,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { PageOf } from '../../../shared/models/page-of.data';
-import { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../models/meal.data';
+import { type PageOf } from '../../../shared/models/page-of.data';
+import { type ConsumptionManageDto, type ConsumptionResponseDto, type MealFilters } from '../models/meal.data';
 import { MealService } from './meal.service';
 
 describe('MealService', () => {

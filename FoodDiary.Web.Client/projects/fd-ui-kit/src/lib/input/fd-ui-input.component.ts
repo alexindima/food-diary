@@ -1,12 +1,12 @@
 ﻿import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
-import { afterNextRender, DestroyRef, ElementRef, viewChild } from '@angular/core';
+import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { FdUiFieldSize } from '../types/field-size.type';
+import { type FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
@@ -62,11 +62,17 @@ export class FdUiInputComponent implements ControlValueAccessor {
         afterNextRender(() => {
             this.monitorAutofill();
             this.syncNativeValue();
-            this.autofillSyncTimers = [100, 500, 1000, 2500, 5000].map(delay => setTimeout(() => this.syncNativeValue(), delay));
+            this.autofillSyncTimers = [100, 500, 1000, 2500, 5000].map(delay =>
+                setTimeout(() => {
+                    this.syncNativeValue();
+                }, delay),
+            );
         });
 
         this.destroyRef.onDestroy(() => {
-            this.autofillSyncTimers.forEach(timer => clearTimeout(timer));
+            this.autofillSyncTimers.forEach(timer => {
+                clearTimeout(timer);
+            });
         });
     }
 
@@ -195,7 +201,9 @@ export class FdUiInputComponent implements ControlValueAccessor {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.syncNativeValue();
-                setTimeout(() => this.syncNativeValue());
+                setTimeout(() => {
+                    this.syncNativeValue();
+                });
             });
     }
 }

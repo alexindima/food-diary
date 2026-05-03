@@ -1,15 +1,15 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';
-import { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
-import { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
+import { type RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
+import { type FavoriteRecipe, type Recipe, type RecipeFilters } from '../models/recipe.data';
 
 @Injectable()
 export class RecipeListFacade {
@@ -70,7 +70,9 @@ export class RecipeListFacade {
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
-            finalize(() => this.recipeData.setLoading(false)),
+            finalize(() => {
+                this.recipeData.setLoading(false);
+            }),
         );
     }
 
@@ -98,7 +100,9 @@ export class RecipeListFacade {
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
-            finalize(() => this.recipeData.setLoading(false)),
+            finalize(() => {
+                this.recipeData.setLoading(false);
+            }),
         );
     }
 

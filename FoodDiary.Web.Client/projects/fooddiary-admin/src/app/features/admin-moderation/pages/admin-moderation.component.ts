@@ -8,10 +8,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AdminModerationService } from '../api/admin-moderation.service';
 import {
     AdminModerationActionDialogComponent,
-    AdminModerationActionDialogData,
-    AdminModerationActionDialogResult,
+    type AdminModerationActionDialogData,
+    type AdminModerationActionDialogResult,
 } from '../dialogs/admin-moderation-action-dialog.component';
-import { AdminContentReport } from '../models/admin-moderation.data';
+import { type AdminContentReport } from '../models/admin-moderation.data';
 
 @Component({
     selector: 'fd-admin-moderation',

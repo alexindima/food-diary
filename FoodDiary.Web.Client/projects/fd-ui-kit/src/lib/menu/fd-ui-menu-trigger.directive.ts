@@ -1,9 +1,9 @@
-import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DestroyRef, Directive, effect, ElementRef, inject, input, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { FdUiMenuComponent } from './fd-ui-menu.component';
+import { type FdUiMenuComponent } from './fd-ui-menu.component';
 
 @Directive({
     selector: '[fdUiMenuTrigger]',
@@ -104,8 +104,16 @@ export class FdUiMenuTriggerDirective {
 
         this.activeSubscriptions.unsubscribe();
         this.activeSubscriptions = new Subscription();
-        this.activeSubscriptions.add(menu.closed.subscribe(() => this.close()));
-        this.activeSubscriptions.add(overlayRef.backdropClick().subscribe(() => this.close()));
+        this.activeSubscriptions.add(
+            menu.closed.subscribe(() => {
+                this.close();
+            }),
+        );
+        this.activeSubscriptions.add(
+            overlayRef.backdropClick().subscribe(() => {
+                this.close();
+            }),
+        );
         this.activeSubscriptions.add(
             overlayRef.keydownEvents().subscribe(event => {
                 if (event.key === 'Escape') {

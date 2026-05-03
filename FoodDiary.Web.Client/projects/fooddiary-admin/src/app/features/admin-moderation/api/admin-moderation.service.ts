@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { AdminContentReport, AdminReportAction } from '../models/admin-moderation.data';
+import { type AdminContentReport, type AdminReportAction } from '../models/admin-moderation.data';
 
 export type PagedResponse<T> = {
     items: T[];

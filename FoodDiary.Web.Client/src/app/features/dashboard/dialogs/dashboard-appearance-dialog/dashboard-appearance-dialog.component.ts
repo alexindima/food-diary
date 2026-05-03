@@ -10,8 +10,8 @@ import { UpdateUserAppearanceDto } from '../../../../shared/models/user.data';
 import {
     APP_THEMES,
     APP_UI_STYLES,
-    AppThemeName,
-    AppUiStyleName,
+    type AppThemeName,
+    type AppUiStyleName,
     isAppThemeName,
     isAppUiStyleName,
 } from '../../../../theme/app-theme.config';
@@ -120,7 +120,9 @@ export class DashboardAppearanceDialogComponent {
                         this.themeService.syncWithUserPreferences(persistedTheme, persistedUiStyle);
                     }
                 },
-                error: () => this.handlePersistError(),
+                error: () => {
+                    this.handlePersistError();
+                },
             });
     }
 

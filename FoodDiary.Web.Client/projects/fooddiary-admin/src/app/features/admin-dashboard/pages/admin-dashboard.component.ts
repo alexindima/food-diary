@@ -4,11 +4,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
-import { AdminAiUsageSummary } from '../../admin-ai-usage/models/admin-ai-usage.data';
+import { type AdminAiUsageSummary } from '../../admin-ai-usage/models/admin-ai-usage.data';
 import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminTelemetryService } from '../api/admin-telemetry.service';
-import { AdminDashboardSummary } from '../models/admin-dashboard.data';
-import { FastingTelemetrySummary } from '../models/admin-telemetry.data';
+import { type AdminDashboardSummary } from '../models/admin-dashboard.data';
+import { type FastingTelemetrySummary } from '../models/admin-telemetry.data';
 
 @Component({
     selector: 'fd-admin-dashboard',
@@ -53,16 +53,24 @@ export class AdminDashboardComponent {
             .getSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: response => this.aiUsage.set(response),
-                error: () => this.aiUsage.set(null),
+                next: response => {
+                    this.aiUsage.set(response);
+                },
+                error: () => {
+                    this.aiUsage.set(null);
+                },
             });
 
         this.telemetryService
             .getFastingSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: response => this.fastingTelemetry.set(response),
-                error: () => this.fastingTelemetry.set(null),
+                next: response => {
+                    this.fastingTelemetry.set(response);
+                },
+                error: () => {
+                    this.fastingTelemetry.set(null);
+                },
             });
     }
 

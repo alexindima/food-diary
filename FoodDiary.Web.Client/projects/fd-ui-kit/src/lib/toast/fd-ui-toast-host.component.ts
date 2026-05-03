@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { FdUiToastHorizontalPosition, FdUiToastInstance, FdUiToastService, FdUiToastVerticalPosition } from './fd-ui-toast.service';
+import {
+    type FdUiToastHorizontalPosition,
+    type FdUiToastInstance,
+    FdUiToastService,
+    type FdUiToastVerticalPosition,
+} from './fd-ui-toast.service';
 
 interface FdUiToastViewport {
     key: string;

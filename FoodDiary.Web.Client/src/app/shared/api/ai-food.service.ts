@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {
-    FoodNutritionRequest,
-    FoodNutritionResponse,
-    FoodTextRequest,
-    FoodVisionRequest,
-    FoodVisionResponse,
-    UserAiUsageResponse,
+    type FoodNutritionRequest,
+    type FoodNutritionResponse,
+    type FoodTextRequest,
+    type FoodVisionRequest,
+    type FoodVisionResponse,
+    type UserAiUsageResponse,
 } from '../models/ai.data';
 
 @Injectable({ providedIn: 'root' })

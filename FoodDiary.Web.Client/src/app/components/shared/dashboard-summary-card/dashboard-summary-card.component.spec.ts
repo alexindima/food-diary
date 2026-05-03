@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DashboardSummaryCardComponent, NutrientBar } from './dashboard-summary-card.component';
+import { DashboardSummaryCardComponent, type NutrientBar } from './dashboard-summary-card.component';
 
 describe('DashboardSummaryCardComponent', () => {
     let component: DashboardSummaryCardComponent;

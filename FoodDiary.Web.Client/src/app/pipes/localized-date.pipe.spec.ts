@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
+import { type LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { type Observable, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizedDatePipe } from './localized-date.pipe';

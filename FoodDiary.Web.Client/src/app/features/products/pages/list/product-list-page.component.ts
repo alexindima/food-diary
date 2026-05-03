@@ -19,7 +19,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import type { ProductDetailActionResult } from '../../components/detail/product-detail.component';
 import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
-import { Product } from '../../models/product.data';
+import { type Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-list-page',

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../../shared/api/user.service';
-import { ChangePasswordDialogComponent, ChangePasswordDialogData } from './change-password-dialog.component';
+import { ChangePasswordDialogComponent, type ChangePasswordDialogData } from './change-password-dialog.component';
 
 describe('ChangePasswordDialogComponent', () => {
     let component: ChangePasswordDialogComponent;

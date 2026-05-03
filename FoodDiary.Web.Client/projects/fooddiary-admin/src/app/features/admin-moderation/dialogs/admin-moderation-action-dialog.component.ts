@@ -8,7 +8,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
 import { AdminModerationService } from '../api/admin-moderation.service';
-import { AdminContentReport } from '../models/admin-moderation.data';
+import { type AdminContentReport } from '../models/admin-moderation.data';
 
 export type AdminModerationActionDialogData = {
     report: AdminContentReport;
@@ -51,7 +51,9 @@ export class AdminModerationActionDialogComponent {
                 : this.moderationService.dismissReport(this.data.report.id, action);
 
         operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: () => this.dialogRef.close({ confirmed: true }),
+            next: () => {
+                this.dialogRef.close({ confirmed: true });
+            },
             error: () => {
                 this.isSubmitting.set(false);
             },

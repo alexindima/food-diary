@@ -7,14 +7,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
-import { UserAiUsageResponse } from '../../../shared/models/ai.data';
-import { ImageSelection } from '../../../shared/models/image-upload.data';
+import { type UserAiUsageResponse } from '../../../shared/models/ai.data';
+import { type ImageSelection } from '../../../shared/models/image-upload.data';
 import { MealService } from '../api/meal.service';
-import { ConsumptionFormData, ConsumptionItemFormData } from '../components/manage/base-meal-manage.types';
+import { type ConsumptionFormData, type ConsumptionItemFormData } from '../components/manage/base-meal-manage.types';
 import {
-    Consumption,
-    ConsumptionAiSessionManageDto,
-    ConsumptionManageDto,
+    type Consumption,
+    type ConsumptionAiSessionManageDto,
+    type ConsumptionManageDto,
     ConsumptionSourceType,
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,

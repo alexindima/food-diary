@@ -3,14 +3,14 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { PageOf } from '../../../shared/models/page-of.data';
+import { type PageOf } from '../../../shared/models/page-of.data';
 import {
-    CreateProductRequest,
+    type CreateProductRequest,
     MeasurementUnit,
-    Product,
+    type Product,
     ProductType,
     ProductVisibility,
-    UpdateProductRequest,
+    type UpdateProductRequest,
 } from '../models/product.data';
 import { ProductService } from './product.service';
 

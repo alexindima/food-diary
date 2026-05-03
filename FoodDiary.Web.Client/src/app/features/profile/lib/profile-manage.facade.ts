@@ -5,17 +5,17 @@ import { finalize, firstValueFrom } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
+    type ConfirmDeleteDialogData,
 } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { NotificationPreferences, NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
+import { type NotificationPreferences, NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
 import { ThemeService } from '../../../services/theme.service';
 import { UserService } from '../../../shared/api/user.service';
-import { AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
-import { UpdateUserDto, User } from '../../../shared/models/user.data';
-import { DietologistRelationship } from '../../dietologist/models/dietologist.data';
+import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { type UpdateUserDto, type User } from '../../../shared/models/user.data';
+import { type DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
@@ -33,7 +33,9 @@ export class ProfileManageFacade {
     private readonly profileAutosaveQueue: AutosaveQueue<UpdateUserDto> = createAutosaveQueue({
         debounceMs: 700,
         isBusy: () => this.isSavingProfile(),
-        persist: updateData => this.persistProfileUpdate(updateData),
+        persist: updateData => {
+            this.persistProfileUpdate(updateData);
+        },
     });
 
     public readonly user = signal<User | null>(null);
@@ -123,7 +125,11 @@ export class ProfileManageFacade {
                 this.isDeleting.set(true);
                 this.userService
                     .deleteCurrentUser()
-                    .pipe(finalize(() => this.isDeleting.set(false)))
+                    .pipe(
+                        finalize(() => {
+                            this.isDeleting.set(false);
+                        }),
+                    )
                     .subscribe({
                         next: success => {
                             if (!success) {
@@ -150,7 +156,11 @@ export class ProfileManageFacade {
         this.isRevokingAiConsent.set(true);
         this.userService
             .revokeAiConsent()
-            .pipe(finalize(() => this.isRevokingAiConsent.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isRevokingAiConsent.set(false);
+                }),
+            )
             .subscribe({
                 next: () => {
                     const current = this.user();
@@ -243,7 +253,11 @@ export class ProfileManageFacade {
         this.isSavingProfile.set(true);
         this.userService
             .update(updateData)
-            .pipe(finalize(() => this.isSavingProfile.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isSavingProfile.set(false);
+                }),
+            )
             .subscribe({
                 next: user => {
                     if (!user) {
@@ -321,7 +335,11 @@ export class ProfileManageFacade {
 
         this.notificationService
             .getWebPushSubscriptions()
-            .pipe(finalize(() => this.isLoadingWebPushSubscriptions.set(false)))
+            .pipe(
+                finalize(() => {
+                    this.isLoadingWebPushSubscriptions.set(false);
+                }),
+            )
             .subscribe({
                 next: subscriptions => {
                     this.webPushSubscriptions.set(subscriptions);

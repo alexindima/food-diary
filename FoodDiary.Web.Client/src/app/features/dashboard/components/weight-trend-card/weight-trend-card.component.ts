@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
+import { type ChartConfiguration, type ScaleOptionsByType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';

@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
-import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { type FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -16,7 +16,7 @@ import { StatisticsBodyComponent } from '../../../components/shared/statistics-b
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
 import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { ExportFormat, ExportService } from '../../meals/api/export.service';
+import { type ExportFormat, ExportService } from '../../meals/api/export.service';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import {
     barChartOptions,

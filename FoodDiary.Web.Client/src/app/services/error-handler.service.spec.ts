@@ -61,7 +61,9 @@ describe('GlobalErrorHandler', () => {
         });
         vi.spyOn(console, 'error');
 
-        expect(() => handler.handleError(new Error('Test'))).not.toThrow();
+        expect(() => {
+            handler.handleError(new Error('Test'));
+        }).not.toThrow();
         // eslint-disable-next-line no-console
         expect(console.error).toHaveBeenCalledWith('Failed to send log to backend:', expect.any(Error));
     });

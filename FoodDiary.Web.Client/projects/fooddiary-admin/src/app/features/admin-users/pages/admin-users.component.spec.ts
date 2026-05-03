@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminImpersonationSession, AdminUser, AdminUsersService, PagedResponse } from '../api/admin-users.service';
+import { type AdminImpersonationSession, type AdminUser, AdminUsersService, type PagedResponse } from '../api/admin-users.service';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 import { AdminUsersComponent } from './admin-users.component';
 

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { FdUiFieldSize } from '../types/field-size.type';
+import { type FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 
@@ -46,7 +46,9 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     private lastValidTime = '00:00';
 
     public constructor() {
-        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.emitValue());
+        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.emitValue();
+        });
     }
 
     protected get sizeClass(): string {

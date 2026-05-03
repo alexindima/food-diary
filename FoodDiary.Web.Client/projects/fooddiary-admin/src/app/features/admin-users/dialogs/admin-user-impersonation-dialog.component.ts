@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, type FormControl, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -8,7 +8,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
-import { AdminImpersonationStart, AdminUser, AdminUsersService } from '../api/admin-users.service';
+import { type AdminImpersonationStart, type AdminUser, AdminUsersService } from '../api/admin-users.service';
 
 type AdminUserImpersonationForm = {
     reason: FormControl<string>;
@@ -74,7 +74,9 @@ export class AdminUserImpersonationDialogComponent {
             .startImpersonation(this.user.id, this.form.controls.reason.value.trim())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: response => this.dialogRef.close(response),
+                next: response => {
+                    this.dialogRef.close(response);
+                },
                 error: () => {
                     this.submitError.set('Could not start impersonation. Please try again.');
                     this.isSubmitting.set(false);

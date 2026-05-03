@@ -1,6 +1,6 @@
-import { DestroyRef, WritableSignal } from '@angular/core';
+import { type DestroyRef, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, Observable, PartialObserver } from 'rxjs';
+import { finalize, type Observable, type PartialObserver } from 'rxjs';
 
 export function runTrackedRequest<T>(
     destroyRef: DestroyRef,
@@ -11,7 +11,9 @@ export function runTrackedRequest<T>(
     state.set(true);
     request$
         .pipe(
-            finalize(() => state.set(false)),
+            finalize(() => {
+                state.set(false);
+            }),
             takeUntilDestroyed(destroyRef),
         )
         .subscribe({

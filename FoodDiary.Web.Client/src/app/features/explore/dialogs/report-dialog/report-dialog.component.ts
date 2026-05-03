@@ -10,7 +10,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { ReportService } from '../../api/report.service';
-import { CreateReportDto } from '../../models/report.data';
+import { type CreateReportDto } from '../../models/report.data';
 
 export interface ReportDialogData {
     targetType: 'Recipe' | 'Comment';

@@ -5,17 +5,17 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import {
     DashboardSummaryCardComponent,
-    NutrientBar,
+    type NutrientBar,
 } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import { MealPreviewEntry, MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview.component';
+import { type MealPreviewEntry, MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview.component';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { AuthService } from '../../../../services/auth.service';
 import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
-import { QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
-import { Meal } from '../../../meals/models/meal.data';
-import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
-import { Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
+import { type QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
+import { type Meal } from '../../../meals/models/meal.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 
 @Component({
     selector: 'fd-landing-preview-tour',
@@ -105,7 +105,9 @@ export class LandingPreviewTourComponent {
 
     public constructor() {
         this.refreshPreviewContent();
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.refreshPreviewContent());
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.refreshPreviewContent();
+        });
     }
 
     public addPreviewProduct(product: Product): void {

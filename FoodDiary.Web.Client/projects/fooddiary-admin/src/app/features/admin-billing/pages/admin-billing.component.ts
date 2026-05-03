@@ -6,13 +6,13 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import {
-    AdminBillingFilters,
-    AdminBillingPayment,
+    type AdminBillingFilters,
+    type AdminBillingPayment,
     AdminBillingService,
-    AdminBillingSubscription,
-    AdminBillingTab,
-    AdminBillingWebhookEvent,
-    PagedResponse,
+    type AdminBillingSubscription,
+    type AdminBillingTab,
+    type AdminBillingWebhookEvent,
+    type PagedResponse,
 } from '../api/admin-billing.service';
 
 @Component({
@@ -113,7 +113,9 @@ export class AdminBillingComponent {
                         this.subscriptions.set(response.items);
                         this.applyPageData(response);
                     },
-                    error: () => this.clearData(),
+                    error: () => {
+                        this.clearData();
+                    },
                 });
             return;
         }
@@ -127,7 +129,9 @@ export class AdminBillingComponent {
                         this.payments.set(response.items);
                         this.applyPageData(response);
                     },
-                    error: () => this.clearData(),
+                    error: () => {
+                        this.clearData();
+                    },
                 });
             return;
         }
@@ -140,7 +144,9 @@ export class AdminBillingComponent {
                     this.webhookEvents.set(response.items);
                     this.applyPageData(response);
                 },
-                error: () => this.clearData(),
+                error: () => {
+                    this.clearData();
+                },
             });
     }
 

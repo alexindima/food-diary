@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -7,8 +7,8 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { GoalsService } from '../../api/goals.service';
-import { GoalsResponse } from '../../models/goals.data';
-import { CalorieGoalDialogComponent, CalorieGoalDialogData } from './calorie-goal-dialog.component';
+import { type GoalsResponse } from '../../models/goals.data';
+import { CalorieGoalDialogComponent, type CalorieGoalDialogData } from './calorie-goal-dialog.component';
 
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;

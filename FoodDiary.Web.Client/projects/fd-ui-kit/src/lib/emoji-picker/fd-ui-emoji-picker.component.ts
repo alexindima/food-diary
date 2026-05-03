@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, model, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, model, viewChildren } from '@angular/core';
 
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 

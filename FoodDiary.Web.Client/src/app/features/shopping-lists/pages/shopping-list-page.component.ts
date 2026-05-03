@@ -9,20 +9,20 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import {
     ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
+    type ConfirmDeleteDialogData,
 } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../services/viewport.service';
-import { FormGroupControls } from '../../../shared/lib/common.data';
+import { type FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListFacade } from '../lib/shopping-list.facade';
-import { ShoppingListItem } from '../models/shopping-list.data';
+import { type ShoppingListItem } from '../models/shopping-list.data';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -87,7 +87,9 @@ export class ShoppingListPageComponent {
             this.buildUnitOptions();
         });
 
-        this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => this.facade.setListName(value));
+        this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+            this.facade.setListName(value);
+        });
 
         this.listSelectControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
             if (id) {

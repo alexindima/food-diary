@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { AdminAiUsageService } from '../api/admin-ai-usage.service';
-import { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
+import { type AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 
 @Component({
     selector: 'fd-admin-ai-usage',

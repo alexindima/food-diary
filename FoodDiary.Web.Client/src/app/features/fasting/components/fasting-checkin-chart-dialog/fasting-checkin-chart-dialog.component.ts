@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, inject, NgZone, viewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartConfiguration } from 'chart.js';
+import { type ChartConfiguration } from 'chart.js';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell.component';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { LocalizationService } from '../../../../services/localization.service';
-import { FastingCheckIn } from '../../models/fasting.data';
+import { type FastingCheckIn } from '../../models/fasting.data';
 
 export interface FastingCheckInChartDialogData {
     title: string;

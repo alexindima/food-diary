@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, forwardRef, input, model } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface FdUiRadioOption<T = unknown> {
     label: string;

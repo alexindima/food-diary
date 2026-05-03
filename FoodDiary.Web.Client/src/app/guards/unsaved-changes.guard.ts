@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
-import { CanDeactivateFn } from '@angular/router';
+import { type CanDeactivateFn } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { from, isObservable, Observable, of } from 'rxjs';
+import { from, isObservable, type Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import {
     UnsavedChangesDialogComponent,
-    UnsavedChangesDialogResult,
+    type UnsavedChangesDialogResult,
 } from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { UnsavedChangesService } from '../services/unsaved-changes.service';
 

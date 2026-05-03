@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { FdUiTab, FdUiTabsComponent } from './fd-ui-tabs.component';
+import { type FdUiTab, FdUiTabsComponent } from './fd-ui-tabs.component';
 
 describe('FdUiTabsComponent', () => {
     let fixture: ComponentFixture<FdUiTabsComponent>;

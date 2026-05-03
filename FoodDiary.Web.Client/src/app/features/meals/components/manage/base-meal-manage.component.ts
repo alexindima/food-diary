@@ -1,27 +1,31 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
     effect,
-    FactoryProvider,
+    type FactoryProvider,
     inject,
     input,
     signal,
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiEmojiPickerComponent, FdUiEmojiPickerOption, FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
-import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import {
+    FdUiEmojiPickerComponent,
+    type FdUiEmojiPickerOption,
+    type FdUiEmojiPickerValue,
+} from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
-import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
@@ -32,26 +36,26 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { NavigationService } from '../../../../services/navigation.service';
 import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
-import { NutrientData } from '../../../../shared/models/charts.data';
-import { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { type UserAiUsageResponse } from '../../../../shared/models/ai.data';
+import { type NutrientData } from '../../../../shared/models/charts.data';
+import { type ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
-import { QuickMealItem } from '../../lib/quick-meal.service';
+import { type QuickMealItem } from '../../lib/quick-meal.service';
 import {
-    Consumption,
-    ConsumptionAiSessionManageDto,
-    ConsumptionItemManageDto,
-    ConsumptionManageDto,
+    type Consumption,
+    type ConsumptionAiSessionManageDto,
+    type ConsumptionItemManageDto,
+    type ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
 import {
-    CalorieMismatchWarning,
-    ConsumptionFormData,
-    ConsumptionItemFormData,
-    MacroBarState,
-    MacroKey,
-    MealNutritionSummaryState,
-    NutritionMode,
+    type CalorieMismatchWarning,
+    type ConsumptionFormData,
+    type ConsumptionItemFormData,
+    type MacroBarState,
+    type MacroKey,
+    type MealNutritionSummaryState,
+    type NutritionMode,
 } from './base-meal-manage.types';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
@@ -271,7 +275,9 @@ export class BaseMealManageComponent {
     public addConsumptionItem(): void {
         this.items.push(this.mealManageFacade.createConsumptionItem());
         const newIndex = this.items.length - 1;
-        queueMicrotask(() => this.onItemSourceClick(newIndex));
+        queueMicrotask(() => {
+            this.onItemSourceClick(newIndex);
+        });
     }
 
     public removeItem(index: number): void {
@@ -485,9 +491,9 @@ export class BaseMealManageComponent {
         };
 
         const consumption = this.consumption();
-        void (consumption ? this.updateConsumption(consumptionData) : this.addConsumption(consumptionData)).catch(error =>
-            this.handleSubmitError(error as HttpErrorResponse),
-        );
+        void (consumption ? this.updateConsumption(consumptionData) : this.addConsumption(consumptionData)).catch(error => {
+            this.handleSubmitError(error as HttpErrorResponse);
+        });
     }
 
     // --- Private methods ---
@@ -838,6 +844,8 @@ export class BaseMealManageComponent {
     }
 
     private loadAiUsage(): void {
-        void this.mealManageFacade.loadAiUsage().then(usage => this.aiUsage.set(usage));
+        void this.mealManageFacade.loadAiUsage().then(usage => {
+            this.aiUsage.set(usage);
+        });
     }
 }

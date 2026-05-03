@@ -1,12 +1,12 @@
 import { signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { NotificationItem, NotificationService } from '../../../services/notification.service';
+import { type NotificationItem, NotificationService } from '../../../services/notification.service';
 import { NotificationsDialogComponent } from './notifications-dialog.component';
 
 type NotificationsDialogComponentTestApi = NotificationsDialogComponent & {

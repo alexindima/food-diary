@@ -1,8 +1,8 @@
-import { HttpClient, HttpContext, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, type HttpContext, type HttpHeaders, HttpParams, type HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
-import { HttpRequestParams } from '../shared/models/http-request.params';
+import { type HttpRequestParams } from '../shared/models/http-request.params';
 
 type RequestBody = unknown;
 

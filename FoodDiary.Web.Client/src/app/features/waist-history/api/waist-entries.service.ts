@@ -1,17 +1,17 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { type HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import {
-    CreateWaistEntryPayload,
-    UpdateWaistEntryPayload,
-    WaistEntry,
-    WaistEntryFilters,
-    WaistEntrySummaryFilters,
-    WaistEntrySummaryPoint,
+    type CreateWaistEntryPayload,
+    type UpdateWaistEntryPayload,
+    type WaistEntry,
+    type WaistEntryFilters,
+    type WaistEntrySummaryFilters,
+    type WaistEntrySummaryPoint,
 } from '../models/waist-entry.data';
 
 @Injectable({

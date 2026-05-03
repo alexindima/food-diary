@@ -1,8 +1,8 @@
 ﻿import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { FdUiFieldSize } from '../types/field-size.type';
+import { type FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 

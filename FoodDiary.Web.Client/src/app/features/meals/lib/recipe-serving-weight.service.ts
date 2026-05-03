@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { type Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { RecipeLookupService } from '../../../shared/api/recipe-lookup.service';
-import { RecipeLookup, RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';
+import { type RecipeLookup, type RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';
 import { MeasurementUnit } from '../../products/models/product.data';
-import { Recipe, RecipeIngredient } from '../../recipes/models/recipe.data';
+import { type Recipe, type RecipeIngredient } from '../../recipes/models/recipe.data';
 
 @Injectable({
     providedIn: 'root',

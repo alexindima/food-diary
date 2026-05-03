@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
-import { MeasurementUnit } from '../../products/models/product.data';
+import { type MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
+import { type ShoppingList, type ShoppingListItem, type ShoppingListItemDto, type ShoppingListSummary } from '../models/shopping-list.data';
 
 export type ShoppingListDraftItem = {
     name: string;
@@ -24,7 +24,9 @@ export class ShoppingListFacade {
     private readonly saveQueue = createAutosaveQueue<void>({
         debounceMs: 500,
         isBusy: () => this.isSaving() || this.isLoading(),
-        persist: () => this.persistList(),
+        persist: () => {
+            this.persistList();
+        },
     });
 
     private readonly lastLoadedListId = signal<string | null>(null);

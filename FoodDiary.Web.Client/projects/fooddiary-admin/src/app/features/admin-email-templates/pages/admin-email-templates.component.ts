@@ -6,7 +6,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
 import { AdminEmailTemplateEditDialogComponent } from '../dialogs/admin-email-template-edit-dialog.component';
-import { AdminEmailTemplate } from '../models/admin-email-template.data';
+import { type AdminEmailTemplate } from '../models/admin-email-template.data';
 
 @Component({
     selector: 'fd-admin-email-templates',

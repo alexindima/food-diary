@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { AdminBillingPayment, AdminBillingService } from './admin-billing.service';
+import { type AdminBillingPayment, AdminBillingService } from './admin-billing.service';
 
 describe('AdminBillingService', () => {
     let service: AdminBillingService;

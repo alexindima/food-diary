@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { PreloadingStrategy, Route } from '@angular/router';
-import { EMPTY, from, Observable, switchMap } from 'rxjs';
+import { type PreloadingStrategy, type Route } from '@angular/router';
+import { EMPTY, from, type Observable, switchMap } from 'rxjs';
 
 import { AuthService } from './auth.service';
 
@@ -46,7 +46,9 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             }
 
             if (typeof this.globalObject.addEventListener !== 'function' || typeof this.globalObject.removeEventListener !== 'function') {
-                this.globalObject.setTimeout(() => resolve(), 1500);
+                this.globalObject.setTimeout(() => {
+                    resolve();
+                }, 1500);
                 return;
             }
 
@@ -70,11 +72,18 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
     private waitForIdle(): Promise<void> {
         return new Promise(resolve => {
             if (typeof this.globalObject.requestIdleCallback === 'function') {
-                this.globalObject.requestIdleCallback(() => resolve(), { timeout: 2000 });
+                this.globalObject.requestIdleCallback(
+                    () => {
+                        resolve();
+                    },
+                    { timeout: 2000 },
+                );
                 return;
             }
 
-            this.globalObject.setTimeout(() => resolve(), 1200);
+            this.globalObject.setTimeout(() => {
+                resolve();
+            }, 1200);
         });
     }
 }

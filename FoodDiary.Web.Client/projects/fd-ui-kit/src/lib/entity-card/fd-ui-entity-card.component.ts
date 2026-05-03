@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, contentChild, input } from '@angular/core';
 
-import { FdUiCardAppearance, FdUiCardComponent } from '../card/fd-ui-card.component';
+import { type FdUiCardAppearance, FdUiCardComponent } from '../card/fd-ui-card.component';
 import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.directive';
 
 @Component({
