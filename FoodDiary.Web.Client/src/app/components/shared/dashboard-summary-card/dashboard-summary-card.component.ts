@@ -28,7 +28,7 @@ export interface NutrientBar {
 export class DashboardSummaryCardComponent {
     private static readonly COLOR_FALLBACK_RGB: [number, number, number] = [90, 169, 250];
     private static readonly CSS_VAR_PATTERN = /^var\((--[^),\s]+)(?:,\s*([^)]+))?\)$/;
-    private static readonly CSS_COLOR_CHANNELS: Record<string, [number, number, number]> = {
+    private static readonly CSS_COLOR_CHANNELS: Partial<Record<string, [number, number, number]>> = {
         '--fd-color-sky-500': [14, 165, 233],
         '--fd-color-blue-500': [59, 130, 246],
         '--fd-color-emerald-500': [16, 185, 129],
@@ -318,7 +318,7 @@ export class DashboardSummaryCardComponent {
 
     private parseCssVariable(variableName: string, fallback?: string): [number, number, number] | null {
         const channels = DashboardSummaryCardComponent.CSS_COLOR_CHANNELS[variableName];
-        if (channels) {
+        if (channels !== undefined) {
             return channels;
         }
 

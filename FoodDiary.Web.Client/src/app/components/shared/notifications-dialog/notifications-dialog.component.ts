@@ -132,7 +132,7 @@ export class NotificationsDialogComponent {
     }
 
     protected getNotificationAriaLabel(notification: NotificationItem): string {
-        const parts = [notification.title?.trim(), notification.body?.trim()].filter(Boolean);
+        const parts = [notification.title.trim(), notification.body?.trim()].filter(Boolean);
         return parts.join('. ');
     }
 }

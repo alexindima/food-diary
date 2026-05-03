@@ -89,7 +89,7 @@ export class AiPhotoResultComponent {
     }
 
     public formatAmount(item: FoodVisionItem): string {
-        const amount = item.amount ?? '';
+        const amount = item.amount;
         const unitKey = this.resolveUnitKey(item.unit);
         const unitLabel = unitKey ? this.translateService.instant(unitKey) : item.unit;
         return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
@@ -132,7 +132,7 @@ export class AiPhotoResultComponent {
     public startEditing(): void {
         const items = this.results().length
             ? this.results()
-            : (this.nutrition()?.items?.map(item => ({
+            : (this.nutrition()?.items.map(item => ({
                   nameEn: item.name,
                   nameLocal: null,
                   amount: item.amount,
@@ -156,7 +156,7 @@ export class AiPhotoResultComponent {
     public applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
         const normalized: FoodVisionItem[] = edited.map(item => ({
-            nameEn: item.nameEn?.trim() || item.name.trim(),
+            nameEn: item.nameEn.trim() || item.name.trim(),
             nameLocal: item.nameLocal && item.nameLocal.trim().length ? item.nameLocal.trim() : null,
             amount: item.amount,
             unit: item.unit,
@@ -310,7 +310,8 @@ export class AiPhotoResultComponent {
     }
 
     private createEditId(): string {
-        return crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+        const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+        return cryptoLike?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
     }
 
     private getDateInputValue(date: Date): string {

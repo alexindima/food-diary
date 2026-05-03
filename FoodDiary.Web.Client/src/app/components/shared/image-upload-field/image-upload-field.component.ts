@@ -67,9 +67,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly imageChanged = output<ImageSelection | null>();
 
     private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-    protected readonly errorId = `image-upload-error-${crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
-    protected readonly cropTitleId = `image-upload-crop-title-${crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
-    protected readonly cropSubtitleId = `image-upload-crop-subtitle-${crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
+    protected readonly errorId = ImageUploadFieldComponent.createId('image-upload-error');
+    protected readonly cropTitleId = ImageUploadFieldComponent.createId('image-upload-crop-title');
+    protected readonly cropSubtitleId = ImageUploadFieldComponent.createId('image-upload-crop-subtitle');
 
     public selection: ImageSelection = { url: null, assetId: null };
     public isDragging = false;
@@ -132,7 +132,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             return;
         }
         this.isDragging = false;
-        const file = event.dataTransfer?.files?.[0];
+        const file = event.dataTransfer?.files[0];
         if (file) {
             this.handleIncomingFile(file);
         }
@@ -197,7 +197,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     public openFilePicker(): void {
-        this.fileInputRef()?.nativeElement?.click();
+        this.fileInputRef()?.nativeElement.click();
     }
 
     protected previewAlt(): string {
@@ -218,6 +218,11 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     public handleIncomingFile(file: File): void {
         void this.handleIncomingFileAsync(file);
+    }
+
+    private static createId(prefix: string): string {
+        const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+        return `${prefix}-${cryptoLike?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
     }
 
     private async handleIncomingFileAsync(file: File): Promise<void> {

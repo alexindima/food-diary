@@ -21,7 +21,7 @@ export class WeightSummaryCardComponent {
 
     public readonly metaText = computed(() => {
         const desiredValue = this.desired();
-        if (desiredValue !== null && desiredValue !== undefined) {
+        if (desiredValue !== null) {
             return this.translateService.instant('WEIGHT_CARD.GOAL', { value: desiredValue });
         }
 
@@ -50,7 +50,7 @@ export class WeightSummaryCardComponent {
         const desired = this.desired();
 
         let status: TrendStatus = 'neutral';
-        if (desired !== null && desired !== undefined) {
+        if (desired !== null) {
             const isImproving = (diff < 0 && latest > desired) || (diff > 0 && latest < desired);
             status = isImproving ? 'positive' : 'negative';
         }

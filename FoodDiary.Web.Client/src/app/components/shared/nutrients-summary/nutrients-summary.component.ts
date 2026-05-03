@@ -87,7 +87,7 @@ export class NutrientsSummaryComponent {
     }));
     public readonly hasNutrientData = computed(() => {
         const data = this.nutrientChartData();
-        return (data.proteins ?? 0) + (data.fats ?? 0) + (data.carbs ?? 0) > 0;
+        return data.proteins + data.fats + data.carbs > 0;
     });
     public readonly nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
         labels: [

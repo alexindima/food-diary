@@ -490,7 +490,7 @@ export class AiInputBarComponent {
                     return;
                 }
 
-                const items = response.items ?? [];
+                const items = response.items;
                 state.results.set(items);
                 if (items.length) {
                     onItems(items);

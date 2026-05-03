@@ -31,10 +31,6 @@ export class PeriodFilterComponent {
             const value = this.selectedValue();
             const range = this.displayRange();
 
-            if (!control) {
-                return;
-            }
-
             if (value === 'custom') {
                 if (control.disabled) {
                     control.enable({ emitEvent: false });
@@ -42,7 +38,7 @@ export class PeriodFilterComponent {
                 return;
             }
 
-            if (range?.start && range?.end) {
+            if (range) {
                 control.setValue({ start: range.start, end: range.end }, { emitEvent: false });
             }
 
