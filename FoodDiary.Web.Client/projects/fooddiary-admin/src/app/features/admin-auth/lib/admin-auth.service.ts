@@ -100,7 +100,7 @@ export class AdminAuthService {
 
         try {
             const response = await firstValueFrom(this.http.post<AdminSsoStartResponse>(`${this.authUrl}/admin-sso/start`, {}));
-            if (!response?.code) {
+            if (!response.code) {
                 return false;
             }
 
@@ -116,7 +116,7 @@ export class AdminAuthService {
         try {
             const response = await firstValueFrom(this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }));
 
-            if (!response?.accessToken) {
+            if (!response.accessToken) {
                 return false;
             }
 

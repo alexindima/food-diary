@@ -43,7 +43,7 @@ export class AdminLessonEditDialogComponent {
     public readonly isSaving = signal(false);
     public readonly showPreview = signal(false);
     public readonly previewHtml = signal<SafeHtml>('' as SafeHtml);
-    public readonly contentLength = signal(this.data.content?.length ?? 0);
+    public readonly contentLength = signal(this.data.content.length);
     public readonly contentMaxLength = CONTENT_MAX_LENGTH;
     public readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());
 
@@ -121,7 +121,7 @@ export class AdminLessonEditDialogComponent {
     }
 
     private updatePreview(): void {
-        const html = this.form.controls.content.value ?? '';
+        const html = this.form.controls.content.value;
         this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
     }
 }

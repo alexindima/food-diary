@@ -38,7 +38,7 @@ export class AdminUserEditDialogComponent {
     public readonly form: FormGroup<AdminUserForm> = this.fb.group({
         isActive: this.fb.nonNullable.control(this.data.isActive),
         isEmailConfirmed: this.fb.nonNullable.control(this.data.isEmailConfirmed),
-        roles: this.fb.nonNullable.control(this.data.roles ?? []),
+        roles: this.fb.nonNullable.control(this.data.roles),
         language: this.fb.nonNullable.control(this.normalizeLanguage(this.data.language) ?? 'en'),
     });
 
@@ -71,14 +71,14 @@ export class AdminUserEditDialogComponent {
     }
 
     public toggleRole(role: string): void {
-        const current = this.form.controls.roles.value ?? [];
+        const current = this.form.controls.roles.value;
         const hasRole = current.includes(role);
         const next = hasRole ? current.filter(item => item !== role) : [...current, role];
         this.form.controls.roles.setValue(next);
     }
 
     public hasRole(role: string): boolean {
-        return (this.form.controls.roles.value ?? []).includes(role);
+        return this.form.controls.roles.value.includes(role);
     }
 
     private normalizeLanguage(value: string | null | undefined): 'en' | 'ru' | null {

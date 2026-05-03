@@ -148,9 +148,9 @@ export class AdminEmailTemplateEditDialogComponent {
     }
 
     private updatePreview(): void {
-        const subject = this.form.controls.subject.value ?? '';
-        const htmlBody = this.form.controls.htmlBody.value ?? '';
-        const textBody = this.form.controls.textBody.value ?? '';
+        const subject = this.form.controls.subject.value;
+        const htmlBody = this.form.controls.htmlBody.value;
+        const textBody = this.form.controls.textBody.value;
         const brand = this.previewBrand();
         const link = this.previewLink();
         const clientName = this.previewClientName();
