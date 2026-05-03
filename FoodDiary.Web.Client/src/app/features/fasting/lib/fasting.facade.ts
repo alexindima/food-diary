@@ -69,7 +69,7 @@ export class FastingFacade {
     public readonly selectedSymptoms = signal<string[]>([]);
     public readonly checkInNotes = signal('');
     public readonly now = signal(new Date());
-    public readonly promptState = signal<Record<string, FastingPromptState>>(this.promptStateStore.read());
+    public readonly promptState = signal<Partial<Record<string, FastingPromptState>>>(this.promptStateStore.read());
 
     public readonly isActive = computed(() => {
         const session = this.currentSession();

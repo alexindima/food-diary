@@ -133,11 +133,11 @@ export class FastingCheckInChartDialogComponent {
                 padding: 10,
                 callbacks: {
                     title: items => {
-                        const point = this.points()[items[0]?.dataIndex ?? -1];
+                        const point = this.getTooltipPoint(items);
                         return point ? this.formatTooltipTitle(point.checkedInAtUtc) : '';
                     },
                     footer: items => {
-                        const point = this.points()[items[0]?.dataIndex ?? -1];
+                        const point = this.getTooltipPoint(items);
                         if (!point) {
                             return '';
                         }
@@ -208,6 +208,15 @@ export class FastingCheckInChartDialogComponent {
                 });
             });
         });
+    }
+
+    private getTooltipPoint(items: readonly { dataIndex: number }[]): FastingCheckInChartPoint | undefined {
+        const tooltipItem = (items as readonly ({ dataIndex: number } | undefined)[])[0];
+        if (!tooltipItem) {
+            return undefined;
+        }
+
+        return (this.points() as readonly (FastingCheckInChartPoint | undefined)[])[tooltipItem.dataIndex];
     }
 
     private formatAxisLabel(value: string): string {

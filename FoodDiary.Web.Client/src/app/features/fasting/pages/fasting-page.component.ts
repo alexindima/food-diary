@@ -244,9 +244,11 @@ export class FastingPageComponent {
     public constructor() {
         this.facade.initialize();
 
-        (this.translateService.onLangChange ?? EMPTY).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.currentLanguage.set(this.localizationService.getCurrentLanguage());
-        });
+        ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.currentLanguage.set(this.localizationService.getCurrentLanguage());
+            });
 
         effect(() => {
             const version = this.facade.checkInSavedVersion();
@@ -300,8 +302,8 @@ export class FastingPageComponent {
         }
 
         const [fastDaysRaw, eatDaysRaw] = value.split(':');
-        const fastDays = Number.parseInt(fastDaysRaw ?? '', 10);
-        const eatDays = Number.parseInt(eatDaysRaw ?? '', 10);
+        const fastDays = Number.parseInt(fastDaysRaw, 10);
+        const eatDays = Number.parseInt(eatDaysRaw, 10);
 
         if (Number.isNaN(fastDays) || Number.isNaN(eatDays)) {
             return;

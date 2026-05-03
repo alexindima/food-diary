@@ -67,8 +67,8 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
         }
     }
 
-    const currentStage = applicableStages[currentIndex];
-    const nextStage = applicableStages[currentIndex + 1] ?? null;
+    const currentStage = applicableStages[currentIndex] as FastingStageDefinition;
+    const nextStage = (applicableStages as readonly (FastingStageDefinition | undefined)[])[currentIndex + 1] ?? null;
 
     return {
         index: currentIndex + 1,
@@ -77,7 +77,7 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
         descriptionKey: currentStage.descriptionKey,
         color: currentStage.color,
         glowColor: currentStage.glowColor,
-        nextTitleKey: nextStage?.titleKey ?? null,
+        nextTitleKey: nextStage ? nextStage.titleKey : null,
         nextInMs: nextStage ? Math.max(0, nextStage.startsAtHours * 3_600_000 - elapsedMs) : null,
     };
 }
