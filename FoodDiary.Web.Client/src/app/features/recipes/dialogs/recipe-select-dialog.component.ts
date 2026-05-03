@@ -116,7 +116,7 @@ export class RecipeSelectDialogComponent {
         return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
-    public async onCreateRecipeClick(): Promise<void> {
+    public onCreateRecipeClick(): void {
         this.fdDialogService
             .open<RecipeManageComponent, null, Recipe | null>(RecipeManageComponent, {
                 preset: 'fullscreen',

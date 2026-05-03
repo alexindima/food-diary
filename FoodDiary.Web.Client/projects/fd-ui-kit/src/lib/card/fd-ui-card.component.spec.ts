@@ -72,7 +72,7 @@ describe('FdUiCardComponent', () => {
         expect(metaEl.nativeElement.textContent.trim()).toBe('100 kcal');
     });
 
-    it('should project content', async () => {
+    it('should project content', () => {
         const hostFixture = TestBed.createComponent(CardWithContentHostComponent);
         hostFixture.detectChanges();
 

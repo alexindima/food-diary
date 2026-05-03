@@ -217,7 +217,7 @@ export class AuthComponent {
         }
     }
 
-    public async onLoginSubmit(): Promise<void> {
+    public onLoginSubmit(): void {
         this.syncLoginNativeValues();
 
         if (!this.loginForm.valid || this.isSubmitting()) {
@@ -272,7 +272,7 @@ export class AuthComponent {
         });
     }
 
-    public async onRegisterSubmit(): Promise<void> {
+    public onRegisterSubmit(): void {
         if (!this.registerForm.valid || this.isSubmitting()) {
             return;
         }
@@ -310,7 +310,7 @@ export class AuthComponent {
                 },
             });
             this.googleReady.set(true);
-            void this.googleIdentityService.prompt();
+            this.googleIdentityService.prompt();
         } catch {
             this.googleReady.set(false);
         }

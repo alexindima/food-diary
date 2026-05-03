@@ -35,9 +35,16 @@ app.use(
  * Handle all other requests by rendering the Angular application.
  */
 app.use((req, res, next) => {
-    angularApp
+    void angularApp
         .handle(req)
-        .then(response => (response ? writeResponseToNodeResponse(response, res) : next()))
+        .then(response => {
+            if (response) {
+                void writeResponseToNodeResponse(response, res);
+                return;
+            }
+
+            next();
+        })
         .catch(next);
 });
 

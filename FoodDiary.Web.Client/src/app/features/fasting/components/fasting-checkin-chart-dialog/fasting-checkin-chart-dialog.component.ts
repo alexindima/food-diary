@@ -203,7 +203,7 @@ export class FastingCheckInChartDialogComponent {
                 this.ngZone.runOutsideAngular(() => {
                     window.setTimeout(() => {
                         chartDirective.chart?.resize();
-                        void chartDirective.update();
+                        chartDirective.update();
                     }, 180);
                 });
             });

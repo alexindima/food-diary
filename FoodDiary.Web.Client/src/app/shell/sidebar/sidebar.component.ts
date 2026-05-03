@@ -218,7 +218,7 @@ export class SidebarComponent {
 
     private readonly notificationSync = effect(() => {
         if (this.isAuthenticated()) {
-            void this.notificationService.fetchUnreadCount();
+            this.notificationService.fetchUnreadCount();
             this.notificationService.ensureNotificationsLoaded();
         }
     });

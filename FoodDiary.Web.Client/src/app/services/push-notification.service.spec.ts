@@ -145,7 +145,7 @@ describe('PushNotificationService', () => {
         expect(service.currentSubscriptionEndpoint()).toBeNull();
     });
 
-    it('should react to notification click by navigating and refreshing notifications', async () => {
+    it('should react to notification click by navigating and refreshing notifications', () => {
         notificationClicks$.next({ notification: { data: { targetUrl: '/fasting?intent=check-in' } } });
 
         expect(router.navigateByUrl).toHaveBeenCalledWith('/fasting?intent=check-in');

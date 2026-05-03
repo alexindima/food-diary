@@ -52,11 +52,11 @@ describe('DashboardNotificationSettingsDialogComponent', () => {
             isSupported: signal(true),
             isSubscribed: signal(false),
             isBusy: signal(false),
-            ensureSubscription: vi.fn(async () => 'subscribed'),
+            ensureSubscription: vi.fn(() => Promise.resolve('subscribed')),
         };
 
         navigationService = {
-            navigateToProfile: vi.fn(async () => {}),
+            navigateToProfile: vi.fn(() => Promise.resolve()),
         };
 
         dialogRef = {

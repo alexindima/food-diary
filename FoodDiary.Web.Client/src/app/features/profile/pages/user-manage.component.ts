@@ -358,7 +358,7 @@ export class UserManageComponent {
         this.loadBillingOverview();
     }
 
-    public async onSubmit(): Promise<void> {
+    public onSubmit(): void {
         this.userForm.markAllAsTouched();
 
         if (this.userForm.valid) {

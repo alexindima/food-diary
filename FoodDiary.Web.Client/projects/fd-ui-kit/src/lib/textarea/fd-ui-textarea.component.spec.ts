@@ -168,7 +168,7 @@ describe('FdUiTextareaComponent', () => {
         let hostFixture: ComponentFixture<TestHostComponent>;
         let hostComponent: TestHostComponent;
 
-        beforeEach(async () => {
+        beforeEach(() => {
             hostFixture = TestBed.createComponent(TestHostComponent);
             hostComponent = hostFixture.componentInstance;
             hostFixture.detectChanges();
