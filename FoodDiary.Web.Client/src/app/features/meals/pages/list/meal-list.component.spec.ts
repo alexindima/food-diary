@@ -6,7 +6,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -66,6 +66,7 @@ describe('MealListComponent', () => {
     const mockMealService = {
         queryOverview: vi.fn().mockReturnValue(of(createOverview([]))),
         query: vi.fn().mockReturnValue(of(createPageOf([]))),
+        repeat: vi.fn().mockReturnValue(of(void 0)),
         deleteById: vi.fn().mockReturnValue(of(void 0)),
     };
 
@@ -140,6 +141,10 @@ describe('MealListComponent', () => {
         component = fixture.componentInstance;
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -179,9 +184,9 @@ describe('MealListComponent', () => {
     });
 
     it('should group consumptions by date', () => {
-        const meal1 = createMockMeal({ id: '1', date: '2024-03-15T10:00:00Z' });
-        const meal2 = createMockMeal({ id: '2', date: '2024-03-15T14:00:00Z' });
-        const meal3 = createMockMeal({ id: '3', date: '2024-03-16T10:00:00Z' });
+        const meal1 = createMockMeal({ id: '1', date: new Date(2024, 2, 15, 10).toISOString() });
+        const meal2 = createMockMeal({ id: '2', date: new Date(2024, 2, 15, 14).toISOString() });
+        const meal3 = createMockMeal({ id: '3', date: new Date(2024, 2, 16, 10).toISOString() });
 
         // Directly call loadConsumptions to avoid debounceTime issues
         mockMealService.query.mockReturnValue(of(createPageOf([meal1, meal2, meal3])));
@@ -190,12 +195,68 @@ describe('MealListComponent', () => {
         const grouped = component.groupedConsumptions();
         expect(grouped.length).toBe(2);
 
-        const march16Group = grouped.find(g => g.date.toISOString().startsWith('2024-03-16'));
-        const march15Group = grouped.find(g => g.date.toISOString().startsWith('2024-03-15'));
+        const march16Group = grouped.find(g => g.date.getFullYear() === 2024 && g.date.getMonth() === 2 && g.date.getDate() === 16);
+        const march15Group = grouped.find(g => g.date.getFullYear() === 2024 && g.date.getMonth() === 2 && g.date.getDate() === 15);
         expect(march16Group).toBeDefined();
         expect(march15Group).toBeDefined();
         expect(march15Group!.items.length).toBe(2);
         expect(march16Group!.items.length).toBe(1);
+    });
+
+    it('should group meals by local calendar date instead of UTC date', () => {
+        const lateMeal = createMockMeal({ id: '1', date: new Date(2026, 4, 4, 22, 48).toISOString() });
+        const afterMidnightMeal = createMockMeal({ id: '2', date: new Date(2026, 4, 5, 0, 30).toISOString() });
+
+        mockMealService.query.mockReturnValue(of(createPageOf([afterMidnightMeal, lateMeal])));
+        component.loadConsumptions(1).subscribe();
+
+        const grouped = component.groupedConsumptions();
+        expect(grouped.length).toBe(2);
+        expect(grouped[0].date.getFullYear()).toBe(2026);
+        expect(grouped[0].date.getMonth()).toBe(4);
+        expect(grouped[0].date.getDate()).toBe(5);
+        expect(grouped[0].items).toEqual([afterMidnightMeal]);
+        expect(grouped[1].date.getDate()).toBe(4);
+        expect(grouped[1].items).toEqual([lateMeal]);
+    });
+
+    it('should query selected date range using local day boundaries', () => {
+        const start = new Date(2026, 4, 5);
+        const end = new Date(2026, 4, 6);
+
+        component.searchForm.controls.dateRange.setValue({ start, end });
+        mockMealService.query.mockClear();
+
+        component.loadConsumptions(1).subscribe();
+
+        expect(mockMealService.query).toHaveBeenCalledWith(1, 10, {
+            dateFrom: new Date(2026, 4, 5, 0, 0, 0, 0).toISOString(),
+            dateTo: new Date(2026, 4, 6, 23, 59, 59, 999).toISOString(),
+        });
+    });
+
+    it('should repeat favorite meal for the local calendar date', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(2026, 4, 5, 0, 30));
+        fixture.detectChanges();
+        const containerEl = fixture.nativeElement.querySelector('[fdpagecontainer]') as HTMLElement;
+        containerEl.scrollIntoView = vi.fn();
+
+        component.repeatFavorite({
+            id: 'favorite-1',
+            mealId: 'meal-1',
+            name: null,
+            createdAtUtc: '2026-05-04T20:00:00Z',
+            mealDate: '2026-05-04T20:00:00Z',
+            mealType: null,
+            totalCalories: 100,
+            totalProteins: 1,
+            totalFats: 1,
+            totalCarbs: 1,
+            itemCount: 1,
+        });
+
+        expect(mockMealService.repeat).toHaveBeenCalledWith('meal-1', '2026-05-05');
     });
 
     it('should open meal details dialog', async () => {

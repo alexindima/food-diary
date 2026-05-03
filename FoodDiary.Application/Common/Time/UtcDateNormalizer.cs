@@ -11,6 +11,13 @@ public static class UtcDateNormalizer {
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
+    public static DateTime NormalizeInstantPreservingUnspecifiedAsUtc(DateTime value) =>
+        value.Kind switch {
+            DateTimeKind.Utc => value,
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+        };
+
     public static DateTime NormalizeDateUsingLocalFallback(DateTime value) {
         var utc = value.Kind switch {
             DateTimeKind.Utc => value,

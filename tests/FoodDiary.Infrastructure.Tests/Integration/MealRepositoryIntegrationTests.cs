@@ -77,6 +77,45 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
+    public async Task GetPagedAsync_UsesExactUtcInstantsForLocalDayBoundaries() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-local-day-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var previousLocalDayMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 4, 18, 48, 0, DateTimeKind.Utc));
+        var firstLocalDayMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 4, 20, 30, 0, DateTimeKind.Utc));
+        var lastLocalDayMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 5, 19, 30, 0, DateTimeKind.Utc));
+        var nextLocalDayMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 5, 20, 0, 0, DateTimeKind.Utc));
+
+        context.Meals.AddRange(previousLocalDayMeal, firstLocalDayMeal, lastLocalDayMeal, nextLocalDayMeal);
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+
+        var (items, totalItems) = await repository.GetPagedAsync(
+            user.Id,
+            page: 1,
+            limit: 10,
+            dateFrom: new DateTime(2026, 5, 4, 20, 0, 0, DateTimeKind.Utc),
+            dateTo: new DateTime(2026, 5, 5, 19, 59, 59, 999, DateTimeKind.Utc));
+
+        Assert.Equal(2, totalItems);
+        Assert.Collection(
+            items,
+            item => Assert.Equal(lastLocalDayMeal.Id, item.Id),
+            item => Assert.Equal(firstLocalDayMeal.Id, item.Id));
+    }
+
+    [RequiresDockerFact]
     public async Task GetDistinctMealDatesAsync_ReturnsDistinctDaysForTimedMeals() {
         await using var context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meals-dates-{Guid.NewGuid():N}@example.com", "hash");

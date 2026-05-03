@@ -35,10 +35,10 @@ public sealed class GetConsumptionsOverviewQueryHandler(
         var sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
         var favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);
         var normalizedFrom = request.DateFrom.HasValue
-            ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(request.DateFrom.Value)
+            ? (DateTime?)UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom.Value)
             : null;
         var normalizedTo = request.DateTo.HasValue
-            ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(request.DateTo.Value)
+            ? (DateTime?)UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo.Value)
             : null;
 
         var pageData = await mealRepository.GetPagedAsync(

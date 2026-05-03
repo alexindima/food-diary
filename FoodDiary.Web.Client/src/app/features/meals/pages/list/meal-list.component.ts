@@ -116,7 +116,7 @@ export class MealListComponent {
     }
 
     public repeatFavorite(favorite: FavoriteMeal): void {
-        const today = new Date().toISOString().slice(0, 10);
+        const today = this.toLocalDateInputValue(new Date());
         this.mealService.repeat(favorite.mealId, today).subscribe({
             next: () => {
                 this.scrollToTop();
@@ -141,8 +141,8 @@ export class MealListComponent {
         const dateRange = this.searchForm.controls.dateRange.value;
 
         const filters: MealFilters = {
-            dateFrom: this.toIsoDate(dateRange?.start ?? null),
-            dateTo: this.toIsoDate(dateRange?.end ?? null),
+            dateFrom: this.toLocalDayStartIso(dateRange?.start ?? null),
+            dateTo: this.toLocalDayEndIso(dateRange?.end ?? null),
         };
 
         return this.mealService.query(page, 10, filters).pipe(
@@ -165,8 +165,8 @@ export class MealListComponent {
         this.consumptionData.setLoading(true);
         const dateRange = this.searchForm.controls.dateRange.value;
         const filters: MealFilters = {
-            dateFrom: this.toIsoDate(dateRange?.start ?? null),
-            dateTo: this.toIsoDate(dateRange?.end ?? null),
+            dateFrom: this.toLocalDayStartIso(dateRange?.start ?? null),
+            dateTo: this.toLocalDayEndIso(dateRange?.end ?? null),
         };
 
         return this.mealService.queryOverview(1, 10, filters, 10).pipe(
@@ -215,7 +215,7 @@ export class MealListComponent {
                 } else if (data.action === 'Edit') {
                     void this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Repeat') {
-                    const today = new Date().toISOString().slice(0, 10);
+                    const today = this.toLocalDateInputValue(new Date());
                     this.mealService.repeat(data.id, today).subscribe({
                         next: () => {
                             this.scrollToTop();
@@ -278,13 +278,20 @@ export class MealListComponent {
         this.loadConsumptions(this.currentPageIndex + 1).subscribe();
     }
 
-    private toIsoDate(date: Date | null | undefined): string | undefined {
+    private toLocalDayStartIso(date: Date | null | undefined): string | undefined {
         if (!date) {
             return undefined;
         }
 
-        const normalized = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-        return normalized.toISOString();
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).toISOString();
+    }
+
+    private toLocalDayEndIso(date: Date | null | undefined): string | undefined {
+        if (!date) {
+            return undefined;
+        }
+
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).toISOString();
     }
 
     private groupByDate(items: Meal[]): { date: Date; items: Meal[] }[] {
@@ -292,14 +299,21 @@ export class MealListComponent {
 
         for (const item of items) {
             const date = new Date(item.date);
-            const key = date.toISOString().slice(0, 10);
+            const key = this.toLocalDateInputValue(date);
             if (!buckets.has(key)) {
-                buckets.set(key, { date, items: [] });
+                buckets.set(key, { date: new Date(date.getFullYear(), date.getMonth(), date.getDate()), items: [] });
             }
             buckets.get(key)!.items.push(item);
         }
 
         return Array.from(buckets.values()).sort((a, b) => b.date.getTime() - a.date.getTime());
+    }
+
+    private toLocalDateInputValue(date: Date): string {
+        const year = date.getFullYear();
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
+        const day = `${date.getDate()}`.padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 }
 

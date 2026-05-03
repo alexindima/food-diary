@@ -663,23 +663,23 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
-    public async Task GetConsumptionsQueryHandler_NormalizesDateRangeToUtcForRepositoryQuery() {
+    public async Task GetConsumptionsQueryHandler_PreservesDateRangeInstantsForRepositoryQuery() {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsQueryHandler(
             repository,
             new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubFavoriteMealRepository());
         var userId = UserId.New();
-        var localFrom = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Local);
-        var localTo = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Local);
+        var from = new DateTime(2026, 4, 4, 20, 0, 0, DateTimeKind.Utc);
+        var to = new DateTime(2026, 4, 5, 19, 59, 59, 999, DateTimeKind.Utc);
 
         var result = await handler.Handle(
-            new GetConsumptionsQuery(userId.Value, 1, 25, localFrom, localTo),
+            new GetConsumptionsQuery(userId.Value, 1, 25, from, to),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(NormalizeUtcDate(localFrom), repository.LastDateFrom);
-        Assert.Equal(NormalizeUtcDate(localTo), repository.LastDateTo);
+        Assert.Equal(from, repository.LastDateFrom);
+        Assert.Equal(to, repository.LastDateTo);
         Assert.Equal(DateTimeKind.Utc, repository.LastDateFrom!.Value.Kind);
         Assert.Equal(DateTimeKind.Utc, repository.LastDateTo!.Value.Kind);
     }
@@ -737,15 +737,6 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(MealType.Dinner, repository.LastAddedMeal.MealType);
         Assert.Equal(2, repository.LastAddedMeal.Items.Count);
         Assert.Equal(510, repository.LastAddedMeal.TotalCalories);
-    }
-
-    private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {

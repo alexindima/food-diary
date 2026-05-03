@@ -12,6 +12,20 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     private static DateTime StartOfNextUtcDay(DateTime value) =>
         DateTime.SpecifyKind(value.Date.AddDays(1), DateTimeKind.Utc);
 
+    private static DateTime NormalizeUtcInstant(DateTime value) =>
+        value.Kind switch {
+            DateTimeKind.Utc => value,
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+        };
+
+    private static DateTime NormalizeInclusiveEndInstant(DateTime value) {
+        var utc = NormalizeUtcInstant(value);
+        return utc.TimeOfDay == TimeSpan.Zero
+            ? DateTime.SpecifyKind(utc.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc)
+            : utc;
+    }
+
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
         await context.Meals.AddAsync(meal, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
@@ -76,13 +90,13 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .Where(m => m.UserId == userId);
 
         if (dateFrom.HasValue) {
-            var from = StartOfUtcDay(dateFrom.Value);
+            var from = NormalizeUtcInstant(dateFrom.Value);
             filteredQuery = filteredQuery.Where(m => m.Date >= from);
         }
 
         if (dateTo.HasValue) {
-            var toExclusive = StartOfNextUtcDay(dateTo.Value);
-            filteredQuery = filteredQuery.Where(m => m.Date < toExclusive);
+            var to = NormalizeInclusiveEndInstant(dateTo.Value);
+            filteredQuery = filteredQuery.Where(m => m.Date <= to);
         }
 
         var totalItems = await filteredQuery.CountAsync(cancellationToken);
