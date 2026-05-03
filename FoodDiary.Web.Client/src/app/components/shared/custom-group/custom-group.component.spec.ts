@@ -26,7 +26,7 @@ describe('CustomGroupComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const titleEl = el.querySelector('.custom-group__title span');
-        expect(titleEl?.textContent?.trim()).toBe('Group Title');
+        expect(titleEl?.textContent.trim()).toBe('Group Title');
     });
 
     describe('accordion toggle', () => {
@@ -160,7 +160,7 @@ describe('CustomGroupComponent', () => {
 
             const el: HTMLElement = fixture.nativeElement;
             const hint = el.querySelector('.custom-group__hint');
-            expect(hint?.textContent?.trim()).toBe('Items hidden');
+            expect(hint?.textContent.trim()).toBe('Items hidden');
         });
     });
 });

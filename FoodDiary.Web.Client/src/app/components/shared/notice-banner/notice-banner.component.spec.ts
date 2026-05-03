@@ -27,8 +27,8 @@ describe('NoticeBannerComponent', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.fd-notice__title')?.textContent?.trim()).toBe('Test Title');
-        expect(el.querySelector('.fd-notice__message')?.textContent?.trim()).toBe('Test Message');
+        expect(el.querySelector('.fd-notice__title')?.textContent.trim()).toBe('Test Title');
+        expect(el.querySelector('.fd-notice__message')?.textContent.trim()).toBe('Test Message');
     });
 
     it('should show action button when actionLabel is set', () => {
@@ -38,7 +38,7 @@ describe('NoticeBannerComponent', () => {
         const el: HTMLElement = fixture.nativeElement;
         const actionBtn = el.querySelector('.fd-notice__action');
         expect(actionBtn).toBeTruthy();
-        expect(actionBtn?.textContent?.trim()).toBe('Click Me');
+        expect(actionBtn?.textContent.trim()).toBe('Click Me');
     });
 
     it('should not show action button when actionLabel is null', () => {

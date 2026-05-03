@@ -26,7 +26,7 @@ describe('BadgeComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const labelEl = el.querySelector('.fd-badge__label');
-        expect(labelEl?.textContent?.trim()).toBe('Test Label');
+        expect(labelEl?.textContent.trim()).toBe('Test Label');
     });
 
     it('should apply default variant class (neutral)', () => {

@@ -43,6 +43,6 @@ describe('PageBodyComponent', () => {
         const el: HTMLElement = hostFixture.nativeElement;
         const projected = el.querySelector('.projected');
         expect(projected).toBeTruthy();
-        expect(projected?.textContent?.trim()).toBe('Projected content');
+        expect(projected?.textContent.trim()).toBe('Projected content');
     });
 });

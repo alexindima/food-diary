@@ -26,7 +26,7 @@ describe('ManageHeaderComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const titleEl = el.querySelector('.fd-manage-header__title');
-        expect(titleEl?.textContent?.trim()).toBe('Manage Title');
+        expect(titleEl?.textContent.trim()).toBe('Manage Title');
     });
 
     it('should render subtitle when provided', () => {
@@ -36,7 +36,7 @@ describe('ManageHeaderComponent', () => {
         const el: HTMLElement = fixture.nativeElement;
         const subtitleEl = el.querySelector('.fd-manage-header__subtitle');
         expect(subtitleEl).toBeTruthy();
-        expect(subtitleEl?.textContent?.trim()).toBe('Some subtitle');
+        expect(subtitleEl?.textContent.trim()).toBe('Some subtitle');
     });
 
     it('should not render subtitle when null', () => {

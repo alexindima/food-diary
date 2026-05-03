@@ -223,8 +223,8 @@ describe('DynamicProgressBarComponent', () => {
             setInputs(75, 100);
             const el: HTMLElement = fixture.nativeElement;
             const title = el.querySelector('.dynamic-progress-bar-title');
-            expect(title?.textContent?.trim()).toContain('75');
-            expect(title?.textContent?.trim()).toContain('75%');
+            expect(title?.textContent.trim()).toContain('75');
+            expect(title?.textContent.trim()).toContain('75%');
         });
     });
 });

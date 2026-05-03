@@ -65,7 +65,7 @@ describe('RecipeCardComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const titleEl = el.querySelector('.entity-card__name');
-        expect(titleEl?.textContent?.trim()).toBe('Test Recipe');
+        expect(titleEl?.textContent.trim()).toBe('Test Recipe');
     });
 
     it('should emit open on card click', () => {
@@ -163,7 +163,7 @@ describe('RecipeCardComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const caloriesEl = el.querySelector('.entity-card__calories-value');
-        expect(caloriesEl?.textContent?.trim()).toBe('368');
+        expect(caloriesEl?.textContent.trim()).toBe('368');
     });
 
     it('should display quality score progress', () => {
@@ -174,8 +174,8 @@ describe('RecipeCardComponent', () => {
         const valueEl = el.querySelector('.entity-card__quality-value');
         const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
 
-        expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
-        expect(valueEl?.textContent?.trim()).toBe('64');
+        expect(labelEl?.textContent.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
+        expect(valueEl?.textContent.trim()).toBe('64');
         expect(fillEl?.style.width).toBe('64%');
     });
 });

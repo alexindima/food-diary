@@ -26,7 +26,7 @@ describe('PageHeaderComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const titleEl = el.querySelector('.fd-page-title');
-        expect(titleEl?.textContent?.trim()).toBe('Page Title');
+        expect(titleEl?.textContent.trim()).toBe('Page Title');
     });
 
     it('should render subtitle when provided', () => {
@@ -36,7 +36,7 @@ describe('PageHeaderComponent', () => {
         const el: HTMLElement = fixture.nativeElement;
         const subtitleEl = el.querySelector('.fd-page-subtitle');
         expect(subtitleEl).toBeTruthy();
-        expect(subtitleEl?.textContent?.trim()).toBe('A subtitle');
+        expect(subtitleEl?.textContent.trim()).toBe('A subtitle');
     });
 
     it('should not render subtitle when not provided', () => {

@@ -63,7 +63,7 @@ describe('ProductCardComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const nameEl = el.querySelector('.entity-card__name');
-        expect(nameEl?.textContent?.trim()).toBe('Test Product');
+        expect(nameEl?.textContent.trim()).toBe('Test Product');
     });
 
     it('should emit open on card click', () => {
@@ -94,7 +94,7 @@ describe('ProductCardComponent', () => {
         fixture.detectChanges();
         const el: HTMLElement = fixture.nativeElement;
         const caloriesEl = el.querySelector('.entity-card__calories-value');
-        expect(caloriesEl?.textContent?.trim()).toBe('290');
+        expect(caloriesEl?.textContent.trim()).toBe('290');
     });
 
     it('should display quality score progress', () => {
@@ -105,8 +105,8 @@ describe('ProductCardComponent', () => {
         const valueEl = el.querySelector('.entity-card__quality-value');
         const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
 
-        expect(labelEl?.textContent?.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
-        expect(valueEl?.textContent?.trim()).toBe('72');
+        expect(labelEl?.textContent.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
+        expect(valueEl?.textContent.trim()).toBe('72');
         expect(fillEl?.style.width).toBe('72%');
     });
 
