@@ -59,10 +59,14 @@ export class ProductListPageComponent extends ProductListBaseComponent {
             .afterClosed()
             .subscribe(data => {
                 const result = data as ProductDetailActionResult | undefined;
-                this.loadFavorites();
-                this.reloadCurrentPage();
 
                 if (!result) {
+                    return;
+                }
+
+                if (result.action === 'FavoriteChanged') {
+                    this.loadFavorites();
+                    this.reloadCurrentPage();
                     return;
                 }
 

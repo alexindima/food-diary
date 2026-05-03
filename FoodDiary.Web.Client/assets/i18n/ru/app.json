@@ -590,7 +590,8 @@
             "ITEMS": "Позиции",
             "DATE": "Дата",
             "COMMENT": "Комментарий",
-            "UNKNOWN_MEAL": "Не указано"
+            "UNKNOWN_MEAL": "Не указано",
+            "UNKNOWN_ITEM": "Позиция"
         }
     },
     "MEAL_TYPES": {

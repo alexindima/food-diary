@@ -18,6 +18,48 @@
     justify-content: center;
 }
 
+.fd-favorite-button {
+    --fd-button-host-width: var(--fd-size-control-xs);
+    --fd-button-host-min-width: var(--fd-size-control-xs);
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
+    --fd-button-height-explicit: var(--fd-size-control-xs);
+    --fd-button-padding-x: 0;
+    --fd-button-border-radius: var(--fd-radius-pill);
+    --fd-button-transform-hover: scale(1.05);
+    --fd-button-transform-active: none;
+    --fd-button-disabled-opacity: 0.7;
+    --fd-button-secondary-text-background-default: transparent;
+    --fd-button-secondary-text-background-hover: transparent;
+    --fd-button-secondary-text-background-active: transparent;
+    --fd-button-secondary-text-background-disabled: transparent;
+    --fd-button-secondary-text-border-default: transparent;
+    --fd-button-secondary-text-border-hover: transparent;
+    --fd-button-secondary-text-border-active: transparent;
+    --fd-button-secondary-text-border-disabled: transparent;
+    --fd-button-secondary-text-text-default: var(--fd-color-favorite-muted);
+    --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-favorite-muted);
+    --fd-button-text-default: var(--fd-color-favorite-muted);
+    --fd-button-text-hover: var(--fd-color-amber-500);
+    --fd-button-text-active: var(--fd-color-amber-500);
+    --fd-button-text-disabled: var(--fd-color-favorite-muted);
+    flex: 0 0 auto;
+}
+
+.fd-favorite-button--active {
+    --fd-button-secondary-text-text-default: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-amber-500);
+    --fd-button-text-default: var(--fd-color-amber-500);
+    --fd-button-text-hover: var(--fd-color-amber-500);
+    --fd-button-text-active: var(--fd-color-amber-500);
+    --fd-button-text-disabled: var(--fd-color-amber-500);
+}
+
 .fd-center {
     display: flex;
     align-items: center;

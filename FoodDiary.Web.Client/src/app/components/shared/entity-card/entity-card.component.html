@@ -34,13 +34,14 @@
             <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
                 @if (showFavorite()) {
                     <fd-ui-button
-                        class="entity-card__favorite-button fd-inline-center"
+                        class="entity-card__favorite-button fd-favorite-button fd-inline-center"
                         appearance="plain-icon"
                         variant="secondary"
                         fill="text"
                         [icon]="isFavorite() ? 'star' : 'star_border'"
                         iconSize="sm"
                         [class.entity-card__favorite-button--active]="isFavorite()"
+                        [class.fd-favorite-button--active]="isFavorite()"
                         [fdUiHint]="favoriteAriaLabel()"
                         [fdUiHintDisabled]="!favoriteAriaLabel()"
                         [ariaLabel]="favoriteAriaLabel() ?? undefined"

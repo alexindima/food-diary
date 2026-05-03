@@ -205,13 +205,14 @@ export class MealListComponent {
             })
             .afterClosed()
             .subscribe(data => {
-                this.loadFavorites();
-
                 if (!data) {
                     return;
                 }
 
-                if (data.action === 'Edit') {
+                if (data.action === 'FavoriteChanged') {
+                    this.loadFavorites();
+                    this.reloadCurrentPage();
+                } else if (data.action === 'Edit') {
                     void this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Repeat') {
                     const today = new Date().toISOString().slice(0, 10);

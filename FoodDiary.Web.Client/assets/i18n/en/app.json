@@ -626,7 +626,8 @@
             "ITEMS": "Items",
             "DATE": "Date",
             "COMMENT": "Comment",
-            "UNKNOWN_MEAL": "Not specified"
+            "UNKNOWN_MEAL": "Not specified",
+            "UNKNOWN_ITEM": "Item"
         }
     },
     "MEAL_TYPES": {

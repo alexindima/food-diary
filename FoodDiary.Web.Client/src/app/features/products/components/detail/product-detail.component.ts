@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -8,15 +8,19 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { BaseChartDirective } from 'ng2-charts';
 
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import {
+    NutritionControlNames,
+    NutritionEditorComponent,
+    NutritionMacroState,
+} from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { NutrientData } from '../../../../shared/models/charts.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
@@ -30,27 +34,28 @@ import { Product } from '../../models/product.data';
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [provideCharts(withDefaultRegisterables())],
     imports: [
         TranslatePipe,
         FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
+        FdUiDialogHeaderDirective,
         FdUiButtonComponent,
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
-        BaseChartDirective,
+        NutritionEditorComponent,
     ],
 })
 export class ProductDetailComponent {
     private readonly productService = inject(ProductService);
     private readonly favoriteProductService = inject(FavoriteProductService);
-    private readonly dialogRef = inject(FdUiDialogRef<ProductDetailComponent>);
+    private readonly dialogRef = inject(FdUiDialogRef<ProductDetailComponent, ProductDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
 
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
+    private initialFavoriteState = false;
     private favoriteProductId: string | null = null;
 
     public product: Product;
@@ -67,12 +72,9 @@ export class ProductDetailComponent {
     };
 
     public calories: number;
+    public readonly qualityScore: number;
+    public readonly qualityGrade: string;
     public nutrientChartData: NutrientData;
-    public pieChartData: ChartData<'pie', number[], string>;
-    public barChartData: ChartData<'bar', number[], string>;
-    public pieChartOptions: ChartOptions<'pie'>;
-    public barChartOptions: ChartOptions<'bar'>;
-    public readonly chartSize = 200;
     public readonly isDeleteDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
     public readonly isEditDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
     public readonly canModify = computed(() => !this.isEditDisabled());
@@ -88,14 +90,30 @@ export class ProductDetailComponent {
         value: number;
         unitKey: string;
         color: string;
+        percent: number;
     }[];
+    public readonly nutritionControlNames: NutritionControlNames = {
+        calories: 'calories',
+        proteins: 'proteins',
+        fats: 'fats',
+        carbs: 'carbs',
+        fiber: 'fiber',
+        alcohol: 'alcohol',
+    };
+    public readonly nutritionForm: FormGroup;
+    public readonly macroBarState: NutritionMacroState;
     public isDuplicateInProgress = false;
 
     public constructor() {
         const data = inject<Product>(FD_UI_DIALOG_DATA);
 
         this.product = data;
+        this.initialFavoriteState = this.product.isFavorite ?? false;
+        this.isFavorite.set(this.initialFavoriteState);
+        this.favoriteProductId = this.product.favoriteProductId ?? null;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
+        this.qualityScore = Math.round(Math.min(100, Math.max(0, this.product.qualityScore ?? 50)));
+        this.qualityGrade = this.product.qualityGrade ?? 'yellow';
 
         this.calories = this.product.caloriesPerBase;
         this.nutrientChartData = {
@@ -103,99 +121,109 @@ export class ProductDetailComponent {
             fats: this.product.fatsPerBase,
             carbs: this.product.carbsPerBase,
         };
-        const labels = [
-            this.translate.instant('GENERAL.NUTRIENTS.PROTEIN'),
-            this.translate.instant('GENERAL.NUTRIENTS.FAT'),
-            this.translate.instant('GENERAL.NUTRIENTS.CARB'),
-        ];
         const datasetValues = [this.product.proteinsPerBase, this.product.fatsPerBase, this.product.carbsPerBase];
-        const colors = [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs];
-        this.pieChartData = {
-            labels,
-            datasets: [
-                {
-                    data: datasetValues,
-                    backgroundColor: colors,
-                },
-            ],
-        };
-        this.barChartData = {
-            labels,
-            datasets: [
-                {
-                    data: datasetValues,
-                    backgroundColor: colors,
-                },
-            ],
-        };
-        const tooltipLabel = (label: string, value: number): string =>
-            `${label}: ${value.toFixed(2)} ${this.translate.instant('GENERAL.UNITS.G')}`;
-        this.pieChartOptions = {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx: TooltipItem<'pie'>): string => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
-                    },
-                },
-            },
-        };
-        this.barChartOptions = {
-            responsive: true,
-            scales: {
-                x: { display: false },
-                y: { beginAtZero: true },
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx: TooltipItem<'bar'>): string => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
-                    },
-                },
-            },
-        };
+        this.nutritionForm = this.buildNutritionForm({
+            calories: this.product.caloriesPerBase,
+            proteins: this.product.proteinsPerBase,
+            fats: this.product.fatsPerBase,
+            carbs: this.product.carbsPerBase,
+            fiber: this.product.fiberPerBase,
+            alcohol: this.product.alcoholPerBase,
+        });
+        this.macroBarState = this.buildMacroBarState(datasetValues);
         this.macroBlocks = [
             {
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
                 value: this.product.proteinsPerBase,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.proteins,
+                percent: this.resolveMacroPercent(this.product.proteinsPerBase, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.FAT',
                 value: this.product.fatsPerBase,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fats,
+                percent: this.resolveMacroPercent(this.product.fatsPerBase, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.CARB',
                 value: this.product.carbsPerBase,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.carbs,
+                percent: this.resolveMacroPercent(this.product.carbsPerBase, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.FIBER',
                 value: this.product.fiberPerBase,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
+                percent: this.resolveMacroPercent(this.product.fiberPerBase, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
                 value: this.product.alcoholPerBase,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.alcohol,
+                percent: this.resolveMacroPercent(this.product.alcoholPerBase, datasetValues),
             },
         ];
-        this.favoriteProductService.isFavorite(this.product.id).subscribe(isFav => this.isFavorite.set(isFav));
+        this.favoriteProductService.isFavorite(this.product.id).subscribe(isFav => {
+            this.initialFavoriteState = isFav;
+            this.isFavorite.set(isFav);
+        });
+    }
+
+    private buildNutritionForm(values: {
+        calories: number;
+        proteins: number;
+        fats: number;
+        carbs: number;
+        fiber: number;
+        alcohol: number;
+    }): FormGroup {
+        return new FormGroup({
+            calories: new FormControl(values.calories),
+            proteins: new FormControl(values.proteins),
+            fats: new FormControl(values.fats),
+            carbs: new FormControl(values.carbs),
+            fiber: new FormControl(values.fiber),
+            alcohol: new FormControl(values.alcohol),
+        });
+    }
+
+    private buildMacroBarState(values: number[]): NutritionMacroState {
+        const total = values.reduce((sum, value) => sum + value, 0);
+
+        return {
+            isEmpty: total <= 0,
+            segments: [
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * 100 : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * 100 : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * 100 : 0 },
+            ],
+        };
+    }
+
+    private resolveMacroPercent(value: number, values: number[]): number {
+        const max = Math.max(...values, value, 1);
+        return Math.max(4, Math.round((value / max) * 100));
+    }
+
+    public close(): void {
+        if (this.hasFavoriteChanged()) {
+            this.dialogRef.close(new ProductDetailActionResult(this.product.id, 'FavoriteChanged', true));
+            return;
+        }
+
+        this.dialogRef.close();
     }
 
     public onEdit(): void {
         if (this.isEditDisabled()) {
             return;
         }
-        const editResult = new ProductDetailActionResult(this.product.id, 'Edit');
+        const editResult = new ProductDetailActionResult(this.product.id, 'Edit', this.hasFavoriteChanged());
         this.dialogRef.close(editResult);
     }
 
@@ -219,7 +247,7 @@ export class ProductDetailComponent {
             .afterClosed()
             .subscribe(confirm => {
                 if (confirm) {
-                    const deleteResult = new ProductDetailActionResult(this.product.id, 'Delete');
+                    const deleteResult = new ProductDetailActionResult(this.product.id, 'Delete', this.hasFavoriteChanged());
                     this.dialogRef.close(deleteResult);
                 }
             });
@@ -233,7 +261,7 @@ export class ProductDetailComponent {
         this.isDuplicateInProgress = true;
         this.productService.duplicate(this.product.id).subscribe({
             next: duplicated => {
-                this.dialogRef.close(new ProductDetailActionResult(duplicated.id, 'Duplicate'));
+                this.dialogRef.close(new ProductDetailActionResult(duplicated.id, 'Duplicate', this.hasFavoriteChanged()));
             },
             error: () => {
                 this.isDuplicateInProgress = false;
@@ -291,13 +319,18 @@ export class ProductDetailComponent {
             });
         }
     }
+
+    private hasFavoriteChanged(): boolean {
+        return this.initialFavoriteState !== this.isFavorite();
+    }
 }
 
 export class ProductDetailActionResult {
     public constructor(
         public id: string,
         public action: ProductDetailAction,
+        public favoriteChanged = false,
     ) {}
 }
 
-export type ProductDetailAction = 'Edit' | 'Delete' | 'Duplicate';
+export type ProductDetailAction = 'Edit' | 'Delete' | 'Duplicate' | 'FavoriteChanged';

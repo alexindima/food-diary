@@ -165,12 +165,17 @@ export class RecipeListComponent {
             .afterClosed()
             .subscribe(result => {
                 const actionResult = result as RecipeDetailActionResult | undefined;
-                this.loadFavorites();
-                this.reloadCurrentPage();
 
                 if (!actionResult) {
                     return;
                 }
+
+                if (actionResult.action === 'FavoriteChanged') {
+                    this.loadFavorites();
+                    this.reloadCurrentPage();
+                    return;
+                }
+
                 void this.recipeListFacade.handleDetailAction(
                     actionResult,
                     recipe,

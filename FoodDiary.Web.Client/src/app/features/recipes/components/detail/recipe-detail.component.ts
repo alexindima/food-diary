@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -8,15 +8,19 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { BaseChartDirective } from 'ng2-charts';
 
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import {
+    NutritionControlNames,
+    NutritionEditorComponent,
+    NutritionMacroState,
+} from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
@@ -28,16 +32,16 @@ import { Recipe } from '../../models/recipe.data';
     templateUrl: './recipe-detail.component.html',
     styleUrls: ['./recipe-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [provideCharts(withDefaultRegisterables())],
     imports: [
         TranslatePipe,
         FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
+        FdUiDialogHeaderDirective,
         FdUiButtonComponent,
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
-        BaseChartDirective,
+        NutritionEditorComponent,
     ],
 })
 export class RecipeDetailComponent {
@@ -49,6 +53,7 @@ export class RecipeDetailComponent {
 
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
+    private initialFavoriteState = false;
     private favoriteRecipeId: string | null = null;
 
     public readonly recipe: Recipe;
@@ -60,17 +65,28 @@ export class RecipeDetailComponent {
     public readonly alcohol: number;
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
-    public readonly pieChartData: ChartData<'pie', number[], string>;
-    public readonly barChartData: ChartData<'bar', number[], string>;
-    public readonly pieChartOptions: ChartOptions<'pie'>;
-    public readonly barChartOptions: ChartOptions<'bar'>;
-    public readonly chartSize = 200;
     public readonly macroBlocks: {
         labelKey: string;
         value: number;
         unitKey: string;
         color: string;
+        percent: number;
     }[];
+    public readonly ingredientPreview: {
+        name: string;
+        amount: number;
+        unitKey: string | null;
+    }[];
+    public readonly nutritionControlNames: NutritionControlNames = {
+        calories: 'calories',
+        proteins: 'proteins',
+        fats: 'fats',
+        carbs: 'carbs',
+        fiber: 'fiber',
+        alcohol: 'alcohol',
+    };
+    public readonly nutritionForm: FormGroup;
+    public readonly macroBarState: NutritionMacroState;
     public readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
         { value: 'nutrients', labelKey: 'RECIPE_DETAIL.TABS.NUTRIENTS' },
@@ -90,6 +106,9 @@ export class RecipeDetailComponent {
         const data = inject<Recipe>(FD_UI_DIALOG_DATA);
 
         this.recipe = data;
+        this.initialFavoriteState = this.recipe.isFavorite ?? false;
+        this.isFavorite.set(this.initialFavoriteState);
+        this.favoriteRecipeId = this.recipe.favoriteRecipeId ?? null;
         this.calories = this.resolveNutrientValue(data.totalCalories, data.manualCalories);
         this.proteins = this.resolveNutrientValue(data.totalProteins, data.manualProteins);
         this.fats = this.resolveNutrientValue(data.totalFats, data.manualFats);
@@ -100,6 +119,7 @@ export class RecipeDetailComponent {
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
+        this.ingredientPreview = this.buildIngredientPreview();
         this.visibilityKey = `RECIPE_VISIBILITY.${this.recipe.visibility}`;
         this.isDeleteDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
         this.isEditDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
@@ -110,92 +130,116 @@ export class RecipeDetailComponent {
                 : this.recipe.isOwnedByCurrentUser
                   ? 'RECIPE_DETAIL.WARNING_IN_USE'
                   : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
-        const labels = [
-            this.translateService.instant('GENERAL.NUTRIENTS.PROTEIN'),
-            this.translateService.instant('GENERAL.NUTRIENTS.FAT'),
-            this.translateService.instant('GENERAL.NUTRIENTS.CARB'),
-        ];
         const datasetValues = [this.proteins, this.fats, this.carbs];
-        const colors = [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs];
-        this.pieChartData = {
-            labels,
-            datasets: [
-                {
-                    data: datasetValues,
-                    backgroundColor: colors,
-                },
-            ],
-        };
-        this.barChartData = {
-            labels,
-            datasets: [
-                {
-                    data: datasetValues,
-                    backgroundColor: colors,
-                },
-            ],
-        };
-        const tooltipLabel = (label: string, value: number): string =>
-            `${label}: ${value.toFixed(2)} ${this.translateService.instant('STATISTICS.GRAMS')}`;
-        this.pieChartOptions = {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx: TooltipItem<'pie'>): string => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
-                    },
-                },
-            },
-        };
-        this.barChartOptions = {
-            responsive: true,
-            scales: {
-                x: { display: false },
-                y: { beginAtZero: true },
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx: TooltipItem<'bar'>): string => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
-                    },
-                },
-            },
-        };
+        this.nutritionForm = this.buildNutritionForm({
+            calories: this.calories,
+            proteins: this.proteins,
+            fats: this.fats,
+            carbs: this.carbs,
+            fiber: this.fiber,
+            alcohol: this.alcohol,
+        });
+        this.macroBarState = this.buildMacroBarState(datasetValues);
         this.macroBlocks = [
             {
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
                 value: this.proteins,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.proteins,
+                percent: this.resolveMacroPercent(this.proteins, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.FAT',
                 value: this.fats,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fats,
+                percent: this.resolveMacroPercent(this.fats, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.CARB',
                 value: this.carbs,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.carbs,
+                percent: this.resolveMacroPercent(this.carbs, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.FIBER',
                 value: this.fiber,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
+                percent: this.resolveMacroPercent(this.fiber, datasetValues),
             },
             {
                 labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
                 value: this.alcohol,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.alcohol,
+                percent: this.resolveMacroPercent(this.alcohol, datasetValues),
             },
         ];
-        this.favoriteRecipeService.isFavorite(this.recipe.id).subscribe(isFav => this.isFavorite.set(isFav));
+        this.favoriteRecipeService.isFavorite(this.recipe.id).subscribe(isFav => {
+            this.initialFavoriteState = isFav;
+            this.isFavorite.set(isFav);
+        });
+    }
+
+    private buildNutritionForm(values: {
+        calories: number;
+        proteins: number;
+        fats: number;
+        carbs: number;
+        fiber: number;
+        alcohol: number;
+    }): FormGroup {
+        return new FormGroup({
+            calories: new FormControl(values.calories),
+            proteins: new FormControl(values.proteins),
+            fats: new FormControl(values.fats),
+            carbs: new FormControl(values.carbs),
+            fiber: new FormControl(values.fiber),
+            alcohol: new FormControl(values.alcohol),
+        });
+    }
+
+    private buildMacroBarState(values: number[]): NutritionMacroState {
+        const total = values.reduce((sum, value) => sum + value, 0);
+
+        return {
+            isEmpty: total <= 0,
+            segments: [
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * 100 : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * 100 : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * 100 : 0 },
+            ],
+        };
+    }
+
+    private resolveMacroPercent(value: number, values: number[]): number {
+        const max = Math.max(...values, value, 1);
+        return Math.max(4, Math.round((value / max) * 100));
+    }
+
+    private buildIngredientPreview(): { name: string; amount: number; unitKey: string | null }[] {
+        return this.recipe.steps
+            .flatMap(step => step.ingredients ?? [])
+            .slice(0, 6)
+            .map(ingredient => ({
+                name:
+                    ingredient.productName ??
+                    ingredient.nestedRecipeName ??
+                    this.translateService.instant('RECIPE_DETAIL.UNKNOWN_INGREDIENT'),
+                amount: ingredient.amount,
+                unitKey: ingredient.productBaseUnit ? `GENERAL.UNITS.${ingredient.productBaseUnit}` : null,
+            }));
+    }
+
+    public close(): void {
+        if (this.hasFavoriteChanged()) {
+            this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'FavoriteChanged', true));
+            return;
+        }
+
+        this.dialogRef.close();
     }
 
     private resolveFiberValue(): number {
@@ -336,7 +380,7 @@ export class RecipeDetailComponent {
             return;
         }
 
-        this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Edit'));
+        this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Edit', this.hasFavoriteChanged()));
     }
 
     public onDelete(): void {
@@ -355,7 +399,7 @@ export class RecipeDetailComponent {
         this.isDuplicateInProgress = true;
         this.recipeService.duplicate(this.recipe.id).subscribe({
             next: duplicated => {
-                this.dialogRef.close(new RecipeDetailActionResult(duplicated.id, 'Duplicate'));
+                this.dialogRef.close(new RecipeDetailActionResult(duplicated.id, 'Duplicate', this.hasFavoriteChanged()));
             },
             error: () => {
                 this.isDuplicateInProgress = false;
@@ -414,6 +458,10 @@ export class RecipeDetailComponent {
         }
     }
 
+    private hasFavoriteChanged(): boolean {
+        return this.initialFavoriteState !== this.isFavorite();
+    }
+
     private showConfirmDialog(): void {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('CONFIRM_DELETE.TITLE', {
@@ -434,17 +482,18 @@ export class RecipeDetailComponent {
             .afterClosed()
             .subscribe(confirm => {
                 if (confirm) {
-                    this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Delete'));
+                    this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Delete', this.hasFavoriteChanged()));
                 }
             });
     }
 }
 
-export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate';
+export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate' | 'FavoriteChanged';
 
 export class RecipeDetailActionResult {
     public constructor(
         public id: string,
         public action: RecipeDetailAction,
+        public favoriteChanged = false,
     ) {}
 }

@@ -6,14 +6,14 @@
 .fd-ui-tabs {
     --fd-tabs-gap: 0;
     --fd-tabs-height: var(--fd-size-control-md);
-    --fd-tabs-label-opacity: 0.6;
+    --fd-tabs-label-opacity: 1;
     --fd-tabs-label-opacity-active: 1;
     --fd-tabs-label-line-height: 1;
     --fd-tabs-border-color: var(--fd-color-border-strong);
     --fd-tabs-flex-wrap: nowrap;
     --fd-tabs-item-padding-inline: var(--fd-space-tabs-item-padding-inline);
-    --fd-tabs-color: var(--fd-color-slate-900);
-    --fd-tabs-color-hover: var(--fd-color-primary-600);
+    --fd-tabs-color: var(--fd-color-text-muted);
+    --fd-tabs-color-hover: var(--fd-color-text);
     --fd-tabs-color-active: var(--fd-color-primary-600);
     --fd-tabs-active-border-color: var(--fd-color-primary-600);
     --fd-tabs-label-white-space: nowrap;

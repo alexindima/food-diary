@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
+    DestroyRef,
+    ElementRef,
     inject,
     input,
+    signal,
+    viewChild,
     ViewEncapsulation,
 } from '@angular/core';
 
@@ -41,11 +46,14 @@ export interface FdUiDialogData {
 export class FdUiDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiDialogComponent>, { optional: true });
     private readonly injectedData = inject(FD_UI_DIALOG_DATA, { optional: true }) as FdUiDialogData | null;
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
 
     private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
     private readonly headerSlot = contentChild(FdUiDialogHeaderDirective, { descendants: true });
+    private readonly body = viewChild<ElementRef<HTMLElement>>('body');
+    private readonly isBodyScrollable = signal(false);
 
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
@@ -58,6 +66,35 @@ export class FdUiDialogComponent {
     public readonly showHeader = computed(() => Boolean(this.title() || this.subtitle() || this.dismissible()));
     public readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
     public readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
+    public readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());
+
+    public constructor() {
+        afterNextRender(() => {
+            const body = this.body()?.nativeElement;
+
+            if (!body) {
+                return;
+            }
+
+            const updateScrollableState = (): void => {
+                this.isBodyScrollable.set(body.scrollHeight > body.clientHeight + 1);
+            };
+            const scheduleUpdate = (): void => {
+                window.requestAnimationFrame(updateScrollableState);
+            };
+            const resizeObserver = new ResizeObserver(scheduleUpdate);
+            const mutationObserver = new MutationObserver(scheduleUpdate);
+
+            updateScrollableState();
+            resizeObserver.observe(body);
+            mutationObserver.observe(body, { childList: true, subtree: true, characterData: true });
+
+            this.destroyRef.onDestroy(() => {
+                resizeObserver.disconnect();
+                mutationObserver.disconnect();
+            });
+        });
+    }
 
     public get hasFooter(): boolean {
         return Boolean(this.footerSlot());

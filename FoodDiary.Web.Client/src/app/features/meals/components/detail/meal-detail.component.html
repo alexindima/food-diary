@@ -1,25 +1,106 @@
-﻿<fd-ui-dialog [title]="'CONSUMPTION_DETAIL.TITLE' | translate" [subtitle]="formattedDate || undefined" size="lg">
-    <fd-ui-tabs class="consumption-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
+<fd-ui-dialog size="lg">
+    <header fdUiDialogHeader class="consumption-detail__header">
+        <div class="consumption-detail__header-row">
+            <div class="consumption-detail__title-group">
+                <fd-ui-button
+                    class="consumption-detail__favorite-btn fd-favorite-button fd-inline-center"
+                    appearance="plain-icon"
+                    variant="secondary"
+                    fill="text"
+                    [icon]="isFavorite() ? 'star' : 'star_border'"
+                    iconSize="sm"
+                    [class.consumption-detail__favorite-btn--active]="isFavorite()"
+                    [class.fd-favorite-button--active]="isFavorite()"
+                    [disabled]="isFavoriteLoading()"
+                    [fdUiHint]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
+                    [ariaLabel]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
+                    (click)="toggleFavorite()"
+                />
+                <div class="consumption-detail__heading">
+                    <h2 class="consumption-detail__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }}</h2>
+                    @if (formattedDate) {
+                        <p class="consumption-detail__subtitle">{{ formattedDate }}</p>
+                    }
+                </div>
+            </div>
+            <button type="button" class="consumption-detail__close-button" (click)="close()" aria-label="Close dialog">
+                <span class="material-icons" aria-hidden="true">close</span>
+            </button>
+        </div>
+        <fd-ui-tabs
+            class="consumption-detail__tabs"
+            [tabs]="tabs"
+            [selectedValue]="activeTab"
+            (selectedValueChange)="onTabChange($event)"
+        />
+    </header>
 
     <div class="consumption-detail fd-stack fd-gap-lg">
         @switch (activeTab) {
             @case ('summary') {
-                <div class="consumption-detail__summary fd-grid fd-gap-sm">
-                    <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
-                        accentSide="top"
-                        accentColor="var(--fd-color-primary-300)"
-                        [tinted]="true"
-                    >
-                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                            'CONSUMPTION_DETAIL.SUMMARY.CALORIES' | translate
-                        }}</span>
-                        <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
-                            {{ calories }}
-                            {{ 'GENERAL.UNITS.KCAL' | translate }}
-                        </strong>
-                    </fd-ui-accent-surface>
+                <section class="consumption-detail__overview fd-grid fd-gap-md">
+                    <div class="consumption-detail__overview-main fd-stack fd-gap-sm">
+                        <fd-ui-accent-surface
+                            class="consumption-detail__hero fd-ui-summary-surface"
+                            accentSide="left"
+                            accentColor="var(--fd-color-primary-300)"
+                            [tinted]="true"
+                        >
+                            <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                                'CONSUMPTION_DETAIL.SUMMARY.CALORIES' | translate
+                            }}</span>
+                            <strong class="consumption-detail__hero-value fd-ui-summary-surface__value">
+                                {{ calories }}
+                                {{ 'GENERAL.UNITS.KCAL' | translate }}
+                            </strong>
+                            <span class="consumption-detail__hero-meta fd-ui-body-sm">
+                                {{ mealTypeLabel || ('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_MEAL' | translate) }}
+                                ·
+                                {{ itemsCount }} {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
+                            </span>
+                        </fd-ui-accent-surface>
 
+                        <div class="consumption-detail__quality-row">
+                            <span class="consumption-detail__quality-label fd-ui-caption">{{
+                                'PRODUCT_CARD.QUALITY_SCORE' | translate
+                            }}</span>
+                            <div class="consumption-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
+                                <span
+                                    class="consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--{{
+                                        qualityGrade
+                                    }}"
+                                    [style.width.%]="qualityScore"
+                                ></span>
+                            </div>
+                            <strong
+                                class="consumption-detail__quality-value fd-ui-body-sm"
+                                [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
+                            >
+                                {{ qualityScore }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="consumption-detail__macro-bars fd-stack fd-gap-sm">
+                        @for (macro of macroBlocks.slice(0, 3); track macro.labelKey) {
+                            <div class="consumption-detail__macro-row">
+                                <span class="consumption-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
+                                <div class="consumption-detail__macro-track" aria-hidden="true">
+                                    <span
+                                        class="consumption-detail__macro-fill"
+                                        [style.background]="macro.color"
+                                        [style.width.%]="macro.percent"
+                                    ></span>
+                                </div>
+                                <strong class="consumption-detail__macro-value fd-ui-body-sm">
+                                    {{ macro.value }} {{ macro.unitKey | translate }}
+                                </strong>
+                            </div>
+                        }
+                    </div>
+                </section>
+
+                <div class="consumption-detail__summary fd-grid fd-gap-sm">
                     <fd-ui-accent-surface
                         class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
                         accentSide="top"
@@ -47,33 +128,6 @@
                             itemsCount
                         }}</strong>
                     </fd-ui-accent-surface>
-
-                    <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary consumption-detail__surface--quality fd-ui-summary-surface fd-ui-summary-surface--quality"
-                        accentSide="top"
-                        accentColor="var(--fd-color-primary-300)"
-                        [tinted]="true"
-                    >
-                        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                            'PRODUCT_CARD.QUALITY_SCORE' | translate
-                        }}</span>
-                        <div class="consumption-detail__quality fd-grid fd-gap-sm fd-align-center">
-                            <div class="consumption-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
-                                <span
-                                    class="consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--{{
-                                        qualityGrade
-                                    }}"
-                                    [style.width.%]="qualityScore"
-                                ></span>
-                            </div>
-                            <strong
-                                class="consumption-detail__quality-value fd-ui-summary-surface__value fd-ui-card-title"
-                                [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
-                            >
-                                {{ qualityScore }}
-                            </strong>
-                        </div>
-                    </fd-ui-accent-surface>
                 </div>
 
                 @if (consumption.comment) {
@@ -91,69 +145,40 @@
                         }}</span>
                     </fd-ui-accent-surface>
                 }
+
+                @if (itemPreview.length) {
+                    <section class="consumption-detail__list fd-stack fd-gap-xs">
+                        <h3 class="consumption-detail__list-title fd-ui-card-title">
+                            {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
+                        </h3>
+                        @for (item of itemPreview; track $index) {
+                            <div class="consumption-detail__list-row">
+                                <span class="fd-ui-body-sm">{{ item.name }}</span>
+                                <strong class="fd-ui-body-sm">
+                                    {{ item.amount }}
+                                    @if (item.unitKey) {
+                                        {{ item.unitKey | translate }}
+                                    }
+                                </strong>
+                            </div>
+                        }
+                    </section>
+                }
             }
             @case ('nutrients') {
-                <div class="consumption-detail__nutrients fd-grid fd-gap-md">
-                    <div class="consumption-detail__macro-grid fd-grid fd-gap-sm">
-                        @for (macro of macroBlocks; track macro.labelKey) {
-                            <fd-ui-accent-surface
-                                class="consumption-detail__surface fd-ui-summary-surface"
-                                accentSide="top"
-                                [accentColor]="macro.color"
-                                [tinted]="true"
-                            >
-                                <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                                    macro.labelKey | translate
-                                }}</span>
-                                <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
-                                    {{ macro.value }}
-                                    {{ macro.unitKey | translate }}
-                                </strong>
-                            </fd-ui-accent-surface>
-                        }
-                    </div>
-                    <div class="consumption-detail__charts fd-grid fd-gap-sm">
-                        <div class="consumption-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
-                            <canvas
-                                baseChart
-                                [style.width.px]="chartSize"
-                                [style.height.px]="chartSize"
-                                [data]="pieChartData"
-                                [options]="pieChartOptions"
-                                [type]="'pie'"
-                                [legend]="false"
-                            ></canvas>
-                        </div>
-                        <div class="consumption-detail__chart fd-center" [style.width.px]="chartSize" [style.height.px]="chartSize">
-                            <canvas
-                                baseChart
-                                [style.width.px]="chartSize"
-                                [style.height.px]="chartSize"
-                                [data]="barChartData"
-                                [options]="barChartOptions"
-                                [type]="'bar'"
-                                [legend]="false"
-                            ></canvas>
-                        </div>
-                    </div>
-                </div>
+                <fd-nutrition-editor
+                    class="consumption-detail__nutrients"
+                    [formGroup]="nutritionForm"
+                    [controlNames]="nutritionControlNames"
+                    [macroState]="macroBarState"
+                    [readonly]="true"
+                />
             }
         }
     </div>
 
     <div fdUiDialogFooter class="consumption-detail__footer fd-stack fd-gap-sm">
         <div class="consumption-detail__actions fd-ui-actions fd-ui-actions--end">
-            <fd-ui-button
-                class="consumption-detail__favorite-btn"
-                variant="secondary"
-                fill="solid"
-                [icon]="isFavorite() ? 'star' : 'star_border'"
-                [class.consumption-detail__favorite-btn--active]="isFavorite()"
-                [disabled]="isFavoriteLoading()"
-                [fdUiHint]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
-                [ariaLabel]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
-                (click)="toggleFavorite()"
-            />
             <fd-ui-button size="md" variant="secondary" icon="replay" (click)="onRepeat()">
                 {{ 'CONSUMPTION_DETAIL.REPEAT_BUTTON' | translate }}
             </fd-ui-button>
