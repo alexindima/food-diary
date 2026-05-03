@@ -19,6 +19,9 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Stylelint: `npm run stylelint`
 - Prettier: `npm run prettier`
 - Tests: `npm run test`
+- App tests: `npm run test:ci:app`
+- UI kit tests: `npm run test:ci:ui-kit`
+- Admin tests: `npm run test:ci:admin`
 - UI kit build: `npx ng build fd-ui-kit`
 
 ## TypeScript + Angular

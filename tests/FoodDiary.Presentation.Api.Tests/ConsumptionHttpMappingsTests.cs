@@ -179,7 +179,33 @@ public sealed class ConsumptionHttpMappingsTests {
         var aiItemId = Guid.NewGuid();
 
         var items = new List<ConsumptionItemModel> {
-            new(itemId, consumptionId, 150, productId, "Chicken", "g", 100, 165, 31, 3.6, 0, 0, 0, null, null, null, null, null, null, null, null, null, 85, "A"),
+            new(
+                itemId,
+                consumptionId,
+                150,
+                productId,
+                "Chicken",
+                "https://example.com/chicken.jpg",
+                "g",
+                100,
+                165,
+                31,
+                3.6,
+                0,
+                0,
+                0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                85,
+                "A"),
         };
         var aiItems = new List<ConsumptionAiItemModel> {
             new(aiItemId, sessionId, "Rice", "Рис", 200, "g", 260, 5, 0.6, 56, 0.4, 0),
@@ -199,6 +225,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal(itemId, response.Items[0].Id);
         Assert.Equal(productId, response.Items[0].ProductId);
         Assert.Equal("Chicken", response.Items[0].ProductName);
+        Assert.Equal("https://example.com/chicken.jpg", response.Items[0].ProductImageUrl);
         Assert.Equal(85, response.Items[0].ProductQualityScore);
         Assert.Equal("A", response.Items[0].ProductQualityGrade);
 

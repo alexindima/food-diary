@@ -22,6 +22,11 @@ export interface EntityCardQuality {
     grade: QualityGrade;
 }
 
+export interface EntityCardCollageImage {
+    url: string;
+    alt: string;
+}
+
 export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
 
 @Component({
@@ -42,6 +47,7 @@ export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
 })
 export class EntityCardComponent {
     public readonly imageUrl = input<string | null | undefined>(null);
+    public readonly collageImages = input<ReadonlyArray<EntityCardCollageImage>>([]);
     public readonly imageAlt = input.required<string>();
     public readonly imageIcon = input('restaurant');
     public readonly previewable = input(false);
@@ -82,7 +88,10 @@ export class EntityCardComponent {
         };
     });
 
-    public readonly hasPreviewImage = computed(() => Boolean(this.previewable() && this.imageUrl()?.trim()));
+    public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, 4));
+    public readonly hasPreviewImage = computed(() =>
+        Boolean(this.previewable() && (this.imageUrl()?.trim() || this.visibleCollageImages().length > 0)),
+    );
 
     public handleOpen(): void {
         this.open.emit();

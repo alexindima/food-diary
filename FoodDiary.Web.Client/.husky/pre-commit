@@ -5,6 +5,10 @@ HAS_TS=$(echo "$STAGED_FILES" | grep -c '\.ts$' || true)
 HAS_HTML=$(echo "$STAGED_FILES" | grep -c '\.html$' || true)
 HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
 HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
+HAS_FRONTEND_SHARED=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(package(-lock)?\.json|angular\.json|tsconfig.*\.json|src/(styles|test-setup)\.ts|src/styles/|src/styles\.scss)' || true)
+HAS_FRONTEND_APP=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(src/app|assets/|src/environments|src/main|src/server|src/app\.|src/index\.html|src/manifest\.webmanifest|ngsw-config\.json)' || true)
+HAS_FRONTEND_UI_KIT=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/projects/fd-ui-kit/' || true)
+HAS_FRONTEND_ADMIN=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/projects/fooddiary-admin/' || true)
 HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n/.*\.json|scripts/check-i18n\.mjs|package\.json|src/.*\.html)$' || true)
 HAS_STORYBOOK=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
@@ -47,7 +51,25 @@ fi
 
 if [ "$HAS_FRONTEND" -gt 0 ]; then
   echo "=== Running frontend tests ==="
-  npm run test:ci || exit 1
+  if [ "$HAS_FRONTEND_SHARED" -gt 0 ] || [ "$HAS_FRONTEND_UI_KIT" -gt 0 ]; then
+    echo "=== Running all frontend tests (shared or UI kit changes) ==="
+    npm run test:ci || exit 1
+  else
+    if [ "$HAS_FRONTEND_APP" -gt 0 ]; then
+      echo "=== Running app frontend tests ==="
+      npm run test:ci:app || exit 1
+    fi
+
+    if [ "$HAS_FRONTEND_ADMIN" -gt 0 ]; then
+      echo "=== Running admin frontend tests ==="
+      npm run test:ci:admin || exit 1
+    fi
+
+    if [ "$HAS_FRONTEND_APP" -eq 0 ] && [ "$HAS_FRONTEND_ADMIN" -eq 0 ]; then
+      echo "=== Running all frontend tests (unclassified frontend changes) ==="
+      npm run test:ci || exit 1
+    fi
+  fi
 else
   echo "=== Skipping frontend tests (no frontend files changed) ==="
 fi

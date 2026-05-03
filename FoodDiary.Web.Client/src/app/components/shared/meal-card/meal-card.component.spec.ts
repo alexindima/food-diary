@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -13,6 +14,7 @@ describe('MealCardComponent', () => {
     let component: MealCardComponent;
     let fixture: ComponentFixture<MealCardComponent>;
     let translateService: TranslateService;
+    let dialogService: FdUiDialogService;
 
     const mockMeal: MealCardItem = {
         id: 'meal-1',
@@ -54,6 +56,7 @@ describe('MealCardComponent', () => {
         fixture = TestBed.createComponent(MealCardComponent);
         component = fixture.componentInstance;
         translateService = TestBed.inject(TranslateService);
+        dialogService = TestBed.inject(FdUiDialogService);
         fixture.componentRef.setInput('meal', mockMeal);
     });
 
@@ -119,6 +122,66 @@ describe('MealCardComponent', () => {
         expect(component.coverImage()).toBe('assets/images/stubs/meals/lunch.svg');
     });
 
+    it('should use item image as cover when no meal image exists', () => {
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            imageUrl: null,
+            items: [{ product: { imageUrl: 'https://example.com/product.jpg', name: 'Product' } }],
+        });
+        fixture.detectChanges();
+
+        expect(component.coverImage()).toBe('https://example.com/product.jpg');
+        expect(component.collageImages()).toEqual([]);
+        expect(component.hasPreviewImage()).toBe(true);
+    });
+
+    it('should build collage images from product and recipe items', () => {
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            imageUrl: null,
+            items: [
+                { product: { imageUrl: 'https://example.com/product.jpg', name: 'Product' } },
+                { recipe: { imageUrl: 'https://example.com/recipe.jpg', name: 'Recipe' } },
+            ],
+        });
+        fixture.detectChanges();
+
+        expect(component.coverImage()).toBeNull();
+        expect(component.collageImages()).toEqual([
+            { url: 'https://example.com/product.jpg', alt: 'Product' },
+            { url: 'https://example.com/recipe.jpg', alt: 'Recipe' },
+        ]);
+        expect(component.hasPreviewImage()).toBe(true);
+    });
+
+    it('should open collage preview when meal uses item collage images', () => {
+        const openSpy = vi.spyOn(dialogService, 'open').mockImplementation(() => Object.create(null));
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            imageUrl: null,
+            items: [
+                { product: { imageUrl: 'https://example.com/product.jpg', name: 'Product' } },
+                { recipe: { imageUrl: 'https://example.com/recipe.jpg', name: 'Recipe' } },
+            ],
+        });
+        fixture.detectChanges();
+
+        component.handlePreview();
+
+        expect(openSpy).toHaveBeenCalledWith(
+            expect.any(Function),
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    imageUrl: undefined,
+                    collageImages: [
+                        { url: 'https://example.com/product.jpg', alt: 'Product' },
+                        { url: 'https://example.com/recipe.jpg', alt: 'Recipe' },
+                    ],
+                }),
+            }),
+        );
+    });
+
     it('should use AI session image when meal imageUrl is empty', () => {
         fixture.componentRef.setInput('meal', {
             ...mockMeal,
@@ -127,6 +190,7 @@ describe('MealCardComponent', () => {
         });
         fixture.detectChanges();
         expect(component.coverImage()).toBe('https://example.com/ai-meal.jpg');
+        expect(component.collageImages()).toEqual([]);
         expect(component.hasPreviewImage()).toBe(true);
     });
 

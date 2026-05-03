@@ -15,6 +15,9 @@ Angular frontend for the main Food Diary app, shared UI kit, and admin app.
 - `npm run stylelint`
 - `npm run prettier`
 - `npm run test:ci`
+- `npm run test:ci:app`
+- `npm run test:ci:ui-kit`
+- `npm run test:ci:admin`
 - `npm run test:e2e:client:smoke`
 - `npm run build:storybook`
 

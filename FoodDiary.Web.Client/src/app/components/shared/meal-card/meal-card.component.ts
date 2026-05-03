@@ -10,7 +10,7 @@ import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.s
 import { QualityGrade } from '../../../features/products/models/product.data';
 import { AuthService } from '../../../services/auth.service';
 import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
-import { EntityCardComponent } from '../entity-card/entity-card.component';
+import { EntityCardCollageImage, EntityCardComponent } from '../entity-card/entity-card.component';
 
 export interface MealCardItem {
     id: string;
@@ -27,7 +27,10 @@ export interface MealCardItem {
     qualityGrade?: QualityGrade | null;
     isFavorite?: boolean;
     favoriteMealId?: string | null;
-    items?: Array<unknown> | null;
+    items?: Array<{
+        product?: { imageUrl?: string | null; name?: string | null } | null;
+        recipe?: { imageUrl?: string | null; name?: string | null } | null;
+    } | null> | null;
     aiSessions?: Array<{ imageUrl?: string | null; items?: Array<unknown> | null } | null> | null;
 }
 
@@ -80,7 +83,25 @@ export class MealCardComponent {
     public readonly coverImage = computed(() => {
         const image = this.resolvePreviewImage();
         const resolved = resolveMealImageUrl(image ?? undefined, this.meal().mealType ?? undefined) ?? image;
+        const itemImages = image ? [] : this.resolveItemImages();
+
+        if (!image && itemImages.length === 1) {
+            return itemImages[0].url;
+        }
+
+        if (!image && itemImages.length > 1) {
+            return null;
+        }
+
         return resolved ?? this.fallbackMealImage;
+    });
+    public readonly collageImages = computed<ReadonlyArray<EntityCardCollageImage>>(() => {
+        if (this.resolvePreviewImage()) {
+            return [];
+        }
+
+        const itemImages = this.resolveItemImages();
+        return itemImages.length > 1 ? itemImages : [];
     });
 
     public readonly itemCount = computed(() => {
@@ -106,12 +127,13 @@ export class MealCardComponent {
     }
 
     public hasPreviewImage(): boolean {
-        return Boolean(this.resolvePreviewImage());
+        return Boolean(this.resolvePreviewImage() || this.collageImages().length > 0);
     }
 
     public handlePreview(): void {
         const imageUrl = this.resolvePreviewImage();
-        if (!imageUrl) {
+        const collageImages = imageUrl ? [] : this.collageImages();
+        if (!imageUrl && collageImages.length === 0) {
             return;
         }
 
@@ -121,6 +143,7 @@ export class MealCardComponent {
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
             data: {
                 imageUrl,
+                collageImages,
                 alt: this.translateService.instant('IMAGE_PREVIEW.ALT', {
                     name: this.mealTitle(),
                 }),
@@ -198,6 +221,16 @@ export class MealCardComponent {
     }
 
     private resolvePreviewImage(): string | undefined {
+        const explicitImage = this.resolveExplicitPreviewImage();
+        if (explicitImage) {
+            return explicitImage;
+        }
+
+        const itemImages = this.resolveItemImages();
+        return itemImages.length === 1 ? itemImages[0].url : undefined;
+    }
+
+    private resolveExplicitPreviewImage(): string | undefined {
         const mealImage = this.meal().imageUrl?.trim();
         if (mealImage) {
             return mealImage;
@@ -206,5 +239,29 @@ export class MealCardComponent {
         return this.meal()
             .aiSessions?.map(session => session?.imageUrl?.trim())
             .find(Boolean);
+    }
+
+    private resolveItemImages(): EntityCardCollageImage[] {
+        const seen = new Set<string>();
+        const result: EntityCardCollageImage[] = [];
+
+        for (const item of this.meal().items ?? []) {
+            const imageUrl = item?.product?.imageUrl?.trim() || item?.recipe?.imageUrl?.trim();
+            if (!imageUrl || seen.has(imageUrl)) {
+                continue;
+            }
+
+            seen.add(imageUrl);
+            result.push({
+                url: imageUrl,
+                alt: item?.product?.name?.trim() || item?.recipe?.name?.trim() || this.mealTitle(),
+            });
+
+            if (result.length === 4) {
+                break;
+            }
+        }
+
+        return result;
     }
 }

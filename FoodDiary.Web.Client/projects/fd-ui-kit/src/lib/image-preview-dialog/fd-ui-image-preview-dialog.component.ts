@@ -7,9 +7,15 @@ import { FD_UI_DIALOG_DATA } from '../dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from '../dialog/fd-ui-dialog-ref';
 
 export interface FdUiImagePreviewDialogData {
-    imageUrl: string;
+    imageUrl?: string;
+    collageImages?: ReadonlyArray<FdUiImagePreviewDialogCollageImage>;
     alt?: string;
     title?: string;
+}
+
+export interface FdUiImagePreviewDialogCollageImage {
+    url: string;
+    alt?: string;
 }
 
 @Component({
@@ -25,7 +31,8 @@ export class FdUiImagePreviewDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiImagePreviewDialogComponent, void>);
     private readonly dialogData = inject<FdUiImagePreviewDialogData>(FD_UI_DIALOG_DATA);
 
-    public readonly imageUrl = this.dialogData.imageUrl;
+    public readonly imageUrl = this.dialogData.imageUrl?.trim() ?? '';
+    public readonly collageImages = (this.dialogData.collageImages ?? []).slice(0, 4);
     public readonly alt = this.dialogData.alt ?? '';
     public readonly title = this.dialogData.title?.trim() ?? '';
 

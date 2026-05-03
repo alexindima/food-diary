@@ -11,7 +11,7 @@
     <div
         fdMediaCardMedia
         class="entity-card__thumb fd-place-center"
-        [class.entity-card__thumb--has-image]="!!imageUrl()"
+        [class.entity-card__thumb--has-image]="!!imageUrl() || visibleCollageImages().length > 0"
         [class.entity-card__thumb--previewable]="hasPreviewImage()"
         [fdUiHint]="hasPreviewImage() ? ('IMAGE_PREVIEW.OPEN' | translate) : null"
         [fdUiHintDisabled]="!hasPreviewImage()"
@@ -24,6 +24,12 @@
     >
         @if (imageUrl(); as imageSrc) {
             <img [src]="imageSrc" [alt]="imageAlt()" />
+        } @else if (visibleCollageImages().length) {
+            <div class="entity-card__collage entity-card__collage--count-{{ visibleCollageImages().length }}">
+                @for (image of visibleCollageImages(); track image.url) {
+                    <img class="entity-card__collage-image" [src]="image.url" [alt]="image.alt" />
+                }
+            </div>
         } @else {
             <fd-ui-icon [name]="imageIcon()" size="lg" />
         }

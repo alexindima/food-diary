@@ -109,6 +109,7 @@ export interface ConsumptionItemResponseDto {
     amount: number;
     productId?: string | null;
     productName?: string | null;
+    productImageUrl?: string | null;
     productBaseUnit?: MeasurementUnit | string | null;
     productBaseAmount?: number | null;
     productCaloriesPerBase?: number | null;
@@ -119,6 +120,7 @@ export interface ConsumptionItemResponseDto {
     productAlcoholPerBase?: number | null;
     recipeId?: string | null;
     recipeName?: string | null;
+    recipeImageUrl?: string | null;
     recipeServings?: number | null;
     recipeTotalCalories?: number | null;
     recipeTotalProteins?: number | null;
