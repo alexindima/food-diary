@@ -75,7 +75,7 @@ export class WeightTrendCardComponent {
                 callbacks: {
                     label: context => {
                         const value = context.raw as number | null;
-                        if (value === null || value === undefined) {
+                        if (value === null) {
                             return '';
                         }
                         return `${value.toFixed(1)} kg`;
@@ -106,7 +106,7 @@ export class WeightTrendCardComponent {
 
     public readonly changeTone = computed<'positive' | 'negative' | 'neutral'>(() => {
         const value = this.change();
-        if (value === null || value === undefined) {
+        if (value === null) {
             return 'neutral';
         }
         if (value < -0.01) {
@@ -120,7 +120,7 @@ export class WeightTrendCardComponent {
 
     public readonly formattedChangeValue = computed(() => {
         const delta = this.change();
-        if (delta === null || delta === undefined) {
+        if (delta === null) {
             return null;
         }
         const rounded = Math.round(delta * 10) / 10;
@@ -130,7 +130,7 @@ export class WeightTrendCardComponent {
 
     public readonly hasValue = computed(() => {
         const value = this.currentWeight();
-        return value !== null && value !== undefined;
+        return value !== null;
     });
 
     public readonly dynamicChartOptions = computed<ChartConfiguration<'line'>['options']>(() => {

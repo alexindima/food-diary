@@ -129,7 +129,8 @@ export class DashboardLayoutService {
     private getLayoutForKey(key: 'web' | 'mobile'): string[] {
         const layout = this.layoutSettings();
         const fallback = DEFAULT_LAYOUT[key] ?? [];
-        const values = layout[key] && layout[key]?.length ? layout[key]! : fallback;
+        const configured = layout[key];
+        const values = configured && configured.length ? configured : fallback;
         return this.ensureSummary(values, fallback);
     }
 

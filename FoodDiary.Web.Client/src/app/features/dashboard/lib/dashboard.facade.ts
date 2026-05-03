@@ -59,7 +59,7 @@ export class DashboardFacade {
     public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumference ?? null);
     public readonly desiredWaist = computed(() => this.snapshot()?.waist.desired ?? null);
     public readonly weeklyConsumed = computed(() =>
-        (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0),
+        (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + point.calories, 0),
     );
     public readonly hydration = computed(() => this.snapshot()?.hydration ?? null);
     public readonly dailyAdvice = computed(() => this.snapshot()?.advice ?? null);

@@ -45,7 +45,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 id: 'protein',
                 label: 'Protein',
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                current: s.statistics.averageProteins ?? 0,
+                current: s.statistics.averageProteins,
                 target: s.statistics.proteinGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
@@ -56,7 +56,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 id: 'carbs',
                 label: 'Carbs',
                 labelKey: 'GENERAL.NUTRIENTS.CARB',
-                current: s.statistics.averageCarbs ?? 0,
+                current: s.statistics.averageCarbs,
                 target: s.statistics.carbGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
@@ -67,7 +67,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 id: 'fats',
                 label: 'Fats',
                 labelKey: 'GENERAL.NUTRIENTS.FAT',
-                current: s.statistics.averageFats ?? 0,
+                current: s.statistics.averageFats,
                 target: s.statistics.fatGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
@@ -78,7 +78,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 id: 'fiber',
                 label: 'Fiber',
                 labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                current: s.statistics.averageFiber ?? 0,
+                current: s.statistics.averageFiber,
                 target: s.statistics.fiberGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
@@ -109,7 +109,7 @@ export function createConsumptionRingSignal(
             dailyGoal,
             dailyConsumed: consumedToday,
             weeklyConsumed: weeklyConsumed(),
-            weeklyGoal: s?.weeklyCalorieGoal ?? (dailyGoal > 0 ? dailyGoal * 7 : 0),
+            weeklyGoal: s ? s.weeklyCalorieGoal : 0,
             nutrientBars: nutrientBars(),
         };
     });
@@ -117,7 +117,7 @@ export function createConsumptionRingSignal(
 
 export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: Signal<boolean>): Signal<MealPreviewEntry[]> {
     return computed<MealPreviewEntry[]>(() => {
-        const mealList = [...(meals() ?? [])];
+        const mealList = [...meals()];
 
         if (!isTodaySelected()) {
             return mealList.map(meal => ({

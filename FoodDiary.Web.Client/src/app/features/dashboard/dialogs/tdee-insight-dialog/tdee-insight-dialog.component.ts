@@ -64,7 +64,7 @@ export class TdeeInsightDialogComponent {
           : 'TDEE_DIALOG.SUMMARY.ESTIMATED';
     public readonly showSuggestion =
         !!this.insight?.suggestedCalorieTarget &&
-        !!this.insight?.currentCalorieTarget &&
+        !!this.insight.currentCalorieTarget &&
         Math.abs(this.insight.suggestedCalorieTarget - this.insight.currentCalorieTarget) > 50;
     public readonly hintKey = this.insight?.goalAdjustmentHint
         ? `TDEE_CARD.HINTS.${this.insight.goalAdjustmentHint.replace('hint.', '').toUpperCase()}`

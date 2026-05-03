@@ -461,7 +461,7 @@ export class DashboardComponent {
         }
 
         this.resizeObserver = new ResizeObserver(entries => {
-            const entry = entries[0];
+            const entry = entries[0] as ResizeObserverEntry | undefined;
             if (!entry) {
                 return;
             }
