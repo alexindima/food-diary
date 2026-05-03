@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,7 +21,6 @@ import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
 import { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
-import { SidebarActionLinksComponent } from './sidebar-action-links.component';
 import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
 
 const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
@@ -53,8 +53,6 @@ const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
     { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
 ];
 
-const MOBILE_USER_ROUTE_ITEMS: SidebarRouteItem[] = [{ id: 'profile', icon: 'settings', labelKey: 'HEADER.PROFILE', route: '/profile' }];
-
 type DesktopSectionId = 'food' | 'body' | null;
 type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
 
@@ -66,7 +64,6 @@ type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
         FdUiHintDirective,
         FdUiButtonComponent,
         FdUiIconComponent,
-        SidebarActionLinksComponent,
         SidebarRouteLinksComponent,
         SlicePipe,
         UpperCasePipe,
@@ -117,7 +114,6 @@ export class SidebarComponent {
     protected readonly bodyTrackingItems = BODY_TRACKING_ITEMS;
     protected readonly desktopBottomItems = DESKTOP_BOTTOM_ITEMS;
     protected readonly mobileReportItems = MOBILE_REPORT_ITEMS;
-    protected readonly mobileUserRouteItems = MOBILE_USER_ROUTE_ITEMS;
     protected readonly currentUser = this.userService.user;
     protected readonly brandStatusKey = computed(() => {
         if (this.isAdmin()) {
@@ -172,55 +168,9 @@ export class SidebarComponent {
                 return this.bodyTrackingItems;
             case 'reports':
                 return this.mobileReportItems;
-            case 'user':
-                return this.mobileUserRouteItems;
             default:
                 return [];
         }
-    });
-    protected readonly mobileUserActionItems = computed<SidebarActionItem[]>(() => {
-        const items: SidebarActionItem[] = [
-            {
-                id: 'mobile-notifications',
-                icon: 'notifications',
-                labelKey: 'NOTIFICATIONS.TITLE',
-                action: 'openNotifications',
-                variant: 'secondary',
-                fill: 'outline',
-                className: 'sidebar-mobile__sheet-action',
-                badge: this.unreadNotificationCount() || undefined,
-            },
-            {
-                id: 'mobile-logout',
-                icon: 'logout',
-                labelKey: 'HEADER.LOGOUT',
-                action: 'logout',
-                variant: 'danger',
-                fill: 'outline',
-                className: 'sidebar-mobile__sheet-logout',
-            },
-        ];
-
-        if (this.isAdmin()) {
-            items.splice(1, 0, {
-                id: 'mobile-admin',
-                icon: 'admin_panel_settings',
-                labelKey: 'SIDEBAR.ADMIN_PANEL',
-                action: 'openAdminPanel',
-                variant: 'danger',
-                fill: 'outline',
-                className: 'sidebar-mobile__sheet-action',
-            });
-        }
-
-        return items;
-    });
-    protected readonly activeMobileSheetActionItems = computed<SidebarActionItem[]>(() => {
-        if (this.mobileSheet() === 'user') {
-            return this.mobileUserActionItems();
-        }
-
-        return [];
     });
     protected readonly dailyConsumedKcal = signal(0);
     protected readonly dailyGoalKcal = signal(0);
@@ -288,7 +238,7 @@ export class SidebarComponent {
         mobileMediaQuery?.addEventListener('change', updateMobileViewport);
         this.destroyRef.onDestroy(() => mobileMediaQuery?.removeEventListener('change', updateMobileViewport));
 
-        this.router.events.subscribe(event => {
+        this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             if (event instanceof NavigationEnd) {
                 this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
                 this.pendingRoute.set(null);

@@ -186,30 +186,6 @@
         flex: 1 1 auto;
     }
 
-    &__premium {
-        padding: var(--fd-space-stat-tile-padding) var(--fd-space-sm);
-        border-radius: var(--fd-radius-panel);
-        background: var(--fd-bg-premium);
-        color: var(--fd-color-slate-200);
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-        box-shadow: var(--fd-shadow-xl);
-    }
-
-    &__premium-title {
-        color: var(--fd-color-white);
-    }
-
-    &__premium-text {
-        color: var(--fd-color-slate-300);
-    }
-
-    &__premium-button {
-        justify-content: center;
-        width: 100%;
-    }
-
     &__user {
         width: 100%;
         grid-template-columns: auto 1fr auto;
@@ -294,25 +270,6 @@
             inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 12%, transparent),
             var(--fd-shadow-lg);
         overflow: hidden;
-    }
-
-    &__theme-control {
-        display: grid;
-        gap: var(--fd-space-xs);
-        padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-xxs);
-    }
-
-    &__theme-label {
-        font-size: var(--fd-text-helper-size);
-        line-height: var(--fd-text-helper-line-height);
-        font-weight: var(--fd-font-weight-bold);
-        letter-spacing: var(--fd-letter-spacing-overline);
-        text-transform: uppercase;
-        color: var(--fd-color-text-muted);
-    }
-
-    &__theme-toggle {
-        width: 100%;
     }
 
     &__user-menu-link {
@@ -607,21 +564,6 @@
             border: var(--fd-border-width) solid var(--fd-bg-surface);
             font-weight: var(--fd-font-weight-bold);
             line-height: 1;
-        }
-
-        .sidebar-mobile__theme-control {
-            display: grid;
-            gap: var(--fd-space-xs);
-            padding: var(--fd-space-xs) var(--fd-space-micro) var(--fd-space-xxs);
-        }
-
-        .sidebar-mobile__theme-label {
-            font-size: var(--fd-text-helper-size);
-            line-height: var(--fd-text-helper-line-height);
-            font-weight: var(--fd-font-weight-bold);
-            letter-spacing: var(--fd-letter-spacing-overline);
-            text-transform: uppercase;
-            color: var(--fd-color-text-muted);
         }
 
         .sidebar-mobile__sheet-action {
