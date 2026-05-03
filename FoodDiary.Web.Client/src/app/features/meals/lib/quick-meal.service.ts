@@ -40,7 +40,7 @@ export class QuickMealService {
             return;
         }
 
-        const amount = product.baseAmount ?? 1;
+        const amount = this.resolveProductAmount(product);
         const key = `product-${product.id}`;
         this.upsertItem({
             key,
@@ -147,6 +147,18 @@ export class QuickMealService {
         const items = this.itemsSignal();
         this.clear();
         return items;
+    }
+
+    private resolveProductAmount(product: Product): number {
+        if (product.defaultPortionAmount > 0) {
+            return product.defaultPortionAmount;
+        }
+
+        if (product.baseAmount > 0) {
+            return product.baseAmount;
+        }
+
+        return 1;
     }
 
     private upsertItem(newItem: QuickMealItem): void {

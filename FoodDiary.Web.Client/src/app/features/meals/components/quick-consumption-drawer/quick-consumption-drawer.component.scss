@@ -37,8 +37,8 @@
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-pill);
     --fd-button-background-default: var(--fd-bg-surface-raised);
-    --fd-button-background-hover: var(--fd-bg-surface-inset-blend);
-    --fd-button-background-active: var(--fd-bg-surface-inset-blend);
+    --fd-button-background-hover: var(--fd-bg-surface-raised-blend);
+    --fd-button-background-active: var(--fd-bg-surface-raised-blend);
     --fd-button-border-default: var(--fd-color-border-dark-muted);
     --fd-button-border-hover: var(--fd-color-border-dark-subtle);
     --fd-button-border-active: var(--fd-color-border-dark-medium);
@@ -63,7 +63,7 @@
     grid-template-columns: auto 1fr auto;
     padding: var(--fd-space-xs);
     border-radius: var(--fd-radius-card);
-    background: var(--fd-bg-surface-inset-blend);
+    background: var(--fd-bg-surface-raised-blend);
     border: var(--fd-border-subtle);
 }
 
@@ -129,7 +129,7 @@
     margin: 0;
     padding: var(--fd-space-sm);
     border-radius: var(--fd-radius-lg);
-    background: var(--fd-bg-surface-inset-blend);
+    background: var(--fd-bg-surface-raised-blend);
     border: var(--fd-border-dashed);
     color: var(--fd-color-text-muted);
     text-align: center;
