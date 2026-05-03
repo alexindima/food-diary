@@ -150,7 +150,7 @@
 </aside>
 
 <nav class="sidebar-mobile" aria-label="Mobile navigation">
-    @if (isAuthenticated() && isMobileViewport() && !isDashboardRoute()) {
+    @if (isMobileProgressVisible()) {
         <section class="sidebar-mobile__progress" aria-live="polite">
             <div class="sidebar-mobile__progress-head">
                 <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
@@ -228,25 +228,81 @@
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.USER' | translate }}</span>
         </button>
     </div>
+
+    @if (isMobileSheetOpen()) {
+        <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMobileMenus()"></div>
+
+        <div
+            #mobileSheetPanel
+            class="sidebar-mobile__sheet"
+            role="dialog"
+            aria-modal="true"
+            tabindex="-1"
+            [attr.aria-label]="activeMobileSheetLabelKey() | translate"
+        >
+            @if (mobileSheet() === 'user') {
+                <div class="sidebar-mobile__user-row">
+                    <a
+                        routerLink="/profile"
+                        routerLinkActive="is-active"
+                        class="sidebar-mobile__sheet-link sidebar-mobile__profile-link fd-row fd-gap-xs"
+                        [class.is-pending]="pendingRoute() === '/profile'"
+                        (click)="onDirectRouteClick('/profile'); closeMobileMenus()"
+                    >
+                        <fd-ui-icon name="settings"></fd-ui-icon>
+                        <span class="fd-ui-action-text">{{ 'HEADER.PROFILE' | translate }}</span>
+                    </a>
+                    <fd-ui-button
+                        class="sidebar-mobile__notifications-button"
+                        type="button"
+                        variant="secondary"
+                        fill="outline"
+                        appearance="toolbar"
+                        icon="notifications"
+                        [ariaLabel]="'NOTIFICATIONS.TITLE' | translate"
+                        [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
+                        (click)="onMobileAction('openNotifications')"
+                    >
+                        @if (unreadNotificationCount() > 0) {
+                            <span class="sidebar-mobile__notifications-badge fd-ui-caption">{{ unreadNotificationCount() }}</span>
+                        }
+                    </fd-ui-button>
+                </div>
+
+                @if (isAdmin()) {
+                    <fd-ui-button
+                        class="sidebar-mobile__sheet-action"
+                        type="button"
+                        variant="danger"
+                        fill="outline"
+                        icon="admin_panel_settings"
+                        [fullWidth]="true"
+                        (click)="onMobileAction('openAdminPanel')"
+                    >
+                        {{ 'SIDEBAR.ADMIN_PANEL' | translate }}
+                    </fd-ui-button>
+                }
+
+                <fd-ui-button
+                    class="sidebar-mobile__sheet-logout"
+                    type="button"
+                    variant="danger"
+                    fill="outline"
+                    icon="logout"
+                    [fullWidth]="true"
+                    (click)="onMobileAction('logout')"
+                >
+                    {{ 'HEADER.LOGOUT' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-sidebar-route-links
+                    [items]="activeMobileSheetRouteItems()"
+                    [pendingRoute]="pendingRoute()"
+                    linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
+                    (itemSelected)="onRouteSelected($event); closeMobileMenus()"
+                />
+                <fd-sidebar-action-links [items]="activeMobileSheetActionItems()" (actionSelected)="onMobileAction($event)" />
+            }
+        </div>
+    }
 </nav>
-
-@if (isMobileSheetOpen()) {
-    <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMobileMenus()"></div>
-
-    <div
-        #mobileSheet
-        class="sidebar-mobile__sheet"
-        role="dialog"
-        aria-modal="true"
-        tabindex="-1"
-        [attr.aria-label]="activeMobileSheetLabelKey() | translate"
-    >
-        <fd-sidebar-route-links
-            [items]="activeMobileSheetRouteItems()"
-            [pendingRoute]="pendingRoute()"
-            linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
-            (itemSelected)="onRouteSelected($event); closeMobileMenus()"
-        />
-        <fd-sidebar-action-links [items]="activeMobileSheetActionItems()" (actionSelected)="onMobileAction($event)" />
-    </div>
-}

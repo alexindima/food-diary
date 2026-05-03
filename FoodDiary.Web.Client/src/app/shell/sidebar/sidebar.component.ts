@@ -146,6 +146,9 @@ export class SidebarComponent {
         const path = this.currentPath();
         return path === '/' || path === '/dashboard';
     });
+    protected readonly isMobileProgressVisible = computed(
+        () => this.isAuthenticated() && this.isMobileViewport() && !this.isDashboardRoute(),
+    );
     protected readonly pendingRoute = signal<string | null>(null);
     protected readonly activeMobileSheetLabelKey = computed(() => {
         switch (this.mobileSheet()) {
@@ -230,7 +233,7 @@ export class SidebarComponent {
         return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * 100, 100));
     });
     private readonly userMenuRef = viewChild<ElementRef<HTMLElement>>('userMenu');
-    private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheet');
+    private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheetPanel');
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
 
@@ -244,7 +247,7 @@ export class SidebarComponent {
     });
 
     private readonly progressSync = effect(() => {
-        if (!this.isAuthenticated() || !this.isMobileViewport() || this.isDashboardRoute()) {
+        if (!this.isMobileProgressVisible()) {
             this.dailyConsumedKcal.set(0);
             this.dailyGoalKcal.set(0);
             return;
