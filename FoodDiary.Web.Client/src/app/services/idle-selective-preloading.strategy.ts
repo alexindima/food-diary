@@ -52,16 +52,19 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
                 return;
             }
 
+            const addEventListener = this.globalObject.addEventListener.bind(this.globalObject);
+            const removeEventListener = this.globalObject.removeEventListener.bind(this.globalObject);
+
             const onLoad = (): void => {
-                this.globalObject.removeEventListener('load', onLoad);
+                removeEventListener('load', onLoad);
                 resolve();
             };
 
-            this.globalObject.addEventListener('load', onLoad, { once: true });
+            addEventListener('load', onLoad, { once: true });
 
             // Fallback for browsers where the load event never reaches this listener path.
             this.globalObject.setTimeout(() => {
-                this.globalObject.removeEventListener('load', onLoad);
+                removeEventListener('load', onLoad);
                 resolve();
             }, 3000);
         });
