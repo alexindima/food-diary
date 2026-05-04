@@ -1,3 +1,3 @@
 export type HttpRequestParams = {
-    [param: string]: string | number | boolean | Date;
+    [param: string]: string | number | boolean | Date | null | undefined;
 };

@@ -180,7 +180,7 @@ export class WeightHistoryFacade {
             return;
         }
 
-        if (customRange?.start && customRange?.end) {
+        if (customRange && customRange.start && customRange.end) {
             this.loadEntries();
         }
     });
@@ -240,7 +240,7 @@ export class WeightHistoryFacade {
 
     public cancelEdit(): void {
         this.resetEditingState();
-        const latest = this.entriesDescending()[0];
+        const latest = (this.entriesDescending() as Array<WeightEntry | undefined>)[0];
         this.form.setValue({
             date: this.formatDateInput(new Date()),
             weight: latest ? latest.weight.toString() : '',
@@ -301,7 +301,7 @@ export class WeightHistoryFacade {
 
         if (value === 'custom') {
             const current = this.customRangeControl.value;
-            if (!current?.start || !current?.end) {
+            if (!current || !current.start || !current.end) {
                 const end = new Date();
                 const start = new Date(end);
                 start.setMonth(start.getMonth() - 1);

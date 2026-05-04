@@ -247,7 +247,7 @@ export class ShoppingListFacade {
     private applyList(list: ShoppingList): void {
         this.suppressAutosave = true;
         this.list.set(list);
-        this.items.set(this.rebuildSortOrder(list.items ?? []));
+        this.items.set(this.rebuildSortOrder(list.items));
         this.listName.set(list.name);
         this.selectedListId.set(list.id);
         this.lastLoadedListId.set(list.id);
@@ -264,7 +264,7 @@ export class ShoppingListFacade {
     }
 
     private normalizeAmount(value: number | null): number | null {
-        if (value === null || value === undefined) {
+        if (value === null) {
             return null;
         }
         const parsed = Number(value);

@@ -175,7 +175,7 @@ export class WaistHistoryFacade {
             return;
         }
 
-        if (customRange?.start && customRange?.end) {
+        if (customRange && customRange.start && customRange.end) {
             this.loadEntries();
         }
     });
@@ -235,7 +235,7 @@ export class WaistHistoryFacade {
 
     public cancelEdit(): void {
         this.resetEditingState();
-        const latest = this.entriesDescending()[0];
+        const latest = (this.entriesDescending() as Array<WaistEntry | undefined>)[0];
         this.form.setValue({
             date: this.formatDateInput(new Date()),
             circumference: latest ? latest.circumference.toString() : '',
@@ -296,7 +296,7 @@ export class WaistHistoryFacade {
 
         if (value === 'custom') {
             const current = this.customRangeControl.value;
-            if (!current?.start || !current?.end) {
+            if (!current || !current.start || !current.end) {
                 const end = new Date();
                 const start = new Date(end);
                 start.setMonth(start.getMonth() - 1);

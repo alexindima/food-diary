@@ -205,7 +205,7 @@ export class AuthService extends ApiService {
 
         const refreshRequest$ = this.post<AuthResponse>('refresh', { refreshToken }).pipe(
             map(response => {
-                const accessToken = response?.accessToken ?? null;
+                const accessToken = response.accessToken;
                 if (accessToken) {
                     this.applyAuthenticatedSession(response);
                 }
@@ -262,20 +262,20 @@ export class AuthService extends ApiService {
         this.tokenStorage.setRefreshToken(authResponse.refreshToken);
         this.authTokenSignal.set(authResponse.accessToken);
 
-        const preferredLanguage = authResponse.user?.language;
+        const preferredLanguage = authResponse.user.language;
         if (preferredLanguage) {
             void this.localizationService.applyLanguagePreference(preferredLanguage);
         }
 
-        this.themeService.syncWithUserPreferences(authResponse.user?.theme, authResponse.user?.uiStyle);
+        this.themeService.syncWithUserPreferences(authResponse.user.theme, authResponse.user.uiStyle);
 
-        if (typeof authResponse.user?.isEmailConfirmed === 'boolean') {
+        if (typeof authResponse.user.isEmailConfirmed === 'boolean') {
             this.setEmailConfirmed(authResponse.user.isEmailConfirmed);
         } else {
             this.setEmailConfirmed(true);
         }
 
-        const userId = authResponse.user?.id ?? this.jwtDecoder.extractUserId(authResponse.accessToken);
+        const userId = authResponse.user.id;
         if (userId) {
             this.tokenStorage.setUserId(userId);
             this.userSignal.set(userId);

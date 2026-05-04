@@ -59,7 +59,7 @@ export class PremiumAccessPageComponent {
     public readonly showManageBilling = computed(() => this.canManageBilling() && this.isPremium());
     public readonly availableProviders = computed(() => {
         const overview = this.overview();
-        const providers = overview?.availableProviders?.filter(provider => !!provider?.trim()) ?? [];
+        const providers = overview?.availableProviders.filter(provider => !!provider.trim()) ?? [];
         return providers;
     });
     public readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);

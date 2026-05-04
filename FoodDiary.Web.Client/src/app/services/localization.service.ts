@@ -147,7 +147,7 @@ export class LocalizationService {
     }
 
     private getDomainDefaultLanguage(): string | null {
-        const hostname = this.document.location.hostname?.toLowerCase();
+        const hostname = this.document.location.hostname.toLowerCase();
         if (!hostname) {
             return null;
         }

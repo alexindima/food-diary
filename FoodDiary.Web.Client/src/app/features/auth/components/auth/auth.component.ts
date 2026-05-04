@@ -525,8 +525,8 @@ export class AuthComponent {
     private handleRegisterError(errorCode?: string): void {
         if (errorCode === 'User.EmailAlreadyExists' || errorCode === 'Validation.Conflict') {
             const emailField = this.registerForm.controls.email;
-            emailField?.updateValueAndValidity();
-            emailField?.setErrors({ userExists: true });
+            emailField.updateValueAndValidity();
+            emailField.setErrors({ userExists: true });
         } else if (errorCode === 'Authentication.AccountDeleted') {
             this.setGlobalError('AUTH.REGISTER.ACCOUNT_DELETED');
         } else {

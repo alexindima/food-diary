@@ -108,7 +108,7 @@ function shouldIgnoreCssParseWarning(args: unknown[], ignoredMessage: string): b
 function installCssParseStderrFilter(): void {
     const ignoredMessage = 'Could not parse CSS stylesheet';
     const processRef = (
-        globalThis as typeof globalThis & {
+        globalThis as unknown as {
             process?: {
                 stderr?: {
                     write?: (...args: unknown[]) => unknown;

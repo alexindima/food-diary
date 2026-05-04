@@ -218,7 +218,7 @@ export class GoalsFacade {
 
     public readonly macroStates = computed(() =>
         this.macroConfigs.map(cfg => {
-            const rawValue = this.macroValues()[cfg.key] ?? 0;
+            const rawValue = this.macroValues()[cfg.key];
             const value = this.clampValue(rawValue, cfg.max);
             const percent = Math.min(100, Math.max(0, Math.round((value / cfg.max) * 100)));
             const accent = this.pickZoneColor(cfg, value);
@@ -406,28 +406,27 @@ export class GoalsFacade {
                     }
 
                     const nextMacros = { ...this.macroValues() };
-                    let hasUserMacros = false;
+                    const macroInputs: Array<[MacroKey, number | null | undefined]> = [
+                        ['protein', goals?.proteinTarget],
+                        ['fats', goals?.fatTarget],
+                        ['carbs', goals?.carbTarget],
+                        ['fiber', goals?.fiberTarget],
+                    ];
 
-                    const applyMacro = (key: MacroKey, value: number | null | undefined): void => {
+                    for (const [key, value] of macroInputs) {
                         if (value === null || value === undefined) {
-                            return;
+                            continue;
                         }
 
                         const cfg = this.macroConfigs.find(item => item.key === key);
                         if (!cfg) {
-                            return;
+                            continue;
                         }
 
                         nextMacros[key] = this.clampValue(value, cfg.max);
-                        hasUserMacros = true;
-                    };
+                    }
 
-                    applyMacro('protein', goals?.proteinTarget);
-                    applyMacro('fats', goals?.fatTarget);
-                    applyMacro('carbs', goals?.carbTarget);
-                    applyMacro('fiber', goals?.fiberTarget);
-
-                    if (hasUserMacros) {
+                    if (macroInputs.some(([, value]) => value !== null && value !== undefined)) {
                         this.macroValues.set(nextMacros);
                     }
 
@@ -569,24 +568,22 @@ export class GoalsFacade {
         };
 
         this.macroValues.update(current => {
-            let changed = false;
             const next = { ...current };
 
-            (Object.keys(targetValues) as MacroKey[]).forEach(key => {
+            for (const key of Object.keys(targetValues) as MacroKey[]) {
                 const cfg = this.macroConfigs.find(item => item.key === key);
                 const raw = targetValues[key];
                 if (!cfg || raw === undefined) {
-                    return;
+                    continue;
                 }
 
                 const clamped = this.clampValue(Math.round(raw), cfg.max);
                 if (next[key] !== clamped) {
                     next[key] = clamped;
-                    changed = true;
                 }
-            });
+            }
 
-            return changed ? next : current;
+            return next;
         });
     }
 

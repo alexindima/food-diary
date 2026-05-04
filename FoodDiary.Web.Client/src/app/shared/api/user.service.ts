@@ -46,7 +46,7 @@ export class UserService extends ApiService {
     public getOverview(): Observable<UserProfileOverview | null> {
         return this.get<UserProfileOverview>('overview').pipe(
             tap(overview => {
-                this.userSignal.set(overview?.user ?? null);
+                this.userSignal.set(overview.user);
             }),
             catchError(error => {
                 this.userSignal.set(null);
@@ -58,7 +58,7 @@ export class UserService extends ApiService {
     public getInfo(): Observable<User | null> {
         return this.get<User>('info').pipe(
             tap(user => {
-                this.userSignal.set(user ?? null);
+                this.userSignal.set(user);
             }),
             catchError(error => {
                 this.userSignal.set(null);
@@ -70,7 +70,7 @@ export class UserService extends ApiService {
     public getInfoSilently(): Observable<User | null> {
         return this.get<User>('info', undefined, undefined, this.silentLoadingContext).pipe(
             tap(user => {
-                this.userSignal.set(user ?? null);
+                this.userSignal.set(user);
             }),
             catchError(error => {
                 this.userSignal.set(null);
@@ -82,9 +82,7 @@ export class UserService extends ApiService {
     public update(data: UpdateUserDto): Observable<User | null> {
         return this.patch<User>('info', data).pipe(
             tap(user => {
-                if (user) {
-                    this.userSignal.set(user);
-                }
+                this.userSignal.set(user);
             }),
             catchError(error => fallbackApiError('Update user error', error, null)),
         );
@@ -93,9 +91,7 @@ export class UserService extends ApiService {
     public updateTheme(theme: string): Observable<User | null> {
         return this.updateAppearance(new UpdateUserAppearanceDto({ theme })).pipe(
             tap(user => {
-                if (user) {
-                    this.userSignal.set(user);
-                }
+                this.userSignal.set(user);
             }),
             catchError(error => fallbackApiError('Update user theme error', error, null)),
         );
@@ -104,9 +100,7 @@ export class UserService extends ApiService {
     public updateAppearance(data: UpdateUserAppearanceDto): Observable<User | null> {
         return this.patch<User>('preferences/appearance', data).pipe(
             tap(user => {
-                if (user) {
-                    this.userSignal.set(user);
-                }
+                this.userSignal.set(user);
             }),
             catchError(error => fallbackApiError('Update user appearance error', error, null)),
         );
@@ -115,9 +109,7 @@ export class UserService extends ApiService {
     public updateDashboardLayout(layout: DashboardLayoutSettings): Observable<User | null> {
         return this.patch<User>('info', { dashboardLayout: layout }).pipe(
             tap(user => {
-                if (user) {
-                    this.userSignal.set(user);
-                }
+                this.userSignal.set(user);
             }),
             catchError(error => fallbackApiError('Update dashboard layout error', error, null)),
         );

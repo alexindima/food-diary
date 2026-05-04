@@ -303,8 +303,8 @@ export class UserManageComponent {
             const userData = this.mapUserToForm(user);
             this.lastUserData = userData;
             this.applyUserData(userData);
-            this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours ?? 12);
-            this.fastingCheckInFollowUpReminderHours.set(user.fastingCheckInFollowUpReminderHours ?? 20);
+            this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours);
+            this.fastingCheckInFollowUpReminderHours.set(user.fastingCheckInFollowUpReminderHours);
 
             if (!this.hasTrackedNotificationsView()) {
                 this.frontendObservability.recordNotificationSettingsViewed({
@@ -1122,8 +1122,8 @@ export class UserManageComponent {
 
     private mapUserToForm(user: User): Partial<UserFormValues> {
         return {
-            email: user.email ?? null,
-            username: user.username ?? null,
+            email: user.email,
+            username: user.username,
             firstName: user.firstName ?? null,
             lastName: user.lastName ?? null,
             gender: this.normalizeGender(user.gender),

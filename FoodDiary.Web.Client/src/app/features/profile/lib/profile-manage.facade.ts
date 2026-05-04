@@ -189,11 +189,6 @@ export class ProfileManageFacade {
 
         try {
             const notificationPreferences = await firstValueFrom(this.notificationService.updateNotificationPreferences(preferences));
-            if (!notificationPreferences) {
-                this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                return null;
-            }
-
             this.applyNotificationPreferences(notificationPreferences);
             this.clearGlobalError();
             return this.user();

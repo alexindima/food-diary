@@ -65,7 +65,7 @@ export class GoogleIdentityService {
     }
 
     public renderButton(target: HTMLElement, theme: 'outline' | 'filled_blue' = 'outline'): void {
-        if (!window.google?.accounts?.id || !target) {
+        if (!window.google?.accounts?.id) {
             return;
         }
 

@@ -109,16 +109,12 @@ export class StatisticsFacade {
             return buildBodyChartData(this.weightSummaryPoints(), point => point.averageWeight / (heightM * heightM), formatLabel);
         }
 
-        if (selectedTab === 'whtr') {
-            const heightCm = this.userHeightCm();
-            if (!heightCm || heightCm <= 0) {
-                return null;
-            }
-
-            return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
+        const heightCm = this.userHeightCm();
+        if (!heightCm || heightCm <= 0) {
+            return null;
         }
 
-        return null;
+        return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
     });
     public readonly hasBodyData = computed(
         () => !!this.bodyChartData() && (this.bodyChartData()!.datasets[0].data as (number | null)[]).some(value => value !== null),
@@ -150,7 +146,7 @@ export class StatisticsFacade {
             return;
         }
 
-        if (customRange?.start && customRange?.end) {
+        if (customRange && customRange.start && customRange.end) {
             this.loadAllData();
         }
     });
@@ -174,7 +170,7 @@ export class StatisticsFacade {
         this.selectedRange.set(value);
 
         const current = this.customRangeControl.value;
-        if (!current?.start || !current?.end) {
+        if (!current || !current.start || !current.end) {
             const end = new Date();
             const start = new Date(end);
             start.setMonth(start.getMonth() - 1);
@@ -231,7 +227,7 @@ export class StatisticsFacade {
             )
             .subscribe({
                 next: data => {
-                    this.chartStatisticsData.set(StatisticsMapper.mapStatistics(data ?? []));
+                    this.chartStatisticsData.set(StatisticsMapper.mapStatistics(data));
                     this.hasLoadError.set(false);
                 },
                 error: () => {

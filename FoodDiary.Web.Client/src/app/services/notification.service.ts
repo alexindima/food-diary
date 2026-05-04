@@ -119,18 +119,16 @@ export class NotificationService {
             return;
         }
 
-        if (!this.unreadCountRequest$) {
-            this.unreadCountRequest$ = this.http
-                .get<{ count: number }>(`${this.baseUrl}/unread-count`, {
-                    context: this.silentLoadingContext,
-                })
-                .pipe(
-                    finalize(() => {
-                        this.unreadCountRequest$ = null;
-                    }),
-                    shareReplay({ bufferSize: 1, refCount: false }),
-                );
-        }
+        this.unreadCountRequest$ = this.http
+            .get<{ count: number }>(`${this.baseUrl}/unread-count`, {
+                context: this.silentLoadingContext,
+            })
+            .pipe(
+                finalize(() => {
+                    this.unreadCountRequest$ = null;
+                }),
+                shareReplay({ bufferSize: 1, refCount: false }),
+            );
 
         this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: response => {

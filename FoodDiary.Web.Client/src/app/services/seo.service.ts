@@ -68,7 +68,7 @@ export class SeoService {
     }
 
     private getCurrentSiteUrl(): string {
-        const hostname = this.document.location.hostname?.toLowerCase();
+        const hostname = this.document.location.hostname.toLowerCase();
         return hostname && RUSSIAN_HOSTS.has(hostname) ? RUSSIAN_SITE_URL : ENGLISH_SITE_URL;
     }
 
@@ -97,7 +97,7 @@ export class SeoService {
     }
 
     private getOpenGraphLocale(): string {
-        const currentLang = this.translate.currentLang?.toLowerCase();
+        const currentLang = this.translate.currentLang.toLowerCase();
         return currentLang === 'ru' ? 'ru_RU' : 'en_US';
     }
 

@@ -10,7 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class LocalizedDatePipe implements PipeTransform {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private locale = this.translateService.getCurrentLang() ?? 'en-US';
+    private locale = this.translateService.getCurrentLang();
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(e => (this.locale = e.lang));

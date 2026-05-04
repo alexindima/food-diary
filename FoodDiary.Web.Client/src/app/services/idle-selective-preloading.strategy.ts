@@ -4,7 +4,7 @@ import { EMPTY, from, type Observable, switchMap } from 'rxjs';
 
 import { AuthService } from './auth.service';
 
-type IdleCapableGlobal = typeof globalThis & {
+type IdleCapableGlobal = {
     addEventListener?: (type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void;
     removeEventListener?: (type: string, listener: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void;
     dispatchEvent?: (event: Event) => boolean;
@@ -18,7 +18,7 @@ type IdleCapableGlobal = typeof globalThis & {
 @Injectable({ providedIn: 'root' })
 export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
     private readonly authService = inject(AuthService);
-    private readonly globalObject = globalThis as IdleCapableGlobal;
+    private readonly globalObject = globalThis as unknown as IdleCapableGlobal;
     private pageReadyPromise?: Promise<void>;
 
     public preload(route: Route, load: () => Observable<unknown>): Observable<unknown> {
@@ -53,7 +53,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             }
 
             const onLoad = (): void => {
-                this.globalObject.removeEventListener?.('load', onLoad);
+                this.globalObject.removeEventListener('load', onLoad);
                 resolve();
             };
 
@@ -61,7 +61,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
 
             // Fallback for browsers where the load event never reaches this listener path.
             this.globalObject.setTimeout(() => {
-                this.globalObject.removeEventListener?.('load', onLoad);
+                this.globalObject.removeEventListener('load', onLoad);
                 resolve();
             }, 3000);
         });

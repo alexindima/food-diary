@@ -109,7 +109,7 @@ function normalizeMacroValue(value: number | null | undefined): number {
  * Extract a non-negative numeric value from a form control.
  * Handles null, undefined, NaN, and negative values gracefully.
  */
-export function getControlNumericValue(control: { value: number | string | null }): number {
+export function getControlNumericValue(control: { value: number | string | null | undefined }): number {
     const raw = control.value;
     if (raw === null || raw === undefined || raw === '') {
         return 0;

@@ -95,7 +95,7 @@ export function getCurrentDateRange(
         return { start, end };
     }
 
-    if (customValue?.start && customValue?.end) {
+    if (customValue && customValue.start && customValue.end) {
         return { start: customValue.start, end: customValue.end };
     }
 
@@ -310,25 +310,25 @@ export function buildSummaryMetrics(stats: MappedStatistics | null): SummaryMetr
             {
                 key: 'proteins' as const,
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                value: aggregated?.proteins ?? 0,
+                value: aggregated.proteins,
                 color: CHART_COLORS.proteins,
             },
             {
                 key: 'fats' as const,
                 labelKey: 'GENERAL.NUTRIENTS.FAT',
-                value: aggregated?.fats ?? 0,
+                value: aggregated.fats,
                 color: CHART_COLORS.fats,
             },
             {
                 key: 'carbs' as const,
                 labelKey: 'GENERAL.NUTRIENTS.CARB',
-                value: aggregated?.carbs ?? 0,
+                value: aggregated.carbs,
                 color: CHART_COLORS.carbs,
             },
             {
                 key: 'fiber' as const,
                 labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                value: aggregated?.fiber ?? 0,
+                value: aggregated.fiber,
                 color: CHART_COLORS.fiber,
             },
         ],

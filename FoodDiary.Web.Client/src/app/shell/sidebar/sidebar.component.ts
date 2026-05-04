@@ -308,7 +308,7 @@ export class SidebarComponent {
 
     private syncDailyProgress(): void {
         this.dashboardService.getSnapshotSilently(new Date(), 1, 1).subscribe(snapshot => {
-            this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
+            this.dailyConsumedKcal.set(snapshot?.statistics.totalCalories ?? 0);
             this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
         });
     }
