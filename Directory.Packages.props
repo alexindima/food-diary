@@ -61,7 +61,7 @@
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
 
     <!-- Telegram -->
-    <PackageVersion Include="Telegram.Bot" Version="22.0.0" />
+    <PackageVersion Include="Telegram.Bot" Version="22.9.6.2" />
 
     <!-- Testing -->
     <PackageVersion Include="coverlet.collector" Version="10.0.0" />
