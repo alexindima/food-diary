@@ -48,7 +48,7 @@
     <PackageVersion Include="QuestPDF" Version="2026.2.4" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageVersion Include="SmtpServer" Version="11.1.0" />
-    <PackageVersion Include="Stripe.net" Version="50.4.1" />
+    <PackageVersion Include="Stripe.net" Version="51.1.0" />
     <PackageVersion Include="WebPush" Version="1.0.12" />
 
     <!-- Hangfire -->
