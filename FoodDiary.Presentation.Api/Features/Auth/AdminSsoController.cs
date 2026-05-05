@@ -33,5 +33,5 @@ public sealed class AdminSsoController(ISender mediator, ILogger<AdminSsoControl
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> AdminSsoExchange([FromBody] AdminSsoExchangeHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.admin-sso.exchange");
+        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), _logger, "auth.admin-sso.exchange");
 }

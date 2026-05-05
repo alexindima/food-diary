@@ -1,5 +1,7 @@
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -13,8 +15,9 @@ public class AuthenticationTokenServiceTests {
     public async Task IssueAndStoreAsync_StoresHashedRefreshToken_AndReturnsTokens() {
         var user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);
+        var loginEvents = new InMemoryUserLoginEventRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(repository, jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(repository, loginEvents, jwt, new StubDateTimeProvider());
 
         var result = await service.IssueAndStoreAsync(user, CancellationToken.None);
 
@@ -24,6 +27,32 @@ public class AuthenticationTokenServiceTests {
             $"sha256:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
             user.RefreshToken);
         Assert.True(repository.Updated);
+        Assert.Empty(loginEvents.Items);
+    }
+
+    [Fact]
+    public async Task IssueAndStoreAsync_WithClientContext_RecordsLoginEvent() {
+        var user = CreateUser("user@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var loginEvents = new InMemoryUserLoginEventRepository();
+        var jwt = new FakeJwtTokenGenerator();
+        var service = new AuthenticationTokenService(repository, loginEvents, jwt, new StubDateTimeProvider());
+
+        await service.IssueAndStoreAsync(
+            user,
+            CancellationToken.None,
+            new AuthenticationClientContext(
+                "password",
+                "203.0.113.42",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36"));
+
+        var loginEvent = Assert.Single(loginEvents.Items);
+        Assert.Equal(user.Id, loginEvent.UserId);
+        Assert.Equal("password", loginEvent.AuthProvider);
+        Assert.Equal("203.0.113.42", loginEvent.IpAddress);
+        Assert.Equal("Chrome", loginEvent.BrowserName);
+        Assert.Equal("Windows", loginEvent.OperatingSystem);
+        Assert.Equal("Desktop", loginEvent.DeviceType);
     }
 
     [Fact]
@@ -31,7 +60,7 @@ public class AuthenticationTokenServiceTests {
         var user = CreateUser("user@example.com", "Admin", "Support");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(repository, jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(repository, new InMemoryUserLoginEventRepository(), jwt, new StubDateTimeProvider());
 
         var token = service.IssueAccessToken(user);
 
@@ -68,6 +97,46 @@ public class AuthenticationTokenServiceTests {
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) {
             Updated = true;
             return Task.CompletedTask;
+        }
+    }
+
+    private sealed class InMemoryUserLoginEventRepository : IUserLoginEventRepository {
+        public List<UserLoginEvent> Items { get; } = [];
+
+        public Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) {
+            Items.Add(loginEvent);
+            return Task.CompletedTask;
+        }
+
+        public Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
+            int page,
+            int limit,
+            Guid? userId,
+            string? search,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
+            DateTime? fromUtc,
+            DateTime? toUtc,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<int> DeleteOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) {
+            var expiredItems = Items
+                .Where(item => item.LoggedInAtUtc < olderThanUtc)
+                .OrderBy(item => item.LoggedInAtUtc)
+                .Take(Math.Max(batchSize, 1))
+                .ToArray();
+
+            foreach (var item in expiredItems) {
+                Items.Remove(item);
+            }
+
+            return Task.FromResult(expiredItems.Length);
         }
     }
 

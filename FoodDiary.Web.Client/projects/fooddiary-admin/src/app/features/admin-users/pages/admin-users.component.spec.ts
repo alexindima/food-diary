@@ -3,7 +3,14 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { type AdminImpersonationSession, type AdminUser, AdminUsersService, type PagedResponse } from '../api/admin-users.service';
+import {
+    type AdminImpersonationSession,
+    type AdminUser,
+    type AdminUserLoginDeviceSummary,
+    type AdminUserLoginEvent,
+    AdminUsersService,
+    type PagedResponse,
+} from '../api/admin-users.service';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 import { AdminUsersComponent } from './admin-users.component';
 
@@ -13,6 +20,8 @@ describe('AdminUsersComponent', () => {
     let usersService: {
         getUsers: ReturnType<typeof vi.fn>;
         getImpersonationSessions: ReturnType<typeof vi.fn>;
+        getLoginEvents: ReturnType<typeof vi.fn>;
+        getLoginSummary: ReturnType<typeof vi.fn>;
     };
     let dialogService: { open: ReturnType<typeof vi.fn> };
 
@@ -54,15 +63,49 @@ describe('AdminUsersComponent', () => {
         totalItems: 1,
     };
 
+    const pagedLoginEvents: PagedResponse<AdminUserLoginEvent> = {
+        items: [
+            {
+                id: 'login-1',
+                userId: 'u1',
+                userEmail: 'user@example.com',
+                authProvider: 'password',
+                maskedIpAddress: '203.0.113.0',
+                userAgent: 'Vitest',
+                browserName: 'Chrome',
+                browserVersion: '125.0',
+                operatingSystem: 'Windows',
+                deviceType: 'Desktop',
+                loggedInAtUtc: '2026-01-01T00:00:00Z',
+            },
+        ],
+        page: 1,
+        limit: 20,
+        totalPages: 2,
+        totalItems: 22,
+    };
+
+    const loginSummary: AdminUserLoginDeviceSummary[] = [
+        {
+            key: 'device:Desktop',
+            count: 7,
+            lastSeenAtUtc: '2026-01-01T00:00:00Z',
+        },
+    ];
+
     beforeEach(async () => {
         usersService = {
             getUsers: vi.fn(),
             getImpersonationSessions: vi.fn(),
+            getLoginEvents: vi.fn(),
+            getLoginSummary: vi.fn(),
         };
         dialogService = { open: vi.fn() };
 
         usersService.getUsers.mockReturnValue(of(pagedUsers));
         usersService.getImpersonationSessions.mockReturnValue(of(pagedSessions));
+        usersService.getLoginEvents.mockReturnValue(of(pagedLoginEvents));
+        usersService.getLoginSummary.mockReturnValue(of(loginSummary));
         dialogService.open.mockReturnValue({
             afterClosed: () => of(false),
         });
@@ -98,6 +141,16 @@ describe('AdminUsersComponent', () => {
         expect(component.sessionsTotalPages()).toBe(1);
         expect(component.sessionsTotalItems()).toBe(1);
         expect(component.isSessionsLoading()).toBe(false);
+    });
+
+    it('should load login activity on init', () => {
+        expect(usersService.getLoginEvents).toHaveBeenCalledWith(1, 20, null);
+        expect(usersService.getLoginSummary).toHaveBeenCalled();
+        expect(component.loginEvents()).toEqual(pagedLoginEvents.items);
+        expect(component.loginEventsTotalPages()).toBe(2);
+        expect(component.loginEventsTotalItems()).toBe(22);
+        expect(component.loginSummary()).toEqual(loginSummary);
+        expect(component.isLoginEventsLoading()).toBe(false);
     });
 
     it('should update search and reload from page 1', () => {
@@ -152,6 +205,33 @@ describe('AdminUsersComponent', () => {
         component.goToSessionsPage(0);
         component.goToSessionsPage(99);
         expect(usersService.getImpersonationSessions.mock.calls.length).toBe(callCount);
+    });
+
+    it('should update login event search and reload from page 1', () => {
+        component.onLoginEventsSearchChange('chrome');
+
+        expect(component.loginEventsSearch()).toBe('chrome');
+        expect(component.loginEventsPage()).toBe(1);
+        expect(usersService.getLoginEvents).toHaveBeenLastCalledWith(1, 20, 'chrome');
+    });
+
+    it('should change login events page only within valid bounds', () => {
+        usersService.getLoginEvents.mockReturnValue(
+            of({
+                ...pagedLoginEvents,
+                totalPages: 3,
+            }),
+        );
+        component.loginEventsTotalPages.set(3);
+
+        component.goToLoginEventsPage(2);
+        expect(component.loginEventsPage()).toBe(2);
+        expect(usersService.getLoginEvents).toHaveBeenLastCalledWith(2, 20, null);
+
+        const callCount = usersService.getLoginEvents.mock.calls.length;
+        component.goToLoginEventsPage(0);
+        component.goToLoginEventsPage(99);
+        expect(usersService.getLoginEvents.mock.calls.length).toBe(callCount);
     });
 
     it('should reload users after successful dialog close', () => {

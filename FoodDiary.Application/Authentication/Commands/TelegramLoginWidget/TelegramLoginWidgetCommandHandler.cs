@@ -47,7 +47,7 @@ public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<Telegram
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
         }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

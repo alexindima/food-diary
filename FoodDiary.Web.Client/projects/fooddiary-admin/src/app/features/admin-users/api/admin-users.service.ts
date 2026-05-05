@@ -46,6 +46,26 @@ export type AdminImpersonationSession = {
     startedAtUtc: string;
 };
 
+export type AdminUserLoginEvent = {
+    id: string;
+    userId: string;
+    userEmail: string;
+    authProvider: string;
+    maskedIpAddress?: string | null;
+    userAgent?: string | null;
+    browserName?: string | null;
+    browserVersion?: string | null;
+    operatingSystem?: string | null;
+    deviceType?: string | null;
+    loggedInAtUtc: string;
+};
+
+export type AdminUserLoginDeviceSummary = {
+    key: string;
+    count: number;
+    lastSeenAtUtc: string;
+};
+
 type ApiPagedResponse<T> = {
     data: T[];
     page: number;
@@ -113,5 +133,27 @@ export class AdminUsersService {
                 totalItems: response.totalItems,
             })),
         );
+    }
+
+    public getLoginEvents(page: number, limit: number, search?: string | null): Observable<PagedResponse<AdminUserLoginEvent>> {
+        let params = new HttpParams().set('page', page).set('limit', limit);
+
+        if (search) {
+            params = params.set('search', search);
+        }
+
+        return this.http.get<ApiPagedResponse<AdminUserLoginEvent>>(`${this.baseUrl}/login-events`, { params }).pipe(
+            map(response => ({
+                items: response.data,
+                page: response.page,
+                limit: response.limit,
+                totalPages: response.totalPages,
+                totalItems: response.totalItems,
+            })),
+        );
+    }
+
+    public getLoginSummary(): Observable<AdminUserLoginDeviceSummary[]> {
+        return this.http.get<AdminUserLoginDeviceSummary[]>(`${this.baseUrl}/login-summary`);
     }
 }

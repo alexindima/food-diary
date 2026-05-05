@@ -10,6 +10,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
@@ -193,7 +194,10 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
-        public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(User user, CancellationToken cancellationToken) =>
+        public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
+            User user,
+            CancellationToken cancellationToken,
+            AuthenticationClientContext? clientContext = null) =>
             Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
 
         public string IssueAccessToken(User user) => throw new NotSupportedException();
