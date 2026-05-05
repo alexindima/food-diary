@@ -81,7 +81,7 @@ export function getCurrentDateRange(
     const start = new Date(end);
 
     if (range === 'week') {
-        start.setDate(end.getDate() - 7);
+        start.setDate(end.getDate() - 6);
         return { start, end };
     }
 

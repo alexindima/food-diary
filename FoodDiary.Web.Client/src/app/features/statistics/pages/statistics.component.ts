@@ -27,7 +27,7 @@ import {
     radarChartOptions,
     summarySparklineOptions,
 } from '../lib/statistics-chart-config';
-import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
+import { isBodyTab, isNutritionTab, isStatisticsRange, normalizeEndOfDay, normalizeStartOfDay } from '../lib/statistics-data-mapper';
 
 @Component({
     selector: 'fd-statistics',
@@ -138,8 +138,8 @@ export class StatisticsComponent {
 
     public exportDiary(format: ExportFormat): void {
         const range = this.currentRange();
-        const dateFrom = new Date(range.start.getFullYear(), range.start.getMonth(), range.start.getDate(), 0, 0, 0, 0).toISOString();
-        const dateTo = new Date(range.end.getFullYear(), range.end.getMonth(), range.end.getDate(), 23, 59, 59, 999).toISOString();
+        const dateFrom = normalizeStartOfDay(range.start).toISOString();
+        const dateTo = normalizeEndOfDay(range.end).toISOString();
         this.exportService.exportDiary(dateFrom, dateTo, format);
     }
 }

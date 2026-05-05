@@ -47,6 +47,25 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
+    [Fact]
+    public async Task GenerateAsync_WithLongPeriod_DoesNotDownloadMealImages() {
+        var userId = UserId.New();
+        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        meal.UpdateImage("https://example.test/meal.jpg");
+        var imageHandler = new RecordingImageHandler();
+        var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
+
+        var pdf = await generator.GenerateAsync(
+            [meal],
+            new DateTime(2026, 4, 20, 20, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            CancellationToken.None);
+
+        Assert.True(pdf.Length > 1024);
+        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal(0, imageHandler.RequestCount);
+    }
+
     private static Meal CreateMeal(
         UserId userId,
         DateTime date,
@@ -58,5 +77,14 @@ public sealed class DiaryPdfGeneratorTests {
         var meal = Meal.Create(userId, date, MealType.Lunch);
         meal.ApplyNutrition(new MealNutritionUpdate(calories, proteins, fats, carbs, fiber, 0, IsAutoCalculated: true));
         return meal;
+    }
+
+    private sealed class RecordingImageHandler : HttpMessageHandler {
+        public int RequestCount { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            RequestCount++;
+            return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.NotFound));
+        }
     }
 }
