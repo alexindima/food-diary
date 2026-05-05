@@ -44,7 +44,7 @@ public class RegisterCommandHandler(
             ExpiresAtUtc: dateTimeProvider.UtcNow.AddHours(24),
             IssuedAtUtc: dateTimeProvider.UtcNow));
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
 
         try {
             await emailSender.SendEmailVerificationAsync(

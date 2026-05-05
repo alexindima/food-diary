@@ -588,6 +588,8 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/admin/dashboard",
             "/api/v{version}/admin/users",
             "/api/v{version}/admin/users/impersonation-sessions",
+            "/api/v{version}/admin/users/login-events",
+            "/api/v{version}/admin/users/login-summary",
             "/api/v{version}/admin/users/{id}",
             "/api/v{version}/admin/users/{id}/impersonation",
             "/api/v{version}/admin/billing/subscriptions",

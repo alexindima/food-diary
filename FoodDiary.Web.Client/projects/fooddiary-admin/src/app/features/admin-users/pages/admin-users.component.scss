@@ -30,3 +30,22 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.login-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--fd-space-sm);
+}
+
+.login-summary__item {
+    display: grid;
+    gap: var(--fd-space-xxs);
+    padding: var(--fd-space-sm);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-sm);
+}
+
+.login-summary__label {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+}

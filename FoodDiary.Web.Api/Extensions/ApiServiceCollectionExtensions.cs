@@ -81,6 +81,12 @@ public static class ApiServiceCollectionExtensions {
                 "FastingNotifications:PollIntervalSeconds must be greater than zero when enabled.")
             .ValidateOnStart();
         services
+            .AddOptions<UserLoginEventCleanupOptions>()
+            .BindConfiguration(UserLoginEventCleanupOptions.SectionName)
+            .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
+                "UserLoginEventCleanup requires positive RetentionDays, BatchSize, and PollIntervalHours when enabled.")
+            .ValidateOnStart();
+        services
             .AddOptions<ApiBuildInfoOptions>()
             .BindConfiguration(ApiBuildInfoOptions.SectionName)
             .Validate(ApiBuildInfoOptions.HasValidCommitSha,
@@ -144,6 +150,7 @@ public static class ApiServiceCollectionExtensions {
         services.AddRateLimiter(static _ => { });
         services.AddOutputCache(static _ => { });
         services.AddHostedService<FastingNotificationHostedService>();
+        services.AddHostedService<UserLoginEventCleanupHostedService>();
         services.AddPresentationApi();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options => {

@@ -48,6 +48,28 @@ public static class AdminHttpResponseMappings {
             model.StartedAtUtc);
     }
 
+    public static AdminUserLoginEventHttpResponse ToHttpResponse(this AdminUserLoginEventModel model) {
+        return new AdminUserLoginEventHttpResponse(
+            model.Id,
+            model.UserId,
+            model.UserEmail,
+            model.AuthProvider,
+            model.MaskedIpAddress,
+            model.UserAgent,
+            model.BrowserName,
+            model.BrowserVersion,
+            model.OperatingSystem,
+            model.DeviceType,
+            model.LoggedInAtUtc);
+    }
+
+    public static AdminUserLoginDeviceSummaryHttpResponse ToHttpResponse(this AdminUserLoginDeviceSummaryModel model) {
+        return new AdminUserLoginDeviceSummaryHttpResponse(
+            model.Key,
+            model.Count,
+            model.LastSeenAtUtc);
+    }
+
     public static AdminAiPromptHttpResponse ToAiPromptHttpResponse(this AdminAiPromptModel model) {
         return new AdminAiPromptHttpResponse(
             model.Id,
@@ -126,6 +148,11 @@ public static class AdminHttpResponseMappings {
 
     public static PagedHttpResponse<AdminImpersonationSessionHttpResponse> ToImpersonationSessionsHttpResponse(
         this PagedResponse<AdminImpersonationSessionReadModel> response) {
+        return response.ToPagedHttpResponse(ToHttpResponse);
+    }
+
+    public static PagedHttpResponse<AdminUserLoginEventHttpResponse> ToLoginEventsHttpResponse(
+        this PagedResponse<AdminUserLoginEventModel> response) {
         return response.ToPagedHttpResponse(ToHttpResponse);
     }
 

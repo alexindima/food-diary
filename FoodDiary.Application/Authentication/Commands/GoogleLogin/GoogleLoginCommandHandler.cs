@@ -45,7 +45,7 @@ public sealed class GoogleLoginCommandHandler(
 
         await EnsurePasswordSetupReminderAsync(user, notificationRepository, cancellationToken);
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 

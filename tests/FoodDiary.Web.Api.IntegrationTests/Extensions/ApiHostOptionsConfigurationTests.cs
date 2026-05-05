@@ -28,6 +28,9 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["RateLimiting:Ai:PermitLimit"] = "11",
                 ["RateLimiting:Ai:WindowSeconds"] = "120",
                 ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "30",
+                ["UserLoginEventCleanup:RetentionDays"] = "90",
+                ["UserLoginEventCleanup:BatchSize"] = "250",
+                ["UserLoginEventCleanup:PollIntervalHours"] = "12",
             })
             .Build();
 
@@ -40,6 +43,7 @@ public sealed class ApiHostOptionsConfigurationTests {
         var forwardedHeaders = provider.GetRequiredService<IOptions<ApiForwardedHeadersOptions>>().Value;
         var rateLimiting = provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value;
         var outputCache = provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value;
+        var userLoginEventCleanup = provider.GetRequiredService<IOptions<UserLoginEventCleanupOptions>>().Value;
         var forwardedHeadersOptions = provider.GetRequiredService<IOptions<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>>().Value;
 
         Assert.Equal(["http://localhost:4200"], cors.Origins);
@@ -51,6 +55,9 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(11, rateLimiting.Ai.PermitLimit);
         Assert.Equal(120, rateLimiting.Ai.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
+        Assert.Equal(90, userLoginEventCleanup.RetentionDays);
+        Assert.Equal(250, userLoginEventCleanup.BatchSize);
+        Assert.Equal(12, userLoginEventCleanup.PollIntervalHours);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => ip.ToString() == "10.0.0.10");
         Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => network.BaseAddress.ToString() == "10.0.0.0" && network.PrefixLength == 24);

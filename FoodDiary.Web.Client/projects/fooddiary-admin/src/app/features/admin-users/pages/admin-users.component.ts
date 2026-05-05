@@ -11,6 +11,8 @@ import {
     type AdminImpersonationSession,
     type AdminImpersonationStart,
     type AdminUser,
+    type AdminUserLoginDeviceSummary,
+    type AdminUserLoginEvent,
     AdminUsersService,
 } from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
@@ -43,10 +45,19 @@ export class AdminUsersComponent {
     public readonly sessionsTotalItems = signal(0);
     public readonly sessionsSearch = signal('');
     public readonly isSessionsLoading = signal(false);
+    public readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
+    public readonly loginSummary = signal<AdminUserLoginDeviceSummary[]>([]);
+    public readonly loginEventsPage = signal(1);
+    public readonly loginEventsTotalPages = signal(1);
+    public readonly loginEventsTotalItems = signal(0);
+    public readonly loginEventsSearch = signal('');
+    public readonly isLoginEventsLoading = signal(false);
 
     public constructor() {
         this.loadUsers();
         this.loadSessions();
+        this.loadLoginEvents();
+        this.loadLoginSummary();
     }
 
     public loadUsers(): void {
@@ -158,5 +169,60 @@ export class AdminUsersComponent {
 
         this.sessionsPage.set(page);
         this.loadSessions();
+    }
+
+    public loadLoginEvents(): void {
+        this.isLoginEventsLoading.set(true);
+        this.usersService
+            .getLoginEvents(this.loginEventsPage(), this.limit, this.loginEventsSearch().trim() || null)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => {
+                    this.loginEvents.set(response.items);
+                    this.loginEventsTotalPages.set(response.totalPages);
+                    this.loginEventsTotalItems.set(response.totalItems);
+                    this.isLoginEventsLoading.set(false);
+                },
+                error: () => {
+                    this.loginEvents.set([]);
+                    this.loginEventsTotalPages.set(1);
+                    this.loginEventsTotalItems.set(0);
+                    this.isLoginEventsLoading.set(false);
+                },
+            });
+    }
+
+    public loadLoginSummary(): void {
+        this.usersService
+            .getLoginSummary()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => {
+                    this.loginSummary.set(response);
+                },
+                error: () => {
+                    this.loginSummary.set([]);
+                },
+            });
+    }
+
+    public onLoginEventsSearchChange(value: string): void {
+        this.loginEventsSearch.set(value);
+        this.loginEventsPage.set(1);
+        this.loadLoginEvents();
+    }
+
+    public goToLoginEventsPage(page: number): void {
+        if (page < 1 || page > this.loginEventsTotalPages()) {
+            return;
+        }
+
+        this.loginEventsPage.set(page);
+        this.loadLoginEvents();
+    }
+
+    public formatSummaryKey(key: string): string {
+        const [category, value] = key.split(':', 2);
+        return `${category.toUpperCase()} / ${value || 'Unknown'}`;
     }
 }

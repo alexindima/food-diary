@@ -27,6 +27,7 @@ namespace FoodDiary.Infrastructure.Persistence;
 
 public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : DbContext(options) {
     public DbSet<User> Users => Set<User>();
+    public DbSet<UserLoginEvent> UserLoginEvents => Set<UserLoginEvent>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<ImageAsset> ImageAssets => Set<ImageAsset>();

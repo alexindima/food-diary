@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
@@ -121,7 +122,10 @@ public sealed class RefreshTokenCommandHandlerTests {
     private sealed class FakeAuthenticationTokenService : IAuthenticationTokenService {
         public int IssueAndStoreCallCount { get; private set; }
 
-        public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(User user, CancellationToken cancellationToken) {
+        public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
+            User user,
+            CancellationToken cancellationToken,
+            AuthenticationClientContext? clientContext = null) {
             IssueAndStoreCallCount++;
             return Task.FromResult(new IssuedAuthenticationTokens("new-access-token", "new-refresh-token"));
         }

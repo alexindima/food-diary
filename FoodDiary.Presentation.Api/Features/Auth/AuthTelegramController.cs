@@ -28,7 +28,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> TelegramVerify([FromBody] TelegramAuthHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.telegram.verify");
+        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), _logger, "auth.telegram.verify");
 
     [HttpPost("login-widget")]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
@@ -38,7 +38,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> TelegramLoginWidget([FromBody] TelegramLoginWidgetHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.telegram.login-widget");
+        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), _logger, "auth.telegram.login-widget");
 
     [Authorize]
     [HttpPost("link")]
@@ -58,5 +58,5 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> TelegramBotAuth([FromBody] TelegramBotAuthHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.telegram.bot-auth");
+        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), _logger, "auth.telegram.bot-auth");
 }

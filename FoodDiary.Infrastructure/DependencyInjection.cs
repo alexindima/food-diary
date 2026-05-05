@@ -134,6 +134,7 @@ public static class DependencyInjection {
         services.AddSingleton(static sp => sp.GetRequiredService<IOptions<EmailOptions>>().Value);
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
         services.AddScoped<IBillingSubscriptionRepository, BillingSubscriptionRepository>();
         services.AddScoped<IBillingPaymentRepository, BillingPaymentRepository>();
         services.AddScoped<IBillingWebhookEventRepository, BillingWebhookEventRepository>();

@@ -27,6 +27,18 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     public Task<IActionResult> GetImpersonationSessions([FromQuery] GetAdminImpersonationSessionsHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToImpersonationSessionsHttpResponse());
 
+    [HttpGet("login-events")]
+    [ProducesResponseType<PagedHttpResponse<AdminUserLoginEventHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetLoginEvents([FromQuery] GetAdminUserLoginEventsHttpQuery query) =>
+        HandleOk(query.ToQuery(), static value => value.ToLoginEventsHttpResponse());
+
+    [HttpGet("login-summary")]
+    [ProducesResponseType<IReadOnlyList<AdminUserLoginDeviceSummaryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetLoginSummary([FromQuery] GetAdminUserLoginSummaryHttpQuery query) =>
+        HandleOk(query.ToQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
+
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
