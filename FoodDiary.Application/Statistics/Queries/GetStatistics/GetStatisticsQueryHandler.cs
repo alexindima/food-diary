@@ -27,8 +27,8 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
 
         var quantizationDays = Math.Clamp(request.QuantizationDays <= 0 ? 1 : request.QuantizationDays, 1, 365);
 
-        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(request.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(request.DateTo);
+        var normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
 
         var meals = await mealRepository.GetByPeriodAsync(
             userId,

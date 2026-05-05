@@ -63,11 +63,11 @@ export class WaistHistoryFacade {
     );
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const ordered = [...this.summaryPoints()].sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime());
+        const ordered = [...this.summaryPoints()].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
         const label = this.translate.instant('WAIST_HISTORY.CHART_LABEL');
 
         return {
-            labels: ordered.map(point => this.formatDateLabel(point.dateFrom)),
+            labels: ordered.map(point => this.formatDateLabel(point.startDate)),
             datasets: [
                 {
                     data: ordered.map(point => (point.averageCircumference > 0 ? point.averageCircumference : null)),

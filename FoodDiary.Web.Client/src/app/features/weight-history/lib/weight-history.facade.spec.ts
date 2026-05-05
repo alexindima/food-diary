@@ -33,7 +33,7 @@ describe('WeightHistoryFacade', () => {
             ),
             getSummary: vi
                 .fn()
-                .mockReturnValue(of([{ dateFrom: '2026-04-01T00:00:00Z', dateTo: '2026-04-01T23:59:59Z', averageWeight: 74.2 }])),
+                .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeight: 74.2 }])),
             create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', weight: 73.8 })),
             update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 })),
             remove: vi.fn().mockReturnValue(of(void 0)),

@@ -138,8 +138,8 @@ export class StatisticsComponent {
 
     public exportDiary(format: ExportFormat): void {
         const range = this.currentRange();
-        const dateFrom = new Date(Date.UTC(range.start.getFullYear(), range.start.getMonth(), range.start.getDate())).toISOString();
-        const dateTo = new Date(Date.UTC(range.end.getFullYear(), range.end.getMonth(), range.end.getDate())).toISOString();
+        const dateFrom = new Date(range.start.getFullYear(), range.start.getMonth(), range.start.getDate(), 0, 0, 0, 0).toISOString();
+        const dateTo = new Date(range.end.getFullYear(), range.end.getMonth(), range.end.getDate(), 23, 59, 59, 999).toISOString();
         this.exportService.exportDiary(dateFrom, dateTo, format);
     }
 }

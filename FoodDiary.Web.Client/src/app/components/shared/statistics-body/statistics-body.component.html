@@ -8,7 +8,7 @@
     />
 
     <fd-ui-section-state
-        appearance="compact"
+        class="stats-body-card__state"
         [state]="isLoading() ? 'loading' : hasLoadError() ? 'error' : hasBodyData() ? 'content' : 'empty'"
         [loadingLabel]="'STATISTICS.LOADING' | translate"
         [emptyMessage]="noDataKey() | translate"

@@ -45,7 +45,7 @@ export class StatisticsFacade {
     private lastLoadedRangeKey: string | null = null;
     private readonly initialized = signal(false);
 
-    public readonly selectedRange = signal<StatisticsRange>('month');
+    public readonly selectedRange = signal<StatisticsRange>('week');
     public readonly selectedNutritionTab = signal<NutritionChartTab>('calories');
     public readonly selectedBodyTab = signal<BodyChartTab>('weight');
     public readonly customRangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
@@ -313,6 +313,6 @@ export class StatisticsFacade {
     }
 
     private formatSummaryLabel(dateString: string): string {
-        return new Date(dateString).toLocaleDateString(this.getCurrentLocale());
+        return this.formatDateLabel(new Date(dateString));
     }
 }

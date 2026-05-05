@@ -22,8 +22,8 @@ public class ExportDiaryQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(query.DateTo);
+        var normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
 
         var meals = await mealRepository.GetByPeriodAsync(
             userId, normalizedFrom, normalizedTo, cancellationToken);

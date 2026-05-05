@@ -26,6 +26,9 @@ public class ExportFeatureTests {
     private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
         new(new StubMealRepository(meals), new StubPdfGenerator());
 
+    private static ExportDiaryQueryHandler CreateHandler(StubMealRepository repository) =>
+        new(repository, new StubPdfGenerator());
+
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
         var userId = UserId.New();
@@ -56,6 +59,23 @@ public class ExportFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("application/pdf", result.Value.ContentType);
         Assert.EndsWith(".pdf", result.Value.FileName);
+    }
+
+    [Fact]
+    public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
+        var userId = UserId.New();
+        var repository = new StubMealRepository([]);
+        var handler = CreateHandler(repository);
+        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc, ExportFormat.Pdf),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(localDayStartUtc, repository.LastDateFrom);
+        Assert.Equal(localDayEndUtc, repository.LastDateTo);
     }
 
     [Fact]
@@ -154,9 +174,15 @@ public class ExportFeatureTests {
     }
 
     private sealed class StubMealRepository(IReadOnlyList<Meal> meals) : IMealRepository {
+        public DateTime? LastDateFrom { get; private set; }
+        public DateTime? LastDateTo { get; private set; }
+
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
-            UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
-            Task.FromResult(meals);
+            UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) {
+            LastDateFrom = dateFrom;
+            LastDateTo = dateTo;
+            return Task.FromResult(meals);
+        }
 
         public Task<Meal> AddAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();

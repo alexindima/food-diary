@@ -20,8 +20,8 @@ export interface WaistEntryFilters {
 }
 
 export interface WaistEntrySummaryPoint {
-    dateFrom: string;
-    dateTo: string;
+    startDate: string;
+    endDate: string;
     averageCircumference: number;
 }
 

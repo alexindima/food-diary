@@ -66,11 +66,11 @@ export function getQuantizationDays(start: Date, end: Date): number {
 }
 
 export function normalizeStartOfDay(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 }
 
 export function normalizeEndOfDay(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 }
 
 export function getCurrentDateRange(
@@ -243,7 +243,7 @@ export function buildNutrientsBarChartData(
     };
 }
 
-export function buildBodyChartData<T extends { dateFrom: string }>(
+export function buildBodyChartData<T extends { startDate: string }>(
     points: T[],
     getValue: (point: T) => number | null | undefined,
     formatLabel: (dateString: string) => string,
@@ -256,9 +256,9 @@ export function buildBodyChartData<T extends { dateFrom: string }>(
     const data: (number | null)[] = [];
 
     points.forEach(point => {
-        labels.push(formatLabel(point.dateFrom));
+        labels.push(formatLabel(point.startDate));
         const value = getValue(point);
-        if (value === undefined || value === null || Number.isNaN(value)) {
+        if (value === undefined || value === null || Number.isNaN(value) || value <= 0) {
             data.push(null);
         } else {
             data.push(Number(value.toFixed(2)));
@@ -269,11 +269,13 @@ export function buildBodyChartData<T extends { dateFrom: string }>(
         return null;
     }
 
+    const chartData = interpolateMissingBodyValues(data);
+
     return {
         labels,
         datasets: [
             {
-                data,
+                data: chartData,
                 borderColor: CHART_COLORS.primaryLine,
                 backgroundColor: 'transparent',
                 tension: 0.3,
@@ -287,6 +289,35 @@ export function buildBodyChartData<T extends { dateFrom: string }>(
             },
         ],
     };
+}
+
+function interpolateMissingBodyValues(data: (number | null)[]): (number | null)[] {
+    const result = [...data];
+    const knownIndexes = result.reduce<number[]>((indexes, value, index) => {
+        if (value !== null) {
+            indexes.push(index);
+        }
+
+        return indexes;
+    }, []);
+
+    for (let index = 0; index < knownIndexes.length - 1; index++) {
+        const startIndex = knownIndexes[index];
+        const endIndex = knownIndexes[index + 1];
+        const startValue = result[startIndex];
+        const endValue = result[endIndex];
+
+        if (startValue === null || endValue === null || endIndex - startIndex <= 1) {
+            continue;
+        }
+
+        const step = (endValue - startValue) / (endIndex - startIndex);
+        for (let fillIndex = startIndex + 1; fillIndex < endIndex; fillIndex++) {
+            result[fillIndex] = Number((startValue + step * (fillIndex - startIndex)).toFixed(2));
+        }
+    }
+
+    return result;
 }
 
 export function buildSummaryMetrics(stats: MappedStatistics | null): SummaryMetrics | null {

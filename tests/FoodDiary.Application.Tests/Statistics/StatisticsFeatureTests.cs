@@ -1,6 +1,8 @@
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Statistics;
@@ -53,7 +55,28 @@ public class StatisticsFeatureTests {
         Assert.Equal(from, bucket.DateFrom);
     }
 
-    private sealed class NoopMealRepository : IMealRepository {
+    [Fact]
+    public async Task GetStatisticsQueryHandler_WithLocalDayUtcBoundaries_GroupsMealsByRequestedBoundary() {
+        var userId = UserId.New();
+        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        var includedMeal = Meal.Create(userId, localDayStartUtc.AddMinutes(30), MealType.Snack);
+        includedMeal.ApplyNutrition(new MealNutritionUpdate(946, 59, 45, 76, 7, 0, true));
+        var nextLocalDayMeal = Meal.Create(userId, localDayEndUtc.AddMinutes(1), MealType.Snack);
+        nextLocalDayMeal.ApplyNutrition(new MealNutritionUpdate(41, 1, 0, 10, 3, 0, true));
+        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([includedMeal, nextLocalDayMeal]));
+        var query = new GetStatisticsQuery(userId.Value, localDayStartUtc, localDayEndUtc, 1);
+
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var bucket = Assert.Single(result.Value);
+        Assert.Equal(localDayStartUtc, bucket.DateFrom);
+        Assert.Equal(localDayEndUtc, bucket.DateTo);
+        Assert.Equal(946, bucket.TotalCalories);
+    }
+
+    private class NoopMealRepository : IMealRepository {
         public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => Task.FromResult(meal);
         public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -74,7 +97,7 @@ public class StatisticsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult((Items: (IReadOnlyList<Meal>)Array.Empty<Meal>(), TotalItems: 0));
 
-        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+        public virtual Task<IReadOnlyList<Meal>> GetByPeriodAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
@@ -95,5 +118,14 @@ public class StatisticsFeatureTests {
             UserId userId, DateTime date,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Meal>>(Array.Empty<Meal>());
+    }
+
+    private sealed class StaticMealRepository(IReadOnlyList<Meal> meals) : NoopMealRepository {
+        public override Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Meal>>(meals);
     }
 }

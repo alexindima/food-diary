@@ -20,8 +20,8 @@ export interface WeightEntryFilters {
 }
 
 export interface WeightEntrySummaryPoint {
-    dateFrom: string;
-    dateTo: string;
+    startDate: string;
+    endDate: string;
     averageWeight: number;
 }
 

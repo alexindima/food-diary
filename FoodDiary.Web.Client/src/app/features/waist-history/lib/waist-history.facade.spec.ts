@@ -33,7 +33,7 @@ describe('WaistHistoryFacade', () => {
             ),
             getSummary: vi
                 .fn()
-                .mockReturnValue(of([{ dateFrom: '2026-04-01T00:00:00Z', dateTo: '2026-04-01T23:59:59Z', averageCircumference: 82 }])),
+                .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82 }])),
             create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumference: 81.7 })),
             update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
             remove: vi.fn().mockReturnValue(of(void 0)),

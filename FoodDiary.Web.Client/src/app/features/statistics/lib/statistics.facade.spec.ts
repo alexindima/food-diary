@@ -35,12 +35,12 @@ describe('StatisticsFacade', () => {
         weightEntriesService = {
             getSummary: vi
                 .fn()
-                .mockReturnValue(of([{ dateFrom: '2026-04-01T00:00:00Z', dateTo: '2026-04-01T23:59:59Z', averageWeight: 75.3 }])),
+                .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeight: 75.3 }])),
         };
         waistEntriesService = {
             getSummary: vi
                 .fn()
-                .mockReturnValue(of([{ dateFrom: '2026-04-01T00:00:00Z', dateTo: '2026-04-01T23:59:59Z', averageCircumference: 82.1 }])),
+                .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82.1 }])),
         };
         userService = {
             getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
@@ -88,13 +88,13 @@ describe('StatisticsFacade', () => {
         weightEntriesService.getSummary.mockClear();
         waistEntriesService.getSummary.mockClear();
 
-        facade.changeRange('week');
+        facade.changeRange('month');
         TestBed.flushEffects();
 
         expect(statisticsService.getAggregatedStatistics).toHaveBeenCalledTimes(1);
         expect(weightEntriesService.getSummary).toHaveBeenCalledTimes(1);
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
-        expect(facade.selectedRange()).toBe('week');
+        expect(facade.selectedRange()).toBe('month');
     });
 
     it('marks load error when aggregated statistics request fails', () => {

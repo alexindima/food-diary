@@ -59,7 +59,7 @@ export function createWeightTrendSignals(
 } {
     const weightTrendSeries = computed<WeightTrendPoint[]>(() => {
         const points = weightTrendPoints().map(point => ({
-            date: point.dateFrom,
+            date: point.startDate,
             value: point.averageWeight > 0 ? point.averageWeight : null,
         }));
         return points.length ? points : buildFallbackTrend(latestWeight(), selectedDate(), trendDays);
@@ -83,7 +83,7 @@ export function createWaistTrendSignals(
 } {
     const waistTrendSeries = computed<WeightTrendPoint[]>(() => {
         const points = waistTrendPoints().map(point => ({
-            date: point.dateFrom,
+            date: point.startDate,
             value: point.averageCircumference > 0 ? point.averageCircumference : null,
         }));
         return points.length ? points : buildFallbackTrend(latestWaist(), selectedDate(), trendDays);

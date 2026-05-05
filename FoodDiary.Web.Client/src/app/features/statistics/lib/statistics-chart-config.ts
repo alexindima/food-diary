@@ -15,7 +15,30 @@ export function applyAlpha(hexColor: string, alpha: number): string {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export const TICK_COLOR = 'var(--fd-color-slate-600)';
+function readCssColor(variable: string, fallback: string): string {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return fallback;
+    }
+
+    const value = window.getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+    return value || fallback;
+}
+
+const TICK_COLOR_FALLBACK = '#475569';
+const GRID_COLOR_FALLBACK = '#e2e8f0';
+const RADAR_ANGLE_LINE_COLOR_FALLBACK = '#bfdbfe';
+
+export function getTickColor(): string {
+    return readCssColor('--fd-color-text-muted', TICK_COLOR_FALLBACK);
+}
+
+function getGridColor(): string {
+    return readCssColor('--fd-color-border', GRID_COLOR_FALLBACK);
+}
+
+function getRadarAngleLineColor(): string {
+    return readCssColor('--fd-color-primary-200', RADAR_ANGLE_LINE_COLOR_FALLBACK);
+}
 
 export function createCaloriesLineChartOptions(formatTooltip: (label: string, value: number) => string): ChartConfiguration['options'] {
     return {
@@ -36,10 +59,12 @@ export function createCaloriesLineChartOptions(formatTooltip: (label: string, va
         scales: {
             y: {
                 beginAtZero: true,
-                ticks: { color: TICK_COLOR },
+                grid: { color: getGridColor },
+                ticks: { color: getTickColor },
             },
             x: {
-                ticks: { color: TICK_COLOR, maxRotation: 0 },
+                grid: { color: getGridColor },
+                ticks: { color: getTickColor, maxRotation: 0 },
             },
         },
     };
@@ -56,10 +81,12 @@ export const nutrientsLineChartOptions: ChartConfiguration['options'] = {
     scales: {
         y: {
             beginAtZero: true,
-            ticks: { color: TICK_COLOR },
+            grid: { color: getGridColor },
+            ticks: { color: getTickColor },
         },
         x: {
-            ticks: { color: TICK_COLOR, maxRotation: 0 },
+            grid: { color: getGridColor },
+            ticks: { color: getTickColor, maxRotation: 0 },
         },
     },
 };
@@ -84,9 +111,9 @@ export const radarChartOptions: ChartOptions<'radar'> = {
     scales: {
         r: {
             beginAtZero: true,
-            angleLines: { color: 'color-mix(in srgb, var(--fd-color-primary-200) 55%, var(--fd-color-white))' },
-            grid: { color: 'var(--fd-color-slate-200)' },
-            ticks: { showLabelBackdrop: false },
+            angleLines: { color: getRadarAngleLineColor },
+            grid: { color: getGridColor },
+            ticks: { color: getTickColor, showLabelBackdrop: false },
         },
     },
 };
@@ -96,6 +123,12 @@ export const barChartOptions: ChartOptions<'bar'> = {
     scales: {
         y: {
             beginAtZero: true,
+            grid: { color: getGridColor },
+            ticks: { color: getTickColor },
+        },
+        x: {
+            grid: { color: getGridColor },
+            ticks: { color: getTickColor },
         },
     },
     plugins: {
@@ -110,8 +143,8 @@ export const bodyChartOptions: ChartConfiguration['options'] = {
         legend: { display: false },
     },
     scales: {
-        y: { beginAtZero: false, ticks: { color: TICK_COLOR } },
-        x: { ticks: { color: TICK_COLOR, maxRotation: 0 } },
+        y: { beginAtZero: false, grid: { color: getGridColor }, ticks: { color: getTickColor } },
+        x: { grid: { color: getGridColor }, ticks: { color: getTickColor, maxRotation: 0 } },
     },
 };
 
