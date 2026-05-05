@@ -68,6 +68,7 @@ using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Events;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.Infrastructure.Services.DiaryPdf;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using Microsoft.Extensions.Options;
