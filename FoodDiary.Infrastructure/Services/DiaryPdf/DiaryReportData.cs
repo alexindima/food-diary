@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;

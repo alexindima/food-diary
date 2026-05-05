@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;

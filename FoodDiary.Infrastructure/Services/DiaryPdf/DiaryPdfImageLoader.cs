@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Formats.Jpeg;

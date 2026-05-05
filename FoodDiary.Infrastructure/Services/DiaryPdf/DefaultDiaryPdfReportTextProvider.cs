@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Export.Common;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 

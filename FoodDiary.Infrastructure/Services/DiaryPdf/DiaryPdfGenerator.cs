@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using QuestPDF.Fluent;

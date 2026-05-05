@@ -1,4 +1,4 @@
-﻿namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private const string PageBackground = "#ffffff";
