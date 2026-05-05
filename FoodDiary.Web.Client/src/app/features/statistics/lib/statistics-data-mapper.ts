@@ -334,8 +334,8 @@ export function buildSummaryMetrics(stats: MappedStatistics | null): SummaryMetr
         totalCalories,
         averageCard: {
             consumption: averageCalories,
-            steps: 6420,
-            burned: 215,
+            steps: 0,
+            burned: 0,
         },
         macros: [
             {

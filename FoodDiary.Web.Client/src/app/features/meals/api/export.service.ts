@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -17,25 +18,27 @@ export class ExportService extends ApiService {
         format: ExportFormat = 'csv',
         locale?: string,
         timeZoneOffsetMinutes?: number,
-    ): void {
+    ): Observable<void> {
         const ext = format === 'pdf' ? 'pdf' : 'csv';
         const reportOrigin = typeof window === 'undefined' ? undefined : window.location.origin;
-        this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).subscribe(response => {
-            const blob = response.body;
-            if (!blob) {
-                return;
-            }
+        return this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).pipe(
+            map(response => {
+                const blob = response.body;
+                if (!blob) {
+                    return;
+                }
 
-            const contentDisposition = response.headers.get('Content-Disposition');
-            const fileName = this.extractFileName(contentDisposition) ?? `food-diary.${ext}`;
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const fileName = this.extractFileName(contentDisposition) ?? `food-diary.${ext}`;
 
-            const url = URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = fileName;
-            anchor.click();
-            URL.revokeObjectURL(url);
-        });
+                const url = URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = url;
+                anchor.download = fileName;
+                anchor.click();
+                URL.revokeObjectURL(url);
+            }),
+        );
     }
 
     private extractFileName(contentDisposition: string | null): string | null {

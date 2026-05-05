@@ -25,7 +25,7 @@
     min-height: var(--fd-button-height);
     margin: var(--fd-button-margin);
     padding: 0 var(--fd-button-padding-x);
-    position: var(--fd-button-position);
+    position: relative;
     z-index: var(--fd-button-z-index);
     pointer-events: var(--fd-button-pointer-events);
     text-transform: none;

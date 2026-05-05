@@ -1,4 +1,28 @@
 <fd-ui-card class="stats-summary-card" [title]="'STATISTICS.SUMMARY_TITLE' | translate">
+    <div fdUiCardActions class="stats-summary-card__actions">
+        <fd-ui-button
+            variant="secondary"
+            fill="outline"
+            size="sm"
+            icon="download"
+            [loading]="exportingFormat() !== null"
+            [ariaLabel]="'STATISTICS.EXPORT_MENU_LABEL' | translate"
+            [fdUiMenuTrigger]="exportMenu"
+        >
+            {{ 'STATISTICS.EXPORT_MENU_LABEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-menu #exportMenu>
+            <fd-ui-menu-item [disabled]="exportingFormat() !== null" (itemClick)="export('csv')">
+                <fd-ui-icon name="table_view" />
+                {{ 'STATISTICS.EXPORT_CSV' | translate }}
+            </fd-ui-menu-item>
+            <fd-ui-menu-item [disabled]="exportingFormat() !== null" (itemClick)="export('pdf')">
+                <fd-ui-icon name="picture_as_pdf" />
+                {{ 'STATISTICS.EXPORT_PDF' | translate }}
+            </fd-ui-menu-item>
+        </fd-ui-menu>
+    </div>
+
     <fd-ui-section-state
         appearance="compact"
         [state]="summary() ? 'content' : 'empty'"
@@ -40,7 +64,7 @@
                         </div>
                         <div class="stats-summary-card__average-details fd-grid fd-gap-card-header">
                             <div class="stats-summary-card__average-item fd-stack fd-gap-card-header">
-                                <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
+                                <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-md">
                                     {{ data.averageCard.steps | number: '1.0-0' }}
                                 </strong>
                                 <span class="stats-summary-card__note fd-ui-stat-tile__meta fd-ui-overline">
@@ -48,7 +72,7 @@
                                 </span>
                             </div>
                             <div class="stats-summary-card__average-item fd-stack fd-gap-card-header">
-                                <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-lg">
+                                <strong class="stats-summary-card__value fd-ui-stat-tile__value fd-ui-metric-md">
                                     {{ data.averageCard.burned | number: '1.0-0' }}
                                     {{ 'GENERAL.UNITS.KCAL' | translate }}
                                 </strong>

@@ -8,6 +8,12 @@
     width: 100%;
 }
 
+.stats-summary-card__actions {
+    display: flex;
+    align-items: center;
+    padding-bottom: var(--fd-space-sm);
+}
+
 .stats-summary-card__row--top > * {
     flex: 1 1 220px;
 }

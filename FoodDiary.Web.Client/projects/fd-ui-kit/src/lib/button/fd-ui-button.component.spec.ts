@@ -115,6 +115,15 @@ describe('FdUiButtonComponent', () => {
         expect(component.classes()).toContain('fd-ui-button--loading');
     });
 
+    it('should keep spinner positioned inside the button', () => {
+        fixture.componentRef.setInput('loading', true);
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.css('button'));
+
+        expect(getComputedStyle(button.nativeElement).position).toBe('relative');
+    });
+
     it('should set aria-label attribute', () => {
         fixture.componentRef.setInput('ariaLabel', 'Close dialog');
         fixture.detectChanges();

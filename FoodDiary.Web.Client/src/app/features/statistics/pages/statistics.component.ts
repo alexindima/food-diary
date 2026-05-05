@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
 import { type FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { finalize } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -37,8 +36,6 @@ import { isBodyTab, isNutritionTab, isStatisticsRange, normalizeEndOfDay, normal
         CommonModule,
         TranslatePipe,
         ReactiveFormsModule,
-        FdUiHintDirective,
-        FdUiButtonComponent,
         FdUiEmptyStateComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -101,6 +98,7 @@ export class StatisticsComponent {
     public readonly nutrientsBarChartData = this.facade.nutrientsBarChartData;
     public readonly bodyChartData = this.facade.bodyChartData;
     public readonly hasBodyData = this.facade.hasBodyData;
+    public readonly exportingFormat = signal<ExportFormat | null>(null);
 
     public readonly caloriesLineChartOptions = createCaloriesLineChartOptions(
         (label, value) => `${label}: ${parseFloat(value.toFixed(2))} ${this.translateService.instant('GENERAL.UNITS.KCAL')}`,
@@ -137,11 +135,23 @@ export class StatisticsComponent {
     }
 
     public exportDiary(format: ExportFormat): void {
+        if (this.exportingFormat() !== null) {
+            return;
+        }
+
         const range = this.currentRange();
         const dateFrom = normalizeStartOfDay(range.start).toISOString();
         const dateTo = normalizeEndOfDay(range.end).toISOString();
         const locale = this.translateService.currentLang || this.translateService.getDefaultLang() || undefined;
         const timeZoneOffsetMinutes = -new Date().getTimezoneOffset();
-        this.exportService.exportDiary(dateFrom, dateTo, format, locale, timeZoneOffsetMinutes);
+        this.exportingFormat.set(format);
+        this.exportService
+            .exportDiary(dateFrom, dateTo, format, locale, timeZoneOffsetMinutes)
+            .pipe(
+                finalize(() => {
+                    this.exportingFormat.set(null);
+                }),
+            )
+            .subscribe();
     }
 }
