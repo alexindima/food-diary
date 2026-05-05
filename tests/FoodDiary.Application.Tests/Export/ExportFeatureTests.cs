@@ -50,15 +50,19 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithPdfFormat_ReturnsPdfFileResult() {
         var userId = UserId.New();
         var meals = new[] { CreateMeal(userId) };
-        var handler = CreateHandler(meals);
+        var pdfGenerator = new StubPdfGenerator();
+        var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), pdfGenerator);
 
         var result = await handler.Handle(
-            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf),
+            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://дневникеды.рф"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("application/pdf", result.Value.ContentType);
         Assert.EndsWith(".pdf", result.Value.FileName);
+        Assert.Equal("ru", pdfGenerator.LastLocale);
+        Assert.Equal(240, pdfGenerator.LastTimeZoneOffsetMinutes);
+        Assert.Equal("https://дневникеды.рф", pdfGenerator.LastReportOrigin);
     }
 
     [Fact]
@@ -195,11 +199,22 @@ public class ExportFeatureTests {
     }
 
     private sealed class StubPdfGenerator : IDiaryPdfGenerator {
+        public string? LastLocale { get; private set; }
+        public int? LastTimeZoneOffsetMinutes { get; private set; }
+        public string? LastReportOrigin { get; private set; }
+
         public Task<byte[]> GenerateAsync(
             IReadOnlyList<Meal> meals,
             DateTime dateFrom,
             DateTime dateTo,
-            CancellationToken cancellationToken) =>
-            Task.FromResult<byte[]>([0x25, 0x50, 0x44, 0x46]); // %PDF magic bytes
+            string? locale,
+            int? timeZoneOffsetMinutes,
+            string? reportOrigin,
+            CancellationToken cancellationToken) {
+            LastLocale = locale;
+            LastTimeZoneOffsetMinutes = timeZoneOffsetMinutes;
+            LastReportOrigin = reportOrigin;
+            return Task.FromResult<byte[]>([0x25, 0x50, 0x44, 0x46]); // %PDF magic bytes
+        }
     }
 }

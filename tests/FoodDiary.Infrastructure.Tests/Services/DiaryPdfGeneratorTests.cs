@@ -21,6 +21,9 @@ public sealed class DiaryPdfGeneratorTests {
             meals,
             new DateTime(2026, 5, 1, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            null,
+            240,
+            "https://дневникеды.рф",
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -41,6 +44,9 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            null,
+            240,
+            "https://fooddiary.club",
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -59,6 +65,9 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 4, 20, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            null,
+            240,
+            null,
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);

@@ -15,6 +15,9 @@ public class ExportController(ISender mediator) : AuthorizedController(mediator)
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
         [FromQuery] DateTime dateTo,
-        [FromQuery] string format = "csv") =>
-        HandleFile(ExportHttpMappings.ToQuery(userId, dateFrom, dateTo, format));
+        [FromQuery] string format = "csv",
+        [FromQuery] string? locale = null,
+        [FromQuery] int? timeZoneOffsetMinutes = null,
+        [FromQuery] string? reportOrigin = null) =>
+        HandleFile(ExportHttpMappings.ToQuery(userId, dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin));
 }

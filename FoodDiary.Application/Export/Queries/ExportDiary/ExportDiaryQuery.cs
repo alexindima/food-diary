@@ -8,4 +8,7 @@ public record ExportDiaryQuery(
     Guid? UserId,
     DateTime DateFrom,
     DateTime DateTo,
-    ExportFormat Format = ExportFormat.Csv) : IQuery<Result<FileExportResult>>, IUserRequest;
+    ExportFormat Format = ExportFormat.Csv,
+    string? Locale = null,
+    int? TimeZoneOffsetMinutes = null,
+    string? ReportOrigin = null) : IQuery<Result<FileExportResult>>, IUserRequest;

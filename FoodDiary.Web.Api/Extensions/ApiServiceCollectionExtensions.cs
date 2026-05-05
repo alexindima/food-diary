@@ -1,5 +1,6 @@
 using System.Text;
 using FoodDiary.Application;
+using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure;
@@ -9,6 +10,7 @@ using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Web.Api.Build;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Resources.Notifications;
+using FoodDiary.Resources.Reports;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
@@ -31,6 +33,7 @@ public static class ApiServiceCollectionExtensions {
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);
         services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
+        services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
         services.AddDistributedMemoryCache();
         services
             .AddOptions<ApiCorsOptions>()

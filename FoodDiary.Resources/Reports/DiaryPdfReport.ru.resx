@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+  </resheader>
+  <data name="ReportTitle" xml:space="preserve"><value>Отчет дневника питания</value></data>
+  <data name="PeriodLabel" xml:space="preserve"><value>Период</value></data>
+  <data name="MealsCountLabel" xml:space="preserve"><value>приемов пищи: {0}</value></data>
+  <data name="PeriodSummaryTitle" xml:space="preserve"><value>Сводка за период</value></data>
+  <data name="TotalCaloriesTitle" xml:space="preserve"><value>Всего калорий</value></data>
+  <data name="KcalUnit" xml:space="preserve"><value>ккал</value></data>
+  <data name="AveragePerDayTitle" xml:space="preserve"><value>Среднее в день</value></data>
+  <data name="TotalForPeriodTitle" xml:space="preserve"><value>Суммарно за период</value></data>
+  <data name="ProteinsTitle" xml:space="preserve"><value>Белки</value></data>
+  <data name="FatsTitle" xml:space="preserve"><value>Жиры</value></data>
+  <data name="CarbsTitle" xml:space="preserve"><value>Углеводы</value></data>
+  <data name="FiberTitle" xml:space="preserve"><value>Клетчатка</value></data>
+  <data name="GramsUnit" xml:space="preserve"><value>г</value></data>
+  <data name="GramsProteinsLabel" xml:space="preserve"><value>г белков</value></data>
+  <data name="GramsFatsLabel" xml:space="preserve"><value>г жиров</value></data>
+  <data name="GramsCarbsLabel" xml:space="preserve"><value>г углеводов</value></data>
+  <data name="GramsFiberLabel" xml:space="preserve"><value>г клетчатки</value></data>
+  <data name="CaloriesByDayTitle" xml:space="preserve"><value>Калории по дням</value></data>
+  <data name="NutrientsByDayTitle" xml:space="preserve"><value>Нутриенты по дням</value></data>
+  <data name="MealsTitle" xml:space="preserve"><value>Приемы пищи</value></data>
+  <data name="NoMealsMessage" xml:space="preserve"><value>За этот период приемов пищи не найдено.</value></data>
+  <data name="DateColumn" xml:space="preserve"><value>Дата</value></data>
+  <data name="TypeColumn" xml:space="preserve"><value>Тип</value></data>
+  <data name="ItemsColumn" xml:space="preserve"><value>Состав</value></data>
+  <data name="KcalColumn" xml:space="preserve"><value>Ккал</value></data>
+  <data name="ProteinsColumnShort" xml:space="preserve"><value>Белки</value></data>
+  <data name="SatietyColumn" xml:space="preserve"><value>Сытость</value></data>
+  <data name="CommentColumn" xml:space="preserve"><value>Комментарий</value></data>
+  <data name="BeforeLabel" xml:space="preserve"><value>До</value></data>
+  <data name="AfterLabel" xml:space="preserve"><value>После</value></data>
+  <data name="OtherMealType" xml:space="preserve"><value>Другое</value></data>
+  <data name="BreakfastMealType" xml:space="preserve"><value>Завтрак</value></data>
+  <data name="LunchMealType" xml:space="preserve"><value>Обед</value></data>
+  <data name="DinnerMealType" xml:space="preserve"><value>Ужин</value></data>
+  <data name="SnackMealType" xml:space="preserve"><value>Перекус</value></data>
+  <data name="ItemsPrefix" xml:space="preserve"><value>Состав</value></data>
+  <data name="ItemsNotSpecified" xml:space="preserve"><value>не указан</value></data>
+  <data name="MoreItemsSuffix" xml:space="preserve"><value>еще</value></data>
+  <data name="RecipeFallback" xml:space="preserve"><value>Рецепт</value></data>
+  <data name="ProductFallback" xml:space="preserve"><value>Продукт</value></data>
+  <data name="ServingUnit" xml:space="preserve"><value>порц.</value></data>
+  <data name="GeneratedByPrefix" xml:space="preserve"><value>Сформировано Food Diary - </value></data>
+</root>

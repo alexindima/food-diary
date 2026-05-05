@@ -7,5 +7,8 @@ public interface IDiaryPdfGenerator {
         IReadOnlyList<Meal> meals,
         DateTime dateFrom,
         DateTime dateTo,
+        string? locale,
+        int? timeZoneOffsetMinutes,
+        string? reportOrigin,
         CancellationToken cancellationToken);
 }

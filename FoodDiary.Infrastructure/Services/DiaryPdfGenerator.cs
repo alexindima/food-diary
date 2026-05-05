@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -17,46 +18,62 @@ using ImageSharpSize = SixLabors.ImageSharp.Size;
 
 namespace FoodDiary.Infrastructure.Services;
 
-internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
-    private const string PageBackground = "#11161d";
-    private const string PanelBackground = "#22272f";
-    private const string CardBackground = "#262c34";
-    private const string BorderColor = "#3a424e";
-    private const string GridColor = "#3d4652";
-    private const string TextColor = "#f5f7fb";
-    private const string MutedTextColor = "#aebbd0";
-    private const string PrimaryColor = "#63e6be";
-    private const string PrimaryFillColor = "#244d45";
-    private const string ProteinColor = "#3b82f6";
-    private const string FatColor = "#f5d76e";
-    private const string CarbColor = "#00b894";
-    private const string FiberColor = "#7c3aed";
-    private const string SatietyColor = "#ffb25b";
+internal sealed class DiaryPdfGenerator(
+    HttpClient httpClient,
+    IDiaryPdfReportTextProvider textProvider) : IDiaryPdfGenerator {
+    private const string PageBackground = "#ffffff";
+    private const string PanelBackground = "#ffffff";
+    private const string CardBackground = "#f8fafc";
+    private const string BorderColor = "#cbd5e1";
+    private const string GridColor = "#e2e8f0";
+    private const string TextColor = "#111827";
+    private const string MutedTextColor = "#475569";
+    private const string PrimaryColor = "#0f766e";
+    private const string PrimaryFillColor = "#d9f8ec";
+    private const string ImagePlaceholderBackground = "#f1f5f9";
+    private const string MetricBackground = "#ffffff";
+    private const string TableHeaderBackground = "#f1f5f9";
+    private const string ProteinColor = "#2563eb";
+    private const string FatColor = "#b08900";
+    private const string CarbColor = "#059669";
+    private const string FiberColor = "#6d28d9";
+    private const string SatietyColor = "#f59e0b";
+    private const string DefaultReportHost = "fooddiary.club";
     private const int MaxMealImageBytes = 2 * 1024 * 1024;
     private const int MealImageThumbnailSize = 320;
 
-    private readonly HttpClient _httpClient;
-
-    public DiaryPdfGenerator()
-        : this(new HttpClient { Timeout = TimeSpan.FromSeconds(5) }) {
+    internal DiaryPdfGenerator()
+        : this(new HttpClient { Timeout = TimeSpan.FromSeconds(5) }, new DefaultDiaryPdfReportTextProvider()) {
     }
 
-    public DiaryPdfGenerator(HttpClient httpClient) {
-        _httpClient = httpClient;
+    internal DiaryPdfGenerator(HttpClient httpClient)
+        : this(httpClient, new DefaultDiaryPdfReportTextProvider()) {
     }
 
     public async Task<byte[]> GenerateAsync(
         IReadOnlyList<Meal> meals,
         DateTime dateFrom,
         DateTime dateTo,
+        string? locale,
+        int? timeZoneOffsetMinutes,
+        string? reportOrigin,
         CancellationToken cancellationToken) {
         QuestPDF.Settings.License = LicenseType.Community;
 
+        var texts = textProvider.GetTexts(locale);
         var useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
         var mealImages = useCompactMealsMode
             ? new Dictionary<MealId, byte[]>()
             : await LoadMealImagesAsync(meals, cancellationToken);
-        var report = DiaryReportData.Create(meals, dateFrom, dateTo, mealImages, useCompactMealsMode);
+        var report = DiaryReportData.Create(
+            meals,
+            dateFrom,
+            dateTo,
+            mealImages,
+            useCompactMealsMode,
+            texts,
+            timeZoneOffsetMinutes,
+            ResolveReportHost(reportOrigin));
 
         var document = Document.Create(container => {
             container.Page(page => {
@@ -67,7 +84,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
                 page.Header().Element(c => ComposeHeader(c, report));
                 page.Content().Element(c => ComposeContent(c, report));
-                page.Footer().Element(ComposeFooter);
+                page.Footer().Element(c => ComposeFooter(c, report));
             });
         });
 
@@ -77,14 +94,15 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     private static void ComposeHeader(IContainer container, DiaryReportData report) {
         container.PaddingBottom(12).Row(row => {
             row.RelativeItem().Column(column => {
-                column.Item().Text("Food Diary Report")
+                column.Item().Text(report.Texts.ReportTitle)
                     .FontSize(18).Bold().FontColor(TextColor);
 
                 column.Item().Text(text => {
-                    text.Span("Period: ").SemiBold().FontColor(MutedTextColor);
+                    text.Span($"{report.Texts.PeriodLabel}: ").SemiBold().FontColor(MutedTextColor);
                     text.Span($"{report.PeriodStartLabel} - {report.PeriodEndLabel}");
+                    text.Span($" ({report.TimeZoneOffsetLabel})").FontColor(MutedTextColor);
                     text.Span("  |  ").FontColor(BorderColor);
-                    text.Span($"{report.MealCount} meals").FontColor(MutedTextColor);
+                    text.Span(string.Format(report.Culture, report.Texts.MealsCountLabel, report.MealCount)).FontColor(MutedTextColor);
                 });
             });
 
@@ -113,7 +131,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     private static void ComposeSummarySection(IContainer container, DiaryReportData report) {
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(12);
-            column.Item().Text("Period summary").FontSize(13).SemiBold().FontColor(MutedTextColor);
+            column.Item().Text(report.Texts.PeriodSummaryTitle).FontSize(13).SemiBold().FontColor(MutedTextColor);
 
             column.Item().Row(row => {
                 row.Spacing(8);
@@ -125,45 +143,59 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             column.Item().Row(row => {
                 row.Spacing(8);
 
-                row.RelativeItem().Element(c => ComposeMacroCard(c, "Proteins", report.AverageProteins, ProteinColor, report.ProteinSeries));
-                row.RelativeItem().Element(c => ComposeMacroCard(c, "Fats", report.AverageFats, FatColor, report.FatSeries));
-                row.RelativeItem().Element(c => ComposeMacroCard(c, "Carbs", report.AverageCarbs, CarbColor, report.CarbSeries));
-                row.RelativeItem().Element(c => ComposeMacroCard(c, "Fiber", report.AverageFiber, FiberColor, report.FiberSeries));
+                row.RelativeItem().Element(c => ComposeMacroCard(c, report, report.Texts.ProteinsTitle, report.AverageProteins, ProteinColor, report.ProteinSeries));
+                row.RelativeItem().Element(c => ComposeMacroCard(c, report, report.Texts.FatsTitle, report.AverageFats, FatColor, report.FatSeries));
+                row.RelativeItem().Element(c => ComposeMacroCard(c, report, report.Texts.CarbsTitle, report.AverageCarbs, CarbColor, report.CarbSeries));
+                row.RelativeItem().Element(c => ComposeMacroCard(c, report, report.Texts.FiberTitle, report.AverageFiber, FiberColor, report.FiberSeries));
             });
         });
     }
 
     private static void ComposeTotalCaloriesCard(IContainer container, DiaryReportData report) {
         container.Background(CardBackground).Border(1).BorderColor(BorderColor).Padding(12).Height(180).Column(column => {
-            column.Item().Text("Total calories").FontSize(9).SemiBold().FontColor(MutedTextColor);
-            column.Item().Text($"{FormatNumber(report.TotalCalories, 0)} kcal").FontSize(26).Bold().FontColor(TextColor);
+            column.Item().Text(report.Texts.TotalCaloriesTitle).FontSize(9).SemiBold().FontColor(MutedTextColor);
+            column.Item().Text($"{FormatNumber(report.TotalCalories, 0, report.Culture)} {report.Texts.KcalUnit}").FontSize(26).Bold().FontColor(TextColor);
             column.Item().ExtendVertical().AlignBottom().Svg(DiaryChartSvgRenderer.RenderWideSparkline(report.CalorieSeries, PrimaryColor, PrimaryFillColor)).FitArea();
         });
     }
 
     private static void ComposeAverageCard(IContainer container, DiaryReportData report) {
         container.Background(CardBackground).Border(1).BorderColor(BorderColor).Padding(12).Height(180).Column(column => {
-            column.Item().Text("Average per day").FontSize(9).SemiBold().FontColor(MutedTextColor);
-            column.Item().Text($"{FormatNumber(report.AverageCalories, 0)} kcal").FontSize(26).Bold().FontColor(TextColor);
+            column.Item().Text(report.Texts.AveragePerDayTitle).FontSize(9).SemiBold().FontColor(MutedTextColor);
+            column.Item().Text($"{FormatNumber(report.AverageCalories, 0, report.Culture)} {report.Texts.KcalUnit}").FontSize(26).Bold().FontColor(TextColor);
             column.Item().PaddingTop(14).LineHorizontal(1).LineColor(BorderColor);
-            column.Item().PaddingTop(12).Row(row => {
-                row.RelativeItem().Column(metric => {
-                    metric.Item().Text(FormatNumber(report.TotalProteins, 1)).FontSize(18).Bold();
-                    metric.Item().Text("g proteins").FontSize(8).FontColor(MutedTextColor);
+            column.Item().PaddingTop(10).Text(report.Texts.TotalForPeriodTitle).FontSize(8).SemiBold().FontColor(MutedTextColor);
+            column.Item().PaddingTop(8).Column(metrics => {
+                metrics.Spacing(8);
+                metrics.Item().Row(row => {
+                    row.RelativeItem().Column(metric => {
+                        metric.Item().Text(FormatNumber(report.TotalProteins, 1, report.Culture)).FontSize(16).Bold();
+                        metric.Item().Text(report.Texts.GramsProteinsLabel).FontSize(7).FontColor(MutedTextColor);
+                    });
+                    row.RelativeItem().Column(metric => {
+                        metric.Item().Text(FormatNumber(report.TotalFats, 1, report.Culture)).FontSize(16).Bold();
+                        metric.Item().Text(report.Texts.GramsFatsLabel).FontSize(7).FontColor(MutedTextColor);
+                    });
                 });
-                row.RelativeItem().Column(metric => {
-                    metric.Item().Text(FormatNumber(report.TotalCarbs, 1)).FontSize(18).Bold();
-                    metric.Item().Text("g carbs").FontSize(8).FontColor(MutedTextColor);
+                metrics.Item().Row(row => {
+                    row.RelativeItem().Column(metric => {
+                        metric.Item().Text(FormatNumber(report.TotalCarbs, 1, report.Culture)).FontSize(16).Bold();
+                        metric.Item().Text(report.Texts.GramsCarbsLabel).FontSize(7).FontColor(MutedTextColor);
+                    });
+                    row.RelativeItem().Column(metric => {
+                        metric.Item().Text(FormatNumber(report.TotalFiber, 1, report.Culture)).FontSize(16).Bold();
+                        metric.Item().Text(report.Texts.GramsFiberLabel).FontSize(7).FontColor(MutedTextColor);
+                    });
                 });
             });
         });
     }
 
-    private static void ComposeMacroCard(IContainer container, string title, double value, string color, IReadOnlyList<double> series) {
+    private static void ComposeMacroCard(IContainer container, DiaryReportData report, string title, double value, string color, IReadOnlyList<double> series) {
         container.Background(CardBackground).BorderTop(3).BorderColor(color).Padding(8).Height(92).Column(column => {
             column.Item().Text(title).FontSize(8).SemiBold().FontColor(MutedTextColor);
-            column.Item().Text($"{FormatNumber(value, 1)} g").FontSize(20).Bold().FontColor(TextColor);
-            column.Item().ExtendVertical().AlignBottom().Svg(DiaryChartSvgRenderer.RenderSparkline(series, color, ApplyAlpha(color, 0.24))).FitArea();
+            column.Item().Text($"{FormatNumber(value, 1, report.Culture)} {report.Texts.GramsUnit}").FontSize(20).Bold().FontColor(TextColor);
+            column.Item().ExtendVertical().AlignBottom().Svg(DiaryChartSvgRenderer.RenderSparkline(series, color, ApplyAlpha(color, 0.12))).FitArea();
         });
     }
 
@@ -172,7 +204,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             column.Spacing(12);
             column.Item().Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(10).Column(chart => {
                 chart.Spacing(8);
-                chart.Item().Text("Calories by day").FontSize(12).SemiBold().FontColor(MutedTextColor);
+                chart.Item().Text(report.Texts.CaloriesByDayTitle).FontSize(12).SemiBold().FontColor(MutedTextColor);
                 chart.Item().Height(150).Svg(DiaryChartSvgRenderer.RenderLineChart(
                     report.DayLabels,
                     report.CalorieSeries,
@@ -181,14 +213,14 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             });
             column.Item().Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(10).Column(chart => {
                 chart.Spacing(8);
-                chart.Item().Text("Nutrients by day").FontSize(12).SemiBold().FontColor(MutedTextColor);
+                chart.Item().Text(report.Texts.NutrientsByDayTitle).FontSize(12).SemiBold().FontColor(MutedTextColor);
                 chart.Item().Height(150).Svg(DiaryChartSvgRenderer.RenderMultiLineChart(
                     report.DayLabels,
                     [
-                        new ChartSeries("Proteins", report.ProteinSeries, ProteinColor),
-                        new ChartSeries("Fats", report.FatSeries, FatColor),
-                        new ChartSeries("Carbs", report.CarbSeries, CarbColor),
-                        new ChartSeries("Fiber", report.FiberSeries, FiberColor),
+                        new ChartSeries(report.Texts.ProteinsTitle, report.ProteinSeries, ProteinColor),
+                        new ChartSeries(report.Texts.FatsTitle, report.FatSeries, FatColor),
+                        new ChartSeries(report.Texts.CarbsTitle, report.CarbSeries, CarbColor),
+                        new ChartSeries(report.Texts.FiberTitle, report.FiberSeries, FiberColor),
                     ])).FitArea();
             });
         });
@@ -199,11 +231,11 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(10);
-            column.Item().Text("Meals").FontSize(12).SemiBold().FontColor(MutedTextColor);
+            column.Item().Text(report.Texts.MealsTitle).FontSize(12).SemiBold().FontColor(MutedTextColor);
 
             if (meals.Count == 0) {
                 column.Item().PaddingVertical(20).AlignCenter()
-                    .Text("No meals recorded in this period.")
+                    .Text(report.Texts.NoMealsMessage)
                     .FontSize(12).FontColor(MutedTextColor);
                 return;
             }
@@ -233,23 +265,23 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
                     header.RelativeItem().Text(text => {
                         text.Span(report.FormatMealDate(meal.Date)).FontSize(11).Bold().FontColor(TextColor);
                         text.Span("  ");
-                        text.Span(meal.MealType?.ToString() ?? "Other").FontSize(9).SemiBold().FontColor(MutedTextColor);
+                        text.Span(report.FormatMealType(meal.MealType)).FontSize(9).SemiBold().FontColor(MutedTextColor);
                     });
 
-                    header.ConstantItem(88).AlignRight().Text($"{FormatNumber(EffectiveCalories(meal), 0)} kcal")
+                    header.ConstantItem(88).AlignRight().Text($"{FormatNumber(EffectiveCalories(meal), 0, report.Culture)} {report.Texts.KcalUnit}")
                         .FontSize(16).Bold().FontColor(TextColor);
                 });
 
-                column.Item().Text(FormatMealItems(meal)).FontSize(8).FontColor(MutedTextColor);
+                column.Item().Text(FormatMealItems(meal, report)).FontSize(8).FontColor(MutedTextColor);
 
                 column.Item().Row(rowMetrics => {
                     rowMetrics.Spacing(6);
-                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Proteins", EffectiveProteins(meal), "g", ProteinColor));
-                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Fats", EffectiveFats(meal), "g", FatColor));
-                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Carbs", EffectiveCarbs(meal), "g", CarbColor));
-                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Fiber", EffectiveFiber(meal), "g", FiberColor));
-                    rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, "Before", meal.PreMealSatietyLevel));
-                    rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, "After", meal.PostMealSatietyLevel));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, report, report.Texts.ProteinsTitle, EffectiveProteins(meal), report.Texts.GramsUnit, ProteinColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, report, report.Texts.FatsTitle, EffectiveFats(meal), report.Texts.GramsUnit, FatColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, report, report.Texts.CarbsTitle, EffectiveCarbs(meal), report.Texts.GramsUnit, CarbColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, report, report.Texts.FiberTitle, EffectiveFiber(meal), report.Texts.GramsUnit, FiberColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, report.Texts.BeforeLabel, meal.PreMealSatietyLevel));
+                    rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, report.Texts.AfterLabel, meal.PostMealSatietyLevel));
                 });
 
                 if (!string.IsNullOrWhiteSpace(meal.Comment)) {
@@ -264,11 +296,11 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(10);
-            column.Item().Text("Meals").FontSize(12).SemiBold().FontColor(MutedTextColor);
+            column.Item().Text(report.Texts.MealsTitle).FontSize(12).SemiBold().FontColor(MutedTextColor);
 
             if (meals.Count == 0) {
                 column.Item().PaddingVertical(20).AlignCenter()
-                    .Text("No meals recorded in this period.")
+                    .Text(report.Texts.NoMealsMessage)
                     .FontSize(12).FontColor(MutedTextColor);
                 return;
             }
@@ -288,27 +320,27 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
                 });
 
                 table.Header(header => {
-                    HeaderCell(header.Cell(), "Date");
-                    HeaderCell(header.Cell(), "Type");
-                    HeaderCell(header.Cell(), "Items");
-                    HeaderCell(header.Cell(), "Kcal");
-                    HeaderCell(header.Cell(), "Prot.");
-                    HeaderCell(header.Cell(), "Fats");
-                    HeaderCell(header.Cell(), "Carbs");
-                    HeaderCell(header.Cell(), "Fiber");
-                    HeaderCell(header.Cell(), "Satiety");
-                    HeaderCell(header.Cell(), "Comment");
+                    HeaderCell(header.Cell(), report.Texts.DateColumn);
+                    HeaderCell(header.Cell(), report.Texts.TypeColumn);
+                    HeaderCell(header.Cell(), report.Texts.ItemsColumn);
+                    HeaderCell(header.Cell(), report.Texts.KcalColumn);
+                    HeaderCell(header.Cell(), report.Texts.ProteinsColumnShort);
+                    HeaderCell(header.Cell(), report.Texts.FatsTitle);
+                    HeaderCell(header.Cell(), report.Texts.CarbsTitle);
+                    HeaderCell(header.Cell(), report.Texts.FiberTitle);
+                    HeaderCell(header.Cell(), report.Texts.SatietyColumn);
+                    HeaderCell(header.Cell(), report.Texts.CommentColumn);
                 });
 
                 foreach (var meal in meals) {
                     DataCell(table.Cell(), report.FormatMealDate(meal.Date));
-                    DataCell(table.Cell(), meal.MealType?.ToString() ?? "Other");
-                    DataCell(table.Cell(), FormatMealItemsList(meal));
-                    DataCell(table.Cell(), FormatNumber(EffectiveCalories(meal), 0));
-                    DataCell(table.Cell(), FormatNumber(EffectiveProteins(meal), 1));
-                    DataCell(table.Cell(), FormatNumber(EffectiveFats(meal), 1));
-                    DataCell(table.Cell(), FormatNumber(EffectiveCarbs(meal), 1));
-                    DataCell(table.Cell(), FormatNumber(EffectiveFiber(meal), 1));
+                    DataCell(table.Cell(), report.FormatMealType(meal.MealType));
+                    DataCell(table.Cell(), FormatMealItemsList(meal, report));
+                    DataCell(table.Cell(), FormatNumber(EffectiveCalories(meal), 0, report.Culture));
+                    DataCell(table.Cell(), FormatNumber(EffectiveProteins(meal), 1, report.Culture));
+                    DataCell(table.Cell(), FormatNumber(EffectiveFats(meal), 1, report.Culture));
+                    DataCell(table.Cell(), FormatNumber(EffectiveCarbs(meal), 1, report.Culture));
+                    DataCell(table.Cell(), FormatNumber(EffectiveFiber(meal), 1, report.Culture));
                     DataCell(table.Cell(), $"{meal.PreMealSatietyLevel}/{meal.PostMealSatietyLevel}");
                     DataCell(table.Cell(), string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90));
                 }
@@ -317,7 +349,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     }
 
     private static void HeaderCell(IContainer container, string value) {
-        container.Background("#18212b").PaddingHorizontal(5).PaddingVertical(6)
+        container.Background(TableHeaderBackground).PaddingHorizontal(5).PaddingVertical(6)
             .Text(value).FontSize(7).SemiBold().FontColor(MutedTextColor);
     }
 
@@ -327,7 +359,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     }
 
     private static void ComposeMealImage(IContainer container, byte[] imageBytes) {
-        container.Background("#1b222b").Border(1).BorderColor(BorderColor)
+        container.Background(ImagePlaceholderBackground).Border(1).BorderColor(BorderColor)
             .AlignCenter()
             .AlignMiddle()
             .Image(imageBytes)
@@ -335,7 +367,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     }
 
     private static void ComposeMealImagePlaceholder(IContainer container) {
-        container.Background("#1b222b").Border(1).BorderColor(BorderColor)
+        container.Background(ImagePlaceholderBackground).Border(1).BorderColor(BorderColor)
             .AlignCenter()
             .AlignMiddle()
             .Text("?")
@@ -344,18 +376,18 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             .FontColor(MutedTextColor);
     }
 
-    private static void ComposeMetricPill(IContainer container, string label, double value, string unit, string color) {
-        container.Background("#202630").Border(1).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(4).Column(column => {
+    private static void ComposeMetricPill(IContainer container, DiaryReportData report, string label, double value, string unit, string color) {
+        container.Background(MetricBackground).Border(1).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(4).Column(column => {
             column.Item().Text(label).FontSize(6).FontColor(MutedTextColor);
             column.Item().Text(text => {
-                text.Span(FormatNumber(value, 1)).FontSize(9).Bold().FontColor(color);
+                text.Span(FormatNumber(value, 1, report.Culture)).FontSize(9).Bold().FontColor(color);
                 text.Span($" {unit}").FontSize(7).FontColor(MutedTextColor);
             });
         });
     }
 
     private static void ComposeSatietyPill(IContainer container, string label, int level) {
-        container.Background("#202630").Border(1).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(4).Column(column => {
+        container.Background(MetricBackground).Border(1).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(4).Column(column => {
             column.Item().Text(label).FontSize(6).FontColor(MutedTextColor);
             column.Item().Row(row => {
                 row.Spacing(2);
@@ -368,10 +400,10 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         });
     }
 
-    private static void ComposeFooter(IContainer container) {
+    private static void ComposeFooter(IContainer container, DiaryReportData report) {
         container.AlignCenter().Text(text => {
-            text.Span("Generated by Food Diary - ").FontSize(7).FontColor(MutedTextColor);
-            text.Span("fooddiary.club").FontSize(7).FontColor(PrimaryColor);
+            text.Span(report.Texts.GeneratedByPrefix).FontSize(7).FontColor(MutedTextColor);
+            text.Span(report.ReportHost).FontSize(7).FontColor(PrimaryColor);
         });
     }
 
@@ -391,7 +423,10 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
 
     private static string FormatNumber(double value, int decimals) =>
-        Math.Round(value, decimals).ToString($"N{decimals}", CultureInfo.InvariantCulture);
+        FormatNumber(value, decimals, CultureInfo.InvariantCulture);
+
+    private static string FormatNumber(double value, int decimals, CultureInfo culture) =>
+        Math.Round(value, decimals).ToString($"N{decimals}", culture);
 
     private static string ApplyAlpha(string hex, double alpha) {
         var normalized = hex.TrimStart('#');
@@ -401,6 +436,38 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
         var alphaByte = (byte)Math.Round(Math.Clamp(alpha, 0, 1) * 255);
         return $"#{alphaByte:X2}{normalized}";
+    }
+
+    private static string ResolveReportHost(string? reportOrigin) {
+        if (string.IsNullOrWhiteSpace(reportOrigin)) {
+            return DefaultReportHost;
+        }
+
+        var normalized = reportOrigin.Trim();
+        if (Uri.TryCreate(normalized, UriKind.Absolute, out var uri) &&
+            uri.Scheme is "http" or "https" &&
+            !string.IsNullOrWhiteSpace(uri.Host)) {
+            return FormatHost(uri.IdnHost, uri.Port, uri.IsDefaultPort);
+        }
+
+        return Uri.CheckHostName(normalized) == UriHostNameType.Unknown
+            ? DefaultReportHost
+            : FormatHost(normalized, port: null, isDefaultPort: true);
+    }
+
+    private static string FormatHost(string host, int? port, bool isDefaultPort) {
+        var unicodeHost = ToUnicodeHost(host.Trim().TrimEnd('.'));
+        return port.HasValue && !isDefaultPort
+            ? $"{unicodeHost}:{port.Value}"
+            : unicodeHost;
+    }
+
+    private static string ToUnicodeHost(string host) {
+        try {
+            return new IdnMapping().GetUnicode(host);
+        } catch (ArgumentException) {
+            return DefaultReportHost;
+        }
     }
 
     private async Task<IReadOnlyDictionary<MealId, byte[]>> LoadMealImagesAsync(
@@ -483,7 +550,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
                 return null;
             }
 
-            using var response = await _httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxMealImageBytes) {
                 return null;
             }
@@ -612,42 +679,44 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     private static string Truncate(string value, int maxLength) =>
         value.Length <= maxLength ? value : $"{value[..Math.Max(0, maxLength - 3)]}...";
 
-    private static string FormatMealItems(Meal meal) {
-        var items = FormatMealItemsList(meal);
-        return items == "not specified" ? "Items: not specified" : $"Items: {items}";
+    private static string FormatMealItems(Meal meal, DiaryReportData report) {
+        var items = FormatMealItemsList(meal, report);
+        return items == report.Texts.ItemsNotSpecified
+            ? $"{report.Texts.ItemsPrefix}: {report.Texts.ItemsNotSpecified}"
+            : $"{report.Texts.ItemsPrefix}: {items}";
     }
 
-    private static string FormatMealItemsList(Meal meal) {
+    private static string FormatMealItemsList(Meal meal, DiaryReportData report) {
         if (meal.Items.Count == 0) {
-            return "not specified";
+            return report.Texts.ItemsNotSpecified;
         }
 
         var itemLabels = meal.Items
             .OrderBy(item => item.CreatedOnUtc)
-            .Select(FormatMealItem)
+            .Select(item => FormatMealItem(item, report))
             .Where(label => !string.IsNullOrWhiteSpace(label))
             .Take(6)
             .ToArray();
 
         if (itemLabels.Length == 0) {
-            return "not specified";
+            return report.Texts.ItemsNotSpecified;
         }
 
         var suffix = meal.Items.Count > itemLabels.Length
-            ? $" +{meal.Items.Count - itemLabels.Length} more"
+            ? $" +{meal.Items.Count - itemLabels.Length} {report.Texts.MoreItemsSuffix}"
             : "";
 
         return Truncate($"{string.Join(", ", itemLabels)}{suffix}", 220);
     }
 
-    private static string FormatMealItem(MealItem item) {
+    private static string FormatMealItem(MealItem item, DiaryReportData report) {
         var name = item.Product?.Name ?? item.Recipe?.Name;
         if (string.IsNullOrWhiteSpace(name)) {
-            name = item.IsRecipe ? "Recipe" : "Product";
+            name = item.IsRecipe ? report.Texts.RecipeFallback : report.Texts.ProductFallback;
         }
 
-        var amountUnit = item.IsRecipe ? "serv" : FormatProductUnit(item);
-        return $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0)} {amountUnit} {name}";
+        var amountUnit = item.IsRecipe ? report.Texts.ServingUnit : FormatProductUnit(item);
+        return $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0, report.Culture)} {amountUnit} {name}";
     }
 
     private static string FormatProductUnit(MealItem item) =>
@@ -661,8 +730,12 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         string PeriodStartLabel,
         string PeriodEndLabel,
         TimeSpan DisplayOffset,
+        string TimeZoneOffsetLabel,
+        string ReportHost,
         IReadOnlyDictionary<MealId, byte[]> MealImages,
-        bool UseCompactMealsMode) {
+        bool UseCompactMealsMode,
+        DiaryPdfReportTexts Texts,
+        CultureInfo Culture) {
         public int MealCount => Meals.Count;
         public int DayCount => Math.Max(1, Days.Count);
         public double TotalCalories => Days.Sum(day => day.Calories);
@@ -683,38 +756,56 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         public IReadOnlyList<double> FiberSeries => Days.Select(day => day.Fiber).ToArray();
 
         public string FormatMealDate(DateTime date) =>
-            EnsureUtc(date).Add(DisplayOffset).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            EnsureUtc(date).Add(DisplayOffset).ToString("yyyy-MM-dd HH:mm", Culture);
+
+        public string FormatMealType(MealType? mealType) =>
+            mealType switch {
+                MealType.Breakfast => Texts.BreakfastMealType,
+                MealType.Lunch => Texts.LunchMealType,
+                MealType.Dinner => Texts.DinnerMealType,
+                MealType.Snack => Texts.SnackMealType,
+                _ => Texts.OtherMealType,
+            };
 
         public static DiaryReportData Create(
             IReadOnlyList<Meal> meals,
             DateTime dateFrom,
             DateTime dateTo,
             IReadOnlyDictionary<MealId, byte[]> mealImages,
-            bool useCompactMealsMode) {
+            bool useCompactMealsMode,
+            DiaryPdfReportTexts texts,
+            int? timeZoneOffsetMinutes,
+            string reportHost) {
             var normalizedFrom = EnsureUtc(dateFrom);
             var normalizedTo = EnsureUtc(dateTo);
             if (normalizedTo < normalizedFrom) {
                 (normalizedFrom, normalizedTo) = (normalizedTo, normalizedFrom);
             }
 
-            var displayOffset = InferDisplayOffset(normalizedFrom);
-            var days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset);
+            var culture = ResolveCulture(texts.CultureName);
+            var displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
+            var days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
             var orderedMeals = meals.OrderBy(meal => meal.Date).ToArray();
             return new DiaryReportData(
                 orderedMeals,
                 days,
-                days.FirstOrDefault()?.Label ?? normalizedFrom.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                days.LastOrDefault()?.Label ?? normalizedTo.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                days.FirstOrDefault()?.Label ?? normalizedFrom.ToString("yyyy-MM-dd", culture),
+                days.LastOrDefault()?.Label ?? normalizedTo.ToString("yyyy-MM-dd", culture),
                 displayOffset,
+                FormatTimeZoneOffset(displayOffset),
+                reportHost,
                 mealImages,
-                useCompactMealsMode);
+                useCompactMealsMode,
+                texts,
+                culture);
         }
 
         private static IReadOnlyList<DiaryDay> BuildDays(
             IReadOnlyList<Meal> meals,
             DateTime dateFrom,
             DateTime dateTo,
-            TimeSpan displayOffset) {
+            TimeSpan displayOffset,
+            CultureInfo culture) {
             var duration = dateTo - dateFrom;
             var dayCount = Math.Clamp((int)Math.Ceiling(duration.TotalDays), 1, 366);
             var result = new List<DiaryDay>(dayCount);
@@ -728,7 +819,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
                 var labelDate = start.Add(displayOffset).Date;
                 result.Add(new DiaryDay(
-                    labelDate.ToString("d MMM", CultureInfo.InvariantCulture),
+                    labelDate.ToString("d MMM", culture),
                     bucketMeals.Sum(EffectiveCalories),
                     bucketMeals.Sum(EffectiveProteins),
                     bucketMeals.Sum(EffectiveFats),
@@ -746,11 +837,31 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
                 _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
             };
 
-        private static TimeSpan InferDisplayOffset(DateTime dateFrom) {
+        private static CultureInfo ResolveCulture(string? cultureName) {
+            try {
+                return string.IsNullOrWhiteSpace(cultureName)
+                    ? CultureInfo.GetCultureInfo("en")
+                    : CultureInfo.GetCultureInfo(cultureName);
+            } catch (CultureNotFoundException) {
+                return CultureInfo.GetCultureInfo("en");
+            }
+        }
+
+        private static TimeSpan ResolveDisplayOffset(DateTime dateFrom, int? timeZoneOffsetMinutes) {
+            if (timeZoneOffsetMinutes is >= -840 and <= 840) {
+                return TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value);
+            }
+
             var timeOfDay = dateFrom.TimeOfDay;
             return timeOfDay <= TimeSpan.FromHours(12)
                 ? -timeOfDay
                 : TimeSpan.FromDays(1) - timeOfDay;
+        }
+
+        private static string FormatTimeZoneOffset(TimeSpan offset) {
+            var sign = offset < TimeSpan.Zero ? "-" : "+";
+            var absolute = offset.Duration();
+            return $"UTC{sign}{(int)absolute.TotalHours:00}:{absolute.Minutes:00}";
         }
     }
 
@@ -766,6 +877,54 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         string Label,
         IReadOnlyList<double> Values,
         string Color);
+
+    private sealed class DefaultDiaryPdfReportTextProvider : IDiaryPdfReportTextProvider {
+        public DiaryPdfReportTexts GetTexts(string? locale) =>
+            new(
+                CultureName: "en",
+                ReportTitle: "Food Diary Report",
+                PeriodLabel: "Period",
+                MealsCountLabel: "{0} meals",
+                PeriodSummaryTitle: "Period summary",
+                TotalCaloriesTitle: "Total calories",
+                KcalUnit: "kcal",
+                AveragePerDayTitle: "Average per day",
+                TotalForPeriodTitle: "Total for period",
+                ProteinsTitle: "Proteins",
+                FatsTitle: "Fats",
+                CarbsTitle: "Carbs",
+                FiberTitle: "Fiber",
+                GramsUnit: "g",
+                GramsProteinsLabel: "g proteins",
+                GramsFatsLabel: "g fats",
+                GramsCarbsLabel: "g carbs",
+                GramsFiberLabel: "g fiber",
+                CaloriesByDayTitle: "Calories by day",
+                NutrientsByDayTitle: "Nutrients by day",
+                MealsTitle: "Meals",
+                NoMealsMessage: "No meals recorded in this period.",
+                DateColumn: "Date",
+                TypeColumn: "Type",
+                ItemsColumn: "Items",
+                KcalColumn: "Kcal",
+                ProteinsColumnShort: "Prot.",
+                SatietyColumn: "Satiety",
+                CommentColumn: "Comment",
+                BeforeLabel: "Before",
+                AfterLabel: "After",
+                OtherMealType: "Other",
+                BreakfastMealType: "Breakfast",
+                LunchMealType: "Lunch",
+                DinnerMealType: "Dinner",
+                SnackMealType: "Snack",
+                ItemsPrefix: "Items",
+                ItemsNotSpecified: "not specified",
+                MoreItemsSuffix: "more",
+                RecipeFallback: "Recipe",
+                ProductFallback: "Product",
+                ServingUnit: "serv",
+                GeneratedByPrefix: "Generated by Food Diary - ");
+    }
 
     private static class DiaryChartSvgRenderer {
         public static string RenderLineChart(IReadOnlyList<string> labels, IReadOnlyList<double> values, string lineColor, string fillColor) {
@@ -786,7 +945,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
             sb.Append(CultureInfo.InvariantCulture, $"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">
-                  <rect width="{width}" height="{height}" fill="#22272f"/>
+                  <rect width="{width}" height="{height}" fill="{PanelBackground}"/>
                 """);
 
             for (var tick = 0; tick <= 4; tick++) {
@@ -808,13 +967,13 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             }
 
             sb.Append(CultureInfo.InvariantCulture, $"""
-                  <path d="{areaPath}" fill="{fillColor}" opacity="0.78"/>
+                  <path d="{areaPath}" fill="{fillColor}" opacity="0.55"/>
                   <path d="{linePath}" fill="none" stroke="{lineColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                 """);
 
             foreach (var point in points) {
                 sb.Append(CultureInfo.InvariantCulture, $"""
-                    <circle cx="{point.X}" cy="{point.Y}" r="4" fill="#22272f" stroke="{lineColor}" stroke-width="3"/>
+                    <circle cx="{point.X}" cy="{point.Y}" r="4" fill="{PanelBackground}" stroke="{lineColor}" stroke-width="3"/>
                 """);
             }
 
@@ -837,7 +996,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
             sb.Append(CultureInfo.InvariantCulture, $"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">
-                  <rect width="{width}" height="{height}" fill="#22272f"/>
+                  <rect width="{width}" height="{height}" fill="{PanelBackground}"/>
                 """);
 
             for (var tick = 0; tick <= 4; tick++) {
@@ -905,7 +1064,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
 
             return $$"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {{width.ToString(CultureInfo.InvariantCulture)}} {{height.ToString(CultureInfo.InvariantCulture)}}" preserveAspectRatio="none">
-                  <path d="{{areaPath}}" fill="{{fillColor}}" opacity="0.8"/>
+                  <path d="{{areaPath}}" fill="{{fillColor}}" opacity="0.55"/>
                   <path d="{{linePath}}" fill="none" stroke="{{lineColor}}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 """;

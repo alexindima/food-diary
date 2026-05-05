@@ -11,9 +11,16 @@ export type ExportFormat = 'csv' | 'pdf';
 export class ExportService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.export;
 
-    public exportDiary(dateFrom: string, dateTo: string, format: ExportFormat = 'csv'): void {
+    public exportDiary(
+        dateFrom: string,
+        dateTo: string,
+        format: ExportFormat = 'csv',
+        locale?: string,
+        timeZoneOffsetMinutes?: number,
+    ): void {
         const ext = format === 'pdf' ? 'pdf' : 'csv';
-        this.getBlob('diary', { dateFrom, dateTo, format }).subscribe(response => {
+        const reportOrigin = typeof window === 'undefined' ? undefined : window.location.origin;
+        this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).subscribe(response => {
             const blob = response.body;
             if (!blob) {
                 return;

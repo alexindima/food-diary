@@ -140,6 +140,8 @@ export class StatisticsComponent {
         const range = this.currentRange();
         const dateFrom = normalizeStartOfDay(range.start).toISOString();
         const dateTo = normalizeEndOfDay(range.end).toISOString();
-        this.exportService.exportDiary(dateFrom, dateTo, format);
+        const locale = this.translateService.currentLang || this.translateService.getDefaultLang() || undefined;
+        const timeZoneOffsetMinutes = -new Date().getTimezoneOffset();
+        this.exportService.exportDiary(dateFrom, dateTo, format, locale, timeZoneOffsetMinutes);
     }
 }
