@@ -33,7 +33,7 @@ public class ExportDiaryQueryHandler(
 
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(
-                pdfGenerator.Generate(meals, query.DateFrom, query.DateTo),
+                await pdfGenerator.GenerateAsync(meals, query.DateFrom, query.DateTo, cancellationToken),
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(

@@ -8,7 +8,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 
 public sealed class DiaryPdfGeneratorTests {
     [Fact]
-    public void Generate_WithMeals_ReturnsPdfDocument() {
+    public async Task GenerateAsync_WithMeals_ReturnsPdfDocument() {
         var userId = UserId.New();
         var meals = new[] {
             CreateMeal(userId, new DateTime(2026, 5, 2, 21, 4, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7),
@@ -17,10 +17,31 @@ public sealed class DiaryPdfGeneratorTests {
         };
         var generator = new DiaryPdfGenerator();
 
-        var pdf = generator.Generate(
+        var pdf = await generator.GenerateAsync(
             meals,
             new DateTime(2026, 5, 1, 20, 0, 0, DateTimeKind.Utc),
-            new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc));
+            new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            CancellationToken.None);
+
+        Assert.True(pdf.Length > 1024);
+        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_WithMealImage_ReturnsPdfDocument() {
+        const string transparentPngDataUrl =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=";
+        var userId = UserId.New();
+        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        meal.UpdateImage(transparentPngDataUrl);
+        meal.UpdateSatietyLevels(2, 5);
+        var generator = new DiaryPdfGenerator();
+
+        var pdf = await generator.GenerateAsync(
+            [meal],
+            new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));

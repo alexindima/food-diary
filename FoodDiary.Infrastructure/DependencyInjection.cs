@@ -180,7 +180,9 @@ public static class DependencyInjection {
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
         services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
-        services.AddSingleton<IDiaryPdfGenerator, DiaryPdfGenerator>();
+        services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => {
+            client.Timeout = TimeSpan.FromSeconds(5);
+        });
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();

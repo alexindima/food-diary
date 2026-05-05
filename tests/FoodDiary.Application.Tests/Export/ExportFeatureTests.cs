@@ -195,7 +195,11 @@ public class ExportFeatureTests {
     }
 
     private sealed class StubPdfGenerator : IDiaryPdfGenerator {
-        public byte[] Generate(IReadOnlyList<Meal> meals, DateTime dateFrom, DateTime dateTo) =>
-            [0x25, 0x50, 0x44, 0x46]; // %PDF magic bytes
+        public Task<byte[]> GenerateAsync(
+            IReadOnlyList<Meal> meals,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken) =>
+            Task.FromResult<byte[]>([0x25, 0x50, 0x44, 0x46]); // %PDF magic bytes
     }
 }

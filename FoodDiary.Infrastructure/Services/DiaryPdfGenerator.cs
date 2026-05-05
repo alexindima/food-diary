@@ -3,9 +3,17 @@ using System.Net;
 using System.Text;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.ValueObjects.Ids;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using ImageSharpImage = SixLabors.ImageSharp.Image;
+using ImageSharpRgbaImage = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>;
+using ImageSharpSize = SixLabors.ImageSharp.Size;
 
 namespace FoodDiary.Infrastructure.Services;
 
@@ -23,11 +31,29 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
     private const string FatColor = "#f5d76e";
     private const string CarbColor = "#00b894";
     private const string FiberColor = "#7c3aed";
+    private const string SatietyColor = "#ffb25b";
+    private const int MaxMealImageBytes = 2 * 1024 * 1024;
+    private const int MealImageThumbnailSize = 320;
 
-    public byte[] Generate(IReadOnlyList<Meal> meals, DateTime dateFrom, DateTime dateTo) {
+    private readonly HttpClient _httpClient;
+
+    public DiaryPdfGenerator()
+        : this(new HttpClient { Timeout = TimeSpan.FromSeconds(5) }) {
+    }
+
+    public DiaryPdfGenerator(HttpClient httpClient) {
+        _httpClient = httpClient;
+    }
+
+    public async Task<byte[]> GenerateAsync(
+        IReadOnlyList<Meal> meals,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken) {
         QuestPDF.Settings.License = LicenseType.Community;
 
-        var report = DiaryReportData.Create(meals, dateFrom, dateTo);
+        var mealImages = await LoadMealImagesAsync(meals, cancellationToken);
+        var report = DiaryReportData.Create(meals, dateFrom, dateTo, mealImages);
 
         var document = Document.Create(container => {
             container.Page(page => {
@@ -71,7 +97,7 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             column.Item().PageBreak();
             column.Item().Element(c => ComposeNutritionChartSection(c, report));
             column.Item().PageBreak();
-            column.Item().Element(c => ComposeMealsTable(c, report));
+            column.Item().Element(c => ComposeMealsCards(c, report));
         });
     }
 
@@ -159,11 +185,11 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         });
     }
 
-    private static void ComposeMealsTable(IContainer container, DiaryReportData report) {
+    private static void ComposeMealsCards(IContainer container, DiaryReportData report) {
         var meals = report.Meals;
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
-            column.Spacing(8);
+            column.Spacing(10);
             column.Item().Text("Meals").FontSize(12).SemiBold().FontColor(MutedTextColor);
 
             if (meals.Count == 0) {
@@ -173,41 +199,96 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
                 return;
             }
 
-            column.Item().Table(table => {
-                table.ColumnsDefinition(columns => {
-                    columns.RelativeColumn(1.7f);
-                    columns.RelativeColumn(1.5f);
-                    columns.RelativeColumn(1.2f);
-                    columns.RelativeColumn(1.2f);
-                    columns.RelativeColumn(1.2f);
-                    columns.RelativeColumn(1.2f);
-                    columns.RelativeColumn(1.2f);
-                    columns.RelativeColumn(3);
+            foreach (var meal in meals) {
+                column.Item().ShowEntire().Element(c => ComposeMealCard(c, report, meal));
+            }
+        });
+    }
+
+    private static void ComposeMealCard(IContainer container, DiaryReportData report, Meal meal) {
+        var hasImage = report.MealImages.TryGetValue(meal.Id, out var imageBytes);
+
+        container.Background(CardBackground).Border(1).BorderColor(BorderColor).Padding(8).Row(row => {
+            row.Spacing(10);
+
+            if (hasImage && imageBytes is not null) {
+                row.ConstantItem(74).Height(74).Element(c => ComposeMealImage(c, imageBytes));
+            } else {
+                row.ConstantItem(74).Height(74).Element(ComposeMealImagePlaceholder);
+            }
+
+            row.RelativeItem().Column(column => {
+                column.Spacing(6);
+
+                column.Item().Row(header => {
+                    header.RelativeItem().Text(text => {
+                        text.Span(report.FormatMealDate(meal.Date)).FontSize(11).Bold().FontColor(TextColor);
+                        text.Span("  ");
+                        text.Span(meal.MealType?.ToString() ?? "Other").FontSize(9).SemiBold().FontColor(MutedTextColor);
+                    });
+
+                    header.ConstantItem(88).AlignRight().Text($"{FormatNumber(EffectiveCalories(meal), 0)} kcal")
+                        .FontSize(16).Bold().FontColor(TextColor);
                 });
 
-                HeaderCell(table, "Date");
-                HeaderCell(table, "Meal type");
-                HeaderCell(table, "Calories");
-                HeaderCell(table, "Proteins");
-                HeaderCell(table, "Fats");
-                HeaderCell(table, "Carbs");
-                HeaderCell(table, "Fiber");
-                HeaderCell(table, "Comment");
+                column.Item().Text(FormatMealItems(meal)).FontSize(8).FontColor(MutedTextColor);
 
-                for (var i = 0; i < meals.Count; i++) {
-                    var meal = meals[i];
-                    var bg = i % 2 == 0 ? "#1c222a" : "#202832";
+                column.Item().Row(rowMetrics => {
+                    rowMetrics.Spacing(6);
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Proteins", EffectiveProteins(meal), "g", ProteinColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Fats", EffectiveFats(meal), "g", FatColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Carbs", EffectiveCarbs(meal), "g", CarbColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, "Fiber", EffectiveFiber(meal), "g", FiberColor));
+                    rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, "Before", meal.PreMealSatietyLevel));
+                    rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, "After", meal.PostMealSatietyLevel));
+                });
 
-                    DataCell(table, report.FormatMealDate(meal.Date), bg);
-                    DataCell(table, meal.MealType?.ToString() ?? "-", bg);
-                    DataCell(table, FormatNumber(EffectiveCalories(meal), 1), bg);
-                    DataCell(table, FormatNumber(EffectiveProteins(meal), 1), bg);
-                    DataCell(table, FormatNumber(EffectiveFats(meal), 1), bg);
-                    DataCell(table, FormatNumber(EffectiveCarbs(meal), 1), bg);
-                    DataCell(table, FormatNumber(EffectiveFiber(meal), 1), bg);
-                    DataCell(table, meal.Comment ?? "", bg);
+                if (!string.IsNullOrWhiteSpace(meal.Comment)) {
+                    column.Item().Text(Truncate(meal.Comment, 180)).FontSize(8).FontColor(MutedTextColor);
                 }
             });
+        });
+    }
+
+    private static void ComposeMealImage(IContainer container, byte[] imageBytes) {
+        container.Background("#1b222b").Border(1).BorderColor(BorderColor)
+            .AlignCenter()
+            .AlignMiddle()
+            .Image(imageBytes)
+            .FitArea();
+    }
+
+    private static void ComposeMealImagePlaceholder(IContainer container) {
+        container.Background("#1b222b").Border(1).BorderColor(BorderColor)
+            .AlignCenter()
+            .AlignMiddle()
+            .Text("?")
+            .FontSize(36)
+            .Bold()
+            .FontColor(MutedTextColor);
+    }
+
+    private static void ComposeMetricPill(IContainer container, string label, double value, string unit, string color) {
+        container.Background("#202630").Border(1).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(4).Column(column => {
+            column.Item().Text(label).FontSize(6).FontColor(MutedTextColor);
+            column.Item().Text(text => {
+                text.Span(FormatNumber(value, 1)).FontSize(9).Bold().FontColor(color);
+                text.Span($" {unit}").FontSize(7).FontColor(MutedTextColor);
+            });
+        });
+    }
+
+    private static void ComposeSatietyPill(IContainer container, string label, int level) {
+        container.Background("#202630").Border(1).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(4).Column(column => {
+            column.Item().Text(label).FontSize(6).FontColor(MutedTextColor);
+            column.Item().Row(row => {
+                row.Spacing(2);
+                for (var index = 1; index <= 5; index++) {
+                    var color = index <= level ? SatietyColor : BorderColor;
+                    row.RelativeItem().Height(4).Background(color);
+                }
+            });
+            column.Item().Text($"{level}/5").FontSize(7).FontColor(TextColor);
         });
     }
 
@@ -216,16 +297,6 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
             text.Span("Generated by Food Diary - ").FontSize(7).FontColor(MutedTextColor);
             text.Span("fooddiary.club").FontSize(7).FontColor(PrimaryColor);
         });
-    }
-
-    private static void HeaderCell(TableDescriptor table, string text) {
-        table.Cell().Background("#17202b").BorderBottom(1).BorderColor(BorderColor).Padding(5)
-            .Text(text).FontColor(MutedTextColor).SemiBold().FontSize(8);
-    }
-
-    private static void DataCell(TableDescriptor table, string text, string bg) {
-        table.Cell().Background(bg).BorderBottom(1).BorderColor(BorderColor)
-            .Padding(4).Text(text).FontSize(7).FontColor(TextColor);
     }
 
     private static double EffectiveCalories(Meal meal) =>
@@ -256,12 +327,239 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         return $"#{alphaByte:X2}{normalized}";
     }
 
+    private async Task<IReadOnlyDictionary<MealId, byte[]>> LoadMealImagesAsync(
+        IReadOnlyList<Meal> meals,
+        CancellationToken cancellationToken) {
+        var result = new Dictionary<MealId, byte[]>();
+        var cache = new Dictionary<string, byte[]?>(StringComparer.Ordinal);
+
+        foreach (var meal in meals.Take(60)) {
+            var image = await LoadMealImageForReportAsync(meal, cache, cancellationToken);
+            if (image is not null) {
+                result[meal.Id] = image;
+            }
+        }
+
+        return result;
+    }
+
+    private async Task<byte[]?> LoadMealImageForReportAsync(
+        Meal meal,
+        Dictionary<string, byte[]?> cache,
+        CancellationToken cancellationToken) {
+        if (!string.IsNullOrWhiteSpace(meal.ImageUrl)) {
+            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, cancellationToken);
+        }
+
+        var ingredientImages = new List<byte[]>();
+        foreach (var imageUrl in GetIngredientImageUrls(meal).Take(4)) {
+            var image = await LoadCachedMealImageAsync(imageUrl, cache, cancellationToken);
+            if (image is not null) {
+                ingredientImages.Add(image);
+            }
+        }
+
+        return CreateMealImageCollage(ingredientImages);
+    }
+
+    private async Task<byte[]?> LoadCachedMealImageAsync(
+        string imageUrl,
+        Dictionary<string, byte[]?> cache,
+        CancellationToken cancellationToken) {
+        if (cache.TryGetValue(imageUrl, out var cached)) {
+            return cached;
+        }
+
+        var image = await LoadMealImageAsync(imageUrl, cancellationToken);
+        cache[imageUrl] = image;
+        return image;
+    }
+
+    private async Task<byte[]?> LoadMealImageAsync(string imageUrl, CancellationToken cancellationToken) {
+        try {
+            if (TryReadDataUrl(imageUrl, out var dataUrlBytes)) {
+                return PrepareMealImage(dataUrlBytes);
+            }
+
+            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri) ||
+                uri.Scheme is not ("http" or "https")) {
+                return null;
+            }
+
+            using var response = await _httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxMealImageBytes) {
+                return null;
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            using var memory = new MemoryStream();
+            var buffer = new byte[81920];
+            int read;
+
+            while ((read = await stream.ReadAsync(buffer, cancellationToken)) > 0) {
+                memory.Write(buffer, 0, read);
+                if (memory.Length > MaxMealImageBytes) {
+                    return null;
+                }
+            }
+
+            return memory.Length == 0 ? null : PrepareMealImage(memory.ToArray());
+        } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException or FormatException) {
+            return null;
+        }
+    }
+
+    private static IReadOnlyList<string> GetIngredientImageUrls(Meal meal) =>
+        meal.Items
+            .OrderBy(item => item.CreatedOnUtc)
+            .Select(item => item.Product?.ImageUrl ?? item.Recipe?.ImageUrl)
+            .Where(url => !string.IsNullOrWhiteSpace(url))
+            .Distinct(StringComparer.Ordinal)
+            .Cast<string>()
+            .ToArray();
+
+    private static bool TryReadDataUrl(string value, out byte[] bytes) {
+        bytes = [];
+        const string marker = ";base64,";
+        var markerIndex = value.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (!value.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase) || markerIndex < 0) {
+            return false;
+        }
+
+        bytes = Convert.FromBase64String(value[(markerIndex + marker.Length)..]);
+        return bytes.Length <= MaxMealImageBytes;
+    }
+
+    private static byte[]? PrepareMealImage(byte[] imageBytes) {
+        try {
+            using var image = ImageSharpImage.Load(imageBytes);
+            image.Mutate(context => context.Resize(new ResizeOptions {
+                Size = new ImageSharpSize(MealImageThumbnailSize, MealImageThumbnailSize),
+                Mode = ResizeMode.Crop,
+                Position = AnchorPositionMode.Center
+            }));
+
+            using var output = new MemoryStream();
+            image.Save(output, new JpegEncoder { Quality = 86 });
+            return output.ToArray();
+        } catch {
+            return null;
+        }
+    }
+
+    private static byte[]? CreateMealImageCollage(IReadOnlyList<byte[]> images) {
+        if (images.Count == 0) {
+            return null;
+        }
+
+        if (images.Count == 1) {
+            return images[0];
+        }
+
+        try {
+            using var canvas = new ImageSharpRgbaImage(
+                MealImageThumbnailSize,
+                MealImageThumbnailSize,
+                new Rgba32(27, 34, 43));
+            var slots = GetCollageSlots(images.Count);
+
+            for (var index = 0; index < Math.Min(images.Count, slots.Length); index++) {
+                using var tile = ImageSharpImage.Load<Rgba32>(images[index]);
+                var slot = slots[index];
+                tile.Mutate(context => context.Resize(new ResizeOptions {
+                    Size = new ImageSharpSize(slot.Width, slot.Height),
+                    Mode = ResizeMode.Crop,
+                    Position = AnchorPositionMode.Center
+                }));
+
+                CopyImage(tile, canvas, slot.X, slot.Y);
+            }
+
+            using var output = new MemoryStream();
+            canvas.Save(output, new JpegEncoder { Quality = 86 });
+            return output.ToArray();
+        } catch {
+            return null;
+        }
+    }
+
+    private static CollageSlot[] GetCollageSlots(int imageCount) {
+        var half = MealImageThumbnailSize / 2;
+        return imageCount switch {
+            2 => [
+                new CollageSlot(0, 0, half, MealImageThumbnailSize),
+                new CollageSlot(half, 0, half, MealImageThumbnailSize)
+            ],
+            3 => [
+                new CollageSlot(0, 0, half, MealImageThumbnailSize),
+                new CollageSlot(half, 0, half, half),
+                new CollageSlot(half, half, half, half)
+            ],
+            _ => [
+                new CollageSlot(0, 0, half, half),
+                new CollageSlot(half, 0, half, half),
+                new CollageSlot(0, half, half, half),
+                new CollageSlot(half, half, half, half)
+            ]
+        };
+    }
+
+    private static void CopyImage(ImageSharpRgbaImage source, ImageSharpRgbaImage target, int targetX, int targetY) {
+        for (var y = 0; y < source.Height; y++) {
+            var sourceRow = source.DangerousGetPixelRowMemory(y).Span;
+            var targetRow = target.DangerousGetPixelRowMemory(targetY + y).Span[targetX..(targetX + source.Width)];
+            sourceRow.CopyTo(targetRow);
+        }
+    }
+
+    private static string Truncate(string value, int maxLength) =>
+        value.Length <= maxLength ? value : $"{value[..Math.Max(0, maxLength - 3)]}...";
+
+    private static string FormatMealItems(Meal meal) {
+        if (meal.Items.Count == 0) {
+            return "Items: not specified";
+        }
+
+        var itemLabels = meal.Items
+            .OrderBy(item => item.CreatedOnUtc)
+            .Select(FormatMealItem)
+            .Where(label => !string.IsNullOrWhiteSpace(label))
+            .Take(6)
+            .ToArray();
+
+        if (itemLabels.Length == 0) {
+            return "Items: not specified";
+        }
+
+        var suffix = meal.Items.Count > itemLabels.Length
+            ? $" +{meal.Items.Count - itemLabels.Length} more"
+            : "";
+
+        return Truncate($"Items: {string.Join(", ", itemLabels)}{suffix}", 220);
+    }
+
+    private static string FormatMealItem(MealItem item) {
+        var name = item.Product?.Name ?? item.Recipe?.Name;
+        if (string.IsNullOrWhiteSpace(name)) {
+            name = item.IsRecipe ? "Recipe" : "Product";
+        }
+
+        var amountUnit = item.IsRecipe ? "serv" : FormatProductUnit(item);
+        return $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0)} {amountUnit} {name}";
+    }
+
+    private static string FormatProductUnit(MealItem item) =>
+        item.Product?.BaseUnit.ToString().ToLowerInvariant() ?? "g";
+
+    private readonly record struct CollageSlot(int X, int Y, int Width, int Height);
+
     private sealed record DiaryReportData(
         IReadOnlyList<Meal> Meals,
         IReadOnlyList<DiaryDay> Days,
         string PeriodStartLabel,
         string PeriodEndLabel,
-        TimeSpan DisplayOffset) {
+        TimeSpan DisplayOffset,
+        IReadOnlyDictionary<MealId, byte[]> MealImages) {
         public int MealCount => Meals.Count;
         public int DayCount => Math.Max(1, Days.Count);
         public double TotalCalories => Days.Sum(day => day.Calories);
@@ -284,7 +582,11 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
         public string FormatMealDate(DateTime date) =>
             EnsureUtc(date).Add(DisplayOffset).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-        public static DiaryReportData Create(IReadOnlyList<Meal> meals, DateTime dateFrom, DateTime dateTo) {
+        public static DiaryReportData Create(
+            IReadOnlyList<Meal> meals,
+            DateTime dateFrom,
+            DateTime dateTo,
+            IReadOnlyDictionary<MealId, byte[]> mealImages) {
             var normalizedFrom = EnsureUtc(dateFrom);
             var normalizedTo = EnsureUtc(dateTo);
             if (normalizedTo < normalizedFrom) {
@@ -299,7 +601,8 @@ internal sealed class DiaryPdfGenerator : IDiaryPdfGenerator {
                 days,
                 days.FirstOrDefault()?.Label ?? normalizedFrom.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                 days.LastOrDefault()?.Label ?? normalizedTo.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                displayOffset);
+                displayOffset,
+                mealImages);
         }
 
         private static IReadOnlyList<DiaryDay> BuildDays(

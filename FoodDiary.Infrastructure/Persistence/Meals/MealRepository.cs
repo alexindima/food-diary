@@ -133,6 +133,11 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
 
         return await context.Meals
             .AsNoTracking()
+            .AsSplitQuery()
+            .Include(m => m.Items)
+            .ThenInclude(i => i.Product)
+            .Include(m => m.Items)
+            .ThenInclude(i => i.Recipe)
             .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
