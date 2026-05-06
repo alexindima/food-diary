@@ -142,12 +142,14 @@ export class MealListComponent {
 
     public onPageChange(pageIndex: number): void {
         this.scrollToTop();
-        this.loadConsumptions(pageIndex + 1).subscribe();
+        this.loadConsumptions(pageIndex + 1)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     public retryLoad(): void {
         const request = this.hasDateFilter() ? this.loadConsumptions(1) : this.loadInitialOverview();
-        request.subscribe();
+        request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     public async openMealDetails(consumption: Meal): Promise<void> {
@@ -211,6 +213,7 @@ export class MealListComponent {
                 },
             )
             .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
                 if (!result) {
                     return;
@@ -235,7 +238,9 @@ export class MealListComponent {
     }
 
     protected reloadCurrentPage(): void {
-        this.loadConsumptions(this.currentPageIndex + 1).subscribe();
+        this.loadConsumptions(this.currentPageIndex + 1)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     private get dateRange(): FdUiDateRangeValue | null {

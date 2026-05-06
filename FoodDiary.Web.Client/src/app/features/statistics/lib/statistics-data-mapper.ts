@@ -2,6 +2,7 @@ import { type ChartConfiguration } from 'chart.js';
 
 import { type SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
+import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../shared/lib/local-date.utils';
 import { type MappedStatistics } from '../models/statistics.data';
 import { applyAlpha } from './statistics-chart-config';
 
@@ -66,11 +67,11 @@ export function getQuantizationDays(start: Date, end: Date): number {
 }
 
 export function normalizeStartOfDay(date: Date): Date {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+    return normalizeStartOfLocalDay(date);
 }
 
 export function normalizeEndOfDay(date: Date): Date {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+    return normalizeEndOfLocalDay(date);
 }
 
 export function getCurrentDateRange(

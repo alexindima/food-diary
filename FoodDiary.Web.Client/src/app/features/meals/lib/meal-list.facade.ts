@@ -6,6 +6,7 @@ import { type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
+import { toLocalDayEndIso, toLocalDayStartIso } from '../../../shared/lib/local-date.utils';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { FavoriteMealService } from '../api/favorite-meal.service';
 import { MealService } from '../api/meal.service';
@@ -32,6 +33,10 @@ export class MealListFacade {
         this.favoriteMealService
             .getAll()
             .pipe(
+                catchError(() => {
+                    this.showOperationError();
+                    return of([]);
+                }),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.isFavoritesLoadingMore.set(false);
@@ -137,8 +142,8 @@ export class MealListFacade {
 
     private buildFilters(dateRange: FdUiDateRangeValue | null): MealFilters {
         return {
-            dateFrom: this.toLocalDayStartIso(dateRange?.start ?? null),
-            dateTo: this.toLocalDayEndIso(dateRange?.end ?? null),
+            dateFrom: toLocalDayStartIso(dateRange?.start ?? null),
+            dateTo: toLocalDayEndIso(dateRange?.end ?? null),
         };
     }
 
@@ -152,21 +157,5 @@ export class MealListFacade {
 
     private showOperationError(): void {
         this.toastService.error(this.translateService.instant('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE'));
-    }
-
-    private toLocalDayStartIso(date: Date | null | undefined): string | undefined {
-        if (!date) {
-            return undefined;
-        }
-
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).toISOString();
-    }
-
-    private toLocalDayEndIso(date: Date | null | undefined): string | undefined {
-        if (!date) {
-            return undefined;
-        }
-
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).toISOString();
     }
 }
