@@ -1,7 +1,6 @@
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi;
@@ -13,7 +12,7 @@ public sealed class SwaggerOperationFilterTests {
     [Fact]
     public void Apply_ForAnonymousAction_AddsOnlyStandard500Response() {
         var filter = new StandardErrorResponsesOperationFilter();
-        var operation = new OpenApiOperation { Responses = new OpenApiResponses() };
+        var operation = new OpenApiOperation { Responses = [] };
 
         filter.Apply(operation, CreateContext(nameof(TestController.Anonymous)));
 
@@ -25,7 +24,7 @@ public sealed class SwaggerOperationFilterTests {
     [Fact]
     public void Apply_ForAuthorizedAction_Adds401And500Responses() {
         var filter = new StandardErrorResponsesOperationFilter();
-        var operation = new OpenApiOperation { Responses = new OpenApiResponses() };
+        var operation = new OpenApiOperation { Responses = [] };
 
         filter.Apply(operation, CreateContext(nameof(TestController.Authorized)));
 
@@ -40,7 +39,7 @@ public sealed class SwaggerOperationFilterTests {
     [Fact]
     public void Apply_ForRoleAuthorizedAction_AddsForbiddenResponse() {
         var filter = new StandardErrorResponsesOperationFilter();
-        var operation = new OpenApiOperation { Responses = new OpenApiResponses() };
+        var operation = new OpenApiOperation { Responses = [] };
 
         filter.Apply(operation, CreateContext(nameof(TestController.AdminOnly)));
 
@@ -85,12 +84,12 @@ public sealed class SwaggerOperationFilterTests {
 
     private sealed class TestController : ControllerBase {
         [AllowAnonymous]
-        public IActionResult Anonymous() => Ok();
+        public OkResult Anonymous() => Ok();
 
         [Authorize]
-        public IActionResult Authorized() => Ok();
+        public OkResult Authorized() => Ok();
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AdminOnly() => Ok();
+        public OkResult AdminOnly() => Ok();
     }
 }
