@@ -7,8 +7,29 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { type Meal } from '../../models/meal.data';
+import { MeasurementUnit, type Product, ProductVisibility } from '../../../products/models/product.data';
+import { ConsumptionSourceType, type Meal } from '../../models/meal.data';
 import { MealDetailComponent } from './meal-detail.component';
+
+const createProduct = (id: string, name: string): Product => ({
+    id,
+    name,
+    baseUnit: MeasurementUnit.G,
+    baseAmount: 100,
+    defaultPortionAmount: 100,
+    caloriesPerBase: 0,
+    proteinsPerBase: 0,
+    fatsPerBase: 0,
+    carbsPerBase: 0,
+    fiberPerBase: 0,
+    alcoholPerBase: 0,
+    usageCount: 0,
+    visibility: ProductVisibility.Private,
+    createdAt: new Date('2026-05-06T00:00:00Z'),
+    isOwnedByCurrentUser: true,
+    qualityScore: 0,
+    qualityGrade: 'green',
+});
 
 const mockMeal: Meal = {
     id: '1',
@@ -119,10 +140,118 @@ describe('MealDetailComponent', () => {
         expect(component.itemsCount).toBe(0);
     });
 
+    it('should include ai items in item count and preview', async () => {
+        const meal: Meal = {
+            ...mockMeal,
+            items: [
+                {
+                    id: 'item-1',
+                    consumptionId: '1',
+                    amount: 180,
+                    sourceType: ConsumptionSourceType.Product,
+                    product: createProduct('p1', 'Manual item'),
+                },
+            ],
+            aiSessions: [
+                {
+                    id: 'session-1',
+                    consumptionId: '1',
+                    imageAssetId: null,
+                    imageUrl: null,
+                    recognizedAtUtc: '2026-05-06T19:00:00Z',
+                    items: [
+                        {
+                            id: 'ai-1',
+                            sessionId: 'session-1',
+                            nameEn: 'AI item',
+                            nameLocal: 'ИИ позиция',
+                            amount: 100,
+                            unit: 'g',
+                            calories: 0,
+                            proteins: 0,
+                            fats: 0,
+                            carbs: 0,
+                            fiber: 0,
+                            alcohol: 0,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        TestBed.resetTestingModule();
+        await TestBed.configureTestingModule({
+            imports: [MealDetailComponent, TranslateModule.forRoot()],
+            providers: [
+                provideNoopAnimations(),
+                { provide: FD_UI_DIALOG_DATA, useValue: meal },
+                { provide: FdUiDialogRef, useValue: mockDialogRef },
+                { provide: FdUiDialogService, useValue: mockFdDialogService },
+            ],
+        }).compileComponents();
+
+        const customFixture = TestBed.createComponent(MealDetailComponent);
+        const customComponent = customFixture.componentInstance;
+
+        expect(customComponent.itemsCount).toBe(2);
+        expect(customComponent.itemPreview.map(item => item.name)).toEqual(['Manual item', 'ИИ позиция']);
+    });
+
     it('should build macro blocks', () => {
         expect(component.macroBlocks.length).toBe(5);
         expect(component.macroBlocks[0].value).toBe(30); // proteins
         expect(component.macroBlocks[1].value).toBe(20); // fats
         expect(component.macroBlocks[2].value).toBe(50); // carbs
+    });
+
+    it('should collapse item preview and expand hidden items', async () => {
+        const meal: Meal = {
+            ...mockMeal,
+            items: [
+                {
+                    id: 'item-1',
+                    consumptionId: '1',
+                    amount: 100,
+                    sourceType: ConsumptionSourceType.Product,
+                    product: createProduct('p1', 'First item'),
+                },
+                {
+                    id: 'item-2',
+                    consumptionId: '1',
+                    amount: 120,
+                    sourceType: ConsumptionSourceType.Product,
+                    product: createProduct('p2', 'Second item'),
+                },
+                {
+                    id: 'item-3',
+                    consumptionId: '1',
+                    amount: 140,
+                    sourceType: ConsumptionSourceType.Product,
+                    product: createProduct('p3', 'Third item'),
+                },
+            ],
+            aiSessions: [],
+        };
+
+        TestBed.resetTestingModule();
+        await TestBed.configureTestingModule({
+            imports: [MealDetailComponent, TranslateModule.forRoot()],
+            providers: [
+                provideNoopAnimations(),
+                { provide: FD_UI_DIALOG_DATA, useValue: meal },
+                { provide: FdUiDialogRef, useValue: mockDialogRef },
+                { provide: FdUiDialogService, useValue: mockFdDialogService },
+            ],
+        }).compileComponents();
+
+        const customFixture = TestBed.createComponent(MealDetailComponent);
+        const customComponent = customFixture.componentInstance;
+
+        expect(customComponent.visibleItemPreview().map(item => item.name)).toEqual(['First item', 'Second item']);
+        expect(customComponent.getHiddenItemPreviewCount()).toBe(1);
+
+        customComponent.toggleItemPreviewExpanded();
+
+        expect(customComponent.visibleItemPreview().map(item => item.name)).toEqual(['First item', 'Second item', 'Third item']);
     });
 });

@@ -85,7 +85,7 @@
                                 {{ 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' | translate }}
                             </p>
                             <fd-ui-emoji-picker
-                                [options]="satietyEmojiOptions"
+                                [options]="hungerEmojiOptions"
                                 [selectedValue]="consumptionForm.controls.preMealSatietyLevel.value"
                                 [ariaLabel]="getSatietyButtonAriaLabel('preMealSatietyLevel')"
                                 (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
@@ -112,21 +112,41 @@
                         </h2>
                     </div>
                     <div class="consumption-manage__items-grid fd-grid fd-gap-lg">
+                        <fd-ai-input-bar
+                            mode="emit"
+                            [mealType]="consumptionForm.controls.mealType.value"
+                            [isProcessing]="consumptionForm.disabled"
+                            (mealRecognized)="onAiMealRecognized($event)"
+                        />
+
+                        <div class="consumption-manage__manual-choice fd-row fd-wrap fd-gap-sm fd-align-center">
+                            <span class="consumption-manage__manual-choice-label fd-ui-body-sm">
+                                {{ 'CONSUMPTION_MANAGE.ITEMS_OR_MANUAL' | translate }}
+                            </span>
+                            <fd-ui-button type="button" variant="secondary" fill="outline" icon="search" (click)="addConsumptionItem()">
+                                {{ 'CONSUMPTION_MANAGE.CHOOSE_ITEM' | translate }}
+                            </fd-ui-button>
+                        </div>
+
                         <fd-meal-items-list
                             [formArray]="items"
+                            [hasExternalItems]="aiSessions().length > 0"
                             [isEditMode]="!!consumption()"
+                            [renderVersion]="itemsRenderVersion()"
+                            [showAddAction]="false"
+                            [showEmptyRows]="false"
                             (addItem)="addConsumptionItem()"
                             (removeItemEvent)="removeItem($event)"
                             (openItemSelect)="onItemSourceClick($event)"
-                        />
-
-                        <fd-meal-ai-sessions
-                            [aiSessions]="aiSessions()"
-                            [aiQuotaExceeded]="aiQuotaExceeded()"
-                            (addFromPhoto)="onAddConsumptionFromPhoto()"
-                            (editSession)="onEditAiSession($event)"
-                            (deleteSession)="onDeleteAiSession($event)"
-                        />
+                        >
+                            @if (aiSessions().length) {
+                                <fd-meal-ai-sessions
+                                    [aiSessions]="aiSessions()"
+                                    (editSession)="onEditAiSession($event)"
+                                    (deleteSession)="onDeleteAiSession($event)"
+                                />
+                            }
+                        </fd-meal-items-list>
                     </div>
                 </div>
             </div>

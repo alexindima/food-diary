@@ -12,41 +12,81 @@ export interface FdUiSatietyScaleLevel {
     gradient: string;
 }
 
-export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
+export const DEFAULT_HUNGER_LEVELS: FdUiSatietyScaleLevel[] = [
     {
         value: 1,
         emoji: '😣',
-        titleKey: 'HUNGER_SCALE.LEVEL_1.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_1.DESCRIPTION',
+        titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_1.TITLE',
+        descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_1.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-700), var(--fd-color-danger))',
     },
     {
         value: 2,
         emoji: '😟',
-        titleKey: 'HUNGER_SCALE.LEVEL_2.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_2.DESCRIPTION',
+        titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_2.TITLE',
+        descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_2.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))',
     },
     {
         value: 3,
         emoji: '😐',
-        titleKey: 'HUNGER_SCALE.LEVEL_3.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_3.DESCRIPTION',
+        titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_3.TITLE',
+        descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_3.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
     },
     {
         value: 4,
         emoji: '🙂',
-        titleKey: 'HUNGER_SCALE.LEVEL_4.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_4.DESCRIPTION',
+        titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_4.TITLE',
+        descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_4.DESCRIPTION',
         gradient:
             'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)))',
     },
     {
         value: 5,
         emoji: '😌',
-        titleKey: 'HUNGER_SCALE.LEVEL_5.TITLE',
-        descriptionKey: 'HUNGER_SCALE.LEVEL_5.DESCRIPTION',
+        titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_5.TITLE',
+        descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_5.DESCRIPTION',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)), var(--fd-color-sky-500))',
+    },
+];
+
+export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
+    {
+        value: 1,
+        emoji: '😣',
+        titleKey: 'SATIETY_AFTER_SCALE.LEVEL_1.TITLE',
+        descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_1.DESCRIPTION',
+        gradient: 'linear-gradient(135deg, var(--fd-color-red-700), var(--fd-color-danger))',
+    },
+    {
+        value: 2,
+        emoji: '😕',
+        titleKey: 'SATIETY_AFTER_SCALE.LEVEL_2.TITLE',
+        descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_2.DESCRIPTION',
+        gradient: 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))',
+    },
+    {
+        value: 3,
+        emoji: '🙂',
+        titleKey: 'SATIETY_AFTER_SCALE.LEVEL_3.TITLE',
+        descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_3.DESCRIPTION',
+        gradient: 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
+    },
+    {
+        value: 4,
+        emoji: '😊',
+        titleKey: 'SATIETY_AFTER_SCALE.LEVEL_4.TITLE',
+        descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_4.DESCRIPTION',
+        gradient:
+            'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-green-500) 55%, var(--fd-color-yellow-300)), color-mix(in srgb, var(--fd-color-green-500) 82%, var(--fd-color-white)))',
+    },
+    {
+        value: 5,
+        emoji: '🥴',
+        titleKey: 'SATIETY_AFTER_SCALE.LEVEL_5.TITLE',
+        descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_5.DESCRIPTION',
         gradient:
             'linear-gradient(135deg, color-mix(in srgb, var(--fd-color-sky-500) 60%, var(--fd-color-teal-500)), var(--fd-color-sky-500))',
     },

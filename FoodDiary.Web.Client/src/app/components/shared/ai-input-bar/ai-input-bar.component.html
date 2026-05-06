@@ -14,7 +14,7 @@
         [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
         [value]="voiceText()"
         (input)="onTextInput($event)"
-        (keydown.enter)="submitText()"
+        (keydown.enter)="submitText(); $event.preventDefault()"
         [disabled]="isDisabled()"
     />
     @if (!voiceText()) {

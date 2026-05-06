@@ -5,69 +5,83 @@
     headerAlign="center"
     [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
 >
-    <div class="consumption-items fd-stack">
+    <div class="consumption-items fd-stack fd-gap-md">
+        @if (!hasVisibleManualItems() && !hasExternalItems()) {
+            <p class="consumption-manage__items-empty fd-ui-body-sm">
+                {{ 'CONSUMPTION_MANAGE.ITEMS_EMPTY' | translate }}
+            </p>
+        }
+
         @for (item of formArray().controls; track $index; let i = $index; let first = $first) {
-            <div class="consumption-item-card fd-stack fd-gap-md" [formGroup]="item">
-                <div class="consumption-item__fields fd-stack fd-gap-md">
-                    <div class="consumption-item__row consumption-item__row--with-remove fd-row fd-wrap fd-gap-md fd-align-start">
-                        <div class="consumption-item__field consumption-item__field--source fd-stack fd-gap-xs">
-                            <fd-ui-input
-                                class="consumption-item__selector-input"
-                                size="lg"
-                                [ngModel]="getItemSourceName(i)"
-                                [ngModelOptions]="{ standalone: true }"
-                                [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
-                                [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
-                                [readonly]="true"
-                                [prefixIcon]="getItemSourceIcon(i)"
-                                [error]="getItemSourceError(i)"
-                                (click)="onItemSourceClick(i)"
-                            />
+            @if (showEmptyRows() || hasManualItem(i)) {
+                <div class="consumption-item-card fd-stack fd-gap-md" [formGroup]="item">
+                    <div class="consumption-item__fields fd-stack fd-gap-md">
+                        <div class="consumption-item__row consumption-item__row--with-remove fd-row fd-wrap fd-gap-md fd-align-start">
+                            <div class="consumption-item__field consumption-item__field--source fd-stack fd-gap-xs">
+                                <fd-ui-input
+                                    class="consumption-item__selector-input"
+                                    size="lg"
+                                    [ngModel]="getItemSourceName(i)"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
+                                    [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
+                                    [readonly]="true"
+                                    [prefixIcon]="getItemSourceIcon(i)"
+                                    [error]="getItemSourceError(i)"
+                                    (click)="onItemSourceClick(i)"
+                                />
+                            </div>
+                            <div class="consumption-item__field consumption-item__field--amount fd-stack fd-gap-xs">
+                                <fd-ui-input
+                                    formControlName="amount"
+                                    size="lg"
+                                    type="number"
+                                    [step]="0.01"
+                                    [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
+                                    [placeholder]="getAmountPlaceholder(i) | translate"
+                                    [required]="true"
+                                    [error]="getAmountControlError(i)"
+                                    [readonly]="!formArray().at(i).controls.product.value && !formArray().at(i).controls.recipe.value"
+                                />
+                            </div>
+                            <fd-ui-button
+                                type="button"
+                                variant="danger"
+                                fill="text"
+                                icon="close"
+                                [fdUiHint]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
+                                [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
+                                class="consumption-item__remove consumption-item__remove--inline"
+                                [disabled]="first && showEmptyRows()"
+                                (click)="onRemoveItem(i)"
+                            >
+                                {{ 'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate }}
+                            </fd-ui-button>
                         </div>
-                        <div class="consumption-item__field consumption-item__field--amount fd-stack fd-gap-xs">
-                            <fd-ui-input
-                                formControlName="amount"
-                                size="lg"
-                                type="number"
-                                [step]="0.01"
-                                [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
-                                [placeholder]="getAmountPlaceholder(i) | translate"
-                                [required]="true"
-                                [error]="getAmountControlError(i)"
-                                [readonly]="!formArray().at(i).controls.product.value && !formArray().at(i).controls.recipe.value"
-                            />
-                        </div>
-                        <fd-ui-button
-                            type="button"
-                            variant="danger"
-                            fill="text"
-                            icon="close"
-                            [fdUiHint]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                            [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                            class="consumption-item__remove consumption-item__remove--inline"
-                            [disabled]="first"
-                            (click)="onRemoveItem(i)"
-                        >
-                            {{ 'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate }}
-                        </fd-ui-button>
                     </div>
                 </div>
-            </div>
+            }
         }
+
+        <ng-content />
     </div>
-    <div class="consumption-item__actions consumption-item__actions--stack fd-stack fd-gap-sm">
-        <fd-ui-button
-            type="button"
-            icon="add"
-            appearance="dashed"
-            class="consumption-item__add"
-            variant="secondary"
-            fill="outline"
-            (click)="onAddItem()"
-        >
-            {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
-        </fd-ui-button>
-    </div>
+
+    @if (showAddAction()) {
+        <div class="consumption-item__actions consumption-item__actions--stack fd-stack fd-gap-sm">
+            <fd-ui-button
+                type="button"
+                icon="add"
+                appearance="dashed"
+                class="consumption-item__add"
+                variant="secondary"
+                fill="outline"
+                (click)="onAddItem()"
+            >
+                {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
+            </fd-ui-button>
+        </div>
+    }
+
     <fd-ui-form-error
         class="consumption-item__error"
         [error]="formArray().touched && formArray().errors?.['nonEmptyArray'] ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"

@@ -219,17 +219,19 @@ export class MealManageFacade {
             group.patchValue({
                 product: selection.product,
                 recipe: null,
+                amount: this.resolveProductAmount(selection.product),
             });
             this.configureItemType(group, ConsumptionSourceType.Product);
             return;
         }
 
-        this.recipeWeight.loadServingWeight(selection.recipe).subscribe();
         group.patchValue({
             recipe: selection.recipe,
             product: null,
+            amount: 1,
         });
         this.configureItemType(group, ConsumptionSourceType.Recipe);
+        this.ensureRecipeWeightForExistingItem(group, 1, selection.recipe);
     }
 
     public ensureRecipeWeightForExistingItem(
@@ -357,6 +359,18 @@ export class MealManageFacade {
         if (!shouldDisable && group.controls.amount.disabled) {
             group.controls.amount.enable({ emitEvent: false });
         }
+    }
+
+    private resolveProductAmount(product: Product): number {
+        if (product.defaultPortionAmount > 0) {
+            return product.defaultPortionAmount;
+        }
+
+        if (product.baseAmount > 0) {
+            return product.baseAmount;
+        }
+
+        return 1;
     }
 
     private calculateAutoNutritionTotals(

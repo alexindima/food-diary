@@ -310,6 +310,7 @@ export class AiInputBarComponent {
     private submitMeal(result: AiInputBarResult): void {
         if (this.mode() === 'emit') {
             this.mealRecognized.emit(result);
+            this.clearState();
             return;
         }
 

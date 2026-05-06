@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, input, output, signal } fro
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 import { type ConsumptionAiItemManageDto, type ConsumptionAiSessionManageDto } from '../../../models/meal.data';
@@ -13,15 +12,13 @@ import { type NutritionTotals } from '../base-meal-manage.types';
     templateUrl: './meal-ai-sessions.component.html',
     styleUrls: ['../base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiHintDirective, FdUiCardComponent, FdUiButtonComponent, FdUiIconComponent],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent],
 })
 export class MealAiSessionsComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly aiSessions = input.required<ConsumptionAiSessionManageDto[]>();
-    public readonly aiQuotaExceeded = input<boolean>(false);
 
-    public readonly addFromPhoto = output<void>();
     public readonly editSession = output<number>();
     public readonly deleteSession = output<number>();
 
@@ -114,10 +111,6 @@ export class MealAiSessionsComponent {
 
     public getHiddenAiItemsCount(items: ConsumptionAiItemManageDto[], maxVisible: number): number {
         return Math.max(0, items.length - Math.max(0, maxVisible));
-    }
-
-    public onAddFromPhoto(): void {
-        this.addFromPhoto.emit();
     }
 
     public onEditSession(index: number): void {

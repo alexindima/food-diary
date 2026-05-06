@@ -184,6 +184,34 @@ describe('MealManageFacade', () => {
         expect(group.controls.amount.value).toBe(100);
     });
 
+    it('should use product default portion amount after manual selection', async () => {
+        const product = {
+            ...createEmptyProductSnapshot(),
+            id: 'p1',
+            defaultPortionAmount: 180,
+            baseAmount: 100,
+        };
+        const group = facade.createConsumptionItem();
+        dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
+
+        await facade.openItemSelectionDialog(group, 'Product');
+
+        expect(group.controls.product.value).toBe(product);
+        expect(group.controls.amount.value).toBe(180);
+    });
+
+    it('should convert one recipe serving to grams after manual selection', async () => {
+        const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
+        const group = facade.createConsumptionItem();
+        dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
+        recipeWeightService.loadServingWeight.mockReturnValue(of(75));
+
+        await facade.openItemSelectionDialog(group, 'Recipe');
+
+        expect(group.controls.recipe.value).toBe(recipe);
+        expect(group.controls.amount.value).toBe(75);
+    });
+
     it('should validate items array as non-empty when ai sessions are absent', () => {
         const validator = facade.createItemsValidator(() => []);
 

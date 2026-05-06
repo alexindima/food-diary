@@ -19,7 +19,13 @@
                 <div class="consumption-detail__heading">
                     <h2 class="consumption-detail__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }}</h2>
                     @if (formattedDate) {
-                        <p class="consumption-detail__subtitle">{{ formattedDate }}</p>
+                        <p class="consumption-detail__subtitle">
+                            {{ formattedDate }}
+                            @if (mealTypeLabel) {
+                                <span aria-hidden="true"> · </span>
+                                <span>{{ mealTypeLabel }}</span>
+                            }
+                        </p>
                     }
                 </div>
             </div>
@@ -53,11 +59,6 @@
                                 {{ calories }}
                                 {{ 'GENERAL.UNITS.KCAL' | translate }}
                             </strong>
-                            <span class="consumption-detail__hero-meta fd-ui-body-sm">
-                                {{ mealTypeLabel || ('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_MEAL' | translate) }}
-                                ·
-                                {{ itemsCount }} {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
-                            </span>
                         </fd-ui-accent-surface>
 
                         <div class="consumption-detail__quality-row">
@@ -93,7 +94,7 @@
                                     ></span>
                                 </div>
                                 <strong class="consumption-detail__macro-value fd-ui-body-sm">
-                                    {{ macro.value }} {{ macro.unitKey | translate }}
+                                    {{ macro.value | number: '1.0-1' }} {{ macro.unitKey | translate }}
                                 </strong>
                             </div>
                         }
@@ -102,31 +103,39 @@
 
                 <div class="consumption-detail__summary fd-grid fd-gap-sm">
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
+                        class="consumption-detail__surface consumption-detail__surface--satiety fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
                         <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                            'CONSUMPTION_DETAIL.SUMMARY.MEAL_TYPE' | translate
+                            'CONSUMPTION_DETAIL.SUMMARY.HUNGER_BEFORE' | translate
                         }}</span>
-                        <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
-                            {{ mealTypeLabel || ('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_MEAL' | translate) }}
-                        </strong>
+                        <span class="consumption-detail__satiety-value">
+                            <span class="consumption-detail__satiety-emoji" aria-hidden="true">{{ preMealSatietyMeta.emoji }}</span>
+                            <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
+                                {{ preMealSatietyMeta.title }}
+                            </strong>
+                        </span>
+                        <span class="consumption-detail__satiety-description fd-ui-body-sm">{{ preMealSatietyMeta.description }}</span>
                     </fd-ui-accent-surface>
 
                     <fd-ui-accent-surface
-                        class="consumption-detail__surface consumption-detail__surface--summary fd-ui-summary-surface"
+                        class="consumption-detail__surface consumption-detail__surface--satiety fd-ui-summary-surface"
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300)"
                         [tinted]="true"
                     >
                         <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                            'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate
+                            'CONSUMPTION_DETAIL.SUMMARY.SATIETY_AFTER' | translate
                         }}</span>
-                        <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">{{
-                            itemsCount
-                        }}</strong>
+                        <span class="consumption-detail__satiety-value">
+                            <span class="consumption-detail__satiety-emoji" aria-hidden="true">{{ postMealSatietyMeta.emoji }}</span>
+                            <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
+                                {{ postMealSatietyMeta.title }}
+                            </strong>
+                        </span>
+                        <span class="consumption-detail__satiety-description fd-ui-body-sm">{{ postMealSatietyMeta.description }}</span>
                     </fd-ui-accent-surface>
                 </div>
 
@@ -146,24 +155,41 @@
                     </fd-ui-accent-surface>
                 }
 
-                @if (itemPreview.length) {
-                    <section class="consumption-detail__list fd-stack fd-gap-xs">
-                        <h3 class="consumption-detail__list-title fd-ui-card-title">
-                            {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
-                        </h3>
-                        @for (item of itemPreview; track $index) {
+                <section class="consumption-detail__list fd-stack fd-gap-xs">
+                    <h3 class="consumption-detail__list-title fd-ui-card-title">
+                        {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
+                        <span class="consumption-detail__list-count fd-ui-caption">{{ itemsCount }}</span>
+                    </h3>
+                    @if (itemPreview.length) {
+                        @for (item of visibleItemPreview(); track $index) {
                             <div class="consumption-detail__list-row">
                                 <span class="fd-ui-body-sm">{{ item.name }}</span>
                                 <strong class="fd-ui-body-sm">
                                     {{ item.amount }}
                                     @if (item.unitKey) {
                                         {{ item.unitKey | translate }}
+                                    } @else if (item.unitText) {
+                                        {{ item.unitText }}
                                     }
                                 </strong>
                             </div>
                         }
-                    </section>
-                }
+                        @if (getHiddenItemPreviewCount() > 0) {
+                            <button
+                                type="button"
+                                class="consumption-detail__list-more"
+                                [attr.aria-expanded]="isItemPreviewExpanded()"
+                                (click)="toggleItemPreviewExpanded()"
+                            >
+                                @if (isItemPreviewExpanded()) {
+                                    {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_HIDE' | translate }}
+                                } @else {
+                                    {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE' | translate: { count: getHiddenItemPreviewCount() } }}
+                                }
+                            </button>
+                        }
+                    }
+                </section>
             }
             @case ('nutrients') {
                 <fd-nutrition-editor

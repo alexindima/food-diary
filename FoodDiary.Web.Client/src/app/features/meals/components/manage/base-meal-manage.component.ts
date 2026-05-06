@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import {
@@ -23,13 +24,15 @@ import {
     type FdUiEmojiPickerValue,
 } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
 
+import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { type AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -84,6 +87,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        FdUiButtonComponent,
         FdUiCardComponent,
         FdUiDateInputComponent,
         FdUiTimeInputComponent,
@@ -92,6 +96,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiEmojiPickerComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
+        AiInputBarComponent,
         ImageUploadFieldComponent,
         MealItemsListComponent,
         MealAiSessionsComponent,
@@ -128,8 +133,10 @@ export class BaseMealManageComponent {
     public readonly globalError = signal<string | null>(null);
     public readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
     public readonly aiUsage = signal<UserAiUsageResponse | null>(null);
+    public readonly itemsRenderVersion = signal(0);
     public nutritionMode: NutritionMode = 'auto';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
+    public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
     public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     private populatedConsumptionId: string | null = null;
@@ -273,15 +280,21 @@ export class BaseMealManageComponent {
     // --- Item management (delegated from MealItemsListComponent events) ---
 
     public addConsumptionItem(): void {
-        this.items.push(this.mealManageFacade.createConsumptionItem());
-        const newIndex = this.items.length - 1;
+        const reusableIndex = this.findReusableEmptyItemIndex();
+        const itemIndex = reusableIndex >= 0 ? reusableIndex : this.items.length;
+
+        if (reusableIndex < 0) {
+            this.items.push(this.mealManageFacade.createConsumptionItem());
+        }
+
         queueMicrotask(() => {
-            this.onItemSourceClick(newIndex);
+            this.onItemSourceClick(itemIndex);
         });
     }
 
     public removeItem(index: number): void {
         this.items.removeAt(index);
+        this.bumpItemsRenderVersion();
     }
 
     public onItemSourceClick(index: number): void {
@@ -290,31 +303,28 @@ export class BaseMealManageComponent {
         void this.mealManageFacade
             .openItemSelectionDialog(group, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product')
             .then(() => {
+                this.bumpItemsRenderVersion();
                 this.updateItemValidationRules();
                 this.updateSummary();
             });
     }
 
-    // --- AI session management (delegated from MealAiSessionsComponent events) ---
+    // --- AI session management ---
 
-    public onAddConsumptionFromPhoto(): void {
-        if (!this.ensurePremiumAccess()) {
-            return;
-        }
-
-        if (this.aiQuotaExceeded()) {
-            return;
-        }
-
-        void this.mealManageFacade.openAiPhotoSessionDialog().then(session => {
-            if (!session) {
-                return;
-            }
-            this.aiSessions.update(current => this.mealManageFacade.addAiSession(current, session));
-            this.items.updateValueAndValidity({ emitEvent: false });
-            this.updateItemValidationRules();
-            this.updateSummary();
-        });
+    public onAiMealRecognized(result: AiInputBarResult): void {
+        this.aiSessions.update(current =>
+            this.mealManageFacade.addAiSession(current, {
+                source: result.source,
+                imageAssetId: result.imageAssetId,
+                imageUrl: result.imageUrl,
+                recognizedAtUtc: result.recognizedAtUtc,
+                notes: result.notes,
+                items: result.items,
+            }),
+        );
+        this.items.updateValueAndValidity({ emitEvent: false });
+        this.updateItemValidationRules();
+        this.updateSummary();
     }
 
     public onDeleteAiSession(index: number): void {
@@ -384,12 +394,16 @@ export class BaseMealManageComponent {
 
     // --- Satiety ---
 
-    public getSatietyLevelMeta(value: number | null): { emoji: string; label: string; description: string; gradient: string } {
+    public getSatietyLevelMeta(
+        controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel',
+        value: number | null,
+    ): { emoji: string; label: string; description: string; gradient: string } {
         const normalizedValue = this.normalizeSatietyLevel(value);
-        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === normalizedValue);
+        const levels = controlName === 'preMealSatietyLevel' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
+        const config = levels.find(level => level.value === normalizedValue);
         return {
             emoji: config?.emoji ?? '😐',
-            label: `${normalizedValue} - ${this.translateService.instant(config?.titleKey ?? '')}`,
+            label: this.translateService.instant(config?.titleKey ?? ''),
             description: this.translateService.instant(config?.descriptionKey ?? ''),
             gradient: config?.gradient ?? 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
         };
@@ -398,7 +412,7 @@ export class BaseMealManageComponent {
     public getSatietyButtonAriaLabel(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): string {
         const labelKey =
             controlName === 'preMealSatietyLevel' ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' : 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL';
-        const meta = this.getSatietyLevelMeta(this.consumptionForm.controls[controlName].value);
+        const meta = this.getSatietyLevelMeta(controlName, this.consumptionForm.controls[controlName].value);
         const sectionLabel = this.translateService.instant(labelKey);
 
         return `${sectionLabel}. ${meta.label}. ${meta.description}`;
@@ -711,7 +725,12 @@ export class BaseMealManageComponent {
     }
 
     private buildSatietyEmojiOptions(): void {
-        this.satietyEmojiOptions = DEFAULT_SATIETY_LEVELS.map(level => {
+        this.hungerEmojiOptions = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
+        this.satietyEmojiOptions = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+    }
+
+    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): FdUiEmojiPickerOption<number>[] {
+        return levels.map(level => {
             const label = this.translateService.instant(level.titleKey);
             const description = this.translateService.instant(level.descriptionKey);
             return {
@@ -719,8 +738,8 @@ export class BaseMealManageComponent {
                 emoji: level.emoji,
                 label,
                 description,
-                ariaLabel: `${level.value}. ${label}. ${description}`,
-                hint: `${level.value}. ${label}`,
+                ariaLabel: `${label}. ${description}`,
+                hint: `${label}. ${description}`,
             };
         });
     }
@@ -778,6 +797,14 @@ export class BaseMealManageComponent {
 
     private ensurePremiumAccess(): boolean {
         return this.mealManageFacade.ensurePremiumAccess();
+    }
+
+    private findReusableEmptyItemIndex(): number {
+        return this.items.controls.findIndex(group => !group.controls.product.value && !group.controls.recipe.value);
+    }
+
+    private bumpItemsRenderVersion(): void {
+        this.itemsRenderVersion.update(version => version + 1);
     }
 
     private buildMealTypeOptions(): void {

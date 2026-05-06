@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 import {
@@ -24,7 +25,7 @@ import {
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import { type Meal } from '../../models/meal.data';
+import { type ConsumptionAiItem, type Meal } from '../../models/meal.data';
 
 @Component({
     selector: 'fd-meal-detail',
@@ -43,6 +44,7 @@ import { type Meal } from '../../models/meal.data';
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
         NutritionEditorComponent,
+        DecimalPipe,
     ],
 })
 export class MealDetailComponent {
@@ -69,11 +71,15 @@ export class MealDetailComponent {
     public readonly itemsCount: number;
     public readonly formattedDate: string | null;
     public readonly mealTypeLabel: string | null;
+    public readonly preMealSatietyMeta: MealSatietyMeta;
+    public readonly postMealSatietyMeta: MealSatietyMeta;
     public readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'CONSUMPTION_DETAIL.TABS.SUMMARY' },
         { value: 'nutrients', labelKey: 'CONSUMPTION_DETAIL.TABS.NUTRIENTS' },
     ];
     public activeTab: 'summary' | 'nutrients' = 'summary';
+    public readonly itemPreviewMaxItems = 2;
+    public readonly isItemPreviewExpanded = signal(false);
     public readonly macroBlocks: {
         labelKey: string;
         value: number;
@@ -81,11 +87,7 @@ export class MealDetailComponent {
         color: string;
         percent: number;
     }[];
-    public readonly itemPreview: {
-        name: string;
-        amount: number;
-        unitKey: string | null;
-    }[];
+    public readonly itemPreview: MealDetailItemPreview[];
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
         proteins: 'proteins',
@@ -112,9 +114,11 @@ export class MealDetailComponent {
         this.alcohol = data.totalAlcohol;
         this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
         this.qualityGrade = data.qualityGrade ?? 'yellow';
-        this.itemsCount = data.items.length;
+        this.itemsCount = this.getTotalItemsCount(data);
         this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
         this.mealTypeLabel = data.mealType ? this.translate.instant(`MEAL_TYPES.${data.mealType}`) : null;
+        this.preMealSatietyMeta = this.buildSatietyMeta('before', data.preMealSatietyLevel);
+        this.postMealSatietyMeta = this.buildSatietyMeta('after', data.postMealSatietyLevel);
         this.itemPreview = this.buildItemPreview();
 
         const datasetValues = [this.proteins, this.fats, this.carbs];
@@ -206,12 +210,70 @@ export class MealDetailComponent {
         return Math.max(4, Math.round((value / max) * 100));
     }
 
-    private buildItemPreview(): { name: string; amount: number; unitKey: string | null }[] {
-        return this.consumption.items.slice(0, 6).map(item => ({
+    private buildItemPreview(): MealDetailItemPreview[] {
+        const manualItems = this.consumption.items.map(item => ({
             name: item.product?.name ?? item.recipe?.name ?? this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM'),
             amount: item.amount,
             unitKey: item.product?.baseUnit ? `GENERAL.UNITS.${item.product.baseUnit}` : 'CONSUMPTION_DETAIL.SERVINGS',
+            unitText: null,
         }));
+        const aiItems = (this.consumption.aiSessions ?? []).flatMap(session =>
+            session.items.map(item => ({
+                name: this.getAiItemName(item),
+                amount: item.amount,
+                unitKey: this.getAiItemUnitKey(item.unit),
+                unitText: this.getAiItemUnitKey(item.unit) ? null : item.unit,
+            })),
+        );
+
+        return [...manualItems, ...aiItems];
+    }
+
+    private getTotalItemsCount(consumption: Meal): number {
+        const aiItemsCount = (consumption.aiSessions ?? []).reduce((total, session) => total + session.items.length, 0);
+        return consumption.items.length + aiItemsCount;
+    }
+
+    private getAiItemName(item: ConsumptionAiItem): string {
+        return item.nameLocal?.trim() || item.nameEn.trim() || this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM');
+    }
+
+    private getAiItemUnitKey(unit: string): string | null {
+        const normalized = unit.trim().toLowerCase();
+        const unitMap: Record<string, string> = {
+            g: 'GENERAL.UNITS.G',
+            gram: 'GENERAL.UNITS.G',
+            grams: 'GENERAL.UNITS.G',
+            gr: 'GENERAL.UNITS.G',
+            ml: 'GENERAL.UNITS.ML',
+            l: 'GENERAL.UNITS.ML',
+            pcs: 'GENERAL.UNITS.PCS',
+            pc: 'GENERAL.UNITS.PCS',
+            piece: 'GENERAL.UNITS.PCS',
+            pieces: 'GENERAL.UNITS.PCS',
+        };
+
+        return unitMap[normalized] ?? null;
+    }
+
+    private buildSatietyMeta(kind: 'before' | 'after', value: number | null | undefined): MealSatietyMeta {
+        if (typeof value !== 'number') {
+            return {
+                emoji: '😐',
+                title: this.translate.instant('HUNGER_SCALE.LEVEL_0.TITLE'),
+                description: this.translate.instant('HUNGER_SCALE.LEVEL_0.DESCRIPTION'),
+            };
+        }
+
+        const normalizedValue = Math.min(5, Math.max(1, Math.round(value)));
+        const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
+        const level = levels.find(item => item.value === normalizedValue);
+
+        return {
+            emoji: level?.emoji ?? '😐',
+            title: this.translate.instant(level?.titleKey ?? 'HUNGER_SCALE.LEVEL_0.TITLE'),
+            description: this.translate.instant(level?.descriptionKey ?? 'HUNGER_SCALE.LEVEL_0.DESCRIPTION'),
+        };
     }
 
     public close(): void {
@@ -287,6 +349,18 @@ export class MealDetailComponent {
         }
     }
 
+    public visibleItemPreview(): MealDetailItemPreview[] {
+        return this.isItemPreviewExpanded() ? this.itemPreview : this.itemPreview.slice(0, this.itemPreviewMaxItems);
+    }
+
+    public getHiddenItemPreviewCount(): number {
+        return Math.max(0, this.itemPreview.length - this.itemPreviewMaxItems);
+    }
+
+    public toggleItemPreviewExpanded(): void {
+        this.isItemPreviewExpanded.update(isExpanded => !isExpanded);
+    }
+
     public onRepeat(): void {
         const repeatResult = new MealDetailActionResult(this.consumption.id, 'Repeat', this.hasFavoriteChanged());
         this.dialogRef.close(repeatResult);
@@ -335,3 +409,16 @@ export class MealDetailActionResult {
 }
 
 export type MealDetailAction = 'Edit' | 'Delete' | 'Repeat' | 'FavoriteChanged';
+
+type MealSatietyMeta = {
+    emoji: string;
+    title: string;
+    description: string;
+};
+
+type MealDetailItemPreview = {
+    name: string;
+    amount: number;
+    unitKey: string | null;
+    unitText: string | null;
+};

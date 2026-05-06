@@ -31,7 +31,11 @@ export class MealItemsListComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly formArray = input.required<FormArray<FormGroup<ConsumptionItemFormData>>>();
+    public readonly hasExternalItems = input<boolean>(false);
     public readonly isEditMode = input<boolean>(false);
+    public readonly renderVersion = input<number>(0);
+    public readonly showAddAction = input<boolean>(true);
+    public readonly showEmptyRows = input<boolean>(true);
 
     public readonly addItem = output<void>();
     public readonly removeItemEvent = output<number>();
@@ -116,6 +120,17 @@ export class MealItemsListComponent {
     public getAmountControlError(index: number): string | null {
         const group = (this.formArray().controls as Array<FormGroup<ConsumptionItemFormData> | undefined>)[index];
         return this.resolveControlError(group?.controls.amount ?? null);
+    }
+
+    public hasVisibleManualItems(): boolean {
+        this.renderVersion();
+        return this.formArray().controls.some((_, index) => this.showEmptyRows() || this.hasManualItem(index));
+    }
+
+    public hasManualItem(index: number): boolean {
+        this.renderVersion();
+        const group = this.formArray().at(index);
+        return Boolean(group.controls.product.value) || Boolean(group.controls.recipe.value);
     }
 
     public onAddItem(): void {

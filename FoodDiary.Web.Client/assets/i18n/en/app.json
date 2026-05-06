@@ -629,8 +629,12 @@
             "ITEMS": "Items",
             "DATE": "Date",
             "COMMENT": "Comment",
+            "HUNGER_BEFORE": "Hunger before",
+            "SATIETY_AFTER": "Satiety after",
             "UNKNOWN_MEAL": "Not specified",
-            "UNKNOWN_ITEM": "Item"
+            "UNKNOWN_ITEM": "Item",
+            "ITEMS_MORE": "+ {{count}} more",
+            "ITEMS_HIDE": "Hide"
         }
     },
     "MEAL_TYPES": {
@@ -692,6 +696,8 @@
             "RECIPES_TAB": "Recipes"
         },
         "ADD_ITEM": "Add product or recipe",
+        "ITEMS_OR_MANUAL": "or choose manually",
+        "CHOOSE_ITEM": "Product or recipe",
         "ADD_ITEM_FROM_PHOTO": "Add automatically via photo",
         "PHOTO_AI_DIALOG": {
             "TITLE": "Recognize food from photo",
@@ -761,14 +767,59 @@
         "SATIETY_PLACEHOLDER_TITLE": "Neutral",
         "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to change the level.",
         "ITEMS_ADDED_TITLE": "Added items",
-        "ITEMS_AI_TITLE": "Recognized from photo",
-        "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically.",
+        "ITEMS_EMPTY": "Add items with AI or choose a product/recipe manually.",
+        "ITEMS_AI_TITLE": "Added with AI",
+        "ITEMS_AI_HINT": "Review recognized items and nutrients before saving.",
         "ITEMS_AI_SUMMARY": "Recognized: {{count}} items",
         "ITEMS_AI_EDIT": "Edit recognition",
         "ITEMS_AI_DELETE": "Remove recognition",
         "ITEMS_AI_PHOTO_LABEL": "Photo {{index}}",
         "ITEMS_AI_MORE": "+ {{count}} more",
         "ITEMS_AI_HIDE": "Hide"
+    },
+    "HUNGER_BEFORE_SCALE": {
+        "LEVEL_1": {
+            "TITLE": "Very hungry",
+            "DESCRIPTION": "Strong hunger, hard to wait."
+        },
+        "LEVEL_2": {
+            "TITLE": "Hungry",
+            "DESCRIPTION": "Ready to eat soon."
+        },
+        "LEVEL_3": {
+            "TITLE": "Slightly hungry",
+            "DESCRIPTION": "A little hungry, but still comfortable."
+        },
+        "LEVEL_4": {
+            "TITLE": "Barely hungry",
+            "DESCRIPTION": "Hunger is weak or almost gone."
+        },
+        "LEVEL_5": {
+            "TITLE": "Not hungry",
+            "DESCRIPTION": "Calm and not hungry."
+        }
+    },
+    "SATIETY_AFTER_SCALE": {
+        "LEVEL_1": {
+            "TITLE": "Still hungry",
+            "DESCRIPTION": "Hunger is still noticeable after eating."
+        },
+        "LEVEL_2": {
+            "TITLE": "Not quite full",
+            "DESCRIPTION": "Satiety is light and more food still sounds good."
+        },
+        "LEVEL_3": {
+            "TITLE": "Comfortable",
+            "DESCRIPTION": "No hunger and no heaviness."
+        },
+        "LEVEL_4": {
+            "TITLE": "Full",
+            "DESCRIPTION": "Pleasantly satisfied without heaviness."
+        },
+        "LEVEL_5": {
+            "TITLE": "Overate",
+            "DESCRIPTION": "Too much food, with heaviness or discomfort."
+        }
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {
