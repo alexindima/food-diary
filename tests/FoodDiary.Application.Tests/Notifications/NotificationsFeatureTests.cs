@@ -2,9 +2,13 @@ using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
+using FoodDiary.Application.Notifications.Queries.GetNotifications;
+using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -133,9 +137,84 @@ public class NotificationsFeatureTests {
         Assert.Contains("fastingReminderFollowUp=20", auditLogger.Details);
     }
 
+    [Fact]
+    public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-notifications@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetNotificationPreferencesQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetNotifications_WithPasswordUser_HidesPasswordSetupSuggestion() {
+        var user = User.Create("password-notifications@example.com", "hash");
+        var repo = new InMemoryNotificationRepository();
+        repo.Seed(Notification.Create(user.Id, NotificationTypes.PasswordSetupSuggested, "{}"));
+        repo.Seed(Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"));
+        var renderer = new RecordingNotificationTextRenderer();
+        var handler = new GetNotificationsQueryHandler(repo, new SingleUserRepository(user), renderer);
+
+        var result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value);
+        Assert.Equal(NotificationTypes.FastingCompleted, result.Value[0].Type);
+        Assert.Equal([NotificationTypes.FastingCompleted], renderer.RenderedTypes);
+    }
+
+    [Fact]
+    public async Task NotificationCleanup_WithNonPositiveBatchSize_DoesNotCallRepository() {
+        var repository = new InMemoryNotificationRepository();
+        var service = new NotificationCleanupService(
+            repository,
+            new FixedDateTimeProvider(new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc)));
+
+        var deleted = await service.CleanupExpiredNotificationsAsync(
+            new NotificationCleanupPolicy(["Fast"], 3, 4, 30, 60, 0),
+            CancellationToken.None);
+
+        Assert.Equal(0, deleted);
+        Assert.False(repository.DeleteExpiredBatchCalled);
+    }
+
+    [Fact]
+    public async Task NotificationCleanup_UsesUtcNowRetentionCutoffsAndCancellationToken() {
+        using var cts = new CancellationTokenSource();
+        var repository = new InMemoryNotificationRepository { DeleteExpiredBatchResult = 7 };
+        var utcNow = new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc);
+        var service = new NotificationCleanupService(repository, new FixedDateTimeProvider(utcNow));
+
+        var deleted = await service.CleanupExpiredNotificationsAsync(
+            new NotificationCleanupPolicy(["Fast"], 3, 4, 30, 60, 25),
+            cts.Token);
+
+        Assert.Equal(7, deleted);
+        Assert.True(repository.DeleteExpiredBatchCalled);
+        Assert.Equal(["Fast"], repository.TransientTypes);
+        Assert.Equal(utcNow.AddDays(-3), repository.TransientReadOlderThanUtc);
+        Assert.Equal(utcNow.AddDays(-4), repository.TransientUnreadOlderThanUtc);
+        Assert.Equal(utcNow.AddDays(-30), repository.StandardReadOlderThanUtc);
+        Assert.Equal(utcNow.AddDays(-60), repository.StandardUnreadOlderThanUtc);
+        Assert.Equal(25, repository.BatchSize);
+        Assert.Equal(cts.Token, repository.DeleteExpiredBatchCancellationToken);
+    }
+
     private sealed class InMemoryNotificationRepository : INotificationRepository {
         private readonly List<Notification> _notifications = [];
         public bool MarkAllReadCalled { get; private set; }
+        public bool DeleteExpiredBatchCalled { get; private set; }
+        public IReadOnlyCollection<string> TransientTypes { get; private set; } = [];
+        public DateTime TransientReadOlderThanUtc { get; private set; }
+        public DateTime TransientUnreadOlderThanUtc { get; private set; }
+        public DateTime StandardReadOlderThanUtc { get; private set; }
+        public DateTime StandardUnreadOlderThanUtc { get; private set; }
+        public int BatchSize { get; private set; }
+        public int DeleteExpiredBatchResult { get; init; }
+        public CancellationToken DeleteExpiredBatchCancellationToken { get; private set; }
 
         public void Seed(Notification notification) => _notifications.Add(notification);
 
@@ -175,8 +254,17 @@ public class NotificationsFeatureTests {
             DateTime standardReadOlderThanUtc,
             DateTime standardUnreadOlderThanUtc,
             int batchSize,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
+            CancellationToken cancellationToken = default) {
+            DeleteExpiredBatchCalled = true;
+            TransientTypes = transientTypes;
+            TransientReadOlderThanUtc = transientReadOlderThanUtc;
+            TransientUnreadOlderThanUtc = transientUnreadOlderThanUtc;
+            StandardReadOlderThanUtc = standardReadOlderThanUtc;
+            StandardUnreadOlderThanUtc = standardUnreadOlderThanUtc;
+            BatchSize = batchSize;
+            DeleteExpiredBatchCancellationToken = cancellationToken;
+            return Task.FromResult(DeleteExpiredBatchResult);
+        }
     }
 
     private sealed class SingleUserRepository(User user) : IUserRepository {
@@ -203,5 +291,21 @@ public class NotificationsFeatureTests {
             ActorId = actorId;
             Details = details;
         }
+    }
+
+    private sealed class RecordingNotificationTextRenderer : INotificationTextRenderer {
+        public List<string> RenderedTypes { get; } = [];
+
+        public NotificationText Render(string type, string? locale = null, params object[] arguments) =>
+            new(type, null);
+
+        public NotificationText RenderFromPayload(string type, string payloadJson, string? locale = null) {
+            RenderedTypes.Add(type);
+            return new NotificationText(type, payloadJson);
+        }
+    }
+
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
+        public DateTime UtcNow => utcNow;
     }
 }

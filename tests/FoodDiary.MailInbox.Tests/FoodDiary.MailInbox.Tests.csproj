@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
@@ -21,6 +25,7 @@
     <ProjectReference Include="..\..\FoodDiary.MailInbox.Application\FoodDiary.MailInbox.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.MailInbox.Domain\FoodDiary.MailInbox.Domain.csproj" />
     <ProjectReference Include="..\..\FoodDiary.MailInbox.Infrastructure\FoodDiary.MailInbox.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.MailInbox.Presentation\FoodDiary.MailInbox.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

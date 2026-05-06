@@ -1,7 +1,9 @@
 using FoodDiary.Application.Wearables.Commands.ConnectWearable;
 using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
+using FoodDiary.Application.Wearables.Commands.SyncWearableData;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -110,19 +112,94 @@ public class WearablesFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [Fact]
+    public async Task GetWearableAuthUrl_WithConfiguredProvider_ReturnsClientUrl() {
+        var client = new StubWearableClient(WearableProvider.Fitbit, null);
+        var handler = new GetWearableAuthUrlQueryHandler([client]);
+
+        var result = await handler.Handle(new GetWearableAuthUrlQuery("Fitbit", "state-123"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("https://auth.example.com?state=state-123", result.Value);
+    }
+
+    [Fact]
+    public async Task GetWearableAuthUrl_WithUnconfiguredProvider_ReturnsFailure() {
+        var handler = new GetWearableAuthUrlQueryHandler([]);
+
+        var result = await handler.Handle(new GetWearableAuthUrlQuery("Fitbit", "state"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("ProviderNotConfigured", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task SyncWearableData_WithDailyData_AddsEntriesAndReturnsSummary() {
+        var userId = UserId.New();
+        var date = new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc);
+        var connection = WearableConnection.Create(
+            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+        var connectionRepository = new InMemoryWearableConnectionRepository();
+        connectionRepository.Seed(connection);
+        var syncRepository = new InMemoryWearableSyncRepository();
+        var client = new StubWearableClient(WearableProvider.Fitbit, null) {
+            DataPoints = [
+                new WearableDataPoint(WearableDataType.Steps, 5000),
+                new WearableDataPoint(WearableDataType.CaloriesBurned, 250)
+            ]
+        };
+        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository);
+
+        var result = await handler.Handle(
+            new SyncWearableDataCommand(userId.Value, "Fitbit", date),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(5000, result.Value.Steps);
+        Assert.Equal(250, result.Value.CaloriesBurned);
+        Assert.Equal(2, syncRepository.AddedCount);
+        Assert.True(connectionRepository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task SyncWearableData_WhenTokenRefreshFails_DeactivatesConnectionAndReturnsFailure() {
+        var userId = UserId.New();
+        var connection = WearableConnection.Create(
+            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddMinutes(-1));
+        var connectionRepository = new InMemoryWearableConnectionRepository();
+        connectionRepository.Seed(connection);
+        var client = new StubWearableClient(WearableProvider.Fitbit, null) {
+            RefreshTokenResult = null
+        };
+        var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository());
+
+        var result = await handler.Handle(
+            new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("AuthFailed", result.Error.Code);
+        Assert.False(connection.IsActive);
+        Assert.True(connectionRepository.UpdateCalled);
+    }
+
     private sealed class StubWearableClient(WearableProvider provider, WearableTokenResult? tokenResult) : IWearableClient {
         public WearableProvider Provider => provider;
+        public WearableTokenResult? RefreshTokenResult { get; init; } = new("new-access", "new-refresh", "ext", DateTime.UtcNow.AddHours(1));
+        public IReadOnlyList<WearableDataPoint> DataPoints { get; init; } = [];
+
         public string GetAuthorizationUrl(string state) => $"https://auth.example.com?state={state}";
         public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken ct = default) =>
             Task.FromResult(tokenResult);
         public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken ct = default) =>
-            throw new NotSupportedException();
+            Task.FromResult(RefreshTokenResult);
         public Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken ct = default) =>
-            throw new NotSupportedException();
+            Task.FromResult(DataPoints);
     }
 
     private sealed class InMemoryWearableConnectionRepository : IWearableConnectionRepository {
         private readonly List<WearableConnection> _connections = [];
+        public bool UpdateCalled { get; private set; }
 
         public void Seed(WearableConnection connection) => _connections.Add(connection);
 
@@ -137,6 +214,42 @@ public class WearablesFeatureTests {
             return Task.FromResult(connection);
         }
 
-        public Task UpdateAsync(WearableConnection connection, CancellationToken ct = default) => Task.CompletedTask;
+        public Task UpdateAsync(WearableConnection connection, CancellationToken ct = default) {
+            UpdateCalled = true;
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class InMemoryWearableSyncRepository : IWearableSyncRepository {
+        private readonly List<WearableSyncEntry> _entries = [];
+        public int AddedCount { get; private set; }
+
+        public Task<WearableSyncEntry?> GetAsync(
+            UserId userId,
+            WearableProvider provider,
+            WearableDataType dataType,
+            DateTime date,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_entries.FirstOrDefault(e =>
+                e.UserId == userId &&
+                e.Provider == provider &&
+                e.DataType == dataType &&
+                e.Date == date.Date));
+
+        public Task<IReadOnlyList<WearableSyncEntry>> GetDailySummaryAsync(
+            UserId userId,
+            DateTime date,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WearableSyncEntry>>(
+                _entries.Where(e => e.UserId == userId && e.Date == date.Date).ToList());
+
+        public Task<WearableSyncEntry> AddAsync(WearableSyncEntry entry, CancellationToken cancellationToken = default) {
+            AddedCount++;
+            _entries.Add(entry);
+            return Task.FromResult(entry);
+        }
+
+        public Task UpdateAsync(WearableSyncEntry entry, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 }
