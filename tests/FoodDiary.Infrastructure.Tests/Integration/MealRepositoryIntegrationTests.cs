@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence.Meals;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
@@ -166,5 +167,40 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var actualMeal = Assert.Single(meals);
         Assert.Equal(meal.Id, actualMeal.Id);
+    }
+
+    [RequiresDockerFact]
+    public async Task GetByPeriodAsync_IncludesAiSessionItemsForExport() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-ai-export-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var meal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 5, 4, 13, 45, 0, DateTimeKind.Utc));
+        meal.AddAiSession(
+            null,
+            AiRecognitionSource.Text,
+            new DateTime(2026, 5, 4, 13, 46, 0, DateTimeKind.Utc),
+            null,
+            [
+                MealAiItemData.Create("Rice", "Рис", 445, "g", 905, 58, 45, 66, 4, 0),
+            ]);
+
+        context.Meals.Add(meal);
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+
+        var meals = await repository.GetByPeriodAsync(
+            user.Id,
+            new DateTime(2026, 5, 4, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 4, 23, 59, 59, DateTimeKind.Utc));
+
+        var actualMeal = Assert.Single(meals);
+        var session = Assert.Single(actualMeal.AiSessions);
+        var item = Assert.Single(session.Items);
+        Assert.Equal("Rice", item.NameEn);
     }
 }

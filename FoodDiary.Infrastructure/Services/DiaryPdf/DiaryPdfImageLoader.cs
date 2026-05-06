@@ -14,17 +14,27 @@ internal sealed partial class DiaryPdfGenerator {
     private async Task<IReadOnlyDictionary<MealId, byte[]>> LoadMealImagesAsync(
         IReadOnlyList<Meal> meals,
         CancellationToken cancellationToken) {
-        var result = new Dictionary<MealId, byte[]>();
-        var cache = new Dictionary<string, byte[]?>(StringComparer.Ordinal);
+        using var gate = new SemaphoreSlim(MaxParallelMealImageDownloads);
+        var cache = new Dictionary<string, Lazy<Task<byte[]?>>>(StringComparer.Ordinal);
+        var tasks = meals
+            .Take(MaxMealImagesPerReport)
+            .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, cancellationToken))
+            .ToArray();
 
-        foreach (var meal in meals.Take(60)) {
-            var image = await LoadMealImageForReportAsync(meal, cache, cancellationToken);
-            if (image is not null) {
-                result[meal.Id] = image;
-            }
-        }
+        var entries = await Task.WhenAll(tasks);
 
-        return result;
+        return entries
+            .Where(entry => entry.Image is not null)
+            .ToDictionary(entry => entry.MealId, entry => entry.Image!, EqualityComparer<MealId>.Default);
+    }
+
+    private async Task<MealImageEntry> LoadMealImageEntryAsync(
+        Meal meal,
+        Dictionary<string, Lazy<Task<byte[]?>>> cache,
+        SemaphoreSlim gate,
+        CancellationToken cancellationToken) {
+        var image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken);
+        return new MealImageEntry(meal.Id, image);
     }
 
     private static bool ShouldUseCompactMealsMode(DateTime dateFrom, DateTime dateTo) =>
@@ -50,34 +60,49 @@ internal sealed partial class DiaryPdfGenerator {
 
     private async Task<byte[]?> LoadMealImageForReportAsync(
         Meal meal,
-        Dictionary<string, byte[]?> cache,
+        Dictionary<string, Lazy<Task<byte[]?>>> cache,
+        SemaphoreSlim gate,
         CancellationToken cancellationToken) {
         if (!string.IsNullOrWhiteSpace(meal.ImageUrl)) {
-            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, cancellationToken);
+            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken);
         }
 
-        var ingredientImages = new List<byte[]>();
-        foreach (var imageUrl in GetIngredientImageUrls(meal).Take(4)) {
-            var image = await LoadCachedMealImageAsync(imageUrl, cache, cancellationToken);
-            if (image is not null) {
-                ingredientImages.Add(image);
-            }
-        }
+        var ingredientImages = await Task.WhenAll(
+            GetIngredientImageUrls(meal)
+                .Take(MaxIngredientImagesPerCollage)
+                .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken)));
 
-        return CreateMealImageCollage(ingredientImages);
+        return CreateMealImageCollage(ingredientImages.Where(image => image is not null).Cast<byte[]>().ToArray());
     }
 
     private async Task<byte[]?> LoadCachedMealImageAsync(
         string imageUrl,
-        Dictionary<string, byte[]?> cache,
+        Dictionary<string, Lazy<Task<byte[]?>>> cache,
+        SemaphoreSlim gate,
         CancellationToken cancellationToken) {
-        if (cache.TryGetValue(imageUrl, out var cached)) {
-            return cached;
+        Lazy<Task<byte[]?>> cached;
+        lock (cache) {
+            if (!cache.TryGetValue(imageUrl, out cached!)) {
+                cached = new Lazy<Task<byte[]?>>(
+                    () => LoadMealImageWithGateAsync(imageUrl, gate, cancellationToken),
+                    LazyThreadSafetyMode.ExecutionAndPublication);
+                cache[imageUrl] = cached;
+            }
         }
 
-        var image = await LoadMealImageAsync(imageUrl, cancellationToken);
-        cache[imageUrl] = image;
-        return image;
+        return await cached.Value;
+    }
+
+    private async Task<byte[]?> LoadMealImageWithGateAsync(
+        string imageUrl,
+        SemaphoreSlim gate,
+        CancellationToken cancellationToken) {
+        await gate.WaitAsync(cancellationToken);
+        try {
+            return await LoadMealImageAsync(imageUrl, cancellationToken);
+        } finally {
+            gate.Release();
+        }
     }
 
     private async Task<byte[]?> LoadMealImageAsync(string imageUrl, CancellationToken cancellationToken) {
@@ -113,6 +138,8 @@ internal sealed partial class DiaryPdfGenerator {
             return null;
         }
     }
+
+    private readonly record struct MealImageEntry(MealId MealId, byte[]? Image);
 
     private static IReadOnlyList<string> GetIngredientImageUrls(Meal meal) =>
         meal.Items

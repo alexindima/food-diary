@@ -77,38 +77,161 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static string FormatMealItemsList(Meal meal, DiaryReportData report) {
-        if (meal.Items.Count == 0) {
-            return report.Texts.ItemsNotSpecified;
-        }
+        var itemLabels = FormatMealItemLabels(meal, report, maxItems: 6);
+        return itemLabels.Count == 0
+            ? report.Texts.ItemsNotSpecified
+            : Truncate(string.Join(", ", itemLabels), 220);
+    }
 
-        var itemLabels = meal.Items
-            .OrderBy(item => item.CreatedOnUtc)
-            .Select(item => FormatMealItem(item, report))
+    private static IReadOnlyList<string> FormatMealItemLabels(Meal meal, DiaryReportData report, int maxItems) {
+        var compositionItems = GetMealCompositionItems(meal, report);
+        var itemLabels = compositionItems
+            .Select(item => item.Label)
             .Where(label => !string.IsNullOrWhiteSpace(label))
-            .Take(6)
+            .Take(maxItems)
             .ToArray();
 
         if (itemLabels.Length == 0) {
-            return report.Texts.ItemsNotSpecified;
+            return [];
         }
 
-        var suffix = meal.Items.Count > itemLabels.Length
-            ? $" +{meal.Items.Count - itemLabels.Length} {report.Texts.MoreItemsSuffix}"
+        var suffix = compositionItems.Count > itemLabels.Length
+            ? $" +{compositionItems.Count - itemLabels.Length} {report.Texts.MoreItemsSuffix}"
             : "";
 
-        return Truncate($"{string.Join(", ", itemLabels)}{suffix}", 220);
+        return suffix.Length == 0
+            ? itemLabels
+            : [.. itemLabels, suffix.TrimStart()];
     }
 
-    private static string FormatMealItem(MealItem item, DiaryReportData report) {
+    private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(Meal meal, DiaryReportData report) {
+        var manualItems = meal.Items
+            .OrderBy(item => item.CreatedOnUtc)
+            .Select(item => FormatMealItem(item, report))
+            .ToArray();
+
+        var aiItems = meal.AiSessions
+            .OrderBy(session => session.RecognizedAtUtc)
+            .SelectMany(session => session.Items.OrderBy(item => item.CreatedOnUtc))
+            .Select(item => FormatMealAiItem(item, report))
+            .ToArray();
+
+        return [.. manualItems, .. aiItems];
+    }
+
+    private static MealCompositionItem FormatMealItem(MealItem item, DiaryReportData report) {
         var name = item.Product?.Name ?? item.Recipe?.Name;
         if (string.IsNullOrWhiteSpace(name)) {
             name = item.IsRecipe ? report.Texts.RecipeFallback : report.Texts.ProductFallback;
         }
 
-        var amountUnit = item.IsRecipe ? report.Texts.ServingUnit : FormatProductUnit(item);
-        return $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0, report.Culture)} {amountUnit} {name}";
+        var amountUnit = item.IsRecipe ? report.Texts.ServingUnit : FormatProductUnit(item, report);
+        var amount = $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0, report.Culture)} {amountUnit}";
+        var nutrition = CalculateMealItemNutrition(item);
+
+        return new MealCompositionItem(
+            Label: $"{amount} {name}",
+            Name: CapitalizeFirstLetter(name, report.Culture),
+            Amount: amount,
+            Calories: nutrition.Calories,
+            Proteins: nutrition.Proteins,
+            Fats: nutrition.Fats,
+            Carbs: nutrition.Carbs,
+            Fiber: nutrition.Fiber);
     }
 
-    private static string FormatProductUnit(MealItem item) =>
-        item.Product?.BaseUnit.ToString().ToLowerInvariant() ?? "g";
+    private static string FormatProductUnit(MealItem item, DiaryReportData report) =>
+        FormatUnit(item.Product?.BaseUnit.ToString(), report);
+
+    private static MealCompositionItem FormatMealAiItem(MealAiItem item, DiaryReportData report) {
+        var name = ResolveAiItemName(item, report);
+        var unit = FormatUnit(item.Unit, report);
+        var amount = $"{FormatNumber(item.Amount, 0, report.Culture)} {unit}";
+
+        return new MealCompositionItem(
+            Label: $"{amount} {name}",
+            Name: CapitalizeFirstLetter(name, report.Culture),
+            Amount: amount,
+            Calories: item.Calories,
+            Proteins: item.Proteins,
+            Fats: item.Fats,
+            Carbs: item.Carbs,
+            Fiber: item.Fiber);
+    }
+
+    private static string ResolveAiItemName(MealAiItem item, DiaryReportData report) {
+        if (report.Culture.TwoLetterISOLanguageName != "en" && !string.IsNullOrWhiteSpace(item.NameLocal)) {
+            return item.NameLocal.Trim();
+        }
+
+        return string.IsNullOrWhiteSpace(item.NameEn)
+            ? report.Texts.ProductFallback
+            : item.NameEn.Trim();
+    }
+
+    private static string FormatUnit(string? unit, DiaryReportData? report) {
+        if (string.IsNullOrWhiteSpace(unit)) {
+            return report?.Texts.GramsUnit ?? "g";
+        }
+
+        var normalized = unit.Trim();
+        return normalized.Equals("g", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Equals("gram", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Equals("grams", StringComparison.OrdinalIgnoreCase)
+            ? report?.Texts.GramsUnit ?? "g"
+            : normalized;
+    }
+
+    private static string CapitalizeFirstLetter(string value, CultureInfo culture) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return value;
+        }
+
+        var normalized = value.Trim();
+        var firstTextElement = StringInfo.GetNextTextElement(normalized, 0);
+        return firstTextElement.ToUpper(culture) + normalized[firstTextElement.Length..];
+    }
+
+    private static MealCompositionNutrition CalculateMealItemNutrition(MealItem item) {
+        if (item.Product is not null) {
+            var baseAmount = item.Product.BaseAmount <= 0 ? 1 : item.Product.BaseAmount;
+            var multiplier = item.Amount / baseAmount;
+            return new MealCompositionNutrition(
+                item.Product.CaloriesPerBase * multiplier,
+                item.Product.ProteinsPerBase * multiplier,
+                item.Product.FatsPerBase * multiplier,
+                item.Product.CarbsPerBase * multiplier,
+                item.Product.FiberPerBase * multiplier);
+        }
+
+        if (item.Recipe is not null) {
+            var servings = item.Recipe.Servings <= 0 ? 1 : item.Recipe.Servings;
+            var multiplier = item.Amount / servings;
+            return new MealCompositionNutrition(
+                (item.Recipe.TotalCalories ?? 0) * multiplier,
+                (item.Recipe.TotalProteins ?? 0) * multiplier,
+                (item.Recipe.TotalFats ?? 0) * multiplier,
+                (item.Recipe.TotalCarbs ?? 0) * multiplier,
+                (item.Recipe.TotalFiber ?? 0) * multiplier);
+        }
+
+        return new MealCompositionNutrition(0, 0, 0, 0, 0);
+    }
+
+    private sealed record MealCompositionItem(
+        string Label,
+        string Name,
+        string Amount,
+        double Calories,
+        double Proteins,
+        double Fats,
+        double Carbs,
+        double Fiber);
+
+    private readonly record struct MealCompositionNutrition(
+        double Calories,
+        double Proteins,
+        double Fats,
+        double Carbs,
+        double Fiber);
 }

@@ -99,6 +99,34 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     [Fact]
+    public async Task GenerateAsync_WithRecognizedItemsOnly_ReturnsPdfDocument() {
+        var userId = UserId.New();
+        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7);
+        meal.AddAiSession(
+            null,
+            AiRecognitionSource.Text,
+            new DateTime(2026, 5, 4, 15, 3, 0, DateTimeKind.Utc),
+            null,
+            [
+                MealAiItemData.Create("carrot", "морковь", 100, "g", 41, 1, 0, 10, 3, 0),
+                MealAiItemData.Create("rice", "рис", 445, "g", 905, 58, 45, 66, 4, 0),
+            ]);
+        var generator = new DiaryPdfGenerator();
+
+        var pdf = await generator.GenerateAsync(
+            [meal],
+            new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            "ru",
+            240,
+            null,
+            CancellationToken.None);
+
+        Assert.True(pdf.Length > 1024);
+        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+    }
+
+    [Fact]
     public async Task GenerateAsync_WithLongPeriod_DoesNotDownloadMealImages() {
         var userId = UserId.New();
         var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);

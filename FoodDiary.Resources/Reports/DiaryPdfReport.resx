@@ -36,12 +36,16 @@
   <data name="DateColumn" xml:space="preserve"><value>Date</value></data>
   <data name="TypeColumn" xml:space="preserve"><value>Type</value></data>
   <data name="ItemsColumn" xml:space="preserve"><value>Items</value></data>
+  <data name="AmountColumn" xml:space="preserve"><value>Amount</value></data>
   <data name="KcalColumn" xml:space="preserve"><value>Kcal</value></data>
-  <data name="ProteinsColumnShort" xml:space="preserve"><value>Prot.</value></data>
+  <data name="ProteinsColumnShort" xml:space="preserve"><value>Prot., g</value></data>
+  <data name="FatsColumnShort" xml:space="preserve"><value>Fat, g</value></data>
+  <data name="CarbsColumnShort" xml:space="preserve"><value>Carb, g</value></data>
+  <data name="FiberColumnShort" xml:space="preserve"><value>Fiber, g</value></data>
   <data name="SatietyColumn" xml:space="preserve"><value>Satiety</value></data>
   <data name="CommentColumn" xml:space="preserve"><value>Comment</value></data>
-  <data name="BeforeLabel" xml:space="preserve"><value>Before</value></data>
-  <data name="AfterLabel" xml:space="preserve"><value>After</value></data>
+  <data name="BeforeLabel" xml:space="preserve"><value>Hunger before</value></data>
+  <data name="AfterLabel" xml:space="preserve"><value>Satiety after</value></data>
   <data name="OtherMealType" xml:space="preserve"><value>Other</value></data>
   <data name="BreakfastMealType" xml:space="preserve"><value>Breakfast</value></data>
   <data name="LunchMealType" xml:space="preserve"><value>Lunch</value></data>

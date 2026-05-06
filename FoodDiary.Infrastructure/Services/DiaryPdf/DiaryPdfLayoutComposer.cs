@@ -187,8 +187,6 @@ internal sealed partial class DiaryPdfGenerator {
                         .FontSize(16).Bold().FontColor(TextColor);
                 });
 
-                column.Item().Text(FormatMealItems(meal, report)).FontSize(8).FontColor(MutedTextColor);
-
                 column.Item().Row(rowMetrics => {
                     rowMetrics.Spacing(6);
                     rowMetrics.RelativeItem().Element(c => ComposeMetricPill(c, report, report.Texts.ProteinsTitle, EffectiveProteins(meal), report.Texts.GramsUnit, ProteinColor));
@@ -199,8 +197,14 @@ internal sealed partial class DiaryPdfGenerator {
                     rowMetrics.RelativeItem().Element(c => ComposeSatietyPill(c, report.Texts.AfterLabel, meal.PostMealSatietyLevel));
                 });
 
+                column.Item().Element(c => ComposeMealItemsList(c, report, meal));
+
                 if (!string.IsNullOrWhiteSpace(meal.Comment)) {
-                    column.Item().Text(Truncate(meal.Comment, 180)).FontSize(8).FontColor(MutedTextColor);
+                    column.Item().Column(comment => {
+                        comment.Spacing(2);
+                        comment.Item().Text($"{report.Texts.CommentColumn}:").FontSize(8).SemiBold().FontColor(MutedTextColor);
+                        comment.Item().Text(Truncate(meal.Comment, 180)).FontSize(8).FontColor(TextColor);
+                    });
                 }
             });
         });
@@ -263,8 +267,60 @@ internal sealed partial class DiaryPdfGenerator {
         });
     }
 
+    private static void ComposeMealItemsList(IContainer container, DiaryReportData report, Meal meal) {
+        var compositionItems = GetMealCompositionItems(meal, report);
+        container.Column(column => {
+            column.Spacing(3);
+
+            if (compositionItems.Count == 0) {
+                column.Item().Text(report.Texts.ItemsNotSpecified).FontSize(8).FontColor(MutedTextColor);
+                return;
+            }
+
+            column.Item()
+                .BorderTop(0.75f)
+                .BorderLeft(0.75f)
+                .BorderRight(0.75f)
+                .BorderColor(BorderColor)
+                .Table(table => {
+                    table.ColumnsDefinition(columns => {
+                        columns.RelativeColumn(1.7f);
+                        columns.ConstantColumn(44);
+                        columns.ConstantColumn(34);
+                        columns.ConstantColumn(42);
+                        columns.ConstantColumn(42);
+                        columns.ConstantColumn(42);
+                        columns.ConstantColumn(42);
+                    });
+
+                    CompositionHeaderCell(table.Cell(), report.Texts.ItemsColumn);
+                    CompositionHeaderCell(table.Cell(), report.Texts.AmountColumn);
+                    CompositionHeaderCell(table.Cell(), report.Texts.KcalColumn);
+                    CompositionHeaderCell(table.Cell(), report.Texts.ProteinsColumnShort);
+                    CompositionHeaderCell(table.Cell(), report.Texts.FatsColumnShort);
+                    CompositionHeaderCell(table.Cell(), report.Texts.CarbsColumnShort);
+                    CompositionHeaderCell(table.Cell(), report.Texts.FiberColumnShort);
+
+                    foreach (var item in compositionItems) {
+                        DataCell(table.Cell(), Truncate(item.Name, 44));
+                        DataCell(table.Cell(), item.Amount);
+                        DataCell(table.Cell(), FormatNumber(item.Calories, 0, report.Culture));
+                        DataCell(table.Cell(), FormatNumber(item.Proteins, 1, report.Culture));
+                        DataCell(table.Cell(), FormatNumber(item.Fats, 1, report.Culture));
+                        DataCell(table.Cell(), FormatNumber(item.Carbs, 1, report.Culture));
+                        DataCell(table.Cell(), FormatNumber(item.Fiber, 1, report.Culture));
+                    }
+                });
+        });
+    }
+
     private static void HeaderCell(IContainer container, string value) {
         container.Background(TableHeaderBackground).PaddingHorizontal(5).PaddingVertical(6)
+            .Text(value).FontSize(7).SemiBold().FontColor(MutedTextColor);
+    }
+
+    private static void CompositionHeaderCell(IContainer container, string value) {
+        container.Background(TableHeaderBackground).BorderBottom(0.75f).BorderColor(BorderColor).PaddingHorizontal(5).PaddingVertical(6)
             .Text(value).FontSize(7).SemiBold().FontColor(MutedTextColor);
     }
 

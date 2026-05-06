@@ -36,12 +36,16 @@
   <data name="DateColumn" xml:space="preserve"><value>Дата</value></data>
   <data name="TypeColumn" xml:space="preserve"><value>Тип</value></data>
   <data name="ItemsColumn" xml:space="preserve"><value>Состав</value></data>
+  <data name="AmountColumn" xml:space="preserve"><value>Кол-во</value></data>
   <data name="KcalColumn" xml:space="preserve"><value>Ккал</value></data>
-  <data name="ProteinsColumnShort" xml:space="preserve"><value>Белки</value></data>
+  <data name="ProteinsColumnShort" xml:space="preserve"><value>Белки, г</value></data>
+  <data name="FatsColumnShort" xml:space="preserve"><value>Жиры, г</value></data>
+  <data name="CarbsColumnShort" xml:space="preserve"><value>Угл., г</value></data>
+  <data name="FiberColumnShort" xml:space="preserve"><value>Клетч., г</value></data>
   <data name="SatietyColumn" xml:space="preserve"><value>Сытость</value></data>
   <data name="CommentColumn" xml:space="preserve"><value>Комментарий</value></data>
-  <data name="BeforeLabel" xml:space="preserve"><value>До</value></data>
-  <data name="AfterLabel" xml:space="preserve"><value>После</value></data>
+  <data name="BeforeLabel" xml:space="preserve"><value>Голод до</value></data>
+  <data name="AfterLabel" xml:space="preserve"><value>Сытость после</value></data>
   <data name="OtherMealType" xml:space="preserve"><value>Другое</value></data>
   <data name="BreakfastMealType" xml:space="preserve"><value>Завтрак</value></data>
   <data name="LunchMealType" xml:space="preserve"><value>Обед</value></data>

@@ -21,4 +21,7 @@ internal sealed partial class DiaryPdfGenerator {
     private const string DefaultReportHost = "fooddiary.club";
     private const int MaxMealImageBytes = 2 * 1024 * 1024;
     private const int MealImageThumbnailSize = 320;
+    private const int MaxMealImagesPerReport = 60;
+    private const int MaxIngredientImagesPerCollage = 4;
+    private const int MaxParallelMealImageDownloads = 6;
 }
