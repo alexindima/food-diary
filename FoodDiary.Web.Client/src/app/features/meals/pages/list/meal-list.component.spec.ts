@@ -5,7 +5,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../services/localization.service';
@@ -14,7 +15,7 @@ import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { type PageOf } from '../../../../shared/models/page-of.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
-import { type Meal } from '../../models/meal.data';
+import { type FavoriteMeal, type Meal } from '../../models/meal.data';
 import { type MealOverview } from '../../models/meal.data';
 import { MealListComponent } from './meal-list.component';
 
@@ -66,7 +67,7 @@ describe('MealListComponent', () => {
     const mockMealService = {
         queryOverview: vi.fn().mockReturnValue(of(createOverview([]))),
         query: vi.fn().mockReturnValue(of(createPageOf([]))),
-        repeat: vi.fn().mockReturnValue(of(void 0)),
+        repeat: vi.fn().mockReturnValue(of(createMockMeal())),
         deleteById: vi.fn().mockReturnValue(of(void 0)),
     };
 
@@ -81,6 +82,10 @@ describe('MealListComponent', () => {
 
     const mockFdDialogService = {
         open: vi.fn().mockReturnValue(mockDialogRef),
+    };
+
+    const mockToastService = {
+        error: vi.fn(),
     };
 
     const mockBreakpointObserver = {
@@ -105,6 +110,11 @@ describe('MealListComponent', () => {
         vi.clearAllMocks();
         mockMealService.queryOverview.mockReturnValue(of(createOverview([])));
         mockMealService.query.mockReturnValue(of(createPageOf([])));
+        mockMealService.repeat.mockReturnValue(of(createMockMeal()));
+        mockMealService.deleteById.mockReturnValue(of(void 0));
+        mockFavoriteMealService.getAll.mockReturnValue(of([]));
+        mockFavoriteMealService.remove.mockReturnValue(of(void 0));
+        mockToastService.error.mockClear();
 
         // Mock window.matchMedia for the component constructor
         Object.defineProperty(window, 'matchMedia', {
@@ -130,6 +140,7 @@ describe('MealListComponent', () => {
                 { provide: MealService, useValue: mockMealService },
                 { provide: NavigationService, useValue: mockNavigationService },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
+                { provide: FdUiToastService, useValue: mockToastService },
                 { provide: BreakpointObserver, useValue: mockBreakpointObserver },
                 { provide: FavoriteMealService, useValue: mockFavoriteMealService },
                 { provide: AiFoodService, useValue: mockAiFoodService },
@@ -235,6 +246,16 @@ describe('MealListComponent', () => {
         });
     });
 
+    it('should expose load errors for retry state', () => {
+        mockMealService.query.mockReturnValue(throwError(() => new Error('Network error')));
+
+        component.loadConsumptions(1).subscribe();
+
+        expect(component.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
+        expect(component.consumptionData.isLoading()).toBe(false);
+        expect(component.consumptionData.items()).toEqual([]);
+    });
+
     it('should repeat favorite meal for the local calendar date', () => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date(2026, 4, 5, 0, 30));
@@ -259,6 +280,41 @@ describe('MealListComponent', () => {
         expect(mockMealService.repeat).toHaveBeenCalledWith('meal-1', '2026-05-05');
     });
 
+    it('should show toast when favorite repeat fails', () => {
+        const favorite = createFavorite();
+        mockMealService.repeat.mockReturnValue(throwError(() => new Error('Repeat failed')));
+
+        component.repeatFavorite(favorite);
+
+        expect(mockToastService.error).toHaveBeenCalledWith('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE');
+        expect(component.errorKey()).toBeNull();
+        expect(mockMealService.query).not.toHaveBeenCalled();
+    });
+
+    it('should sync favorite count and meal card state when favorite is removed', () => {
+        const favorite = createFavorite();
+        const meal = createMockMeal({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id });
+        component.consumptionData.setData(createPageOf([meal]));
+        component.favorites.set([favorite]);
+        component.favoriteTotalCount.set(1);
+
+        component.removeFavorite(favorite);
+
+        expect(component.favorites()).toEqual([]);
+        expect(component.favoriteTotalCount()).toBe(0);
+        expect(component.consumptionData.items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
+    });
+
+    it('should sync meal card favorite changes before refreshing favorites', () => {
+        const meal = createMockMeal({ id: 'meal-1', isFavorite: false, favoriteMealId: null });
+        component.consumptionData.setData(createPageOf([meal]));
+
+        component.onMealFavoriteChanged(meal, { isFavorite: true, favoriteMealId: 'favorite-1' });
+
+        expect(component.consumptionData.items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
+        expect(mockFavoriteMealService.getAll).toHaveBeenCalled();
+    });
+
     it('should open meal details dialog', async () => {
         const meal = createMockMeal();
 
@@ -267,3 +323,20 @@ describe('MealListComponent', () => {
         expect(mockFdDialogService.open).toHaveBeenCalled();
     });
 });
+
+function createFavorite(overrides: Partial<FavoriteMeal> = {}): FavoriteMeal {
+    return {
+        id: 'favorite-1',
+        mealId: 'meal-1',
+        name: null,
+        createdAtUtc: '2026-05-04T20:00:00Z',
+        mealDate: '2026-05-04T20:00:00Z',
+        mealType: null,
+        totalCalories: 100,
+        totalProteins: 1,
+        totalFats: 1,
+        totalCarbs: 1,
+        itemCount: 1,
+        ...overrides,
+    };
+}

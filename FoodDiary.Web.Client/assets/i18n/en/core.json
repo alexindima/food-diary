@@ -190,6 +190,7 @@
     "ERRORS": {
         "LOAD_FAILED_TITLE": "Something went wrong",
         "LOAD_FAILED_MESSAGE": "We couldn't load the data. Please try again.",
+        "FAVORITE_UPDATE_FAILED": "Could not update favorites. Please try again.",
         "RETRY": "Try again",
         "NETWORK_ERROR": "No internet connection",
         "SERVER_ERROR": "Server error. Please try again later."

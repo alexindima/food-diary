@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, of, switchMap } from 'rxjs';
 
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
@@ -28,6 +29,11 @@ export interface ProductCardItem {
     favoriteProductId?: string | null;
 }
 
+export interface ProductFavoriteChange {
+    isFavorite: boolean;
+    favoriteProductId: string | null;
+}
+
 @Component({
     selector: 'fd-product-card',
     standalone: true,
@@ -42,12 +48,13 @@ export class ProductCardComponent {
     private readonly favoriteProductService = inject(FavoriteProductService);
     private readonly authService = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly toastService = inject(FdUiToastService);
 
     public readonly product = input.required<ProductCardItem>();
     public readonly imageUrl = input<string>();
     public readonly open = output<void>();
     public readonly addToMeal = output<void>();
-    public readonly favoriteChanged = output<boolean>();
+    public readonly favoriteChanged = output<ProductFavoriteChange>();
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
@@ -137,7 +144,10 @@ export class ProductCardComponent {
                 next: favorite => {
                     this.favoriteProductId = favorite.id;
                     this.isFavorite.set(true);
-                    this.favoriteChanged.emit(true);
+                    this.favoriteChanged.emit({ isFavorite: true, favoriteProductId: favorite.id });
+                },
+                error: () => {
+                    this.showFavoriteError();
                 },
             });
     }
@@ -156,7 +166,10 @@ export class ProductCardComponent {
                     next: () => {
                         this.favoriteProductId = null;
                         this.isFavorite.set(false);
-                        this.favoriteChanged.emit(false);
+                        this.favoriteChanged.emit({ isFavorite: false, favoriteProductId: null });
+                    },
+                    error: () => {
+                        this.showFavoriteError();
                     },
                 });
             return;
@@ -182,8 +195,15 @@ export class ProductCardComponent {
                 next: () => {
                     this.favoriteProductId = null;
                     this.isFavorite.set(false);
-                    this.favoriteChanged.emit(false);
+                    this.favoriteChanged.emit({ isFavorite: false, favoriteProductId: null });
+                },
+                error: () => {
+                    this.showFavoriteError();
                 },
             });
+    }
+
+    private showFavoriteError(): void {
+        this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
     }
 }

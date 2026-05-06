@@ -99,13 +99,14 @@ describe('MealService', () => {
         req.flush(mockPageDto);
     });
 
-    it('should return empty page on query error', () => {
-        service.query(1, 10, defaultFilters).subscribe(result => {
-            expect(result.data).toEqual([]);
-            expect(result.page).toBe(1);
-            expect(result.limit).toBe(10);
-            expect(result.totalPages).toBe(0);
-            expect(result.totalItems).toBe(0);
+    it('should rethrow query errors', () => {
+        service.query(1, 10, defaultFilters).subscribe({
+            next: () => {
+                expect.fail('Expected query to fail');
+            },
+            error: error => {
+                expect(error.status).toBe(500);
+            },
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
@@ -310,9 +311,14 @@ describe('MealService', () => {
         req.flush(null);
     });
 
-    it('should silently handle delete error', () => {
-        service.deleteById('m1').subscribe(result => {
-            expect(result).toBeUndefined();
+    it('should rethrow delete errors', () => {
+        service.deleteById('m1').subscribe({
+            next: () => {
+                expect.fail('Expected delete to fail');
+            },
+            error: error => {
+                expect(error.status).toBe(500);
+            },
         });
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);

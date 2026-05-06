@@ -192,7 +192,7 @@
                                         [imageUrl]="resolveImage(product)"
                                         (open)="onProductClick(product)"
                                         (addToMeal)="onAddToMeal(product)"
-                                        (favoriteChanged)="loadFavorites()"
+                                        (favoriteChanged)="onProductFavoriteChanged(product, $event)"
                                     />
                                 }
                             </div>
@@ -214,7 +214,7 @@
                                         [imageUrl]="resolveImage(product)"
                                         (open)="onProductClick(product)"
                                         (addToMeal)="onAddToMeal(product)"
-                                        (favoriteChanged)="loadFavorites()"
+                                        (favoriteChanged)="onProductFavoriteChanged(product, $event)"
                                     />
                                 }
                             </div>

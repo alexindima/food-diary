@@ -24,7 +24,7 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
+import { RecipeCardComponent, type RecipeFavoriteChange } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
@@ -274,6 +274,11 @@ export class RecipeListComponent {
             });
     }
 
+    public onRecipeFavoriteChanged(recipe: Recipe, change: RecipeFavoriteChange): void {
+        this.syncRecipeFavoriteState(recipe.id, change.isFavorite, change.favoriteRecipeId);
+        this.loadFavorites();
+    }
+
     public toggleFavorites(): void {
         this.isFavoritesOpen.update(value => !value);
     }
@@ -303,14 +308,9 @@ export class RecipeListComponent {
     public removeFavorite(favorite: FavoriteRecipe): void {
         this.favoriteRecipeService.remove(favorite.id).subscribe({
             next: () => {
-                this.loadFavorites();
-                this.reloadCurrentPage();
+                this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
                 this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                this.recentRecipes.set(
-                    this.recentRecipes().map(recipe =>
-                        recipe.id === favorite.recipeId ? { ...recipe, isFavorite: false, favoriteRecipeId: null } : recipe,
-                    ),
-                );
+                this.syncRecipeFavoriteState(favorite.recipeId, false, null);
             },
         });
     }
@@ -332,6 +332,15 @@ export class RecipeListComponent {
                 this.searchForm.controls.onlyMine.value,
             )
             .subscribe();
+    }
+
+    private syncRecipeFavoriteState(recipeId: string, isFavorite: boolean, favoriteRecipeId: string | null): void {
+        this.recipeData.items.update(items =>
+            items.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
+        );
+        this.recentRecipes.update(recipes =>
+            recipes.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
+        );
     }
 }
 

@@ -569,6 +569,7 @@
         "FAVORITE_REPEAT": "Repeat today",
         "FAVORITE_REMOVE": "Remove from favorites",
         "FAVORITES_LOAD_MORE": "Load all favorites",
+        "OPERATION_ERROR_MESSAGE": "Could not update this meal. Please try again.",
         "VOICE_PLACEHOLDER": "Describe your meal, e.g. \"two eggs and toast\"...",
         "VOICE_RESULT_TITLE": "AI recognized items",
         "VOICE_CREATE_MEAL": "Log as meal",

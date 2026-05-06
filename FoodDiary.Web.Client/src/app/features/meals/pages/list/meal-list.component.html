@@ -48,9 +48,11 @@
         <fd-ui-button
             type="button"
             class="consumption-list__manual-add-button"
-            variant="secondary"
+            variant="primary"
             fill="text"
+            size="sm"
             icon="add"
+            iconSize="sm"
             (click)="goToMealAdd()"
         >
             {{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}
@@ -82,7 +84,8 @@
                                 }}
                             </div>
                             <div class="consumption-list__favorite-meta">
-                                {{ fav.totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} Â· {{ fav.itemCount }}
+                                {{ fav.totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} &middot;
+                                {{ fav.itemCount }}
                                 {{ 'CONSUMPTION_LIST.FAVORITE_ITEMS' | translate }}
                             </div>
                         </div>
@@ -114,7 +117,7 @@
 
     <fd-page-body>
         @if (errorKey()) {
-            <fd-error-state (retry)="hasDateFilter() ? loadConsumptions(1) : loadInitialOverview()" />
+            <fd-error-state [titleKey]="errorKey()!" (retry)="retryLoad()" />
         } @else if (consumptionData.isLoading()) {
             <div class="consumption-list__grid fd-grid fd-gap-card-profile">
                 <fd-skeleton-card />
@@ -154,7 +157,7 @@
                                     class="consumption-card"
                                     [meal]="consumption"
                                     (open)="openMealDetails(consumption)"
-                                    (favoriteChanged)="loadFavorites()"
+                                    (favoriteChanged)="onMealFavoriteChanged(consumption, $event)"
                                 />
                             }
                         </div>

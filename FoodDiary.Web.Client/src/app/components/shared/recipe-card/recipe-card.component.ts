@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, of, switchMap } from 'rxjs';
 
 import { type QualityGrade } from '../../../features/products/models/product.data';
@@ -35,6 +36,11 @@ export interface RecipeCardItem {
     favoriteRecipeId?: string | null;
 }
 
+export interface RecipeFavoriteChange {
+    isFavorite: boolean;
+    favoriteRecipeId: string | null;
+}
+
 @Component({
     selector: 'fd-recipe-card',
     standalone: true,
@@ -49,12 +55,13 @@ export class RecipeCardComponent {
     private readonly favoriteRecipeService = inject(FavoriteRecipeService);
     private readonly authService = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly toastService = inject(FdUiToastService);
 
     public readonly recipe = input.required<RecipeCardItem>();
     public readonly imageUrl = input<string>();
     public readonly open = output<void>();
     public readonly addToMeal = output<void>();
-    public readonly favoriteChanged = output<boolean>();
+    public readonly favoriteChanged = output<RecipeFavoriteChange>();
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
@@ -170,7 +177,10 @@ export class RecipeCardComponent {
                 next: favorite => {
                     this.favoriteRecipeId = favorite.id;
                     this.isFavorite.set(true);
-                    this.favoriteChanged.emit(true);
+                    this.favoriteChanged.emit({ isFavorite: true, favoriteRecipeId: favorite.id });
+                },
+                error: () => {
+                    this.showFavoriteError();
                 },
             });
     }
@@ -189,7 +199,10 @@ export class RecipeCardComponent {
                     next: () => {
                         this.favoriteRecipeId = null;
                         this.isFavorite.set(false);
-                        this.favoriteChanged.emit(false);
+                        this.favoriteChanged.emit({ isFavorite: false, favoriteRecipeId: null });
+                    },
+                    error: () => {
+                        this.showFavoriteError();
                     },
                 });
             return;
@@ -215,8 +228,15 @@ export class RecipeCardComponent {
                 next: () => {
                     this.favoriteRecipeId = null;
                     this.isFavorite.set(false);
-                    this.favoriteChanged.emit(false);
+                    this.favoriteChanged.emit({ isFavorite: false, favoriteRecipeId: null });
+                },
+                error: () => {
+                    this.showFavoriteError();
                 },
             });
+    }
+
+    private showFavoriteError(): void {
+        this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
     }
 }

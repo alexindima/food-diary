@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, of, switchMap } from 'rxjs';
 
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
@@ -34,6 +35,11 @@ export interface MealCardItem {
     aiSessions?: Array<{ imageUrl?: string | null; items?: Array<unknown> | null } | null> | null;
 }
 
+export interface MealFavoriteChange {
+    isFavorite: boolean;
+    favoriteMealId: string | null;
+}
+
 @Component({
     selector: 'fd-meal-card',
     standalone: true,
@@ -48,11 +54,12 @@ export class MealCardComponent {
     private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly authService = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly toastService = inject(FdUiToastService);
     private readonly locale = inject(LOCALE_ID);
 
     public readonly meal = input.required<MealCardItem>();
     public readonly open = output<void>();
-    public readonly favoriteChanged = output<boolean>();
+    public readonly favoriteChanged = output<MealFavoriteChange>();
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
@@ -176,7 +183,10 @@ export class MealCardComponent {
                 next: favorite => {
                     this.favoriteMealId = favorite.id;
                     this.isFavorite.set(true);
-                    this.favoriteChanged.emit(true);
+                    this.favoriteChanged.emit({ isFavorite: true, favoriteMealId: favorite.id });
+                },
+                error: () => {
+                    this.showFavoriteError();
                 },
             });
     }
@@ -195,7 +205,10 @@ export class MealCardComponent {
                     next: () => {
                         this.favoriteMealId = null;
                         this.isFavorite.set(false);
-                        this.favoriteChanged.emit(false);
+                        this.favoriteChanged.emit({ isFavorite: false, favoriteMealId: null });
+                    },
+                    error: () => {
+                        this.showFavoriteError();
                     },
                 });
             return;
@@ -221,9 +234,16 @@ export class MealCardComponent {
                 next: () => {
                     this.favoriteMealId = null;
                     this.isFavorite.set(false);
-                    this.favoriteChanged.emit(false);
+                    this.favoriteChanged.emit({ isFavorite: false, favoriteMealId: null });
+                },
+                error: () => {
+                    this.showFavoriteError();
                 },
             });
+    }
+
+    private showFavoriteError(): void {
+        this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
     }
 
     private resolvePreviewImage(): string | undefined {

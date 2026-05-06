@@ -3,6 +3,7 @@ import { catchError, map, type Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import { type PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, type Product } from '../../products/models/product.data';
@@ -37,16 +38,7 @@ export class MealService extends ApiService {
                 ...pageData,
                 data: pageData.data.map(response => this.mapConsumption(response)),
             })),
-            catchError(() => {
-                const empty: PageOf<Meal> = {
-                    data: [],
-                    page,
-                    limit,
-                    totalPages: 0,
-                    totalItems: 0,
-                };
-                return of(empty);
-            }),
+            catchError(error => rethrowApiError('Query meals error', error)),
         );
     }
 
@@ -61,20 +53,7 @@ export class MealService extends ApiService {
                 favoriteItems: response.favoriteItems,
                 favoriteTotalCount: response.favoriteTotalCount,
             })),
-            catchError(() => {
-                const empty: MealOverview = {
-                    allConsumptions: {
-                        data: [],
-                        page,
-                        limit,
-                        totalPages: 0,
-                        totalItems: 0,
-                    },
-                    favoriteItems: [],
-                    favoriteTotalCount: 0,
-                };
-                return of(empty);
-            }),
+            catchError(error => rethrowApiError('Query meal overview error', error)),
         );
     }
 
@@ -100,13 +79,13 @@ export class MealService extends ApiService {
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(`${id}`).pipe(catchError(() => of(void 0)));
+        return this.delete<void>(`${id}`).pipe(catchError(error => rethrowApiError('Delete meal error', error)));
     }
 
-    public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal | null> {
+    public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal> {
         return this.post<ConsumptionResponseDto>(`${id}/repeat`, { targetDate, mealType }).pipe(
             map(response => this.mapConsumption(response)),
-            catchError(() => of(null)),
+            catchError(error => rethrowApiError('Repeat meal error', error)),
         );
     }
 

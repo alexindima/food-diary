@@ -2,19 +2,20 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, debounceTime, finalize, map, type Observable, of, switchMap } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
-import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
+import { MealCardComponent, type MealFavoriteChange } from '../../../../components/shared/meal-card/meal-card.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
@@ -61,6 +62,8 @@ export class MealListComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
+    private readonly translateService = inject(TranslateService);
+    private readonly toastService = inject(FdUiToastService);
 
     public searchForm: FormGroup<SearchFormGroup>;
     public consumptionData: PagedData<Meal> = new PagedData<Meal>();
@@ -124,6 +127,9 @@ export class MealListComponent {
                 this.scrollToTop();
                 this.loadConsumptions(this.currentPageIndex + 1).subscribe();
             },
+            error: () => {
+                this.showOperationError();
+            },
         });
     }
 
@@ -131,8 +137,18 @@ export class MealListComponent {
         this.favoriteMealService.remove(favorite.id).subscribe({
             next: () => {
                 this.favorites.update(list => list.filter(f => f.id !== favorite.id));
+                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                this.syncMealFavoriteState(favorite.mealId, false, null);
+            },
+            error: () => {
+                this.showOperationError();
             },
         });
+    }
+
+    public onMealFavoriteChanged(meal: Meal, change: MealFavoriteChange): void {
+        this.syncMealFavoriteState(meal.id, change.isFavorite, change.favoriteMealId);
+        this.loadFavorites();
     }
 
     public onMealCreated(): void {
@@ -154,12 +170,12 @@ export class MealListComponent {
                 this.consumptionData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;
                 this.consumptionData.setLoading(false);
-                this.errorKey.set(null);
+                this.clearError();
             }),
             catchError(() => {
                 this.consumptionData.clearData();
                 this.consumptionData.setLoading(false);
-                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                this.showLoadError();
                 return of();
             }),
         );
@@ -180,14 +196,14 @@ export class MealListComponent {
                 this.favoriteTotalCount.set(data.favoriteTotalCount);
                 this.currentPageIndex = data.allConsumptions.page - 1;
                 this.consumptionData.setLoading(false);
-                this.errorKey.set(null);
+                this.clearError();
             }),
             catchError(() => {
                 this.consumptionData.clearData();
                 this.favorites.set([]);
                 this.favoriteTotalCount.set(0);
                 this.consumptionData.setLoading(false);
-                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                this.showLoadError();
                 return of();
             }),
         );
@@ -197,6 +213,11 @@ export class MealListComponent {
         this.scrollToTop();
         this.currentPageIndex = pageIndex;
         this.loadConsumptions(pageIndex + 1).subscribe();
+    }
+
+    public retryLoad(): void {
+        const request = this.hasDateFilter() ? this.loadConsumptions(1) : this.loadInitialOverview();
+        request.subscribe();
     }
 
     public async openMealDetails(consumption: Meal): Promise<void> {
@@ -225,12 +246,18 @@ export class MealListComponent {
                             this.scrollToTop();
                             this.reloadCurrentPage();
                         },
+                        error: () => {
+                            this.showOperationError();
+                        },
                     });
                 } else {
                     this.mealService.deleteById(data.id).subscribe({
                         next: () => {
                             this.scrollToTop();
                             this.reloadCurrentPage();
+                        },
+                        error: () => {
+                            this.showOperationError();
                         },
                     });
                 }
@@ -280,6 +307,24 @@ export class MealListComponent {
 
     protected reloadCurrentPage(): void {
         this.loadConsumptions(this.currentPageIndex + 1).subscribe();
+    }
+
+    private clearError(): void {
+        this.errorKey.set(null);
+    }
+
+    private showLoadError(): void {
+        this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+    }
+
+    private showOperationError(): void {
+        this.toastService.error(this.translateService.instant('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE'));
+    }
+
+    private syncMealFavoriteState(mealId: string, isFavorite: boolean, favoriteMealId: string | null): void {
+        this.consumptionData.items.update(items =>
+            items.map(item => (item.id === mealId ? { ...item, isFavorite, favoriteMealId } : item)),
+        );
     }
 
     private toLocalDayStartIso(date: Date | null | undefined): string | undefined {

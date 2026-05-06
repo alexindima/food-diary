@@ -193,7 +193,7 @@
                                         [imageUrl]="resolveImage(recipe)"
                                         (open)="onRecipeClick(recipe)"
                                         (addToMeal)="onAddToMeal(recipe)"
-                                        (favoriteChanged)="loadFavorites()"
+                                        (favoriteChanged)="onRecipeFavoriteChanged(recipe, $event)"
                                     />
                                 }
                             </div>
@@ -215,7 +215,7 @@
                                         [imageUrl]="resolveImage(recipe)"
                                         (open)="onRecipeClick(recipe)"
                                         (addToMeal)="onAddToMeal(recipe)"
-                                        (favoriteChanged)="loadFavorites()"
+                                        (favoriteChanged)="onRecipeFavoriteChanged(recipe, $event)"
                                     />
                                 }
                             </div>

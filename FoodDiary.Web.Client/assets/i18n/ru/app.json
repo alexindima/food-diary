@@ -533,6 +533,7 @@
         "FAVORITE_REPEAT": "Повторить сегодня",
         "FAVORITE_REMOVE": "Убрать из избранного",
         "FAVORITES_LOAD_MORE": "Показать всё избранное",
+        "OPERATION_ERROR_MESSAGE": "Не удалось обновить приём пищи. Попробуйте ещё раз.",
         "VOICE_PLACEHOLDER": "Опишите приём пищи, например \"два яйца и тост\"...",
         "VOICE_RESULT_TITLE": "AI распознал продукты",
         "VOICE_CREATE_MEAL": "Записать приём пищи",

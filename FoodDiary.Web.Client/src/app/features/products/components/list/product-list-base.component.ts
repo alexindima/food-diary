@@ -17,7 +17,7 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
+import { ProductCardComponent, type ProductFavoriteChange } from '../../../../components/shared/product-card/product-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -344,6 +344,11 @@ export class ProductListBaseComponent {
             });
     }
 
+    public onProductFavoriteChanged(product: Product, change: ProductFavoriteChange): void {
+        this.syncProductFavoriteState(product.id, change.isFavorite, change.favoriteProductId);
+        this.loadFavorites();
+    }
+
     public toggleFavorites(): void {
         this.isFavoritesOpen.update(value => !value);
     }
@@ -373,12 +378,9 @@ export class ProductListBaseComponent {
     public removeFavorite(favorite: FavoriteProduct): void {
         this.favoriteProductService.remove(favorite.id).subscribe({
             next: () => {
-                this.loadFavorites();
-                this.reloadCurrentPage();
+                this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
                 this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                this.recentProducts = this.recentProducts.map(product =>
-                    product.id === favorite.productId ? { ...product, isFavorite: false, favoriteProductId: null } : product,
-                );
+                this.syncProductFavoriteState(favorite.productId, false, null);
             },
         });
     }
@@ -402,6 +404,15 @@ export class ProductListBaseComponent {
 
         const leftSet = new Set(left);
         return right.every(type => leftSet.has(type));
+    }
+
+    private syncProductFavoriteState(productId: string, isFavorite: boolean, favoriteProductId: string | null): void {
+        this.productData.items.update(items =>
+            items.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
+        );
+        this.recentProducts = this.recentProducts.map(product =>
+            product.id === productId ? { ...product, isFavorite, favoriteProductId } : product,
+        );
     }
 }
 
