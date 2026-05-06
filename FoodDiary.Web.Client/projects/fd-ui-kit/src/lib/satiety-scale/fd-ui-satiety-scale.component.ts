@@ -15,14 +15,14 @@ export interface FdUiSatietyScaleLevel {
 export const DEFAULT_HUNGER_LEVELS: FdUiSatietyScaleLevel[] = [
     {
         value: 1,
-        emoji: '😣',
+        emoji: '😫',
         titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_1.TITLE',
         descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_1.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-700), var(--fd-color-danger))',
     },
     {
         value: 2,
-        emoji: '😟',
+        emoji: '🥺',
         titleKey: 'HUNGER_BEFORE_SCALE.LEVEL_2.TITLE',
         descriptionKey: 'HUNGER_BEFORE_SCALE.LEVEL_2.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))',
@@ -55,7 +55,7 @@ export const DEFAULT_HUNGER_LEVELS: FdUiSatietyScaleLevel[] = [
 export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     {
         value: 1,
-        emoji: '😣',
+        emoji: '😟',
         titleKey: 'SATIETY_AFTER_SCALE.LEVEL_1.TITLE',
         descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_1.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-red-700), var(--fd-color-danger))',
@@ -69,14 +69,14 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     },
     {
         value: 3,
-        emoji: '🙂',
+        emoji: '😊',
         titleKey: 'SATIETY_AFTER_SCALE.LEVEL_3.TITLE',
         descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_3.DESCRIPTION',
         gradient: 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
     },
     {
         value: 4,
-        emoji: '😊',
+        emoji: '😋',
         titleKey: 'SATIETY_AFTER_SCALE.LEVEL_4.TITLE',
         descriptionKey: 'SATIETY_AFTER_SCALE.LEVEL_4.DESCRIPTION',
         gradient:
