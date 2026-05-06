@@ -50,6 +50,10 @@
         padding: 0;
         overflow: hidden;
         background: var(--fd-bg-page);
+
+        &:focus {
+            outline: none;
+        }
     }
 
     &__viewport {
