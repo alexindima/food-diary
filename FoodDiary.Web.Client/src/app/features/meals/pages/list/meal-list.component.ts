@@ -2,15 +2,14 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, debounceTime, finalize, map, type Observable, of, switchMap } from 'rxjs';
+import { debounceTime, type Observable, switchMap } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
@@ -24,11 +23,9 @@ import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
 import { type FormGroupControls } from '../../../../shared/lib/common.data';
-import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { FavoriteMealService } from '../../api/favorite-meal.service';
-import { MealService } from '../../api/meal.service';
 import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
-import { type FavoriteMeal, type Meal, type MealFilters } from '../../models/meal.data';
+import { MealListFacade } from '../../lib/meal-list.facade';
+import { type FavoriteMeal, type Meal } from '../../models/meal.data';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
 @Component({
@@ -54,26 +51,23 @@ import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from
         FavoritesSectionComponent,
         LocalizedDatePipe,
     ],
+    providers: [MealListFacade],
 })
 export class MealListComponent {
-    private readonly mealService = inject(MealService);
-    private readonly favoriteMealService = inject(FavoriteMealService);
+    private readonly mealListFacade = inject(MealListFacade);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
-    private readonly translateService = inject(TranslateService);
-    private readonly toastService = inject(FdUiToastService);
 
     public searchForm: FormGroup<SearchFormGroup>;
-    public consumptionData: PagedData<Meal> = new PagedData<Meal>();
-    public currentPageIndex = 0;
+    public readonly consumptionData = this.mealListFacade.consumptionData;
+    public readonly errorKey = this.mealListFacade.errorKey;
+    public readonly favorites = this.mealListFacade.favorites;
+    public readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
+    public readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
-    public readonly errorKey = signal<string | null>(null);
-    public readonly favorites = signal<FavoriteMeal[]>([]);
-    public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
-    public readonly isFavoritesLoadingMore = signal(false);
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasDateFilter = computed(() => {
         const dateRange = this.searchForm.controls.dateRange.value;
@@ -84,12 +78,16 @@ export class MealListComponent {
     public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
+    public get currentPageIndex(): number {
+        return this.mealListFacade.currentPageIndex();
+    }
+
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
             dateRange: new FormControl<FdUiDateRangeValue | null>(null),
         });
 
-        this.loadInitialOverview().subscribe();
+        this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 
         this.searchForm.valueChanges
             .pipe(
@@ -101,19 +99,7 @@ export class MealListComponent {
     }
 
     public loadFavorites(): void {
-        this.isFavoritesLoadingMore.set(true);
-        this.favoriteMealService
-            .getAll()
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.isFavoritesLoadingMore.set(false);
-                }),
-            )
-            .subscribe(favorites => {
-                this.favorites.set(favorites);
-                this.favoriteTotalCount.set(favorites.length);
-            });
+        this.mealListFacade.loadFavorites();
     }
 
     public toggleFavorites(): void {
@@ -122,32 +108,22 @@ export class MealListComponent {
 
     public repeatFavorite(favorite: FavoriteMeal): void {
         const today = this.toLocalDateInputValue(new Date());
-        this.mealService.repeat(favorite.mealId, today).subscribe({
-            next: () => {
-                this.scrollToTop();
-                this.loadConsumptions(this.currentPageIndex + 1).subscribe();
-            },
-            error: () => {
-                this.showOperationError();
-            },
-        });
+        this.mealListFacade
+            .repeatMeal(favorite.mealId, today, this.dateRange)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(repeated => {
+                if (repeated) {
+                    this.scrollToTop();
+                }
+            });
     }
 
     public removeFavorite(favorite: FavoriteMeal): void {
-        this.favoriteMealService.remove(favorite.id).subscribe({
-            next: () => {
-                this.favorites.update(list => list.filter(f => f.id !== favorite.id));
-                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                this.syncMealFavoriteState(favorite.mealId, false, null);
-            },
-            error: () => {
-                this.showOperationError();
-            },
-        });
+        this.mealListFacade.removeFavorite(favorite);
     }
 
     public onMealFavoriteChanged(meal: Meal, change: MealFavoriteChange): void {
-        this.syncMealFavoriteState(meal.id, change.isFavorite, change.favoriteMealId);
+        this.mealListFacade.syncMealFavoriteState(meal.id, change.isFavorite, change.favoriteMealId);
         this.loadFavorites();
     }
 
@@ -157,61 +133,15 @@ export class MealListComponent {
     }
 
     public loadConsumptions(page: number): Observable<void> {
-        this.consumptionData.setLoading(true);
-        const dateRange = this.searchForm.controls.dateRange.value;
-
-        const filters: MealFilters = {
-            dateFrom: this.toLocalDayStartIso(dateRange?.start ?? null),
-            dateTo: this.toLocalDayEndIso(dateRange?.end ?? null),
-        };
-
-        return this.mealService.query(page, 10, filters).pipe(
-            map(pageData => {
-                this.consumptionData.setData(pageData);
-                this.currentPageIndex = pageData.page - 1;
-                this.consumptionData.setLoading(false);
-                this.clearError();
-            }),
-            catchError(() => {
-                this.consumptionData.clearData();
-                this.consumptionData.setLoading(false);
-                this.showLoadError();
-                return of();
-            }),
-        );
+        return this.mealListFacade.loadConsumptions(page, this.dateRange);
     }
 
     public loadInitialOverview(): Observable<void> {
-        this.consumptionData.setLoading(true);
-        const dateRange = this.searchForm.controls.dateRange.value;
-        const filters: MealFilters = {
-            dateFrom: this.toLocalDayStartIso(dateRange?.start ?? null),
-            dateTo: this.toLocalDayEndIso(dateRange?.end ?? null),
-        };
-
-        return this.mealService.queryOverview(1, 10, filters, 10).pipe(
-            map(data => {
-                this.consumptionData.setData(data.allConsumptions);
-                this.favorites.set(data.favoriteItems);
-                this.favoriteTotalCount.set(data.favoriteTotalCount);
-                this.currentPageIndex = data.allConsumptions.page - 1;
-                this.consumptionData.setLoading(false);
-                this.clearError();
-            }),
-            catchError(() => {
-                this.consumptionData.clearData();
-                this.favorites.set([]);
-                this.favoriteTotalCount.set(0);
-                this.consumptionData.setLoading(false);
-                this.showLoadError();
-                return of();
-            }),
-        );
+        return this.mealListFacade.loadInitialOverview(this.dateRange);
     }
 
     public onPageChange(pageIndex: number): void {
         this.scrollToTop();
-        this.currentPageIndex = pageIndex;
         this.loadConsumptions(pageIndex + 1).subscribe();
     }
 
@@ -229,6 +159,7 @@ export class MealListComponent {
                 data: consumption,
             })
             .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(data => {
                 if (!data) {
                     return;
@@ -241,25 +172,23 @@ export class MealListComponent {
                     void this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Repeat') {
                     const today = this.toLocalDateInputValue(new Date());
-                    this.mealService.repeat(data.id, today).subscribe({
-                        next: () => {
-                            this.scrollToTop();
-                            this.reloadCurrentPage();
-                        },
-                        error: () => {
-                            this.showOperationError();
-                        },
-                    });
+                    this.mealListFacade
+                        .repeatMeal(data.id, today, this.dateRange)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(repeated => {
+                            if (repeated) {
+                                this.scrollToTop();
+                            }
+                        });
                 } else {
-                    this.mealService.deleteById(data.id).subscribe({
-                        next: () => {
-                            this.scrollToTop();
-                            this.reloadCurrentPage();
-                        },
-                        error: () => {
-                            this.showOperationError();
-                        },
-                    });
+                    this.mealListFacade
+                        .deleteMeal(data.id, this.dateRange)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(deleted => {
+                            if (deleted) {
+                                this.scrollToTop();
+                            }
+                        });
                 }
             });
     }
@@ -309,38 +238,8 @@ export class MealListComponent {
         this.loadConsumptions(this.currentPageIndex + 1).subscribe();
     }
 
-    private clearError(): void {
-        this.errorKey.set(null);
-    }
-
-    private showLoadError(): void {
-        this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
-    }
-
-    private showOperationError(): void {
-        this.toastService.error(this.translateService.instant('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE'));
-    }
-
-    private syncMealFavoriteState(mealId: string, isFavorite: boolean, favoriteMealId: string | null): void {
-        this.consumptionData.items.update(items =>
-            items.map(item => (item.id === mealId ? { ...item, isFavorite, favoriteMealId } : item)),
-        );
-    }
-
-    private toLocalDayStartIso(date: Date | null | undefined): string | undefined {
-        if (!date) {
-            return undefined;
-        }
-
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).toISOString();
-    }
-
-    private toLocalDayEndIso(date: Date | null | undefined): string | undefined {
-        if (!date) {
-            return undefined;
-        }
-
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).toISOString();
+    private get dateRange(): FdUiDateRangeValue | null {
+        return this.searchForm.controls.dateRange.value;
     }
 
     private groupByDate(items: Meal[]): { date: Date; items: Meal[] }[] {
