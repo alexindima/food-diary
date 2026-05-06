@@ -18,6 +18,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FdUiEmojiPickerComponent,
     type FdUiEmojiPickerOption,
@@ -30,6 +31,7 @@ import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
+import { firstValueFrom } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { type AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -62,6 +64,7 @@ import {
 } from './base-meal-manage.types';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
+import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog.component';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
 
 export type { ConsumptionFormData, ConsumptionItemFormData } from './base-meal-manage.types';
@@ -110,6 +113,7 @@ export class BaseMealManageComponent {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly mealManageFacade = inject(MealManageFacade);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly calorieMismatchThreshold = 0.2;
 
     public readonly nutritionControlNames = {
@@ -288,7 +292,7 @@ export class BaseMealManageComponent {
         }
 
         queueMicrotask(() => {
-            this.onItemSourceClick(itemIndex);
+            this.openManualItemDialog(itemIndex);
         });
     }
 
@@ -298,15 +302,25 @@ export class BaseMealManageComponent {
     }
 
     public onItemSourceClick(index: number): void {
+        this.openManualItemDialog(index);
+    }
+
+    public openManualItemDialog(index: number): void {
         const group = this.items.at(index);
-        const initialType = group.controls.sourceType.value;
-        void this.mealManageFacade
-            .openItemSelectionDialog(group, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product')
-            .then(() => {
+        void firstValueFrom(
+            this.fdDialogService
+                .open<MealManualItemDialogComponent, MealManualItemDialogData, boolean>(MealManualItemDialogComponent, {
+                    preset: 'form',
+                    data: { group },
+                })
+                .afterClosed(),
+        ).then(saved => {
+            if (saved) {
                 this.bumpItemsRenderVersion();
                 this.updateItemValidationRules();
                 this.updateSummary();
-            });
+            }
+        });
     }
 
     // --- AI session management ---

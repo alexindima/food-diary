@@ -198,8 +198,9 @@
     }
 
     &__manual-choice {
-        justify-content: center;
-        padding: var(--fd-space-xs) 0;
+        justify-content: flex-start;
+        margin-top: calc(0px - var(--fd-space-md));
+        padding: 0;
     }
 
     &__manual-choice-label,
@@ -360,17 +361,19 @@
 }
 
 .consumption-item-card {
-    padding: var(--fd-space-md) 0;
-    border-bottom: var(--fd-border-muted);
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-panel);
+    background: var(--fd-bg-card-editor-surface-gradient);
+    box-shadow: var(--fd-shadow-lg);
 }
 
 .consumption-item-card:first-child {
-    padding-top: 0;
+    margin-top: 0;
 }
 
 .consumption-item-card:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .consumption-item__row--with-remove {
@@ -411,6 +414,30 @@
 
 .consumption-item__error {
     margin-top: var(--fd-space-sm);
+}
+
+.consumption-item__nutrition {
+    padding-top: var(--fd-space-sm);
+    border-top: var(--fd-border-muted);
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-stat-value-size);
+    line-height: var(--fd-text-stat-value-line-height);
+    font-weight: var(--fd-text-stat-value-weight);
+}
+
+.consumption-item__nutrition-calories {
+    color: var(--fd-color-text);
+    font-weight: var(--fd-text-action-weight);
+}
+
+.consumption-item__nutrition-label {
+    color: var(--fd-color-text-muted);
+    font-weight: var(--fd-text-action-weight);
+}
+
+.consumption-item__nutrition-macros {
+    color: var(--fd-color-text-muted);
+    font-weight: var(--fd-font-weight-medium);
 }
 
 .consumption-manage__nutrition-toggle {

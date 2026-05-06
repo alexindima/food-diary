@@ -739,7 +739,11 @@
         "ITEMS_AI_DELETE": "Удалить распознавание",
         "ITEMS_AI_PHOTO_LABEL": "Фото {{index}}",
         "ITEMS_AI_MORE": "+ ещё {{count}}",
-        "ITEMS_AI_HIDE": "Скрыть"
+        "ITEMS_AI_HIDE": "Скрыть",
+        "ITEMS_MANUAL_SUMMARY": "Добавлено вручную",
+        "MANUAL_ITEM_EDIT": "Редактировать ручную позицию",
+        "MANUAL_ITEM_DIALOG_TITLE": "Ручная позиция",
+        "MANUAL_ITEM_DIALOG_SAVE": "Сохранить позицию"
     },
     "HUNGER_BEFORE_SCALE": {
         "LEVEL_1": {

@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
+import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import { type ConsumptionItemFormData } from '../base-meal-manage.types';
+import { type ConsumptionItemFormData, type NutritionTotals } from '../base-meal-manage.types';
 
 @Component({
     selector: 'fd-meal-items-list',
@@ -18,17 +18,17 @@ import { type ConsumptionItemFormData } from '../base-meal-manage.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
-        FormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiCardComponent,
-        FdUiInputComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
+        FdUiIconComponent,
     ],
 })
 export class MealItemsListComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly recipeWeight = inject(RecipeServingWeightService);
 
     public readonly formArray = input.required<FormArray<FormGroup<ConsumptionItemFormData>>>();
     public readonly hasExternalItems = input<boolean>(false);
@@ -38,6 +38,7 @@ export class MealItemsListComponent {
     public readonly showEmptyRows = input<boolean>(true);
 
     public readonly addItem = output<void>();
+    public readonly editItem = output<number>();
     public readonly removeItemEvent = output<number>();
     public readonly openItemSelect = output<number>();
 
@@ -122,6 +123,72 @@ export class MealItemsListComponent {
         return this.resolveControlError(group?.controls.amount ?? null);
     }
 
+    public getManualItemTotals(index: number): NutritionTotals {
+        const group = this.formArray().at(index);
+        const amount = group.controls.amount.value || 0;
+
+        if (group.controls.sourceType.value === ConsumptionSourceType.Product) {
+            const product = group.controls.product.value;
+            if (!product || product.baseAmount <= 0) {
+                return this.getEmptyTotals();
+            }
+
+            const multiplier = amount / product.baseAmount;
+            return {
+                calories: product.caloriesPerBase * multiplier,
+                proteins: product.proteinsPerBase * multiplier,
+                fats: product.fatsPerBase * multiplier,
+                carbs: product.carbsPerBase * multiplier,
+                fiber: product.fiberPerBase * multiplier,
+                alcohol: product.alcoholPerBase * multiplier,
+            };
+        }
+
+        const recipe = group.controls.recipe.value;
+        if (!recipe || !recipe.servings || recipe.servings <= 0) {
+            return this.getEmptyTotals();
+        }
+
+        const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
+        return {
+            calories: ((recipe.totalCalories ?? 0) / recipe.servings) * servingsAmount,
+            proteins: ((recipe.totalProteins ?? 0) / recipe.servings) * servingsAmount,
+            fats: ((recipe.totalFats ?? 0) / recipe.servings) * servingsAmount,
+            carbs: ((recipe.totalCarbs ?? 0) / recipe.servings) * servingsAmount,
+            fiber: ((recipe.totalFiber ?? 0) / recipe.servings) * servingsAmount,
+            alcohol: ((recipe.totalAlcohol ?? 0) / recipe.servings) * servingsAmount,
+        };
+    }
+
+    public formatManualMacro(value: number, unitKey: string): string {
+        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const hasFraction = Math.abs(value % 1) > 0.01;
+        const formatter = new Intl.NumberFormat(locale, {
+            maximumFractionDigits: hasFraction ? 1 : 0,
+            minimumFractionDigits: hasFraction ? 1 : 0,
+        });
+        const unitLabel = this.translateService.instant(unitKey);
+        return `${formatter.format(value)} ${unitLabel}`.trim();
+    }
+
+    public formatManualAmount(index: number): string {
+        const amount = this.formArray().at(index).controls.amount.value || 0;
+        const unitLabel = this.getAmountUnitLabel(index);
+        return unitLabel ? `${this.formatNumber(amount)} ${unitLabel}`.trim() : this.formatNumber(amount);
+    }
+
+    public getManualItemImageUrl(index: number): string | null {
+        if (this.isRecipeItem(index)) {
+            return this.formArray().at(index).controls.recipe.value?.imageUrl ?? null;
+        }
+
+        return this.formArray().at(index).controls.product.value?.imageUrl ?? null;
+    }
+
+    public onEditItem(index: number): void {
+        this.editItem.emit(index);
+    }
+
     public hasVisibleManualItems(): boolean {
         this.renderVersion();
         return this.formArray().controls.some((_, index) => this.showEmptyRows() || this.hasManualItem(index));
@@ -145,6 +212,15 @@ export class MealItemsListComponent {
         this.openItemSelect.emit(index);
     }
 
+    private formatNumber(value: number): string {
+        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const hasFraction = Math.abs(value % 1) > 0.01;
+        return new Intl.NumberFormat(locale, {
+            maximumFractionDigits: hasFraction ? 1 : 0,
+            minimumFractionDigits: hasFraction ? 1 : 0,
+        }).format(value);
+    }
+
     private resolveControlError(control: AbstractControl | null): string | null {
         if (!control || !control.invalid || !control.touched) {
             return null;
@@ -160,5 +236,9 @@ export class MealItemsListComponent {
         }
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    private getEmptyTotals(): NutritionTotals {
+        return { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
     }
 }

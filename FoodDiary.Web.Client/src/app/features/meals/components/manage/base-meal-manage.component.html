@@ -136,6 +136,7 @@
                             [showAddAction]="false"
                             [showEmptyRows]="false"
                             (addItem)="addConsumptionItem()"
+                            (editItem)="openManualItemDialog($event)"
                             (removeItemEvent)="removeItem($event)"
                             (openItemSelect)="onItemSourceClick($event)"
                         >

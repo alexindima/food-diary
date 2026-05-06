@@ -1,0 +1,33 @@
+<fd-ui-dialog [title]="'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate" size="md">
+    <div class="meal-manual-item-dialog fd-stack fd-gap-md">
+        <fd-ui-input
+            [ngModel]="itemSourceName"
+            [ngModelOptions]="{ standalone: true }"
+            [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
+            [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
+            [readonly]="true"
+            [prefixIcon]="itemSourceIcon"
+            [error]="sourceError"
+            (click)="chooseItem()"
+        />
+
+        <fd-ui-input
+            [formControl]="amount"
+            type="number"
+            [step]="0.01"
+            [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
+            [placeholder]="amountPlaceholderKey | translate"
+            [required]="true"
+            [error]="amountError"
+        />
+    </div>
+
+    <div fdUiDialogFooter class="meal-manual-item-dialog__footer fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="cancel()">
+            {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="button" variant="primary" fill="solid" icon="check" (click)="save()">
+            {{ 'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_SAVE' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

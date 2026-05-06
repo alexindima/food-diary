@@ -775,7 +775,11 @@
         "ITEMS_AI_DELETE": "Remove recognition",
         "ITEMS_AI_PHOTO_LABEL": "Photo {{index}}",
         "ITEMS_AI_MORE": "+ {{count}} more",
-        "ITEMS_AI_HIDE": "Hide"
+        "ITEMS_AI_HIDE": "Hide",
+        "ITEMS_MANUAL_SUMMARY": "Added manually",
+        "MANUAL_ITEM_EDIT": "Edit manual item",
+        "MANUAL_ITEM_DIALOG_TITLE": "Manual item",
+        "MANUAL_ITEM_DIALOG_SAVE": "Save item"
     },
     "HUNGER_BEFORE_SCALE": {
         "LEVEL_1": {
