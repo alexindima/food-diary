@@ -4,8 +4,8 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { NavigationService } from '../../../services/navigation.service';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../products/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
 import { type Meal } from '../models/meal.data';
 import { QuickMealService } from './quick-meal.service';
@@ -13,7 +13,6 @@ import { QuickMealService } from './quick-meal.service';
 describe('QuickMealService', () => {
     let service: QuickMealService;
     let mealService: { create: ReturnType<typeof vi.fn> };
-    let navigationService: { navigateToConsumptionAddAsync: ReturnType<typeof vi.fn> };
     let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
     const product: Product = {
@@ -55,12 +54,21 @@ describe('QuickMealService', () => {
         aiSessions: [],
     };
 
+    const recipe: Recipe = {
+        id: 'recipe-1',
+        name: 'Rice bowl',
+        servings: 4,
+        visibility: RecipeVisibility.Private,
+        usageCount: 0,
+        createdAt: '2026-05-03T12:00:00Z',
+        isOwnedByCurrentUser: true,
+        isNutritionAutoCalculated: true,
+        steps: [],
+    };
+
     beforeEach(() => {
         mealService = {
             create: vi.fn().mockReturnValue(of(createdMeal)),
-        };
-        navigationService = {
-            navigateToConsumptionAddAsync: vi.fn().mockResolvedValue(true),
         };
         toastService = {
             success: vi.fn(),
@@ -71,7 +79,6 @@ describe('QuickMealService', () => {
             providers: [
                 QuickMealService,
                 { provide: MealService, useValue: mealService },
-                { provide: NavigationService, useValue: navigationService },
                 { provide: FdUiToastService, useValue: toastService },
                 {
                     provide: TranslateService,
@@ -148,47 +155,6 @@ describe('QuickMealService', () => {
         );
     });
 
-    it('clears draft after opening editor only when navigation succeeds', async () => {
-        service.addProduct(product);
-        service.updateDetails({
-            date: '2026-05-04',
-            time: '13:45',
-            comment: 'Lunch note',
-            preMealSatietyLevel: 2,
-            postMealSatietyLevel: 4,
-        });
-
-        await service.openEditorAsync();
-
-        expect(navigationService.navigateToConsumptionAddAsync).toHaveBeenCalledWith(undefined, {
-            state: {
-                quickConsumptionItems: [
-                    expect.objectContaining({
-                        key: 'product-product-1',
-                        amount: 180,
-                    }),
-                ],
-                quickConsumptionDetails: {
-                    date: '2026-05-04',
-                    time: '13:45',
-                    comment: 'Lunch note',
-                    preMealSatietyLevel: 2,
-                    postMealSatietyLevel: 4,
-                },
-            },
-        });
-        expect(service.items()).toEqual([]);
-    });
-
-    it('keeps draft when editor navigation is cancelled', async () => {
-        navigationService.navigateToConsumptionAddAsync.mockResolvedValue(false);
-        service.addProduct(product);
-
-        await service.openEditorAsync();
-
-        expect(service.items()).toHaveLength(1);
-    });
-
     it('clears draft and shows success only when save returns created meal', () => {
         service.addProduct(product);
         service.updateDetails({
@@ -219,6 +185,24 @@ describe('QuickMealService', () => {
         expect(toastService.success).toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_SUCCESS');
         expect(toastService.error).not.toHaveBeenCalled();
         expect(service.items()).toEqual([]);
+    });
+
+    it('saves recipe draft amount as servings', () => {
+        service.addRecipe(recipe);
+
+        service.saveDraft();
+
+        expect(mealService.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+                items: [
+                    expect.objectContaining({
+                        recipeId: 'recipe-1',
+                        productId: null,
+                        amount: 1,
+                    }),
+                ],
+            }),
+        );
     });
 
     it('keeps draft and shows error when save returns null', () => {

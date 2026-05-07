@@ -1,23 +1,18 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { type FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    FdUiEmojiPickerComponent,
-    type FdUiEmojiPickerOption,
-    type FdUiEmojiPickerValue,
-} from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
-import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { firstValueFrom } from 'rxjs';
 
+import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields.component';
 import { resolveProductImageUrl } from '../../../products/lib/product-image.util';
 import { ProductType } from '../../../products/models/product.data';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
-import { type QuickMealDetails, type QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
+import { type QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 import { ConsumptionSourceType } from '../../models/meal.data';
 import { type ConsumptionItemFormData } from '../manage/base-meal-manage.types';
 import {
@@ -28,7 +23,7 @@ import {
 @Component({
     selector: 'fd-quick-consumption-drawer',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiEmojiPickerComponent, NgOptimizedImage],
+    imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, NgOptimizedImage, MealDetailsFieldsComponent],
     templateUrl: './quick-consumption-drawer.component.html',
     styleUrls: ['./quick-consumption-drawer.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,8 +50,21 @@ export class QuickConsumptionDrawerComponent {
 
     public readonly shouldRender = computed(() => this.forceShow() || this.hasItems());
     public readonly isInline = computed(() => this.layout() === 'inline');
-    public readonly hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-    public readonly satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+
+    public constructor() {
+        let hadItems = this.hasItems();
+        effect(() => {
+            const hasItems = this.hasItems();
+            untracked(() => {
+                if (!hasItems) {
+                    this.resetUiState();
+                } else if (!hadItems) {
+                    this.isCollapsed.set(false);
+                }
+                hadItems = hasItems;
+            });
+        });
+    }
 
     public imageFor(item: QuickMealItem): string {
         if (item.type === 'product' && item.product) {
@@ -85,8 +93,16 @@ export class QuickConsumptionDrawerComponent {
         return this.translateService.instant('CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT') + ': ' + this.itemName(item);
     }
 
-    public updateDetails(field: keyof Pick<QuickMealDetails, 'date' | 'time' | 'comment'>, value: string): void {
-        this.quickService.updateDetails({ [field]: value });
+    public updateDate(value: string): void {
+        this.quickService.updateDetails({ date: value });
+    }
+
+    public updateTime(value: string): void {
+        this.quickService.updateDetails({ time: value });
+    }
+
+    public updateComment(value: string): void {
+        this.quickService.updateDetails({ comment: value });
     }
 
     public toggleDetails(): void {
@@ -97,44 +113,16 @@ export class QuickConsumptionDrawerComponent {
         this.isCollapsed.update(value => !value);
     }
 
-    public onSatietyLevelChange(field: 'preMealSatietyLevel' | 'postMealSatietyLevel', value: FdUiEmojiPickerValue | null): void {
-        if (typeof value !== 'number') {
-            return;
-        }
-
-        this.quickService.updateDetails({ [field]: this.normalizeSatietyLevel(value) });
+    public updatePreMealSatietyLevel(value: number): void {
+        this.quickService.updateDetails({ preMealSatietyLevel: value });
     }
 
-    public getSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
-        const value = kind === 'before' ? this.details().preMealSatietyLevel : this.details().postMealSatietyLevel;
-        const meta = this.getSatietyLevelMeta(kind, value);
-        const fieldLabel = this.translateService.instant(
-            kind === 'before' ? 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' : 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER',
-        );
-        return `${fieldLabel}. ${meta.label}. ${meta.description}`.trim();
+    public updatePostMealSatietyLevel(value: number): void {
+        this.quickService.updateDetails({ postMealSatietyLevel: value });
     }
 
     public edit(item: QuickMealItem): void {
-        const group = this.createFormGroup(item);
-        void firstValueFrom(
-            this.fdDialogService
-                .open<MealManualItemDialogComponent, MealManualItemDialogData, boolean>(MealManualItemDialogComponent, {
-                    preset: 'form',
-                    data: { group },
-                })
-                .afterClosed(),
-        ).then(saved => {
-            if (!saved) {
-                return;
-            }
-
-            const updatedItem = this.toQuickMealItem(group);
-            if (!updatedItem) {
-                return;
-            }
-
-            this.quickService.updateItem(item.key, updatedItem);
-        });
+        void this.openEditDialogAsync(item);
     }
 
     public remove(key: string): void {
@@ -145,57 +133,49 @@ export class QuickConsumptionDrawerComponent {
         this.quickService.clear();
     }
 
-    public openEditor(): void {
-        void this.quickService.openEditorAsync();
-    }
-
     public save(): void {
         this.quickService.saveDraft();
     }
 
-    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): FdUiEmojiPickerOption<number>[] {
-        return levels.map(level => {
-            const label = this.translateService.instant(level.titleKey);
-            const description = this.translateService.instant(level.descriptionKey);
-            return {
-                value: level.value,
-                emoji: level.emoji,
-                label,
-                description,
-                ariaLabel: `${label}. ${description}`,
-                hint: `${label}. ${description}`,
-            };
-        });
+    private resetUiState(): void {
+        this.isCollapsed.set(false);
+        this.isDetailsExpanded.set(false);
     }
 
-    private getSatietyLevelMeta(kind: 'before' | 'after', value: number | null): { label: string; description: string } {
-        const normalizedValue = this.normalizeSatietyLevel(value);
-        const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
-        const config = levels.find(level => level.value === normalizedValue);
-        return {
-            label: this.translateService.instant(config?.titleKey ?? ''),
-            description: this.translateService.instant(config?.descriptionKey ?? ''),
-        };
-    }
+    private async openEditDialogAsync(item: QuickMealItem): Promise<void> {
+        const group = await this.createFormGroupAsync(item);
+        const saved = await firstValueFrom(
+            this.fdDialogService
+                .open<MealManualItemDialogComponent, MealManualItemDialogData, boolean>(MealManualItemDialogComponent, {
+                    preset: 'form',
+                    data: { group },
+                })
+                .afterClosed(),
+        );
 
-    private normalizeSatietyLevel(value: number | null): number {
-        if (!value) {
-            return 3;
+        if (!saved) {
+            return;
         }
 
-        if (value > 5) {
-            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        const updatedItem = this.toQuickMealItem(group);
+        if (!updatedItem) {
+            return;
         }
 
-        return Math.max(1, value);
+        this.quickService.updateItem(item.key, updatedItem);
     }
 
-    private createFormGroup(item: QuickMealItem): FormGroup<ConsumptionItemFormData> {
+    private async createFormGroupAsync(item: QuickMealItem): Promise<FormGroup<ConsumptionItemFormData>> {
         const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
+        const amount =
+            sourceType === ConsumptionSourceType.Recipe
+                ? await this.mealManageFacade.resolveRecipeServingsToGramsAsync(item.recipe ?? null, item.amount)
+                : item.amount;
+
         return this.mealManageFacade.createConsumptionItem(
             sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
             sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
-            item.amount,
+            amount,
             sourceType,
         );
     }
@@ -227,7 +207,7 @@ export class QuickConsumptionDrawerComponent {
             key: `recipe-${recipe.id}`,
             type: 'recipe',
             recipe,
-            amount,
+            amount: this.mealManageFacade.convertRecipeGramsToServings(recipe, amount),
         };
     }
 }

@@ -1,15 +1,10 @@
-import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+﻿import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
-import {
-    FdUiEmojiPickerComponent,
-    type FdUiEmojiPickerOption,
-    type FdUiEmojiPickerValue,
-} from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
-import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
 import { type FoodNutritionResponse, type FoodVisionItem } from '../../../../shared/models/ai.data';
+import { MealDetailsFieldsComponent } from '../../meal-details-fields/meal-details-fields.component';
 import { type AiInputBarMealDetails } from '../ai-input-bar.types';
 
 type EditableAiItem = {
@@ -37,7 +32,7 @@ type EditChangeSummary = {
 @Component({
     selector: 'fd-ai-photo-result',
     standalone: true,
-    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, FdUiEmojiPickerComponent, DragDropModule],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, DragDropModule, MealDetailsFieldsComponent],
     templateUrl: './ai-photo-result.component.html',
     styleUrls: ['./ai-photo-result.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,8 +67,6 @@ export class AiPhotoResultComponent {
     public readonly detailsComment = signal('');
     public readonly preMealSatietyLevel = signal<number | null>(3);
     public readonly postMealSatietyLevel = signal<number | null>(3);
-    public readonly hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-    public readonly satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
     public readonly editItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
 
@@ -113,14 +106,6 @@ export class AiPhotoResultComponent {
         return this.translateService.instant('AI_INPUT_BAR.REMOVE_AI_ITEM', {
             name: item.name.trim() || item.nameEn.trim() || '?',
         });
-    }
-
-    public getSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
-        const meta = this.getSatietyLevelMeta(kind, kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel());
-        const fieldLabel = this.translateService.instant(
-            kind === 'before' ? 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' : 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER',
-        );
-        return `${fieldLabel}. ${meta.label}. ${meta.description}`.trim();
     }
 
     public startEditing(): void {
@@ -239,49 +224,6 @@ export class AiPhotoResultComponent {
             comment: this.detailsComment().trim() || null,
             preMealSatietyLevel: this.normalizeSatietyLevel(this.preMealSatietyLevel()),
             postMealSatietyLevel: this.normalizeSatietyLevel(this.postMealSatietyLevel()),
-        });
-    }
-
-    public getSatietyLevelMeta(
-        kind: 'before' | 'after',
-        value: number | null,
-    ): { emoji: string; label: string; description: string; gradient: string } {
-        const normalizedValue = this.normalizeSatietyLevel(value);
-        const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
-        const config = levels.find(level => level.value === normalizedValue);
-        return {
-            emoji: config?.emoji ?? '😐',
-            label: this.translateService.instant(config?.titleKey ?? ''),
-            description: this.translateService.instant(config?.descriptionKey ?? ''),
-            gradient: config?.gradient ?? 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
-        };
-    }
-
-    public onSatietyLevelChange(kind: 'before' | 'after', value: FdUiEmojiPickerValue | null): void {
-        if (typeof value !== 'number') {
-            return;
-        }
-
-        const normalized = this.normalizeSatietyLevel(value);
-        if (kind === 'before') {
-            this.preMealSatietyLevel.set(normalized);
-        } else {
-            this.postMealSatietyLevel.set(normalized);
-        }
-    }
-
-    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): FdUiEmojiPickerOption<number>[] {
-        return levels.map(level => {
-            const label = this.translateService.instant(level.titleKey);
-            const description = this.translateService.instant(level.descriptionKey);
-            return {
-                value: level.value,
-                emoji: level.emoji,
-                label,
-                description,
-                ariaLabel: `${label}. ${description}`,
-                hint: `${label}. ${description}`,
-            };
         });
     }
 

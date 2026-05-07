@@ -1,0 +1,74 @@
+<div
+    class="meal-details-fields fd-grid fd-gap-sm"
+    [class.meal-details-fields--surface]="surface()"
+    [class.meal-details-fields--regular]="density() === 'regular'"
+    [class.meal-details-fields--satiety-columns]="satietyLayout() === 'columns'"
+>
+    <div class="meal-details-fields__date-time fd-grid fd-gap-xs">
+        <label class="meal-details-fields__field fd-grid fd-gap-xxs">
+            <span class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating">
+                {{ 'AI_INPUT_BAR.DETAIL_DATE' | translate }}
+            </span>
+            <input
+                class="meal-details-fields__input fd-ui-body-sm"
+                type="date"
+                [value]="date()"
+                (input)="dateChange.emit(dateInput.value)"
+                #dateInput
+            />
+        </label>
+        <label class="meal-details-fields__field fd-grid fd-gap-xxs">
+            <span class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating">
+                {{ 'AI_INPUT_BAR.DETAIL_TIME' | translate }}
+            </span>
+            <input
+                class="meal-details-fields__input fd-ui-body-sm"
+                type="time"
+                [value]="time()"
+                (input)="timeChange.emit(timeInput.value)"
+                #timeInput
+            />
+        </label>
+    </div>
+
+    <label class="meal-details-fields__field fd-grid fd-gap-xxs">
+        <span class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating">
+            {{ 'AI_INPUT_BAR.DETAIL_COMMENT' | translate }}
+        </span>
+        <textarea
+            class="meal-details-fields__textarea fd-ui-body-sm"
+            [rows]="textareaRows()"
+            [value]="comment()"
+            (input)="commentChange.emit(commentInput.value)"
+            #commentInput
+        ></textarea>
+    </label>
+
+    <div class="meal-details-fields__satiety fd-grid fd-gap-sm">
+        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
+            <p class="meal-details-fields__label meal-details-fields__satiety-label fd-ui-field-label fd-ui-field-label--floating">
+                {{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}
+            </p>
+            <fd-ui-emoji-picker
+                size="sm"
+                [options]="hungerEmojiOptions"
+                [selectedValue]="preMealSatietyLevel()"
+                [ariaLabel]="getSatietyButtonAriaLabel('before')"
+                (selectedValueChange)="onSatietyLevelChange('before', $event)"
+            />
+        </div>
+
+        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
+            <p class="meal-details-fields__label meal-details-fields__satiety-label fd-ui-field-label fd-ui-field-label--floating">
+                {{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}
+            </p>
+            <fd-ui-emoji-picker
+                size="sm"
+                [options]="satietyEmojiOptions"
+                [selectedValue]="postMealSatietyLevel()"
+                [ariaLabel]="getSatietyButtonAriaLabel('after')"
+                (selectedValueChange)="onSatietyLevelChange('after', $event)"
+            />
+        </div>
+    </div>
+</div>

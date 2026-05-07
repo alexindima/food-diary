@@ -256,6 +256,11 @@ export class MealManageFacade {
         });
     }
 
+    public async resolveRecipeServingsToGramsAsync(recipe: Recipe | null, servingsAmount: number): Promise<number> {
+        const servingWeight = await firstValueFrom(this.recipeWeight.loadServingWeight(recipe));
+        return servingWeight && servingWeight > 0 ? servingsAmount * servingWeight : servingsAmount;
+    }
+
     public convertRecipeGramsToServings(recipe: Recipe | null, grams: number): number {
         return this.recipeWeight.convertGramsToServings(recipe, grams);
     }

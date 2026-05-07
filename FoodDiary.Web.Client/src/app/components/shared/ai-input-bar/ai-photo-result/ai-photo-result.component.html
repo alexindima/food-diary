@@ -204,75 +204,22 @@
             </div>
 
             <div class="ai-photo-result__details" [class.ai-photo-result__details--expanded]="showDetails() && isDetailsExpanded()">
-                <div class="ai-photo-result__details-inner fd-stack fd-gap-card-profile">
-                    <div class="ai-photo-result__details-grid fd-gap-sm">
-                        <label class="ai-photo-result__detail-field fd-stack fd-gap-xxs">
-                            <span class="ai-photo-result__detail-label fd-ui-field-label fd-ui-field-label--floating">{{
-                                'AI_INPUT_BAR.DETAIL_DATE' | translate
-                            }}</span>
-                            <input
-                                class="ai-photo-result__detail-input fd-ui-body-sm"
-                                type="date"
-                                [value]="detailsDate()"
-                                (input)="updateDetailsDate(dateInput.value)"
-                                #dateInput
-                            />
-                        </label>
-                        <label class="ai-photo-result__detail-field fd-stack fd-gap-xxs">
-                            <span class="ai-photo-result__detail-label fd-ui-field-label fd-ui-field-label--floating">{{
-                                'AI_INPUT_BAR.DETAIL_TIME' | translate
-                            }}</span>
-                            <input
-                                class="ai-photo-result__detail-input fd-ui-body-sm"
-                                type="time"
-                                [value]="detailsTime()"
-                                (input)="updateDetailsTime(timeInput.value)"
-                                #timeInput
-                            />
-                        </label>
-                    </div>
-
-                    <label class="ai-photo-result__detail-field fd-stack fd-gap-xxs">
-                        <span class="ai-photo-result__detail-label fd-ui-field-label fd-ui-field-label--floating">{{
-                            'AI_INPUT_BAR.DETAIL_COMMENT' | translate
-                        }}</span>
-                        <textarea
-                            class="ai-photo-result__detail-textarea fd-ui-body-sm"
-                            rows="3"
-                            [value]="detailsComment()"
-                            (input)="updateDetailsComment(commentInput.value)"
-                            #commentInput
-                        ></textarea>
-                    </label>
-
-                    <div class="ai-photo-result__satiety-grid fd-gap-sm">
-                        <div class="ai-photo-result__satiety-field fd-stack fd-gap-xxs">
-                            <p class="ai-photo-result__satiety-label fd-ui-field-label fd-ui-field-label--floating">
-                                {{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}
-                            </p>
-                            <fd-ui-emoji-picker
-                                size="sm"
-                                [options]="hungerEmojiOptions"
-                                [selectedValue]="preMealSatietyLevel()"
-                                [ariaLabel]="getSatietyButtonAriaLabel('before')"
-                                (selectedValueChange)="onSatietyLevelChange('before', $event)"
-                            />
-                        </div>
-
-                        <div class="ai-photo-result__satiety-field fd-stack fd-gap-xxs">
-                            <p class="ai-photo-result__satiety-label fd-ui-field-label fd-ui-field-label--floating">
-                                {{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}
-                            </p>
-                            <fd-ui-emoji-picker
-                                size="sm"
-                                [options]="satietyEmojiOptions"
-                                [selectedValue]="postMealSatietyLevel()"
-                                [ariaLabel]="getSatietyButtonAriaLabel('after')"
-                                (selectedValueChange)="onSatietyLevelChange('after', $event)"
-                            />
-                        </div>
-                    </div>
-                </div>
+                <fd-meal-details-fields
+                    class="ai-photo-result__details-inner"
+                    [date]="detailsDate()"
+                    [time]="detailsTime()"
+                    [comment]="detailsComment()"
+                    [preMealSatietyLevel]="preMealSatietyLevel()"
+                    [postMealSatietyLevel]="postMealSatietyLevel()"
+                    [surface]="false"
+                    density="regular"
+                    satietyLayout="columns"
+                    (dateChange)="updateDetailsDate($event)"
+                    (timeChange)="updateDetailsTime($event)"
+                    (commentChange)="updateDetailsComment($event)"
+                    (preMealSatietyLevelChange)="preMealSatietyLevel.set($event)"
+                    (postMealSatietyLevelChange)="postMealSatietyLevel.set($event)"
+                />
             </div>
         }
     }

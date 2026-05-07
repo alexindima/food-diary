@@ -157,54 +157,6 @@
     --fd-button-transform-active: none;
 }
 
-.quick-consumption__details-panel {
-    padding: var(--fd-space-xs);
-    border-radius: var(--fd-radius-card);
-    background: var(--fd-bg-surface-raised-blend);
-    border: var(--fd-border-subtle);
-}
-
-.quick-consumption__details-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.quick-consumption__satiety-grid {
-    grid-template-columns: 1fr;
-}
-
-.quick-consumption__detail-field,
-.quick-consumption__satiety-field {
-    min-width: 0;
-}
-
-.quick-consumption__detail-label,
-.quick-consumption__satiety-label {
-    margin: 0;
-    color: var(--fd-color-text-muted);
-}
-
-.quick-consumption__detail-input,
-.quick-consumption__detail-textarea {
-    width: 100%;
-    min-width: 0;
-    border: var(--fd-border-subtle);
-    border-radius: var(--fd-radius-card);
-    background: var(--fd-bg-surface-raised);
-    color: var(--fd-color-text);
-    outline: none;
-}
-
-.quick-consumption__detail-input {
-    min-height: var(--fd-size-control-md);
-    padding: 0 var(--fd-space-xs);
-}
-
-.quick-consumption__detail-textarea {
-    resize: vertical;
-    min-height: calc(var(--fd-size-control-touch) * 1.4);
-    padding: var(--fd-space-xs);
-}
-
 .quick-consumption__actions {
     grid-template-columns: 1fr;
 }
@@ -220,20 +172,16 @@
 }
 
 @media #{variables.$media-phablet} {
-
+    /* stylelint-disable-next-line rule-empty-line-before */
     .quick-consumption {
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         width: auto;
     }
-
-    .quick-consumption__details-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
+    /* stylelint-disable-next-line rule-empty-line-before */
     .quick-consumption__item--flash {
         animation: none;
         box-shadow: var(--fd-shadow-ring-inset-success);
@@ -241,7 +189,7 @@
 }
 
 @keyframes quick-consumption-item-flash {
-
+    /* stylelint-disable rule-empty-line-before */
     0% {
         background: var(--fd-bg-success-soft);
         box-shadow: var(--fd-shadow-ring-inset-success), var(--fd-shadow-accent-glow);
@@ -258,4 +206,5 @@
         box-shadow: var(--fd-shadow-none);
         transform: translateY(0);
     }
+    /* stylelint-enable rule-empty-line-before */
 }

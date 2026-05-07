@@ -45,7 +45,6 @@ import { type UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { type NutrientData } from '../../../../shared/models/charts.data';
 import { type ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
-import { type QuickMealDetails, type QuickMealItem } from '../../lib/quick-meal.service';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -235,8 +234,6 @@ export class BaseMealManageComponent {
         } else if (!this.consumption()) {
             this.setAutoMealTypeFromDate();
         }
-
-        this.prefillFromNavigationState();
 
         effect(() => {
             const consumption = this.consumption();
@@ -548,65 +545,6 @@ export class BaseMealManageComponent {
         }
 
         mealTypeControl.setValue(resolveMealTypeByTime(date), { emitEvent: false });
-    }
-
-    private prefillFromNavigationState(): void {
-        if (this.consumption()) {
-            return;
-        }
-
-        const navigationState = this.router.getCurrentNavigation()?.extras.state as
-            | { quickConsumptionItems?: QuickMealItem[]; quickConsumptionDetails?: QuickMealDetails }
-            | undefined;
-        const historyState = window.history.state as
-            | { quickConsumptionItems?: QuickMealItem[]; quickConsumptionDetails?: QuickMealDetails }
-            | undefined;
-        const draftItems = navigationState?.quickConsumptionItems ?? historyState?.quickConsumptionItems;
-        const draftDetails = navigationState?.quickConsumptionDetails ?? historyState?.quickConsumptionDetails;
-
-        if (!draftItems?.length) {
-            return;
-        }
-
-        this.items.clear();
-        if (draftDetails) {
-            this.consumptionForm.patchValue(
-                {
-                    date: draftDetails.date,
-                    time: draftDetails.time,
-                    comment: draftDetails.comment || null,
-                    preMealSatietyLevel: this.normalizeSatietyLevel(draftDetails.preMealSatietyLevel),
-                    postMealSatietyLevel: this.normalizeSatietyLevel(draftDetails.postMealSatietyLevel),
-                },
-                { emitEvent: false },
-            );
-            this.setAutoMealTypeFromDate();
-        }
-
-        draftItems.forEach(item => {
-            const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
-            const amount = item.amount;
-            this.items.push(
-                this.mealManageFacade.createConsumptionItem(
-                    sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
-                    sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
-                    amount,
-                    sourceType,
-                ),
-            );
-
-            if (sourceType === ConsumptionSourceType.Recipe) {
-                const currentIndex = this.items.length - 1;
-                this.mealManageFacade.ensureRecipeWeightForExistingItem(this.items.at(currentIndex), amount, item.recipe ?? null);
-            }
-        });
-
-        if (!this.items.length) {
-            this.items.push(this.mealManageFacade.createConsumptionItem());
-        }
-
-        this.updateItemValidationRules();
-        this.updateSummary();
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {

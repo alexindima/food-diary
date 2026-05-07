@@ -1,0 +1,106 @@
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FdUiEmojiPickerComponent,
+    type FdUiEmojiPickerOption,
+    type FdUiEmojiPickerValue,
+} from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
+import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+
+@Component({
+    selector: 'fd-meal-details-fields',
+    imports: [TranslatePipe, FdUiEmojiPickerComponent],
+    templateUrl: './meal-details-fields.component.html',
+    styleUrls: ['./meal-details-fields.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MealDetailsFieldsComponent {
+    private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
+
+    public readonly date = input.required<string>();
+    public readonly time = input.required<string>();
+    public readonly comment = input.required<string>();
+    public readonly preMealSatietyLevel = input<number | null>(3);
+    public readonly postMealSatietyLevel = input<number | null>(3);
+    public readonly textareaRows = input(3);
+    public readonly surface = input(true);
+    public readonly density = input<'compact' | 'regular'>('compact');
+    public readonly satietyLayout = input<'stacked' | 'columns'>('stacked');
+
+    public readonly dateChange = output<string>();
+    public readonly timeChange = output<string>();
+    public readonly commentChange = output<string>();
+    public readonly preMealSatietyLevelChange = output<number>();
+    public readonly postMealSatietyLevelChange = output<number>();
+
+    public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
+    public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+
+    public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.hungerEmojiOptions = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
+            this.satietyEmojiOptions = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+        });
+    }
+
+    public getSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
+        const value = kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel();
+        const meta = this.getSatietyLevelMeta(kind, value);
+        const fieldLabel = this.translateService.instant(
+            kind === 'before' ? 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' : 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER',
+        );
+        return `${fieldLabel}. ${meta.label}. ${meta.description}`.trim();
+    }
+
+    public onSatietyLevelChange(kind: 'before' | 'after', value: FdUiEmojiPickerValue | null): void {
+        if (typeof value !== 'number') {
+            return;
+        }
+
+        const normalized = this.normalizeSatietyLevel(value);
+        if (kind === 'before') {
+            this.preMealSatietyLevelChange.emit(normalized);
+        } else {
+            this.postMealSatietyLevelChange.emit(normalized);
+        }
+    }
+
+    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): FdUiEmojiPickerOption<number>[] {
+        return levels.map(level => {
+            const label = this.translateService.instant(level.titleKey);
+            const description = this.translateService.instant(level.descriptionKey);
+            return {
+                value: level.value,
+                emoji: level.emoji,
+                label,
+                description,
+                ariaLabel: `${label}. ${description}`,
+                hint: `${label}. ${description}`,
+            };
+        });
+    }
+
+    private getSatietyLevelMeta(kind: 'before' | 'after', value: number | null): { label: string; description: string } {
+        const normalizedValue = this.normalizeSatietyLevel(value);
+        const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
+        const config = levels.find(level => level.value === normalizedValue);
+        return {
+            label: this.translateService.instant(config?.titleKey ?? ''),
+            description: this.translateService.instant(config?.descriptionKey ?? ''),
+        };
+    }
+
+    private normalizeSatietyLevel(value: number | null): number {
+        if (!value) {
+            return 3;
+        }
+
+        if (value > 5) {
+            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        }
+
+        return Math.max(1, value);
+    }
+}

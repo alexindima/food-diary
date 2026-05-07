@@ -2,7 +2,6 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
-import { NavigationService } from '../../../services/navigation.service';
 import { type Product } from '../../products/models/product.data';
 import { type Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
@@ -32,7 +31,6 @@ export interface QuickMealDetails {
 })
 export class QuickMealService {
     private readonly mealService = inject(MealService);
-    private readonly navigationService = inject(NavigationService);
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
 
@@ -131,28 +129,6 @@ export class QuickMealService {
             ...current,
             ...details,
         }));
-    }
-
-    public async openEditorAsync(): Promise<void> {
-        if (this.isPreviewMode) {
-            return;
-        }
-
-        const items = this.itemsSignal();
-        if (!items.length) {
-            return;
-        }
-
-        const navigated = await this.navigationService.navigateToConsumptionAddAsync(undefined, {
-            state: {
-                quickConsumptionItems: [...items],
-                quickConsumptionDetails: this.detailsSignal(),
-            },
-        });
-
-        if (navigated) {
-            this.clear();
-        }
     }
 
     public saveDraft(): void {

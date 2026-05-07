@@ -1,0 +1,90 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.meal-details-fields {
+    min-width: 0;
+}
+
+.meal-details-fields--surface {
+    padding: var(--fd-space-xs);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface-raised-blend);
+    border: var(--fd-border-subtle);
+}
+
+.meal-details-fields__date-time {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.meal-details-fields__satiety {
+    grid-template-columns: 1fr;
+}
+
+.meal-details-fields--satiety-columns .meal-details-fields__satiety {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+}
+
+.meal-details-fields__field {
+    min-width: 0;
+}
+
+.meal-details-fields__label {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}
+
+.meal-details-fields__input,
+.meal-details-fields__textarea {
+    width: 100%;
+    min-width: 0;
+    border: var(--fd-border-subtle);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface-raised);
+    color: var(--fd-color-text);
+    outline: none;
+    font: inherit;
+}
+
+.meal-details-fields__input {
+    min-height: var(--fd-size-control-md);
+    padding: 0 var(--fd-space-xs);
+}
+
+.meal-details-fields__textarea {
+    resize: vertical;
+    min-height: calc(var(--fd-size-control-touch) * 1.4);
+    padding: var(--fd-space-xs);
+}
+
+.meal-details-fields--regular {
+    /* stylelint-disable rule-empty-line-before */
+    .meal-details-fields__input,
+    .meal-details-fields__textarea {
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-lg);
+    }
+
+    .meal-details-fields__input {
+        min-height: var(--fd-size-control-touch);
+        padding: 0 var(--fd-space-sm);
+    }
+
+    .meal-details-fields__textarea {
+        min-height: 88px;
+        padding: var(--fd-space-sm);
+    }
+    /* stylelint-enable rule-empty-line-before */
+}
+
+@media #{variables.$media-phablet} {
+    /* stylelint-disable-next-line rule-empty-line-before */
+    .meal-details-fields__date-time,
+    .meal-details-fields--satiety-columns .meal-details-fields__satiety {
+        grid-template-columns: 1fr;
+    }
+}

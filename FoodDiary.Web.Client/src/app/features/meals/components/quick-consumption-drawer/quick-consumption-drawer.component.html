@@ -101,75 +101,19 @@
                 </fd-ui-button>
 
                 @if (isDetailsExpanded()) {
-                    <div class="quick-consumption__details-panel fd-grid fd-gap-sm">
-                        <div class="quick-consumption__details-grid fd-grid fd-gap-xs">
-                            <label class="quick-consumption__detail-field fd-grid fd-gap-xxs">
-                                <span class="quick-consumption__detail-label fd-ui-field-label fd-ui-field-label--floating">
-                                    {{ 'AI_INPUT_BAR.DETAIL_DATE' | translate }}
-                                </span>
-                                <input
-                                    class="quick-consumption__detail-input fd-ui-body-sm"
-                                    type="date"
-                                    [value]="details().date"
-                                    (input)="updateDetails('date', dateInput.value)"
-                                    #dateInput
-                                />
-                            </label>
-                            <label class="quick-consumption__detail-field fd-grid fd-gap-xxs">
-                                <span class="quick-consumption__detail-label fd-ui-field-label fd-ui-field-label--floating">
-                                    {{ 'AI_INPUT_BAR.DETAIL_TIME' | translate }}
-                                </span>
-                                <input
-                                    class="quick-consumption__detail-input fd-ui-body-sm"
-                                    type="time"
-                                    [value]="details().time"
-                                    (input)="updateDetails('time', timeInput.value)"
-                                    #timeInput
-                                />
-                            </label>
-                        </div>
-
-                        <label class="quick-consumption__detail-field fd-grid fd-gap-xxs">
-                            <span class="quick-consumption__detail-label fd-ui-field-label fd-ui-field-label--floating">
-                                {{ 'AI_INPUT_BAR.DETAIL_COMMENT' | translate }}
-                            </span>
-                            <textarea
-                                class="quick-consumption__detail-textarea fd-ui-body-sm"
-                                rows="2"
-                                [value]="details().comment"
-                                (input)="updateDetails('comment', commentInput.value)"
-                                #commentInput
-                            ></textarea>
-                        </label>
-
-                        <div class="quick-consumption__satiety-grid fd-grid fd-gap-sm">
-                            <div class="quick-consumption__satiety-field fd-grid fd-gap-xxs">
-                                <p class="quick-consumption__satiety-label fd-ui-field-label fd-ui-field-label--floating">
-                                    {{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}
-                                </p>
-                                <fd-ui-emoji-picker
-                                    size="sm"
-                                    [options]="hungerEmojiOptions"
-                                    [selectedValue]="details().preMealSatietyLevel"
-                                    [ariaLabel]="getSatietyButtonAriaLabel('before')"
-                                    (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
-                                />
-                            </div>
-
-                            <div class="quick-consumption__satiety-field fd-grid fd-gap-xxs">
-                                <p class="quick-consumption__satiety-label fd-ui-field-label fd-ui-field-label--floating">
-                                    {{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}
-                                </p>
-                                <fd-ui-emoji-picker
-                                    size="sm"
-                                    [options]="satietyEmojiOptions"
-                                    [selectedValue]="details().postMealSatietyLevel"
-                                    [ariaLabel]="getSatietyButtonAriaLabel('after')"
-                                    (selectedValueChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <fd-meal-details-fields
+                        [date]="details().date"
+                        [time]="details().time"
+                        [comment]="details().comment"
+                        [preMealSatietyLevel]="details().preMealSatietyLevel"
+                        [postMealSatietyLevel]="details().postMealSatietyLevel"
+                        [textareaRows]="2"
+                        (dateChange)="updateDate($event)"
+                        (timeChange)="updateTime($event)"
+                        (commentChange)="updateComment($event)"
+                        (preMealSatietyLevelChange)="updatePreMealSatietyLevel($event)"
+                        (postMealSatietyLevelChange)="updatePostMealSatietyLevel($event)"
+                    />
                 }
             </div>
 
