@@ -28,9 +28,9 @@ describe('MealManageFacade', () => {
     let aiFoodService: { getUsageSummary: ReturnType<typeof vi.fn> };
     let authService: { isPremium: ReturnType<typeof vi.fn> };
     let navigationService: {
-        navigateToHome: ReturnType<typeof vi.fn>;
-        navigateToConsumptionList: ReturnType<typeof vi.fn>;
-        navigateToPremiumAccess: ReturnType<typeof vi.fn>;
+        navigateToHomeAsync: ReturnType<typeof vi.fn>;
+        navigateToConsumptionListAsync: ReturnType<typeof vi.fn>;
+        navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
     };
     let dialogService: { open: ReturnType<typeof vi.fn> };
     let recipeWeightService: { loadServingWeight: ReturnType<typeof vi.fn>; convertGramsToServings: ReturnType<typeof vi.fn> };
@@ -72,9 +72,9 @@ describe('MealManageFacade', () => {
             isPremium: vi.fn(),
         };
         navigationService = {
-            navigateToHome: vi.fn(),
-            navigateToConsumptionList: vi.fn(),
-            navigateToPremiumAccess: vi.fn(),
+            navigateToHomeAsync: vi.fn(),
+            navigateToConsumptionListAsync: vi.fn(),
+            navigateToPremiumAccessAsync: vi.fn(),
         };
         dialogService = {
             open: vi.fn(),
@@ -91,9 +91,9 @@ describe('MealManageFacade', () => {
         dialogService.open.mockReturnValue({ afterClosed: () => of('ConsumptionList') });
         recipeWeightService.loadServingWeight.mockReturnValue(of(50));
         recipeWeightService.convertGramsToServings.mockImplementation((_recipe: unknown, amount: number) => amount / 50);
-        navigationService.navigateToHome.mockResolvedValue(true);
-        navigationService.navigateToConsumptionList.mockResolvedValue(true);
-        navigationService.navigateToPremiumAccess.mockResolvedValue(true);
+        navigationService.navigateToHomeAsync.mockResolvedValue(true);
+        navigationService.navigateToConsumptionListAsync.mockResolvedValue(true);
+        navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
 
         TestBed.configureTestingModule({
             providers: [
@@ -111,27 +111,27 @@ describe('MealManageFacade', () => {
     });
 
     it('should load ai usage summary', async () => {
-        await expect(facade.loadAiUsage()).resolves.toEqual(usage);
+        await expect(facade.loadAiUsageAsync()).resolves.toEqual(usage);
     });
 
     it('should create consumption when original consumption is null', async () => {
-        const result = await facade.submitConsumption(null, consumptionData);
+        const result = await facade.submitConsumptionAsync(null, consumptionData);
 
         expect(mealService.create).toHaveBeenCalled();
         expect(result).toEqual(consumption);
     });
 
     it('should update consumption when editing existing consumption', async () => {
-        const result = await facade.submitConsumption(consumption, consumptionData);
+        const result = await facade.submitConsumptionAsync(consumption, consumptionData);
 
         expect(mealService.update).toHaveBeenCalledWith('c1', consumptionData);
         expect(result).toEqual(consumption);
     });
 
     it('should redirect after success dialog choice', async () => {
-        await facade.showSuccessRedirect(false);
+        await facade.showSuccessRedirectAsync(false);
 
-        expect(navigationService.navigateToConsumptionList).toHaveBeenCalled();
+        expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
     });
 
     it('should append ai session', () => {
@@ -194,7 +194,7 @@ describe('MealManageFacade', () => {
         const group = facade.createConsumptionItem();
         dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
 
-        await facade.openItemSelectionDialog(group, 'Product');
+        await facade.openItemSelectionDialogAsync(group, 'Product');
 
         expect(group.controls.product.value).toBe(product);
         expect(group.controls.amount.value).toBe(180);
@@ -206,7 +206,7 @@ describe('MealManageFacade', () => {
         dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
         recipeWeightService.loadServingWeight.mockReturnValue(of(75));
 
-        await facade.openItemSelectionDialog(group, 'Recipe');
+        await facade.openItemSelectionDialogAsync(group, 'Recipe');
 
         expect(group.controls.recipe.value).toBe(recipe);
         expect(group.controls.amount.value).toBe(75);

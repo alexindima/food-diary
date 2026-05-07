@@ -19,7 +19,7 @@ describe('RecipeManageFacade', () => {
         update: ReturnType<typeof vi.fn>;
     };
     let navigationService: {
-        navigateToRecipeList: ReturnType<typeof vi.fn>;
+        navigateToRecipeListAsync: ReturnType<typeof vi.fn>;
     };
     let dialogService: {
         open: ReturnType<typeof vi.fn>;
@@ -31,7 +31,7 @@ describe('RecipeManageFacade', () => {
             update: vi.fn().mockReturnValue(of({ id: 'recipe-1', name: 'Recipe' })),
         };
         navigationService = {
-            navigateToRecipeList: vi.fn().mockResolvedValue(true),
+            navigateToRecipeListAsync: vi.fn().mockResolvedValue(true),
         };
         dialogService = {
             open: vi.fn().mockReturnValue({
@@ -71,7 +71,7 @@ describe('RecipeManageFacade', () => {
         await Promise.resolve();
 
         expect(recipeService.create).toHaveBeenCalled();
-        expect(navigationService.navigateToRecipeList).toHaveBeenCalledTimes(1);
+        expect(navigationService.navigateToRecipeListAsync).toHaveBeenCalledTimes(1);
         expect(facade.globalError()).toBeNull();
     });
 
@@ -94,7 +94,7 @@ describe('RecipeManageFacade', () => {
                 name: 'Recipe',
             }),
         );
-        expect(navigationService.navigateToRecipeList).toHaveBeenCalledTimes(1);
+        expect(navigationService.navigateToRecipeListAsync).toHaveBeenCalledTimes(1);
     });
 
     it('sets non-translated backend error on submit failure', () => {

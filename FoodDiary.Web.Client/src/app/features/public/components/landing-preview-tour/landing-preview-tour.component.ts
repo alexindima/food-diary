@@ -118,7 +118,7 @@ export class LandingPreviewTourComponent {
         this.quickConsumptionService.addRecipe(recipe);
     }
 
-    public async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
+    public async openAuthDialogAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
 
         this.fdDialogService.open(AuthDialogComponent, {

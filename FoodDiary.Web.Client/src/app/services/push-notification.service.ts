@@ -37,7 +37,7 @@ export class PushNotificationService {
         });
 
         this.swPush.pushSubscriptionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(change => {
-            void this.syncSubscriptionChange(change.oldSubscription, change.newSubscription);
+            void this.syncSubscriptionChangeAsync(change.oldSubscription, change.newSubscription);
         });
 
         this.swPush.notificationClicks.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -59,12 +59,12 @@ export class PushNotificationService {
             }
 
             untracked(() => {
-                void this.syncExistingSubscription();
+                void this.syncExistingSubscriptionAsync();
             });
         });
     }
 
-    public async ensureSubscription(): Promise<PushNotificationEnableResult> {
+    public async ensureSubscriptionAsync(): Promise<PushNotificationEnableResult> {
         if (!this.swPush.isEnabled) {
             return 'unsupported';
         }
@@ -112,7 +112,7 @@ export class PushNotificationService {
         }
     }
 
-    private async syncExistingSubscription(): Promise<void> {
+    private async syncExistingSubscriptionAsync(): Promise<void> {
         try {
             const subscription = await firstValueFrom(this.swPush.subscription.pipe(take(1)));
             this.isSubscribed.set(!!subscription);
@@ -129,7 +129,7 @@ export class PushNotificationService {
         }
     }
 
-    private async syncSubscriptionChange(
+    private async syncSubscriptionChangeAsync(
         oldSubscription: PushSubscription | null,
         newSubscription: PushSubscription | null,
     ): Promise<void> {
@@ -156,7 +156,7 @@ export class PushNotificationService {
         }
     }
 
-    public async removeSubscription(endpoint: string): Promise<boolean> {
+    public async removeSubscriptionAsync(endpoint: string): Promise<boolean> {
         if (!endpoint || this.isBusy()) {
             return false;
         }

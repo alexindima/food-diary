@@ -17,11 +17,11 @@ export const mealResolver: ResolveFn<Meal | null> = route => {
             if (meal) {
                 return meal;
             }
-            void navigationService.navigateToConsumptionList();
+            void navigationService.navigateToConsumptionListAsync();
             return null;
         }),
         catchError(() => {
-            void navigationService.navigateToConsumptionList();
+            void navigationService.navigateToConsumptionListAsync();
             return of(null);
         }),
     );

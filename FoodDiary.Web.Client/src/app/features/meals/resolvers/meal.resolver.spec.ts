@@ -10,7 +10,7 @@ import { mealResolver } from './meal.resolver';
 
 describe('mealResolver', () => {
     let mealServiceSpy: { getById: ReturnType<typeof vi.fn> };
-    let navSpy: { navigateToConsumptionList: ReturnType<typeof vi.fn> };
+    let navSpy: { navigateToConsumptionListAsync: ReturnType<typeof vi.fn> };
 
     const mockMeal: Partial<Meal> = { id: 'meal-1' };
 
@@ -24,7 +24,7 @@ describe('mealResolver', () => {
 
     beforeEach(() => {
         mealServiceSpy = { getById: vi.fn() };
-        navSpy = { navigateToConsumptionList: vi.fn().mockResolvedValue(undefined) };
+        navSpy = { navigateToConsumptionListAsync: vi.fn().mockResolvedValue(undefined) };
 
         TestBed.configureTestingModule({
             providers: [
@@ -63,7 +63,7 @@ describe('mealResolver', () => {
         });
 
         expect(resolved).toBeNull();
-        expect(navSpy.navigateToConsumptionList).toHaveBeenCalled();
+        expect(navSpy.navigateToConsumptionListAsync).toHaveBeenCalled();
     });
 
     it('should navigate to consumption list when service throws error', () => {
@@ -79,6 +79,6 @@ describe('mealResolver', () => {
         });
 
         expect(resolved).toBeNull();
-        expect(navSpy.navigateToConsumptionList).toHaveBeenCalled();
+        expect(navSpy.navigateToConsumptionListAsync).toHaveBeenCalled();
     });
 });

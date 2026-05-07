@@ -273,8 +273,8 @@ export class BaseMealManageComponent {
         });
     }
 
-    public async onCancel(): Promise<void> {
-        await this.navigationService.navigateToConsumptionList();
+    public async onCancelAsync(): Promise<void> {
+        await this.navigationService.navigateToConsumptionListAsync();
     }
 
     public get items(): FormArray<FormGroup<ConsumptionItemFormData>> {
@@ -358,7 +358,7 @@ export class BaseMealManageComponent {
             return;
         }
 
-        void this.mealManageFacade.openEditAiPhotoSessionDialog(session).then(updated => {
+        void this.mealManageFacade.openEditAiPhotoSessionDialogAsync(session).then(updated => {
             if (!updated) {
                 return;
             }
@@ -519,7 +519,7 @@ export class BaseMealManageComponent {
         };
 
         const consumption = this.consumption();
-        void (consumption ? this.updateConsumption(consumptionData) : this.addConsumption(consumptionData)).catch(error => {
+        void (consumption ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData)).catch(error => {
             this.handleSubmitError(error as HttpErrorResponse);
         });
     }
@@ -758,17 +758,17 @@ export class BaseMealManageComponent {
         });
     }
 
-    private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
-        const response = await this.mealManageFacade.submitConsumption(null, consumptionData);
-        await this.handleSubmitResponse(response);
+    private async addConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
+        const response = await this.mealManageFacade.submitConsumptionAsync(null, consumptionData);
+        await this.handleSubmitResponseAsync(response);
     }
 
-    private async updateConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
-        const response = await this.mealManageFacade.submitConsumption(this.consumption() ?? null, consumptionData);
-        await this.handleSubmitResponse(response);
+    private async updateConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
+        const response = await this.mealManageFacade.submitConsumptionAsync(this.consumption() ?? null, consumptionData);
+        await this.handleSubmitResponseAsync(response);
     }
 
-    private async handleSubmitResponse(response: Consumption | null): Promise<void> {
+    private async handleSubmitResponseAsync(response: Consumption | null): Promise<void> {
         if (response) {
             if (!this.consumption()) {
                 this.consumptionForm.reset({
@@ -791,7 +791,7 @@ export class BaseMealManageComponent {
                 this.aiSessions.set([]);
                 this.updateSummary();
             }
-            await this.mealManageFacade.showSuccessRedirect(Boolean(this.consumption()));
+            await this.mealManageFacade.showSuccessRedirectAsync(Boolean(this.consumption()));
         } else {
             this.handleSubmitError();
         }
@@ -885,7 +885,7 @@ export class BaseMealManageComponent {
     }
 
     private loadAiUsage(): void {
-        void this.mealManageFacade.loadAiUsage().then(usage => {
+        void this.mealManageFacade.loadAiUsageAsync().then(usage => {
             this.aiUsage.set(usage);
         });
     }

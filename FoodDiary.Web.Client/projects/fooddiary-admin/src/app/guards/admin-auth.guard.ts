@@ -7,7 +7,7 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
     const authService = inject(AdminAuthService);
     const router = inject(Router);
 
-    await authService.applySsoFromQuery();
+    await authService.applySsoFromQueryAsync();
     authService.refreshTokenState();
 
     if (!authService.isAuthenticated()) {
@@ -17,7 +17,7 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
     }
 
     if (!authService.isAdmin()) {
-        const upgraded = await authService.tryUpgradeToAdmin();
+        const upgraded = await authService.tryUpgradeToAdminAsync();
         authService.refreshTokenState();
 
         if (upgraded && authService.isAdmin()) {

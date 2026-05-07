@@ -1,4 +1,4 @@
-﻿<aside class="sidebar fd-stack fd-gap-md">
+<aside class="sidebar fd-stack fd-gap-md">
     <div class="sidebar__brand fd-row fd-gap-xs">
         <div class="sidebar__logo">
             <span class="sidebar__logo-mark" aria-hidden="true"></span>
@@ -14,7 +14,7 @@
             icon="notifications"
             [ariaLabel]="'NOTIFICATIONS.TITLE' | translate"
             [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
-            (click)="openNotifications()"
+            (click)="openNotificationsAsync()"
         >
             @if (unreadNotificationCount() > 0) {
                 <span class="sidebar__brand-notifications-dot" aria-hidden="true"></span>
@@ -139,7 +139,7 @@
                         fill="outline"
                         icon="logout"
                         role="menuitem"
-                        (click)="logout()"
+                        (click)="logoutAsync()"
                     >
                         {{ 'HEADER.LOGOUT' | translate }}
                     </fd-ui-button>

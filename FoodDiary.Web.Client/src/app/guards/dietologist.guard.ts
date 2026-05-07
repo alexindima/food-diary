@@ -10,12 +10,12 @@ export const dietologistGuard: CanActivateFn = async (_route, state) => {
     const router = inject(Router);
 
     if (!authService.isAuthenticated()) {
-        await navigationService.navigateToAuth('login', state.url);
+        await navigationService.navigateToAuthAsync('login', state.url);
         return false;
     }
 
     if (!authService.isEmailConfirmed()) {
-        await navigationService.navigateToEmailVerificationPending();
+        await navigationService.navigateToEmailVerificationPendingAsync();
         return false;
     }
 

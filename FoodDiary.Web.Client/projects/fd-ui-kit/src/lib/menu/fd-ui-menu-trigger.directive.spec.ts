@@ -46,7 +46,7 @@ describe('FdUiMenuTriggerDirective', () => {
         trigger = fixture.nativeElement.querySelector('button');
     });
 
-    async function flushOverlayFocus(): Promise<void> {
+    async function flushOverlayFocusAsync(): Promise<void> {
         fixture.detectChanges();
         await fixture.whenStable();
         await Promise.resolve();
@@ -67,7 +67,7 @@ describe('FdUiMenuTriggerDirective', () => {
         const focusLastItem = vi.spyOn(menu, 'focusLastItem');
 
         dispatchTriggerKey('ArrowUp');
-        await flushOverlayFocus();
+        await flushOverlayFocusAsync();
 
         const items = getMenuItems();
         expect(items).toHaveLength(3);
@@ -76,11 +76,11 @@ describe('FdUiMenuTriggerDirective', () => {
 
     it('closes on Escape and restores focus to the trigger', async () => {
         dispatchTriggerKey('ArrowDown');
-        await flushOverlayFocus();
+        await flushOverlayFocusAsync();
 
         const firstItem = getMenuItems()[0];
         firstItem.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-        await flushOverlayFocus();
+        await flushOverlayFocusAsync();
 
         expect(getMenuItems()).toHaveLength(0);
         expect(document.activeElement).toBe(trigger);
@@ -88,12 +88,12 @@ describe('FdUiMenuTriggerDirective', () => {
 
     it('closes on Tab without restoring focus to the trigger', async () => {
         dispatchTriggerKey('ArrowDown');
-        await flushOverlayFocus();
+        await flushOverlayFocusAsync();
 
         const firstItem = getMenuItems()[0];
         firstItem.focus();
         firstItem.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
-        await flushOverlayFocus();
+        await flushOverlayFocusAsync();
 
         expect(getMenuItems()).toHaveLength(0);
         expect(document.activeElement).not.toBe(trigger);

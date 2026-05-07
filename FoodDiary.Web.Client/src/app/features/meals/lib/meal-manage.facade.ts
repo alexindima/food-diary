@@ -57,7 +57,7 @@ export class MealManageFacade {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeWeight = inject(RecipeServingWeightService);
 
-    public async loadAiUsage(): Promise<UserAiUsageResponse | null> {
+    public async loadAiUsageAsync(): Promise<UserAiUsageResponse | null> {
         return firstValueFrom(this.aiFoodService.getUsageSummary());
     }
 
@@ -71,19 +71,22 @@ export class MealManageFacade {
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed) {
-                    void this.navigationService.navigateToPremiumAccess();
+                    void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });
         return false;
     }
 
-    public async submitConsumption(consumption: Consumption | null, consumptionData: ConsumptionManageDto): Promise<Consumption | null> {
+    public async submitConsumptionAsync(
+        consumption: Consumption | null,
+        consumptionData: ConsumptionManageDto,
+    ): Promise<Consumption | null> {
         return consumption
             ? await firstValueFrom(this.mealService.update(consumption.id, consumptionData))
             : await firstValueFrom(this.mealService.create(consumptionData));
     }
 
-    public async showSuccessRedirect(isEdit: boolean): Promise<void> {
+    public async showSuccessRedirectAsync(isEdit: boolean): Promise<void> {
         const data: ConsumptionManageSuccessDialogData = { isEdit };
         const redirectAction = await firstValueFrom(
             this.fdDialogService
@@ -98,13 +101,13 @@ export class MealManageFacade {
         );
 
         if (redirectAction === 'Home') {
-            await this.navigationService.navigateToHome();
+            await this.navigationService.navigateToHomeAsync();
         } else if (redirectAction === 'ConsumptionList') {
-            await this.navigationService.navigateToConsumptionList();
+            await this.navigationService.navigateToConsumptionListAsync();
         }
     }
 
-    public async openAiPhotoSessionDialog(): Promise<ConsumptionAiSessionManageDto | null> {
+    public async openAiPhotoSessionDialogAsync(): Promise<ConsumptionAiSessionManageDto | null> {
         const { MealPhotoRecognitionDialogComponent } =
             await import('../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component');
 
@@ -122,7 +125,7 @@ export class MealManageFacade {
         );
     }
 
-    public async openEditAiPhotoSessionDialog(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {
+    public async openEditAiPhotoSessionDialogAsync(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {
         const { MealPhotoRecognitionDialogComponent } =
             await import('../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component');
         const selection: ImageSelection | null = session.imageUrl
@@ -201,7 +204,7 @@ export class MealManageFacade {
         this.updateAmountControlState(group);
     }
 
-    public async openItemSelectionDialog(group: FormGroup<ConsumptionItemFormData>, initialTab: 'Product' | 'Recipe'): Promise<void> {
+    public async openItemSelectionDialogAsync(group: FormGroup<ConsumptionItemFormData>, initialTab: 'Product' | 'Recipe'): Promise<void> {
         const selection = await firstValueFrom(
             this.fdDialogService
                 .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {

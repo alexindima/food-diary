@@ -311,8 +311,8 @@ export class RecipeManageComponent {
         }
     }
 
-    public async onCancel(): Promise<void> {
-        await this.recipeManageFacade.cancelManage();
+    public async onCancelAsync(): Promise<void> {
+        await this.recipeManageFacade.cancelManageAsync();
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {

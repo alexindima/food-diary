@@ -35,9 +35,9 @@ export class EmailVerificationComponent {
 
     public onContinue(): void {
         if (this.authService.isAuthenticated()) {
-            void this.navigationService.navigateToHome();
+            void this.navigationService.navigateToHomeAsync();
         } else {
-            void this.navigationService.navigateToAuth('login');
+            void this.navigationService.navigateToAuthAsync('login');
         }
     }
 

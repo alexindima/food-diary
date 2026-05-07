@@ -106,27 +106,27 @@ export class RecipeListFacade {
         );
     }
 
-    public async navigateToAddRecipe(): Promise<void> {
-        await this.navigationService.navigateToRecipeAdd();
+    public async navigateToAddRecipeAsync(): Promise<void> {
+        await this.navigationService.navigateToRecipeAddAsync();
     }
 
-    public async navigateToEditRecipe(recipeId: string): Promise<void> {
-        await this.navigationService.navigateToRecipeEdit(recipeId);
+    public async navigateToEditRecipeAsync(recipeId: string): Promise<void> {
+        await this.navigationService.navigateToRecipeEditAsync(recipeId);
     }
 
-    public async handleDetailAction(
+    public async handleDetailActionAsync(
         result: RecipeDetailActionResult,
         recipe: Recipe,
         search: string | null,
         onlyMine: boolean,
     ): Promise<void> {
         if (result.action === 'Edit') {
-            await this.navigateToEditRecipe(recipe.id);
+            await this.navigateToEditRecipeAsync(recipe.id);
             return;
         }
 
         if (result.action === 'Duplicate') {
-            await this.navigateToEditRecipe(result.id);
+            await this.navigateToEditRecipeAsync(result.id);
             return;
         }
 

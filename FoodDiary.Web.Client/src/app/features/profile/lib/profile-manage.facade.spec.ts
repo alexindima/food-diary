@@ -24,9 +24,9 @@ describe('ProfileManageFacade', () => {
         removeWebPushSubscription: ReturnType<typeof vi.fn>;
     };
     let dialogService: { open: ReturnType<typeof vi.fn> };
-    let authService: { onLogout: ReturnType<typeof vi.fn>; startAdminSso: ReturnType<typeof vi.fn> };
-    let localizationService: { applyLanguagePreference: ReturnType<typeof vi.fn> };
-    let navigationService: { navigateToHome: ReturnType<typeof vi.fn> };
+    let authService: { onLogoutAsync: ReturnType<typeof vi.fn>; startAdminSso: ReturnType<typeof vi.fn> };
+    let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
+    let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
 
     const user: User = {
         id: 'u1',
@@ -88,14 +88,14 @@ describe('ProfileManageFacade', () => {
             open: vi.fn(),
         };
         authService = {
-            onLogout: vi.fn().mockResolvedValue(undefined),
+            onLogoutAsync: vi.fn().mockResolvedValue(undefined),
             startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
         };
         localizationService = {
-            applyLanguagePreference: vi.fn().mockResolvedValue(undefined),
+            applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
         };
         navigationService = {
-            navigateToHome: vi.fn().mockResolvedValue(undefined),
+            navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
         };
 
         dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
@@ -130,7 +130,7 @@ describe('ProfileManageFacade', () => {
 
         expect(userService.getOverview).toHaveBeenCalledTimes(1);
         expect(facade.user()).toEqual(expect.objectContaining(user));
-        expect(localizationService.applyLanguagePreference).toHaveBeenCalledWith('ru');
+        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenCalledWith('ru');
         expect(facade.user()?.pushNotificationsEnabled).toBe(true);
         expect(facade.webPushSubscriptions()).toHaveLength(1);
         expect(facade.globalError()).toBeNull();
@@ -151,7 +151,7 @@ describe('ProfileManageFacade', () => {
 
         expect(userService.update).toHaveBeenCalledTimes(1);
         expect(dialogService.open).toHaveBeenCalled();
-        expect(navigationService.navigateToHome).toHaveBeenCalled();
+        expect(navigationService.navigateToHomeAsync).toHaveBeenCalled();
     });
 
     it('opens password success dialog after successful password dialog close', () => {
@@ -175,7 +175,7 @@ describe('ProfileManageFacade', () => {
         facade.deleteAccount();
 
         expect(userService.deleteCurrentUser).toHaveBeenCalledTimes(1);
-        expect(authService.onLogout).toHaveBeenCalledWith(true);
+        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
         expect(facade.isDeleting()).toBe(false);
     });
 
@@ -192,7 +192,7 @@ describe('ProfileManageFacade', () => {
     it('updates notification preferences through notification endpoint', async () => {
         facade.initialize();
 
-        const updatedUser = await facade.updateNotificationPreferences({ pushNotificationsEnabled: false });
+        const updatedUser = await facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: false });
 
         expect(notificationService.updateNotificationPreferences).toHaveBeenCalledWith({ pushNotificationsEnabled: false });
         expect(updatedUser?.pushNotificationsEnabled).toBe(false);
@@ -203,7 +203,7 @@ describe('ProfileManageFacade', () => {
     it('removes web push subscription and updates local device list', async () => {
         facade.initialize();
 
-        const removed = await facade.removeWebPushSubscription('https://push.example.com/subscriptions/current');
+        const removed = await facade.removeWebPushSubscriptionAsync('https://push.example.com/subscriptions/current');
 
         expect(removed).toBe(true);
         expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith('https://push.example.com/subscriptions/current');
@@ -214,7 +214,7 @@ describe('ProfileManageFacade', () => {
         facade.initialize();
         notificationService.updateNotificationPreferences.mockReturnValueOnce(throwError(() => new Error('preferences failed')));
 
-        const updatedUser = await facade.updateNotificationPreferences({ socialPushNotificationsEnabled: false });
+        const updatedUser = await facade.updateNotificationPreferencesAsync({ socialPushNotificationsEnabled: false });
 
         expect(updatedUser).toBeNull();
         expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');

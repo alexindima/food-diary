@@ -12,7 +12,13 @@ public sealed class NotificationTestScheduler(
     IHostApplicationLifetime applicationLifetime,
     ILogger<NotificationTestScheduler> logger)
     : INotificationTestScheduler {
-    public Task<ScheduledNotificationHttpResponse> ScheduleAsync(Guid userId, int delaySeconds, string type) {
+    public Task<ScheduledNotificationHttpResponse> ScheduleAsync(
+        Guid userId,
+        int delaySeconds,
+        string type,
+        CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var normalizedDelaySeconds = Math.Clamp(delaySeconds, 1, 3600);
         var normalizedType = NormalizeType(type);
         var scheduledAtUtc = DateTime.UtcNow.AddSeconds(normalizedDelaySeconds);

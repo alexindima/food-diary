@@ -91,7 +91,7 @@ export class AuthService extends ApiService {
         this.linkTelegramIfAvailable();
     }
 
-    public async restoreSession(): Promise<void> {
+    public async restoreSessionAsync(): Promise<void> {
         if (this.authReadySignal()) {
             return;
         }
@@ -100,7 +100,7 @@ export class AuthService extends ApiService {
             return this.sessionRestorePromise;
         }
 
-        this.sessionRestorePromise = this.restoreSessionInternal().finally(() => {
+        this.sessionRestorePromise = this.restoreSessionInternalAsync().finally(() => {
             this.authReadySignal.set(true);
             this.sessionRestorePromise = null;
         });
@@ -108,8 +108,8 @@ export class AuthService extends ApiService {
         return this.sessionRestorePromise;
     }
 
-    public async ensureSessionReady(): Promise<void> {
-        await this.restoreSession();
+    public async ensureSessionReadyAsync(): Promise<void> {
+        await this.restoreSessionAsync();
     }
 
     public login(data: LoginRequest): Observable<AuthResponse> {
@@ -199,7 +199,7 @@ export class AuthService extends ApiService {
 
         const refreshToken = this.tokenStorage.getRefreshToken();
         if (!refreshToken) {
-            void this.onLogout(true);
+            void this.onLogoutAsync(true);
             return of(null);
         }
 
@@ -212,7 +212,7 @@ export class AuthService extends ApiService {
                 return accessToken;
             }),
             catchError(error => {
-                void this.onLogout(true);
+                void this.onLogoutAsync(true);
                 return fallbackApiError('refreshToken error', error, null);
             }),
             finalize(() => {
@@ -225,17 +225,17 @@ export class AuthService extends ApiService {
         return refreshRequest$;
     }
 
-    public async onLogout(redirectToAuth = false): Promise<void> {
+    public async onLogoutAsync(redirectToAuth = false): Promise<void> {
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);
         this.tokenStorage.clearAll();
         this.localizationService.clearStoredLanguage();
         if (redirectToAuth) {
-            await this.navigationService.navigateToAuth('login');
+            await this.navigationService.navigateToAuthAsync('login');
             return;
         }
-        await this.navigationService.navigateToLanding();
+        await this.navigationService.navigateToLandingAsync();
     }
 
     public getToken(): string | null {
@@ -264,7 +264,7 @@ export class AuthService extends ApiService {
 
         const preferredLanguage = authResponse.user.language;
         if (preferredLanguage) {
-            void this.localizationService.applyLanguagePreference(preferredLanguage);
+            void this.localizationService.applyLanguagePreferenceAsync(preferredLanguage);
         }
 
         this.themeService.syncWithUserPreferences(authResponse.user.theme, authResponse.user.uiStyle);
@@ -286,7 +286,7 @@ export class AuthService extends ApiService {
         }
     }
 
-    private async restoreSessionInternal(): Promise<void> {
+    private async restoreSessionInternalAsync(): Promise<void> {
         this.captureImpersonationTokenFromQuery();
         this.initializeAuth();
         if (this.isAuthenticated()) {

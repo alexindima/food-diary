@@ -98,14 +98,14 @@ describe('PushNotificationService', () => {
         });
 
         const disabledService = TestBed.inject(PushNotificationService);
-        await expect(disabledService.ensureSubscription()).resolves.toBe('unsupported');
+        await expect(disabledService.ensureSubscriptionAsync()).resolves.toBe('unsupported');
     });
 
     it('should upsert existing subscription and return already-subscribed', async () => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/current');
         swPush.subscription = of(subscription) as never;
 
-        const result = await service.ensureSubscription();
+        const result = await service.ensureSubscriptionAsync();
 
         expect(result).toBe('already-subscribed');
         expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledWith(
@@ -122,7 +122,7 @@ describe('PushNotificationService', () => {
         swPush.subscription = of(null) as never;
         swPush.requestSubscription.mockResolvedValue(subscription);
 
-        const result = await service.ensureSubscription();
+        const result = await service.ensureSubscriptionAsync();
 
         expect(result).toBe('subscribed');
         expect(swPush.requestSubscription).toHaveBeenCalledWith({ serverPublicKey: 'public-key' });
@@ -137,7 +137,7 @@ describe('PushNotificationService', () => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/current');
         swPush.subscription = of(subscription) as never;
 
-        const removed = await service.removeSubscription(subscription.endpoint);
+        const removed = await service.removeSubscriptionAsync(subscription.endpoint);
 
         expect(removed).toBe(true);
         expect(subscription.unsubscribe).toHaveBeenCalledTimes(1);

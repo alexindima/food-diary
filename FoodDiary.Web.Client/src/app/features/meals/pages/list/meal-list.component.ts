@@ -153,7 +153,7 @@ export class MealListComponent {
         request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
-    public async openMealDetails(consumption: Meal): Promise<void> {
+    public async openMealDetailsAsync(consumption: Meal): Promise<void> {
         const { MealDetailComponent } = await import('../../components/detail/meal-detail.component');
 
         this.fdDialogService
@@ -172,7 +172,7 @@ export class MealListComponent {
                     this.loadFavorites();
                     this.reloadCurrentPage();
                 } else if (data.action === 'Edit') {
-                    void this.navigationService.navigateToConsumptionEdit(data.id);
+                    void this.navigationService.navigateToConsumptionEditAsync(data.id);
                 } else if (data.action === 'Repeat') {
                     const targetDate = new Date();
                     this.mealListFacade
@@ -196,8 +196,8 @@ export class MealListComponent {
             });
     }
 
-    public async goToMealAdd(): Promise<void> {
-        await this.navigationService.navigateToConsumptionAdd();
+    public async goToMealAddAsync(): Promise<void> {
+        await this.navigationService.navigateToConsumptionAddAsync();
     }
 
     public openFilters(): void {

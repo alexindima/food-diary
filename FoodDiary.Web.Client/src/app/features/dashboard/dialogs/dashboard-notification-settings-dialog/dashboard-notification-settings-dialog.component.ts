@@ -128,7 +128,7 @@ export class DashboardNotificationSettingsDialogComponent {
                         return;
                     }
 
-                    void this.finishEnablingPush();
+                    void this.finishEnablingPushAsync();
                 },
                 error: () => {
                     this.submitError.set(this.translateService.instant('DASHBOARD.NOTIFICATIONS.ERROR'));
@@ -214,7 +214,7 @@ export class DashboardNotificationSettingsDialogComponent {
             });
     }
 
-    public async openAdvancedSettings(): Promise<void> {
+    public async openAdvancedSettingsAsync(): Promise<void> {
         if (this.isOpeningProfile()) {
             return;
         }
@@ -223,7 +223,7 @@ export class DashboardNotificationSettingsDialogComponent {
 
         try {
             this.dialogRef?.close();
-            await this.navigationService.navigateToProfile();
+            await this.navigationService.navigateToProfileAsync();
         } finally {
             this.isOpeningProfile.set(false);
         }
@@ -257,8 +257,8 @@ export class DashboardNotificationSettingsDialogComponent {
             });
     }
 
-    private async finishEnablingPush(): Promise<void> {
-        const result = await this.pushNotifications.ensureSubscription();
+    private async finishEnablingPushAsync(): Promise<void> {
+        const result = await this.pushNotifications.ensureSubscriptionAsync();
 
         switch (result) {
             case 'subscribed':

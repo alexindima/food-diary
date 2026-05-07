@@ -14,7 +14,7 @@ describe('PasswordResetComponent', () => {
     let component: PasswordResetComponent;
     let fixture: ComponentFixture<PasswordResetComponent>;
     let authServiceSpy: { confirmPasswordReset: ReturnType<typeof vi.fn> };
-    let navigationServiceSpy: { navigateToHome: ReturnType<typeof vi.fn>; navigateToAuth: ReturnType<typeof vi.fn> };
+    let navigationServiceSpy: { navigateToHomeAsync: ReturnType<typeof vi.fn>; navigateToAuthAsync: ReturnType<typeof vi.fn> };
     let translateServiceSpy: TranslateService;
 
     const user: User = {
@@ -37,9 +37,9 @@ describe('PasswordResetComponent', () => {
 
     function createComponent(queryParams: Record<string, string> = { userId: 'user-1', token: 'tok-abc' }): void {
         authServiceSpy = { confirmPasswordReset: vi.fn() };
-        navigationServiceSpy = { navigateToHome: vi.fn(), navigateToAuth: vi.fn() };
-        navigationServiceSpy.navigateToHome.mockReturnValue(Promise.resolve());
-        navigationServiceSpy.navigateToAuth.mockReturnValue(Promise.resolve());
+        navigationServiceSpy = { navigateToHomeAsync: vi.fn(), navigateToAuthAsync: vi.fn() };
+        navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
+        navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             imports: [PasswordResetComponent, TranslateModule.forRoot()],
@@ -130,7 +130,7 @@ describe('PasswordResetComponent', () => {
         component.form.controls.confirmPassword.setValue('newPassword123');
         component.onSubmit();
 
-        expect(navigationServiceSpy.navigateToHome).toHaveBeenCalled();
+        expect(navigationServiceSpy.navigateToHomeAsync).toHaveBeenCalled();
         expect(component.isSubmitting()).toBe(false);
     });
 

@@ -74,17 +74,17 @@ export const appConfig: ApplicationConfig = {
             const themeService = inject(ThemeService);
             const userService = inject(UserService);
 
-            return localizationService.initializeLocalization().then(async () => {
-                await authService.restoreSession();
+            return localizationService.initializeLocalizationAsync().then(async () => {
+                await authService.restoreSessionAsync();
 
                 if (!authService.isAuthenticated()) {
                     return;
                 }
 
-                await localizationService.loadApplicationTranslations();
+                await localizationService.loadApplicationTranslationsAsync();
                 const user = await firstValueFrom(userService.getInfoSilently());
-                await localizationService.applyLanguagePreference(user?.language ?? null);
-                await localizationService.loadApplicationTranslations();
+                await localizationService.applyLanguagePreferenceAsync(user?.language ?? null);
+                await localizationService.loadApplicationTranslationsAsync();
                 themeService.syncWithUserPreferences(user?.theme, user?.uiStyle);
             });
         }),

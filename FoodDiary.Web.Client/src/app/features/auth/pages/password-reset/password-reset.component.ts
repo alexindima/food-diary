@@ -88,7 +88,7 @@ export class PasswordResetComponent {
             .subscribe({
                 next: () => {
                     this.isSubmitting.set(false);
-                    void this.navigationService.navigateToHome();
+                    void this.navigationService.navigateToHomeAsync();
                 },
                 error: () => {
                     this.isSubmitting.set(false);
@@ -99,7 +99,7 @@ export class PasswordResetComponent {
     }
 
     public onBackToLogin(): void {
-        void this.navigationService.navigateToAuth('login');
+        void this.navigationService.navigateToAuthAsync('login');
     }
 
     public getControlError(control: AbstractControl | null): string | null {

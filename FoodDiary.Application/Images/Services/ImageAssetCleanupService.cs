@@ -18,7 +18,7 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(false, "not_found");
         }
 
-        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
+        var inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken);
         if (inUse) {
             return new DeleteImageAssetResult(false, "in_use");
         }

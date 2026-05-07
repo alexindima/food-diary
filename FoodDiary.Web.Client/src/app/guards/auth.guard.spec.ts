@@ -12,11 +12,11 @@ describe('authGuard', () => {
         getToken: ReturnType<typeof vi.fn>;
         isAuthenticated: ReturnType<typeof signal>;
         isEmailConfirmed: ReturnType<typeof signal>;
-        ensureSessionReady: ReturnType<typeof vi.fn>;
+        ensureSessionReadyAsync: ReturnType<typeof vi.fn>;
     };
     let navigationServiceMock: {
-        navigateToAuth: ReturnType<typeof vi.fn>;
-        navigateToEmailVerificationPending: ReturnType<typeof vi.fn>;
+        navigateToAuthAsync: ReturnType<typeof vi.fn>;
+        navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
     };
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
@@ -29,16 +29,16 @@ describe('authGuard', () => {
             getToken: vi.fn(),
             isAuthenticated,
             isEmailConfirmed,
-            ensureSessionReady: vi.fn(),
+            ensureSessionReadyAsync: vi.fn(),
         };
-        authServiceMock.ensureSessionReady.mockResolvedValue(undefined);
+        authServiceMock.ensureSessionReadyAsync.mockResolvedValue(undefined);
 
         navigationServiceMock = {
-            navigateToAuth: vi.fn(),
-            navigateToEmailVerificationPending: vi.fn(),
+            navigateToAuthAsync: vi.fn(),
+            navigateToEmailVerificationPendingAsync: vi.fn(),
         };
-        navigationServiceMock.navigateToAuth.mockReturnValue(Promise.resolve());
-        navigationServiceMock.navigateToEmailVerificationPending.mockReturnValue(Promise.resolve());
+        navigationServiceMock.navigateToAuthAsync.mockReturnValue(Promise.resolve());
+        navigationServiceMock.navigateToEmailVerificationPendingAsync.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             providers: [
@@ -60,9 +60,9 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
         expect(result).toBe(true);
-        expect(authServiceMock.ensureSessionReady).toHaveBeenCalled();
-        expect(navigationServiceMock.navigateToAuth).not.toHaveBeenCalled();
-        expect(navigationServiceMock.navigateToEmailVerificationPending).not.toHaveBeenCalled();
+        expect(authServiceMock.ensureSessionReadyAsync).toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToAuthAsync).not.toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).not.toHaveBeenCalled();
     });
 
     it('should redirect to email verification when email not confirmed', async () => {
@@ -72,7 +72,7 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
         expect(result).toBe(false);
-        expect(navigationServiceMock.navigateToEmailVerificationPending).toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).toHaveBeenCalled();
     });
 
     it('should redirect to login when not authenticated', async () => {
@@ -81,7 +81,7 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
         expect(result).toBe(false);
-        expect(navigationServiceMock.navigateToAuth).toHaveBeenCalledWith('login', '/products');
+        expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/products');
     });
 
     it('should include returnUrl in login redirect', async () => {
@@ -92,6 +92,6 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
         expect(result).toBe(false);
-        expect(navigationServiceMock.navigateToAuth).toHaveBeenCalledWith('login', '/recipes/add');
+        expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/recipes/add');
     });
 });

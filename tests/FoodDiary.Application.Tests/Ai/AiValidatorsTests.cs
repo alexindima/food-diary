@@ -199,7 +199,7 @@ public class AiValidatorsTests {
         public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+        public Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(

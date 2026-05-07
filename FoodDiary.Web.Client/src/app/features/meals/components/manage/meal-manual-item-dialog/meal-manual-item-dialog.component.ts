@@ -97,7 +97,7 @@ export class MealManualItemDialogComponent {
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
 
-    public async chooseItem(): Promise<void> {
+    public async chooseItemAsync(): Promise<void> {
         const initialTab = this.sourceType() === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product';
         const selection = await firstValueFrom(
             this.fdDialogService

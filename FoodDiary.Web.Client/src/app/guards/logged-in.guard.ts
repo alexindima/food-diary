@@ -7,7 +7,7 @@ import { NavigationService } from '../services/navigation.service';
 export const loggedInGuard: CanActivateFn = async (_route, state) => {
     const authService = inject(AuthService);
     const navigationService = inject(NavigationService);
-    await authService.ensureSessionReady();
+    await authService.ensureSessionReadyAsync();
 
     if (!authService.isAuthenticated()) {
         return true;
@@ -17,6 +17,6 @@ export const loggedInGuard: CanActivateFn = async (_route, state) => {
         return true;
     }
 
-    await navigationService.navigateToHome();
+    await navigationService.navigateToHomeAsync();
     return false;
 };

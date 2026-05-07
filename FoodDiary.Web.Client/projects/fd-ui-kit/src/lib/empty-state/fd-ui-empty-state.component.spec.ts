@@ -15,7 +15,7 @@ class TestHostComponent {
 }
 
 describe('FdUiEmptyStateComponent', () => {
-    async function createComponent(appearance: 'default' | 'compact' = 'default'): Promise<ComponentFixture<TestHostComponent>> {
+    async function createComponentAsync(appearance: 'default' | 'compact' = 'default'): Promise<ComponentFixture<TestHostComponent>> {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent],
         }).compileComponents();
@@ -27,13 +27,13 @@ describe('FdUiEmptyStateComponent', () => {
     }
 
     it('renders title and message', async () => {
-        const fixture = await createComponent();
+        const fixture = await createComponentAsync();
         expect(fixture.nativeElement.textContent).toContain('Nothing here');
         expect(fixture.nativeElement.textContent).toContain('Start by adding an item.');
     });
 
     it('applies compact appearance class', async () => {
-        const fixture = await createComponent('compact');
+        const fixture = await createComponentAsync('compact');
         const emptyState = fixture.nativeElement.querySelector('fd-ui-empty-state');
         expect(emptyState.classList.contains('fd-ui-empty-state--compact')).toBe(true);
     });

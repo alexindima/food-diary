@@ -1,4 +1,4 @@
-﻿<div class="image-upload-field fd-stack fd-gap-xs" [class.image-upload-field--disabled]="disabled" [class]="appearanceClass()">
+<div class="image-upload-field fd-stack fd-gap-xs" [class.image-upload-field--disabled]="disabled" [class]="appearanceClass()">
     <div
         class="image-upload-field__dropzone fd-place-center"
         role="button"
@@ -97,7 +97,7 @@
                         #cropImage
                         [src]="cropPreviewUrl"
                         [alt]="previewAlt()"
-                        (load)="onCropperImageLoaded(cropImage)"
+                        (load)="onCropperImageLoadedAsync(cropImage)"
                         class="image-upload-field__cropper-image"
                     />
                 </div>

@@ -22,7 +22,7 @@ public sealed class NotificationTestSchedulerTests {
             NullLogger<NotificationTestScheduler>.Instance);
         var userId = Guid.NewGuid();
 
-        var response = await scheduler.ScheduleAsync(userId, 0, " unknown-type ");
+        var response = await scheduler.ScheduleAsync(userId, 0, " unknown-type ", CancellationToken.None);
 
         Assert.Equal(NotificationTypes.FastingCompleted, response.Type);
         Assert.Equal(1, response.DelaySeconds);
@@ -49,7 +49,7 @@ public sealed class NotificationTestSchedulerTests {
             lifetime,
             NullLogger<NotificationTestScheduler>.Instance);
 
-        var response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.EatingWindowStarted);
+        var response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.EatingWindowStarted, CancellationToken.None);
         Assert.Equal(NotificationTypes.EatingWindowStarted, response.Type);
 
         await sender.WaitAsync();

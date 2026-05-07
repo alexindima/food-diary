@@ -16,7 +16,7 @@ export class DietologistPromoComponent {
     protected readonly workflowSteps = ['INVITE', 'SHARE', 'ADJUST'];
     protected readonly permissionKeys = ['MEALS', 'STATISTICS', 'WEIGHT', 'GOALS', 'FASTING'];
 
-    protected async openAuth(mode: 'login' | 'register'): Promise<void> {
+    protected async openAuthAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
 
         this.fdDialogService.open(AuthDialogComponent, {

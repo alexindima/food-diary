@@ -4,13 +4,13 @@
         [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
         [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
-        (back)="onCancel()"
+        (back)="onCancelAsync()"
     />
 
     <form
         class="product-manage__form fd-stack fd-gap-lg"
         [formGroup]="productForm"
-        (ngSubmit)="onSubmit()"
+        (ngSubmit)="onSubmitAsync()"
         [attr.aria-busy]="isSubmitting() || isDeleting()"
     >
         <div class="product-manage__grid fd-grid fd-gap-xl">
@@ -53,7 +53,7 @@
                                 fill="outline"
                                 variant="primary"
                                 icon="arrow_back"
-                                (click)="onCancel()"
+                                (click)="onCancelAsync()"
                             >
                                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
                             </fd-ui-button>
@@ -68,7 +68,7 @@
                                     [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
                                     [loading]="isDeleting()"
                                     [disabled]="isSubmitting()"
-                                    (click)="onDeleteProduct()"
+                                    (click)="onDeleteProductAsync()"
                                 />
                             }
                             @if (product()) {

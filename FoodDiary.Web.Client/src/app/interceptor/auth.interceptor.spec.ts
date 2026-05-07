@@ -18,7 +18,7 @@ import { AuthInterceptor } from './auth.interceptor';
 type AuthServiceMock = {
     getToken: ReturnType<typeof vi.fn<() => string | null>>;
     refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
-    onLogout: ReturnType<typeof vi.fn<(skipRedirect?: boolean) => Promise<void>>>;
+    onLogoutAsync: ReturnType<typeof vi.fn<(skipRedirect?: boolean) => Promise<void>>>;
 };
 
 describe('AuthInterceptor', () => {
@@ -27,8 +27,8 @@ describe('AuthInterceptor', () => {
     let authServiceSpy: AuthServiceMock;
 
     beforeEach(() => {
-        authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogout: vi.fn() };
-        authServiceSpy.onLogout.mockReturnValue(Promise.resolve());
+        authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogoutAsync: vi.fn() };
+        authServiceSpy.onLogoutAsync.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             providers: [
@@ -135,7 +135,7 @@ describe('AuthInterceptor', () => {
         const req = httpTesting.expectOne('/api/data');
         req.flush(null, { status: 401, statusText: 'Unauthorized' });
 
-        expect(authServiceSpy.onLogout).toHaveBeenCalledWith(true);
+        expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });
 
     it('should logout when refresh returns null token', () => {
@@ -151,7 +151,7 @@ describe('AuthInterceptor', () => {
         const req = httpTesting.expectOne('/api/data');
         req.flush(null, { status: 401, statusText: 'Unauthorized' });
 
-        expect(authServiceSpy.onLogout).toHaveBeenCalledWith(true);
+        expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });
 
     it('should not refresh for auth requests (URL contains /auth/)', () => {
@@ -167,7 +167,7 @@ describe('AuthInterceptor', () => {
         req.flush(null, { status: 401, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogout).not.toHaveBeenCalled();
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
     });
 
     it('should propagate non-401 errors without refresh attempt', () => {
@@ -183,6 +183,6 @@ describe('AuthInterceptor', () => {
         req.flush(null, { status: 500, statusText: 'Internal Server Error' });
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogout).not.toHaveBeenCalled();
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
     });
 });

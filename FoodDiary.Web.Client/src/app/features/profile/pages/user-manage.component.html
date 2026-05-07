@@ -329,7 +329,7 @@
                                 [disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
                                 [fdUiHint]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
                                 [ariaLabel]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
-                                (checkedChange)="togglePushNotifications()"
+                                (checkedChange)="togglePushNotificationsAsync()"
                             />
                         </div>
 
@@ -351,7 +351,7 @@
                                         [disabled]="isUpdatingNotifications()"
                                         [fdUiHint]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
                                         [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
-                                        (checkedChange)="toggleFastingPushNotifications()"
+                                        (checkedChange)="toggleFastingPushNotificationsAsync()"
                                     />
                                 </div>
 
@@ -413,7 +413,7 @@
                                                 variant="secondary"
                                                 [disabled]="isUpdatingNotifications()"
                                                 [loading]="isUpdatingNotifications()"
-                                                (click)="saveFastingReminderHours()"
+                                                (click)="saveFastingReminderHoursAsync()"
                                             >
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVE' | translate }}
                                             </fd-ui-button>
@@ -437,7 +437,7 @@
                                         [disabled]="isUpdatingNotifications()"
                                         [fdUiHint]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
                                         [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
-                                        (checkedChange)="toggleSocialPushNotifications()"
+                                        (checkedChange)="toggleSocialPushNotificationsAsync()"
                                     />
                                 </div>
                             </div>
@@ -512,7 +512,7 @@
                                                 [disabled]="
                                                     pushNotificationsBusy() || removingConnectedDeviceEndpoint() === subscription.endpoint
                                                 "
-                                                (click)="removeConnectedDevice(subscription)"
+                                                (click)="removeConnectedDeviceAsync(subscription)"
                                             >
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE' | translate }}
                                             </fd-ui-button>

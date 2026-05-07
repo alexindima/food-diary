@@ -14,7 +14,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 export class LandingCtaComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
 
-    public async openAuth(mode: 'login' | 'register'): Promise<void> {
+    public async openAuthAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
 
         this.fdDialogService.open(AuthDialogComponent, {

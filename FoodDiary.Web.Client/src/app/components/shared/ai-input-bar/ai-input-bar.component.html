@@ -1,4 +1,4 @@
-﻿<div class="ai-input-bar fd-row fd-gap-control" [class.ai-input-bar--attached]="hasAttachedResult()">
+<div class="ai-input-bar fd-row fd-gap-control" [class.ai-input-bar--attached]="hasAttachedResult()">
     <fd-image-upload-field
         class="ai-input-bar__hidden-upload"
         appearance="hidden"
@@ -14,7 +14,7 @@
         [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
         [value]="voiceText()"
         (input)="onTextInput($event)"
-        (keydown.enter)="submitText(); $event.preventDefault()"
+        (keydown.enter)="submitTextAsync(); $event.preventDefault()"
         [disabled]="isDisabled()"
     />
     @if (!voiceText()) {
@@ -25,7 +25,7 @@
             icon="photo_camera"
             iconSize="lg"
             [disabled]="isDisabled()"
-            (click)="onPhotoClick()"
+            (click)="onPhotoClickAsync()"
             [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
             [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
             fdUiHintPosition="bottom"
@@ -39,7 +39,7 @@
                 iconSize="lg"
                 [class.ai-input-bar__action-btn--mic-active]="isListening()"
                 [disabled]="isDisabled()"
-                (click)="toggleMic()"
+                (click)="toggleMicAsync()"
                 [fdUiHint]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
                 [ariaLabel]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
                 fdUiHintPosition="bottom"
@@ -54,7 +54,7 @@
             iconSize="lg"
             [disabled]="isDisabled()"
             [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
-            (click)="submitText()"
+            (click)="submitTextAsync()"
         />
     }
 </div>

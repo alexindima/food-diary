@@ -14,7 +14,7 @@ class TestHostComponent {
 }
 
 describe('FdUiFormErrorComponent', () => {
-    async function createComponent(): Promise<ComponentFixture<TestHostComponent>> {
+    async function createComponentAsync(): Promise<ComponentFixture<TestHostComponent>> {
         await TestBed.configureTestingModule({
             imports: [TranslateModule.forRoot(), TestHostComponent],
         }).compileComponents();
@@ -25,7 +25,7 @@ describe('FdUiFormErrorComponent', () => {
     }
 
     it('renders an alert live region for the error message', async () => {
-        const fixture = await createComponent();
+        const fixture = await createComponentAsync();
         const errorText = fixture.nativeElement.querySelector('.fd-ui-form-error__text');
 
         expect(errorText).not.toBeNull();

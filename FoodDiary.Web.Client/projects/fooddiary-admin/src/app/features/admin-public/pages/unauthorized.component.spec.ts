@@ -8,13 +8,13 @@ import { UnauthorizedComponent } from './unauthorized.component';
 describe('UnauthorizedComponent', () => {
     let component: UnauthorizedComponent;
     let fixture: ComponentFixture<UnauthorizedComponent>;
-    let authService: { tryApplySsoFromReturnUrl: ReturnType<typeof vi.fn> };
+    let authService: { tryApplySsoFromReturnUrlAsync: ReturnType<typeof vi.fn> };
     let router: { navigateByUrl: ReturnType<typeof vi.fn> };
     let routeSnapshot: { queryParamMap: ReturnType<typeof convertToParamMap> };
 
     beforeEach(async () => {
         authService = {
-            tryApplySsoFromReturnUrl: vi.fn(),
+            tryApplySsoFromReturnUrlAsync: vi.fn(),
         };
         router = {
             navigateByUrl: vi.fn(),
@@ -53,13 +53,13 @@ describe('UnauthorizedComponent', () => {
     });
 
     it('should try to recover from sso return url on init', async () => {
-        authService.tryApplySsoFromReturnUrl.mockResolvedValue('/users?page=2');
+        authService.tryApplySsoFromReturnUrlAsync.mockResolvedValue('/users?page=2');
 
         createComponent();
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(authService.tryApplySsoFromReturnUrl).toHaveBeenCalledWith('/users?code=sso-code&page=2');
+        expect(authService.tryApplySsoFromReturnUrlAsync).toHaveBeenCalledWith('/users?code=sso-code&page=2');
         expect(router.navigateByUrl).toHaveBeenCalledWith('/users?page=2', { replaceUrl: true });
     });
 
@@ -72,7 +72,7 @@ describe('UnauthorizedComponent', () => {
         createComponent();
         fixture.detectChanges();
 
-        expect(authService.tryApplySsoFromReturnUrl).not.toHaveBeenCalled();
+        expect(authService.tryApplySsoFromReturnUrlAsync).not.toHaveBeenCalled();
         expect(router.navigateByUrl).not.toHaveBeenCalled();
     });
 });

@@ -184,7 +184,7 @@ public class ImagesFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+        public Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(InUseIds.Contains(assetId));
 
         public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(

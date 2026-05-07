@@ -20,10 +20,10 @@
             </div>
 
             <div class="dietologist-promo__actions">
-                <fd-ui-button size="lg" variant="primary" (click)="openAuth('register')">
+                <fd-ui-button size="lg" variant="primary" (click)="openAuthAsync('register')">
                     {{ 'LANDING_DIETOLOGIST.REGISTER' | translate }}
                 </fd-ui-button>
-                <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuth('login')">
+                <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuthAsync('login')">
                     {{ 'LANDING_DIETOLOGIST.LOGIN' | translate }}
                 </fd-ui-button>
             </div>

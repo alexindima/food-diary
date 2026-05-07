@@ -19,7 +19,7 @@
     </div>
 
     <div *fdUiDialogFooter class="dialog-footer">
-        <fd-ui-button variant="text" (click)="onCancel()">
+        <fd-ui-button variant="text" (click)="onCancelAsync()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>
         <fd-ui-button variant="flat" [disabled]="!selectedFood()" (click)="onConfirm()">

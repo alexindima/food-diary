@@ -41,8 +41,8 @@ export class ProductAddDialogComponent extends BaseProductManageComponent {
         this.skipConfirmDialog = true;
     }
 
-    public override async onSubmit(): Promise<Product | null> {
-        const product = await super.onSubmit();
+    public override async onSubmitAsync(): Promise<Product | null> {
+        const product = await super.onSubmitAsync();
         if (product) {
             this.dialogRef.close(product);
         }
@@ -50,7 +50,7 @@ export class ProductAddDialogComponent extends BaseProductManageComponent {
         return product;
     }
 
-    public override onCancel(): Promise<void> {
+    public override onCancelAsync(): Promise<void> {
         this.dialogRef.close(this.initialProduct ?? null);
 
         return Promise.resolve();

@@ -33,7 +33,7 @@ class TestHostComponent {
 }
 
 describe('FdUiSectionStateComponent', () => {
-    async function createComponent(): Promise<ComponentFixture<TestHostComponent>> {
+    async function createComponentAsync(): Promise<ComponentFixture<TestHostComponent>> {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent],
         }).compileComponents();
@@ -47,14 +47,14 @@ describe('FdUiSectionStateComponent', () => {
     let host: TestHostComponent;
 
     it('renders projected content in content state', async () => {
-        fixture = await createComponent();
+        fixture = await createComponentAsync();
         host = fixture.componentInstance;
 
         expect(fixture.nativeElement.querySelector('.projected-content')?.textContent).toContain('Ready');
     });
 
     it('renders loader in loading state', async () => {
-        fixture = await createComponent();
+        fixture = await createComponentAsync();
         host = fixture.componentInstance;
         host.state.set('loading');
         fixture.detectChanges();
@@ -63,7 +63,7 @@ describe('FdUiSectionStateComponent', () => {
     });
 
     it('renders empty state in empty state', async () => {
-        fixture = await createComponent();
+        fixture = await createComponentAsync();
         host = fixture.componentInstance;
         host.state.set('empty');
         fixture.detectChanges();
@@ -72,7 +72,7 @@ describe('FdUiSectionStateComponent', () => {
     });
 
     it('emits retry in error state', async () => {
-        fixture = await createComponent();
+        fixture = await createComponentAsync();
         host = fixture.componentInstance;
         host.state.set('error');
         fixture.detectChanges();
@@ -82,7 +82,7 @@ describe('FdUiSectionStateComponent', () => {
     });
 
     it('applies compact host class', async () => {
-        fixture = await createComponent();
+        fixture = await createComponentAsync();
         host = fixture.componentInstance;
         host.appearance = 'compact';
         host.state.set('empty');

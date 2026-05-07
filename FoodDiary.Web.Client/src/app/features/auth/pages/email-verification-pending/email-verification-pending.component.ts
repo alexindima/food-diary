@@ -36,7 +36,7 @@ export class EmailVerificationPendingComponent {
 
     public constructor() {
         if (!this.authService.isAuthenticated()) {
-            void this.navigationService.navigateToAuth('login');
+            void this.navigationService.navigateToAuthAsync('login');
             return;
         }
         this.startRealtime();
@@ -58,7 +58,7 @@ export class EmailVerificationPendingComponent {
                 this.authService.setEmailConfirmed(user.isEmailConfirmed);
                 if (user.isEmailConfirmed) {
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.SUCCESS'));
-                    void this.navigationService.navigateToHome();
+                    void this.navigationService.navigateToHomeAsync();
                 } else {
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.NOT_CONFIRMED'));
                 }
@@ -130,7 +130,7 @@ export class EmailVerificationPendingComponent {
                 this.email.set(user.email);
                 this.authService.setEmailConfirmed(user.isEmailConfirmed);
                 if (user.isEmailConfirmed) {
-                    void this.navigationService.navigateToHome();
+                    void this.navigationService.navigateToHomeAsync();
                 } else {
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.INITIAL'));
                     this.tryAutoResendEmail();
@@ -140,14 +140,14 @@ export class EmailVerificationPendingComponent {
 
     private startRealtime(): void {
         this.realtimeService
-            .connect(this.authService, () => {
+            .connectAsync(this.authService, () => {
                 this.authService.setEmailConfirmed(true);
                 this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.SUCCESS'));
-                void this.navigationService.navigateToHome();
+                void this.navigationService.navigateToHomeAsync();
             })
             .then(() => {
                 this.destroyRef.onDestroy(() => {
-                    void this.realtimeService.disconnect();
+                    void this.realtimeService.disconnectAsync();
                 });
             })
             .catch(() => {

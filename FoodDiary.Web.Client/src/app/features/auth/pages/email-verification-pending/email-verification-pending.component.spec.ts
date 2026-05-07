@@ -18,12 +18,12 @@ describe('EmailVerificationPendingComponent', () => {
         resendEmailVerification: ReturnType<typeof vi.fn>;
     };
     let navigationServiceMock: {
-        navigateToAuth: ReturnType<typeof vi.fn>;
-        navigateToHome: ReturnType<typeof vi.fn>;
+        navigateToAuthAsync: ReturnType<typeof vi.fn>;
+        navigateToHomeAsync: ReturnType<typeof vi.fn>;
     };
     let realtimeServiceMock: {
-        connect: ReturnType<typeof vi.fn>;
-        disconnect: ReturnType<typeof vi.fn>;
+        connectAsync: ReturnType<typeof vi.fn>;
+        disconnectAsync: ReturnType<typeof vi.fn>;
     };
 
     beforeEach(() => {
@@ -43,12 +43,12 @@ describe('EmailVerificationPendingComponent', () => {
             resendEmailVerification: vi.fn().mockReturnValue(of(true)),
         };
         navigationServiceMock = {
-            navigateToAuth: vi.fn().mockResolvedValue(undefined),
-            navigateToHome: vi.fn().mockResolvedValue(undefined),
+            navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
+            navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
         };
         realtimeServiceMock = {
-            connect: vi.fn().mockResolvedValue(undefined),
-            disconnect: vi.fn().mockResolvedValue(undefined),
+            connectAsync: vi.fn().mockResolvedValue(undefined),
+            disconnectAsync: vi.fn().mockResolvedValue(undefined),
         };
     });
 
@@ -77,7 +77,7 @@ describe('EmailVerificationPendingComponent', () => {
         createComponent(true);
 
         expect(authServiceMock.resendEmailVerification).not.toHaveBeenCalled();
-        expect(navigationServiceMock.navigateToHome).toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
     });
 
     function createComponent(autoResend: boolean): void {

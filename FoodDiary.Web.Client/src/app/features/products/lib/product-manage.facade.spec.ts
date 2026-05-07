@@ -14,9 +14,9 @@ describe('ProductManageFacade', () => {
     let productService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteById: ReturnType<typeof vi.fn> };
     let dialogService: { open: ReturnType<typeof vi.fn> };
     let navigationService: {
-        navigateToHome: ReturnType<typeof vi.fn>;
-        navigateToProductList: ReturnType<typeof vi.fn>;
-        navigateToPremiumAccess: ReturnType<typeof vi.fn>;
+        navigateToHomeAsync: ReturnType<typeof vi.fn>;
+        navigateToProductListAsync: ReturnType<typeof vi.fn>;
+        navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
     };
     let authService: { isPremium: ReturnType<typeof vi.fn> };
 
@@ -80,17 +80,17 @@ describe('ProductManageFacade', () => {
             open: vi.fn(),
         };
         navigationService = {
-            navigateToHome: vi.fn(),
-            navigateToProductList: vi.fn(),
-            navigateToPremiumAccess: vi.fn(),
+            navigateToHomeAsync: vi.fn(),
+            navigateToProductListAsync: vi.fn(),
+            navigateToPremiumAccessAsync: vi.fn(),
         };
         authService = {
             isPremium: vi.fn(),
         };
 
-        navigationService.navigateToHome.mockResolvedValue(true);
-        navigationService.navigateToProductList.mockResolvedValue(true);
-        navigationService.navigateToPremiumAccess.mockResolvedValue(true);
+        navigationService.navigateToHomeAsync.mockResolvedValue(true);
+        navigationService.navigateToProductListAsync.mockResolvedValue(true);
+        navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
         dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
         productService.create.mockReturnValue(of(product));
         productService.update.mockReturnValue(of(product));
@@ -111,7 +111,7 @@ describe('ProductManageFacade', () => {
     });
 
     it('should create product on submit when product is null', async () => {
-        const result = await facade.submitProduct(null, request, true);
+        const result = await facade.submitProductAsync(null, request, true);
 
         expect(productService.create).toHaveBeenCalledWith(request);
         expect(result.product).toEqual(product);
@@ -119,7 +119,7 @@ describe('ProductManageFacade', () => {
     });
 
     it('should update product on submit when editing existing product', async () => {
-        const result = await facade.submitProduct(product, request, true);
+        const result = await facade.submitProductAsync(product, request, true);
 
         expect(productService.update).toHaveBeenCalledWith(
             'p1',
@@ -136,7 +136,7 @@ describe('ProductManageFacade', () => {
     it('should return error when save fails', async () => {
         productService.create.mockReturnValueOnce(throwError(() => ({ status: 400 })));
 
-        const result = await facade.submitProduct(null, request, true);
+        const result = await facade.submitProductAsync(null, request, true);
 
         expect(result.product).toBeNull();
         expect(result.error?.status).toBe(400);
@@ -145,13 +145,13 @@ describe('ProductManageFacade', () => {
     it('should delete product and navigate after confirmation', async () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
 
-        const result = await facade.deleteProduct(product, {
+        const result = await facade.deleteProductAsync(product, {
             title: 'Delete',
             message: 'Confirm',
         });
 
         expect(productService.deleteById).toHaveBeenCalledWith('p1');
-        expect(navigationService.navigateToProductList).toHaveBeenCalled();
+        expect(navigationService.navigateToProductListAsync).toHaveBeenCalled();
         expect(result).toBe('deleted');
     });
 });

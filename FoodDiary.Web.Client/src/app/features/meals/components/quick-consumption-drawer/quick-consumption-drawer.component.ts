@@ -67,7 +67,7 @@ export class QuickConsumptionDrawerComponent {
     }
 
     public openEditor(): void {
-        void this.quickService.openEditor();
+        void this.quickService.openEditorAsync();
     }
 
     public save(): void {

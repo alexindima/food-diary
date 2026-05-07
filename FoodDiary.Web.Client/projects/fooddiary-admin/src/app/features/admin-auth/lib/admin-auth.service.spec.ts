@@ -54,7 +54,7 @@ describe('AdminAuthService', () => {
         const replaceStateSpy = vi.spyOn(window.history, 'replaceState');
         window.history.replaceState({}, '', '/admin?code=sso-code&foo=1');
 
-        const promise = service.applySsoFromQuery();
+        const promise = service.applySsoFromQueryAsync();
 
         const req = httpMock.expectOne(`${baseUrl}/admin-sso/exchange`);
         expect(req.request.method).toBe('POST');
@@ -73,7 +73,7 @@ describe('AdminAuthService', () => {
     });
 
     it('should extract code from return url and return cleaned path after successful exchange', async () => {
-        const resultPromise = service.tryApplySsoFromReturnUrl(encodeURIComponent('/users?page=2&code=return-code'));
+        const resultPromise = service.tryApplySsoFromReturnUrlAsync(encodeURIComponent('/users?page=2&code=return-code'));
 
         const req = httpMock.expectOne(`${baseUrl}/admin-sso/exchange`);
         expect(req.request.method).toBe('POST');
@@ -91,7 +91,7 @@ describe('AdminAuthService', () => {
         localStorage.setItem('authToken', createToken({ role: 'User' }));
         service.refreshTokenState();
 
-        const promise = service.tryUpgradeToAdmin();
+        const promise = service.tryUpgradeToAdminAsync();
 
         const startReq = httpMock.expectOne(`${baseUrl}/admin-sso/start`);
         expect(startReq.request.method).toBe('POST');

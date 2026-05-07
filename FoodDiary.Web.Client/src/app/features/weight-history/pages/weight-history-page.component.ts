@@ -105,7 +105,7 @@ export class WeightHistoryPageComponent {
     }
 
     public navigateBack(): void {
-        void this.navigationService.navigateToHome();
+        void this.navigationService.navigateToHomeAsync();
     }
 
     public submit(): void {

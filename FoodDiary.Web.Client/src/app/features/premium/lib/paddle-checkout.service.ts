@@ -51,8 +51,8 @@ export class PaddleCheckoutService {
     private initializedToken: string | null = null;
     private initializedEnvironment: PaddleEnvironment | null = null;
 
-    public async openTransactionCheckout(transactionId: string, options: PaddleInitOptions): Promise<void> {
-        await this.initialize(options);
+    public async openTransactionCheckoutAsync(transactionId: string, options: PaddleInitOptions): Promise<void> {
+        await this.initializeAsync(options);
 
         if (!window.Paddle?.Checkout) {
             throw new Error('Paddle Checkout is unavailable');
@@ -70,12 +70,12 @@ export class PaddleCheckoutService {
         });
     }
 
-    private async initialize(options: PaddleInitOptions): Promise<void> {
+    private async initializeAsync(options: PaddleInitOptions): Promise<void> {
         if (this.initializedToken === options.token && this.initializedEnvironment === options.environment) {
             return;
         }
 
-        await this.loadScript();
+        await this.loadScriptAsync();
 
         if (!window.Paddle) {
             throw new Error('Paddle.js did not initialize');
@@ -102,7 +102,7 @@ export class PaddleCheckoutService {
         this.initializedEnvironment = options.environment;
     }
 
-    private async loadScript(): Promise<void> {
+    private async loadScriptAsync(): Promise<void> {
         if (this.scriptLoadPromise) {
             return this.scriptLoadPromise;
         }

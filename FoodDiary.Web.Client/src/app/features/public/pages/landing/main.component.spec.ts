@@ -20,7 +20,7 @@ describe('MainComponent', () => {
         vi.clearAllMocks();
     });
 
-    async function createComponent(
+    async function createComponentAsync(
         path: string,
         params: Record<string, string> = {},
         queryParams: Record<string, string> = {},
@@ -55,7 +55,7 @@ describe('MainComponent', () => {
     }
 
     it('opens auth dialog with route query params', async () => {
-        await createComponent('auth/:mode', { mode: 'login' }, { returnUrl: '/dashboard', adminReturnUrl: '/users' });
+        await createComponentAsync('auth/:mode', { mode: 'login' }, { returnUrl: '/dashboard', adminReturnUrl: '/users' });
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -75,7 +75,7 @@ describe('MainComponent', () => {
     });
 
     it('does not open auth dialog outside auth routes', async () => {
-        await createComponent('');
+        await createComponentAsync('');
 
         fixture.detectChanges();
 

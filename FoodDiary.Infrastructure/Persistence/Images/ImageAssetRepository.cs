@@ -22,7 +22,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) {
+    public async Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         return await context.ImageAssets
             .Where(a => a.Id == assetId)
             .Select(_ =>

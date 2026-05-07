@@ -35,7 +35,7 @@ export class AdminAuthService {
         this.tokenSignal.set(this.getToken());
     }
 
-    public async applySsoFromQuery(): Promise<void> {
+    public async applySsoFromQueryAsync(): Promise<void> {
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
         if (!code) {
@@ -54,7 +54,7 @@ export class AdminAuthService {
             return;
         }
 
-        const success = await this.exchangeSsoCode(code);
+        const success = await this.exchangeSsoCodeAsync(code);
         this.markCodeProcessed(code);
 
         params.delete('code');
@@ -68,7 +68,7 @@ export class AdminAuthService {
         this.tokenSignal.set(this.getToken());
     }
 
-    public async tryApplySsoFromReturnUrl(returnUrl: string): Promise<string | null> {
+    public async tryApplySsoFromReturnUrlAsync(returnUrl: string): Promise<string | null> {
         const result = this.extractCodeFromUrl(returnUrl);
         if (!result) {
             return null;
@@ -82,13 +82,13 @@ export class AdminAuthService {
             return result.cleanedUrl;
         }
 
-        const success = await this.exchangeSsoCode(result.code);
+        const success = await this.exchangeSsoCodeAsync(result.code);
         this.markCodeProcessed(result.code);
         this.tokenSignal.set(this.getToken());
         return success ? result.cleanedUrl : null;
     }
 
-    public async tryUpgradeToAdmin(): Promise<boolean> {
+    public async tryUpgradeToAdminAsync(): Promise<boolean> {
         if (this.isAdmin()) {
             return true;
         }
@@ -104,7 +104,7 @@ export class AdminAuthService {
                 return false;
             }
 
-            const success = await this.exchangeSsoCode(response.code);
+            const success = await this.exchangeSsoCodeAsync(response.code);
             this.tokenSignal.set(this.getToken());
             return success;
         } catch {
@@ -112,7 +112,7 @@ export class AdminAuthService {
         }
     }
 
-    public async exchangeSsoCode(code: string): Promise<boolean> {
+    public async exchangeSsoCodeAsync(code: string): Promise<boolean> {
         try {
             const response = await firstValueFrom(this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }));
 

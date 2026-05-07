@@ -18,8 +18,8 @@ describe('RecipeListFacade', () => {
         deleteById: ReturnType<typeof vi.fn>;
     };
     let navigationService: {
-        navigateToRecipeAdd: ReturnType<typeof vi.fn>;
-        navigateToRecipeEdit: ReturnType<typeof vi.fn>;
+        navigateToRecipeAddAsync: ReturnType<typeof vi.fn>;
+        navigateToRecipeEditAsync: ReturnType<typeof vi.fn>;
     };
     let quickMealService: { addRecipe: ReturnType<typeof vi.fn> };
     let toastService: { open: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
@@ -65,8 +65,8 @@ describe('RecipeListFacade', () => {
         };
 
         navigationService = {
-            navigateToRecipeAdd: vi.fn().mockResolvedValue(true),
-            navigateToRecipeEdit: vi.fn().mockResolvedValue(true),
+            navigateToRecipeAddAsync: vi.fn().mockResolvedValue(true),
+            navigateToRecipeEditAsync: vi.fn().mockResolvedValue(true),
         };
 
         quickMealService = {

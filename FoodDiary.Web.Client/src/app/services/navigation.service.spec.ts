@@ -27,17 +27,17 @@ describe('NavigationService', () => {
     });
 
     it('should navigate to home', async () => {
-        await service.navigateToHome();
+        await service.navigateToHomeAsync();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
     });
 
     it('should navigate to landing', async () => {
-        await service.navigateToLanding();
+        await service.navigateToLandingAsync();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/']);
     });
 
     it('should navigate to dashboard when returnUrl is empty', async () => {
-        await service.navigateToReturnUrl(null);
+        await service.navigateToReturnUrlAsync(null);
         expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/dashboard');
     });
 
@@ -45,7 +45,7 @@ describe('NavigationService', () => {
         const mode: AuthMode = 'login';
         const returnUrl = '/products';
 
-        await service.navigateToAuth(mode, returnUrl);
+        await service.navigateToAuthAsync(mode, returnUrl);
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth', 'login'], {
             queryParams: { returnUrl: '/products' },
         });
@@ -54,27 +54,27 @@ describe('NavigationService', () => {
     it('should navigate to auth without returnUrl', async () => {
         const mode: AuthMode = 'register';
 
-        await service.navigateToAuth(mode);
+        await service.navigateToAuthAsync(mode);
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth', 'register'], { queryParams: {} });
     });
 
     it('should navigate to email verification pending without auto resend', async () => {
-        await service.navigateToEmailVerificationPending();
+        await service.navigateToEmailVerificationPendingAsync();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/verify-pending'], { queryParams: {} });
     });
 
     it('should navigate to email verification pending with auto resend', async () => {
-        await service.navigateToEmailVerificationPending({ autoResend: true });
+        await service.navigateToEmailVerificationPendingAsync({ autoResend: true });
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/verify-pending'], { queryParams: { autoResend: 'true' } });
     });
 
     it('should navigate to product edit with id', async () => {
-        await service.navigateToProductEdit('abc-123');
+        await service.navigateToProductEditAsync('abc-123');
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/products/abc-123/edit']);
     });
 
     it('should navigate to consumption add with mealType', async () => {
-        await service.navigateToConsumptionAdd('breakfast');
+        await service.navigateToConsumptionAddAsync('breakfast');
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/meals/add'], {
             state: { mealType: 'breakfast' },
             queryParams: { mealType: 'breakfast' },
@@ -82,7 +82,7 @@ describe('NavigationService', () => {
     });
 
     it('should navigate to profile', async () => {
-        await service.navigateToProfile();
+        await service.navigateToProfileAsync();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/profile']);
     });
 });

@@ -31,13 +31,13 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             return EMPTY;
         }
 
-        return from(this.waitForPageReady()).pipe(
-            switchMap(() => from(this.waitForIdle())),
+        return from(this.waitForPageReadyAsync()).pipe(
+            switchMap(() => from(this.waitForIdleAsync())),
             switchMap(() => load()),
         );
     }
 
-    private waitForPageReady(): Promise<void> {
+    private waitForPageReadyAsync(): Promise<void> {
         this.pageReadyPromise ??= new Promise(resolve => {
             const documentReadyState = this.globalObject.document?.readyState;
             if (documentReadyState === 'complete') {
@@ -72,7 +72,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
         return this.pageReadyPromise;
     }
 
-    private waitForIdle(): Promise<void> {
+    private waitForIdleAsync(): Promise<void> {
         return new Promise(resolve => {
             if (typeof this.globalObject.requestIdleCallback === 'function') {
                 this.globalObject.requestIdleCallback(

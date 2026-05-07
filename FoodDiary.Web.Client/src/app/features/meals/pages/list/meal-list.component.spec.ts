@@ -72,8 +72,8 @@ describe('MealListComponent', () => {
     };
 
     const mockNavigationService = {
-        navigateToConsumptionAdd: vi.fn().mockResolvedValue(true),
-        navigateToConsumptionEdit: vi.fn().mockResolvedValue(true),
+        navigateToConsumptionAddAsync: vi.fn().mockResolvedValue(true),
+        navigateToConsumptionEditAsync: vi.fn().mockResolvedValue(true),
     };
 
     const mockDialogRef = {
@@ -170,9 +170,9 @@ describe('MealListComponent', () => {
     });
 
     it('should navigate to add meal', async () => {
-        await component.goToMealAdd();
+        await component.goToMealAddAsync();
 
-        expect(mockNavigationService.navigateToConsumptionAdd).toHaveBeenCalled();
+        expect(mockNavigationService.navigateToConsumptionAddAsync).toHaveBeenCalled();
     });
 
     it('should handle page change', () => {
@@ -318,7 +318,7 @@ describe('MealListComponent', () => {
     it('should open meal details dialog', async () => {
         const meal = createMockMeal();
 
-        await component.openMealDetails(meal);
+        await component.openMealDetailsAsync(meal);
 
         expect(mockFdDialogService.open).toHaveBeenCalled();
     });

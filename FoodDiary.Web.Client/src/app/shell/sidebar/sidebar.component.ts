@@ -273,10 +273,10 @@ export class SidebarComponent {
                 this.openAdminPanel();
                 break;
             case 'openNotifications':
-                void this.openNotifications();
+                void this.openNotificationsAsync();
                 break;
             case 'logout':
-                void this.logout();
+                void this.logoutAsync();
                 break;
         }
     }
@@ -346,7 +346,7 @@ export class SidebarComponent {
         this.isUserMenuOpen.set(true);
     }
 
-    protected async openNotifications(): Promise<void> {
+    protected async openNotificationsAsync(): Promise<void> {
         const { NotificationsDialogComponent } =
             await import('../../components/shared/notifications-dialog/notifications-dialog.component');
         this.dialogService.open(NotificationsDialogComponent, {
@@ -419,18 +419,18 @@ export class SidebarComponent {
         focusTarget?.focus();
     }
 
-    protected async logout(): Promise<void> {
-        const canLogout = await this.confirmUnsavedChanges();
+    protected async logoutAsync(): Promise<void> {
+        const canLogout = await this.confirmUnsavedChangesAsync();
         if (!canLogout) {
             return;
         }
 
-        await this.authService.onLogout(true);
+        await this.authService.onLogoutAsync(true);
         this.closeUserMenu();
         this.closeMobileMenus();
     }
 
-    private async confirmUnsavedChanges(): Promise<boolean> {
+    private async confirmUnsavedChangesAsync(): Promise<boolean> {
         const handler = this.unsavedChangesService.getHandler();
         if (!handler || !handler.hasChanges()) {
             return true;

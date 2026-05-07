@@ -23,9 +23,9 @@ describe('DashboardNotificationSettingsDialogComponent', () => {
         isSupported: ReturnType<typeof signal<boolean>>;
         isSubscribed: ReturnType<typeof signal<boolean>>;
         isBusy: ReturnType<typeof signal<boolean>>;
-        ensureSubscription: ReturnType<typeof vi.fn>;
+        ensureSubscriptionAsync: ReturnType<typeof vi.fn>;
     };
-    let navigationService: { navigateToProfile: ReturnType<typeof vi.fn> };
+    let navigationService: { navigateToProfileAsync: ReturnType<typeof vi.fn> };
     let dialogRef: { close: ReturnType<typeof vi.fn> };
     let toastService: { success: ReturnType<typeof vi.fn>; info: ReturnType<typeof vi.fn> };
     let frontendObservability: {
@@ -52,11 +52,11 @@ describe('DashboardNotificationSettingsDialogComponent', () => {
             isSupported: signal(true),
             isSubscribed: signal(false),
             isBusy: signal(false),
-            ensureSubscription: vi.fn(() => Promise.resolve('subscribed')),
+            ensureSubscriptionAsync: vi.fn(() => Promise.resolve('subscribed')),
         };
 
         navigationService = {
-            navigateToProfile: vi.fn(() => Promise.resolve()),
+            navigateToProfileAsync: vi.fn(() => Promise.resolve()),
         };
 
         dialogRef = {
@@ -114,7 +114,7 @@ describe('DashboardNotificationSettingsDialogComponent', () => {
         await fixture.whenStable();
 
         expect(notificationService.updateNotificationPreferences).toHaveBeenCalledWith({ pushNotificationsEnabled: true });
-        expect(pushNotifications.ensureSubscription).toHaveBeenCalledTimes(1);
+        expect(pushNotifications.ensureSubscriptionAsync).toHaveBeenCalledTimes(1);
         expect(toastService.success).toHaveBeenCalled();
     });
 
@@ -129,9 +129,9 @@ describe('DashboardNotificationSettingsDialogComponent', () => {
     });
 
     it('opens profile settings from the dialog footer action', async () => {
-        await component.openAdvancedSettings();
+        await component.openAdvancedSettingsAsync();
 
         expect(dialogRef.close).toHaveBeenCalledTimes(1);
-        expect(navigationService.navigateToProfile).toHaveBeenCalledTimes(1);
+        expect(navigationService.navigateToProfileAsync).toHaveBeenCalledTimes(1);
     });
 });

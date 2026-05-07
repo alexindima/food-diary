@@ -48,7 +48,7 @@ export class BarcodeScannerComponent {
                 'aztec',
             ],
         });
-        void this.startCamera();
+        void this.startCameraAsync();
         this.destroyRef.onDestroy(() => {
             this.stopCamera();
         });
@@ -59,7 +59,7 @@ export class BarcodeScannerComponent {
         this.dialogRef.close(null);
     }
 
-    private async startCamera(): Promise<void> {
+    private async startCameraAsync(): Promise<void> {
         try {
             this.stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'environment' },
@@ -86,11 +86,11 @@ export class BarcodeScannerComponent {
         }
 
         this.animationFrameId = requestAnimationFrame(() => {
-            void this.scanFrame(video);
+            void this.scanFrameAsync(video);
         });
     }
 
-    private async scanFrame(video: HTMLVideoElement): Promise<void> {
+    private async scanFrameAsync(video: HTMLVideoElement): Promise<void> {
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             try {
                 const barcodes = await this.detector!.detect(video);

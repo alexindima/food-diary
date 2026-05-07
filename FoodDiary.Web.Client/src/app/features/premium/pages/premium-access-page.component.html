@@ -31,7 +31,7 @@
             [title]="'PREMIUM_PAGE.ERROR_TITLE' | translate"
             [message]="errorMessage"
             [actionLabel]="'PREMIUM_PAGE.RETRY_ACTION' | translate"
-            (action)="reloadOverview()"
+            (action)="reloadOverviewAsync()"
         ></fd-notice-banner>
     }
 
@@ -50,7 +50,7 @@
                     fill="outline"
                     [loading]="portalLoading()"
                     [disabled]="portalLoading()"
-                    (click)="openPortal()"
+                    (click)="openPortalAsync()"
                 >
                     {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
                 </fd-ui-button>
@@ -112,7 +112,7 @@
                                     fullWidth
                                     [loading]="isPlanLoading('monthly')"
                                     [disabled]="checkoutLoadingPlan() !== null"
-                                    (click)="startCheckout('monthly', provider)"
+                                    (click)="startCheckoutAsync('monthly', provider)"
                                 >
                                     {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: getProviderLabel(provider) } }}
                                 </fd-ui-button>
@@ -123,7 +123,7 @@
                             fullWidth
                             [loading]="isPlanLoading('monthly')"
                             [disabled]="checkoutLoadingPlan() !== null"
-                            (click)="startCheckout('monthly')"
+                            (click)="startCheckoutAsync('monthly')"
                         >
                             {{ 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION' | translate }}
                         </fd-ui-button>
@@ -149,7 +149,7 @@
                                     fullWidth
                                     [loading]="isPlanLoading('yearly')"
                                     [disabled]="checkoutLoadingPlan() !== null"
-                                    (click)="startCheckout('yearly', provider)"
+                                    (click)="startCheckoutAsync('yearly', provider)"
                                 >
                                     {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: getProviderLabel(provider) } }}
                                 </fd-ui-button>
@@ -160,7 +160,7 @@
                             fullWidth
                             [loading]="isPlanLoading('yearly')"
                             [disabled]="checkoutLoadingPlan() !== null"
-                            (click)="startCheckout('yearly')"
+                            (click)="startCheckoutAsync('yearly')"
                         >
                             {{ 'PREMIUM_PAGE.PLANS.YEARLY.ACTION' | translate }}
                         </fd-ui-button>

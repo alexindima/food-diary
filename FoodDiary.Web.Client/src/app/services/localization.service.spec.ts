@@ -106,7 +106,7 @@ describe('LocalizationService', () => {
     });
 
     it("should initialize with default language 'en'", async () => {
-        await service.initializeLocalization();
+        await service.initializeLocalizationAsync();
 
         expect(translateSpy.addLangs).toHaveBeenCalledWith(['en', 'ru']);
         expect(translateSpy.use).toHaveBeenCalledWith('en');
@@ -115,7 +115,7 @@ describe('LocalizationService', () => {
     it('should use stored language preference', async () => {
         localStorage.setItem('fd_language', 'ru');
 
-        await service.initializeLocalization();
+        await service.initializeLocalizationAsync();
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
@@ -123,7 +123,7 @@ describe('LocalizationService', () => {
     it('should default to russian for the russian domain when no stored preference exists', async () => {
         (mockDocument.location as Location).hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
 
-        await service.initializeLocalization();
+        await service.initializeLocalizationAsync();
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
@@ -132,7 +132,7 @@ describe('LocalizationService', () => {
         localStorage.setItem('fd_language', 'en');
         (mockDocument.location as Location).hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
 
-        await service.initializeLocalization();
+        await service.initializeLocalizationAsync();
 
         expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
@@ -140,7 +140,7 @@ describe('LocalizationService', () => {
     it("should normalize unknown language to 'en'", async () => {
         translateSpy.getBrowserLang.mockReturnValue('fr');
 
-        await service.initializeLocalization();
+        await service.initializeLocalizationAsync();
 
         expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
@@ -148,7 +148,7 @@ describe('LocalizationService', () => {
     it("should normalize 'ru' correctly", async () => {
         translateSpy.getBrowserLang.mockReturnValue('ru');
 
-        await service.initializeLocalization();
+        await service.initializeLocalizationAsync();
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
@@ -157,7 +157,7 @@ describe('LocalizationService', () => {
         currentLangValue = 'en';
         translateSpy.getDefaultLang.mockReturnValue('en');
 
-        await service.applyLanguagePreference('ru');
+        await service.applyLanguagePreferenceAsync('ru');
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
@@ -167,7 +167,7 @@ describe('LocalizationService', () => {
         translateSpy.getDefaultLang.mockReturnValue('en');
         translateSpy.use.mockClear();
 
-        await service.applyLanguagePreference('en');
+        await service.applyLanguagePreferenceAsync('en');
 
         expect(translateSpy.use).not.toHaveBeenCalled();
     });
@@ -187,14 +187,14 @@ describe('LocalizationService', () => {
     });
 
     it('should extend current language with application translations', async () => {
-        await service.loadApplicationTranslations();
+        await service.loadApplicationTranslationsAsync();
 
         expect(translationLoaderSpy.loadApplicationTranslations).toHaveBeenCalledWith('en');
         expect(translateSpy.setTranslation).toHaveBeenCalledWith('en', { DASHBOARD: { TITLE: 'Dashboard' } }, true);
     });
 
     it('should extend current language with public route translations', async () => {
-        await service.loadRouteTranslations('/calorie-counter');
+        await service.loadRouteTranslationsAsync('/calorie-counter');
 
         expect(translationLoaderSpy.loadRouteTranslations).toHaveBeenCalledWith('en', '/calorie-counter');
         expect(translateSpy.setTranslation).toHaveBeenCalledWith('en', { SEO_PAGE: { TRUST_TITLE: 'Trust' } }, true);

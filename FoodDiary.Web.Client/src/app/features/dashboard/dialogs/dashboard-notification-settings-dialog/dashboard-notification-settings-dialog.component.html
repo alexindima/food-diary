@@ -121,7 +121,7 @@
             variant="secondary"
             [disabled]="isOpeningProfile()"
             [loading]="isOpeningProfile()"
-            (click)="openAdvancedSettings()"
+            (click)="openAdvancedSettingsAsync()"
         >
             {{ 'DASHBOARD.NOTIFICATIONS.OPEN_PROFILE' | translate }}
         </fd-ui-button>

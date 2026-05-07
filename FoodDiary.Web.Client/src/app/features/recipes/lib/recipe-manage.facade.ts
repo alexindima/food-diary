@@ -182,7 +182,7 @@ export class RecipeManageFacade {
                 }),
             )
             .subscribe({
-                next: recipe => void this.handleSubmitResponse(recipe),
+                next: recipe => void this.handleSubmitResponseAsync(recipe),
                 error: error => {
                     this.handleSubmitError(error);
                 },
@@ -199,20 +199,20 @@ export class RecipeManageFacade {
                 }),
             )
             .subscribe({
-                next: recipe => void this.handleSubmitResponse(recipe),
+                next: recipe => void this.handleSubmitResponseAsync(recipe),
                 error: error => {
                     this.handleSubmitError(error);
                 },
             });
     }
 
-    public async cancelManage(): Promise<void> {
+    public async cancelManageAsync(): Promise<void> {
         if (this.dialogRef) {
             this.dialogRef.close(null);
             return;
         }
 
-        await this.navigationService.navigateToRecipeList();
+        await this.navigationService.navigateToRecipeListAsync();
     }
 
     public clearGlobalError(): void {
@@ -223,14 +223,14 @@ export class RecipeManageFacade {
         this.globalError.set(translate ? this.translateService.instant(message) : message);
     }
 
-    private async handleSubmitResponse(response: Recipe): Promise<void> {
+    private async handleSubmitResponseAsync(response: Recipe): Promise<void> {
         this.clearGlobalError();
         if (this.dialogRef) {
             this.dialogRef.close(response);
             return;
         }
 
-        await this.navigationService.navigateToRecipeList();
+        await this.navigationService.navigateToRecipeListAsync();
     }
 
     private handleSubmitError(error?: HttpErrorResponse): void {

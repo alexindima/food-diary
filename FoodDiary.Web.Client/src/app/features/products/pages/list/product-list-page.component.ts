@@ -49,7 +49,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
     private readonly toastService = inject(FdUiToastService);
     private isDeleteInProgress = false;
 
-    protected override async onProductClick(product: Product): Promise<void> {
+    protected override async handleProductClickAsync(product: Product): Promise<void> {
         const { ProductDetailComponent } = await import('../../components/detail/product-detail.component');
         this.fdDialogService
             .open(ProductDetailComponent, {
@@ -71,7 +71,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
                 }
 
                 if (result.action === 'Edit' || result.action === 'Duplicate') {
-                    void this.navigationService.navigateToProductEdit(result.id);
+                    void this.navigationService.navigateToProductEditAsync(result.id);
                     return;
                 }
 

@@ -321,7 +321,7 @@ export class UserManageComponent {
                 return;
             }
 
-            void this.clearProfileIntentQueryParam();
+            void this.clearProfileIntentQueryParamAsync();
             this.pendingPasswordSetupIntent.set(false);
 
             if (!user.hasPassword) {
@@ -397,13 +397,13 @@ export class UserManageComponent {
         this.facade.deleteAccount();
     }
 
-    public async togglePushNotifications(): Promise<void> {
+    public async togglePushNotificationsAsync(): Promise<void> {
         if (this.isUpdatingNotifications() || this.pushNotificationsBusy()) {
             return;
         }
 
         const nextEnabled = !this.pushNotificationsEnabled();
-        const user = await this.facade.updateNotificationPreferences({ pushNotificationsEnabled: nextEnabled });
+        const user = await this.facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: nextEnabled });
         if (!user) {
             return;
         }
@@ -417,7 +417,7 @@ export class UserManageComponent {
             return;
         }
 
-        const result = await this.pushNotifications.ensureSubscription();
+        const result = await this.pushNotifications.ensureSubscriptionAsync();
         switch (result) {
             case 'subscribed':
             case 'already-subscribed':
@@ -449,12 +449,12 @@ export class UserManageComponent {
         }
     }
 
-    public async toggleFastingPushNotifications(): Promise<void> {
+    public async toggleFastingPushNotificationsAsync(): Promise<void> {
         if (this.isUpdatingNotifications()) {
             return;
         }
 
-        const user = await this.facade.updateNotificationPreferences({
+        const user = await this.facade.updateNotificationPreferencesAsync({
             fastingPushNotificationsEnabled: !this.fastingPushNotificationsEnabled(),
         });
         if (!user) {
@@ -496,7 +496,7 @@ export class UserManageComponent {
         });
     }
 
-    public async saveFastingReminderHours(): Promise<void> {
+    public async saveFastingReminderHoursAsync(): Promise<void> {
         if (this.isUpdatingNotifications()) {
             return;
         }
@@ -508,7 +508,7 @@ export class UserManageComponent {
             return;
         }
 
-        const user = await this.facade.updateNotificationPreferences({
+        const user = await this.facade.updateNotificationPreferencesAsync({
             fastingCheckInReminderHours: firstReminder,
             fastingCheckInFollowUpReminderHours: followUpReminder,
         });
@@ -525,7 +525,7 @@ export class UserManageComponent {
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
     }
 
-    public async removeConnectedDevice(subscription: WebPushSubscriptionItem): Promise<void> {
+    public async removeConnectedDeviceAsync(subscription: WebPushSubscriptionItem): Promise<void> {
         const endpoint = subscription.endpoint;
         if (!endpoint || this.removingConnectedDeviceEndpoint() || this.pushNotificationsBusy()) {
             return;
@@ -533,8 +533,8 @@ export class UserManageComponent {
 
         const removed =
             this.currentSubscriptionEndpoint() === endpoint
-                ? await this.pushNotifications.removeSubscription(endpoint)
-                : await this.facade.removeWebPushSubscription(endpoint);
+                ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
+                : await this.facade.removeWebPushSubscriptionAsync(endpoint);
 
         if (!removed) {
             this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'failed', {
@@ -571,12 +571,12 @@ export class UserManageComponent {
         return !!subscription.endpoint && subscription.endpoint === this.currentSubscriptionEndpoint();
     }
 
-    public async toggleSocialPushNotifications(): Promise<void> {
+    public async toggleSocialPushNotificationsAsync(): Promise<void> {
         if (this.isUpdatingNotifications()) {
             return;
         }
 
-        const user = await this.facade.updateNotificationPreferences({
+        const user = await this.facade.updateNotificationPreferencesAsync({
             socialPushNotificationsEnabled: !this.socialPushNotificationsEnabled(),
         });
         if (!user) {
@@ -1148,7 +1148,7 @@ export class UserManageComponent {
         return `${year}-${month}-${day}`;
     }
 
-    private async clearProfileIntentQueryParam(): Promise<void> {
+    private async clearProfileIntentQueryParamAsync(): Promise<void> {
         await this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { intent: null },

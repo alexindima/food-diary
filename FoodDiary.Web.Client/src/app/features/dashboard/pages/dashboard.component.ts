@@ -268,27 +268,27 @@ export class DashboardComponent {
         this.facade.setSelectedDate(value);
     }
 
-    public async openWeightHistory(): Promise<void> {
-        await this.navigationService.navigateToWeightHistory();
+    public async openWeightHistoryAsync(): Promise<void> {
+        await this.navigationService.navigateToWeightHistoryAsync();
     }
 
-    public async openWaistHistory(): Promise<void> {
-        await this.navigationService.navigateToWaistHistory();
+    public async openWaistHistoryAsync(): Promise<void> {
+        await this.navigationService.navigateToWaistHistoryAsync();
     }
 
-    public async openCycleTracking(): Promise<void> {
-        await this.navigationService.navigateToCycleTracking();
+    public async openCycleTrackingAsync(): Promise<void> {
+        await this.navigationService.navigateToCycleTrackingAsync();
     }
 
-    public async openGoals(): Promise<void> {
-        await this.navigationService.navigateToGoals();
+    public async openGoalsAsync(): Promise<void> {
+        await this.navigationService.navigateToGoalsAsync();
     }
 
-    public async openProfile(): Promise<void> {
-        await this.navigationService.navigateToProfile();
+    public async openProfileAsync(): Promise<void> {
+        await this.navigationService.navigateToProfileAsync();
     }
 
-    public async openCalorieGoalDialog(): Promise<void> {
+    public async openCalorieGoalDialogAsync(): Promise<void> {
         const { CalorieGoalDialogComponent } = await import('../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component');
         this.dialogService
             .open(CalorieGoalDialogComponent, {
@@ -306,7 +306,7 @@ export class DashboardComponent {
             });
     }
 
-    public async openNotificationSettings(): Promise<void> {
+    public async openNotificationSettingsAsync(): Promise<void> {
         const { DashboardNotificationSettingsDialogComponent } =
             await import('../dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.component');
 
@@ -319,7 +319,7 @@ export class DashboardComponent {
             .subscribe();
     }
 
-    public async openAppearanceDialog(): Promise<void> {
+    public async openAppearanceDialogAsync(): Promise<void> {
         const { DashboardAppearanceDialogComponent } =
             await import('../dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.component');
 
@@ -336,12 +336,12 @@ export class DashboardComponent {
             .subscribe();
     }
 
-    public async addConsumption(mealType?: string | null): Promise<void> {
-        await this.navigationService.navigateToConsumptionAdd(mealType ?? undefined);
+    public async addConsumptionAsync(mealType?: string | null): Promise<void> {
+        await this.navigationService.navigateToConsumptionAddAsync(mealType ?? undefined);
     }
 
-    public async manageConsumptions(): Promise<void> {
-        await this.navigationService.navigateToConsumptionList();
+    public async manageConsumptionsAsync(): Promise<void> {
+        await this.navigationService.navigateToConsumptionListAsync();
     }
 
     public onMealCreated(): void {
@@ -349,7 +349,7 @@ export class DashboardComponent {
     }
 
     public openConsumption(consumption: { id: string }): void {
-        void this.navigationService.navigateToConsumptionEdit(consumption.id);
+        void this.navigationService.navigateToConsumptionEditAsync(consumption.id);
     }
 
     public addHydration(amount: number): void {
@@ -368,10 +368,10 @@ export class DashboardComponent {
             return;
         }
 
-        void this.openTdeeDetails();
+        void this.openTdeeDetailsAsync();
     }
 
-    public async openTdeeDetails(): Promise<void> {
+    public async openTdeeDetailsAsync(): Promise<void> {
         const { TdeeInsightDialogComponent } = await import('../dialogs/tdee-insight-dialog/tdee-insight-dialog.component');
 
         this.dialogService
@@ -386,16 +386,16 @@ export class DashboardComponent {
             .subscribe(action => {
                 switch (action?.type) {
                     case 'profile':
-                        void this.openProfile();
+                        void this.openProfileAsync();
                         break;
                     case 'meal':
-                        void this.addConsumption();
+                        void this.addConsumptionAsync();
                         break;
                     case 'weight':
-                        void this.openWeightHistory();
+                        void this.openWeightHistoryAsync();
                         break;
                     case 'goals':
-                        void this.openGoals();
+                        void this.openGoalsAsync();
                         break;
                     case 'applyGoal':
                         this.applyTdeeGoal(action.target);
@@ -410,15 +410,15 @@ export class DashboardComponent {
             return;
         }
 
-        void this.openFasting();
+        void this.openFastingAsync();
     }
 
-    public async openFasting(): Promise<void> {
+    public async openFastingAsync(): Promise<void> {
         if (this.layout.isEditingLayout()) {
             return;
         }
 
-        await this.navigationService.navigateToFasting();
+        await this.navigationService.navigateToFastingAsync();
     }
 
     public getFastingCardLabelKey(): string {

@@ -160,7 +160,7 @@ export class ProductListBaseComponent {
     }
 
     public onAddProductClick(): void {
-        void this.navigationService.navigateToProductAdd();
+        void this.navigationService.navigateToProductAddAsync();
     }
 
     public openBarcodeScanner(): void {
@@ -310,7 +310,7 @@ export class ProductListBaseComponent {
     }
 
     public onOffProductClick(offProduct: OpenFoodFactsProduct): void {
-        void this.navigationService.navigateToProductAdd({
+        void this.navigationService.navigateToProductAddAsync({
             state: {
                 barcode: offProduct.barcode,
                 offProduct,
@@ -322,7 +322,13 @@ export class ProductListBaseComponent {
         this.header().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    protected onProductClick(_product: Product): void | Promise<void> {}
+    public onProductClick(product: Product): void {
+        void this.handleProductClickAsync(product);
+    }
+
+    protected handleProductClickAsync(_product: Product): Promise<void> {
+        return Promise.resolve();
+    }
 
     public onAddToMeal(product: Product): void {
         this.quickConsumptionService.addProduct(product);
@@ -359,7 +365,7 @@ export class ProductListBaseComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(product => {
                 if (product) {
-                    void this.onProductClick(product);
+                    this.onProductClick(product);
                 }
             });
     }

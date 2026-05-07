@@ -25,8 +25,8 @@
                         [viewAllKey]="'MEALS_PREVIEW.VIEW_ALL'"
                         [emptyKey]="'MEALS_PREVIEW.PLACEHOLDER'"
                         [showAddButtons]="true"
-                        (add)="openAuthDialog('register')"
-                        (viewAll)="openAuthDialog('login')"
+                        (add)="openAuthDialogAsync('register')"
+                        (viewAll)="openAuthDialogAsync('login')"
                     />
 
                     <div class="landing-preview__meals-note">
@@ -59,7 +59,7 @@
                                 [product]="product"
                                 [imageUrl]="product.imageUrl || undefined"
                                 (addToMeal)="addPreviewProduct(product)"
-                                (open)="openAuthDialog('login')"
+                                (open)="openAuthDialogAsync('login')"
                             />
                         }
 
@@ -69,7 +69,7 @@
                                 [recipe]="recipe"
                                 [imageUrl]="recipe.imageUrl || undefined"
                                 (addToMeal)="addPreviewRecipe(recipe)"
-                                (open)="openAuthDialog('login')"
+                                (open)="openAuthDialogAsync('login')"
                             />
                         }
                     </div>

@@ -50,8 +50,10 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
             });
     }
 
-    protected override onProductClick(product: Product): void {
+    protected override handleProductClickAsync(product: Product): Promise<void> {
         this.handleSelection(product);
+
+        return Promise.resolve();
     }
 
     private handleSelection(product: Product): void {

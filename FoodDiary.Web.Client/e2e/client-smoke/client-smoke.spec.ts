@@ -26,7 +26,7 @@ test.describe('client smoke', () => {
             createJwt({ sub: 'u1', nameid: 'u1', role: 'User', exp: Math.floor(Date.now() / 1000) + 3600 }),
         );
 
-        await mockAuthenticatedClientApi(page);
+        await mockAuthenticatedClientApiAsync(page);
 
         await page.goto('/');
 
@@ -54,7 +54,7 @@ test.describe('client smoke', () => {
             createJwt({ sub: 'u1', nameid: 'u1', role: 'User', exp: Math.floor(Date.now() / 1000) + 3600 }),
         );
 
-        await mockAuthenticatedClientApi(page);
+        await mockAuthenticatedClientApiAsync(page);
 
         await page.goto('/products');
 
@@ -65,7 +65,7 @@ test.describe('client smoke', () => {
     });
 });
 
-async function mockAuthenticatedClientApi(page: Page): Promise<void> {
+async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
     await page.route('**/hubs/notifications/**', async route => {
         await route.abort('failed');
     });

@@ -33,7 +33,7 @@ export class UnauthorizedComponent {
             return;
         }
 
-        void this.tryRecoverFromSso(this.returnUrl);
+        void this.tryRecoverFromSsoAsync(this.returnUrl);
     }
 
     public goToLogin(): void {
@@ -45,8 +45,8 @@ export class UnauthorizedComponent {
         window.location.assign(url.toString());
     }
 
-    private async tryRecoverFromSso(returnUrl: string): Promise<void> {
-        const cleanedUrl = await this.authService.tryApplySsoFromReturnUrl(returnUrl);
+    private async tryRecoverFromSsoAsync(returnUrl: string): Promise<void> {
+        const cleanedUrl = await this.authService.tryApplySsoFromReturnUrlAsync(returnUrl);
         if (!cleanedUrl) {
             return;
         }

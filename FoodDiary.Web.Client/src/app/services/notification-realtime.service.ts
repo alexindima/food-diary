@@ -27,18 +27,18 @@ export class NotificationRealtimeService {
         effect(() => {
             if (this.authService.isAuthenticated()) {
                 untracked(() => {
-                    void this.connect();
+                    void this.connectAsync();
                 });
                 return;
             }
 
             untracked(() => {
-                void this.disconnect();
+                void this.disconnectAsync();
             });
         });
     }
 
-    private async connect(): Promise<void> {
+    private async connectAsync(): Promise<void> {
         if (this.connection || this.connecting()) {
             return;
         }
@@ -93,7 +93,7 @@ export class NotificationRealtimeService {
         }
     }
 
-    private async disconnect(): Promise<void> {
+    private async disconnectAsync(): Promise<void> {
         if (!this.connection) {
             this.connectedSignal.set(false);
             return;

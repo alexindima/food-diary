@@ -36,11 +36,11 @@ export class LocalizationService {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(event => {
-                void this.loadTranslationsForRoute(event.urlAfterRedirects);
+                void this.loadTranslationsForRouteAsync(event.urlAfterRedirects);
             });
     }
 
-    public initializeLocalization(): Promise<void> {
+    public initializeLocalizationAsync(): Promise<void> {
         this.translateService.addLangs(['en', 'ru']);
 
         const browserLang = this.translateService.getBrowserLang();
@@ -51,7 +51,7 @@ export class LocalizationService {
         return firstValueFrom(this.translateService.use(normalizedLang)).then(() => void 0);
     }
 
-    public applyLanguagePreference(language: string | null | undefined): Promise<void> {
+    public applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
         const normalized = this.normalizeLanguage(language);
         if (!normalized) {
             return Promise.resolve();
@@ -72,7 +72,7 @@ export class LocalizationService {
         return this.normalizeLanguage(current);
     }
 
-    public loadApplicationTranslations(): Promise<void> {
+    public loadApplicationTranslationsAsync(): Promise<void> {
         const currentLang = this.getCurrentLanguage();
         if (this.applicationTranslationLanguages.has(currentLang)) {
             return Promise.resolve();
@@ -84,11 +84,13 @@ export class LocalizationService {
         });
     }
 
-    public loadTranslationsForRoute(pathname: string): Promise<void> {
-        return this.translationLoader.isPublicRoute(pathname) ? this.loadRouteTranslations(pathname) : this.loadApplicationTranslations();
+    public loadTranslationsForRouteAsync(pathname: string): Promise<void> {
+        return this.translationLoader.isPublicRoute(pathname)
+            ? this.loadRouteTranslationsAsync(pathname)
+            : this.loadApplicationTranslationsAsync();
     }
 
-    public loadRouteTranslations(pathname: string): Promise<void> {
+    public loadRouteTranslationsAsync(pathname: string): Promise<void> {
         const currentLang = this.getCurrentLanguage();
         const normalizedPath = this.normalizeRouteKey(pathname);
         const cacheKey = `${currentLang}:${normalizedPath}`;

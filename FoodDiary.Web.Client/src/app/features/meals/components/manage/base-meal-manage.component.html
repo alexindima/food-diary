@@ -1,10 +1,10 @@
-﻿<div class="consumption-manage fd-stack" fdPageContainer>
+<div class="consumption-manage fd-stack" fdPageContainer>
     <fd-manage-header
         class="consumption-manage__header"
         [title]="consumption() ? ('CONSUMPTION_MANAGE.EDIT_TITLE' | translate) : ('CONSUMPTION_MANAGE.ADD_TITLE' | translate)"
         [subtitle]="'CONSUMPTION_MANAGE.SUBTITLE' | translate"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
-        (back)="onCancel()"
+        (back)="onCancelAsync()"
     />
 
     <form class="consumption-manage__form fd-stack fd-gap-lg" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
@@ -172,7 +172,7 @@
                     [consumption]="consumption() ?? null"
                     [globalError]="globalError()"
                     (nutritionModeChange)="onNutritionModeChange($event)"
-                    (cancel)="onCancel()"
+                    (cancel)="onCancelAsync()"
                 />
             </div>
         </div>

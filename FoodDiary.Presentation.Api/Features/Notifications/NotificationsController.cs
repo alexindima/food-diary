@@ -47,8 +47,13 @@ public class NotificationsController(
     [ProducesResponseType<ScheduledNotificationHttpResponse>(StatusCodes.Status202Accepted)]
     public async Task<IActionResult> ScheduleTestNotification(
         [FromCurrentUser] Guid userId,
-        [FromBody] ScheduleTestNotificationHttpRequest request) {
-        var response = await notificationTestScheduler.ScheduleAsync(userId, request.DelaySeconds, request.Type);
+        [FromBody] ScheduleTestNotificationHttpRequest request,
+        CancellationToken cancellationToken) {
+        var response = await notificationTestScheduler.ScheduleAsync(
+            userId,
+            request.DelaySeconds,
+            request.Type,
+            cancellationToken);
         auditLogger.Log(
             "notifications.test.scheduled",
             new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),

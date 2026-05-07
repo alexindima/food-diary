@@ -1,4 +1,4 @@
-﻿<div class="consumption-list" fdPageContainer #container>
+<div class="consumption-list" fdPageContainer #container>
     <fd-page-header
         class="consumption-list__header"
         [title]="'CONSUMPTION_LIST.TITLE' | translate"
@@ -53,7 +53,7 @@
             size="sm"
             icon="add"
             iconSize="sm"
-            (click)="goToMealAdd()"
+            (click)="goToMealAddAsync()"
         >
             {{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}
         </fd-ui-button>
@@ -130,7 +130,7 @@
                     <fd-ui-icon class="consumption-list__no-results-icon" name="restaurant_menu" size="xl" />
                     <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
                     <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.EMPTY_COPY' | translate }}</div>
-                    <fd-ui-button icon="add" variant="primary" fill="solid" (click)="goToMealAdd()">
+                    <fd-ui-button icon="add" variant="primary" fill="solid" (click)="goToMealAddAsync()">
                         {{ 'CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON' | translate }}
                     </fd-ui-button>
                 </div>
@@ -156,7 +156,7 @@
                                 <fd-meal-card
                                     class="consumption-card"
                                     [meal]="consumption"
-                                    (open)="openMealDetails(consumption)"
+                                    (open)="openMealDetailsAsync(consumption)"
                                     (favoriteChanged)="onMealFavoriteChanged(consumption, $event)"
                                 />
                             }

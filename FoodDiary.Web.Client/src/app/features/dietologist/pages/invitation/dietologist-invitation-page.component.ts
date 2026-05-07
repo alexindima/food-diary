@@ -102,11 +102,11 @@ export class DietologistInvitationPageComponent {
     }
 
     public goToClients(): void {
-        void this.navigationService.navigateToDietologist();
+        void this.navigationService.navigateToDietologistAsync();
     }
 
     public goHome(): void {
-        void this.navigationService.navigateToHome();
+        void this.navigationService.navigateToHomeAsync();
     }
 
     private loadInvitation(): void {

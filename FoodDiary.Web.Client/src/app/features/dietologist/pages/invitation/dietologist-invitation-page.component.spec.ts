@@ -18,8 +18,8 @@ describe('DietologistInvitationPageComponent', () => {
         declineInvitationForCurrentUser: ReturnType<typeof vi.fn>;
     };
     let navigationService: {
-        navigateToDietologist: ReturnType<typeof vi.fn>;
-        navigateToHome: ReturnType<typeof vi.fn>;
+        navigateToDietologistAsync: ReturnType<typeof vi.fn>;
+        navigateToHomeAsync: ReturnType<typeof vi.fn>;
     };
     let authService: {
         refreshToken: ReturnType<typeof vi.fn>;
@@ -58,8 +58,8 @@ describe('DietologistInvitationPageComponent', () => {
             declineInvitationForCurrentUser: vi.fn(),
         };
         navigationService = {
-            navigateToDietologist: vi.fn().mockResolvedValue(undefined),
-            navigateToHome: vi.fn().mockResolvedValue(undefined),
+            navigateToDietologistAsync: vi.fn().mockResolvedValue(undefined),
+            navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
         };
         authService = {
             refreshToken: vi.fn().mockReturnValue(of({})),

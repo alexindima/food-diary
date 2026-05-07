@@ -21,12 +21,12 @@ describe('AuthService', () => {
     let service: AuthService;
     let httpMock: HttpTestingController;
     let navigationServiceSpy: {
-        navigateToAuth: ReturnType<typeof vi.fn>;
-        navigateToHome: ReturnType<typeof vi.fn>;
-        navigateToLanding: ReturnType<typeof vi.fn>;
+        navigateToAuthAsync: ReturnType<typeof vi.fn>;
+        navigateToHomeAsync: ReturnType<typeof vi.fn>;
+        navigateToLandingAsync: ReturnType<typeof vi.fn>;
     };
     let localizationServiceSpy: {
-        applyLanguagePreference: ReturnType<typeof vi.fn>;
+        applyLanguagePreferenceAsync: ReturnType<typeof vi.fn>;
         clearStoredLanguage: ReturnType<typeof vi.fn>;
     };
     let quickMealServiceSpy: { exitPreview: ReturnType<typeof vi.fn> };
@@ -38,19 +38,19 @@ describe('AuthService', () => {
         sessionStorage.clear();
 
         navigationServiceSpy = {
-            navigateToAuth: vi.fn(),
-            navigateToHome: vi.fn(),
-            navigateToLanding: vi.fn(),
+            navigateToAuthAsync: vi.fn(),
+            navigateToHomeAsync: vi.fn(),
+            navigateToLandingAsync: vi.fn(),
         };
-        navigationServiceSpy.navigateToAuth.mockReturnValue(Promise.resolve());
-        navigationServiceSpy.navigateToHome.mockReturnValue(Promise.resolve());
-        navigationServiceSpy.navigateToLanding.mockReturnValue(Promise.resolve());
+        navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
+        navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
+        navigationServiceSpy.navigateToLandingAsync.mockReturnValue(Promise.resolve());
 
         localizationServiceSpy = {
-            applyLanguagePreference: vi.fn(),
+            applyLanguagePreferenceAsync: vi.fn(),
             clearStoredLanguage: vi.fn(),
         };
-        localizationServiceSpy.applyLanguagePreference.mockReturnValue(Promise.resolve());
+        localizationServiceSpy.applyLanguagePreferenceAsync.mockReturnValue(Promise.resolve());
 
         quickMealServiceSpy = { exitPreview: vi.fn() };
 
@@ -100,7 +100,7 @@ describe('AuthService', () => {
             localStorage.setItem('authToken', 'token');
             sessionStorage.setItem('authToken', 'token');
 
-            await service.onLogout(false);
+            await service.onLogoutAsync(false);
 
             expect(localStorage.getItem('authToken')).toBeNull();
             expect(sessionStorage.getItem('authToken')).toBeNull();
@@ -187,7 +187,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/login`);
             req.flush(authResponse);
 
-            expect(localizationServiceSpy.applyLanguagePreference).toHaveBeenCalledWith('en');
+            expect(localizationServiceSpy.applyLanguagePreferenceAsync).toHaveBeenCalledWith('en');
         });
 
         it('should not apply language preference when not in response', () => {
@@ -201,7 +201,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/login`);
             req.flush(responseNoLang);
 
-            expect(localizationServiceSpy.applyLanguagePreference).not.toHaveBeenCalled();
+            expect(localizationServiceSpy.applyLanguagePreferenceAsync).not.toHaveBeenCalled();
         });
 
         it('should call quickConsumptionService.exitPreview on login', () => {
@@ -384,7 +384,7 @@ describe('AuthService', () => {
             });
 
             httpMock.expectNone(`${authBaseUrl}/refresh`);
-            expect(navigationServiceSpy.navigateToAuth).toHaveBeenCalledWith('login');
+            expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
         });
 
         it('should logout on refresh failure', () => {
@@ -397,7 +397,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
             req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
 
-            expect(navigationServiceSpy.navigateToAuth).toHaveBeenCalledWith('login');
+            expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
         });
     });
 
@@ -406,7 +406,7 @@ describe('AuthService', () => {
             localStorage.setItem('refreshToken', 'existing-refresh-token');
             const restoredToken = createFakeJwt({ sub: 'user-restore-1', exp: Math.floor(Date.now() / 1000) + 3600 });
 
-            const restorePromise = service.restoreSession();
+            const restorePromise = service.restoreSessionAsync();
 
             const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
             req.flush({
@@ -433,7 +433,7 @@ describe('AuthService', () => {
             expect(service.isAuthenticated()).toBe(false);
             expect(service.isAuthReady()).toBe(false);
 
-            const restorePromise = service.restoreSession();
+            const restorePromise = service.restoreSessionAsync();
 
             const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
             req.flush({
@@ -453,7 +453,7 @@ describe('AuthService', () => {
             localStorage.setItem('userId', 'stale-user');
             localStorage.setItem('emailConfirmed', 'false');
 
-            await service.restoreSession();
+            await service.restoreSessionAsync();
 
             expect(service.getUserId()).toBeNull();
             expect(service.isEmailConfirmed()).toBe(true);
@@ -472,7 +472,7 @@ describe('AuthService', () => {
         });
 
         it('should clear all auth data', async () => {
-            await service.onLogout(false);
+            await service.onLogoutAsync(false);
 
             expect(localStorage.getItem('authToken')).toBeNull();
             expect(localStorage.getItem('refreshToken')).toBeNull();
@@ -481,18 +481,18 @@ describe('AuthService', () => {
         });
 
         it('should navigate to login when redirectToAuth is true', async () => {
-            await service.onLogout(true);
+            await service.onLogoutAsync(true);
 
-            expect(navigationServiceSpy.navigateToAuth).toHaveBeenCalledWith('login');
-            expect(navigationServiceSpy.navigateToHome).not.toHaveBeenCalled();
-            expect(navigationServiceSpy.navigateToLanding).not.toHaveBeenCalled();
+            expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
+            expect(navigationServiceSpy.navigateToHomeAsync).not.toHaveBeenCalled();
+            expect(navigationServiceSpy.navigateToLandingAsync).not.toHaveBeenCalled();
         });
 
         it('should navigate to landing when redirectToAuth is false', async () => {
-            await service.onLogout(false);
+            await service.onLogoutAsync(false);
 
-            expect(navigationServiceSpy.navigateToLanding).toHaveBeenCalled();
-            expect(navigationServiceSpy.navigateToAuth).not.toHaveBeenCalled();
+            expect(navigationServiceSpy.navigateToLandingAsync).toHaveBeenCalled();
+            expect(navigationServiceSpy.navigateToAuthAsync).not.toHaveBeenCalled();
         });
 
         it('should set isAuthenticated to false', async () => {
@@ -500,13 +500,13 @@ describe('AuthService', () => {
             service.initializeAuth();
             expect(service.isAuthenticated()).toBe(true);
 
-            await service.onLogout(false);
+            await service.onLogoutAsync(false);
 
             expect(service.isAuthenticated()).toBe(false);
         });
 
         it('should clear stored language', async () => {
-            await service.onLogout(false);
+            await service.onLogoutAsync(false);
 
             expect(localizationServiceSpy.clearStoredLanguage).toHaveBeenCalled();
         });

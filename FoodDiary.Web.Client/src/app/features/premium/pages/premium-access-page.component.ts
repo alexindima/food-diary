@@ -74,10 +74,10 @@ export class PremiumAccessPageComponent {
     });
 
     public constructor() {
-        void this.initializePage();
+        void this.initializePageAsync();
     }
 
-    public async startCheckout(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
+    public async startCheckoutAsync(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
         if (!this.isBrowser) {
             return;
         }
@@ -101,7 +101,7 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    public async openPortal(): Promise<void> {
+    public async openPortalAsync(): Promise<void> {
         if (!this.isBrowser) {
             return;
         }
@@ -125,8 +125,8 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    public async reloadOverview(): Promise<void> {
-        await this.loadOverview();
+    public async reloadOverviewAsync(): Promise<void> {
+        await this.loadOverviewAsync();
     }
 
     public getPlanLabelKey(plan: BillingPlan | null): string {
@@ -169,13 +169,13 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    private async initializePage(): Promise<void> {
-        await this.handleCheckoutReturnState();
-        await this.loadOverview();
-        await this.handlePaddleTransactionCheckout();
+    private async initializePageAsync(): Promise<void> {
+        await this.handleCheckoutReturnStateAsync();
+        await this.loadOverviewAsync();
+        await this.handlePaddleTransactionCheckoutAsync();
     }
 
-    private async handleCheckoutReturnState(): Promise<void> {
+    private async handleCheckoutReturnStateAsync(): Promise<void> {
         const checkoutState = this.route.snapshot.queryParamMap.get('checkout');
         if (!checkoutState) {
             return;
@@ -201,7 +201,7 @@ export class PremiumAccessPageComponent {
         });
     }
 
-    private async loadOverview(): Promise<void> {
+    private async loadOverviewAsync(): Promise<void> {
         this.isLoading.set(true);
         this.errorMessage.set(null);
 
@@ -216,7 +216,7 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    private async handlePaddleTransactionCheckout(): Promise<void> {
+    private async handlePaddleTransactionCheckoutAsync(): Promise<void> {
         if (!this.isBrowser) {
             return;
         }
@@ -235,7 +235,7 @@ export class PremiumAccessPageComponent {
         }
 
         try {
-            await this.paddleCheckoutService.openTransactionCheckout(transactionId, {
+            await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
                 token: paddleClientToken,
                 environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
                 locale: this.translateService.currentLang || this.translateService.getDefaultLang() || 'en',

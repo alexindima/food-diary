@@ -64,7 +64,7 @@ export class ProfileManageFacade {
                 }
 
                 this.user.set(user);
-                void this.localizationService.applyLanguagePreference(user.language ?? null);
+                void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
                 this.themeService.syncWithUserPreferences(user.theme, user.uiStyle);
                 this.clearGlobalError();
                 this.showSuccessDialog();
@@ -139,7 +139,7 @@ export class ProfileManageFacade {
 
                             this.user.set(null);
                             this.clearGlobalError();
-                            void this.authService.onLogout(true);
+                            void this.authService.onLogoutAsync(true);
                         },
                         error: () => {
                             this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
@@ -174,7 +174,7 @@ export class ProfileManageFacade {
             });
     }
 
-    public async updateNotificationPreferences(preferences: {
+    public async updateNotificationPreferencesAsync(preferences: {
         pushNotificationsEnabled?: boolean;
         fastingPushNotificationsEnabled?: boolean;
         socialPushNotificationsEnabled?: boolean;
@@ -221,7 +221,7 @@ export class ProfileManageFacade {
                 this.webPushSubscriptions.set(overview.webPushSubscriptions);
                 this.dietologistRelationship.set(overview.dietologistRelationship);
                 this.clearGlobalError();
-                void this.localizationService.applyLanguagePreference(overview.user.language ?? null);
+                void this.localizationService.applyLanguagePreferenceAsync(overview.user.language ?? null);
                 this.themeService.syncWithUserPreferences(overview.user.theme, overview.user.uiStyle);
             },
             error: () => {
@@ -239,7 +239,7 @@ export class ProfileManageFacade {
             .afterClosed()
             .subscribe(goToHome => {
                 if (goToHome) {
-                    void this.navigationService.navigateToHome();
+                    void this.navigationService.navigateToHomeAsync();
                 }
             });
     }
@@ -259,7 +259,7 @@ export class ProfileManageFacade {
                         this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
                     } else {
                         this.user.set(user);
-                        void this.localizationService.applyLanguagePreference(user.language ?? null);
+                        void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
                         this.themeService.syncWithUserPreferences(user.theme, user.uiStyle);
                         this.clearGlobalError();
                     }
@@ -307,7 +307,7 @@ export class ProfileManageFacade {
         this.loadWebPushSubscriptions();
     }
 
-    public async removeWebPushSubscription(endpoint: string): Promise<boolean> {
+    public async removeWebPushSubscriptionAsync(endpoint: string): Promise<boolean> {
         if (!endpoint || this.removingWebPushSubscriptionEndpoint()) {
             return false;
         }

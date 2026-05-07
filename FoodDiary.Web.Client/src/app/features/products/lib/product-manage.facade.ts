@@ -23,7 +23,7 @@ export class ProductManageFacade {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly authService = inject(AuthService);
 
-    public async confirmDiscardChanges(data: ConfirmDeleteDialogData): Promise<boolean> {
+    public async confirmDiscardChangesAsync(data: ConfirmDeleteDialogData): Promise<boolean> {
         const confirmed = await firstValueFrom(
             this.fdDialogService
                 .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
@@ -46,13 +46,13 @@ export class ProductManageFacade {
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed) {
-                    void this.navigationService.navigateToPremiumAccess();
+                    void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });
         return false;
     }
 
-    public async deleteProduct(product: Product, confirmData: ConfirmDeleteDialogData): Promise<'deleted' | 'cancelled' | 'error'> {
+    public async deleteProductAsync(product: Product, confirmData: ConfirmDeleteDialogData): Promise<'deleted' | 'cancelled' | 'error'> {
         const confirmed = await firstValueFrom(
             this.fdDialogService.open(ConfirmDeleteDialogComponent, { data: confirmData, preset: 'confirm' }).afterClosed(),
         );
@@ -63,14 +63,14 @@ export class ProductManageFacade {
 
         try {
             await firstValueFrom(this.productService.deleteById(product.id));
-            await this.navigationService.navigateToProductList();
+            await this.navigationService.navigateToProductListAsync();
             return 'deleted';
         } catch {
             return 'error';
         }
     }
 
-    public async submitProduct(
+    public async submitProductAsync(
         product: Product | null,
         productData: CreateProductRequest,
         skipConfirmDialog: boolean,
@@ -84,7 +84,7 @@ export class ProductManageFacade {
             await afterSave?.(savedProduct);
 
             if (!skipConfirmDialog) {
-                await this.showConfirmDialog(Boolean(product));
+                await this.showConfirmDialogAsync(Boolean(product));
             }
 
             return { product: savedProduct, error: null };
@@ -106,7 +106,7 @@ export class ProductManageFacade {
         };
     }
 
-    private async showConfirmDialog(isEdit: boolean): Promise<void> {
+    private async showConfirmDialogAsync(isEdit: boolean): Promise<void> {
         const data: ProductSaveSuccessDialogData = {
             isEdit,
         };
@@ -121,9 +121,9 @@ export class ProductManageFacade {
         );
 
         if (redirectAction === 'Home') {
-            await this.navigationService.navigateToHome();
+            await this.navigationService.navigateToHomeAsync();
         } else if (redirectAction === 'ProductList') {
-            await this.navigationService.navigateToProductList();
+            await this.navigationService.navigateToProductListAsync();
         }
     }
 }

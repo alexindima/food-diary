@@ -131,10 +131,10 @@ export class AdminLessonsComponent {
 
         this.importMessage.set(null);
         this.isImporting.set(true);
-        void this.importLessonsFile(file, input);
+        void this.importLessonsFileAsync(file, input);
     }
 
-    private async importLessonsFile(file: File, input: HTMLInputElement): Promise<void> {
+    private async importLessonsFileAsync(file: File, input: HTMLInputElement): Promise<void> {
         try {
             const payload = JSON.parse(await file.text()) as unknown;
             if (!this.isImportPayload(payload)) {

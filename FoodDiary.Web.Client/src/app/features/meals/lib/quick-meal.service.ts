@@ -84,7 +84,7 @@ export class QuickMealService {
         this.itemsSignal.set([]);
     }
 
-    public async openEditor(): Promise<void> {
+    public async openEditorAsync(): Promise<void> {
         if (this.isPreviewMode) {
             return;
         }
@@ -94,7 +94,7 @@ export class QuickMealService {
             return;
         }
 
-        const navigated = await this.navigationService.navigateToConsumptionAdd(undefined, {
+        const navigated = await this.navigationService.navigateToConsumptionAddAsync(undefined, {
             state: { quickConsumptionItems: [...items] },
         });
 

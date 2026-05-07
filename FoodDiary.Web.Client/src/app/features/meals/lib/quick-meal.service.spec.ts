@@ -13,7 +13,7 @@ import { QuickMealService } from './quick-meal.service';
 describe('QuickMealService', () => {
     let service: QuickMealService;
     let mealService: { create: ReturnType<typeof vi.fn> };
-    let navigationService: { navigateToConsumptionAdd: ReturnType<typeof vi.fn> };
+    let navigationService: { navigateToConsumptionAddAsync: ReturnType<typeof vi.fn> };
     let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
     const product: Product = {
@@ -60,7 +60,7 @@ describe('QuickMealService', () => {
             create: vi.fn().mockReturnValue(of(createdMeal)),
         };
         navigationService = {
-            navigateToConsumptionAdd: vi.fn().mockResolvedValue(true),
+            navigateToConsumptionAddAsync: vi.fn().mockResolvedValue(true),
         };
         toastService = {
             success: vi.fn(),
@@ -106,9 +106,9 @@ describe('QuickMealService', () => {
     it('clears draft after opening editor only when navigation succeeds', async () => {
         service.addProduct(product);
 
-        await service.openEditor();
+        await service.openEditorAsync();
 
-        expect(navigationService.navigateToConsumptionAdd).toHaveBeenCalledWith(undefined, {
+        expect(navigationService.navigateToConsumptionAddAsync).toHaveBeenCalledWith(undefined, {
             state: {
                 quickConsumptionItems: [
                     expect.objectContaining({
@@ -122,10 +122,10 @@ describe('QuickMealService', () => {
     });
 
     it('keeps draft when editor navigation is cancelled', async () => {
-        navigationService.navigateToConsumptionAdd.mockResolvedValue(false);
+        navigationService.navigateToConsumptionAddAsync.mockResolvedValue(false);
         service.addProduct(product);
 
-        await service.openEditor();
+        await service.openEditorAsync();
 
         expect(service.items()).toHaveLength(1);
     });

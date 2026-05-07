@@ -30,7 +30,7 @@ public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture
 
         var repository = new ImageAssetRepository(context);
 
-        var isReferencedAssetInUse = await repository.IsAssetInUse(referencedAsset.Id, CancellationToken.None);
+        var isReferencedAssetInUse = await repository.IsAssetInUseAsync(referencedAsset.Id, CancellationToken.None);
         var unusedCandidates = await repository.GetUnusedOlderThanAsync(
             DateTime.UtcNow.AddDays(1),
             batchSize: 10,

@@ -5,8 +5,10 @@
             <p class="landing-section__subtitle">{{ 'LANDING_CTA.SUBTITLE' | translate }}</p>
         </div>
         <div class="landing-section__actions fd-row fd-wrap fd-gap-sm">
-            <fd-ui-button size="lg" variant="primary" (click)="openAuth('register')">{{ 'LANDING_CTA.REGISTER' | translate }}</fd-ui-button>
-            <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuth('login')">{{
+            <fd-ui-button size="lg" variant="primary" (click)="openAuthAsync('register')">{{
+                'LANDING_CTA.REGISTER' | translate
+            }}</fd-ui-button>
+            <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuthAsync('login')">{{
                 'LANDING_CTA.LOGIN' | translate
             }}</fd-ui-button>
         </div>

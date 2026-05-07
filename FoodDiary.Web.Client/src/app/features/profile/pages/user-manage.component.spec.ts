@@ -36,7 +36,7 @@ describe('UserManageComponent dietologist section', () => {
         notificationsChangedVersion: ReturnType<typeof signal<number>>;
     };
 
-    async function createComponent(
+    async function createComponentAsync(
         relationship: DietologistRelationship | null,
         dialogResult = false,
         user: User | null = null,
@@ -78,7 +78,7 @@ describe('UserManageComponent dietologist section', () => {
                 {
                     provide: LocalizationService,
                     useValue: {
-                        applyLanguagePreference: vi.fn().mockResolvedValue(undefined),
+                        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
                         getCurrentLanguage: vi.fn(() => 'en'),
                     },
                 },
@@ -93,8 +93,8 @@ describe('UserManageComponent dietologist section', () => {
                         isSubscribed: signal(false),
                         isBusy: signal(false),
                         currentSubscriptionEndpoint: signal<string | null>(null),
-                        ensureSubscription: vi.fn().mockResolvedValue('unsupported'),
-                        removeSubscription: vi.fn().mockResolvedValue(true),
+                        ensureSubscriptionAsync: vi.fn().mockResolvedValue('unsupported'),
+                        removeSubscriptionAsync: vi.fn().mockResolvedValue(true),
                     },
                 },
                 {
@@ -135,7 +135,7 @@ describe('UserManageComponent dietologist section', () => {
     }
 
     it('keeps invite mode when no dietologist relationship exists', async () => {
-        await createComponent(null);
+        await createComponentAsync(null);
 
         expect(dietologistService.getRelationship).not.toHaveBeenCalled();
         expect(component.hasDietologistRelationship()).toBe(false);
@@ -147,7 +147,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('applies pending relationship state and disables email editing', async () => {
-        await createComponent({
+        await createComponentAsync({
             invitationId: 'inv-1',
             status: 'Pending',
             email: 'diet@example.com',
@@ -182,7 +182,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('asks for confirmation before disabling profile sharing', async () => {
-        await createComponent(null, false);
+        await createComponentAsync(null, false);
 
         component.onDietologistProfileToggle(false);
 
@@ -191,7 +191,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('disables profile sharing after confirmation', async () => {
-        await createComponent(null, true);
+        await createComponentAsync(null, true);
 
         component.onDietologistProfileToggle(false);
         fixture.detectChanges();
@@ -200,7 +200,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('autosaves permissions when a relationship toggle changes', async () => {
-        await createComponent({
+        await createComponentAsync({
             invitationId: 'inv-1',
             status: 'Accepted',
             email: 'diet@example.com',
@@ -237,7 +237,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('asks for confirmation before disconnecting an accepted dietologist relationship', async () => {
-        await createComponent(
+        await createComponentAsync(
             {
                 invitationId: 'inv-1',
                 status: 'Accepted',
@@ -269,7 +269,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('disconnects after confirmation for an accepted relationship', async () => {
-        await createComponent(
+        await createComponentAsync(
             {
                 invitationId: 'inv-1',
                 status: 'Accepted',
@@ -300,7 +300,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('reloads dietologist relationship when notifications realtime changes', async () => {
-        await createComponent(null);
+        await createComponentAsync(null);
         expect(dietologistService.getRelationship).toHaveBeenCalledTimes(0);
 
         notificationService.notificationsChangedVersion.set(1);
@@ -310,7 +310,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('queues profile autosave when editable user fields change', async () => {
-        await createComponent(null);
+        await createComponentAsync(null);
 
         component.userForm.controls.firstName.markAsDirty();
         component.userForm.controls.firstName.setValue('Alex');
@@ -320,7 +320,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('reports pending and saving profile states for autosave feedback', async () => {
-        await createComponent(null);
+        await createComponentAsync(null);
 
         expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_SAVED');
 
@@ -334,7 +334,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('reports the current notifications background action status', async () => {
-        await createComponent(null);
+        await createComponentAsync(null);
 
         expect(component.getNotificationsStatusKey()).toBeNull();
 
@@ -349,7 +349,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('normalizes legacy profile select values from user overview', async () => {
-        await createComponent(null, false, {
+        await createComponentAsync(null, false, {
             id: 'u1',
             email: 'user@example.com',
             hasPassword: true,
@@ -376,7 +376,7 @@ describe('UserManageComponent dietologist section', () => {
     });
 
     it('opens set password dialog from notifications intent for google-only account', async () => {
-        await createComponent(
+        await createComponentAsync(
             null,
             false,
             {

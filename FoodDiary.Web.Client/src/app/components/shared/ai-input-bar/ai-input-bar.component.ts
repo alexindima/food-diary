@@ -102,7 +102,7 @@ export class AiInputBarComponent {
         this.voiceText.set((event.target as HTMLInputElement).value);
     }
 
-    public async submitText(source: AiRecognitionSource = 'Text'): Promise<void> {
+    public async submitTextAsync(source: AiRecognitionSource = 'Text'): Promise<void> {
         const text = this.voiceText().trim();
         if (!text || this.isDisabled()) {
             return;
@@ -112,7 +112,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureAiConsent())) {
+        if (!(await this.ensureAiConsentAsync())) {
             return;
         }
 
@@ -123,7 +123,7 @@ export class AiInputBarComponent {
         this.runTextAnalysis(text);
     }
 
-    public async toggleMic(): Promise<void> {
+    public async toggleMicAsync(): Promise<void> {
         if (this.isListening()) {
             this.stopListening();
             return;
@@ -133,7 +133,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureAiConsent())) {
+        if (!(await this.ensureAiConsentAsync())) {
             return;
         }
 
@@ -155,7 +155,7 @@ export class AiInputBarComponent {
             const transcript = results?.[0]?.[0]?.transcript;
             if (transcript) {
                 this.voiceText.set(transcript);
-                void this.submitText('Voice');
+                void this.submitTextAsync('Voice');
             }
         };
 
@@ -194,7 +194,7 @@ export class AiInputBarComponent {
         });
     }
 
-    public async onPhotoClick(): Promise<void> {
+    public async onPhotoClickAsync(): Promise<void> {
         if (this.isDisabled()) {
             return;
         }
@@ -203,7 +203,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureAiConsent())) {
+        if (!(await this.ensureAiConsentAsync())) {
             return;
         }
 
@@ -391,14 +391,14 @@ export class AiInputBarComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed) {
-                    void this.navigationService.navigateToPremiumAccess();
+                    void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });
 
         return false;
     }
 
-    private async ensureAiConsent(): Promise<boolean> {
+    private async ensureAiConsentAsync(): Promise<boolean> {
         const cachedUser = this.userService.user();
         if (cachedUser?.aiConsentAcceptedAt) {
             return true;

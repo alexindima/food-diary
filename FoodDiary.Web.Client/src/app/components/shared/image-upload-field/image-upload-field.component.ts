@@ -172,7 +172,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
     }
 
-    public async onCropperImageLoaded(img: HTMLImageElement): Promise<void> {
+    public async onCropperImageLoadedAsync(img: HTMLImageElement): Promise<void> {
         this.destroyCropper();
         const { default: CropperClass } = await import('cropperjs');
         this.cropper = new CropperClass(img, {});
@@ -242,7 +242,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         if (this.cropEnabled()) {
             this.startCropping(file);
         } else {
-            const uploadFile = await this.resizeFileIfNeeded(file);
+            const uploadFile = await this.resizeFileIfNeededAsync(file);
             if (uploadFile.size > maxBytes) {
                 this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
                     maxSizeMb: this.maxSizeMb(),
@@ -255,14 +255,14 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
     }
 
-    private async resizeFileIfNeeded(file: File): Promise<File> {
+    private async resizeFileIfNeededAsync(file: File): Promise<File> {
         const maxDimension = this.resizeMaxDimension();
         if (!maxDimension || maxDimension <= 0 || !this.canResizeFile(file)) {
             return file;
         }
 
         try {
-            const image = await this.loadImage(file);
+            const image = await this.loadImageAsync(file);
             const largestSide = Math.max(image.naturalWidth, image.naturalHeight);
             if (largestSide <= maxDimension) {
                 return file;
@@ -285,7 +285,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             }
 
             ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
-            const blob = await this.canvasToBlob(canvas, file.type, this.resizeQuality());
+            const blob = await this.canvasToBlobAsync(canvas, file.type, this.resizeQuality());
             return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
         } catch (err) {
             this.logger.warn('Failed to resize image before upload', err);
@@ -297,7 +297,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         return ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
     }
 
-    private loadImage(file: File): Promise<HTMLImageElement> {
+    private loadImageAsync(file: File): Promise<HTMLImageElement> {
         return new Promise((resolve, reject) => {
             const url = URL.createObjectURL(file);
             const image = new Image();
@@ -313,7 +313,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         });
     }
 
-    private canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
+    private canvasToBlobAsync(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
         return new Promise((resolve, reject) => {
             canvas.toBlob(
                 blob => {

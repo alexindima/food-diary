@@ -16,7 +16,7 @@ export class EmailVerificationRealtimeService {
     private readonly connectedSignal = signal(false);
     public readonly connected = this.connectedSignal.asReadonly();
 
-    public async connect(authService: AuthService, onVerified: () => void): Promise<void> {
+    public async connectAsync(authService: AuthService, onVerified: () => void): Promise<void> {
         if (this.connection) {
             return;
         }
@@ -48,7 +48,7 @@ export class EmailVerificationRealtimeService {
         }
     }
 
-    public async disconnect(): Promise<void> {
+    public async disconnectAsync(): Promise<void> {
         if (!this.connection) {
             return;
         }

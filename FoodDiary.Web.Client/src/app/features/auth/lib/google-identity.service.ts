@@ -36,13 +36,13 @@ export class GoogleIdentityService {
     private initializedClientId: string | null = null;
     private callback: ((credential: string) => void) | null = null;
 
-    public async initialize(options: GoogleInitOptions): Promise<void> {
+    public async initializeAsync(options: GoogleInitOptions): Promise<void> {
         if (this.initializedClientId === options.clientId && this.callback) {
             this.callback = options.callback;
             return;
         }
 
-        await this.loadScript();
+        await this.loadScriptAsync();
 
         if (!window.google?.accounts?.id) {
             throw new Error('Google Identity Services unavailable');
@@ -87,7 +87,7 @@ export class GoogleIdentityService {
         window.google?.accounts?.id?.cancel();
     }
 
-    private async loadScript(): Promise<void> {
+    private async loadScriptAsync(): Promise<void> {
         if (this.scriptLoaded()) {
             return;
         }

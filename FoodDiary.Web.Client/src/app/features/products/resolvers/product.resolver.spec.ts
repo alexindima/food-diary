@@ -10,7 +10,7 @@ import { productResolver } from './product.resolver';
 
 describe('productResolver', () => {
     let productServiceSpy: { getById: ReturnType<typeof vi.fn> };
-    let navSpy: { navigateToProductList: ReturnType<typeof vi.fn> };
+    let navSpy: { navigateToProductListAsync: ReturnType<typeof vi.fn> };
 
     const mockProduct: Partial<Product> = { id: 'product-1' };
 
@@ -18,7 +18,7 @@ describe('productResolver', () => {
 
     beforeEach(() => {
         productServiceSpy = { getById: vi.fn() };
-        navSpy = { navigateToProductList: vi.fn().mockResolvedValue(undefined) };
+        navSpy = { navigateToProductListAsync: vi.fn().mockResolvedValue(undefined) };
 
         TestBed.configureTestingModule({
             providers: [
@@ -63,7 +63,7 @@ describe('productResolver', () => {
         });
 
         expect(resolved).toBeNull();
-        expect(navSpy.navigateToProductList).toHaveBeenCalled();
+        expect(navSpy.navigateToProductListAsync).toHaveBeenCalled();
     });
 
     it('should navigate to product list when service throws error', () => {
@@ -83,6 +83,6 @@ describe('productResolver', () => {
         });
 
         expect(resolved).toBeNull();
-        expect(navSpy.navigateToProductList).toHaveBeenCalled();
+        expect(navSpy.navigateToProductListAsync).toHaveBeenCalled();
     });
 });

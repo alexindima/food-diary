@@ -157,15 +157,15 @@ export class RecipeListComponent {
             .subscribe();
     }
 
-    public async onAddRecipeClick(): Promise<void> {
-        await this.recipeListFacade.navigateToAddRecipe();
+    public async onAddRecipeClickAsync(): Promise<void> {
+        await this.recipeListFacade.navigateToAddRecipeAsync();
     }
 
     public onRecipeClick(recipe: Recipe): void {
-        void this.openRecipeDetail(recipe);
+        void this.openRecipeDetailAsync(recipe);
     }
 
-    private async openRecipeDetail(recipe: Recipe): Promise<void> {
+    private async openRecipeDetailAsync(recipe: Recipe): Promise<void> {
         const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail.component');
         this.fdDialogService
             .open(RecipeDetailComponent, {
@@ -186,7 +186,7 @@ export class RecipeListComponent {
                     return;
                 }
 
-                void this.recipeListFacade.handleDetailAction(
+                void this.recipeListFacade.handleDetailActionAsync(
                     actionResult,
                     recipe,
                     this.searchForm.controls.search.value,
@@ -208,8 +208,8 @@ export class RecipeListComponent {
             .subscribe();
     }
 
-    public async onEditRecipe(recipe: Recipe): Promise<void> {
-        await this.recipeListFacade.navigateToEditRecipe(recipe.id);
+    public async onEditRecipeAsync(recipe: Recipe): Promise<void> {
+        await this.recipeListFacade.navigateToEditRecipeAsync(recipe.id);
     }
 
     public onDeleteRecipe(recipe: Recipe): void {

@@ -10,7 +10,7 @@ public interface IImageAssetRepository {
 
     Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default);
 
-    Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default);
+    Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
         DateTime olderThanUtc,

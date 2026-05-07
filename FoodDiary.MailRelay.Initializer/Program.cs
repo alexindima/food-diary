@@ -60,7 +60,7 @@ var dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
 var schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailRelaySchemaInitializer>();
 
 try {
-    await ExecuteAsync(command, dataSource, schemaInitializer);
+    await ExecuteAsync(command, dataSource, schemaInitializer, CancellationToken.None);
     return 0;
 } catch (Exception exception) {
     Console.Error.WriteLine($"MailRelay initializer failed: {exception}");
@@ -70,14 +70,15 @@ try {
 static async Task ExecuteAsync(
     InitializerCommand command,
     NpgsqlDataSource dataSource,
-    IMailRelaySchemaInitializer schemaInitializer) {
+    IMailRelaySchemaInitializer schemaInitializer,
+    CancellationToken cancellationToken) {
     switch (command.Name) {
         case "status":
-            await PrintStatusAsync(dataSource);
+            await PrintStatusAsync(dataSource, cancellationToken);
             break;
         case "update":
             Console.WriteLine("Updating MailRelay schema...");
-            await schemaInitializer.EnsureSchemaAsync(CancellationToken.None);
+            await schemaInitializer.EnsureSchemaAsync(cancellationToken);
             Console.WriteLine("MailRelay schema update completed.");
             break;
         default:
@@ -85,8 +86,8 @@ static async Task ExecuteAsync(
     }
 }
 
-static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
-    await using var connection = await dataSource.OpenConnectionAsync();
+static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToken cancellationToken) {
+    await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
     var requiredTables = new[] {
         "mailrelay_outbound_emails",
         "mailrelay_outbox_messages",
@@ -105,8 +106,8 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
 
     await using var command = new NpgsqlCommand(sql, connection);
     command.Parameters.AddWithValue("tableNames", requiredTables);
-    await using var reader = await command.ExecuteReaderAsync();
-    while (await reader.ReadAsync()) {
+    await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+    while (await reader.ReadAsync(cancellationToken)) {
         existingTables.Add(reader.GetString(0));
     }
 

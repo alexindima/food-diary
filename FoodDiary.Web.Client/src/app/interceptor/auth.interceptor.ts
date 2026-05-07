@@ -39,11 +39,11 @@ export class AuthInterceptor implements HttpInterceptor {
                             return next.handle(newRequest);
                         }
 
-                        void this.authService.onLogout(true);
+                        void this.authService.onLogoutAsync(true);
                         return throwError(() => error);
                     }),
                     catchError(refreshError => {
-                        void this.authService.onLogout(true);
+                        void this.authService.onLogoutAsync(true);
                         return throwError(() => refreshError);
                     }),
                 );

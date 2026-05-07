@@ -11,9 +11,9 @@ describe('loggedInGuard', () => {
     let authServiceMock: {
         getToken: ReturnType<typeof vi.fn>;
         isAuthenticated: ReturnType<typeof signal>;
-        ensureSessionReady: ReturnType<typeof vi.fn>;
+        ensureSessionReadyAsync: ReturnType<typeof vi.fn>;
     };
-    let navigationServiceMock: { navigateToHome: ReturnType<typeof vi.fn> };
+    let navigationServiceMock: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -23,12 +23,12 @@ describe('loggedInGuard', () => {
         authServiceMock = {
             getToken: vi.fn(),
             isAuthenticated,
-            ensureSessionReady: vi.fn(),
+            ensureSessionReadyAsync: vi.fn(),
         };
-        authServiceMock.ensureSessionReady.mockResolvedValue(undefined);
+        authServiceMock.ensureSessionReadyAsync.mockResolvedValue(undefined);
 
-        navigationServiceMock = { navigateToHome: vi.fn() };
-        navigationServiceMock.navigateToHome.mockReturnValue(Promise.resolve());
+        navigationServiceMock = { navigateToHomeAsync: vi.fn() };
+        navigationServiceMock.navigateToHomeAsync.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             providers: [
@@ -49,8 +49,8 @@ describe('loggedInGuard', () => {
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
 
         expect(result).toBe(true);
-        expect(authServiceMock.ensureSessionReady).toHaveBeenCalled();
-        expect(navigationServiceMock.navigateToHome).not.toHaveBeenCalled();
+        expect(authServiceMock.ensureSessionReadyAsync).toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();
     });
 
     it('should redirect to dashboard when authenticated', async () => {
@@ -59,7 +59,7 @@ describe('loggedInGuard', () => {
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
 
         expect(result).toBe(false);
-        expect(navigationServiceMock.navigateToHome).toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
     });
 
     it('should allow access for authenticated user when adminReturnUrl is present', async () => {
@@ -70,6 +70,6 @@ describe('loggedInGuard', () => {
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
 
         expect(result).toBe(true);
-        expect(navigationServiceMock.navigateToHome).not.toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();
     });
 });

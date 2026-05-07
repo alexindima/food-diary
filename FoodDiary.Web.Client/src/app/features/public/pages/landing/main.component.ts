@@ -76,11 +76,11 @@ export class MainComponent {
         if (path.startsWith('auth')) {
             const modeParam = this.route.snapshot.params['mode'];
             const mode: 'login' | 'register' = modeParam === 'register' ? 'register' : 'login';
-            void this.openAuthDialog(mode);
+            void this.openAuthDialogAsync(mode);
         }
     }
 
-    private async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
+    private async openAuthDialogAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
         const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
         const adminReturnUrl = this.route.snapshot.queryParamMap.get('adminReturnUrl');

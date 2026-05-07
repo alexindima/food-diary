@@ -390,18 +390,18 @@ export class BaseProductManageComponent {
             });
     }
 
-    public async onCancel(): Promise<void> {
+    public async onCancelAsync(): Promise<void> {
         if (this.hasUnsavedChanges()) {
-            const shouldLeave = await this.confirmDiscardChanges();
+            const shouldLeave = await this.confirmDiscardChangesAsync();
             if (!shouldLeave) {
                 return;
             }
         }
 
-        await this.navigationService.navigateToProductList();
+        await this.navigationService.navigateToProductListAsync();
     }
 
-    public async onDeleteProduct(): Promise<void> {
+    public async onDeleteProductAsync(): Promise<void> {
         const currentProduct = this.product();
 
         if (!currentProduct || !currentProduct.isOwnedByCurrentUser || this.isDeleting() || this.isSubmitting()) {
@@ -422,7 +422,7 @@ export class BaseProductManageComponent {
         this.isDeleting.set(true);
         this.clearGlobalError();
 
-        const result = await this.productManageFacade.deleteProduct(currentProduct, data);
+        const result = await this.productManageFacade.deleteProductAsync(currentProduct, data);
         if (result !== 'deleted') {
             this.isDeleting.set(false);
             if (result === 'error') {
@@ -431,7 +431,7 @@ export class BaseProductManageComponent {
         }
     }
 
-    public async onSubmit(): Promise<Product | null> {
+    public async onSubmitAsync(): Promise<Product | null> {
         this.productForm.markAllAsTouched();
 
         if (this.macrosError()) {
@@ -476,11 +476,11 @@ export class BaseProductManageComponent {
             const previousUsdaFdcId = product?.usdaFdcId ?? null;
 
             try {
-                const result = await this.productManageFacade.submitProduct(
+                const result = await this.productManageFacade.submitProductAsync(
                     product ?? null,
                     productData,
                     this.skipConfirmDialog,
-                    savedProduct => this.syncUsdaLink(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
+                    savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
                 );
                 if (result.error) {
                     this.handleSubmitError(result.error);
@@ -813,7 +813,7 @@ export class BaseProductManageComponent {
         ];
     }
 
-    private async syncUsdaLink(savedProduct: Product, nextFdcId: number | null, previousFdcId: number | null): Promise<void> {
+    private async syncUsdaLinkAsync(savedProduct: Product, nextFdcId: number | null, previousFdcId: number | null): Promise<void> {
         if (nextFdcId === previousFdcId) {
             return;
         }
@@ -855,14 +855,14 @@ export class BaseProductManageComponent {
         return this.productForm.dirty;
     }
 
-    private async confirmDiscardChanges(): Promise<boolean> {
+    private async confirmDiscardChangesAsync(): Promise<boolean> {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_TITLE'),
             message: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_MESSAGE'),
             confirmLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_BUTTON'),
             cancelLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_STAY_BUTTON'),
         };
-        return this.productManageFacade.confirmDiscardChanges(data);
+        return this.productManageFacade.confirmDiscardChangesAsync(data);
     }
 
     private ensurePremiumAccess(): boolean {

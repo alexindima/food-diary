@@ -176,20 +176,20 @@ export class AuthComponent {
                 return;
             }
 
-            void this.completeAuthenticatedNavigation();
+            void this.completeAuthenticatedNavigationAsync();
         });
         afterNextRender(() => {
             this.startLoginAutofillDetection();
         });
-        void this.initializeGoogle();
+        void this.initializeGoogleAsync();
     }
 
     public handleTabChange(value: string): void {
         const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
-        void this.onTabChange(mode);
+        void this.onTabChangeAsync(mode);
     }
 
-    public async onTabChange(mode: 'login' | 'register'): Promise<void> {
+    public async onTabChangeAsync(mode: 'login' | 'register'): Promise<void> {
         if (this.authMode === mode) {
             return;
         }
@@ -287,7 +287,7 @@ export class AuthComponent {
         this.authService.register(registerRequest).subscribe({
             next: () => {
                 this.isSubmitting.set(false);
-                void this.navigationService.navigateToEmailVerificationPending();
+                void this.navigationService.navigateToEmailVerificationPendingAsync();
                 this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
@@ -297,13 +297,13 @@ export class AuthComponent {
         });
     }
 
-    private async initializeGoogle(): Promise<void> {
+    private async initializeGoogleAsync(): Promise<void> {
         const clientId = environment.googleClientId;
         if (!clientId) {
             return;
         }
         try {
-            await this.googleIdentityService.initialize({
+            await this.googleIdentityService.initializeAsync({
                 clientId,
                 callback: credential => {
                     this.onGoogleCredential(credential);
@@ -420,7 +420,7 @@ export class AuthComponent {
     }
 
     private completeAuthenticatedNavigationAndClose(): void {
-        void this.completeAuthenticatedNavigation()
+        void this.completeAuthenticatedNavigationAsync()
             .then(() => {
                 this.closeDialogIfAny();
             })
@@ -429,22 +429,22 @@ export class AuthComponent {
             });
     }
 
-    private async completeAuthenticatedNavigation(): Promise<void> {
+    private async completeAuthenticatedNavigationAsync(): Promise<void> {
         if (!this.authService.isEmailConfirmed()) {
-            await this.navigationService.navigateToEmailVerificationPending({ autoResend: true });
+            await this.navigationService.navigateToEmailVerificationPendingAsync({ autoResend: true });
             return;
         }
 
-        const adminRedirectUrl = await this.tryBuildAdminRedirectUrl();
+        const adminRedirectUrl = await this.tryBuildAdminRedirectUrlAsync();
         if (adminRedirectUrl) {
             window.location.assign(adminRedirectUrl);
             return;
         }
 
-        await this.navigationService.navigateToReturnUrl(this.returnUrl);
+        await this.navigationService.navigateToReturnUrlAsync(this.returnUrl);
     }
 
-    private async tryBuildAdminRedirectUrl(): Promise<string | null> {
+    private async tryBuildAdminRedirectUrlAsync(): Promise<string | null> {
         if (!this.adminReturnUrl || !environment.adminAppUrl) {
             return null;
         }

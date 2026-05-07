@@ -12,13 +12,13 @@ export const recipeResolver: ResolveFn<Recipe | null> = route => {
 
     const recipeId = route.paramMap.get('id');
     if (!recipeId) {
-        void navigationService.navigateToRecipeList();
+        void navigationService.navigateToRecipeListAsync();
         return of(null);
     }
 
     return recipeService.getById(recipeId, false).pipe(
         catchError(() => {
-            void navigationService.navigateToRecipeList();
+            void navigationService.navigateToRecipeListAsync();
             return of(null);
         }),
     );

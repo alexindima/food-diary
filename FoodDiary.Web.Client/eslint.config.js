@@ -81,6 +81,158 @@ const localTemplatePlugin = {
     },
 };
 
+const getParserServices = context => context.sourceCode.parserServices ?? context.parserServices;
+
+const getFunctionName = node => {
+    if (node.id?.name) {
+        return node.id.name;
+    }
+
+    const parent = node.parent;
+    if (!parent) {
+        return null;
+    }
+
+    if (parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
+        return parent.id.name;
+    }
+
+    if (parent.type === 'MethodDefinition' || parent.type === 'PropertyDefinition') {
+        return getPropertyName(parent.key);
+    }
+
+    if (parent.type === 'Property' && parent.value === node) {
+        return getPropertyName(parent.key);
+    }
+
+    return null;
+};
+
+const isFrameworkNamedCallback = node => {
+    const parent = node.parent;
+    if (parent?.type !== 'Property' || parent.value !== node) {
+        return false;
+    }
+
+    const propertyName = getPropertyName(parent.key);
+
+    return propertyName === 'loadComponent' ||
+        propertyName === 'loadChildren' ||
+        propertyName === 'loader' ||
+        propertyName === 'bootstrap' ||
+        propertyName === 'resolve' ||
+        propertyName === 'canActivate' ||
+        propertyName === 'canMatch';
+};
+
+const isFrameworkFunctionName = name =>
+    name === 'bootstrap' ||
+    name === 'loader' ||
+    name.endsWith('Guard');
+
+const getPropertyName = key => {
+    if (key.type === 'Identifier') {
+        return key.name;
+    }
+
+    if (key.type === 'Literal' && typeof key.value === 'string') {
+        return key.value;
+    }
+
+    return null;
+};
+
+const isThenableType = (checker, type) => {
+    if (checker.getPromisedTypeOfPromise(type)) {
+        return true;
+    }
+
+    const symbolName = type.aliasSymbol?.escapedName ?? type.symbol?.escapedName;
+    if (symbolName === 'Promise' || symbolName === 'PromiseLike') {
+        return true;
+    }
+
+    return checker.typeToString(type).startsWith('Promise<');
+};
+
+const isAsyncLikeFunction = (context, node) => {
+    if (node.async) {
+        return true;
+    }
+
+    const services = getParserServices(context);
+    if (!services?.program || !services.esTreeNodeToTSNodeMap) {
+        return false;
+    }
+
+    const checker = services.program.getTypeChecker();
+    const tsNode = services.esTreeNodeToTSNodeMap.get(node);
+    const signature = checker.getSignatureFromDeclaration(tsNode);
+    if (!signature) {
+        return false;
+    }
+
+    return isThenableType(checker, checker.getReturnTypeOfSignature(signature));
+};
+
+const localTsPlugin = {
+    rules: {
+        'async-function-suffix': {
+            meta: {
+                type: 'problem',
+                docs: {
+                    description: 'Require Async suffix only for functions that return Promise-like values.',
+                },
+                messages: {
+                    missingSuffix: 'Async function `{{name}}` should use the Async suffix.',
+                    unexpectedSuffix: 'Synchronous function `{{name}}` should not use the Async suffix.',
+                },
+                schema: [],
+            },
+            create(context) {
+                const checkFunction = node => {
+                    if (isFrameworkNamedCallback(node)) {
+                        return;
+                    }
+
+                    const name = getFunctionName(node);
+                    if (!name) {
+                        return;
+                    }
+
+                    if (isFrameworkFunctionName(name)) {
+                        return;
+                    }
+
+                    const hasAsyncSuffix = name.endsWith('Async');
+                    const isAsyncLike = isAsyncLikeFunction(context, node);
+                    if (isAsyncLike && !hasAsyncSuffix) {
+                        context.report({
+                            node,
+                            messageId: 'missingSuffix',
+                            data: { name },
+                        });
+                    }
+
+                    if (!isAsyncLike && hasAsyncSuffix) {
+                        context.report({
+                            node,
+                            messageId: 'unexpectedSuffix',
+                            data: { name },
+                        });
+                    }
+                };
+
+                return {
+                    FunctionDeclaration: checkFunction,
+                    FunctionExpression: checkFunction,
+                    ArrowFunctionExpression: checkFunction,
+                };
+            },
+        },
+    },
+};
+
 export default [
     {
         ignores: ['**/node_modules/**', '**/dist/**', '**/dist-admin/**', '**/dist-storybook/**', '**/.angular/**', '**/*.min.js'],
@@ -103,6 +255,7 @@ export default [
             '@angular-eslint': angularPlugin,
             prettier: prettierPlugin,
             'simple-import-sort': simpleImportSortPlugin,
+            local: localTsPlugin,
         },
         rules: {
             ...eslintConfigPrettier.rules,
@@ -190,6 +343,7 @@ export default [
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/require-await': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
+            'local/async-function-suffix': 'error',
         },
     },
     {

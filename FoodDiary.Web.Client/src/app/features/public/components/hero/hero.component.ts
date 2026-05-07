@@ -44,18 +44,18 @@ export class HeroComponent {
         }
 
         this.currentLanguage = target;
-        void this.localizationService.applyLanguagePreference(target);
+        void this.localizationService.applyLanguagePreferenceAsync(target);
     }
 
     public goToLogin(): void {
-        void this.openAuthDialog('login');
+        void this.openAuthDialogAsync('login');
     }
 
     public goToRegister(): void {
-        void this.openAuthDialog('register');
+        void this.openAuthDialogAsync('register');
     }
 
-    private async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
+    private async openAuthDialogAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
 
         this.fdDialogService.open(AuthDialogComponent, {

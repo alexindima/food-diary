@@ -49,7 +49,7 @@ export class AppComponent {
         this.router.events
             .pipe(
                 filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-                mergeMap(event => from(this.prepareRoute(event.urlAfterRedirects))),
+                mergeMap(event => from(this.prepareRouteAsync(event.urlAfterRedirects))),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -88,12 +88,12 @@ export class AppComponent {
         }, {});
     }
 
-    private async prepareRoute(url: string): Promise<void> {
+    private async prepareRouteAsync(url: string): Promise<void> {
         this.themeService.applyThemeForRoute(url);
-        await this.localizationService.loadTranslationsForRoute(url);
+        await this.localizationService.loadTranslationsForRouteAsync(url);
     }
 
     public stopImpersonation(): void {
-        void this.authService.onLogout(false);
+        void this.authService.onLogoutAsync(false);
     }
 }

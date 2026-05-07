@@ -9,45 +9,45 @@ import { type AuthMode } from '../features/auth/models/auth.data';
 export class NavigationService {
     private readonly router = inject(Router);
 
-    public async navigateToHome(): Promise<void> {
+    public async navigateToHomeAsync(): Promise<void> {
         await this.router.navigate(['/dashboard']);
     }
 
-    public async navigateToLanding(): Promise<void> {
+    public async navigateToLandingAsync(): Promise<void> {
         await this.router.navigate(['/']);
     }
 
-    public async navigateToAuth(mode: AuthMode, returnUrl?: string): Promise<void> {
+    public async navigateToAuthAsync(mode: AuthMode, returnUrl?: string): Promise<void> {
         const queryParams = returnUrl ? { returnUrl } : {};
         await this.router.navigate(['/auth', mode], { queryParams });
     }
 
-    public async navigateToEmailVerificationPending(options?: { autoResend?: boolean }): Promise<void> {
+    public async navigateToEmailVerificationPendingAsync(options?: { autoResend?: boolean }): Promise<void> {
         const queryParams = options?.autoResend ? { autoResend: 'true' } : {};
         await this.router.navigate(['/verify-pending'], { queryParams });
     }
 
-    public async navigateToReturnUrl(returnUrl: string | null): Promise<void> {
+    public async navigateToReturnUrlAsync(returnUrl: string | null): Promise<void> {
         await this.router.navigateByUrl(returnUrl || '/dashboard');
     }
 
-    public async navigateToProductList(): Promise<void> {
+    public async navigateToProductListAsync(): Promise<void> {
         await this.router.navigate(['/products']);
     }
 
-    public async navigateToProductAdd(extras?: { state?: Record<string, unknown> }): Promise<void> {
+    public async navigateToProductAddAsync(extras?: { state?: Record<string, unknown> }): Promise<void> {
         await this.router.navigate(['/products/add'], extras);
     }
 
-    public async navigateToProductEdit(id: string): Promise<void> {
+    public async navigateToProductEditAsync(id: string): Promise<void> {
         await this.router.navigate([`/products/${id}/edit`]);
     }
 
-    public async navigateToConsumptionList(): Promise<void> {
+    public async navigateToConsumptionListAsync(): Promise<void> {
         await this.router.navigate(['/meals']);
     }
 
-    public async navigateToConsumptionAdd(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
+    public async navigateToConsumptionAddAsync(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
         const navigationExtras = mealType
             ? {
                   state: { mealType, ...(extras?.state ?? {}) },
@@ -57,63 +57,63 @@ export class NavigationService {
         return await this.router.navigate(['/meals/add'], navigationExtras);
     }
 
-    public async navigateToConsumptionEdit(id: string): Promise<void> {
+    public async navigateToConsumptionEditAsync(id: string): Promise<void> {
         await this.router.navigate([`/meals/${id}/edit`]);
     }
 
-    public async navigateToRecipeList(): Promise<void> {
+    public async navigateToRecipeListAsync(): Promise<void> {
         await this.router.navigate(['/recipes']);
     }
 
-    public async navigateToRecipeAdd(): Promise<void> {
+    public async navigateToRecipeAddAsync(): Promise<void> {
         await this.router.navigate(['/recipes/add']);
     }
 
-    public async navigateToRecipeEdit(id: string): Promise<void> {
+    public async navigateToRecipeEditAsync(id: string): Promise<void> {
         await this.router.navigate([`/recipes/${id}/edit`]);
     }
 
-    public async navigateToShoppingList(): Promise<void> {
+    public async navigateToShoppingListAsync(): Promise<void> {
         await this.router.navigate(['/shopping-lists']);
     }
 
-    public async navigateToFasting(): Promise<void> {
+    public async navigateToFastingAsync(): Promise<void> {
         await this.router.navigate(['/fasting']);
     }
 
-    public async navigateToStatistics(): Promise<void> {
+    public async navigateToStatisticsAsync(): Promise<void> {
         await this.router.navigate(['/statistics']);
     }
 
-    public async navigateToProfile(): Promise<void> {
+    public async navigateToProfileAsync(): Promise<void> {
         await this.router.navigate(['/profile']);
     }
 
-    public async navigateToDietologist(): Promise<void> {
+    public async navigateToDietologistAsync(): Promise<void> {
         await this.router.navigate(['/dietologist']);
     }
 
-    public async navigateToPremiumAccess(): Promise<void> {
+    public async navigateToPremiumAccessAsync(): Promise<void> {
         await this.router.navigate(['/premium']);
     }
 
-    public async navigateToWeightHistory(): Promise<void> {
+    public async navigateToWeightHistoryAsync(): Promise<void> {
         await this.router.navigate(['/weight-history']);
     }
 
-    public async navigateToWaistHistory(): Promise<void> {
+    public async navigateToWaistHistoryAsync(): Promise<void> {
         await this.router.navigate(['/waist-history']);
     }
 
-    public async navigateToGoals(): Promise<void> {
+    public async navigateToGoalsAsync(): Promise<void> {
         await this.router.navigate(['/goals']);
     }
 
-    public async navigateToCycleTracking(): Promise<void> {
+    public async navigateToCycleTrackingAsync(): Promise<void> {
         await this.router.navigate(['/cycle-tracking']);
     }
 
-    public async navigateToExplore(): Promise<void> {
+    public async navigateToExploreAsync(): Promise<void> {
         await this.router.navigate(['/explore']);
     }
 }
