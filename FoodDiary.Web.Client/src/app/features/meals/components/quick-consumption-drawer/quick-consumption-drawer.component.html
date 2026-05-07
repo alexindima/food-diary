@@ -35,7 +35,12 @@
             </div>
         </div>
 
-        @if (!isCollapsed()) {
+        <div
+            class="quick-consumption__body fd-grid fd-gap-sm"
+            [class.quick-consumption__body--collapsed]="isCollapsed()"
+            [attr.aria-hidden]="isCollapsed()"
+            [attr.inert]="isCollapsed() ? '' : null"
+        >
             @if (hasItems()) {
                 <div class="quick-consumption__list fd-grid fd-gap-xs">
                     @for (item of items(); track item.key + '-' + (item.flashId ?? 0)) {
@@ -94,10 +99,10 @@
                     variant="secondary"
                     fill="text"
                     [icon]="isDetailsExpanded() ? 'expand_less' : 'expand_more'"
-                    [ariaLabel]="(isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate"
+                    [ariaLabel]="(isDetailsExpanded() ? 'MEAL_DETAILS.HIDE' : 'MEAL_DETAILS.ADD') | translate"
                     (click)="toggleDetails()"
                 >
-                    {{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}
+                    {{ (isDetailsExpanded() ? 'MEAL_DETAILS.HIDE' : 'MEAL_DETAILS.ADD') | translate }}
                 </fd-ui-button>
 
                 @if (isDetailsExpanded()) {
@@ -132,6 +137,6 @@
                     {{ 'QUICK_CONSUMPTION.SAVE' | translate }}
                 </fd-ui-button>
             </div>
-        }
+        </div>
     </div>
 }

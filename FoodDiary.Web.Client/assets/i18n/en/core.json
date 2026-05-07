@@ -449,6 +449,15 @@
         "OPEN": "Open image preview",
         "ALT": "Preview of {{name}}"
     },
+    "MEAL_DETAILS": {
+        "ADD": "Add details",
+        "HIDE": "Hide details",
+        "DATE": "Date",
+        "TIME": "Time",
+        "COMMENT": "Comment",
+        "SATIETY_BEFORE": "Hunger before",
+        "SATIETY_AFTER": "Satiety after"
+    },
     "QUICK_CONSUMPTION": {
         "TITLE": "Meal draft",
         "ITEMS": "items",

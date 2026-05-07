@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, type ElementRef, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -38,6 +38,7 @@ export class LandingPreviewTourComponent {
     private readonly quickConsumptionService = inject(QuickMealService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly draftBlock = viewChild<ElementRef<HTMLElement>>('draftBlock');
 
     public isAuthenticated = this.authService.isAuthenticated;
     public readonly heroSummaryCard = {
@@ -112,10 +113,12 @@ export class LandingPreviewTourComponent {
 
     public addPreviewProduct(product: Product): void {
         this.quickConsumptionService.addProduct(product);
+        this.scrollDraftIntoView();
     }
 
     public addPreviewRecipe(recipe: Recipe): void {
         this.quickConsumptionService.addRecipe(recipe);
+        this.scrollDraftIntoView();
     }
 
     public async openAuthDialogAsync(mode: 'login' | 'register'): Promise<void> {
@@ -354,5 +357,27 @@ export class LandingPreviewTourComponent {
         }
 
         this.quickConsumptionService.setPreviewItems(this.previewQuickItems);
+    }
+
+    private scrollDraftIntoView(): void {
+        const draftBlock = this.draftBlock()?.nativeElement;
+        if (!draftBlock) {
+            return;
+        }
+
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const scroll = (): void => {
+            draftBlock.scrollIntoView({
+                behavior: prefersReducedMotion ? 'auto' : 'smooth',
+                block: 'center',
+                inline: 'nearest',
+            });
+        };
+
+        window.requestAnimationFrame(scroll);
     }
 }

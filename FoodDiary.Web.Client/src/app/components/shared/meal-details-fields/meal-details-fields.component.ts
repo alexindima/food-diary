@@ -48,9 +48,7 @@ export class MealDetailsFieldsComponent {
     public getSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
         const value = kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel();
         const meta = this.getSatietyLevelMeta(kind, value);
-        const fieldLabel = this.translateService.instant(
-            kind === 'before' ? 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' : 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER',
-        );
+        const fieldLabel = this.translateService.instant(kind === 'before' ? 'MEAL_DETAILS.SATIETY_BEFORE' : 'MEAL_DETAILS.SATIETY_AFTER');
         return `${fieldLabel}. ${meta.label}. ${meta.description}`.trim();
     }
 

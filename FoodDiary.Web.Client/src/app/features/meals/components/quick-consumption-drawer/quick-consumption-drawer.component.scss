@@ -19,6 +19,10 @@
         box-shadow: var(--fd-shadow-lg);
         border: var(--fd-border-subtle);
     }
+
+    &--collapsed {
+        row-gap: 0;
+    }
 }
 
 .quick-consumption__title {
@@ -55,6 +59,18 @@
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: var(--fd-size-icon-md);
+}
+
+.quick-consumption__body {
+    min-height: 0;
+
+    &--collapsed {
+        max-height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
 }
 
 .quick-consumption__list {

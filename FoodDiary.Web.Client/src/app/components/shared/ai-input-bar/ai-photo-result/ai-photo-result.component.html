@@ -186,7 +186,7 @@
             <div class="ai-photo-result__actions fd-ui-actions fd-ui-actions--split">
                 @if (showDetails()) {
                     <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="toggleDetails()">
-                        <span>{{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}</span>
+                        <span>{{ (isDetailsExpanded() ? 'MEAL_DETAILS.HIDE' : 'MEAL_DETAILS.ADD') | translate }}</span>
                         <fd-ui-icon [name]="isDetailsExpanded() ? 'expand_less' : 'expand_more'"></fd-ui-icon>
                     </fd-ui-button>
                 } @else {
