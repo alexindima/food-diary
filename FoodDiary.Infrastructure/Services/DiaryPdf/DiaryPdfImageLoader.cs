@@ -67,12 +67,12 @@ internal sealed partial class DiaryPdfGenerator {
             return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken);
         }
 
-        var ingredientImages = await Task.WhenAll(
-            GetIngredientImageUrls(meal)
+        var compositionImages = await Task.WhenAll(
+            GetCompositionImageUrls(meal)
                 .Take(MaxIngredientImagesPerCollage)
                 .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken)));
 
-        return CreateMealImageCollage(ingredientImages.Where(image => image is not null).Cast<byte[]>().ToArray());
+        return CreateMealImageCollage(compositionImages.Where(image => image is not null).Cast<byte[]>().ToArray());
     }
 
     private async Task<byte[]?> LoadCachedMealImageAsync(
@@ -141,10 +141,13 @@ internal sealed partial class DiaryPdfGenerator {
 
     private readonly record struct MealImageEntry(MealId MealId, byte[]? Image);
 
-    private static IReadOnlyList<string> GetIngredientImageUrls(Meal meal) =>
+    private static IReadOnlyList<string> GetCompositionImageUrls(Meal meal) =>
         meal.Items
             .OrderBy(item => item.CreatedOnUtc)
             .Select(item => item.Product?.ImageUrl ?? item.Recipe?.ImageUrl)
+            .Concat(meal.AiSessions
+                .OrderBy(session => session.RecognizedAtUtc)
+                .Select(session => session.ImageAsset?.Url))
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .Distinct(StringComparer.Ordinal)
             .Cast<string>()

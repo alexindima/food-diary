@@ -194,6 +194,40 @@ describe('MealCardComponent', () => {
         expect(component.hasPreviewImage()).toBe(true);
     });
 
+    it('should build collage images from multiple AI session images', () => {
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            imageUrl: null,
+            aiSessions: [
+                { imageUrl: 'https://example.com/ai-meal-1.jpg', notes: 'First photo', items: [{}] },
+                { imageUrl: 'https://example.com/ai-meal-2.jpg', notes: 'Second photo', items: [{}] },
+            ],
+        });
+        fixture.detectChanges();
+
+        expect(component.coverImage()).toBeNull();
+        expect(component.collageImages()).toEqual([
+            { url: 'https://example.com/ai-meal-1.jpg', alt: 'First photo' },
+            { url: 'https://example.com/ai-meal-2.jpg', alt: 'Second photo' },
+        ]);
+        expect(component.hasPreviewImage()).toBe(true);
+    });
+
+    it('should keep explicit meal image over AI collage images', () => {
+        fixture.componentRef.setInput('meal', {
+            ...mockMeal,
+            imageUrl: 'https://example.com/meal-cover.jpg',
+            aiSessions: [
+                { imageUrl: 'https://example.com/ai-meal-1.jpg', items: [{}] },
+                { imageUrl: 'https://example.com/ai-meal-2.jpg', items: [{}] },
+            ],
+        });
+        fixture.detectChanges();
+
+        expect(component.coverImage()).toBe('https://example.com/meal-cover.jpg');
+        expect(component.collageImages()).toEqual([]);
+    });
+
     it('should compute coverImage as fallback when no imageUrl and no mealType', () => {
         fixture.componentRef.setInput('meal', { ...mockMeal, imageUrl: null, mealType: null });
         fixture.detectChanges();

@@ -96,8 +96,8 @@ export class MealListFacade {
         );
     }
 
-    public repeatMeal(mealId: string, targetDate: string, dateRange: FdUiDateRangeValue | null): Observable<boolean> {
-        return this.mealService.repeat(mealId, targetDate).pipe(
+    public repeatMeal(mealId: string, targetDate: string, mealType: string, dateRange: FdUiDateRangeValue | null): Observable<boolean> {
+        return this.mealService.repeat(mealId, targetDate, mealType).pipe(
             switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, dateRange)),
             map(() => true),
             catchError(() => {

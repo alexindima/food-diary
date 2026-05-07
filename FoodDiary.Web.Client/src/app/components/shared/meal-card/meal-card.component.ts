@@ -32,7 +32,7 @@ export interface MealCardItem {
         product?: { imageUrl?: string | null; name?: string | null } | null;
         recipe?: { imageUrl?: string | null; name?: string | null } | null;
     } | null> | null;
-    aiSessions?: Array<{ imageUrl?: string | null; items?: Array<unknown> | null } | null> | null;
+    aiSessions?: Array<{ imageUrl?: string | null; notes?: string | null; items?: Array<unknown> | null } | null> | null;
 }
 
 export interface MealFavoriteChange {
@@ -262,9 +262,7 @@ export class MealCardComponent {
             return mealImage;
         }
 
-        return this.meal()
-            .aiSessions?.map(session => session?.imageUrl?.trim())
-            .find(Boolean);
+        return undefined;
     }
 
     private resolveItemImages(): EntityCardCollageImage[] {
@@ -285,6 +283,25 @@ export class MealCardComponent {
 
             if (result.length === 4) {
                 break;
+            }
+        }
+
+        if (result.length < 4) {
+            for (const session of this.meal().aiSessions ?? []) {
+                const imageUrl = session?.imageUrl?.trim();
+                if (!imageUrl || seen.has(imageUrl)) {
+                    continue;
+                }
+
+                seen.add(imageUrl);
+                result.push({
+                    url: imageUrl,
+                    alt: session?.notes?.trim() || this.mealTitle(),
+                });
+
+                if (result.length === 4) {
+                    break;
+                }
             }
         }
 

@@ -739,6 +739,63 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(510, repository.LastAddedMeal.TotalCalories);
     }
 
+    [Fact]
+    public async Task RepeatMealCommandHandler_WithAiAndManualNutrition_CopiesFullConsumption() {
+        var user = User.Create("repeat-ai-meal@example.com", "hash");
+        var staleMealImageAssetId = ImageAssetId.New();
+        var aiImageAssetId = ImageAssetId.New();
+        var sourceMeal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 3, 26, 20, 0, 0, DateTimeKind.Utc),
+            MealType.Dinner,
+            imageUrl: "https://example.com/stale-meal-cover.jpg",
+            imageAssetId: staleMealImageAssetId);
+        sourceMeal.AddAiSession(
+            imageAssetId: aiImageAssetId,
+            source: AiRecognitionSource.Photo,
+            recognizedAtUtc: new DateTime(2026, 3, 26, 20, 1, 0, DateTimeKind.Utc),
+            notes: "photo",
+            items: [
+                MealAiItemData.Create("Pasta", "Паста", 250, "g", 420, 14, 8, 72, 4, 0)
+            ]);
+        sourceMeal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 430,
+            TotalProteins: 15,
+            TotalFats: 9,
+            TotalCarbs: 73,
+            TotalFiber: 4,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 430,
+            ManualProteins: 15,
+            ManualFats: 9,
+            ManualCarbs: 73,
+            ManualFiber: 4,
+            ManualAlcohol: 0));
+
+        var repository = new SingleMealRepository(sourceMeal);
+        var handler = new RepeatMealCommandHandler(
+            repository,
+            new FixedMealNutritionService(new MealNutritionSummary(0, 0, 0, 0, 0, 0)),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 19, 30, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.LastAddedMeal);
+        Assert.Single(repository.LastAddedMeal.AiSessions);
+        Assert.Single(repository.LastAddedMeal.AiSessions.Single().Items);
+        Assert.Equal("Pasta", repository.LastAddedMeal.AiSessions.Single().Items.Single().NameEn);
+        Assert.Equal(aiImageAssetId, repository.LastAddedMeal.AiSessions.Single().ImageAssetId);
+        Assert.Null(repository.LastAddedMeal.ImageUrl);
+        Assert.Null(repository.LastAddedMeal.ImageAssetId);
+        Assert.False(repository.LastAddedMeal.IsNutritionAutoCalculated);
+        Assert.Equal(430, repository.LastAddedMeal.TotalCalories);
+        Assert.Equal(430, repository.LastAddedMeal.ManualCalories);
+    }
+
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {
         public bool UpdateCalled { get; private set; }
         public Meal? LastAddedMeal { get; private set; }

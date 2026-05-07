@@ -23,6 +23,7 @@ import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
 import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
 import { MealListFacade } from '../../lib/meal-list.facade';
 import { type FavoriteMeal, type Meal } from '../../models/meal.data';
@@ -107,9 +108,9 @@ export class MealListComponent {
     }
 
     public repeatFavorite(favorite: FavoriteMeal): void {
-        const today = this.toLocalDateInputValue(new Date());
+        const targetDate = new Date();
         this.mealListFacade
-            .repeatMeal(favorite.mealId, today, this.dateRange)
+            .repeatMeal(favorite.mealId, targetDate.toISOString(), resolveMealTypeByTime(targetDate), this.dateRange)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(repeated => {
                 if (repeated) {
@@ -173,9 +174,9 @@ export class MealListComponent {
                 } else if (data.action === 'Edit') {
                     void this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Repeat') {
-                    const today = this.toLocalDateInputValue(new Date());
+                    const targetDate = new Date();
                     this.mealListFacade
-                        .repeatMeal(data.id, today, this.dateRange)
+                        .repeatMeal(data.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate), this.dateRange)
                         .pipe(takeUntilDestroyed(this.destroyRef))
                         .subscribe(repeated => {
                             if (repeated) {

@@ -164,12 +164,12 @@ describe('MealListFacade', () => {
         facade.currentPageIndex.set(1);
         let result = false;
 
-        facade.repeatMeal('meal-1', '2026-05-05', null).subscribe(value => {
+        facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', null).subscribe(value => {
             result = value;
         });
 
         expect(result).toBe(true);
-        expect(mealService.repeat).toHaveBeenCalledWith('meal-1', '2026-05-05');
+        expect(mealService.repeat).toHaveBeenCalledWith('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST');
         expect(mealService.query).toHaveBeenCalledWith(2, 10, { dateFrom: undefined, dateTo: undefined });
     });
 
@@ -177,7 +177,7 @@ describe('MealListFacade', () => {
         mealService.repeat.mockReturnValue(throwError(() => new Error('repeat failed')));
         let result = true;
 
-        facade.repeatMeal('meal-1', '2026-05-05', null).subscribe(value => {
+        facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', null).subscribe(value => {
             result = value;
         });
 

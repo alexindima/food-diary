@@ -256,7 +256,7 @@ describe('MealListComponent', () => {
         expect(component.consumptionData.items()).toEqual([]);
     });
 
-    it('should repeat favorite meal for the local calendar date', () => {
+    it('should repeat favorite meal for the current local time and meal type', () => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date(2026, 4, 5, 0, 30));
         fixture.detectChanges();
@@ -277,7 +277,7 @@ describe('MealListComponent', () => {
             itemCount: 1,
         });
 
-        expect(mockMealService.repeat).toHaveBeenCalledWith('meal-1', '2026-05-05');
+        expect(mockMealService.repeat).toHaveBeenCalledWith('meal-1', new Date(2026, 4, 5, 0, 30).toISOString(), 'SNACK');
     });
 
     it('should show toast when favorite repeat fails', () => {
