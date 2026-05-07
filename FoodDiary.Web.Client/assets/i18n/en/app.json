@@ -222,6 +222,8 @@
         "SAVE_ERROR": "Failed to save meal",
         "PREVIEW_EMPTY": "Add products or recipes — they will appear here",
         "CLEAR": "Clear draft",
+        "COLLAPSE": "Collapse draft",
+        "EXPAND": "Expand draft",
         "REMOVE_ITEM": "Remove item",
         "REMOVE_ITEM_NAMED": "Remove {name} from draft",
         "EDIT_ARIA": "Open meal draft editor",

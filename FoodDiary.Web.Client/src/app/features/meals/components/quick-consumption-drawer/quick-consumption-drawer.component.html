@@ -2,6 +2,7 @@
     <div
         class="quick-consumption fd-grid fd-gap-sm"
         [class.quick-consumption--inline]="isInline()"
+        [class.quick-consumption--collapsed]="isCollapsed()"
         role="region"
         [attr.aria-labelledby]="titleId"
     >
@@ -12,78 +13,181 @@
                     {{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}
                 </div>
             </div>
-            <fd-ui-button
-                class="quick-consumption__clear"
-                variant="secondary"
-                fill="outline"
-                icon="close"
-                [fdUiHint]="'QUICK_CONSUMPTION.CLEAR' | translate"
-                [ariaLabel]="'QUICK_CONSUMPTION.CLEAR' | translate"
-                (click)="clear()"
-            />
+            <div class="quick-consumption__header-actions fd-row fd-gap-xs">
+                <fd-ui-button
+                    class="quick-consumption__header-action"
+                    variant="secondary"
+                    fill="outline"
+                    [icon]="isCollapsed() ? 'expand_less' : 'expand_more'"
+                    [fdUiHint]="(isCollapsed() ? 'QUICK_CONSUMPTION.EXPAND' : 'QUICK_CONSUMPTION.COLLAPSE') | translate"
+                    [ariaLabel]="(isCollapsed() ? 'QUICK_CONSUMPTION.EXPAND' : 'QUICK_CONSUMPTION.COLLAPSE') | translate"
+                    (click)="toggleCollapsed()"
+                />
+                <fd-ui-button
+                    class="quick-consumption__header-action"
+                    variant="secondary"
+                    fill="outline"
+                    icon="close"
+                    [fdUiHint]="'QUICK_CONSUMPTION.CLEAR' | translate"
+                    [ariaLabel]="'QUICK_CONSUMPTION.CLEAR' | translate"
+                    (click)="clear()"
+                />
+            </div>
         </div>
 
-        @if (hasItems()) {
-            <div class="quick-consumption__list fd-grid fd-gap-xs">
-                @for (item of items(); track item.key) {
-                    <div class="quick-consumption__item fd-grid fd-gap-xs fd-align-center">
-                        <div class="quick-consumption__thumb fd-place-center">
-                            <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
-                        </div>
-                        <div class="quick-consumption__info fd-grid fd-gap-xxs">
-                            <div class="quick-consumption__name fd-ui-action-text">
-                                {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
+        @if (!isCollapsed()) {
+            @if (hasItems()) {
+                <div class="quick-consumption__list fd-grid fd-gap-xs">
+                    @for (item of items(); track item.key + '-' + (item.flashId ?? 0)) {
+                        <div
+                            class="quick-consumption__item fd-grid fd-gap-xs fd-align-center"
+                            [class.quick-consumption__item--flash]="!!item.flashId"
+                        >
+                            <div class="quick-consumption__thumb fd-place-center">
+                                <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
                             </div>
-                            <div class="quick-consumption__meta fd-ui-body-sm">
-                                {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
-                                @if (item.type === 'product') {
-                                    {{ item.amount | number: '1.0-1' }}
-                                    {{ 'GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G') | translate }}
-                                } @else {
-                                    {{ item.amount | number: '1.0-1' }}
-                                    {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
-                                }
+                            <div class="quick-consumption__info fd-grid fd-gap-xxs">
+                                <div class="quick-consumption__name fd-ui-action-text">
+                                    {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
+                                </div>
+                                <div class="quick-consumption__meta fd-ui-body-sm">
+                                    {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
+                                    @if (item.type === 'product') {
+                                        {{ item.amount | number: '1.0-1' }}
+                                        {{ 'GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G') | translate }}
+                                    } @else {
+                                        {{ item.amount | number: '1.0-1' }}
+                                        {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
+                                    }
+                                </div>
+                            </div>
+                            <div class="quick-consumption__item-actions fd-row fd-gap-xxs">
+                                <fd-ui-button
+                                    class="quick-consumption__item-action"
+                                    variant="secondary"
+                                    fill="text"
+                                    icon="edit"
+                                    [fdUiHint]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
+                                    [ariaLabel]="editItemAriaLabel(item)"
+                                    (click)="edit(item)"
+                                />
+                                <fd-ui-button
+                                    class="quick-consumption__item-action quick-consumption__item-action--danger"
+                                    variant="danger"
+                                    fill="text"
+                                    icon="delete"
+                                    [fdUiHint]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
+                                    [ariaLabel]="removeItemAriaLabel(item)"
+                                    (click)="remove(item.key)"
+                                />
                             </div>
                         </div>
-                        <fd-ui-button
-                            class="quick-consumption__remove"
-                            variant="danger"
-                            fill="outline"
-                            icon="delete"
-                            [fdUiHint]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
-                            [ariaLabel]="removeItemAriaLabel(item)"
-                            (click)="remove(item.key)"
-                        />
+                    }
+                </div>
+            } @else {
+                <p class="quick-consumption__empty fd-ui-body-sm">{{ 'QUICK_CONSUMPTION.PREVIEW_EMPTY' | translate }}</p>
+            }
+
+            <div class="quick-consumption__details fd-grid fd-gap-xs">
+                <fd-ui-button
+                    class="quick-consumption__details-toggle"
+                    variant="secondary"
+                    fill="text"
+                    [icon]="isDetailsExpanded() ? 'expand_less' : 'expand_more'"
+                    [ariaLabel]="(isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate"
+                    (click)="toggleDetails()"
+                >
+                    {{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}
+                </fd-ui-button>
+
+                @if (isDetailsExpanded()) {
+                    <div class="quick-consumption__details-panel fd-grid fd-gap-sm">
+                        <div class="quick-consumption__details-grid fd-grid fd-gap-xs">
+                            <label class="quick-consumption__detail-field fd-grid fd-gap-xxs">
+                                <span class="quick-consumption__detail-label fd-ui-field-label fd-ui-field-label--floating">
+                                    {{ 'AI_INPUT_BAR.DETAIL_DATE' | translate }}
+                                </span>
+                                <input
+                                    class="quick-consumption__detail-input fd-ui-body-sm"
+                                    type="date"
+                                    [value]="details().date"
+                                    (input)="updateDetails('date', dateInput.value)"
+                                    #dateInput
+                                />
+                            </label>
+                            <label class="quick-consumption__detail-field fd-grid fd-gap-xxs">
+                                <span class="quick-consumption__detail-label fd-ui-field-label fd-ui-field-label--floating">
+                                    {{ 'AI_INPUT_BAR.DETAIL_TIME' | translate }}
+                                </span>
+                                <input
+                                    class="quick-consumption__detail-input fd-ui-body-sm"
+                                    type="time"
+                                    [value]="details().time"
+                                    (input)="updateDetails('time', timeInput.value)"
+                                    #timeInput
+                                />
+                            </label>
+                        </div>
+
+                        <label class="quick-consumption__detail-field fd-grid fd-gap-xxs">
+                            <span class="quick-consumption__detail-label fd-ui-field-label fd-ui-field-label--floating">
+                                {{ 'AI_INPUT_BAR.DETAIL_COMMENT' | translate }}
+                            </span>
+                            <textarea
+                                class="quick-consumption__detail-textarea fd-ui-body-sm"
+                                rows="2"
+                                [value]="details().comment"
+                                (input)="updateDetails('comment', commentInput.value)"
+                                #commentInput
+                            ></textarea>
+                        </label>
+
+                        <div class="quick-consumption__satiety-grid fd-grid fd-gap-sm">
+                            <div class="quick-consumption__satiety-field fd-grid fd-gap-xxs">
+                                <p class="quick-consumption__satiety-label fd-ui-field-label fd-ui-field-label--floating">
+                                    {{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}
+                                </p>
+                                <fd-ui-emoji-picker
+                                    size="sm"
+                                    [options]="hungerEmojiOptions"
+                                    [selectedValue]="details().preMealSatietyLevel"
+                                    [ariaLabel]="getSatietyButtonAriaLabel('before')"
+                                    (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
+                                />
+                            </div>
+
+                            <div class="quick-consumption__satiety-field fd-grid fd-gap-xxs">
+                                <p class="quick-consumption__satiety-label fd-ui-field-label fd-ui-field-label--floating">
+                                    {{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}
+                                </p>
+                                <fd-ui-emoji-picker
+                                    size="sm"
+                                    [options]="satietyEmojiOptions"
+                                    [selectedValue]="details().postMealSatietyLevel"
+                                    [ariaLabel]="getSatietyButtonAriaLabel('after')"
+                                    (selectedValueChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
+                                />
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
-        } @else {
-            <p class="quick-consumption__empty fd-ui-body-sm">{{ 'QUICK_CONSUMPTION.PREVIEW_EMPTY' | translate }}</p>
-        }
 
-        <div class="quick-consumption__actions fd-grid fd-gap-xs">
-            <fd-ui-button
-                variant="secondary"
-                fill="outline"
-                icon="edit"
-                [ariaLabel]="'QUICK_CONSUMPTION.EDIT_ARIA' | translate"
-                (click)="openEditor()"
-            >
-                {{ 'QUICK_CONSUMPTION.EDIT' | translate }}
-            </fd-ui-button>
-            <fd-ui-button
-                class="quick-consumption__save"
-                appearance="brand-action"
-                variant="primary"
-                icon="check"
-                [fullWidth]="true"
-                [ariaLabel]="'QUICK_CONSUMPTION.SAVE_ARIA' | translate"
-                [disabled]="isSaving()"
-                [loading]="isSaving()"
-                (click)="save()"
-            >
-                {{ 'QUICK_CONSUMPTION.SAVE' | translate }}
-            </fd-ui-button>
-        </div>
+            <div class="quick-consumption__actions fd-grid fd-gap-xs">
+                <fd-ui-button
+                    class="quick-consumption__save"
+                    appearance="brand-action"
+                    variant="primary"
+                    icon="check"
+                    [fullWidth]="true"
+                    [ariaLabel]="'QUICK_CONSUMPTION.SAVE_ARIA' | translate"
+                    [disabled]="isSaving()"
+                    [loading]="isSaving()"
+                    (click)="save()"
+                >
+                    {{ 'QUICK_CONSUMPTION.SAVE' | translate }}
+                </fd-ui-button>
+            </div>
+        }
     </div>
 }

@@ -2,10 +2,10 @@
 
 .quick-consumption {
     position: fixed;
-    right: var(--fd-space-card-profile-gap);
+    right: var(--fd-space-lg);
     bottom: var(--fd-space-card-profile-gap);
     width: min(380px, 90vw);
-    background: var(--fd-bg-surface-brand);
+    background: var(--fd-bg-surface-muted);
     box-shadow: var(--fd-shadow-xl);
     border-radius: var(--fd-radius-panel);
     padding: var(--fd-space-stat-tile-padding);
@@ -29,7 +29,11 @@
     color: var(--fd-color-text-muted);
 }
 
-.quick-consumption__clear {
+.quick-consumption__header-actions {
+    align-items: start;
+}
+
+.quick-consumption__header-action {
     --fd-button-width: var(--fd-size-control-sm);
     --fd-button-min-width: var(--fd-size-control-sm);
     --fd-button-height: var(--fd-size-control-sm);
@@ -65,6 +69,10 @@
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-surface-raised-blend);
     border: var(--fd-border-subtle);
+
+    &--flash {
+        animation: quick-consumption-item-flash 900ms ease-out both;
+    }
 }
 
 .quick-consumption__thumb {
@@ -97,32 +105,108 @@
     color: var(--fd-color-text-muted);
 }
 
-.quick-consumption__remove {
-    --fd-button-width: var(--fd-size-control-chip);
-    --fd-button-min-width: var(--fd-size-control-chip);
-    --fd-button-height: var(--fd-size-control-chip);
-    --fd-button-height-explicit: var(--fd-size-control-chip);
+.quick-consumption__item-actions {
+    align-self: start;
+}
+
+.quick-consumption__item-action {
+    --fd-button-width: var(--fd-size-control-sm);
+    --fd-button-min-width: var(--fd-size-control-sm);
+    --fd-button-height: var(--fd-size-control-sm);
+    --fd-button-height-explicit: var(--fd-size-control-sm);
     --fd-button-padding-x: 0;
     --fd-button-border-radius: var(--fd-radius-pill);
-    --fd-button-background-default: var(--fd-bg-surface-raised);
-    --fd-button-background-hover: var(--fd-bg-danger-tint);
-    --fd-button-background-active: var(--fd-bg-danger-tint-strong);
-    --fd-button-border-default: var(--fd-color-border-dark-muted);
-    --fd-button-border-hover: var(--fd-color-border-danger-soft);
-    --fd-button-border-active: var(--fd-color-border-danger-medium);
-    --fd-button-text-default: var(--fd-color-danger);
-    --fd-button-text-hover: var(--fd-color-danger);
-    --fd-button-text-active: var(--fd-color-danger);
+    --fd-button-background-default: transparent;
+    --fd-button-background-hover: var(--fd-bg-surface-raised);
+    --fd-button-background-active: var(--fd-bg-surface-raised-blend);
+    --fd-button-border-default: transparent;
+    --fd-button-border-hover: transparent;
+    --fd-button-border-active: transparent;
+    --fd-button-text-default: var(--fd-color-text);
+    --fd-button-text-hover: var(--fd-color-text);
+    --fd-button-text-active: var(--fd-color-text);
     --fd-button-shadow-default: var(--fd-shadow-none);
     --fd-button-shadow-hover: var(--fd-shadow-none);
     --fd-button-shadow-active: var(--fd-shadow-none);
     --fd-button-transform-hover: none;
     --fd-button-transform-active: none;
     --fd-button-icon-size: var(--fd-size-icon-md);
+
+    &--danger {
+        --fd-button-background-hover: var(--fd-bg-danger-tint);
+        --fd-button-background-active: var(--fd-bg-danger-tint-strong);
+        --fd-button-text-default: var(--fd-color-danger);
+        --fd-button-text-hover: var(--fd-color-danger);
+        --fd-button-text-active: var(--fd-color-danger);
+    }
+}
+
+.quick-consumption__details-toggle {
+    justify-self: start;
+    --fd-button-padding-x: 0;
+    --fd-button-background-default: transparent;
+    --fd-button-background-hover: transparent;
+    --fd-button-background-active: transparent;
+    --fd-button-border-default: transparent;
+    --fd-button-border-hover: transparent;
+    --fd-button-border-active: transparent;
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+}
+
+.quick-consumption__details-panel {
+    padding: var(--fd-space-xs);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface-raised-blend);
+    border: var(--fd-border-subtle);
+}
+
+.quick-consumption__details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.quick-consumption__satiety-grid {
+    grid-template-columns: 1fr;
+}
+
+.quick-consumption__detail-field,
+.quick-consumption__satiety-field {
+    min-width: 0;
+}
+
+.quick-consumption__detail-label,
+.quick-consumption__satiety-label {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}
+
+.quick-consumption__detail-input,
+.quick-consumption__detail-textarea {
+    width: 100%;
+    min-width: 0;
+    border: var(--fd-border-subtle);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface-raised);
+    color: var(--fd-color-text);
+    outline: none;
+}
+
+.quick-consumption__detail-input {
+    min-height: var(--fd-size-control-md);
+    padding: 0 var(--fd-space-xs);
+}
+
+.quick-consumption__detail-textarea {
+    resize: vertical;
+    min-height: calc(var(--fd-size-control-touch) * 1.4);
+    padding: var(--fd-space-xs);
 }
 
 .quick-consumption__actions {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr;
 }
 
 .quick-consumption__empty {
@@ -141,5 +225,37 @@
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         width: auto;
+    }
+
+    .quick-consumption__details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .quick-consumption__item--flash {
+        animation: none;
+        box-shadow: var(--fd-shadow-ring-inset-success);
+    }
+}
+
+@keyframes quick-consumption-item-flash {
+
+    0% {
+        background: var(--fd-bg-success-soft);
+        box-shadow: var(--fd-shadow-ring-inset-success), var(--fd-shadow-accent-glow);
+        transform: translateY(-1px);
+    }
+
+    55% {
+        background: var(--fd-bg-success-soft);
+        box-shadow: var(--fd-shadow-ring-inset-success);
+    }
+
+    100% {
+        background: var(--fd-bg-surface-raised-blend);
+        box-shadow: var(--fd-shadow-none);
+        transform: translateY(0);
     }
 }

@@ -103,8 +103,60 @@ describe('QuickMealService', () => {
         expect(service.items()[0]?.amount).toBe(360);
     });
 
+    it('updates an existing draft item amount', () => {
+        service.addProduct(product);
+
+        service.updateItem('product-product-1', {
+            key: 'product-product-1',
+            type: 'product',
+            product,
+            amount: 90,
+        });
+
+        expect(service.items()).toEqual([
+            expect.objectContaining({
+                key: 'product-product-1',
+                amount: 90,
+                flashId: expect.any(Number),
+            }),
+        ]);
+    });
+
+    it('merges draft items when an edit changes the source to an existing item', () => {
+        const rice: Product = {
+            ...product,
+            id: 'product-2',
+            name: 'Rice',
+            defaultPortionAmount: 120,
+        };
+        service.addProduct(product);
+        service.addProduct(rice);
+
+        service.updateItem('product-product-2', {
+            key: 'product-product-1',
+            type: 'product',
+            product,
+            amount: 60,
+        });
+
+        expect(service.items()).toHaveLength(1);
+        expect(service.items()[0]).toEqual(
+            expect.objectContaining({
+                key: 'product-product-1',
+                amount: 240,
+            }),
+        );
+    });
+
     it('clears draft after opening editor only when navigation succeeds', async () => {
         service.addProduct(product);
+        service.updateDetails({
+            date: '2026-05-04',
+            time: '13:45',
+            comment: 'Lunch note',
+            preMealSatietyLevel: 2,
+            postMealSatietyLevel: 4,
+        });
 
         await service.openEditorAsync();
 
@@ -116,6 +168,13 @@ describe('QuickMealService', () => {
                         amount: 180,
                     }),
                 ],
+                quickConsumptionDetails: {
+                    date: '2026-05-04',
+                    time: '13:45',
+                    comment: 'Lunch note',
+                    preMealSatietyLevel: 2,
+                    postMealSatietyLevel: 4,
+                },
             },
         });
         expect(service.items()).toEqual([]);
@@ -132,11 +191,20 @@ describe('QuickMealService', () => {
 
     it('clears draft and shows success only when save returns created meal', () => {
         service.addProduct(product);
+        service.updateDetails({
+            date: '2026-05-04',
+            time: '13:45',
+            comment: 'Lunch note',
+            preMealSatietyLevel: 2,
+            postMealSatietyLevel: 4,
+        });
 
         service.saveDraft();
 
         expect(mealService.create).toHaveBeenCalledWith(
             expect.objectContaining({
+                date: new Date('2026-05-04T13:45'),
+                comment: 'Lunch note',
                 items: [
                     expect.objectContaining({
                         productId: 'product-1',
@@ -144,6 +212,8 @@ describe('QuickMealService', () => {
                     }),
                 ],
                 isNutritionAutoCalculated: true,
+                preMealSatietyLevel: 2,
+                postMealSatietyLevel: 4,
             }),
         );
         expect(toastService.success).toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_SUCCESS');

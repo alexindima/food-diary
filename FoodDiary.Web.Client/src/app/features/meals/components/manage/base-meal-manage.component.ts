@@ -45,7 +45,7 @@ import { type UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { type NutrientData } from '../../../../shared/models/charts.data';
 import { type ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
-import { type QuickMealItem } from '../../lib/quick-meal.service';
+import { type QuickMealDetails, type QuickMealItem } from '../../lib/quick-meal.service';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -555,17 +555,34 @@ export class BaseMealManageComponent {
             return;
         }
 
-        const navigationState = (
-            this.router.getCurrentNavigation()?.extras.state as { quickConsumptionItems?: QuickMealItem[] } | undefined
-        )?.quickConsumptionItems;
-        const historyState = (window.history.state as { quickConsumptionItems?: QuickMealItem[] } | undefined)?.quickConsumptionItems;
-        const draftItems = navigationState ?? historyState;
+        const navigationState = this.router.getCurrentNavigation()?.extras.state as
+            | { quickConsumptionItems?: QuickMealItem[]; quickConsumptionDetails?: QuickMealDetails }
+            | undefined;
+        const historyState = window.history.state as
+            | { quickConsumptionItems?: QuickMealItem[]; quickConsumptionDetails?: QuickMealDetails }
+            | undefined;
+        const draftItems = navigationState?.quickConsumptionItems ?? historyState?.quickConsumptionItems;
+        const draftDetails = navigationState?.quickConsumptionDetails ?? historyState?.quickConsumptionDetails;
 
         if (!draftItems?.length) {
             return;
         }
 
         this.items.clear();
+        if (draftDetails) {
+            this.consumptionForm.patchValue(
+                {
+                    date: draftDetails.date,
+                    time: draftDetails.time,
+                    comment: draftDetails.comment || null,
+                    preMealSatietyLevel: this.normalizeSatietyLevel(draftDetails.preMealSatietyLevel),
+                    postMealSatietyLevel: this.normalizeSatietyLevel(draftDetails.postMealSatietyLevel),
+                },
+                { emitEvent: false },
+            );
+            this.setAutoMealTypeFromDate();
+        }
+
         draftItems.forEach(item => {
             const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
             const amount = item.amount;
