@@ -1,5 +1,5 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
@@ -9,13 +9,17 @@ import { type FastingOccurrenceKind } from '../../models/fasting.data';
 @Component({
     selector: 'fd-fasting-timer-card',
     standalone: true,
-    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent, DashboardWidgetFrameComponent],
+    imports: [DecimalPipe, NgTemplateOutlet, TranslatePipe, FdUiCardComponent, DashboardWidgetFrameComponent],
     templateUrl: './fasting-timer-card.component.html',
     styleUrl: './fasting-timer-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingTimerCardComponent {
     protected readonly Math = Math;
+    protected readonly normalizedProgressPercent = computed(() => {
+        const progress = this.progressPercent();
+        return Number.isFinite(progress) ? Math.max(0, Math.min(progress, 100)) : 0;
+    });
     public readonly layout = input<'stacked' | 'summary' | 'setup' | 'pageSummary'>('stacked');
     public readonly isActive = input<boolean>(false);
     public readonly isOvertime = input<boolean>(false);

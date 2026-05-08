@@ -302,6 +302,17 @@ describe('FastingFacade', () => {
         expect(facade.selectedProtocol()).toBe('F18_6');
     });
 
+    it('restores an intermittent protocol after switching from custom extended setup', () => {
+        facade.selectMode('extended');
+        facade.selectProtocol('Custom');
+        facade.setCustomHours(72);
+
+        facade.selectMode('intermittent');
+
+        expect(facade.selectedProtocol()).toBe('F16_8');
+        expect(facade.plannedDurationHours()).toBe(16);
+    });
+
     it('reduces target locally without overview refresh', () => {
         facade.currentSession.set({
             ...activeSession,
