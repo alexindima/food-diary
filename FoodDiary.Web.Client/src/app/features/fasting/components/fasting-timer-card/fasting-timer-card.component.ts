@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DashboardWidgetFrameComponent } from '../../../dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
+import { type FastingOccurrenceKind } from '../../models/fasting.data';
 
 @Component({
     selector: 'fd-fasting-timer-card',
@@ -15,7 +16,7 @@ import { DashboardWidgetFrameComponent } from '../../../dashboard/components/das
 })
 export class FastingTimerCardComponent {
     protected readonly Math = Math;
-    public readonly layout = input<'stacked' | 'summary'>('stacked');
+    public readonly layout = input<'stacked' | 'summary' | 'setup' | 'pageSummary'>('stacked');
     public readonly isActive = input<boolean>(false);
     public readonly isOvertime = input<boolean>(false);
     public readonly currentSessionCompleted = input<boolean>(false);
@@ -25,6 +26,7 @@ export class FastingTimerCardComponent {
     public readonly remainingLabelKey = input<string>('FASTING.REMAINING');
     public readonly labelKey = input<string>('FASTING.WIDGET_LABEL');
     public readonly stateLabel = input<string | null>(null);
+    public readonly occurrenceKind = input<FastingOccurrenceKind | null>(null);
     public readonly detailLabel = input<string | null>(null);
     public readonly metaLabel = input<string | null>(null);
     public readonly ringColor = input<string | null>(null);
@@ -39,6 +41,10 @@ export class FastingTimerCardComponent {
 
     public getProgressStrokeColor(): string {
         if (this.isOvertime()) {
+            return 'var(--fd-color-green-500)';
+        }
+
+        if (this.isEatingPhase()) {
             return 'var(--fd-color-green-500)';
         }
 
@@ -63,6 +69,15 @@ export class FastingTimerCardComponent {
     }
 
     public shouldShowStageProgress(): boolean {
-        return this.stageTitleKey() !== null && this.stageIndex() !== null && this.totalStages() > 0;
+        return !this.isEatingPhase() && this.stageTitleKey() !== null && this.stageIndex() !== null && this.totalStages() > 0;
+    }
+
+    public shouldShowStageDescriptionFallback(): boolean {
+        return !this.isEatingPhase() && !this.shouldShowStageProgress() && this.stageDescriptionKey() !== null;
+    }
+
+    private isEatingPhase(): boolean {
+        const occurrenceKind = this.occurrenceKind();
+        return occurrenceKind === 'EatDay' || occurrenceKind === 'EatingWindow';
     }
 }

@@ -1,3 +1,4 @@
+import { type FastingStagePresentation } from '../../fasting/lib/fasting-stage';
 import { FASTING_PROTOCOLS, type FastingOccurrenceKind, type FastingSession } from '../../fasting/models/fasting.data';
 
 type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
@@ -41,15 +42,31 @@ export function getDashboardFastingProtocolBaseLabel(translate: TranslateFn, ses
     return session.addedDurationHours > 0 ? `${baseLabel} (+${session.addedDurationHours} ${hoursLabel})` : baseLabel;
 }
 
-export function getDashboardCyclicPhaseProgressLabel(translate: TranslateFn, session: FastingSession): string | null {
+export function getDashboardCyclicPhaseProgressLabel(
+    translate: TranslateFn,
+    session: FastingSession,
+    stage: FastingStagePresentation | null = null,
+): string | null {
     const dayNumber = session.cyclicPhaseDayNumber;
     const dayTotal = session.cyclicPhaseDayTotal;
     if (!dayNumber || !dayTotal) {
         return getDashboardFastingOccurrenceLabel(translate, session.occurrenceKind);
     }
 
-    const key = session.occurrenceKind === 'EatDay' ? 'FASTING.CYCLIC_EAT_PHASE_PROGRESS' : 'FASTING.CYCLIC_FAST_PHASE_PROGRESS';
-    return translate(key, { current: dayNumber, total: dayTotal });
+    if (session.occurrenceKind === 'EatDay') {
+        return translate('FASTING.CYCLIC_EAT_PHASE_DAY_PROGRESS', { current: dayNumber, total: dayTotal });
+    }
+
+    if (stage) {
+        return translate('FASTING.CYCLIC_FAST_PHASE_STAGE_PROGRESS', {
+            current: dayNumber,
+            total: dayTotal,
+            stage: stage.index,
+            stageTotal: stage.total,
+        });
+    }
+
+    return translate('FASTING.CYCLIC_FAST_PHASE_DAY_PROGRESS', { current: dayNumber, total: dayTotal });
 }
 
 export function getDashboardFastingCycleLabel(translate: TranslateFn, cycleDay: number | null): string | null {

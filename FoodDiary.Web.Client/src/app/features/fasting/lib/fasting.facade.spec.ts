@@ -285,6 +285,23 @@ describe('FastingFacade', () => {
         expect(facade.extendHours()).toBe(24);
     });
 
+    it('keeps selected protocol valid when switching between setup modes', () => {
+        facade.selectProtocol('F20_4');
+        facade.selectMode('extended');
+
+        expect(facade.selectedProtocol()).toBe('F24_0');
+
+        facade.selectMode('intermittent');
+
+        expect(facade.selectedProtocol()).toBe('F16_8');
+
+        facade.selectProtocol('F18_6');
+        facade.selectMode('cyclic');
+        facade.selectMode('intermittent');
+
+        expect(facade.selectedProtocol()).toBe('F18_6');
+    });
+
     it('reduces target locally without overview refresh', () => {
         facade.currentSession.set({
             ...activeSession,

@@ -161,6 +161,7 @@ export class FastingPageComponent {
     });
     public readonly isOvertime = this.facade.isOvertime;
     public readonly canExtendActiveSession = this.facade.canExtendActiveSession;
+    public readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
     public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
@@ -225,6 +226,8 @@ export class FastingPageComponent {
     public readonly isCheckInExpanded = signal(false);
     public readonly isCustomExtendExpanded = signal(false);
     public readonly isCustomReduceExpanded = signal(false);
+    public readonly isExtendPanelExpanded = signal(false);
+    public readonly isReducePanelExpanded = signal(false);
     public readonly expandedHistorySessionId = signal<string | null>(null);
     public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
     public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
@@ -451,7 +454,12 @@ export class FastingPageComponent {
     }
 
     public showCustomExtend(): void {
+        this.isExtendPanelExpanded.set(true);
         this.isCustomExtendExpanded.set(true);
+    }
+
+    public toggleExtendPanel(): void {
+        this.isExtendPanelExpanded.update(isExpanded => !isExpanded);
     }
 
     public reduceBy4Hours(): void {
@@ -469,7 +477,12 @@ export class FastingPageComponent {
     }
 
     public showCustomReduce(): void {
+        this.isReducePanelExpanded.set(true);
         this.isCustomReduceExpanded.set(true);
+    }
+
+    public toggleReducePanel(): void {
+        this.isReducePanelExpanded.update(isExpanded => !isExpanded);
     }
 
     public skipCyclicDay(): void {
@@ -1050,9 +1063,24 @@ export class FastingPageComponent {
             return this.getOccurrenceKindLabel(session.occurrenceKind);
         }
 
-        const key = session.occurrenceKind === 'EatDay' ? 'FASTING.CYCLIC_EAT_PHASE_PROGRESS' : 'FASTING.CYCLIC_FAST_PHASE_PROGRESS';
+        if (session.occurrenceKind === 'EatDay') {
+            return this.translateService.instant('FASTING.CYCLIC_EAT_PHASE_DAY_PROGRESS', {
+                current: dayNumber,
+                total: dayTotal,
+            });
+        }
 
-        return this.translateService.instant(key, { current: dayNumber, total: dayTotal });
+        const stage = this.currentStage();
+        if (stage) {
+            return this.translateService.instant('FASTING.CYCLIC_FAST_PHASE_STAGE_PROGRESS', {
+                current: dayNumber,
+                total: dayTotal,
+                stage: stage.index,
+                stageTotal: stage.total,
+            });
+        }
+
+        return this.translateService.instant('FASTING.CYCLIC_FAST_PHASE_DAY_PROGRESS', { current: dayNumber, total: dayTotal });
     }
 
     private getSymptomLabel(symptom: string): string {

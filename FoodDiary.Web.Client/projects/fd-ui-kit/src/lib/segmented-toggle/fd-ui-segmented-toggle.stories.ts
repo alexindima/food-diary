@@ -7,6 +7,9 @@ const meta: Meta<FdUiSegmentedToggleComponent> = {
     title: 'Components/SegmentedToggle',
     component: FdUiSegmentedToggleComponent,
     tags: ['autodocs'],
+    argTypes: {
+        size: { control: 'select', options: ['sm', 'md'] },
+    },
 };
 
 export default meta;
@@ -64,6 +67,24 @@ export const FourOptions: Story = {
             },
             template:
                 '<fd-ui-segmented-toggle [options]="options" [(selectedValue)]="selected" ariaLabel="Meal filter"></fd-ui-segmented-toggle>',
+        };
+    },
+};
+
+export const Small: Story = {
+    render: () => {
+        const selected = signal('week');
+        return {
+            props: {
+                options: [
+                    { label: 'Day', value: 'day' },
+                    { label: 'Week', value: 'week' },
+                    { label: 'Month', value: 'month' },
+                ],
+                selected,
+            },
+            template:
+                '<fd-ui-segmented-toggle size="sm" [options]="options" [(selectedValue)]="selected" ariaLabel="Small period"></fd-ui-segmented-toggle>',
         };
     },
 };

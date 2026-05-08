@@ -51,7 +51,7 @@
 
 .fd-ui-input__control-wrap {
     --fd-input-control-background: var(--fd-bg-surface-raised);
-    min-height: var(--fd-size-control-md);
+    min-height: var(--fd-input-control-height, var(--fd-size-control-md));
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-input);
     background: var(--fd-input-control-background);
@@ -66,7 +66,7 @@
 }
 
 .fd-ui-input--size-sm .fd-ui-input__control-wrap {
-    min-height: var(--fd-size-control-sm);
+    min-height: var(--fd-input-control-sm-height, var(--fd-size-control-sm));
 }
 
 .fd-ui-input--size-lg .fd-ui-input__control-wrap {
@@ -104,8 +104,8 @@
     background: transparent;
     color: var(--fd-color-text);
     font: inherit;
-    font-size: var(--fd-text-body-size);
-    line-height: var(--fd-text-body-line-height);
+    font-size: var(--fd-input-control-font-size, var(--fd-text-body-size));
+    line-height: var(--fd-input-control-line-height, var(--fd-text-body-line-height));
     margin-top: 0;
 }
 
@@ -181,8 +181,8 @@
 }
 
 .fd-ui-input--floating .fd-ui-input__control-wrap {
-    padding-top: var(--fd-space-control-floating-padding-top);
-    padding-bottom: var(--fd-space-control-floating-padding-bottom);
+    padding-top: var(--fd-input-floating-padding-top, var(--fd-space-control-floating-padding-top));
+    padding-bottom: var(--fd-input-floating-padding-bottom, var(--fd-space-control-floating-padding-bottom));
 }
 
 .fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) .fd-ui-input__label {

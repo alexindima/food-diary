@@ -2,12 +2,19 @@
 
 :host {
     display: block;
+    --fd-card-height: 100%;
+    --fd-card-content-width: auto;
+    --fd-card-content-height: 100%;
+    --fd-card-content-justify: space-between;
+    --fd-card-density-default-padding-bottom: var(--fd-space-sm);
+    --fd-card-density-compact-padding-bottom: var(--fd-space-sm);
+    --fd-card-density-relaxed-padding-bottom: var(--fd-space-lg);
 }
 
 .fd-ui-card {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: var(--fd-card-height);
     gap: var(--fd-space-card-gap);
     padding: var(--fd-space-card-padding-y) var(--fd-space-card-padding-x);
     border: var(--fd-border-default);
@@ -42,17 +49,17 @@
     }
 
     &--density-default {
-        padding-bottom: var(--fd-space-sm);
+        padding-bottom: var(--fd-card-density-default-padding-bottom);
     }
 
     &--density-relaxed {
         gap: var(--fd-space-card-relaxed-gap);
-        padding-bottom: var(--fd-space-lg);
+        padding-bottom: var(--fd-card-density-relaxed-padding-bottom);
     }
 
     &--density-compact {
         gap: var(--fd-space-sm);
-        padding-bottom: var(--fd-space-sm);
+        padding-bottom: var(--fd-card-density-compact-padding-bottom);
     }
 
     &--density-profile {
@@ -117,8 +124,9 @@
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-card-content-gap);
-        justify-content: space-between;
-        height: 100%;
+        width: var(--fd-card-content-width);
+        justify-content: var(--fd-card-content-justify);
+        height: var(--fd-card-content-height);
     }
 
     &--density-relaxed &__content {

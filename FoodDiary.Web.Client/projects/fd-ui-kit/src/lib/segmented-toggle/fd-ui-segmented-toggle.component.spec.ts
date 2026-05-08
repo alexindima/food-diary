@@ -57,13 +57,20 @@ describe('FdUiSegmentedToggleComponent', () => {
         expect(buttons[0].nativeElement.getAttribute('aria-checked')).toBe('false');
     });
 
-    it('should apply size class', () => {
+    it('should apply selected option class', () => {
         const container = fixture.debugElement.query(By.css('.fd-ui-segmented-toggle'));
         expect(container).toBeTruthy();
 
-        // The component uses the is-active class for selected items
         const activeButton = fixture.debugElement.query(By.css('.is-active'));
         expect(activeButton).toBeTruthy();
+    });
+
+    it('should apply size class', () => {
+        fixture.componentRef.setInput('size', 'sm');
+        fixture.detectChanges();
+
+        const container = fixture.debugElement.query(By.css('.fd-ui-segmented-toggle'));
+        expect(container.nativeElement.classList).toContain('fd-ui-segmented-toggle--size-sm');
     });
 
     it('should emit selectedValue change', () => {

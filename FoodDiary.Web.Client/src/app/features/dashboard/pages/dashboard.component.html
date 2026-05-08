@@ -143,6 +143,7 @@
                                         [remainingLabelKey]="fastingRemainingLabelKey()"
                                         [labelKey]="getFastingCardLabelKey()"
                                         [stateLabel]="getFastingCardStateLabel()"
+                                        [occurrenceKind]="fastingCurrentSession()?.occurrenceKind ?? null"
                                         [detailLabel]="getFastingCardDetailLabel()"
                                         [metaLabel]="fastingMetaLabel()"
                                         [ringColor]="fastingRingColor()"

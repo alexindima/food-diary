@@ -259,6 +259,15 @@ Base container with consistent radius and padding.
 **Inputs**
 - `subtle?: boolean`
 
+**CSS variables**
+- `--fd-card-height`
+- `--fd-card-content-width`
+- `--fd-card-content-height`
+- `--fd-card-content-justify`
+- `--fd-card-density-default-padding-bottom`
+- `--fd-card-density-compact-padding-bottom`
+- `--fd-card-density-relaxed-padding-bottom`
+
 #### `fd-ui-card-actions` (directive)
 Use inside `fd-ui-card` for action rows.
 
@@ -365,6 +374,15 @@ export interface FdUiRadioOption<T = unknown> {
 
 #### `fd-ui-segmented-toggle`
 Segmented toggle control.
+
+**Inputs**
+- `options?: FdUiSegmentedToggleOption[]`
+- `selectedValue: string`
+- `ariaLabel?: string | null`
+- `appearance?: 'default' | 'soft'`
+- `size?: 'sm' | 'md'`
+- `fullWidth?: boolean`
+- `shrinkItems?: boolean`
 
 #### `fd-ui-chip-select`
 Compact multi-select chip group for filters, tags, and symptom pickers.

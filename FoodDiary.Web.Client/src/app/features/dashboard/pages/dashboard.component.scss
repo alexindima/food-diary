@@ -117,7 +117,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         &--fasting-hero {
             // stylelint-disable-next-line rule-empty-line-before
             > .fd-ui-card {
-                min-height: 240px;
+                min-height: 0;
             }
         }
 

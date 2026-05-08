@@ -152,6 +152,7 @@ export class DashboardComponent {
     });
     private readonly fastingWidgetState = computed(() => {
         const session = this.fastingCurrentSession();
+        const stage = this.fastingBaseStage();
         const fallback = {
             progressPercent: this.facade.fastingProgressPercent(),
             elapsedFormatted: this.facade.fastingElapsedFormatted(),
@@ -161,9 +162,9 @@ export class DashboardComponent {
             showStageProgress: true,
             stateLabel: getDashboardFastingOccurrenceLabel(this.translate, session?.occurrenceKind),
             detailLabel: session ? getDashboardFastingProtocolBaseLabel(this.translate, session) : null,
-            metaLabel: session?.planType === 'Cyclic' ? getDashboardCyclicPhaseProgressLabel(this.translate, session) : null,
-            ringColor: this.fastingBaseStage()?.color ?? null,
-            stage: this.fastingBaseStage(),
+            metaLabel: session?.planType === 'Cyclic' ? getDashboardCyclicPhaseProgressLabel(this.translate, session, stage) : null,
+            ringColor: stage?.color ?? null,
+            stage,
         };
 
         if (!session || session.planType !== 'Intermittent' || session.endedAtUtc) {

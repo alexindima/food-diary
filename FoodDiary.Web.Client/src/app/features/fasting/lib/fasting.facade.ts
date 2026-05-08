@@ -199,7 +199,12 @@ export class FastingFacade {
     public selectMode(mode: FastingMode): void {
         this.selectedMode.set(mode);
 
-        if (mode === 'extended') {
+        if (mode === 'intermittent' && !this.isSelectedProtocolInCategory('intermittent')) {
+            this.selectedProtocol.set('F16_8');
+            return;
+        }
+
+        if (mode === 'extended' && !this.isSelectedProtocolInCategory('extended')) {
             this.selectedProtocol.set('F24_0');
         }
     }
@@ -471,6 +476,11 @@ export class FastingFacade {
         this.moodLevel.set(session?.moodLevel ?? 3);
         this.selectedSymptoms.set(session?.symptoms ?? []);
         this.checkInNotes.set(session?.checkInNotes ?? '');
+    }
+
+    private isSelectedProtocolInCategory(category: 'intermittent' | 'extended'): boolean {
+        const protocol = this.selectedProtocol();
+        return FASTING_PROTOCOLS.some(item => item.value === protocol && item.category === category);
     }
 
     private getPromptStateKey(sessionId: string, promptId: string): string {
