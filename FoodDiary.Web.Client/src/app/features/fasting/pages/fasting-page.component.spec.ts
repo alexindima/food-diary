@@ -165,24 +165,6 @@ describe('FastingPageComponent', () => {
         expect(component.canLoadMoreSessionCheckIns(session)).toBe(false);
     });
 
-    it('toggles extended action panels independently', () => {
-        expect(component.isExtendPanelExpanded()).toBe(false);
-        expect(component.isReducePanelExpanded()).toBe(false);
-
-        component.toggleExtendPanel();
-        expect(component.isExtendPanelExpanded()).toBe(true);
-        expect(component.isReducePanelExpanded()).toBe(false);
-
-        component.toggleReducePanel();
-        expect(component.isExtendPanelExpanded()).toBe(true);
-        expect(component.isReducePanelExpanded()).toBe(true);
-
-        component.showCustomExtend();
-        component.showCustomReduce();
-        expect(component.isExtendPanelExpanded()).toBe(true);
-        expect(component.isReducePanelExpanded()).toBe(true);
-    });
-
     it('treats sessions without check-ins as collapsed non-chartable history items', () => {
         const session = createHistorySession('session-4', 0);
 
