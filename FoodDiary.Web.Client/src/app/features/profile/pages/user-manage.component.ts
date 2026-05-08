@@ -47,6 +47,7 @@ import {
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
+import { parseIntegerInput } from '../../../shared/lib/number.utils';
 import { type ImageSelection } from '../../../shared/models/image-upload.data';
 import { type ActivityLevelOption, Gender, type UiStyleOption, UpdateUserDto, type User } from '../../../shared/models/user.data';
 import {
@@ -472,8 +473,8 @@ export class UserManageComponent {
     }
 
     public onFastingReminderHoursChange(value: string | number, field: 'first' | 'followUp'): void {
-        const parsed = typeof value === 'number' ? value : parseInt(value, 10);
-        if (Number.isNaN(parsed)) {
+        const parsed = parseIntegerInput(value);
+        if (parsed === null) {
             return;
         }
 

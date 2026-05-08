@@ -64,6 +64,24 @@ describe('FastingControlsComponent', () => {
         expect(facade.setCyclicPreset).toHaveBeenCalledWith(2, 1);
     });
 
+    it('ignores invalid numeric input values', () => {
+        component.onCustomHoursChange('abc');
+        component.onCustomIntermittentFastHoursChange('abc');
+        component.onCyclicFastDaysChange('abc');
+        component.onCyclicEatDaysChange('abc');
+        component.onCyclicEatDayFastHoursChange('abc');
+        component.onExtendHoursChange('abc');
+        component.onReduceHoursChange('abc');
+
+        expect(facade.setCustomHours).not.toHaveBeenCalled();
+        expect(facade.setCustomIntermittentFastHours).not.toHaveBeenCalled();
+        expect(facade.setCyclicFastDays).not.toHaveBeenCalled();
+        expect(facade.setCyclicEatDays).not.toHaveBeenCalled();
+        expect(facade.setCyclicEatDayFastHours).not.toHaveBeenCalled();
+        expect(facade.setExtendHours).not.toHaveBeenCalled();
+        expect(facade.setReduceHours).not.toHaveBeenCalled();
+    });
+
     it('renders active cyclic controls without setup start CTA', () => {
         facade.isActive.set(true);
         facade.currentSession.set(createCyclicSession());
@@ -85,6 +103,78 @@ describe('FastingControlsComponent', () => {
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.endFasting).toHaveBeenCalledTimes(1);
+    });
+
+    it('confirms cyclic day management actions', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set(createCyclicSession());
+        fixture.detectChanges();
+
+        component.skipCyclicDay();
+        component.postponeCyclicDay();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(2);
+        expect(facade.skipCyclicDay).toHaveBeenCalledTimes(1);
+        expect(facade.postponeCyclicDay).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps extended adjustment panels collapsed by default', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set(createExtendedSession());
+        fixture.detectChanges();
+
+        const text = fixture.nativeElement.textContent;
+        expect(text).toContain('FASTING.EXTEND_GROUP');
+        expect(text).toContain('FASTING.REDUCE_GROUP');
+        expect(text).not.toContain('FASTING.ADD_DAY');
+        expect(text).not.toContain('FASTING.REDUCE_4_HOURS');
+        expect(text).not.toContain('FASTING.START_FAST');
+    });
+
+    it('expands extended controls and delegates custom duration actions', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set(createExtendedSession());
+        facade.extendHours.set(12);
+        facade.reduceHours.set(2);
+        fixture.detectChanges();
+
+        component.showCustomExtend();
+        component.showCustomReduce();
+        fixture.detectChanges();
+
+        const text = fixture.nativeElement.textContent;
+        expect(text).toContain('FASTING.ADD_TIME');
+        expect(text).toContain('FASTING.REDUCE_TIME');
+
+        component.extendByCustom();
+        component.reduceByCustom();
+
+        expect(facade.extendByHours).toHaveBeenCalledWith(12);
+        expect(facade.reduceTargetByHours).toHaveBeenCalledWith(2);
+    });
+
+    it('asks for safety confirmation before extending beyond the warning threshold', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: 80 });
+        facade.extendHours.set(12);
+        fixture.detectChanges();
+
+        component.extendByCustom();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(facade.extendByHours).toHaveBeenCalledWith(12);
+    });
+
+    it('blocks extensions beyond the hard stop threshold', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: 160 });
+        fixture.detectChanges();
+
+        component.onExtendHoursChange(24);
+        component.extendByCustom();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(facade.extendByHours).not.toHaveBeenCalled();
     });
 });
 
@@ -204,5 +294,21 @@ function createCyclicSession(): FastingSession {
         symptoms: [],
         checkInNotes: null,
         checkIns: [],
+    };
+}
+
+function createExtendedSession(): FastingSession {
+    return {
+        ...createCyclicSession(),
+        id: 'extended-session-1',
+        protocol: 'F24',
+        planType: 'Extended',
+        occurrenceKind: 'FastDay',
+        cyclicFastDays: null,
+        cyclicEatDays: null,
+        cyclicEatDayFastHours: null,
+        cyclicEatDayEatingWindowHours: null,
+        cyclicPhaseDayNumber: null,
+        cyclicPhaseDayTotal: null,
     };
 }

@@ -68,20 +68,34 @@ describe('FastingTimerCardComponent', () => {
         fixture.detectChanges();
 
         const separator = fixture.nativeElement.querySelector('.fasting-timer-card__summary-protocol-separator') as HTMLElement;
-        expect(separator.textContent.trim()).toBe('·');
-        expect(fixture.nativeElement.textContent).not.toContain('Â');
+        expect(separator.textContent.trim()).toBe('\u00b7');
+        expect(fixture.nativeElement.textContent).not.toContain('\u00c2');
     });
 
-    it('clamps rendered progress percent to the valid ring range', async () => {
+    it.each(['summary', 'pageSummary'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
         const fixture = await createHostFixtureAsync();
 
-        fixture.componentInstance.layout.set('summary');
+        fixture.componentInstance.layout.set(layout);
         fixture.componentInstance.isActive.set(true);
         fixture.componentInstance.progressPercent.set(140);
         fixture.detectChanges();
 
         const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
         expect(percent.textContent.trim()).toBe('100%');
+    });
+
+    it.each(['summary', 'pageSummary'] as const)('uses the same progress ring geometry in %s layout', async layout => {
+        const fixture = await createHostFixtureAsync();
+
+        fixture.componentInstance.layout.set(layout);
+        fixture.componentInstance.isActive.set(true);
+        fixture.componentInstance.progressPercent.set(25);
+        fixture.detectChanges();
+
+        const progressRing = fixture.nativeElement.querySelector('.fasting-timer-card__ring-progress') as SVGCircleElement;
+        const circumference = 2 * Math.PI * 90;
+        expect(Number(progressRing.style.strokeDasharray)).toBeCloseTo(circumference);
+        expect(Number(progressRing.style.strokeDashoffset)).toBeCloseTo(circumference * 0.75);
     });
 
     it('marks progress rings as decorative', async () => {

@@ -45,22 +45,7 @@
 
 <ng-template #summaryRing>
     <div class="fasting-timer-card__ring fasting-timer-card__ring--summary" [style.box-shadow]="getRingGlow()">
-        <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-            <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
-            <circle
-                class="fasting-timer-card__ring-progress"
-                [class.fasting-timer-card__ring-progress--overtime]="isOvertime()"
-                cx="100"
-                cy="100"
-                r="90"
-                fill="none"
-                stroke-width="8"
-                stroke-linecap="round"
-                [style.stroke]="getProgressStrokeColor()"
-                [style.stroke-dasharray]="2 * Math.PI * 90"
-                [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - normalizedProgressPercent() / 100)"
-            />
-        </svg>
+        <ng-container [ngTemplateOutlet]="ringProgress" />
         <div class="fasting-timer-card__ring-content fasting-timer-card__ring-content--summary fd-stack fd-center fd-gap-xxs">
             @if (isActive() || currentSessionCompleted()) {
                 @if (stateLabel()) {
@@ -84,22 +69,7 @@
 
 <ng-template #mainRing>
     <div class="fasting-timer-card__ring" [style.box-shadow]="getRingGlow()">
-        <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-            <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
-            <circle
-                class="fasting-timer-card__ring-progress"
-                [class.fasting-timer-card__ring-progress--overtime]="isOvertime()"
-                cx="100"
-                cy="100"
-                r="90"
-                fill="none"
-                stroke-width="8"
-                stroke-linecap="round"
-                [style.stroke]="getProgressStrokeColor()"
-                [style.stroke-dasharray]="2 * Math.PI * 90"
-                [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - normalizedProgressPercent() / 100)"
-            />
-        </svg>
+        <ng-container [ngTemplateOutlet]="ringProgress" />
         <div class="fasting-timer-card__ring-content fd-stack fd-center fd-gap-micro">
             @if (layout() === 'pageSummary') {
                 @if (stateLabel()) {
@@ -171,6 +141,25 @@
             }
         </div>
     </div>
+</ng-template>
+
+<ng-template #ringProgress>
+    <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+        <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
+        <circle
+            class="fasting-timer-card__ring-progress"
+            [class.fasting-timer-card__ring-progress--overtime]="isOvertime()"
+            cx="100"
+            cy="100"
+            r="90"
+            fill="none"
+            stroke-width="8"
+            stroke-linecap="round"
+            [style.stroke]="getProgressStrokeColor()"
+            [style.stroke-dasharray]="2 * Math.PI * 90"
+            [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - normalizedProgressPercent() / 100)"
+        />
+    </svg>
 </ng-template>
 
 <ng-template #summaryContent>

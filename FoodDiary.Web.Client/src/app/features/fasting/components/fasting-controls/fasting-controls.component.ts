@@ -9,6 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../services/localization.service';
+import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FASTING_HARD_STOP_THRESHOLD_HOURS, FASTING_WARNING_THRESHOLD_HOURS } from '../../lib/fasting-page.constants';
 import { CYCLIC_PRESETS, FASTING_PROTOCOLS, type FastingMode, type FastingProtocol, type FastingSession } from '../../models/fasting.data';
@@ -120,15 +121,15 @@ export class FastingControlsComponent {
     }
 
     public onCustomHoursChange(value: string | number): void {
-        const hours = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(hours)) {
+        const hours = parseIntegerInput(value);
+        if (hours !== null) {
             this.facade.setCustomHours(hours);
         }
     }
 
     public onCustomIntermittentFastHoursChange(value: string | number): void {
-        const hours = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(hours)) {
+        const hours = parseIntegerInput(value);
+        if (hours !== null) {
             this.facade.setCustomIntermittentFastHours(hours);
         }
     }
@@ -151,15 +152,15 @@ export class FastingControlsComponent {
     }
 
     public onCyclicFastDaysChange(value: string | number): void {
-        const days = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(days)) {
+        const days = parseIntegerInput(value);
+        if (days !== null) {
             this.facade.setCyclicFastDays(days);
         }
     }
 
     public onCyclicEatDaysChange(value: string | number): void {
-        const days = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(days)) {
+        const days = parseIntegerInput(value);
+        if (days !== null) {
             this.facade.setCyclicEatDays(days);
         }
     }
@@ -169,8 +170,8 @@ export class FastingControlsComponent {
     }
 
     public onCyclicEatDayFastHoursChange(value: string | number): void {
-        const hours = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(hours)) {
+        const hours = parseIntegerInput(value);
+        if (hours !== null) {
             this.facade.setCyclicEatDayFastHours(hours);
         }
     }
@@ -198,15 +199,15 @@ export class FastingControlsComponent {
     }
 
     public onExtendHoursChange(value: string | number): void {
-        const hours = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(hours)) {
+        const hours = parseIntegerInput(value);
+        if (hours !== null) {
             this.facade.setExtendHours(hours);
         }
     }
 
     public onReduceHoursChange(value: string | number): void {
-        const hours = typeof value === 'number' ? value : parseInt(value, 10);
-        if (!isNaN(hours)) {
+        const hours = parseIntegerInput(value);
+        if (hours !== null) {
             this.facade.setReduceHours(hours);
         }
     }
