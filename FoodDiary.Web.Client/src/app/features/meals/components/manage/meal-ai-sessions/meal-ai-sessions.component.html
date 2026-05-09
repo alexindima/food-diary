@@ -1,36 +1,35 @@
 <div class="consumption-manage__ai-summary-listing fd-stack fd-gap-sm">
-    @for (session of aiSessions(); track $index; let idx = $index) {
-        @let totals = getAiSessionTotals(session);
+    @for (row of aiSessionRows(); track row.index) {
         <div class="consumption-manage__ai-summary fd-stack fd-gap-md">
             <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
                 <div class="consumption-manage__ai-summary-image fd-center">
-                    @if (session.imageUrl) {
-                        <img [src]="session.imageUrl" alt="" loading="lazy" />
+                    @if (row.session.imageUrl) {
+                        <img [src]="row.session.imageUrl" alt="" loading="lazy" />
                     } @else {
                         <fd-ui-icon name="auto_awesome" size="md" />
                     }
                 </div>
                 <div class="consumption-manage__ai-summary-heading fd-stack fd-gap-xxs">
                     <div class="consumption-manage__ai-summary-title">
-                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate: { count: session.items.length } }}
+                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate: { count: row.itemCount } }}
                     </div>
                     <div class="consumption-manage__ai-summary-stats fd-stack fd-gap-xxs">
                         <div class="consumption-manage__ai-summary-calories fd-row fd-gap-xxs fd-align-baseline">
                             <span class="consumption-manage__ai-summary-label"> {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}: </span>
-                            <span>{{ formatAiMacro(totals.calories, 'GENERAL.UNITS.KCAL') }}</span>
+                            <span>{{ row.caloriesLabel }}</span>
                         </div>
                         <div class="consumption-manage__ai-summary-nutrients fd-row fd-wrap fd-gap-sm">
                             <span>
                                 {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}:
-                                {{ formatAiMacro(totals.proteins, 'GENERAL.UNITS.G') }}
+                                {{ row.proteinsLabel }}
                             </span>
                             <span>
                                 {{ 'GENERAL.NUTRIENTS.FAT' | translate }}:
-                                {{ formatAiMacro(totals.fats, 'GENERAL.UNITS.G') }}
+                                {{ row.fatsLabel }}
                             </span>
                             <span>
                                 {{ 'GENERAL.NUTRIENTS.CARB' | translate }}:
-                                {{ formatAiMacro(totals.carbs, 'GENERAL.UNITS.G') }}
+                                {{ row.carbsLabel }}
                             </span>
                         </div>
                     </div>
@@ -43,7 +42,7 @@
                         icon="edit"
                         [fdUiHint]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
                         [ariaLabel]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
-                        (click)="onEditSession(idx)"
+                        (click)="onEditSession(row.index)"
                     />
                     <fd-ui-button
                         class="consumption-manage__ai-summary-action consumption-manage__ai-summary-action--danger"
@@ -52,44 +51,40 @@
                         icon="delete"
                         [fdUiHint]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
                         [ariaLabel]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
-                        (click)="onDeleteSession(idx)"
+                        (click)="onDeleteSession(row.index)"
                     />
                 </div>
             </div>
             <div class="consumption-manage__ai-summary-body fd-row fd-gap-md">
                 <div class="consumption-manage__ai-summary-list fd-stack fd-gap-xs">
-                    @for (
-                        aiItem of isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems);
-                        track $index;
-                        let itemIdx = $index
-                    ) {
+                    @for (aiItem of row.visibleItems; track $index) {
                         <div class="consumption-manage__ai-summary-row fd-row fd-gap-md fd-justify-between">
                             <span class="consumption-manage__ai-summary-name">
-                                {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}
+                                {{ aiItem.nameLabel }}
                             </span>
                             <span class="consumption-manage__ai-summary-amount">
-                                {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
+                                {{ aiItem.amountLabel }}
                             </span>
                         </div>
                     }
-                    @if (getHiddenAiItemsCount(session.items, aiPreviewMaxItems) > 0) {
+                    @if (row.hiddenItemsCount > 0) {
                         <fd-ui-button
                             type="button"
                             class="consumption-manage__ai-summary-more"
                             variant="secondary"
                             fill="text"
                             size="sm"
-                            [attr.aria-expanded]="isAiSessionExpanded(idx)"
-                            (click)="toggleAiSessionExpanded(idx)"
+                            [attr.aria-expanded]="row.isExpanded"
+                            (click)="toggleAiSessionExpanded(row.index)"
                         >
-                            @if (isAiSessionExpanded(idx)) {
+                            @if (row.isExpanded) {
                                 {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HIDE' | translate }}
                             } @else {
                                 {{
                                     'CONSUMPTION_MANAGE.ITEMS_AI_MORE'
                                         | translate
                                             : {
-                                                  count: getHiddenAiItemsCount(session.items, aiPreviewMaxItems),
+                                                  count: row.hiddenItemsCount,
                                               }
                                 }}
                             }
