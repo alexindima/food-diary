@@ -1,8 +1,9 @@
 import { Component, computed, type Signal, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../services/localization.service';
@@ -10,8 +11,11 @@ import { FastingFacade } from '../../lib/fasting.facade';
 import { type FastingSession } from '../../models/fasting.data';
 import { FastingTimerCardComponent } from './fasting-timer-card.component';
 
+let localizationLanguage: string;
+
 describe('FastingTimerCardComponent', () => {
     beforeEach(() => {
+        localizationLanguage = 'ru';
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
     });
@@ -31,6 +35,16 @@ describe('FastingTimerCardComponent', () => {
         expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
     });
 
+    it('renders dashboard layout without a fasting facade provider', async () => {
+        const fixture = await createHostFixtureWithoutFacadeAsync();
+
+        fixture.componentInstance.session.set(createSession());
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
+    });
+
     it('renders page controls in page layout', async () => {
         const fixture = await createHostFixtureAsync();
 
@@ -38,6 +52,26 @@ describe('FastingTimerCardComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).not.toBeNull();
+    });
+
+    it('refreshes computed summary labels when the active language changes', async () => {
+        const fixture = await createHostFixtureAsync();
+        const translateService = TestBed.inject(TranslateService);
+        translateService.setTranslation('ru', { FASTING: { FASTING_WINDOW: 'Пост' } });
+        translateService.setTranslation('en', { FASTING: { FASTING_WINDOW: 'Fasting' } });
+
+        await firstValueFrom(translateService.use('ru'));
+        fixture.componentInstance.layout.set('dashboard');
+        setSession(fixture, createSession());
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.textContent).toContain('Пост');
+
+        localizationLanguage = 'en';
+        await firstValueFrom(translateService.use('en'));
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.textContent).toContain('Fasting');
     });
 
     it.each(['dashboard', 'page'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
@@ -156,7 +190,22 @@ async function createHostFixtureAsync(): Promise<ComponentFixture<FastingTimerCa
                 provide: FdUiDialogService,
                 useValue: createDialogServiceStub(),
             },
-            { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'ru' } },
+            { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => localizationLanguage } },
+        ],
+    }).compileComponents();
+
+    return TestBed.createComponent(FastingTimerCardHostComponent);
+}
+
+async function createHostFixtureWithoutFacadeAsync(): Promise<ComponentFixture<FastingTimerCardHostComponent>> {
+    await TestBed.configureTestingModule({
+        imports: [FastingTimerCardHostComponent, TranslateModule.forRoot()],
+        providers: [
+            {
+                provide: FdUiDialogService,
+                useValue: createDialogServiceStub(),
+            },
+            { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => localizationLanguage } },
         ],
     }).compileComponents();
 

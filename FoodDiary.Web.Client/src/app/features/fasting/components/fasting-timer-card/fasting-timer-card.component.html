@@ -44,63 +44,64 @@
 </fd-ui-card>
 
 <ng-template #summaryRing>
-    <div class="fasting-timer-card__ring fasting-timer-card__ring--summary" [style.box-shadow]="getRingGlow()">
+    <div class="fasting-timer-card__ring fasting-timer-card__ring--summary" [style.box-shadow]="ringGlow()">
         <ng-container [ngTemplateOutlet]="ringProgress" />
         <ng-container [ngTemplateOutlet]="summaryRingContent" />
     </div>
 </ng-template>
 
 <ng-template #mainRing>
-    <div class="fasting-timer-card__ring" [style.box-shadow]="getRingGlow()">
+    @let state = viewState();
+    <div class="fasting-timer-card__ring" [style.box-shadow]="ringGlow()">
         <ng-container [ngTemplateOutlet]="ringProgress" />
         @if (isPageSummaryLayout()) {
             <ng-container [ngTemplateOutlet]="summaryRingContent" />
         } @else {
             <div class="fasting-timer-card__ring-content fd-stack fd-center fd-gap-micro">
-                @if (!(isSetupLayout() && !viewState().isActive && !viewState().currentSessionCompleted)) {
-                    <span class="fasting-timer-card__label fd-ui-meta-text">{{ viewState().labelKey | translate }}</span>
-                    @if (viewState().stateLabel) {
-                        <span class="fasting-timer-card__state fd-ui-meta-text">{{ viewState().stateLabel }}</span>
+                @if (!(isSetupLayout() && !state.isActive && !state.currentSessionCompleted)) {
+                    <span class="fasting-timer-card__label fd-ui-meta-text">{{ state.labelKey | translate }}</span>
+                    @if (state.stateLabel) {
+                        <span class="fasting-timer-card__state fd-ui-meta-text">{{ state.stateLabel }}</span>
                     }
                 }
-                @if (viewState().isActive) {
-                    <span class="fasting-timer-card__elapsed fd-ui-metric-lg">{{ viewState().elapsedFormatted }}</span>
+                @if (state.isActive) {
+                    <span class="fasting-timer-card__elapsed fd-ui-metric-lg">{{ state.elapsedFormatted }}</span>
                     @if (shouldShowStageProgress()) {
                         <span class="fasting-timer-card__stage-progress fd-ui-overline">
-                            {{ 'FASTING.STAGES.PROGRESS' | translate: { current: viewState().stageIndex, total: viewState().totalStages } }}
+                            {{ 'FASTING.STAGES.PROGRESS' | translate: { current: state.stageIndex, total: state.totalStages } }}
                         </span>
-                        <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ viewState().stageTitleKey | translate }}</span>
+                        <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ state.stageTitleKey | translate }}</span>
                     }
                     <span class="fasting-timer-card__remaining fd-ui-body-sm">
-                        @if (viewState().isOvertime) {
+                        @if (state.isOvertime) {
                             {{ 'FASTING.GOAL_REACHED' | translate }}
                         } @else {
-                            {{ viewState().remainingLabelKey | translate }}: {{ viewState().remainingFormatted }}
+                            {{ state.remainingLabelKey | translate }}: {{ state.remainingFormatted }}
                         }
                     </span>
-                    @if (!viewState().isOvertime && viewState().nextStageTitleKey && viewState().nextStageFormatted) {
+                    @if (!state.isOvertime && state.nextStageTitleKey && state.nextStageFormatted) {
                         <span class="fasting-timer-card__next-stage-time fd-ui-body-sm">
-                            {{ 'FASTING.STAGES.NEXT_IN' | translate: { time: viewState().nextStageFormatted } }}
+                            {{ 'FASTING.STAGES.NEXT_IN' | translate: { time: state.nextStageFormatted } }}
                         </span>
                         <span class="fasting-timer-card__next-stage-label">
-                            {{ 'FASTING.STAGES.NEXT_STAGE' | translate }}: {{ viewState().nextStageTitleKey | translate }}
+                            {{ 'FASTING.STAGES.NEXT_STAGE' | translate }}: {{ state.nextStageTitleKey | translate }}
                         </span>
                     } @else if (shouldShowStageDescriptionFallback()) {
-                        <span class="fasting-timer-card__next-stage-label">{{ viewState().stageDescriptionKey | translate }}</span>
+                        <span class="fasting-timer-card__next-stage-label">{{ state.stageDescriptionKey | translate }}</span>
                     }
-                } @else if (viewState().currentSessionCompleted) {
-                    <span class="fasting-timer-card__elapsed fd-ui-metric-lg">{{ viewState().elapsedFormatted }}</span>
+                } @else if (state.currentSessionCompleted) {
+                    <span class="fasting-timer-card__elapsed fd-ui-metric-lg">{{ state.elapsedFormatted }}</span>
                     @if (shouldShowStageProgress()) {
                         <span class="fasting-timer-card__stage-progress fd-ui-overline">
-                            {{ 'FASTING.STAGES.PROGRESS' | translate: { current: viewState().stageIndex, total: viewState().totalStages } }}
+                            {{ 'FASTING.STAGES.PROGRESS' | translate: { current: state.stageIndex, total: state.totalStages } }}
                         </span>
-                        <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ viewState().stageTitleKey | translate }}</span>
+                        <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ state.stageTitleKey | translate }}</span>
                     }
                     <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done fd-ui-body-sm">
                         {{ 'FASTING.COMPLETED' | translate }}
                     </span>
-                    @if (viewState().stageDescriptionKey) {
-                        <span class="fasting-timer-card__next-stage-label">{{ viewState().stageDescriptionKey | translate }}</span>
+                    @if (state.stageDescriptionKey) {
+                        <span class="fasting-timer-card__next-stage-label">{{ state.stageDescriptionKey | translate }}</span>
                     }
                 } @else if (isSetupLayout()) {
                     <span class="fasting-timer-card__remaining fd-ui-body-sm">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
@@ -110,8 +111,8 @@
                     }}</span>
                     <span class="fasting-timer-card__remaining fd-ui-body-sm">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
                 }
-                @if (viewState().detailLabel && !(isSetupLayout() && !viewState().isActive && !viewState().currentSessionCompleted)) {
-                    <span class="fasting-timer-card__detail fd-ui-caption">{{ viewState().detailLabel }}</span>
+                @if (state.detailLabel && !(isSetupLayout() && !state.isActive && !state.currentSessionCompleted)) {
+                    <span class="fasting-timer-card__detail fd-ui-caption">{{ state.detailLabel }}</span>
                 }
             </div>
         }
@@ -119,13 +120,14 @@
 </ng-template>
 
 <ng-template #summaryRingContent>
+    @let state = viewState();
     <div class="fasting-timer-card__ring-content fasting-timer-card__ring-content--summary fd-stack fd-center fd-gap-xxs">
-        @if (viewState().isActive || viewState().currentSessionCompleted) {
-            @if (viewState().stateLabel) {
-                <span class="fasting-timer-card__state fasting-timer-card__state--summary fd-ui-body-sm">{{ viewState().stateLabel }}</span>
+        @if (state.isActive || state.currentSessionCompleted) {
+            @if (state.stateLabel) {
+                <span class="fasting-timer-card__state fasting-timer-card__state--summary fd-ui-body-sm">{{ state.stateLabel }}</span>
             }
             <span class="fasting-timer-card__elapsed fasting-timer-card__elapsed--summary fd-ui-metric-lg">{{
-                viewState().elapsedFormatted
+                state.elapsedFormatted
             }}</span>
             <span class="fasting-timer-card__percent fasting-timer-card__percent--summary-secondary fd-ui-stat-value">
                 {{ normalizedProgressPercent() | number: '1.0-0' }}%
@@ -140,18 +142,19 @@
 </ng-template>
 
 <ng-template #ringProgress>
+    @let state = viewState();
     <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
         <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
         <circle
             class="fasting-timer-card__ring-progress"
-            [class.fasting-timer-card__ring-progress--overtime]="viewState().isOvertime"
+            [class.fasting-timer-card__ring-progress--overtime]="state.isOvertime"
             cx="100"
             cy="100"
             r="90"
             fill="none"
             stroke-width="8"
             stroke-linecap="round"
-            [style.stroke]="getProgressStrokeColor()"
+            [style.stroke]="progressStrokeColor()"
             [style.stroke-dasharray]="2 * Math.PI * 90"
             [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - normalizedProgressPercent() / 100)"
         />
@@ -159,71 +162,72 @@
 </ng-template>
 
 <ng-template #summaryContent>
+    @let state = viewState();
     <div class="fasting-timer-card__summary fd-stack fd-gap-card-header">
         <div class="fasting-timer-card__summary-top fd-stack fd-gap-card-header">
             <div class="fasting-timer-card__summary-labels fd-stack fd-gap-card-header">
                 <div class="fasting-timer-card__summary-protocol-line fd-row fd-wrap fd-align-baseline fd-gap-card-header">
-                    <span class="fasting-timer-card__label fd-ui-meta-text">{{ viewState().labelKey | translate }}</span>
-                    @if (viewState().detailLabel) {
+                    <span class="fasting-timer-card__label fd-ui-meta-text">{{ state.labelKey | translate }}</span>
+                    @if (state.detailLabel) {
                         <span class="fasting-timer-card__summary-protocol-separator">&middot;</span>
-                        <span class="fasting-timer-card__detail fasting-timer-card__detail--summary">{{ viewState().detailLabel }}</span>
+                        <span class="fasting-timer-card__detail fasting-timer-card__detail--summary">{{ state.detailLabel }}</span>
                     }
                 </div>
-                @if (viewState().metaLabel) {
-                    <span class="fasting-timer-card__meta fd-ui-body-sm">{{ viewState().metaLabel }}</span>
+                @if (state.metaLabel) {
+                    <span class="fasting-timer-card__meta fd-ui-body-sm">{{ state.metaLabel }}</span>
                 }
             </div>
         </div>
 
-        @if (viewState().isActive) {
+        @if (state.isActive) {
             @if (shouldShowStageProgress()) {
                 <div class="fasting-timer-card__summary-stage fd-stack fd-gap-card-header">
-                    @if (!viewState().metaLabel) {
+                    @if (!state.metaLabel) {
                         <span class="fasting-timer-card__stage-progress fd-ui-overline">
-                            {{ 'FASTING.STAGES.PROGRESS' | translate: { current: viewState().stageIndex, total: viewState().totalStages } }}
+                            {{ 'FASTING.STAGES.PROGRESS' | translate: { current: state.stageIndex, total: state.totalStages } }}
                         </span>
                     }
-                    <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ viewState().stageTitleKey | translate }}</span>
-                    @if (viewState().stageDescriptionKey) {
-                        <span class="fasting-timer-card__next-stage-label">{{ viewState().stageDescriptionKey | translate }}</span>
+                    <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ state.stageTitleKey | translate }}</span>
+                    @if (state.stageDescriptionKey) {
+                        <span class="fasting-timer-card__next-stage-label">{{ state.stageDescriptionKey | translate }}</span>
                     }
                 </div>
             }
-            @if (!viewState().isOvertime && viewState().nextStageTitleKey && viewState().nextStageFormatted) {
+            @if (!state.isOvertime && state.nextStageTitleKey && state.nextStageFormatted) {
                 <div class="fasting-timer-card__summary-next fd-stack fd-gap-card-header">
                     <span class="fasting-timer-card__next-stage-time fd-ui-body-sm">
-                        {{ 'FASTING.STAGES.NEXT_IN' | translate: { time: viewState().nextStageFormatted } }}
+                        {{ 'FASTING.STAGES.NEXT_IN' | translate: { time: state.nextStageFormatted } }}
                     </span>
                 </div>
             }
             <div class="fasting-timer-card__summary-meta fd-row fd-gap-card-header">
-                @if (viewState().isOvertime) {
+                @if (state.isOvertime) {
                     <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done fd-ui-body-sm">
                         {{ 'FASTING.GOAL_REACHED' | translate }}
                     </span>
                 } @else {
                     <span class="fasting-timer-card__remaining fd-ui-body-sm"
-                        >{{ viewState().remainingLabelKey | translate }}: {{ viewState().remainingFormatted }}</span
+                        >{{ state.remainingLabelKey | translate }}: {{ state.remainingFormatted }}</span
                     >
                 }
             </div>
             @if (shouldShowStageDescriptionFallback()) {
-                <span class="fasting-timer-card__next-stage-label">{{ viewState().stageDescriptionKey | translate }}</span>
+                <span class="fasting-timer-card__next-stage-label">{{ state.stageDescriptionKey | translate }}</span>
             }
-        } @else if (viewState().currentSessionCompleted) {
+        } @else if (state.currentSessionCompleted) {
             @if (shouldShowStageProgress()) {
                 <div class="fasting-timer-card__summary-stage fd-stack fd-gap-card-header">
                     <span class="fasting-timer-card__stage-progress fd-ui-overline">
-                        {{ 'FASTING.STAGES.PROGRESS' | translate: { current: viewState().stageIndex, total: viewState().totalStages } }}
+                        {{ 'FASTING.STAGES.PROGRESS' | translate: { current: state.stageIndex, total: state.totalStages } }}
                     </span>
-                    <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ viewState().stageTitleKey | translate }}</span>
+                    <span class="fasting-timer-card__stage-title fd-ui-card-title">{{ state.stageTitleKey | translate }}</span>
                 </div>
             }
             <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done fd-ui-body-sm">
                 {{ 'FASTING.COMPLETED' | translate }}
             </span>
-            @if (viewState().stageDescriptionKey) {
-                <span class="fasting-timer-card__next-stage-label">{{ viewState().stageDescriptionKey | translate }}</span>
+            @if (state.stageDescriptionKey) {
+                <span class="fasting-timer-card__next-stage-label">{{ state.stageDescriptionKey | translate }}</span>
             }
         } @else {
             <div class="fasting-timer-card__summary-time fasting-timer-card__summary-time--idle fd-ui-metric-lg">

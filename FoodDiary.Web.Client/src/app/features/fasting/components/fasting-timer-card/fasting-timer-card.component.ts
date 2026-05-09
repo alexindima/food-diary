@@ -1,9 +1,11 @@
 import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
+import { LocalizationService } from '../../../../services/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
 import { type FastingOccurrenceKind, type FastingSession } from '../../models/fasting.data';
@@ -44,8 +46,10 @@ interface FastingTimerCardState {
 export class FastingTimerCardComponent {
     private readonly facade = inject(FastingFacade, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly localizationService = inject(LocalizationService);
     private readonly translateService = inject(TranslateService);
     private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
+    private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
     private readonly now = signal(new Date());
     private timerInterval: ReturnType<typeof setInterval> | null = null;
     private readonly timerEffect = effect(() => {
@@ -66,6 +70,7 @@ export class FastingTimerCardComponent {
     public readonly session = input<FastingSession | null>(null);
     private readonly usesFacadeTimer = computed(() => this.layout() === 'page' && this.facade !== null);
     protected readonly viewState = computed<FastingTimerCardState>(() => {
+        this.currentLanguage();
         const session = this.getSession();
         const isActive = !!session && !session.endedAtUtc;
         const state = buildFastingTimerCardComputedState({
@@ -114,40 +119,40 @@ export class FastingTimerCardComponent {
     protected readonly shouldShowStageDescriptionFallback = computed(
         () => !this.isEatingPhase() && !this.shouldShowStageProgress() && this.viewState().stageDescriptionKey !== null,
     );
-
-    public constructor() {
-        this.destroyRef.onDestroy(() => {
-            this.stopTimer();
-        });
-    }
-
-    public getProgressStrokeColor(): string {
-        if (this.viewState().isOvertime) {
+    protected readonly progressStrokeColor = computed(() => {
+        const state = this.viewState();
+        if (state.isOvertime || this.isEatingPhase()) {
             return 'var(--fd-color-green-500)';
         }
 
-        if (this.isEatingPhase()) {
-            return 'var(--fd-color-green-500)';
-        }
-
-        return this.viewState().ringColor ?? 'var(--fd-color-purple-500)';
-    }
-
-    public getRingGlow(): string | null {
-        if (!this.viewState().showGlow) {
+        return state.ringColor ?? 'var(--fd-color-purple-500)';
+    });
+    protected readonly ringGlow = computed(() => {
+        const state = this.viewState();
+        if (!state.showGlow) {
             return null;
         }
 
-        if (this.viewState().isOvertime) {
+        if (state.isOvertime) {
             return 'var(--fd-shadow-fasting-overtime-ring)';
         }
 
-        const glowColor = this.viewState().glowColor;
+        const glowColor = state.glowColor;
         if (!glowColor) {
             return null;
         }
 
         return `0 0 0 var(--fd-size-fasting-ring-glow-spread) ${glowColor}, 0 var(--fd-size-fasting-ring-glow-offset-y) var(--fd-size-fasting-ring-glow-blur) ${glowColor}`;
+    });
+
+    public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.currentLanguage.set(this.localizationService.getCurrentLanguage());
+        });
+
+        this.destroyRef.onDestroy(() => {
+            this.stopTimer();
+        });
     }
 
     private getSession(): FastingSession | null {
