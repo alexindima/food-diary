@@ -110,6 +110,7 @@ export class MealCardComponent {
         const itemImages = this.resolveItemImages();
         return itemImages.length > 1 ? itemImages : [];
     });
+    public readonly hasPreviewImage = computed(() => Boolean(this.resolvePreviewImage() || this.collageImages().length > 0));
 
     public readonly itemCount = computed(() => {
         const meal = this.meal();
@@ -131,10 +132,6 @@ export class MealCardComponent {
 
     public handleOpen(): void {
         this.open.emit();
-    }
-
-    public hasPreviewImage(): boolean {
-        return Boolean(this.resolvePreviewImage() || this.collageImages().length > 0);
     }
 
     public handlePreview(): void {

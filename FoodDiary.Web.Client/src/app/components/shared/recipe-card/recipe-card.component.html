@@ -9,7 +9,12 @@
     [favoriteAriaLabel]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
     [ownershipIcon]="recipe().isOwnedByCurrentUser ? 'person' : 'groups'"
     [title]="recipe().name"
-    [description]="('RECIPE_LIST.INGREDIENTS_COUNT' | translate) + ': ' + getIngredientCount() + recipeTimeSuffix()"
+    [description]="
+        ('RECIPE_LIST.INGREDIENTS_COUNT' | translate) +
+        ': ' +
+        ingredientCount() +
+        (totalTime() ? ' - ' + totalTime() + ' ' + ('RECIPE_DETAIL.MIN' | translate) : '')
+    "
     [nutrition]="nutrition()"
     [quality]="quality()"
     [calories]="recipe().totalCalories ?? 0"

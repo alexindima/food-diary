@@ -86,6 +86,22 @@ export class RecipeCardComponent {
 
         return Math.round(Math.min(100, Math.max(0, score)));
     });
+    public readonly hasPreviewImage = computed(() => Boolean(this.imageUrl()?.trim()));
+    public readonly totalTime = computed(() => {
+        const recipe = this.recipe();
+        const prep = recipe.prepTime ?? 0;
+        const cook = recipe.cookTime ?? 0;
+        const total = prep + cook;
+        return total > 0 ? total : null;
+    });
+    public readonly ingredientCount = computed(() => {
+        const recipe = this.recipe();
+        if (!recipe.steps?.length) {
+            return 0;
+        }
+
+        return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
+    });
     private favoriteRecipeId: string | null = null;
 
     public constructor() {
@@ -104,10 +120,6 @@ export class RecipeCardComponent {
         this.addToMeal.emit();
     }
 
-    public hasPreviewImage(): boolean {
-        return Boolean(this.imageUrl()?.trim());
-    }
-
     public handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (!imageUrl) {
@@ -124,32 +136,6 @@ export class RecipeCardComponent {
                 title: this.recipe().name,
             },
         });
-    }
-
-    public getTotalTime(): number | null {
-        const recipe = this.recipe();
-        const prep = recipe.prepTime ?? 0;
-        const cook = recipe.cookTime ?? 0;
-        const total = prep + cook;
-        return total > 0 ? total : null;
-    }
-
-    public getIngredientCount(): number {
-        const recipe = this.recipe();
-        if (!recipe.steps?.length) {
-            return 0;
-        }
-
-        return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
-    }
-
-    public recipeTimeSuffix(): string {
-        const minutes = this.getTotalTime();
-        if (!minutes) {
-            return '';
-        }
-
-        return ` - ${minutes} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
     }
 
     public toggleFavorite(): void {

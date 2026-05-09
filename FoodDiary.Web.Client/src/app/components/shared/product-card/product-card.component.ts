@@ -79,6 +79,7 @@ export class ProductCardComponent {
 
         return Math.round(Math.min(100, Math.max(0, score)));
     });
+    public readonly hasPreviewImage = computed(() => Boolean(this.imageUrl()?.trim()));
     private favoriteProductId: string | null = null;
 
     public constructor() {
@@ -95,10 +96,6 @@ export class ProductCardComponent {
 
     public handleAdd(): void {
         this.addToMeal.emit();
-    }
-
-    public hasPreviewImage(): boolean {
-        return Boolean(this.imageUrl()?.trim());
     }
 
     public handlePreview(): void {

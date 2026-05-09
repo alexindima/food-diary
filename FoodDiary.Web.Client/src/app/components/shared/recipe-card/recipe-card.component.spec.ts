@@ -94,7 +94,7 @@ describe('RecipeCardComponent', () => {
 
     it('should calculate total time as sum of prepTime and cookTime', () => {
         fixture.detectChanges();
-        expect(component.getTotalTime()).toBe(45);
+        expect(component.totalTime()).toBe(45);
     });
 
     it('should return null for total time when both prepTime and cookTime are 0', () => {
@@ -104,7 +104,7 @@ describe('RecipeCardComponent', () => {
             cookTime: 0,
         });
         fixture.detectChanges();
-        expect(component.getTotalTime()).toBeNull();
+        expect(component.totalTime()).toBeNull();
     });
 
     it('should return null for total time when prepTime and cookTime are null', () => {
@@ -114,7 +114,7 @@ describe('RecipeCardComponent', () => {
             cookTime: null,
         });
         fixture.detectChanges();
-        expect(component.getTotalTime()).toBeNull();
+        expect(component.totalTime()).toBeNull();
     });
 
     it('should handle only prepTime set', () => {
@@ -124,12 +124,12 @@ describe('RecipeCardComponent', () => {
             cookTime: null,
         });
         fixture.detectChanges();
-        expect(component.getTotalTime()).toBe(20);
+        expect(component.totalTime()).toBe(20);
     });
 
     it('should count ingredients across all steps', () => {
         fixture.detectChanges();
-        expect(component.getIngredientCount()).toBe(5);
+        expect(component.ingredientCount()).toBe(5);
     });
 
     it('should return 0 ingredients when steps is null', () => {
@@ -138,7 +138,7 @@ describe('RecipeCardComponent', () => {
             steps: null,
         });
         fixture.detectChanges();
-        expect(component.getIngredientCount()).toBe(0);
+        expect(component.ingredientCount()).toBe(0);
     });
 
     it('should return 0 ingredients when steps is empty', () => {
@@ -147,7 +147,7 @@ describe('RecipeCardComponent', () => {
             steps: [],
         });
         fixture.detectChanges();
-        expect(component.getIngredientCount()).toBe(0);
+        expect(component.ingredientCount()).toBe(0);
     });
 
     it('should handle steps with null ingredients', () => {
@@ -156,7 +156,7 @@ describe('RecipeCardComponent', () => {
             steps: [{ ingredients: null }, { ingredients: [{}, {}] }],
         });
         fixture.detectChanges();
-        expect(component.getIngredientCount()).toBe(2);
+        expect(component.ingredientCount()).toBe(2);
     });
 
     it('should display calories', () => {
