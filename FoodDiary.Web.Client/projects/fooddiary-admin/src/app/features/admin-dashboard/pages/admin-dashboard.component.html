@@ -50,58 +50,46 @@
                     </div>
                 </div>
 
-                @if (!fastingTelemetry()) {
-                    <p>Fasting telemetry is unavailable.</p>
-                } @else {
+                @if (fastingTelemetryView(); as telemetry) {
                     <div class="admin-dashboard__telemetry-grid fd-grid fd-gap-md">
                         <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
                             <div class="admin-dashboard__label fd-ui-body-xs">Started sessions</div>
-                            <div class="admin-dashboard__value fd-ui-metric-md">
-                                {{ formatMetric(fastingTelemetry()?.startedSessions) }}
-                            </div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.startedSessions }}</div>
                         </div>
                         <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
                             <div class="admin-dashboard__label fd-ui-body-xs">Completed sessions</div>
-                            <div class="admin-dashboard__value fd-ui-metric-md">
-                                {{ formatMetric(fastingTelemetry()?.completedSessions) }}
-                            </div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.completedSessions }}</div>
                         </div>
                         <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
                             <div class="admin-dashboard__label fd-ui-body-xs">Saved check-ins</div>
-                            <div class="admin-dashboard__value fd-ui-metric-md">{{ formatMetric(fastingTelemetry()?.savedCheckIns) }}</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.savedCheckIns }}</div>
                         </div>
                         <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
                             <div class="admin-dashboard__label fd-ui-body-xs">Completion rate</div>
-                            <div class="admin-dashboard__value fd-ui-metric-md">
-                                {{ formatMetric(fastingTelemetry()?.completionRatePercent) }}%
-                            </div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.completionRatePercent }}%</div>
                         </div>
                         <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
                             <div class="admin-dashboard__label fd-ui-body-xs">Check-in rate</div>
-                            <div class="admin-dashboard__value fd-ui-metric-md">
-                                {{ formatMetric(fastingTelemetry()?.checkInRatePercent) }}%
-                            </div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.checkInRatePercent }}%</div>
                         </div>
                         <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
                             <div class="admin-dashboard__label fd-ui-body-xs">Avg completed duration</div>
-                            <div class="admin-dashboard__value fd-ui-metric-md">
-                                {{ formatMetric(fastingTelemetry()?.averageCompletedDurationHours) }}h
-                            </div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.averageCompletedDurationHours }}h</div>
                         </div>
                     </div>
 
                     <div class="admin-dashboard__meta-list fd-grid fd-gap-xxs">
-                        <div>Window: last {{ fastingTelemetry()?.windowHours ?? 24 }} hours</div>
-                        <div>Last check-in: {{ formatRelativeTime(fastingTelemetry()?.lastCheckInAtUtc ?? null) ?? '-' }}</div>
+                        <div>Window: last {{ telemetry.windowHours }} hours</div>
+                        <div>Last check-in: {{ telemetry.lastCheckInRelativeTime }}</div>
                     </div>
 
                     <div class="admin-dashboard__preset-list fd-grid fd-gap-sm">
                         <div class="admin-dashboard__section-subtitle fd-ui-body-xs">Top reminder presets</div>
 
-                        @if (fastingTelemetry()!.topPresets.length === 0) {
+                        @if (telemetry.topPresets.length === 0) {
                             <p>No reminder preset data yet.</p>
                         } @else {
-                            @for (preset of fastingTelemetry()!.topPresets; track preset.presetId) {
+                            @for (preset of telemetry.topPresets; track preset.presetId) {
                                 <div class="admin-dashboard__preset-item fd-grid fd-gap-xxs">
                                     <div class="admin-dashboard__preset-header fd-row fd-justify-between fd-gap-md">
                                         <strong
@@ -115,13 +103,15 @@
                                         {{ preset.completedSessions }}
                                     </div>
                                     <div class="admin-dashboard__preset-meta">
-                                        Check-in rate {{ formatMetric(preset.checkInRatePercent) }}%, completion rate
-                                        {{ formatMetric(preset.completionRatePercent) }}%
+                                        Check-in rate {{ preset.checkInRatePercentText }}%, completion rate
+                                        {{ preset.completionRatePercentText }}%
                                     </div>
                                 </div>
                             }
                         }
                     </div>
+                } @else {
+                    <p>Fasting telemetry is unavailable.</p>
                 }
             </div>
         </fd-ui-card>
