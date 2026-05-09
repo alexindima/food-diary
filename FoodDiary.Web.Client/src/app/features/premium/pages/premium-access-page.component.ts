@@ -72,6 +72,44 @@ export class PremiumAccessPageComponent {
 
         return this.checkoutAvailable() ? 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_UNAVAILABLE_HINT';
     });
+    public readonly overviewBadges = computed<PremiumOverviewBadgesViewModel>(() => {
+        const overview = this.overview();
+
+        return {
+            planLabelKey: this.isPremium() && overview?.plan ? this.getPlanLabelKey(overview.plan) : null,
+            statusLabelKey: this.getStatusLabelKey(overview?.subscriptionStatus ?? null),
+        };
+    });
+    public readonly planCards = computed<PremiumPlanCardViewModel[]>(() => {
+        const providers = this.availableProviders().map(provider => ({
+            provider,
+            label: this.getProviderLabel(provider),
+        }));
+        const loadingPlan = this.checkoutLoadingPlan();
+
+        return [
+            {
+                plan: 'monthly' as const,
+                titleKey: 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE',
+                descriptionKey: 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION',
+                actionKey: 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION',
+                isFeatured: false,
+                kickerKey: null,
+                isLoading: loadingPlan === 'monthly',
+                providerOptions: providers,
+            },
+            {
+                plan: 'yearly' as const,
+                titleKey: 'PREMIUM_PAGE.PLANS.YEARLY.TITLE',
+                descriptionKey: 'PREMIUM_PAGE.PLANS.YEARLY.DESCRIPTION',
+                actionKey: 'PREMIUM_PAGE.PLANS.YEARLY.ACTION',
+                isFeatured: true,
+                kickerKey: 'PREMIUM_PAGE.PLANS.YEARLY.KICKER',
+                isLoading: loadingPlan === 'yearly',
+                providerOptions: providers,
+            },
+        ];
+    });
 
     public constructor() {
         void this.initializePageAsync();
@@ -129,11 +167,11 @@ export class PremiumAccessPageComponent {
         await this.loadOverviewAsync();
     }
 
-    public getPlanLabelKey(plan: BillingPlan | null): string {
+    private getPlanLabelKey(plan: BillingPlan | null): string {
         return plan === 'yearly' ? 'PREMIUM_PAGE.PLANS.YEARLY.TITLE' : 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE';
     }
 
-    public getStatusLabelKey(status: string | null): string {
+    private getStatusLabelKey(status: string | null): string {
         switch (status) {
             case 'active':
                 return 'PREMIUM_PAGE.STATUS.ACTIVE';
@@ -152,11 +190,7 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    public isPlanLoading(plan: BillingPlan): boolean {
-        return this.checkoutLoadingPlan() === plan;
-    }
-
-    public getProviderLabel(provider: BillingProvider): string {
+    private getProviderLabel(provider: BillingProvider): string {
         switch (provider.toLowerCase()) {
             case 'yookassa':
                 return 'YooKassa';
@@ -271,4 +305,25 @@ export class PremiumAccessPageComponent {
 
         return this.translateService.instant('PREMIUM_PAGE.ERROR_GENERIC');
     }
+}
+
+interface PremiumOverviewBadgesViewModel {
+    planLabelKey: string | null;
+    statusLabelKey: string;
+}
+
+interface PremiumPlanCardViewModel {
+    plan: BillingPlan;
+    titleKey: string;
+    descriptionKey: string;
+    actionKey: string;
+    isFeatured: boolean;
+    kickerKey: string | null;
+    isLoading: boolean;
+    providerOptions: PremiumProviderOptionViewModel[];
+}
+
+interface PremiumProviderOptionViewModel {
+    provider: BillingProvider;
+    label: string;
 }

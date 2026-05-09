@@ -63,14 +63,16 @@
             </p>
         } @else if (overview(); as overview) {
             <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
-                @if (isPremium() && overview.plan) {
-                    <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
-                        {{ getPlanLabelKey(overview.plan) | translate }}
+                @if (overviewBadges(); as badges) {
+                    @if (badges.planLabelKey) {
+                        <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
+                            {{ badges.planLabelKey | translate }}
+                        </span>
+                    }
+                    <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
+                        {{ badges.statusLabelKey | translate }}
                     </span>
                 }
-                <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
-                    {{ getStatusLabelKey(overview.subscriptionStatus) | translate }}
-                </span>
             </div>
 
             @if (overview.currentPeriodEndUtc) {
@@ -96,76 +98,49 @@
             </div>
 
             <div class="premium-access-page__plans fd-grid fd-gap-card-content">
-                <article class="premium-access-page__plan fd-grid fd-gap-card-profile">
-                    <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
-                        <h3 class="premium-access-page__plan-title fd-ui-card-title">
-                            {{ 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE' | translate }}
-                        </h3>
-                        <p class="premium-access-page__text fd-ui-body">{{ 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION' | translate }}</p>
-                    </div>
-                    @if (showProviderChoices()) {
-                        <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
-                            @for (provider of availableProviders(); track provider) {
-                                <fd-ui-button
-                                    variant="secondary"
-                                    fill="outline"
-                                    fullWidth
-                                    [loading]="isPlanLoading('monthly')"
-                                    [disabled]="checkoutLoadingPlan() !== null"
-                                    (click)="startCheckoutAsync('monthly', provider)"
-                                >
-                                    {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: getProviderLabel(provider) } }}
-                                </fd-ui-button>
+                @for (card of planCards(); track card.plan) {
+                    <article
+                        class="premium-access-page__plan fd-grid fd-gap-card-profile"
+                        [class.premium-access-page__plan--featured]="card.isFeatured"
+                    >
+                        <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
+                            @if (card.kickerKey) {
+                                <span class="premium-access-page__plan-kicker fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                                    {{ card.kickerKey | translate }}
+                                </span>
                             }
+                            <h3 class="premium-access-page__plan-title fd-ui-card-title">
+                                {{ card.titleKey | translate }}
+                            </h3>
+                            <p class="premium-access-page__text fd-ui-body">{{ card.descriptionKey | translate }}</p>
                         </div>
-                    } @else {
-                        <fd-ui-button
-                            fullWidth
-                            [loading]="isPlanLoading('monthly')"
-                            [disabled]="checkoutLoadingPlan() !== null"
-                            (click)="startCheckoutAsync('monthly')"
-                        >
-                            {{ 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION' | translate }}
-                        </fd-ui-button>
-                    }
-                </article>
-
-                <article class="premium-access-page__plan premium-access-page__plan--featured fd-grid fd-gap-card-profile">
-                    <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
-                        <span class="premium-access-page__plan-kicker fd-ui-pill fd-ui-pill--primary fd-ui-overline">{{
-                            'PREMIUM_PAGE.PLANS.YEARLY.KICKER' | translate
-                        }}</span>
-                        <h3 class="premium-access-page__plan-title fd-ui-card-title">
-                            {{ 'PREMIUM_PAGE.PLANS.YEARLY.TITLE' | translate }}
-                        </h3>
-                        <p class="premium-access-page__text fd-ui-body">{{ 'PREMIUM_PAGE.PLANS.YEARLY.DESCRIPTION' | translate }}</p>
-                    </div>
-                    @if (showProviderChoices()) {
-                        <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
-                            @for (provider of availableProviders(); track provider) {
-                                <fd-ui-button
-                                    variant="secondary"
-                                    fill="outline"
-                                    fullWidth
-                                    [loading]="isPlanLoading('yearly')"
-                                    [disabled]="checkoutLoadingPlan() !== null"
-                                    (click)="startCheckoutAsync('yearly', provider)"
-                                >
-                                    {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: getProviderLabel(provider) } }}
-                                </fd-ui-button>
-                            }
-                        </div>
-                    } @else {
-                        <fd-ui-button
-                            fullWidth
-                            [loading]="isPlanLoading('yearly')"
-                            [disabled]="checkoutLoadingPlan() !== null"
-                            (click)="startCheckoutAsync('yearly')"
-                        >
-                            {{ 'PREMIUM_PAGE.PLANS.YEARLY.ACTION' | translate }}
-                        </fd-ui-button>
-                    }
-                </article>
+                        @if (showProviderChoices()) {
+                            <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
+                                @for (provider of card.providerOptions; track provider.provider) {
+                                    <fd-ui-button
+                                        variant="secondary"
+                                        fill="outline"
+                                        fullWidth
+                                        [loading]="card.isLoading"
+                                        [disabled]="checkoutLoadingPlan() !== null"
+                                        (click)="startCheckoutAsync(card.plan, provider.provider)"
+                                    >
+                                        {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: provider.label } }}
+                                    </fd-ui-button>
+                                }
+                            </div>
+                        } @else {
+                            <fd-ui-button
+                                fullWidth
+                                [loading]="card.isLoading"
+                                [disabled]="checkoutLoadingPlan() !== null"
+                                (click)="startCheckoutAsync(card.plan)"
+                            >
+                                {{ card.actionKey | translate }}
+                            </fd-ui-button>
+                        }
+                    </article>
+                }
             </div>
         </fd-ui-card>
     }
