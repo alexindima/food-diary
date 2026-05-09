@@ -5,85 +5,25 @@
         @if (isLoading()) {
             <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
         } @else {
-            @if (trends(); as t) {
-                <div class="check-in__trends fd-grid fd-gap-xs">
-                    <fd-ui-accent-surface
-                        class="check-in__trend"
-                        accentSide="left"
-                        [accentColor]="getTrendColor(t.calorieChange)"
-                        [tinted]="true"
-                    >
-                        <div class="check-in__trend-row fd-row fd-gap-xs">
-                            <fd-ui-icon [style.color]="getTrendColor(t.calorieChange)" [name]="getTrendIcon(t.calorieChange)"></fd-ui-icon>
-                            <div class="check-in__trend-info fd-stack">
-                                <span class="check-in__trend-label fd-ui-helper-text">{{ 'WEEKLY_CHECK_IN.CALORIES' | translate }}</span>
-                                <strong class="check-in__trend-value fd-ui-action-text"
-                                    >{{ t.calorieChange > 0 ? '+' : '' }}{{ t.calorieChange | number: '1.0-0' }}
-                                    {{ 'GENERAL.UNITS.KCAL' | translate }}</strong
-                                >
-                            </div>
-                        </div>
-                    </fd-ui-accent-surface>
-                    <fd-ui-accent-surface
-                        class="check-in__trend"
-                        accentSide="left"
-                        [accentColor]="getTrendColor(t.proteinChange)"
-                        [tinted]="true"
-                    >
-                        <div class="check-in__trend-row fd-row fd-gap-xs">
-                            <fd-ui-icon [style.color]="getTrendColor(t.proteinChange)" [name]="getTrendIcon(t.proteinChange)"></fd-ui-icon>
-                            <div class="check-in__trend-info fd-stack">
-                                <span class="check-in__trend-label fd-ui-helper-text">{{ 'WEEKLY_CHECK_IN.PROTEIN' | translate }}</span>
-                                <strong class="check-in__trend-value fd-ui-action-text"
-                                    >{{ t.proteinChange > 0 ? '+' : '' }}{{ t.proteinChange | number: '1.1-1'
-                                    }}{{ 'GENERAL.UNITS.G' | translate }}</strong
-                                >
-                            </div>
-                        </div>
-                    </fd-ui-accent-surface>
-                    @if (t.weightChange !== null) {
-                        <fd-ui-accent-surface
-                            class="check-in__trend"
-                            accentSide="left"
-                            [accentColor]="getTrendColor(t.weightChange, true)"
-                            [tinted]="true"
-                        >
-                            <div class="check-in__trend-row fd-row fd-gap-xs">
-                                <fd-ui-icon
-                                    [style.color]="getTrendColor(t.weightChange, true)"
-                                    [name]="getTrendIcon(t.weightChange)"
-                                ></fd-ui-icon>
-                                <div class="check-in__trend-info fd-stack">
-                                    <span class="check-in__trend-label fd-ui-helper-text">{{ 'WEEKLY_CHECK_IN.WEIGHT' | translate }}</span>
-                                    <strong class="check-in__trend-value fd-ui-action-text"
-                                        >{{ t.weightChange > 0 ? '+' : '' }}{{ t.weightChange | number: '1.1-1' }}
-                                        {{ 'GENERAL.UNITS.KG' | translate }}</strong
-                                    >
+            @if (trendCards(); as trends) {
+                @if (trends.length > 0) {
+                    <div class="check-in__trends fd-grid fd-gap-xs">
+                        @for (trend of trends; track trend.key) {
+                            <fd-ui-accent-surface class="check-in__trend" accentSide="left" [accentColor]="trend.color" [tinted]="true">
+                                <div class="check-in__trend-row fd-row fd-gap-xs">
+                                    <fd-ui-icon [style.color]="trend.color" [name]="trend.icon"></fd-ui-icon>
+                                    <div class="check-in__trend-info fd-stack">
+                                        <span class="check-in__trend-label fd-ui-helper-text">{{ trend.labelKey | translate }}</span>
+                                        <strong class="check-in__trend-value fd-ui-action-text"
+                                            >{{ trend.value > 0 ? '+' : '' }}{{ trend.value | number: trend.numberFormat
+                                            }}{{ trend.unitSeparator }}{{ trend.unitKey | translate }}</strong
+                                        >
+                                    </div>
                                 </div>
-                            </div>
-                        </fd-ui-accent-surface>
-                    }
-                    <fd-ui-accent-surface
-                        class="check-in__trend"
-                        accentSide="left"
-                        [accentColor]="getTrendColor(t.hydrationChange)"
-                        [tinted]="true"
-                    >
-                        <div class="check-in__trend-row fd-row fd-gap-xs">
-                            <fd-ui-icon
-                                [style.color]="getTrendColor(t.hydrationChange)"
-                                [name]="getTrendIcon(t.hydrationChange)"
-                            ></fd-ui-icon>
-                            <div class="check-in__trend-info fd-stack">
-                                <span class="check-in__trend-label fd-ui-helper-text">{{ 'WEEKLY_CHECK_IN.HYDRATION' | translate }}</span>
-                                <strong class="check-in__trend-value fd-ui-action-text"
-                                    >{{ t.hydrationChange > 0 ? '+' : '' }}{{ t.hydrationChange }}
-                                    {{ 'GENERAL.UNITS.ML' | translate }}</strong
-                                >
-                            </div>
-                        </div>
-                    </fd-ui-accent-surface>
-                </div>
+                            </fd-ui-accent-surface>
+                        }
+                    </div>
+                }
             }
 
             <div class="check-in__grid fd-grid fd-gap-md">

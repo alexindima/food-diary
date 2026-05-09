@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
@@ -34,14 +34,68 @@ export class WeeklyCheckInPageComponent {
     public readonly isLoading = this.facade.isLoading;
     public readonly thisWeek = this.facade.thisWeek;
     public readonly lastWeek = this.facade.lastWeek;
-    public readonly trends = this.facade.trends;
     public readonly suggestions = this.facade.suggestions;
-    public readonly getTrendIcon = this.facade.getTrendIcon;
-    public readonly getTrendColor = this.facade.getTrendColor;
+    public readonly trendCards = computed<WeeklyCheckInTrendCardViewModel[]>(() => {
+        const trends = this.facade.trends();
+
+        if (!trends) {
+            return [];
+        }
+
+        const cards: WeeklyCheckInTrendCardViewModel[] = [
+            this.createTrendCard('calories', 'WEEKLY_CHECK_IN.CALORIES', trends.calorieChange, 'GENERAL.UNITS.KCAL', '1.0-0'),
+            this.createTrendCard('protein', 'WEEKLY_CHECK_IN.PROTEIN', trends.proteinChange, 'GENERAL.UNITS.G', '1.1-1', false, ''),
+            this.createTrendCard('hydration', 'WEEKLY_CHECK_IN.HYDRATION', trends.hydrationChange, 'GENERAL.UNITS.ML', '1.0-0'),
+        ];
+
+        if (trends.weightChange !== null) {
+            cards.splice(
+                2,
+                0,
+                this.createTrendCard('weight', 'WEEKLY_CHECK_IN.WEIGHT', trends.weightChange, 'GENERAL.UNITS.KG', '1.1-1', true),
+            );
+        }
+
+        return cards;
+    });
 
     protected readonly Math = Math;
 
     public constructor() {
         this.facade.initialize();
     }
+
+    private createTrendCard(
+        key: WeeklyCheckInTrendCardKey,
+        labelKey: string,
+        value: number,
+        unitKey: string,
+        numberFormat: string,
+        invertPositive = false,
+        unitSeparator = ' ',
+    ): WeeklyCheckInTrendCardViewModel {
+        return {
+            key,
+            labelKey,
+            value,
+            unitKey,
+            unitSeparator,
+            numberFormat,
+            color: this.facade.getTrendColor(value, invertPositive),
+            icon: this.facade.getTrendIcon(value),
+        };
+    }
+}
+
+type WeeklyCheckInTrendCardKey = 'calories' | 'protein' | 'weight' | 'hydration';
+
+interface WeeklyCheckInTrendCardViewModel {
+    key: WeeklyCheckInTrendCardKey;
+    labelKey: string;
+    value: number;
+    unitKey: string;
+    unitSeparator: string;
+    numberFormat: string;
+    color: string;
+    icon: string;
 }
