@@ -6,87 +6,82 @@
     [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
 >
     <div class="consumption-items fd-stack fd-gap-md">
-        @if (!hasVisibleManualItems() && !hasExternalItems()) {
+        @if (manualItemRows().length === 0 && !hasExternalItems()) {
             <p class="consumption-manage__items-empty fd-ui-body-sm">
                 {{ 'CONSUMPTION_MANAGE.ITEMS_EMPTY' | translate }}
             </p>
         }
 
-        @for (item of formArray().controls; track $index; let i = $index; let first = $first) {
-            @if (showEmptyRows() || hasManualItem(i)) {
-                @let totals = getManualItemTotals(i);
-                <div class="consumption-manage__ai-summary consumption-manage__manual-summary fd-stack fd-gap-md" [formGroup]="item">
-                    <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
-                        <div class="consumption-manage__ai-summary-image fd-center">
-                            @if (getManualItemImageUrl(i)) {
-                                <img [src]="getManualItemImageUrl(i)!" alt="" loading="lazy" />
-                            } @else {
-                                <fd-ui-icon [name]="getItemSourceIcon(i)" size="md" />
-                            }
+        @for (item of manualItemRows(); track item.index) {
+            <div class="consumption-manage__ai-summary consumption-manage__manual-summary fd-stack fd-gap-md" [formGroup]="item.group">
+                <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
+                    <div class="consumption-manage__ai-summary-image fd-center">
+                        @if (item.imageUrl) {
+                            <img [src]="item.imageUrl" alt="" loading="lazy" />
+                        } @else {
+                            <fd-ui-icon [name]="item.icon" size="md" />
+                        }
+                    </div>
+                    <div class="consumption-manage__ai-summary-heading fd-stack fd-gap-xxs">
+                        <div class="consumption-manage__ai-summary-title">
+                            {{ 'CONSUMPTION_MANAGE.ITEMS_MANUAL_SUMMARY' | translate }}
                         </div>
-                        <div class="consumption-manage__ai-summary-heading fd-stack fd-gap-xxs">
-                            <div class="consumption-manage__ai-summary-title">
-                                {{ 'CONSUMPTION_MANAGE.ITEMS_MANUAL_SUMMARY' | translate }}
+                        <div class="consumption-manage__ai-summary-stats fd-stack fd-gap-xxs">
+                            <div class="consumption-manage__ai-summary-calories fd-row fd-gap-xxs fd-align-baseline">
+                                <span class="consumption-manage__ai-summary-label"> {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}: </span>
+                                <span>{{ item.caloriesLabel }}</span>
                             </div>
-                            <div class="consumption-manage__ai-summary-stats fd-stack fd-gap-xxs">
-                                <div class="consumption-manage__ai-summary-calories fd-row fd-gap-xxs fd-align-baseline">
-                                    <span class="consumption-manage__ai-summary-label">
-                                        {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}:
-                                    </span>
-                                    <span>{{ formatManualMacro(totals.calories, 'GENERAL.UNITS.KCAL') }}</span>
-                                </div>
-                                <div class="consumption-manage__ai-summary-nutrients fd-row fd-wrap fd-gap-sm">
-                                    <span>
-                                        {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}:
-                                        {{ formatManualMacro(totals.proteins, 'GENERAL.UNITS.G') }}
-                                    </span>
-                                    <span>
-                                        {{ 'GENERAL.NUTRIENTS.FAT' | translate }}:
-                                        {{ formatManualMacro(totals.fats, 'GENERAL.UNITS.G') }}
-                                    </span>
-                                    <span>
-                                        {{ 'GENERAL.NUTRIENTS.CARB' | translate }}:
-                                        {{ formatManualMacro(totals.carbs, 'GENERAL.UNITS.G') }}
-                                    </span>
-                                </div>
+                            <div class="consumption-manage__ai-summary-nutrients fd-row fd-wrap fd-gap-sm">
+                                <span>
+                                    {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}:
+                                    {{ item.proteinsLabel }}
+                                </span>
+                                <span>
+                                    {{ 'GENERAL.NUTRIENTS.FAT' | translate }}:
+                                    {{ item.fatsLabel }}
+                                </span>
+                                <span>
+                                    {{ 'GENERAL.NUTRIENTS.CARB' | translate }}:
+                                    {{ item.carbsLabel }}
+                                </span>
                             </div>
-                        </div>
-                        <div class="consumption-manage__ai-summary-actions fd-row fd-gap-xs">
-                            <fd-ui-button
-                                class="consumption-manage__ai-summary-action"
-                                variant="secondary"
-                                fill="text"
-                                icon="edit"
-                                [fdUiHint]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
-                                [ariaLabel]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
-                                (click)="onEditItem(i)"
-                            />
-                            <fd-ui-button
-                                class="consumption-manage__ai-summary-action consumption-manage__ai-summary-action--danger"
-                                variant="danger"
-                                fill="text"
-                                icon="delete"
-                                [fdUiHint]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                                [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                                [disabled]="first && showEmptyRows()"
-                                (click)="onRemoveItem(i)"
-                            />
                         </div>
                     </div>
-                    <div class="consumption-manage__ai-summary-body fd-row fd-gap-md">
-                        <div class="consumption-manage__ai-summary-list fd-stack fd-gap-xs">
-                            <div class="consumption-manage__ai-summary-row fd-row fd-gap-md fd-justify-between">
-                                <span class="consumption-manage__ai-summary-name">
-                                    {{ getItemSourceName(i) }}
-                                </span>
-                                <span class="consumption-manage__ai-summary-amount">
-                                    {{ formatManualAmount(i) }}
-                                </span>
-                            </div>
+                    <div class="consumption-manage__ai-summary-actions fd-row fd-gap-xs">
+                        <fd-ui-button
+                            class="consumption-manage__ai-summary-action"
+                            variant="secondary"
+                            fill="text"
+                            icon="edit"
+                            [fdUiHint]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
+                            [ariaLabel]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
+                            (click)="onEditItem(item.index)"
+                        />
+                        <fd-ui-button
+                            class="consumption-manage__ai-summary-action consumption-manage__ai-summary-action--danger"
+                            variant="danger"
+                            fill="text"
+                            icon="delete"
+                            [fdUiHint]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
+                            [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
+                            [disabled]="item.isFirst && showEmptyRows()"
+                            (click)="onRemoveItem(item.index)"
+                        />
+                    </div>
+                </div>
+                <div class="consumption-manage__ai-summary-body fd-row fd-gap-md">
+                    <div class="consumption-manage__ai-summary-list fd-stack fd-gap-xs">
+                        <div class="consumption-manage__ai-summary-row fd-row fd-gap-md fd-justify-between">
+                            <span class="consumption-manage__ai-summary-name">
+                                {{ item.sourceName }}
+                            </span>
+                            <span class="consumption-manage__ai-summary-amount">
+                                {{ item.amountLabel }}
+                            </span>
                         </div>
                     </div>
                 </div>
-            }
+            </div>
         }
 
         <ng-content />

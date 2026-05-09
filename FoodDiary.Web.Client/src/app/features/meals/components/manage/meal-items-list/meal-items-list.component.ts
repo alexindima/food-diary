@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -29,6 +30,7 @@ import { type ConsumptionItemFormData, type NutritionTotals } from '../base-meal
 export class MealItemsListComponent {
     private readonly translateService = inject(TranslateService);
     private readonly recipeWeight = inject(RecipeServingWeightService);
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly formArray = input.required<FormArray<FormGroup<ConsumptionItemFormData>>>();
     public readonly hasExternalItems = input<boolean>(false);
@@ -41,6 +43,39 @@ export class MealItemsListComponent {
     public readonly editItem = output<number>();
     public readonly removeItemEvent = output<number>();
     public readonly openItemSelect = output<number>();
+    public readonly manualItemRows = computed<ManualItemRowViewModel[]>(() => {
+        this.renderVersion();
+        this.activeLang();
+
+        return this.formArray()
+            .controls.map((group, index) => ({ group, index }))
+            .filter(({ index }) => this.showEmptyRows() || this.hasManualItem(index))
+            .map(({ group, index }) => {
+                const totals = this.getManualItemTotals(index);
+
+                return {
+                    index,
+                    group,
+                    isFirst: index === 0,
+                    imageUrl: this.getManualItemImageUrl(index),
+                    icon: this.getItemSourceIcon(index),
+                    sourceName: this.getItemSourceName(index),
+                    amountLabel: this.formatManualAmount(index),
+                    caloriesLabel: this.formatManualMacro(totals.calories, 'GENERAL.UNITS.KCAL'),
+                    proteinsLabel: this.formatManualMacro(totals.proteins, 'GENERAL.UNITS.G'),
+                    fatsLabel: this.formatManualMacro(totals.fats, 'GENERAL.UNITS.G'),
+                    carbsLabel: this.formatManualMacro(totals.carbs, 'GENERAL.UNITS.G'),
+                };
+            });
+    });
+
+    private readonly activeLang = signal(this.translateService.currentLang);
+
+    public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
+            this.activeLang.set(event.lang);
+        });
+    }
 
     public isProductItem(index: number): boolean {
         return this.formArray().at(index).controls.sourceType.value === ConsumptionSourceType.Product;
@@ -97,14 +132,14 @@ export class MealItemsListComponent {
         return this.isItemSourceInvalid(index) ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
     }
 
-    public getItemSourceName(index: number): string {
+    private getItemSourceName(index: number): string {
         if (this.isRecipeItem(index)) {
             return this.getRecipeName(index);
         }
         return this.getProductName(index);
     }
 
-    public getItemSourceIcon(index: number): string {
+    private getItemSourceIcon(index: number): string {
         if (this.isRecipeItem(index) && this.formArray().at(index).controls.recipe.value) {
             return 'menu_book';
         }
@@ -123,7 +158,7 @@ export class MealItemsListComponent {
         return this.resolveControlError(group?.controls.amount ?? null);
     }
 
-    public getManualItemTotals(index: number): NutritionTotals {
+    private getManualItemTotals(index: number): NutritionTotals {
         const group = this.formArray().at(index);
         const amount = group.controls.amount.value || 0;
 
@@ -160,7 +195,7 @@ export class MealItemsListComponent {
         };
     }
 
-    public formatManualMacro(value: number, unitKey: string): string {
+    private formatManualMacro(value: number, unitKey: string): string {
         const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
@@ -171,13 +206,13 @@ export class MealItemsListComponent {
         return `${formatter.format(value)} ${unitLabel}`.trim();
     }
 
-    public formatManualAmount(index: number): string {
+    private formatManualAmount(index: number): string {
         const amount = this.formArray().at(index).controls.amount.value || 0;
         const unitLabel = this.getAmountUnitLabel(index);
         return unitLabel ? `${this.formatNumber(amount)} ${unitLabel}`.trim() : this.formatNumber(amount);
     }
 
-    public getManualItemImageUrl(index: number): string | null {
+    private getManualItemImageUrl(index: number): string | null {
         if (this.isRecipeItem(index)) {
             return this.formArray().at(index).controls.recipe.value?.imageUrl ?? null;
         }
@@ -187,11 +222,6 @@ export class MealItemsListComponent {
 
     public onEditItem(index: number): void {
         this.editItem.emit(index);
-    }
-
-    public hasVisibleManualItems(): boolean {
-        this.renderVersion();
-        return this.formArray().controls.some((_, index) => this.showEmptyRows() || this.hasManualItem(index));
     }
 
     public hasManualItem(index: number): boolean {
@@ -241,4 +271,18 @@ export class MealItemsListComponent {
     private getEmptyTotals(): NutritionTotals {
         return { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
     }
+}
+
+interface ManualItemRowViewModel {
+    index: number;
+    group: FormGroup<ConsumptionItemFormData>;
+    isFirst: boolean;
+    imageUrl: string | null;
+    icon: string;
+    sourceName: string;
+    amountLabel: string;
+    caloriesLabel: string;
+    proteinsLabel: string;
+    fatsLabel: string;
+    carbsLabel: string;
 }
