@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { type ChartConfiguration } from 'chart.js';
@@ -93,12 +93,18 @@ export class WeightHistoryPageComponent {
         { value: 'year', labelKey: 'WEIGHT_HISTORY.RANGE_YEAR' },
         { value: 'custom', labelKey: 'WEIGHT_HISTORY.RANGE_CUSTOM' },
     ];
-    public readonly bmiSegments: BmiSegment[] = [
+    private readonly bmiSegmentDefinitions: BmiSegment[] = [
         { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.UNDER', from: 0, to: 18.5, class: 'weight-history-page__bmi-segment--under' },
         { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.NORMAL', from: 18.5, to: 25, class: 'weight-history-page__bmi-segment--normal' },
         { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.OVER', from: 25, to: 30, class: 'weight-history-page__bmi-segment--over' },
         { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.OBESE', from: 30, to: this.bmiScaleMax, class: 'weight-history-page__bmi-segment--obese' },
     ];
+    public readonly bmiSegments = computed<BmiSegmentViewModel[]>(() =>
+        this.bmiSegmentDefinitions.map(segment => ({
+            ...segment,
+            width: `${((segment.to - segment.from) / this.bmiScaleMax) * 100}%`,
+        })),
+    );
 
     public constructor() {
         this.facade.initialize();
@@ -131,11 +137,6 @@ export class WeightHistoryPageComponent {
     public changeRange(value: string): void {
         this.facade.changeRange(value);
     }
-
-    public getBmiSegmentWidth(segment: BmiSegment): string {
-        const width = ((segment.to - segment.from) / this.bmiScaleMax) * 100;
-        return `${width}%`;
-    }
 }
 
 interface BmiSegment {
@@ -143,4 +144,8 @@ interface BmiSegment {
     from: number;
     to: number;
     class: string;
+}
+
+interface BmiSegmentViewModel extends BmiSegment {
+    width: string;
 }

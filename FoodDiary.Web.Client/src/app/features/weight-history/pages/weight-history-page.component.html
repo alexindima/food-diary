@@ -61,11 +61,11 @@
                             </p>
                             <div class="weight-history-page__bmi-scale">
                                 <div class="weight-history-page__bmi-segments">
-                                    @for (segment of bmiSegments; track segment.labelKey) {
+                                    @for (segment of bmiSegments(); track segment.labelKey) {
                                         <div
                                             class="weight-history-page__bmi-segment"
                                             [ngClass]="segment.class"
-                                            [style.width]="getBmiSegmentWidth(segment)"
+                                            [style.width]="segment.width"
                                         >
                                             <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
                                         </div>
