@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -12,6 +12,11 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { ProductListBaseComponent } from '../components/list/product-list-base.component';
 import { type Product } from '../models/product.data';
 import { ProductAddDialogComponent } from './product-add-dialog.component';
+
+interface ProductSelectItemViewModel {
+    product: Product;
+    imageUrl: string | undefined;
+}
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -33,6 +38,12 @@ import { ProductAddDialogComponent } from './product-add-dialog.component';
 export class ProductListDialogComponent extends ProductListBaseComponent {
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
+    protected readonly productItems = computed<ProductSelectItemViewModel[]>(() =>
+        this.productData.items().map(product => ({
+            product,
+            imageUrl: this.resolveImage(product),
+        })),
+    );
 
     private readonly dialogRef = inject(FdUiDialogRef<ProductListDialogComponent, Product | null>, {
         optional: true,

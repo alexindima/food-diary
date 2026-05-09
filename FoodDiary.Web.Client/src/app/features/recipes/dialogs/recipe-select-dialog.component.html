@@ -38,23 +38,27 @@
     } @else {
         @if (recipeData.items().length > 0) {
             <div class="recipe-select__list fd-stack fd-gap-sm">
-                @for (recipe of recipeData.items(); track recipe.id) {
-                    <button type="button" class="recipe-select__item fd-grid fd-gap-sm fd-align-center" (click)="onRecipeClick(recipe)">
+                @for (item of recipeItems(); track item.recipe.id) {
+                    <button
+                        type="button"
+                        class="recipe-select__item fd-grid fd-gap-sm fd-align-center"
+                        (click)="onRecipeClick(item.recipe)"
+                    >
                         <div class="recipe-select__thumb fd-place-center">
-                            @if (resolveImage(recipe)) {
-                                <img [src]="resolveImage(recipe)" [alt]="recipe.name" />
+                            @if (item.imageUrl) {
+                                <img [src]="item.imageUrl" [alt]="item.recipe.name" />
                             } @else {
                                 <fd-ui-icon name="restaurant" />
                             }
                         </div>
                         <div class="recipe-select__info fd-min-w-0">
-                            <div class="recipe-select__name fd-ui-action-text fd-truncate">{{ recipe.name }}</div>
+                            <div class="recipe-select__name fd-ui-action-text fd-truncate">{{ item.recipe.name }}</div>
                             <div class="recipe-select__meta fd-ui-caption fd-truncate">
-                                @if (recipe.category) {
-                                    {{ recipe.category }} ·
+                                @if (item.recipe.category) {
+                                    {{ item.recipe.category }} ·
                                 }
-                                {{ recipe.totalCalories ?? 0 }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} · {{ recipe.servings }}
-                                {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
+                                {{ item.recipe.totalCalories ?? 0 }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} ·
+                                {{ item.recipe.servings }} {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
                             </div>
                         </div>
                         <span class="recipe-select__action fd-inline-center">

@@ -37,22 +37,27 @@
     } @else {
         @if (productData.items().length > 0) {
             <div class="product-select__list fd-stack fd-gap-sm">
-                @for (product of productData.items(); track product.id) {
-                    <button type="button" class="product-select__item fd-grid fd-gap-sm fd-align-center" (click)="onProductClick(product)">
+                @for (item of productItems(); track item.product.id) {
+                    <button
+                        type="button"
+                        class="product-select__item fd-grid fd-gap-sm fd-align-center"
+                        (click)="onProductClick(item.product)"
+                    >
                         <div class="product-select__thumb fd-place-center">
-                            @if (resolveImage(product)) {
-                                <img [src]="resolveImage(product)" [alt]="product.name" />
+                            @if (item.imageUrl) {
+                                <img [src]="item.imageUrl" [alt]="item.product.name" />
                             } @else {
                                 <fd-ui-icon name="restaurant" />
                             }
                         </div>
                         <div class="product-select__info fd-min-w-0">
-                            <div class="product-select__name fd-ui-action-text fd-truncate">{{ product.name }}</div>
+                            <div class="product-select__name fd-ui-action-text fd-truncate">{{ item.product.name }}</div>
                             <div class="product-select__meta fd-ui-caption fd-truncate">
-                                @if (product.brand) {
-                                    {{ product.brand }} ·
+                                @if (item.product.brand) {
+                                    {{ item.product.brand }} ·
                                 }
-                                {{ product.caloriesPerBase }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}/{{ product.baseAmount
+                                {{ item.product.caloriesPerBase }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}/{{
+                                    item.product.baseAmount
                                 }}{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                             </div>
                         </div>

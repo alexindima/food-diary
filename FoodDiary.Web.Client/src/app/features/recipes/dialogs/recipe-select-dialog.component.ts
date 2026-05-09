@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -18,6 +18,11 @@ import { RecipeService } from '../api/recipe.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
 import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
 import { type Recipe, type RecipeFilters } from '../models/recipe.data';
+
+interface RecipeSelectItemViewModel {
+    recipe: Recipe;
+    imageUrl: string | undefined;
+}
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -47,6 +52,12 @@ export class RecipeSelectDialogComponent {
     public readonly embedded = input<boolean>(false);
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output<void>();
+    protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
+        this.recipeData.items().map(recipe => ({
+            recipe,
+            imageUrl: this.resolveImage(recipe),
+        })),
+    );
 
     public readonly searchForm = new FormGroup<RecipeSearchFormGroup>({
         search: new FormControl<string | null>(null),
@@ -112,7 +123,7 @@ export class RecipeSelectDialogComponent {
         this.handleSelection(recipe);
     }
 
-    public resolveImage(recipe: Recipe): string | undefined {
+    private resolveImage(recipe: Recipe): string | undefined {
         return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
