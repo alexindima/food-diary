@@ -73,11 +73,11 @@
             <fd-ui-input [ngModel]="loginEventsSearch()" (ngModelChange)="onLoginEventsSearchChange($event)" placeholder="Search logins" />
         </div>
 
-        @if (loginSummary().length) {
+        @if (loginSummaryItems().length) {
             <div class="login-summary">
-                @for (item of loginSummary(); track item.key) {
+                @for (item of loginSummaryItems(); track item.key) {
                     <div class="login-summary__item">
-                        <span class="login-summary__label">{{ formatSummaryKey(item.key) }}</span>
+                        <span class="login-summary__label">{{ item.label }}</span>
                         <strong>{{ item.count }}</strong>
                     </div>
                 }

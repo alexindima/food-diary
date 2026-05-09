@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -17,6 +17,10 @@ import {
 } from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
+
+interface AdminUserLoginDeviceSummaryViewModel extends AdminUserLoginDeviceSummary {
+    label: string;
+}
 
 @Component({
     selector: 'fd-admin-users',
@@ -52,6 +56,12 @@ export class AdminUsersComponent {
     public readonly loginEventsTotalItems = signal(0);
     public readonly loginEventsSearch = signal('');
     public readonly isLoginEventsLoading = signal(false);
+    public readonly loginSummaryItems = computed<AdminUserLoginDeviceSummaryViewModel[]>(() =>
+        this.loginSummary().map(item => ({
+            ...item,
+            label: this.formatSummaryKey(item.key),
+        })),
+    );
 
     public constructor() {
         this.loadUsers();
@@ -221,7 +231,7 @@ export class AdminUsersComponent {
         this.loadLoginEvents();
     }
 
-    public formatSummaryKey(key: string): string {
+    private formatSummaryKey(key: string): string {
         const [category, value] = key.split(':', 2);
         return `${category.toUpperCase()} / ${value || 'Unknown'}`;
     }
