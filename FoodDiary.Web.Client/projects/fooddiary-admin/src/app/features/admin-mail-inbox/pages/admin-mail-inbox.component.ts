@@ -8,6 +8,15 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { AdminMailInboxService } from '../api/admin-mail-inbox.service';
 import { type AdminMailInboxMessageDetails, type AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
+interface AdminMailInboxMessageSummaryViewModel extends AdminMailInboxMessageSummary {
+    categoryLabel: string;
+}
+
+interface AdminMailInboxMessageDetailsViewModel extends AdminMailInboxMessageDetails {
+    categoryLabel: string;
+    toRecipientsLabel: string;
+}
+
 @Component({
     selector: 'fd-admin-mail-inbox',
     standalone: true,
@@ -27,13 +36,26 @@ export class AdminMailInboxComponent {
     public readonly limit = signal(50);
     public readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
     public readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
-    public readonly filteredMessages = computed(() => {
+    public readonly filteredMessages = computed<AdminMailInboxMessageSummaryViewModel[]>(() => {
         const category = this.categoryFilter();
-        if (category === 'all') {
-            return this.messages();
+        const messages = category === 'all' ? this.messages() : this.messages().filter(message => message.category === category);
+
+        return messages.map(message => ({
+            ...message,
+            categoryLabel: this.formatCategory(message.category),
+        }));
+    });
+    public readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
+        const message = this.selectedMessage();
+        if (!message) {
+            return null;
         }
 
-        return this.messages().filter(message => message.category === category);
+        return {
+            ...message,
+            categoryLabel: this.formatCategory(message.category),
+            toRecipientsLabel: this.formatRecipients(message.toRecipients),
+        };
     });
     public readonly selectedBody = computed(() => {
         const message = this.selectedMessage();
@@ -121,11 +143,11 @@ export class AdminMailInboxComponent {
         this.categoryFilter.set('all');
     }
 
-    public formatRecipients(recipients: string[]): string {
+    private formatRecipients(recipients: string[]): string {
         return recipients.length > 0 ? recipients.join(', ') : '-';
     }
 
-    public formatCategory(category: string): string {
+    private formatCategory(category: string): string {
         return category === 'dmarc-report' ? 'DMARC' : 'Mail';
     }
 }

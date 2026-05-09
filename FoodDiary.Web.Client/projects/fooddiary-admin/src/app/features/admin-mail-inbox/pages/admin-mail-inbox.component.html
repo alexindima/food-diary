@@ -40,7 +40,7 @@
                                         class="mail-badge fd-ui-helper-strong"
                                         [class.mail-badge--dmarc]="message.category === 'dmarc-report'"
                                     >
-                                        {{ formatCategory(message.category) }}
+                                        {{ message.categoryLabel }}
                                     </span>
                                 </td>
                                 <td>{{ message.fromAddress || '-' }}</td>
@@ -60,7 +60,7 @@
         <section class="mail-details fd-grid fd-gap-md" aria-label="Inbound mail message details">
             @if (isDetailsLoading()) {
                 <p>Loading message...</p>
-            } @else if (selectedMessage(); as message) {
+            } @else if (selectedMessageDetails(); as message) {
                 <div class="mail-details__header fd-row fd-align-start fd-justify-between fd-gap-md">
                     <div>
                         <div class="mail-details__subject fd-ui-title-sm">{{ message.subject || '(no subject)' }}</div>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="mail-details__badges fd-row fd-align-start fd-justify-end fd-gap-xs fd-wrap">
                         <span class="mail-badge fd-ui-helper-strong" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
-                            {{ formatCategory(message.category) }}
+                            {{ message.categoryLabel }}
                         </span>
                         <span class="mail-details__status fd-ui-helper-strong">{{ message.status }}</span>
                     </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="fd-grid fd-gap-xxs">
                         <dt class="fd-ui-helper-strong">To</dt>
-                        <dd>{{ formatRecipients(message.toRecipients) }}</dd>
+                        <dd>{{ message.toRecipientsLabel }}</dd>
                     </div>
                     <div class="fd-grid fd-gap-xxs">
                         <dt class="fd-ui-helper-strong">Message ID</dt>
