@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -14,6 +14,24 @@ import {
     type AdminBillingWebhookEvent,
     type PagedResponse,
 } from '../api/admin-billing.service';
+
+interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
+    externalCustomerIdText: string;
+    externalSubscriptionIdText: string;
+    externalPaymentMethodIdText: string;
+}
+
+interface AdminBillingPaymentViewModel extends AdminBillingPayment {
+    amountText: string;
+    externalPaymentIdText: string;
+    externalCustomerIdText: string;
+    webhookEventIdText: string;
+}
+
+interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
+    eventIdText: string;
+    externalObjectIdText: string;
+}
 
 @Component({
     selector: 'fd-admin-billing',
@@ -31,6 +49,30 @@ export class AdminBillingComponent {
     public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
     public readonly payments = signal<AdminBillingPayment[]>([]);
     public readonly webhookEvents = signal<AdminBillingWebhookEvent[]>([]);
+    public readonly subscriptionItems = computed<AdminBillingSubscriptionViewModel[]>(() =>
+        this.subscriptions().map(subscription => ({
+            ...subscription,
+            externalCustomerIdText: this.shortId(subscription.externalCustomerId),
+            externalSubscriptionIdText: this.shortId(subscription.externalSubscriptionId),
+            externalPaymentMethodIdText: this.shortId(subscription.externalPaymentMethodId),
+        })),
+    );
+    public readonly paymentItems = computed<AdminBillingPaymentViewModel[]>(() =>
+        this.payments().map(payment => ({
+            ...payment,
+            amountText: this.formatMoney(payment.amount, payment.currency),
+            externalPaymentIdText: this.shortId(payment.externalPaymentId),
+            externalCustomerIdText: this.shortId(payment.externalCustomerId),
+            webhookEventIdText: this.shortId(payment.webhookEventId),
+        })),
+    );
+    public readonly webhookEventItems = computed<AdminBillingWebhookEventViewModel[]>(() =>
+        this.webhookEvents().map(event => ({
+            ...event,
+            eventIdText: this.shortId(event.eventId),
+            externalObjectIdText: this.shortId(event.externalObjectId),
+        })),
+    );
     public readonly selectedMetadata = signal<string | null>(null);
     public readonly totalPages = signal(1);
     public readonly totalItems = signal(0);
@@ -84,7 +126,7 @@ export class AdminBillingComponent {
         this.selectedMetadata.set(value ? this.formatJson(value) : null);
     }
 
-    public formatMoney(amount?: number | null, currency?: string | null): string {
+    private formatMoney(amount?: number | null, currency?: string | null): string {
         if (amount === null || amount === undefined) {
             return '-';
         }
@@ -92,7 +134,7 @@ export class AdminBillingComponent {
         return currency ? `${amount.toFixed(2)} ${currency}` : amount.toFixed(2);
     }
 
-    public shortId(value?: string | null): string {
+    private shortId(value?: string | null): string {
         if (!value) {
             return '-';
         }

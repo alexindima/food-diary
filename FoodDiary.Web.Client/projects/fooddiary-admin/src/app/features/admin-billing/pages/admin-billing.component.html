@@ -52,7 +52,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (subscription of subscriptions(); track subscription.id) {
+                    @for (subscription of subscriptionItems(); track subscription.id) {
                         <tr>
                             <td>
                                 <strong>{{ subscription.userEmail }}</strong>
@@ -72,9 +72,9 @@
                             </td>
                             <td>{{ subscription.nextBillingAttemptUtc ? (subscription.nextBillingAttemptUtc | date: 'short') : '-' }}</td>
                             <td>
-                                <span>Customer: {{ shortId(subscription.externalCustomerId) }}</span>
-                                <span>Sub: {{ shortId(subscription.externalSubscriptionId) }}</span>
-                                <span>PM: {{ shortId(subscription.externalPaymentMethodId) }}</span>
+                                <span>Customer: {{ subscription.externalCustomerIdText }}</span>
+                                <span>Sub: {{ subscription.externalSubscriptionIdText }}</span>
+                                <span>PM: {{ subscription.externalPaymentMethodIdText }}</span>
                             </td>
                             <td>
                                 {{
@@ -106,7 +106,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (payment of payments(); track payment.id) {
+                    @for (payment of paymentItems(); track payment.id) {
                         <tr>
                             <td>{{ payment.createdOnUtc | date: 'short' }}</td>
                             <td>
@@ -118,11 +118,11 @@
                             <td>
                                 <span class="admin-billing__badge">{{ payment.status }}</span>
                             </td>
-                            <td>{{ formatMoney(payment.amount, payment.currency) }}</td>
+                            <td>{{ payment.amountText }}</td>
                             <td>
-                                <span>Payment: {{ shortId(payment.externalPaymentId) }}</span>
-                                <span>Customer: {{ shortId(payment.externalCustomerId) }}</span>
-                                <span>Webhook: {{ shortId(payment.webhookEventId) }}</span>
+                                <span>Payment: {{ payment.externalPaymentIdText }}</span>
+                                <span>Customer: {{ payment.externalCustomerIdText }}</span>
+                                <span>Webhook: {{ payment.webhookEventIdText }}</span>
                             </td>
                             <td>
                                 <fd-ui-button
@@ -158,18 +158,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (event of webhookEvents(); track event.id) {
+                    @for (event of webhookEventItems(); track event.id) {
                         <tr>
                             <td>{{ event.processedAtUtc | date: 'short' }}</td>
                             <td>{{ event.provider }}</td>
                             <td>
                                 <strong>{{ event.eventType }}</strong>
-                                <span>{{ shortId(event.eventId) }}</span>
+                                <span>{{ event.eventIdText }}</span>
                             </td>
                             <td>
                                 <span class="admin-billing__badge">{{ event.status }}</span>
                             </td>
-                            <td>{{ shortId(event.externalObjectId) }}</td>
+                            <td>{{ event.externalObjectIdText }}</td>
                             <td>{{ event.errorMessage || '-' }}</td>
                             <td>
                                 <fd-ui-button
