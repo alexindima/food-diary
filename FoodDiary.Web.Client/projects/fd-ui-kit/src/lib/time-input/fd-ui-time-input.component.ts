@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, forwardRef, inject, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -30,29 +30,21 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
 
-    protected internalValue = '';
-    protected disabled = false;
-    protected isFocused = false;
+    protected readonly internalValue = signal('');
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
 
     private readonly host = inject(ElementRef<HTMLElement>);
 
     private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    protected get sizeClass(): string {
-        return `fd-ui-time-input--size-${this.size()}`;
-    }
-
-    protected get shouldFloatLabel(): boolean {
-        return this.isFocused || this.internalValue.trim().length > 0;
-    }
-
-    protected get shouldShowPlaceholder(): boolean {
-        return this.isFocused && this.internalValue.trim().length === 0;
-    }
+    protected readonly sizeClass = computed(() => `fd-ui-time-input--size-${this.size()}`);
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
+    protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
 
     public writeValue(value: string | null): void {
-        this.internalValue = value ?? '';
+        this.internalValue.set(value ?? '');
     }
 
     public registerOnChange(fn: (value: string | null) => void): void {
@@ -64,48 +56,49 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.disabled.set(isDisabled);
     }
 
     protected onInput(value: string): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
         if (!value) {
-            this.internalValue = '';
+            this.internalValue.set('');
             this.onChange(null);
             return;
         }
 
         const parsed = this.parseTime(value);
         if (!parsed) {
-            this.internalValue = value;
+            this.internalValue.set(value);
             return;
         }
 
-        this.internalValue = `${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`;
-        this.onChange(this.internalValue);
+        this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
+        this.onChange(this.internalValue());
     }
 
     protected onBlur(): void {
-        this.isFocused = false;
-        if (this.internalValue) {
-            const parsed = this.parseTime(this.internalValue);
+        this.isFocused.set(false);
+        const internalValue = this.internalValue();
+        if (internalValue) {
+            const parsed = this.parseTime(internalValue);
             if (parsed) {
-                this.internalValue = `${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`;
-                this.onChange(this.internalValue);
+                this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
+                this.onChange(this.internalValue());
             }
         }
         this.onTouched();
     }
 
     protected onFocus(): void {
-        this.isFocused = true;
+        this.isFocused.set(true);
     }
 
     protected focusTime(control: HTMLInputElement): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
         control.focus();
@@ -117,7 +110,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
         if (active && this.host.nativeElement.contains(active)) {
             return;
         }
-        this.isFocused = false;
+        this.isFocused.set(false);
         this.onTouched();
     }
 

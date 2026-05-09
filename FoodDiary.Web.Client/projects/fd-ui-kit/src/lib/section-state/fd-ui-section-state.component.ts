@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 import { type FdUiEmptyStateAppearance, FdUiEmptyStateComponent } from '../empty-state/fd-ui-empty-state.component';
@@ -37,9 +37,9 @@ export class FdUiSectionStateComponent {
 
     public readonly retry = output<void>();
 
-    public get emptyAppearance(): FdUiEmptyStateAppearance {
-        return this.appearance() === 'compact' ? 'compact' : 'default';
-    }
+    protected readonly emptyAppearance = computed<FdUiEmptyStateAppearance>(() =>
+        this.appearance() === 'compact' ? 'compact' : 'default',
+    );
 
     public onRetry(): void {
         this.retry.emit();

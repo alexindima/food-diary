@@ -1,6 +1,6 @@
 ﻿<div
     class="fd-ui-textarea"
-    [ngClass]="[sizeClass, error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel ? 'fd-ui-textarea--floating' : '']"
+    [ngClass]="[sizeClass(), error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel() ? 'fd-ui-textarea--floating' : '']"
 >
     <div class="fd-ui-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)" role="presentation">
         @if (label()) {
@@ -15,11 +15,11 @@
             #control
             class="fd-ui-textarea__control"
             [id]="id()"
-            [value]="internalValue"
+            [value]="internalValue()"
             [required]="required()"
             [readonly]="readonly()"
-            [disabled]="disabled"
-            [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+            [disabled]="disabled()"
+            [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? null) : null"
             [attr.maxlength]="maxLength() ?? null"
             [attr.rows]="rows()"
             [attr.aria-describedby]="error() ? id() + '-error' : null"

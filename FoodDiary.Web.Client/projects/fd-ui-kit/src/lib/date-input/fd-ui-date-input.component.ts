@@ -169,13 +169,8 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         }
     }
 
-    protected get minDate(): Date | null {
-        return this.parseDateValue(this.min());
-    }
-
-    protected get maxDate(): Date | null {
-        return this.parseDateValue(this.max());
-    }
+    protected readonly minDate = computed(() => this.parseDateValue(this.min()));
+    protected readonly maxDate = computed(() => this.parseDateValue(this.max()));
 
     private parseDateValue(value: string | Date | null | undefined): Date | null {
         if (!value) {

@@ -49,15 +49,15 @@ describe('FdUiTimeInputComponent', () => {
 
     it('should write value via CVA', () => {
         component.writeValue('14:30');
-        expect(component['internalValue']).toBe('14:30');
+        expect(component['internalValue']()).toBe('14:30');
     });
 
     it('should write null value via CVA as empty string', () => {
         component.writeValue('10:00');
-        expect(component['internalValue']).toBe('10:00');
+        expect(component['internalValue']()).toBe('10:00');
 
         component.writeValue(null);
-        expect(component['internalValue']).toBe('');
+        expect(component['internalValue']()).toBe('');
     });
 
     it('should display error', () => {
@@ -80,7 +80,7 @@ describe('FdUiTimeInputComponent', () => {
     it('should set disabled state', () => {
         component.setDisabledState(true);
 
-        expect(component['disabled']).toBe(true);
+        expect(component['disabled']()).toBe(true);
     });
 
     it('should re-enable after being disabled', () => {
@@ -88,7 +88,7 @@ describe('FdUiTimeInputComponent', () => {
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBe(false);
+        expect(component['disabled']()).toBe(false);
     });
 
     it('should apply size class', () => {
@@ -111,7 +111,7 @@ describe('FdUiTimeInputComponent', () => {
         component['onInput']('14:30');
 
         expect(onChangeSpy).toHaveBeenCalledWith('14:30');
-        expect(component['internalValue']).toBe('14:30');
+        expect(component['internalValue']()).toBe('14:30');
     });
 
     it('should call onChange with null on empty input', () => {
@@ -121,7 +121,7 @@ describe('FdUiTimeInputComponent', () => {
         component['onInput']('');
 
         expect(onChangeSpy).toHaveBeenCalledWith(null);
-        expect(component['internalValue']).toBe('');
+        expect(component['internalValue']()).toBe('');
     });
 
     it('should not call onChange on invalid time input', () => {
@@ -131,7 +131,7 @@ describe('FdUiTimeInputComponent', () => {
         component['onInput']('abc');
 
         expect(onChangeSpy).not.toHaveBeenCalled();
-        expect(component['internalValue']).toBe('abc');
+        expect(component['internalValue']()).toBe('abc');
     });
 
     it('should not process input when disabled', () => {
@@ -160,7 +160,7 @@ describe('FdUiTimeInputComponent', () => {
         component['onInput']('9:05');
 
         expect(onChangeSpy).toHaveBeenCalledWith('09:05');
-        expect(component['internalValue']).toBe('09:05');
+        expect(component['internalValue']()).toBe('09:05');
     });
 
     it('should reject hours above 23', () => {

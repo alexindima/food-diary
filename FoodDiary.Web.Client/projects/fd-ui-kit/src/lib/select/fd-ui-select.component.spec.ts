@@ -64,7 +64,7 @@ describe('FdUiSelectComponent', () => {
         component.writeValue('banana');
         fixture.detectChanges();
 
-        expect(component['internalValue']).toBe('banana');
+        expect(component['internalValue']()).toBe('banana');
     });
 
     it('should select option and update value', () => {
@@ -79,7 +79,7 @@ describe('FdUiSelectComponent', () => {
         component['onOptionSelect'](testOptions[1]);
         fixture.detectChanges();
 
-        expect(component['internalValue']).toBe('banana');
+        expect(component['internalValue']()).toBe('banana');
         expect(onChangeSpy).toHaveBeenCalledWith('banana');
         expect(onTouchedSpy).toHaveBeenCalled();
     });
@@ -95,7 +95,7 @@ describe('FdUiSelectComponent', () => {
         component['onOptionSelect'](testOptions[0]);
         fixture.detectChanges();
 
-        expect(component['internalValue']).toBeNull();
+        expect(component['internalValue']()).toBeNull();
         expect(onChangeSpy).not.toHaveBeenCalled();
     });
 
@@ -106,7 +106,7 @@ describe('FdUiSelectComponent', () => {
         component.writeValue('cherry');
         fixture.detectChanges();
 
-        expect(component['selectedLabel']).toBe('Cherry');
+        expect(component['selectedLabel']()).toBe('Cherry');
     });
 
     it('should float label when has selection', () => {
@@ -114,11 +114,11 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        expect(component['shouldFloatLabel']).toBe(false);
+        expect(component['shouldFloatLabel']()).toBe(false);
 
         component.writeValue('apple');
 
-        expect(component['shouldFloatLabel']).toBe(true);
+        expect(component['shouldFloatLabel']()).toBe(true);
     });
 
     it('should apply size class', () => {
@@ -132,7 +132,7 @@ describe('FdUiSelectComponent', () => {
     it('should set disabled state via CVA', () => {
         component.setDisabledState(true);
 
-        expect(component['disabled']).toBe(true);
+        expect(component['disabled']()).toBe(true);
     });
 
     it('should expose active option id when menu is open', () => {
@@ -142,7 +142,7 @@ describe('FdUiSelectComponent', () => {
         component['openMenu']();
         fixture.detectChanges();
 
-        expect(component['activeOptionId']).toBe(`${component.id()}-option-0`);
+        expect(component['activeOptionId']()).toBe(`${component.id()}-option-0`);
     });
 
     it('should focus listbox when overlay attaches', async () => {

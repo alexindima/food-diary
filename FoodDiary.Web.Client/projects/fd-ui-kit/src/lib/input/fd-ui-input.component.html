@@ -1,11 +1,11 @@
 <div
     class="fd-ui-input"
-    [ngClass]="[sizeClass, appearanceClass, error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel ? 'fd-ui-input--floating' : '']"
+    [ngClass]="[sizeClass(), appearanceClass(), error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel() ? 'fd-ui-input--floating' : '']"
 >
     <div
         class="fd-ui-input__control-wrap"
         [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"
-        [class.fd-ui-input__control-wrap--date]="isDateInput"
+        [class.fd-ui-input__control-wrap--date]="isDateInput()"
         [style.background]="fillColor() || null"
         [style.--fd-input-control-background]="fillColor() || null"
         (click)="focusControl($event, control)"
@@ -29,11 +29,11 @@
             class="fd-ui-input__control"
             [id]="id()"
             [attr.type]="type()"
-            [value]="internalValue"
+            [value]="internalValue()"
             [required]="required()"
             [readonly]="readonly()"
-            [disabled]="disabled"
-            [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+            [disabled]="disabled()"
+            [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? null) : null"
             [attr.maxlength]="maxLength() ?? null"
             [attr.step]="step() ?? null"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
@@ -49,7 +49,7 @@
                 class="fd-ui-input__suffix"
                 type="button"
                 [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
-                [disabled]="disabled"
+                [disabled]="disabled()"
                 (click)="triggerSuffixButton()"
             >
                 <fd-ui-icon [name]="suffixButtonIcon()!"></fd-ui-icon>

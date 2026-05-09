@@ -2,12 +2,12 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
+    computed,
     type ElementRef,
     forwardRef,
-    inject,
     input,
+    signal,
     viewChild,
     ViewEncapsulation,
 } from '@angular/core';
@@ -41,8 +41,6 @@ export interface FdUiSelectOption<T = unknown> {
     ],
 })
 export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
-    private readonly cdr = inject(ChangeDetectorRef);
-
     protected readonly isEqual = Object.is;
     protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
@@ -57,51 +55,43 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
 
-    protected internalValue: T | null = null;
-    protected disabled = false;
-    protected isFocused = false;
-    protected isOpen = false;
-    protected activeIndex = -1;
-    protected overlayMinWidth = 0;
+    protected readonly internalValue = signal<T | null>(null);
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
+    protected readonly isOpen = signal(false);
+    protected readonly activeIndex = signal(-1);
+    protected readonly overlayMinWidth = signal(0);
 
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    protected get sizeClass(): string {
-        return `fd-ui-select--size-${this.size()}`;
-    }
+    protected readonly sizeClass = computed(() => `fd-ui-select--size-${this.size()}`);
+    protected readonly selectedIndex = computed(() => this.options().findIndex(option => this.isEqual(option.value, this.internalValue())));
 
-    protected get selectedIndex(): number {
-        return this.options().findIndex(option => this.isEqual(option.value, this.internalValue));
-    }
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.selectedIndex() >= 0);
 
-    protected get shouldFloatLabel(): boolean {
-        return this.isFocused || this.selectedIndex >= 0;
-    }
-
-    protected get selectedLabel(): string {
-        if (this.selectedIndex < 0) {
-            return this.isFocused ? (this.placeholder() ?? '') : '';
+    protected readonly selectedLabel = computed(() => {
+        const selectedIndex = this.selectedIndex();
+        if (selectedIndex < 0) {
+            return this.isFocused() ? (this.placeholder() ?? '') : '';
         }
 
-        return this.options()[this.selectedIndex]?.label ?? '';
-    }
+        return this.options()[selectedIndex]?.label ?? '';
+    });
 
-    protected get hasValue(): boolean {
-        return this.selectedIndex >= 0;
-    }
+    protected readonly hasValue = computed(() => this.selectedIndex() >= 0);
 
-    protected get activeOptionId(): string | null {
-        if (!this.isOpen || this.activeIndex < 0 || this.activeIndex >= this.options().length) {
+    protected readonly activeOptionId = computed(() => {
+        const activeIndex = this.activeIndex();
+        if (!this.isOpen() || activeIndex < 0 || activeIndex >= this.options().length) {
             return null;
         }
 
-        return this.getOptionId(this.activeIndex);
-    }
+        return this.getOptionId(activeIndex);
+    });
 
     public writeValue(value: T | null): void {
-        this.internalValue = value;
-        this.cdr.markForCheck();
+        this.internalValue.set(value);
     }
 
     public registerOnChange(fn: (value: T | null) => void): void {
@@ -113,28 +103,27 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
+        this.disabled.set(isDisabled);
     }
 
     protected onOptionSelect(option: FdUiSelectOption<T>): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.internalValue = option.value;
-        this.onChange(this.internalValue);
+        this.internalValue.set(option.value);
+        this.onChange(this.internalValue());
         this.onTouched();
         this.closeMenu();
     }
 
     protected onFocus(): void {
-        this.isFocused = true;
+        this.isFocused.set(true);
     }
 
     protected onBlur(): void {
-        if (!this.isOpen) {
-            this.isFocused = false;
+        if (!this.isOpen()) {
+            this.isFocused.set(false);
             this.onTouched();
         }
     }
@@ -142,23 +131,23 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected openMenu(event?: Event): void {
         event?.preventDefault();
 
-        if (this.disabled || this.isOpen) {
+        if (this.disabled() || this.isOpen()) {
             return;
         }
 
-        this.overlayMinWidth = this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0;
-        this.isOpen = true;
-        this.isFocused = true;
-        this.activeIndex = Math.max(this.selectedIndex, 0);
+        this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
+        this.isOpen.set(true);
+        this.isFocused.set(true);
+        this.activeIndex.set(Math.max(this.selectedIndex(), 0));
     }
 
     protected closeMenu(): void {
-        this.isOpen = false;
-        this.isFocused = false;
+        this.isOpen.set(false);
+        this.isFocused.set(false);
     }
 
     protected toggleMenu(event?: Event): void {
-        if (this.isOpen) {
+        if (this.isOpen()) {
             event?.preventDefault();
             this.closeMenu();
             return;
@@ -168,7 +157,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     }
 
     protected onControlWrapClick(event: MouseEvent): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
@@ -190,7 +179,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
                 this.openMenu(event);
                 break;
             case 'Escape':
-                if (this.isOpen) {
+                if (this.isOpen()) {
                     event.preventDefault();
                     this.closeMenu();
                 }
@@ -207,25 +196,25 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         switch (event.key) {
             case 'ArrowDown':
                 event.preventDefault();
-                this.activeIndex = (this.activeIndex + 1 + options.length) % options.length;
+                this.activeIndex.update(activeIndex => (activeIndex + 1 + options.length) % options.length);
                 break;
             case 'ArrowUp':
                 event.preventDefault();
-                this.activeIndex = (this.activeIndex - 1 + options.length) % options.length;
+                this.activeIndex.update(activeIndex => (activeIndex - 1 + options.length) % options.length);
                 break;
             case 'Home':
                 event.preventDefault();
-                this.activeIndex = 0;
+                this.activeIndex.set(0);
                 break;
             case 'End':
                 event.preventDefault();
-                this.activeIndex = options.length - 1;
+                this.activeIndex.set(options.length - 1);
                 break;
             case 'Enter':
             case ' ':
                 event.preventDefault();
-                if (this.activeIndex >= 0) {
-                    this.onOptionSelect(options[this.activeIndex]);
+                if (this.activeIndex() >= 0) {
+                    this.onOptionSelect(options[this.activeIndex()]);
                 }
                 break;
             case 'Escape':

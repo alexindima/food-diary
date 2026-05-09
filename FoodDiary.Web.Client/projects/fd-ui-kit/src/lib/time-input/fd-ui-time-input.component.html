@@ -1,6 +1,6 @@
 ﻿<div
     class="fd-ui-time-input"
-    [ngClass]="[sizeClass, error() ? 'fd-ui-time-input--has-error' : '', shouldFloatLabel ? 'fd-ui-time-input--floating' : '']"
+    [ngClass]="[sizeClass(), error() ? 'fd-ui-time-input--has-error' : '', shouldFloatLabel() ? 'fd-ui-time-input--floating' : '']"
 >
     <div class="fd-ui-time-input__control-wrap" (focusout)="onFocusOut()">
         @if (label()) {
@@ -19,16 +19,16 @@
                 type="time"
                 step="60"
                 inputmode="numeric"
-                [value]="internalValue"
-                [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? 'HH:mm') : null"
-                [disabled]="disabled"
+                [value]="internalValue()"
+                [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? 'HH:mm') : null"
+                [disabled]="disabled()"
                 [attr.aria-describedby]="error() ? id() + '-error' : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
                 (focus)="onFocus()"
                 (input)="onInput($any($event.target).value)"
                 (blur)="onBlur()"
             />
-            <button type="button" class="fd-ui-time-input__suffix" [disabled]="disabled" (click)="focusTime(timeInput)">
+            <button type="button" class="fd-ui-time-input__suffix" [disabled]="disabled()" (click)="focusTime(timeInput)">
                 <fd-ui-icon name="schedule"></fd-ui-icon>
             </button>
         </div>

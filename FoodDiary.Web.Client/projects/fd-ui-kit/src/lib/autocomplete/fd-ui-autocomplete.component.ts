@@ -1,16 +1,6 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    type ElementRef,
-    forwardRef,
-    inject,
-    input,
-    output,
-    viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, forwardRef, input, output, signal, viewChild } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -44,8 +34,6 @@ export interface FdUiAutocompleteOption<T = unknown> {
     ],
 })
 export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAccessor {
-    private readonly cdr = inject(ChangeDetectorRef);
-
     protected readonly controlRef = viewChild<ElementRef<HTMLInputElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
@@ -67,54 +55,42 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     public readonly queryChange = output<string>();
     public readonly optionSelected = output<FdUiAutocompleteOption<T>>();
 
-    protected internalValue: T | null = null;
-    protected queryText = '';
-    protected disabled = false;
-    protected isFocused = false;
-    protected isOpen = false;
-    protected activeIndex = -1;
-    protected overlayMinWidth = 0;
+    protected readonly internalValue = signal<T | null>(null);
+    protected readonly queryText = signal('');
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
+    protected readonly isOpen = signal(false);
+    protected readonly activeIndex = signal(-1);
+    protected readonly overlayMinWidth = signal(0);
 
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    protected get sizeClass(): string {
-        return `fd-ui-autocomplete--size-${this.size()}`;
-    }
-
-    protected get shouldFloatLabel(): boolean {
-        return this.isFocused || this.queryText.trim().length > 0;
-    }
-
-    protected get shouldShowPlaceholder(): boolean {
-        return this.isFocused && this.queryText.trim().length === 0;
-    }
-
-    protected get activeOptionId(): string | null {
-        if (!this.isOpen || this.activeIndex < 0 || this.activeIndex >= this.options().length) {
+    protected readonly sizeClass = computed(() => `fd-ui-autocomplete--size-${this.size()}`);
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.queryText().trim().length > 0);
+    protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.queryText().trim().length === 0);
+    protected readonly activeOptionId = computed(() => {
+        const activeIndex = this.activeIndex();
+        if (!this.isOpen() || activeIndex < 0 || activeIndex >= this.options().length) {
             return null;
         }
 
-        return this.getOptionId(this.activeIndex);
-    }
+        return this.getOptionId(activeIndex);
+    });
 
-    protected get hasSelectedValue(): boolean {
-        return this.internalValue !== null && this.internalValue !== undefined;
-    }
+    protected readonly hasSelectedValue = computed(() => this.internalValue() !== null && this.internalValue() !== undefined);
 
-    protected get shouldOpenOverlay(): boolean {
-        return (
-            this.isOpen &&
+    protected readonly shouldOpenOverlay = computed(
+        () =>
+            this.isOpen() &&
             ((this.loading() && this.showEmptyState()) ||
                 this.options().length > 0 ||
-                (this.showEmptyState() && this.queryText.trim().length >= 2 && !!this.emptyText()))
-        );
-    }
+                (this.showEmptyState() && this.queryText().trim().length >= 2 && !!this.emptyText())),
+    );
 
     public writeValue(value: T | null): void {
-        this.internalValue = value;
-        this.queryText = this.getDisplayText(value);
-        this.cdr.markForCheck();
+        this.internalValue.set(value);
+        this.queryText.set(this.getDisplayText(value));
     }
 
     public registerOnChange(fn: (value: T | null) => void): void {
@@ -126,30 +102,29 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
+        this.disabled.set(isDisabled);
     }
 
     protected onInput(value: string): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.queryText = value;
-        this.internalValue = null;
+        this.queryText.set(value);
+        this.internalValue.set(null);
         this.onChange(value as T);
         this.queryChange.emit(value);
         this.openMenu();
     }
 
     protected onFocus(): void {
-        this.isFocused = true;
+        this.isFocused.set(true);
         this.openMenu();
     }
 
     protected onBlur(): void {
-        if (!this.isOpen) {
-            this.isFocused = false;
+        if (!this.isOpen()) {
+            this.isFocused.set(false);
             this.onTouched();
         }
     }
@@ -158,12 +133,12 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
         event.preventDefault();
         event.stopPropagation();
 
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.internalValue = null;
-        this.queryText = '';
+        this.internalValue.set(null);
+        this.queryText.set('');
         this.onChange('' as T);
         this.queryChange.emit('');
         this.closeMenu();
@@ -171,12 +146,12 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     }
 
     protected selectOption(option: FdUiAutocompleteOption<T>): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.internalValue = option.value;
-        this.queryText = option.label;
+        this.internalValue.set(option.value);
+        this.queryText.set(option.label);
         this.onChange(option.value);
         this.onTouched();
         this.optionSelected.emit(option);
@@ -197,13 +172,13 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
                 this.moveActive(-1);
                 break;
             case 'Enter':
-                if (this.isOpen && this.activeIndex >= 0) {
+                if (this.isOpen() && this.activeIndex() >= 0) {
                     event.preventDefault();
-                    this.selectOption(this.options()[this.activeIndex]);
+                    this.selectOption(this.options()[this.activeIndex()]);
                 }
                 break;
             case 'Escape':
-                if (this.isOpen) {
+                if (this.isOpen()) {
                     event.preventDefault();
                     this.closeMenu();
                 }
@@ -212,10 +187,9 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     }
 
     protected closeMenu(): void {
-        this.isOpen = false;
-        this.activeIndex = -1;
-        this.isFocused = false;
-        this.cdr.markForCheck();
+        this.isOpen.set(false);
+        this.activeIndex.set(-1);
+        this.isFocused.set(false);
     }
 
     protected onMenuAttached(): void {
@@ -231,24 +205,23 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     }
 
     private openMenu(): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.overlayMinWidth = this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0;
-        this.isOpen = true;
-        this.activeIndex = this.options().length > 0 ? 0 : -1;
-        this.cdr.markForCheck();
+        this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
+        this.isOpen.set(true);
+        this.activeIndex.set(this.options().length > 0 ? 0 : -1);
     }
 
     private moveActive(delta: number): void {
         const options = this.options();
         if (!options.length) {
-            this.activeIndex = -1;
+            this.activeIndex.set(-1);
             return;
         }
 
-        this.activeIndex = (this.activeIndex + delta + options.length) % options.length;
+        this.activeIndex.update(activeIndex => (activeIndex + delta + options.length) % options.length);
     }
 
     private getDisplayText(value: T | null): string {

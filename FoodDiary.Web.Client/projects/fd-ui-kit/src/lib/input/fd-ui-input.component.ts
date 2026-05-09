@@ -1,6 +1,6 @@
 ﻿import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, forwardRef, inject, input, output, signal } from '@angular/core';
 import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -27,7 +27,6 @@ export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
     ],
 })
 export class FdUiInputComponent implements ControlValueAccessor {
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly autofillMonitor = inject(AutofillMonitor);
     private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
@@ -50,9 +49,9 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     public readonly suffixButtonClicked = output<void>();
 
-    protected internalValue: string | number = '';
-    protected disabled = false;
-    protected isFocused = false;
+    protected readonly internalValue = signal<string | number>('');
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -76,22 +75,23 @@ export class FdUiInputComponent implements ControlValueAccessor {
         });
     }
 
-    protected get sizeClass(): string {
-        return `fd-ui-input--size-${this.size()}`;
-    }
-
-    protected get appearanceClass(): string {
-        return `fd-ui-input--appearance-${this.appearance()}`;
-    }
-
-    protected get isDateInput(): boolean {
+    protected readonly sizeClass = computed(() => `fd-ui-input--size-${this.size()}`);
+    protected readonly appearanceClass = computed(() => `fd-ui-input--appearance-${this.appearance()}`);
+    protected readonly isDateInput = computed(() => {
         const type = this.type();
         return type === 'date' || type === 'datetime-local' || type === 'time';
-    }
+    });
+    protected readonly shouldFloatLabel = computed(() => {
+        const text = String(this.internalValue()).trim();
+        return this.isFocused() || text.length > 0;
+    });
+    protected readonly shouldShowPlaceholder = computed(() => {
+        const text = String(this.internalValue()).trim();
+        return this.isFocused() && text.length === 0;
+    });
 
     public writeValue(value: string | number | null): void {
-        this.internalValue = value ?? '';
-        this.cdr.markForCheck();
+        this.internalValue.set(value ?? '');
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -103,27 +103,26 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
+        this.disabled.set(isDisabled);
     }
 
     protected onInput(value: string): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.internalValue = value;
+        this.internalValue.set(value);
         this.onChange(value);
     }
 
     protected onBlur(): void {
-        this.isFocused = false;
+        this.isFocused.set(false);
         this.onTouched();
     }
 
     protected onFocus(): void {
         this.syncNativeValue();
-        this.isFocused = true;
+        this.isFocused.set(true);
     }
 
     protected onAnimationStart(event: AnimationEvent, value: string): void {
@@ -134,18 +133,8 @@ export class FdUiInputComponent implements ControlValueAccessor {
         this.syncValue(value);
     }
 
-    protected get shouldFloatLabel(): boolean {
-        const text = String(this.internalValue).trim();
-        return this.isFocused || text.length > 0;
-    }
-
-    protected get shouldShowPlaceholder(): boolean {
-        const text = String(this.internalValue).trim();
-        return this.isFocused && text.length === 0;
-    }
-
     protected triggerSuffixButton(): void {
-        if (this.disabled || !this.suffixButtonIcon()) {
+        if (this.disabled() || !this.suffixButtonIcon()) {
             return;
         }
 
@@ -153,7 +142,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     protected focusControl(event: MouseEvent, control: HTMLInputElement): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
@@ -176,17 +165,15 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     private syncValue(value: string): void {
-        if (value === String(this.internalValue)) {
+        if (value === String(this.internalValue())) {
             return;
         }
 
-        this.internalValue = value;
+        this.internalValue.set(value);
 
-        if (!this.disabled) {
+        if (!this.disabled()) {
             this.onChange(value);
         }
-
-        this.cdr.markForCheck();
     }
 
     private monitorAutofill(): void {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, contentChild, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, contentChild, input, signal } from '@angular/core';
 
 import { type FdUiCardAppearance, FdUiCardComponent } from '../card/fd-ui-card.component';
 import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.directive';
@@ -21,20 +21,20 @@ export class FdUiEntityCardComponent {
 
     public readonly headerTemplate = contentChild(FdUiEntityCardHeaderDirective);
 
-    private hasImageError = false;
+    private readonly hasImageError = signal(false);
 
-    public get resolvedImage(): string {
+    protected readonly resolvedImage = computed(() => {
         const imageUrl = this.imageUrl();
-        if (this.hasImageError || !imageUrl) {
+        if (this.hasImageError() || !imageUrl) {
             return this.fallbackImage();
         }
 
         return imageUrl;
-    }
+    });
 
     public handleImageError(): void {
-        if (!this.hasImageError) {
-            this.hasImageError = true;
+        if (!this.hasImageError()) {
+            this.hasImageError.set(true);
         }
     }
 }

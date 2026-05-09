@@ -1,5 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    ElementRef,
+    forwardRef,
+    inject,
+    input,
+    signal,
+    ViewEncapsulation,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
@@ -34,9 +45,12 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     public readonly size = input<FdUiFieldSize>('md');
 
     protected readonly dateControl = new FormControl<string | null>(null);
-    protected timeValue = '';
-    protected disabled = false;
-    protected isFocused = false;
+    protected readonly dateValue = signal<string | null>(null);
+    protected readonly timeValue = signal('');
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
+    protected readonly sizeClass = computed(() => `fd-ui-datetime-input--size-${this.size()}`);
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || !!this.dateValue() || this.timeValue().trim().length > 0);
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly host = inject(ElementRef<HTMLElement>);
@@ -46,23 +60,17 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     private lastValidTime = '00:00';
 
     public constructor() {
-        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+            this.dateValue.set(value);
             this.emitValue();
         });
-    }
-
-    protected get sizeClass(): string {
-        return `fd-ui-datetime-input--size-${this.size()}`;
-    }
-
-    protected get shouldFloatLabel(): boolean {
-        return this.isFocused || !!this.dateControl.value || this.timeValue.trim().length > 0;
     }
 
     public writeValue(value: string | Date | null): void {
         if (!value) {
             this.dateControl.setValue(null, { emitEvent: false });
-            this.timeValue = '';
+            this.dateValue.set(null);
+            this.timeValue.set('');
             this.lastValidTime = '00:00';
             return;
         }
@@ -70,7 +78,8 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         const parsed = typeof value === 'string' ? this.parseDateTimeString(value) : value;
         if (!parsed) {
             this.dateControl.setValue(null, { emitEvent: false });
-            this.timeValue = '';
+            this.dateValue.set(null);
+            this.timeValue.set('');
             return;
         }
 
@@ -79,8 +88,9 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         const minutes = this.padNumber(parsed.getMinutes());
 
         this.dateControl.setValue(isoDate, { emitEvent: false });
-        this.timeValue = `${hours}:${minutes}`;
-        this.lastValidTime = this.timeValue;
+        this.dateValue.set(isoDate);
+        this.timeValue.set(`${hours}:${minutes}`);
+        this.lastValidTime = this.timeValue();
     }
 
     public registerOnChange(fn: (value: string | null) => void): void {
@@ -92,7 +102,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.disabled.set(isDisabled);
         if (isDisabled) {
             this.dateControl.disable({ emitEvent: false });
         } else {
@@ -101,31 +111,32 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     protected onTimeInput(value: string): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
         const parsed = this.parseTime(value);
         if (!parsed) {
-            this.timeValue = value;
+            this.timeValue.set(value);
             return;
         }
 
-        this.timeValue = `${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`;
-        this.lastValidTime = this.timeValue;
+        this.timeValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
+        this.lastValidTime = this.timeValue();
         this.emitValue();
     }
 
     protected onTimeBlur(): void {
-        if (!this.timeValue) {
+        const timeValue = this.timeValue();
+        if (!timeValue) {
             this.lastValidTime = '00:00';
-            this.timeValue = this.lastValidTime;
+            this.timeValue.set(this.lastValidTime);
             this.emitValue();
         } else {
-            const parsed = this.parseTime(this.timeValue);
+            const parsed = this.parseTime(timeValue);
             if (parsed) {
-                this.timeValue = `${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`;
-                this.lastValidTime = this.timeValue;
+                this.timeValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
+                this.lastValidTime = this.timeValue();
                 this.emitValue();
             }
         }
@@ -134,7 +145,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     protected focusTimeInput(input: HTMLInputElement): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
@@ -143,7 +154,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     protected onFocusIn(): void {
-        this.isFocused = true;
+        this.isFocused.set(true);
     }
 
     protected onFocusOut(): void {
@@ -152,7 +163,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        this.isFocused = false;
+        this.isFocused.set(false);
         this.onTouched();
     }
 
@@ -163,7 +174,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        const time = this.parseTime(this.timeValue) ?? this.parseTime(this.lastValidTime) ?? { hours: 0, minutes: 0 };
+        const time = this.parseTime(this.timeValue()) ?? this.parseTime(this.lastValidTime) ?? { hours: 0, minutes: 0 };
         this.onChange(`${date}T${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`);
     }
 

@@ -1,6 +1,6 @@
 <div
     class="fd-ui-autocomplete"
-    [ngClass]="[sizeClass, error() ? 'fd-ui-autocomplete--has-error' : '', shouldFloatLabel ? 'fd-ui-autocomplete--floating' : '']"
+    [ngClass]="[sizeClass(), error() ? 'fd-ui-autocomplete--has-error' : '', shouldFloatLabel() ? 'fd-ui-autocomplete--floating' : '']"
 >
     <div
         #controlWrap
@@ -26,27 +26,27 @@
             autocomplete="off"
             role="combobox"
             [id]="id()"
-            [value]="queryText"
+            [value]="queryText()"
             [required]="required()"
-            [disabled]="disabled"
-            [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+            [disabled]="disabled()"
+            [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? null) : null"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
             [attr.aria-invalid]="error() ? 'true' : null"
-            [attr.aria-expanded]="isOpen"
+            [attr.aria-expanded]="isOpen()"
             [attr.aria-controls]="id() + '-listbox'"
-            [attr.aria-activedescendant]="activeOptionId"
+            [attr.aria-activedescendant]="activeOptionId()"
             (input)="onInput($any($event.target).value)"
             (focus)="onFocus()"
             (blur)="onBlur()"
             (keydown)="onControlKeydown($event)"
         />
 
-        @if (hasSelectedValue || queryText) {
+        @if (hasSelectedValue() || queryText()) {
             <button
                 class="fd-ui-autocomplete__suffix fd-ui-autocomplete__suffix--button"
                 type="button"
                 aria-label="Clear"
-                [disabled]="disabled"
+                [disabled]="disabled()"
                 (click)="clearValue($event)"
             >
                 <fd-ui-icon name="close"></fd-ui-icon>
@@ -60,10 +60,10 @@
         <ng-template
             cdkConnectedOverlay
             [cdkConnectedOverlayOrigin]="origin"
-            [cdkConnectedOverlayOpen]="shouldOpenOverlay"
+            [cdkConnectedOverlayOpen]="shouldOpenOverlay()"
             [cdkConnectedOverlayHasBackdrop]="true"
             [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
-            [cdkConnectedOverlayMinWidth]="overlayMinWidth"
+            [cdkConnectedOverlayMinWidth]="overlayMinWidth()"
             [cdkConnectedOverlayPositions]="[
                 { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
                 { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
@@ -83,10 +83,10 @@
                             type="button"
                             [id]="getOptionId(index)"
                             class="fd-ui-autocomplete__menu-item"
-                            [class.fd-ui-autocomplete__menu-item--active]="index === activeIndex"
+                            [class.fd-ui-autocomplete__menu-item--active]="index === activeIndex()"
                             role="option"
                             tabindex="-1"
-                            [attr.aria-selected]="isEqual(option.value, internalValue)"
+                            [attr.aria-selected]="isEqual(option.value, internalValue())"
                             (click)="selectOption(option)"
                         >
                             <span class="fd-ui-autocomplete__option-main">

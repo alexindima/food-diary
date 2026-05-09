@@ -1,6 +1,6 @@
 <div
     class="fd-ui-select"
-    [ngClass]="[sizeClass, error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel ? 'fd-ui-select--floating' : '']"
+    [ngClass]="[sizeClass(), error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel() ? 'fd-ui-select--floating' : '']"
 >
     <div
         #controlWrap
@@ -25,29 +25,29 @@
             class="fd-ui-select__control"
             type="button"
             [id]="id()"
-            [disabled]="disabled"
-            [class.fd-ui-select__control--placeholder]="!hasValue"
+            [disabled]="disabled()"
+            [class.fd-ui-select__control--placeholder]="!hasValue()"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
             [attr.aria-invalid]="error() ? 'true' : null"
-            [attr.aria-expanded]="isOpen"
+            [attr.aria-expanded]="isOpen()"
             [attr.aria-haspopup]="'listbox'"
             [attr.aria-controls]="id() + '-listbox'"
-            [attr.aria-activedescendant]="activeOptionId"
+            [attr.aria-activedescendant]="activeOptionId()"
             (focus)="onFocus()"
             (blur)="onBlur()"
             (click)="toggleMenu($event)"
             (keydown)="onControlKeydown($event)"
         >
-            {{ selectedLabel }}
+            {{ selectedLabel() }}
         </button>
 
         <ng-template
             cdkConnectedOverlay
             [cdkConnectedOverlayOrigin]="origin"
-            [cdkConnectedOverlayOpen]="isOpen"
+            [cdkConnectedOverlayOpen]="isOpen()"
             [cdkConnectedOverlayHasBackdrop]="true"
             [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
-            [cdkConnectedOverlayMinWidth]="overlayMinWidth"
+            [cdkConnectedOverlayMinWidth]="overlayMinWidth()"
             [cdkConnectedOverlayPositions]="[
                 { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
                 { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
@@ -69,11 +69,11 @@
                         type="button"
                         [id]="getOptionId(index)"
                         class="fd-ui-select__menu-item"
-                        [class.fd-ui-select__menu-item--selected]="isEqual(option.value, internalValue)"
-                        [class.fd-ui-select__menu-item--active]="index === activeIndex"
+                        [class.fd-ui-select__menu-item--selected]="isEqual(option.value, internalValue())"
+                        [class.fd-ui-select__menu-item--active]="index === activeIndex()"
                         role="option"
                         tabindex="-1"
-                        [attr.aria-selected]="isEqual(option.value, internalValue)"
+                        [attr.aria-selected]="isEqual(option.value, internalValue())"
                         (click)="onOptionSelect(option)"
                     >
                         <span>{{ option.label }}</span>
@@ -82,7 +82,7 @@
             </div>
         </ng-template>
 
-        <span class="fd-ui-select__suffix" [class.fd-ui-select__suffix--open]="isOpen" aria-hidden="true">
+        <span class="fd-ui-select__suffix" [class.fd-ui-select__suffix--open]="isOpen()" aria-hidden="true">
             <fd-ui-icon name="expand_more"></fd-ui-icon>
         </span>
     </div>

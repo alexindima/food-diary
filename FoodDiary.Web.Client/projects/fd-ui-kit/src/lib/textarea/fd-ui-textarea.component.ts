@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, forwardRef, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { type FdUiFieldSize } from '../types/field-size.type';
@@ -22,8 +22,6 @@ let uniqueId = 0;
     ],
 })
 export class FdUiTextareaComponent implements ControlValueAccessor {
-    private readonly cdr = inject(ChangeDetectorRef);
-
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -35,20 +33,19 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
 
-    protected internalValue = '';
-    protected disabled = false;
-    protected isFocused = false;
+    protected readonly internalValue = signal('');
+    protected readonly disabled = signal(false);
+    protected readonly isFocused = signal(false);
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    protected get sizeClass(): string {
-        return `fd-ui-textarea--size-${this.size()}`;
-    }
+    protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
+    protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
 
     public writeValue(value: string | number | null): void {
-        this.internalValue = value === null ? '' : String(value);
-        this.cdr.markForCheck();
+        this.internalValue.set(value === null ? '' : String(value));
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -60,38 +57,29 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
+        this.disabled.set(isDisabled);
     }
 
     protected onInput(value: string): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 
-        this.internalValue = value;
+        this.internalValue.set(value);
         this.onChange(value);
     }
 
     protected onBlur(): void {
-        this.isFocused = false;
+        this.isFocused.set(false);
         this.onTouched();
     }
 
     protected onFocus(): void {
-        this.isFocused = true;
-    }
-
-    protected get shouldFloatLabel(): boolean {
-        return this.isFocused || this.internalValue.trim().length > 0;
-    }
-
-    protected get shouldShowPlaceholder(): boolean {
-        return this.isFocused && this.internalValue.trim().length === 0;
+        this.isFocused.set(true);
     }
 
     protected focusControl(control: HTMLTextAreaElement): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
 

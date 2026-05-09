@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, type ElementRef, input, model, output, viewChildren, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    type ElementRef,
+    input,
+    model,
+    output,
+    viewChildren,
+    ViewEncapsulation,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 export interface FdUiTab {
@@ -28,14 +38,11 @@ export class FdUiTabsComponent {
     protected readonly tabButtons = viewChildren<ElementRef<HTMLButtonElement>>('tabButton');
     protected readonly tabsId = `fd-ui-tabs-${FdUiTabsComponent.nextId++}`;
 
-    protected get appearanceClass(): string {
-        return `fd-ui-tabs--appearance-${this.appearance()}`;
-    }
-
-    protected get selectedIndex(): number {
+    protected readonly appearanceClass = computed(() => `fd-ui-tabs--appearance-${this.appearance()}`);
+    protected readonly selectedIndex = computed(() => {
         const index = this.tabs().findIndex(tab => tab.value === this.selectedValue());
         return index >= 0 ? index : 0;
-    }
+    });
 
     protected selectIndex(index: number): void {
         const tab = this.tabs().at(index);

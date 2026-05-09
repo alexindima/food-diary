@@ -50,8 +50,8 @@
                     <fd-ui-calendar
                         [value]="value()"
                         [displayMonth]="displayMonth()"
-                        [min]="minDate"
-                        [max]="maxDate"
+                        [min]="minDate()"
+                        [max]="maxDate()"
                         (valueChange)="onDateSelect($event)"
                         (displayMonthChange)="onDisplayMonthChange($event)"
                     />

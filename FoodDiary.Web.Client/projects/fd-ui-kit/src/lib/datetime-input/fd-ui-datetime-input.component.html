@@ -1,6 +1,6 @@
 <div
     class="fd-ui-datetime-input"
-    [ngClass]="[sizeClass, error() ? 'fd-ui-datetime-input--has-error' : '', shouldFloatLabel ? 'fd-ui-datetime-input--floating' : '']"
+    [ngClass]="[sizeClass(), error() ? 'fd-ui-datetime-input--has-error' : '', shouldFloatLabel() ? 'fd-ui-datetime-input--floating' : '']"
 >
     <div class="fd-ui-datetime-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
         @if (label()) {
@@ -16,7 +16,7 @@
                 <fd-ui-date-input
                     [id]="id() + '-date'"
                     [formControl]="dateControl"
-                    [placeholder]="shouldFloatLabel ? '' : (placeholder() ?? '')"
+                    [placeholder]="shouldFloatLabel() ? '' : (placeholder() ?? '')"
                     [size]="size()"
                 />
             </div>
@@ -27,16 +27,16 @@
                 <input
                     #timeInput
                     class="fd-ui-datetime-input__control fd-ui-datetime-input__control--time"
-                    [value]="timeValue"
+                    [value]="timeValue()"
                     type="time"
                     step="60"
                     inputmode="numeric"
-                    [attr.placeholder]="shouldFloatLabel ? null : 'HH:mm'"
-                    [disabled]="disabled"
+                    [attr.placeholder]="shouldFloatLabel() ? null : 'HH:mm'"
+                    [disabled]="disabled()"
                     (input)="onTimeInput($any($event.target).value)"
                     (blur)="onTimeBlur()"
                 />
-                <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled" (click)="focusTimeInput(timeInput)">
+                <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled()" (click)="focusTimeInput(timeInput)">
                     <fd-ui-icon name="schedule"></fd-ui-icon>
                 </button>
             </div>
