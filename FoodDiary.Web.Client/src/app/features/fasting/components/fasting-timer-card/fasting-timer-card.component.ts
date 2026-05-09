@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
-import { DashboardWidgetFrameComponent } from '../../../dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
+import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
 import { type FastingOccurrenceKind, type FastingSession } from '../../models/fasting.data';
@@ -50,7 +50,7 @@ export class FastingTimerCardComponent {
     private timerInterval: ReturnType<typeof setInterval> | null = null;
     private readonly timerEffect = effect(() => {
         const session = this.getSession();
-        if (session && !session.endedAtUtc) {
+        if (!this.usesFacadeTimer() && session && !session.endedAtUtc) {
             this.startTimer();
             return;
         }
@@ -64,6 +64,7 @@ export class FastingTimerCardComponent {
     });
     public readonly layout = input<'dashboard' | 'page'>('page');
     public readonly session = input<FastingSession | null>(null);
+    private readonly usesFacadeTimer = computed(() => this.layout() === 'page' && this.facade !== null);
     protected readonly viewState = computed<FastingTimerCardState>(() => {
         const session = this.getSession();
         const isActive = !!session && !session.endedAtUtc;
@@ -102,6 +103,17 @@ export class FastingTimerCardComponent {
     protected readonly isDashboardLayout = computed(() => this.layout() === 'dashboard');
     protected readonly isSetupLayout = computed(() => this.layout() === 'page' && !this.viewState().isActive);
     protected readonly isPageSummaryLayout = computed(() => this.layout() === 'page' && this.viewState().isActive);
+    protected readonly isEatingPhase = computed(() => {
+        const { occurrenceKind } = this.viewState();
+        return occurrenceKind === 'EatDay' || occurrenceKind === 'EatingWindow';
+    });
+    protected readonly shouldShowStageProgress = computed(() => {
+        const state = this.viewState();
+        return !this.isEatingPhase() && state.stageTitleKey !== null && state.stageIndex !== null && state.totalStages > 0;
+    });
+    protected readonly shouldShowStageDescriptionFallback = computed(
+        () => !this.isEatingPhase() && !this.shouldShowStageProgress() && this.viewState().stageDescriptionKey !== null,
+    );
 
     public constructor() {
         this.destroyRef.onDestroy(() => {
@@ -138,20 +150,6 @@ export class FastingTimerCardComponent {
         return `0 0 0 var(--fd-size-fasting-ring-glow-spread) ${glowColor}, 0 var(--fd-size-fasting-ring-glow-offset-y) var(--fd-size-fasting-ring-glow-blur) ${glowColor}`;
     }
 
-    public shouldShowStageProgress(): boolean {
-        const state = this.viewState();
-        return !this.isEatingPhase() && state.stageTitleKey !== null && state.stageIndex !== null && state.totalStages > 0;
-    }
-
-    public shouldShowStageDescriptionFallback(): boolean {
-        return !this.isEatingPhase() && !this.shouldShowStageProgress() && this.viewState().stageDescriptionKey !== null;
-    }
-
-    private isEatingPhase(): boolean {
-        const { occurrenceKind } = this.viewState();
-        return occurrenceKind === 'EatDay' || occurrenceKind === 'EatingWindow';
-    }
-
     private getSession(): FastingSession | null {
         if (this.layout() === 'page' && this.facade) {
             return this.facade.currentSession();
@@ -161,6 +159,10 @@ export class FastingTimerCardComponent {
     }
 
     private getElapsedMs(): number {
+        if (this.usesFacadeTimer() && this.facade) {
+            return this.facade.elapsedMs();
+        }
+
         const session = this.getSession();
         if (!session) {
             return 0;

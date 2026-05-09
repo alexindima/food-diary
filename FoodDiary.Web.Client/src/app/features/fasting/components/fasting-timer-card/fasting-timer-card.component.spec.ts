@@ -195,6 +195,7 @@ interface FastingFacadeStub {
     isReducing: WritableSignal<boolean>;
     isUpdatingCycle: WritableSignal<boolean>;
     canExtendActiveSession: Signal<boolean>;
+    elapsedMs: WritableSignal<number>;
     selectMode: () => void;
     selectProtocol: () => void;
     setCustomHours: () => void;
@@ -238,6 +239,7 @@ function createFastingFacadeStub(): FastingFacadeStub {
         isReducing: signal(false),
         isUpdatingCycle: signal(false),
         canExtendActiveSession: computed(() => false),
+        elapsedMs: signal(0),
         selectMode: () => undefined,
         selectProtocol: () => undefined,
         setCustomHours: () => undefined,
@@ -266,6 +268,9 @@ function getFacadeStub(fixture: ComponentFixture<FastingTimerCardHostComponent>)
 function setSession(fixture: ComponentFixture<FastingTimerCardHostComponent>, session: FastingSession | null): void {
     fixture.componentInstance.session.set(session);
     getFacadeStub(fixture).currentSession.set(session);
+    getFacadeStub(fixture).elapsedMs.set(
+        session ? Math.max(0, new Date('2026-04-12T06:00:00Z').getTime() - new Date(session.startedAtUtc).getTime()) : 0,
+    );
 }
 
 function createExtendedSession(overrides: Partial<FastingSession> = {}): FastingSession {

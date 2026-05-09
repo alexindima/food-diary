@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { type ChartConfiguration, type ScaleOptionsByType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
-import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
+import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 
 export interface WeightTrendPoint {
     date: string | Date;
