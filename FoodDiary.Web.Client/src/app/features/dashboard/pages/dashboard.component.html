@@ -133,28 +133,8 @@
                                 <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
                                     <fd-fasting-timer-card
                                         class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
-                                        [layout]="'summary'"
-                                        [isActive]="fastingIsActive()"
-                                        [isOvertime]="fastingIsOvertime()"
-                                        [currentSessionCompleted]="!!fastingCurrentSession()?.endedAtUtc"
-                                        [progressPercent]="fastingProgressPercent()"
-                                        [elapsedFormatted]="fastingElapsedFormatted()"
-                                        [remainingFormatted]="fastingRemainingFormatted()"
-                                        [remainingLabelKey]="fastingRemainingLabelKey()"
-                                        [labelKey]="getFastingCardLabelKey()"
-                                        [stateLabel]="getFastingCardStateLabel()"
-                                        [occurrenceKind]="fastingCurrentSession()?.occurrenceKind ?? null"
-                                        [detailLabel]="getFastingCardDetailLabel()"
-                                        [metaLabel]="fastingMetaLabel()"
-                                        [ringColor]="fastingRingColor()"
-                                        [glowColor]="fastingStage()?.glowColor ?? null"
-                                        [showGlow]="false"
-                                        [stageTitleKey]="fastingStage()?.titleKey ?? null"
-                                        [stageDescriptionKey]="fastingStage()?.descriptionKey ?? null"
-                                        [stageIndex]="fastingStageIndex()"
-                                        [totalStages]="fastingTotalStages()"
-                                        [nextStageTitleKey]="fastingStage()?.nextTitleKey ?? null"
-                                        [nextStageFormatted]="fastingNextStageFormatted()"
+                                        [layout]="'dashboard'"
+                                        [session]="fastingCurrentSession()"
                                     />
                                 </fd-dashboard-card-shell>
                                 @if (layout.isEditingLayout()) {

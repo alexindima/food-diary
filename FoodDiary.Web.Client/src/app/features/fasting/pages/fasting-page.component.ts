@@ -22,7 +22,6 @@ import {
     FastingCheckInChartDialogComponent,
     type FastingCheckInChartDialogData,
 } from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
-import { FastingControlsComponent } from '../components/fasting-controls/fasting-controls.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
 import {
@@ -32,7 +31,6 @@ import {
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
     type FastingEmojiScaleOption,
 } from '../lib/fasting-page.constants';
-import { type FastingStagePresentation, resolveFastingStage } from '../lib/fasting-stage';
 import {
     FASTING_PROTOCOLS,
     FASTING_SYMPTOM_OPTIONS,
@@ -62,7 +60,6 @@ import {
         FdUiAccentSurfaceComponent,
         FdUiInlineAlertComponent,
         FastingTimerCardComponent,
-        FastingControlsComponent,
     ],
     templateUrl: './fasting-page.component.html',
     styleUrl: './fasting-page.component.scss',
@@ -91,38 +88,6 @@ export class FastingPageComponent {
     public readonly moodLevel = this.facade.moodLevel;
     public readonly selectedSymptoms = this.facade.selectedSymptoms;
     public readonly checkInNotes = this.facade.checkInNotes;
-    public readonly progressPercent = this.facade.progressPercent;
-    public readonly elapsedFormatted = this.facade.elapsedFormatted;
-    public readonly remainingFormatted = this.facade.remainingFormatted;
-    public readonly currentStage = computed<FastingStagePresentation | null>(() => {
-        const session = this.currentSession();
-        if (!session) {
-            return null;
-        }
-
-        if (session.planType === 'Cyclic' && session.occurrenceKind === 'EatDay' && !session.endedAtUtc) {
-            return null;
-        }
-
-        return resolveFastingStage(this.facade.elapsedMs(), session.plannedDurationHours);
-    });
-    public readonly currentRingColor = computed(() => {
-        const session = this.currentSession();
-        if (session?.planType === 'Cyclic' && session.occurrenceKind === 'EatDay' && !session.endedAtUtc) {
-            return 'var(--fd-color-green-500)';
-        }
-
-        return this.currentStage()?.color ?? null;
-    });
-    public readonly nextStageFormatted = computed(() => {
-        const stage = this.currentStage();
-        if (!stage?.nextInMs) {
-            return null;
-        }
-
-        return this.formatDuration(stage.nextInMs);
-    });
-    public readonly isOvertime = this.facade.isOvertime;
     public readonly hungerEmojiScale = FASTING_HUNGER_EMOJI_SCALE;
     public readonly energyEmojiScale = FASTING_ENERGY_EMOJI_SCALE;
     public readonly moodEmojiScale = FASTING_MOOD_EMOJI_SCALE;
@@ -275,6 +240,19 @@ export class FastingPageComponent {
         return option ? this.translateService.instant(option.labelKey) : protocol;
     }
 
+    public getHistorySessionTypeLabel(session: FastingSession): string {
+        if (session.planType === 'Cyclic') {
+            return this.translateService.instant('FASTING.CYCLIC_TYPE');
+        }
+
+        const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
+        if (!option) {
+            return this.translateService.instant('FASTING.EXTENDED_TYPE');
+        }
+
+        return this.translateService.instant(option.category === 'intermittent' ? 'FASTING.INTERMITTENT_TYPE' : 'FASTING.EXTENDED_TYPE');
+    }
+
     public getHistoryProtocolDisplay(session: FastingSession): string {
         if (session.planType === 'Cyclic') {
             const cycleLabel =
@@ -422,105 +400,6 @@ export class FastingPageComponent {
         return `fasting-history-checkins-${sessionId}`;
     }
 
-    public getHistorySessionTypeLabel(session: FastingSession): string {
-        if (session.planType === 'Cyclic') {
-            return this.translateService.instant('FASTING.CYCLIC_TYPE');
-        }
-
-        const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
-        if (!option) {
-            return this.translateService.instant('FASTING.EXTENDED_TYPE');
-        }
-
-        return this.translateService.instant(option.category === 'intermittent' ? 'FASTING.INTERMITTENT_TYPE' : 'FASTING.EXTENDED_TYPE');
-    }
-
-    public getCurrentCardLabelKey(): string {
-        const session = this.currentSession();
-        if (!session) {
-            return 'FASTING.WIDGET_LABEL';
-        }
-
-        switch (session.planType) {
-            case 'Cyclic':
-                return 'FASTING.CYCLIC_TYPE';
-            case 'Extended':
-                return 'FASTING.EXTENDED_TYPE';
-            default:
-                return 'FASTING.INTERMITTENT_TYPE';
-        }
-    }
-
-    public getCurrentCardStateLabel(): string | null {
-        const session = this.currentSession();
-        if (!session?.endedAtUtc) {
-            return this.getOccurrenceKindLabel(session?.occurrenceKind);
-        }
-
-        return null;
-    }
-
-    public getCurrentCardDetailLabel(): string | null {
-        const session = this.currentSession();
-        if (!session) {
-            return null;
-        }
-
-        if (session.planType === 'Cyclic') {
-            const cycleLabel = this.translateService.instant('FASTING.CYCLE_PATTERN', {
-                fast: session.cyclicFastDays ?? 1,
-                eat: session.cyclicEatDays ?? 1,
-            });
-            const eatWindowLabel = this.translateService.instant('FASTING.EAT_WINDOW_PATTERN', {
-                fast: session.cyclicEatDayFastHours ?? 16,
-                eat: session.cyclicEatDayEatingWindowHours ?? 8,
-            });
-
-            return `${cycleLabel} Â· ${eatWindowLabel}`;
-        }
-
-        return null;
-    }
-
-    public getCurrentCardSummaryDetailLabel(): string | null {
-        const session = this.currentSession();
-        if (!session) {
-            return null;
-        }
-
-        return this.getHistoryProtocolDisplay(session);
-    }
-
-    public getCurrentCardMetaLabel(): string | null {
-        const session = this.currentSession();
-        if (!session || session.planType !== 'Cyclic') {
-            return null;
-        }
-
-        return this.getCyclicPhaseProgressLabel(session);
-    }
-
-    public getCurrentRemainingLabelKey(): string {
-        const session = this.currentSession();
-        if (!session) {
-            return 'FASTING.REMAINING';
-        }
-
-        if (session.planType === 'Intermittent' && session.occurrenceKind === 'FastingWindow') {
-            return 'FASTING.UNTIL_EATING_WINDOW';
-        }
-
-        return 'FASTING.REMAINING';
-    }
-
-    private formatDuration(ms: number): string {
-        const totalSeconds = Math.floor(ms / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-
     private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): FdUiEmojiPickerOption<number>[] {
         this.currentLanguage();
 
@@ -562,48 +441,6 @@ export class FastingPageComponent {
         return checkIns.length > 0 ? (checkIns[0] ?? null) : null;
     }
 
-    private getOccurrenceKindLabel(kind?: FastingSession['occurrenceKind']): string | null {
-        switch (kind) {
-            case 'FastDay':
-                return this.translateService.instant('FASTING.FAST_DAY');
-            case 'EatDay':
-                return this.translateService.instant('FASTING.EAT_DAY');
-            case 'FastingWindow':
-                return this.translateService.instant('FASTING.FASTING_WINDOW');
-            case 'EatingWindow':
-                return this.translateService.instant('FASTING.EATING_WINDOW');
-            default:
-                return null;
-        }
-    }
-
-    private getCyclicPhaseProgressLabel(session: FastingSession): string | null {
-        const dayNumber = session.cyclicPhaseDayNumber;
-        const dayTotal = session.cyclicPhaseDayTotal;
-        if (!dayNumber || !dayTotal) {
-            return this.getOccurrenceKindLabel(session.occurrenceKind);
-        }
-
-        if (session.occurrenceKind === 'EatDay') {
-            return this.translateService.instant('FASTING.CYCLIC_EAT_PHASE_DAY_PROGRESS', {
-                current: dayNumber,
-                total: dayTotal,
-            });
-        }
-
-        const stage = this.currentStage();
-        if (stage) {
-            return this.translateService.instant('FASTING.CYCLIC_FAST_PHASE_STAGE_PROGRESS', {
-                current: dayNumber,
-                total: dayTotal,
-                stage: stage.index,
-                stageTotal: stage.total,
-            });
-        }
-
-        return this.translateService.instant('FASTING.CYCLIC_FAST_PHASE_DAY_PROGRESS', { current: dayNumber, total: dayTotal });
-    }
-
     private getSymptomLabel(symptom: string): string {
         return this.translateService.instant(`FASTING.CHECK_IN.SYMPTOMS.${symptom.toUpperCase()}`);
     }
@@ -639,15 +476,15 @@ export class FastingPageComponent {
     }
 
     public getEnergyEmoji(level: number | null | undefined): string {
-        return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? 'â€”';
+        return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
 
     public getHungerEmoji(level: number | null | undefined): string {
-        return this.hungerEmojiScale.find(option => option.value === level)?.emoji ?? 'â€”';
+        return this.hungerEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
 
     public getMoodEmoji(level: number | null | undefined): string {
-        return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? 'â€”';
+        return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
 
     public formatRelativeTime(value: string | null): string | null {
@@ -693,7 +530,7 @@ export class FastingPageComponent {
 
     private getEnergyDisplay(level: number | null): string {
         if (level === null) {
-            return 'â€”';
+            return '—';
         }
 
         return `${this.getEnergyEmoji(level)} ${level}/5`;
@@ -701,7 +538,7 @@ export class FastingPageComponent {
 
     private getMoodDisplay(level: number | null): string {
         if (level === null) {
-            return 'â€”';
+            return '—';
         }
 
         return `${this.getMoodEmoji(level)} ${level}/5`;
@@ -709,7 +546,7 @@ export class FastingPageComponent {
 
     private getHungerSummaryValue(level: number | null): string {
         if (level === null) {
-            return 'â€”';
+            return '—';
         }
 
         return this.getHungerEmoji(level);
@@ -717,7 +554,7 @@ export class FastingPageComponent {
 
     private getEnergySummaryValue(level: number | null): string {
         if (level === null) {
-            return 'â€”';
+            return '—';
         }
 
         return this.getEnergyEmoji(level);
@@ -725,7 +562,7 @@ export class FastingPageComponent {
 
     private getMoodSummaryValue(level: number | null): string {
         if (level === null) {
-            return 'â€”';
+            return '—';
         }
 
         return this.getMoodEmoji(level);

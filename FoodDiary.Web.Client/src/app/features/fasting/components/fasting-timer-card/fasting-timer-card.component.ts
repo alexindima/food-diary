@@ -1,50 +1,116 @@
 import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DashboardWidgetFrameComponent } from '../../../dashboard/components/dashboard-widget-frame/dashboard-widget-frame.component';
-import { type FastingOccurrenceKind } from '../../models/fasting.data';
+import { FastingFacade } from '../../lib/fasting.facade';
+import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
+import { type FastingOccurrenceKind, type FastingSession } from '../../models/fasting.data';
+import { FastingControlsComponent } from '../fasting-controls/fasting-controls.component';
+
+interface FastingTimerCardState {
+    isActive: boolean;
+    isOvertime: boolean;
+    currentSessionCompleted: boolean;
+    progressPercent: number;
+    elapsedFormatted: string;
+    remainingFormatted: string;
+    remainingLabelKey: string;
+    labelKey: string;
+    stateLabel: string | null;
+    occurrenceKind: FastingOccurrenceKind | null;
+    detailLabel: string | null;
+    metaLabel: string | null;
+    ringColor: string | null;
+    glowColor: string | null;
+    stageTitleKey: string | null;
+    stageDescriptionKey: string | null;
+    stageIndex: number | null;
+    totalStages: number;
+    nextStageTitleKey: string | null;
+    nextStageFormatted: string | null;
+    showGlow: boolean;
+}
 
 @Component({
     selector: 'fd-fasting-timer-card',
     standalone: true,
-    imports: [DecimalPipe, NgTemplateOutlet, TranslatePipe, FdUiCardComponent, DashboardWidgetFrameComponent],
+    imports: [DecimalPipe, NgTemplateOutlet, TranslatePipe, FdUiCardComponent, DashboardWidgetFrameComponent, FastingControlsComponent],
     templateUrl: './fasting-timer-card.component.html',
     styleUrl: './fasting-timer-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingTimerCardComponent {
+    private readonly facade = inject(FastingFacade, { optional: true });
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly translateService = inject(TranslateService);
+    private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
+    private readonly now = signal(new Date());
+    private timerInterval: ReturnType<typeof setInterval> | null = null;
+    private readonly timerEffect = effect(() => {
+        const session = this.getSession();
+        if (session && !session.endedAtUtc) {
+            this.startTimer();
+            return;
+        }
+
+        this.stopTimer();
+    });
     protected readonly Math = Math;
     protected readonly normalizedProgressPercent = computed(() => {
-        const progress = this.progressPercent();
+        const progress = this.viewState().progressPercent;
         return Number.isFinite(progress) ? Math.max(0, Math.min(progress, 100)) : 0;
     });
-    public readonly layout = input<'stacked' | 'summary' | 'setup' | 'pageSummary'>('stacked');
-    public readonly isActive = input<boolean>(false);
-    public readonly isOvertime = input<boolean>(false);
-    public readonly currentSessionCompleted = input<boolean>(false);
-    public readonly progressPercent = input<number>(0);
-    public readonly elapsedFormatted = input<string>('00:00:00');
-    public readonly remainingFormatted = input<string>('00:00:00');
-    public readonly remainingLabelKey = input<string>('FASTING.REMAINING');
-    public readonly labelKey = input<string>('FASTING.WIDGET_LABEL');
-    public readonly stateLabel = input<string | null>(null);
-    public readonly occurrenceKind = input<FastingOccurrenceKind | null>(null);
-    public readonly detailLabel = input<string | null>(null);
-    public readonly metaLabel = input<string | null>(null);
-    public readonly ringColor = input<string | null>(null);
-    public readonly glowColor = input<string | null>(null);
-    public readonly stageTitleKey = input<string | null>(null);
-    public readonly stageDescriptionKey = input<string | null>(null);
-    public readonly stageIndex = input<number | null>(null);
-    public readonly totalStages = input<number>(4);
-    public readonly nextStageTitleKey = input<string | null>(null);
-    public readonly nextStageFormatted = input<string | null>(null);
-    public readonly showGlow = input<boolean>(true);
+    public readonly layout = input<'dashboard' | 'page'>('page');
+    public readonly session = input<FastingSession | null>(null);
+    protected readonly viewState = computed<FastingTimerCardState>(() => {
+        const session = this.getSession();
+        const isActive = !!session && !session.endedAtUtc;
+        const state = buildFastingTimerCardComputedState({
+            session,
+            elapsedMs: this.getElapsedMs(),
+            translate: this.translate,
+        });
+        const stage = state.stage;
+
+        return {
+            isActive,
+            isOvertime: state.isOvertime,
+            currentSessionCompleted: !!session?.endedAtUtc,
+            progressPercent: state.progressPercent,
+            elapsedFormatted: state.elapsedFormatted,
+            remainingFormatted: state.remainingFormatted,
+            remainingLabelKey: state.remainingLabelKey,
+            labelKey: this.getCardLabelKey(session),
+            stateLabel: state.stateLabel,
+            occurrenceKind: session?.occurrenceKind ?? null,
+            detailLabel: state.detailLabel,
+            metaLabel: state.metaLabel,
+            ringColor: state.ringColor,
+            glowColor: stage?.glowColor ?? null,
+            stageTitleKey: stage?.titleKey ?? null,
+            stageDescriptionKey: stage?.descriptionKey ?? null,
+            stageIndex: state.showStageProgress ? (stage?.index ?? null) : null,
+            totalStages: state.showStageProgress ? (stage?.total ?? 4) : 0,
+            nextStageTitleKey: stage?.nextTitleKey ?? null,
+            nextStageFormatted: state.nextStageFormatted,
+            showGlow: this.layout() === 'page' && !isActive,
+        };
+    });
+
+    protected readonly isDashboardLayout = computed(() => this.layout() === 'dashboard');
+    protected readonly isSetupLayout = computed(() => this.layout() === 'page' && !this.viewState().isActive);
+    protected readonly isPageSummaryLayout = computed(() => this.layout() === 'page' && this.viewState().isActive);
+
+    public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.stopTimer();
+        });
+    }
 
     public getProgressStrokeColor(): string {
-        if (this.isOvertime()) {
+        if (this.viewState().isOvertime) {
             return 'var(--fd-color-green-500)';
         }
 
@@ -52,19 +118,19 @@ export class FastingTimerCardComponent {
             return 'var(--fd-color-green-500)';
         }
 
-        return this.ringColor() ?? 'var(--fd-color-purple-500)';
+        return this.viewState().ringColor ?? 'var(--fd-color-purple-500)';
     }
 
     public getRingGlow(): string | null {
-        if (!this.showGlow()) {
+        if (!this.viewState().showGlow) {
             return null;
         }
 
-        if (this.isOvertime()) {
+        if (this.viewState().isOvertime) {
             return 'var(--fd-shadow-fasting-overtime-ring)';
         }
 
-        const glowColor = this.glowColor();
+        const glowColor = this.viewState().glowColor;
         if (!glowColor) {
             return null;
         }
@@ -73,15 +139,74 @@ export class FastingTimerCardComponent {
     }
 
     public shouldShowStageProgress(): boolean {
-        return !this.isEatingPhase() && this.stageTitleKey() !== null && this.stageIndex() !== null && this.totalStages() > 0;
+        const state = this.viewState();
+        return !this.isEatingPhase() && state.stageTitleKey !== null && state.stageIndex !== null && state.totalStages > 0;
     }
 
     public shouldShowStageDescriptionFallback(): boolean {
-        return !this.isEatingPhase() && !this.shouldShowStageProgress() && this.stageDescriptionKey() !== null;
+        return !this.isEatingPhase() && !this.shouldShowStageProgress() && this.viewState().stageDescriptionKey !== null;
     }
 
     private isEatingPhase(): boolean {
-        const occurrenceKind = this.occurrenceKind();
+        const { occurrenceKind } = this.viewState();
         return occurrenceKind === 'EatDay' || occurrenceKind === 'EatingWindow';
+    }
+
+    private getSession(): FastingSession | null {
+        if (this.layout() === 'page' && this.facade) {
+            return this.facade.currentSession();
+        }
+
+        return this.session();
+    }
+
+    private getElapsedMs(): number {
+        const session = this.getSession();
+        if (!session) {
+            return 0;
+        }
+
+        const start = new Date(session.startedAtUtc).getTime();
+        const end = session.endedAtUtc ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
+        if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+            return 0;
+        }
+
+        return end - start;
+    }
+
+    private getCardLabelKey(session: FastingSession | null): string {
+        if (!session) {
+            return 'FASTING.WIDGET_LABEL';
+        }
+
+        switch (session.planType) {
+            case 'Cyclic':
+                return 'FASTING.CYCLIC_TYPE';
+            case 'Extended':
+                return 'FASTING.EXTENDED_TYPE';
+            default:
+                return 'FASTING.INTERMITTENT_TYPE';
+        }
+    }
+
+    private startTimer(): void {
+        if (this.timerInterval !== null) {
+            return;
+        }
+
+        this.now.set(new Date());
+        this.timerInterval = setInterval(() => {
+            this.now.set(new Date());
+        }, 1000);
+    }
+
+    private stopTimer(): void {
+        if (this.timerInterval === null) {
+            return;
+        }
+
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
     }
 }

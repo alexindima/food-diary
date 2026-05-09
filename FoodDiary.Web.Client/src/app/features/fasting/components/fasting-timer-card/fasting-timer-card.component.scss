@@ -29,13 +29,6 @@
             display: contents;
         }
 
-        &--stacked {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--fd-space-card-relaxed-gap);
-        }
-
         &--setup {
             display: grid;
             grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
@@ -276,24 +269,6 @@
             max-width: none;
         }
 
-        .fasting-timer-card__layout--page-summary .fasting-timer-card__summary {
-            align-items: flex-start;
-            padding-top: 0;
-        }
-
-        .fasting-timer-card__layout--page-summary .fasting-timer-card__summary-top {
-            align-items: flex-start;
-            text-align: left;
-        }
-
-        .fasting-timer-card__layout--page-summary .fasting-timer-card__summary-labels {
-            align-items: flex-start;
-        }
-
-        .fasting-timer-card__layout--page-summary .fasting-timer-card__summary-protocol-line {
-            justify-content: flex-start;
-        }
-
         .fasting-timer-card__layout--page-summary .fasting-timer-card__controls-slot--page-summary {
             padding-top: 0;
         }
@@ -320,6 +295,8 @@
         .fasting-timer-card__summary {
             width: 100%;
             align-items: center;
+            padding-top: 0;
+            text-align: center;
         }
 
         .fasting-timer-card__summary-top {

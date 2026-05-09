@@ -14,31 +14,8 @@
                     class="fasting__card"
                     [class.fasting__card--page-summary]="isActive()"
                     [class.fasting__card--setup]="!isActive()"
-                    [layout]="isActive() ? 'pageSummary' : 'setup'"
-                    [isActive]="isActive()"
-                    [isOvertime]="isOvertime()"
-                    [currentSessionCompleted]="!!currentSession()?.endedAtUtc"
-                    [progressPercent]="progressPercent()"
-                    [elapsedFormatted]="elapsedFormatted()"
-                    [remainingFormatted]="remainingFormatted()"
-                    [remainingLabelKey]="getCurrentRemainingLabelKey()"
-                    [labelKey]="getCurrentCardLabelKey()"
-                    [stateLabel]="getCurrentCardStateLabel()"
-                    [occurrenceKind]="currentSession()?.occurrenceKind ?? null"
-                    [detailLabel]="isActive() ? getCurrentCardSummaryDetailLabel() : getCurrentCardDetailLabel()"
-                    [metaLabel]="isActive() ? getCurrentCardMetaLabel() : null"
-                    [ringColor]="currentRingColor()"
-                    [glowColor]="currentStage()?.glowColor ?? null"
-                    [showGlow]="!isActive()"
-                    [stageTitleKey]="currentStage()?.titleKey ?? null"
-                    [stageDescriptionKey]="currentStage()?.descriptionKey ?? null"
-                    [stageIndex]="currentStage()?.index ?? null"
-                    [totalStages]="currentStage()?.total ?? 4"
-                    [nextStageTitleKey]="currentStage()?.nextTitleKey ?? null"
-                    [nextStageFormatted]="nextStageFormatted()"
-                >
-                    <fd-fasting-controls fastingControls />
-                </fd-fasting-timer-card>
+                    [layout]="'page'"
+                />
 
                 <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">
                     @if (stats(); as s) {

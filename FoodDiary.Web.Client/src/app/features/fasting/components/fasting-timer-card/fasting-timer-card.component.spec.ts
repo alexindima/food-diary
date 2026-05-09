@@ -1,70 +1,74 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, type Signal, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
-import { describe, expect, it } from 'vitest';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { type FastingOccurrenceKind } from '../../models/fasting.data';
+import { LocalizationService } from '../../../../services/localization.service';
+import { FastingFacade } from '../../lib/fasting.facade';
+import { type FastingSession } from '../../models/fasting.data';
 import { FastingTimerCardComponent } from './fasting-timer-card.component';
 
 describe('FastingTimerCardComponent', () => {
-    it('renders projected fasting controls in stacked layout', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('stacked');
-        fixture.detectChanges();
-
-        expect(getProjectedControl(fixture)).not.toBeNull();
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
     });
 
-    it('renders projected fasting controls in summary layout', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('summary');
-        fixture.detectChanges();
-
-        expect(getProjectedControl(fixture)).not.toBeNull();
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
-    it('renders projected fasting controls in setup layout', async () => {
+    it('renders dashboard layout without page controls', async () => {
         const fixture = await createHostFixtureAsync();
 
-        fixture.componentInstance.layout.set('setup');
+        fixture.componentInstance.layout.set('dashboard');
+        setSession(fixture, createSession());
         fixture.detectChanges();
 
-        expect(getProjectedControl(fixture)).not.toBeNull();
+        expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
     });
 
-    it('renders projected fasting controls in page summary layout', async () => {
+    it('renders page controls in page layout', async () => {
         const fixture = await createHostFixtureAsync();
 
-        fixture.componentInstance.layout.set('pageSummary');
+        fixture.componentInstance.layout.set('page');
         fixture.detectChanges();
 
-        expect(getProjectedControl(fixture)).not.toBeNull();
+        expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).not.toBeNull();
     });
 
-    it.each(['summary', 'pageSummary'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
+    it.each(['dashboard', 'page'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
         const fixture = await createHostFixtureAsync();
 
         fixture.componentInstance.layout.set(layout);
-        fixture.componentInstance.isActive.set(true);
-        fixture.componentInstance.occurrenceKind.set('EatDay');
-        fixture.componentInstance.stageTitleKey.set('FASTING.STAGES.INITIAL.TITLE');
-        fixture.componentInstance.stageDescriptionKey.set('FASTING.STAGES.INITIAL.DESCRIPTION');
-        fixture.componentInstance.stageIndex.set(1);
+        setSession(
+            fixture,
+            createSession({
+                planType: 'Cyclic',
+                protocol: 'Cyclic',
+                occurrenceKind: 'EatDay',
+                cyclicFastDays: 1,
+                cyclicEatDays: 1,
+                cyclicEatDayFastHours: 16,
+                cyclicEatDayEatingWindowHours: 8,
+                cyclicPhaseDayNumber: 1,
+                cyclicPhaseDayTotal: 1,
+            }),
+        );
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css('.fasting-timer-card__stage-title'))).toBeNull();
         expect(fixture.debugElement.query(By.css('.fasting-timer-card__next-stage-label'))).toBeNull();
     });
 
-    it.each(['summary', 'pageSummary'] as const)('renders protocol separator without mojibake in %s layout', async layout => {
+    it.each(['dashboard', 'page'] as const)('renders protocol separator without mojibake in %s layout', async layout => {
         const fixture = await createHostFixtureAsync();
 
         fixture.componentInstance.layout.set(layout);
-        fixture.componentInstance.isActive.set(true);
-        fixture.componentInstance.detailLabel.set('16:8');
+        setSession(fixture, createSession({ protocol: 'F16_8' }));
         fixture.detectChanges();
 
         const separator = fixture.nativeElement.querySelector('.fasting-timer-card__summary-protocol-separator') as HTMLElement;
@@ -72,24 +76,22 @@ describe('FastingTimerCardComponent', () => {
         expect(fixture.nativeElement.textContent).not.toContain('\u00c2');
     });
 
-    it.each(['summary', 'pageSummary'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
+    it.each(['dashboard', 'page'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
         const fixture = await createHostFixtureAsync();
 
         fixture.componentInstance.layout.set(layout);
-        fixture.componentInstance.isActive.set(true);
-        fixture.componentInstance.progressPercent.set(140);
+        setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(30) }));
         fixture.detectChanges();
 
         const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
         expect(percent.textContent.trim()).toBe('100%');
     });
 
-    it.each(['summary', 'pageSummary'] as const)('uses the same progress ring geometry in %s layout', async layout => {
+    it.each(['dashboard', 'page'] as const)('uses the same progress ring geometry in %s layout', async layout => {
         const fixture = await createHostFixtureAsync();
 
         fixture.componentInstance.layout.set(layout);
-        fixture.componentInstance.isActive.set(true);
-        fixture.componentInstance.progressPercent.set(25);
+        setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(6) }));
         fixture.detectChanges();
 
         const progressRing = fixture.nativeElement.querySelector('.fasting-timer-card__ring-progress') as SVGCircleElement;
@@ -98,10 +100,36 @@ describe('FastingTimerCardComponent', () => {
         expect(Number(progressRing.style.strokeDashoffset)).toBeCloseTo(circumference * 0.75);
     });
 
+    it.each(['dashboard', 'page'] as const)('uses shared summary ring content in %s layout', async layout => {
+        const fixture = await createHostFixtureAsync();
+
+        fixture.componentInstance.layout.set(layout);
+        setSession(fixture, createSession());
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.fasting-timer-card__ring-content--summary')).not.toBeNull();
+    });
+
+    it('builds timer display from session inputs', async () => {
+        const fixture = await createHostFixtureAsync();
+
+        fixture.componentInstance.layout.set('dashboard');
+        setSession(
+            fixture,
+            createExtendedSession({ plannedDurationHours: 10, initialPlannedDurationHours: 10, startedAtUtc: getStartedAtUtc(5) }),
+        );
+        fixture.detectChanges();
+
+        const elapsed = fixture.nativeElement.querySelector('.fasting-timer-card__elapsed') as HTMLElement;
+        const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
+        expect(elapsed.textContent.trim()).toBe('05:00:00');
+        expect(percent.textContent.trim()).toBe('50%');
+    });
+
     it('marks progress rings as decorative', async () => {
         const fixture = await createHostFixtureAsync();
 
-        fixture.componentInstance.layout.set('summary');
+        fixture.componentInstance.layout.set('dashboard');
         fixture.detectChanges();
 
         const ringSvg = fixture.nativeElement.querySelector('.fasting-timer-card__ring-svg') as SVGElement;
@@ -112,40 +140,175 @@ describe('FastingTimerCardComponent', () => {
 
 @Component({
     imports: [FastingTimerCardComponent],
-    template: `
-        <fd-fasting-timer-card
-            [layout]="layout()"
-            [isActive]="isActive()"
-            [occurrenceKind]="occurrenceKind()"
-            [detailLabel]="detailLabel()"
-            [progressPercent]="progressPercent()"
-            [stageTitleKey]="stageTitleKey()"
-            [stageDescriptionKey]="stageDescriptionKey()"
-            [stageIndex]="stageIndex()"
-        >
-            <button fastingControls type="button" class="projected-control">Start fasting</button>
-        </fd-fasting-timer-card>
-    `,
+    template: '<fd-fasting-timer-card [layout]="layout()" [session]="session()" />',
 })
 class FastingTimerCardHostComponent {
-    public readonly layout = signal<'stacked' | 'summary' | 'setup' | 'pageSummary'>('stacked');
-    public readonly isActive = signal(false);
-    public readonly occurrenceKind = signal<FastingOccurrenceKind | null>(null);
-    public readonly detailLabel = signal<string | null>(null);
-    public readonly progressPercent = signal(0);
-    public readonly stageTitleKey = signal<string | null>(null);
-    public readonly stageDescriptionKey = signal<string | null>(null);
-    public readonly stageIndex = signal<number | null>(null);
+    public readonly layout = signal<'dashboard' | 'page'>('dashboard');
+    public readonly session = signal<FastingSession | null>(null);
 }
 
 async function createHostFixtureAsync(): Promise<ComponentFixture<FastingTimerCardHostComponent>> {
     await TestBed.configureTestingModule({
         imports: [FastingTimerCardHostComponent, TranslateModule.forRoot()],
+        providers: [
+            { provide: FastingFacade, useValue: createFastingFacadeStub() },
+            {
+                provide: FdUiDialogService,
+                useValue: createDialogServiceStub(),
+            },
+            { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'ru' } },
+        ],
     }).compileComponents();
 
     return TestBed.createComponent(FastingTimerCardHostComponent);
 }
 
-function getProjectedControl(fixture: ComponentFixture<FastingTimerCardHostComponent>): HTMLElement | null {
-    return fixture.nativeElement.querySelector('.projected-control') as HTMLElement | null;
+function createDialogServiceStub(): Pick<FdUiDialogService, 'open'> {
+    return {
+        open: () => ({
+            afterClosed: () => ({
+                pipe: () => ({
+                    subscribe: (): undefined => undefined,
+                }),
+            }),
+        }),
+    } as unknown as Pick<FdUiDialogService, 'open'>;
+}
+
+interface FastingFacadeStub {
+    isActive: Signal<boolean>;
+    currentSession: WritableSignal<FastingSession | null>;
+    selectedMode: WritableSignal<string>;
+    selectedProtocol: WritableSignal<string>;
+    customHours: WritableSignal<number>;
+    customIntermittentFastHours: WritableSignal<number>;
+    cyclicEatDayProtocol: WritableSignal<string>;
+    cyclicFastDays: WritableSignal<number>;
+    cyclicEatDays: WritableSignal<number>;
+    cyclicUsesCustomPreset: WritableSignal<boolean>;
+    cyclicEatDayFastHours: WritableSignal<number>;
+    extendHours: WritableSignal<number>;
+    reduceHours: WritableSignal<number>;
+    isStarting: WritableSignal<boolean>;
+    isEnding: WritableSignal<boolean>;
+    isExtending: WritableSignal<boolean>;
+    isReducing: WritableSignal<boolean>;
+    isUpdatingCycle: WritableSignal<boolean>;
+    canExtendActiveSession: Signal<boolean>;
+    selectMode: () => void;
+    selectProtocol: () => void;
+    setCustomHours: () => void;
+    setCustomIntermittentFastHours: () => void;
+    setCyclicPreset: () => void;
+    selectCustomCyclicPreset: () => void;
+    setCyclicFastDays: () => void;
+    setCyclicEatDays: () => void;
+    selectCyclicEatDayProtocol: () => void;
+    setCyclicEatDayFastHours: () => void;
+    startFasting: () => void;
+    endFasting: () => void;
+    setExtendHours: () => void;
+    setReduceHours: () => void;
+    extendByHours: () => void;
+    reduceTargetByHours: () => void;
+    skipCyclicDay: () => void;
+    postponeCyclicDay: () => void;
+}
+
+function createFastingFacadeStub(): FastingFacadeStub {
+    const currentSession = signal<FastingSession | null>(null);
+
+    return {
+        isActive: computed(() => currentSession() !== null && currentSession()?.endedAtUtc === null),
+        currentSession,
+        selectedMode: signal('intermittent'),
+        selectedProtocol: signal('F16_8'),
+        customHours: signal(16),
+        customIntermittentFastHours: signal(16),
+        cyclicEatDayProtocol: signal('F16_8'),
+        cyclicFastDays: signal(1),
+        cyclicEatDays: signal(1),
+        cyclicUsesCustomPreset: signal(false),
+        cyclicEatDayFastHours: signal(16),
+        extendHours: signal(24),
+        reduceHours: signal(4),
+        isStarting: signal(false),
+        isEnding: signal(false),
+        isExtending: signal(false),
+        isReducing: signal(false),
+        isUpdatingCycle: signal(false),
+        canExtendActiveSession: computed(() => false),
+        selectMode: () => undefined,
+        selectProtocol: () => undefined,
+        setCustomHours: () => undefined,
+        setCustomIntermittentFastHours: () => undefined,
+        setCyclicPreset: () => undefined,
+        selectCustomCyclicPreset: () => undefined,
+        setCyclicFastDays: () => undefined,
+        setCyclicEatDays: () => undefined,
+        selectCyclicEatDayProtocol: () => undefined,
+        setCyclicEatDayFastHours: () => undefined,
+        startFasting: () => undefined,
+        endFasting: () => undefined,
+        setExtendHours: () => undefined,
+        setReduceHours: () => undefined,
+        extendByHours: () => undefined,
+        reduceTargetByHours: () => undefined,
+        skipCyclicDay: () => undefined,
+        postponeCyclicDay: () => undefined,
+    };
+}
+
+function getFacadeStub(fixture: ComponentFixture<FastingTimerCardHostComponent>): FastingFacadeStub {
+    return fixture.debugElement.injector.get(FastingFacade) as unknown as FastingFacadeStub;
+}
+
+function setSession(fixture: ComponentFixture<FastingTimerCardHostComponent>, session: FastingSession | null): void {
+    fixture.componentInstance.session.set(session);
+    getFacadeStub(fixture).currentSession.set(session);
+}
+
+function createExtendedSession(overrides: Partial<FastingSession> = {}): FastingSession {
+    return createSession({
+        planType: 'Extended',
+        protocol: 'F24_0',
+        initialPlannedDurationHours: 24,
+        plannedDurationHours: 24,
+        ...overrides,
+    });
+}
+
+function getStartedAtUtc(hoursAgo: number): string {
+    return new Date(new Date('2026-04-12T06:00:00Z').getTime() - hoursAgo * 3_600_000).toISOString();
+}
+
+function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
+    return {
+        id: 'session-1',
+        startedAtUtc: '2026-04-12T06:00:00Z',
+        endedAtUtc: null,
+        initialPlannedDurationHours: 16,
+        addedDurationHours: 0,
+        plannedDurationHours: 16,
+        protocol: 'F16_8',
+        planType: 'Intermittent',
+        occurrenceKind: 'FastingWindow',
+        cyclicFastDays: null,
+        cyclicEatDays: null,
+        cyclicEatDayFastHours: null,
+        cyclicEatDayEatingWindowHours: null,
+        cyclicPhaseDayNumber: null,
+        cyclicPhaseDayTotal: null,
+        isCompleted: false,
+        status: 'Active',
+        notes: null,
+        checkInAtUtc: null,
+        hungerLevel: null,
+        energyLevel: null,
+        moodLevel: null,
+        symptoms: [],
+        checkInNotes: null,
+        checkIns: [],
+        ...overrides,
+    };
 }

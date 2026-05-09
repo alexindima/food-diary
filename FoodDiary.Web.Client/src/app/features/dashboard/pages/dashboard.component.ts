@@ -9,7 +9,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button.component';
@@ -28,7 +28,6 @@ import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
-import { type FastingStagePresentation, resolveFastingStage } from '../../fasting/lib/fasting-stage';
 import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
 import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
 import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
@@ -41,13 +40,6 @@ import type {
     TdeeInsightDialogData,
 } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
 import { DashboardFacade } from '../lib/dashboard.facade';
-import {
-    formatDashboardFastingDuration,
-    getDashboardCyclicPhaseProgressLabel,
-    getDashboardFastingCycleLabel,
-    getDashboardFastingOccurrenceLabel,
-    getDashboardFastingProtocolBaseLabel,
-} from '../lib/dashboard-fasting.utils';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 
 @Component({
@@ -86,8 +78,6 @@ export class DashboardComponent {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
     private readonly facade = inject(DashboardFacade);
-    private readonly translateService = inject(TranslateService);
-    private readonly translate = (key: string, params?: Record<string, unknown>): string => this.translateService.instant(key, params);
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
@@ -126,109 +116,6 @@ export class DashboardComponent {
     public readonly placeholderLabel = this.facade.placeholderLabel;
     public readonly fastingIsActive = this.facade.fastingIsActive;
     public readonly fastingCurrentSession = this.facade.currentFastingSession;
-    public readonly fastingProgressPercent = computed(() => this.fastingWidgetState().progressPercent);
-    public readonly fastingElapsedFormatted = computed(() => this.fastingWidgetState().elapsedFormatted);
-    public readonly fastingRemainingFormatted = computed(() => this.fastingWidgetState().remainingFormatted);
-    public readonly fastingRemainingLabelKey = computed(() => this.fastingWidgetState().remainingLabelKey);
-    public readonly fastingIsOvertime = computed(() => this.fastingWidgetState().isOvertime);
-    public readonly fastingStage = computed<FastingStagePresentation | null>(() => this.fastingWidgetState().stage);
-    public readonly fastingStageIndex = computed<number | null>(() =>
-        this.fastingWidgetState().showStageProgress ? (this.fastingStage()?.index ?? null) : null,
-    );
-    public readonly fastingTotalStages = computed(() =>
-        this.fastingWidgetState().showStageProgress ? (this.fastingStage()?.total ?? 4) : 0,
-    );
-    public readonly fastingStateLabel = computed(() => this.fastingWidgetState().stateLabel);
-    public readonly fastingDetailLabel = computed(() => this.fastingWidgetState().detailLabel);
-    public readonly fastingMetaLabel = computed(() => this.fastingWidgetState().metaLabel);
-    public readonly fastingRingColor = computed(() => this.fastingWidgetState().ringColor);
-    private readonly fastingBaseStage = computed<FastingStagePresentation | null>(() => {
-        const session = this.fastingCurrentSession();
-        if (!session) {
-            return null;
-        }
-
-        return resolveFastingStage(this.facade.fastingElapsedMs(), session.plannedDurationHours);
-    });
-    private readonly fastingWidgetState = computed(() => {
-        const session = this.fastingCurrentSession();
-        const stage = this.fastingBaseStage();
-        const fallback = {
-            progressPercent: this.facade.fastingProgressPercent(),
-            elapsedFormatted: this.facade.fastingElapsedFormatted(),
-            remainingFormatted: this.facade.fastingRemainingFormatted(),
-            remainingLabelKey: 'FASTING.REMAINING',
-            isOvertime: this.facade.fastingIsOvertime(),
-            showStageProgress: true,
-            stateLabel: getDashboardFastingOccurrenceLabel(this.translate, session?.occurrenceKind),
-            detailLabel: session ? getDashboardFastingProtocolBaseLabel(this.translate, session) : null,
-            metaLabel: session?.planType === 'Cyclic' ? getDashboardCyclicPhaseProgressLabel(this.translate, session, stage) : null,
-            ringColor: stage?.color ?? null,
-            stage,
-        };
-
-        if (!session || session.planType !== 'Intermittent' || session.endedAtUtc) {
-            return fallback;
-        }
-
-        const fastHours = Math.max(1, session.initialPlannedDurationHours || session.plannedDurationHours);
-        const eatingHours = Math.max(1, 24 - fastHours);
-        const cycleLengthMs = (fastHours + eatingHours) * 3_600_000;
-        const cycleDay = Math.floor(this.facade.fastingElapsedMs() / cycleLengthMs) + 1;
-        const cycleElapsedMs = this.facade.fastingElapsedMs() % cycleLengthMs;
-        const fastWindowMs = fastHours * 3_600_000;
-        const eatingWindowMs = eatingHours * 3_600_000;
-        const isFastingWindow = cycleElapsedMs < fastWindowMs;
-
-        if (isFastingWindow) {
-            const stage = resolveFastingStage(cycleElapsedMs, fastHours);
-            return {
-                progressPercent: Math.min((cycleElapsedMs / fastWindowMs) * 100, 100),
-                elapsedFormatted: formatDashboardFastingDuration(cycleElapsedMs),
-                remainingFormatted: formatDashboardFastingDuration(Math.max(0, fastWindowMs - cycleElapsedMs)),
-                remainingLabelKey: 'FASTING.UNTIL_EATING_WINDOW',
-                isOvertime: false,
-                showStageProgress: true,
-                stateLabel: this.translateService.instant('FASTING.FASTING_WINDOW'),
-                detailLabel: getDashboardFastingProtocolBaseLabel(this.translate, session),
-                metaLabel: getDashboardFastingCycleLabel(this.translate, cycleDay),
-                ringColor: stage.color,
-                stage,
-            };
-        }
-
-        const eatingElapsedMs = cycleElapsedMs - fastWindowMs;
-        return {
-            progressPercent: Math.min((eatingElapsedMs / eatingWindowMs) * 100, 100),
-            elapsedFormatted: formatDashboardFastingDuration(eatingElapsedMs),
-            remainingFormatted: formatDashboardFastingDuration(Math.max(0, eatingWindowMs - eatingElapsedMs)),
-            remainingLabelKey: 'FASTING.NEXT_FAST',
-            isOvertime: false,
-            showStageProgress: false,
-            stateLabel: this.translateService.instant('FASTING.EATING_WINDOW'),
-            detailLabel: getDashboardFastingProtocolBaseLabel(this.translate, session),
-            metaLabel: getDashboardFastingCycleLabel(this.translate, cycleDay),
-            ringColor: 'var(--fd-color-green-500)',
-            stage: {
-                index: cycleDay,
-                total: cycleDay,
-                titleKey: 'FASTING.EATING_WINDOW',
-                descriptionKey: 'FASTING.EATING_WINDOW_DESCRIPTION',
-                color: 'var(--fd-color-green-500)',
-                glowColor: 'color-mix(in srgb, var(--fd-color-green-500) 18%, transparent)',
-                nextTitleKey: null,
-                nextInMs: null,
-            } satisfies FastingStagePresentation,
-        };
-    });
-    public readonly fastingNextStageFormatted = computed(() => {
-        const stage = this.fastingStage();
-        if (!stage?.nextInMs) {
-            return null;
-        }
-
-        return formatDashboardFastingDuration(stage.nextInMs);
-    });
     public readonly shouldRenderFastingWidget = computed(() => {
         if (this.layout.isEditingLayout()) {
             return this.layout.shouldRenderBlock('fasting');
@@ -420,30 +307,6 @@ export class DashboardComponent {
         }
 
         await this.navigationService.navigateToFastingAsync();
-    }
-
-    public getFastingCardLabelKey(): string {
-        const session = this.fastingCurrentSession();
-        if (!session) {
-            return 'FASTING.WIDGET_LABEL';
-        }
-
-        switch (session.planType) {
-            case 'Cyclic':
-                return 'FASTING.CYCLIC_TYPE';
-            case 'Extended':
-                return 'FASTING.EXTENDED_TYPE';
-            default:
-                return 'FASTING.INTERMITTENT_TYPE';
-        }
-    }
-
-    public getFastingCardStateLabel(): string | null {
-        return this.fastingStateLabel();
-    }
-
-    public getFastingCardDetailLabel(): string | null {
-        return this.fastingDetailLabel();
     }
 
     private observeDashboardWidth(): void {

@@ -34,10 +34,8 @@ export class DashboardFacade {
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly trendDays = 7;
-    private timerInterval: ReturnType<typeof setInterval> | null = null;
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
-    public readonly now = signal(new Date());
     public readonly isTodaySelected = computed(() => {
         const today = normalizeDate(new Date());
         return this.selectedDate().getTime() === today.getTime();
@@ -80,35 +78,6 @@ export class DashboardFacade {
         const session = this.currentFastingSession();
         return session !== null && session.endedAtUtc === null;
     });
-    public readonly fastingElapsedMs = computed(() => {
-        const session = this.currentFastingSession();
-        if (!session) {
-            return 0;
-        }
-
-        const start = new Date(session.startedAtUtc).getTime();
-        const end = session.endedAtUtc ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
-        return Math.max(0, end - start);
-    });
-    public readonly fastingTotalMs = computed(() => {
-        const session = this.currentFastingSession();
-        return session ? session.plannedDurationHours * 3600_000 : 0;
-    });
-    public readonly fastingProgressPercent = computed(() => {
-        const total = this.fastingTotalMs();
-        if (total <= 0) {
-            return 0;
-        }
-
-        return Math.min((this.fastingElapsedMs() / total) * 100, 100);
-    });
-    public readonly fastingElapsedFormatted = computed(() => this.formatDuration(this.fastingElapsedMs()));
-    public readonly fastingRemainingFormatted = computed(() => {
-        const remaining = Math.max(0, this.fastingTotalMs() - this.fastingElapsedMs());
-        return this.formatDuration(remaining);
-    });
-    public readonly fastingIsOvertime = computed(() => this.fastingElapsedMs() > this.fastingTotalMs());
-
     public readonly placeholderIcon = placeholderIcon;
     public readonly placeholderLabel = placeholderLabel;
 
@@ -177,7 +146,6 @@ export class DashboardFacade {
             next: snapshot => {
                 this.snapshot.set(snapshot);
                 this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
-                this.syncFastingTimer(snapshot);
                 if (clearHydrationUpdate) {
                     this.isHydrationUpdating.set(false);
                 }
@@ -185,7 +153,6 @@ export class DashboardFacade {
             error: () => {
                 this.snapshot.set(null);
                 this.layout.initializeLayout(null);
-                this.stopFastingTimer();
                 if (clearHydrationUpdate) {
                     this.isHydrationUpdating.set(false);
                 }
@@ -196,46 +163,5 @@ export class DashboardFacade {
     private getCurrentLocale(): string {
         const lang = this.translateService.currentLang || this.translateService.getDefaultLang() || 'en';
         return lang.split(/[-_]/)[0];
-    }
-
-    private syncFastingTimer(snapshot: DashboardSnapshot | null): void {
-        const session = snapshot?.currentFastingSession;
-        if (session && session.endedAtUtc === null) {
-            this.startFastingTimer();
-            return;
-        }
-
-        this.stopFastingTimer();
-    }
-
-    private startFastingTimer(): void {
-        if (this.timerInterval !== null) {
-            return;
-        }
-
-        this.now.set(new Date());
-        this.timerInterval = setInterval(() => {
-            this.now.set(new Date());
-        }, 1000);
-        this.destroyRef.onDestroy(() => {
-            this.stopFastingTimer();
-        });
-    }
-
-    private stopFastingTimer(): void {
-        if (this.timerInterval === null) {
-            return;
-        }
-
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
-    }
-
-    private formatDuration(ms: number): string {
-        const totalSeconds = Math.floor(ms / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 }
