@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
@@ -21,11 +21,32 @@ export class ClientDashboardComponent {
 
     public readonly client = signal<ClientSummary | null>(null);
     public readonly loading = signal(true);
+    public readonly clientTitle = computed(() => {
+        const client = this.client();
+        if (!client) {
+            return '';
+        }
 
-    public getClientTitle(client: ClientSummary): string {
         const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
         return fullName || client.email;
-    }
+    });
+    public readonly hasAnyPermission = computed(() => {
+        const p = this.client()?.permissions;
+        if (!p) {
+            return false;
+        }
+
+        return (
+            p.shareProfile ||
+            p.shareMeals ||
+            p.shareStatistics ||
+            p.shareWeight ||
+            p.shareWaist ||
+            p.shareGoals ||
+            p.shareHydration ||
+            p.shareFasting
+        );
+    });
 
     public constructor() {
         const clientId = this.route.snapshot.params['clientId'];
@@ -39,23 +60,6 @@ export class ClientDashboardComponent {
                 this.loading.set(false);
             },
         });
-    }
-
-    public hasAnyPermission(): boolean {
-        const p = this.client()?.permissions;
-        if (!p) {
-            return false;
-        }
-        return (
-            p.shareProfile ||
-            p.shareMeals ||
-            p.shareStatistics ||
-            p.shareWeight ||
-            p.shareWaist ||
-            p.shareGoals ||
-            p.shareHydration ||
-            p.shareFasting
-        );
     }
 
     public goBack(): void {

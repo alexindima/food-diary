@@ -200,10 +200,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.fileInputRef()?.nativeElement.click();
     }
 
-    protected previewAlt(): string {
-        return this.translateService.instant('IMAGE_PREVIEW.ALT', { name: this.label() });
-    }
-
     public onZoneClick(fileInput: HTMLInputElement): void {
         if (this.disabled || this.isUploading || this.selection.url) {
             return;

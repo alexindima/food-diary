@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,6 +9,17 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { type NotificationItem, NotificationService } from '../../../services/notification.service';
+
+interface NotificationViewModel {
+    notification: NotificationItem;
+    isPasswordSetupSuggestion: boolean;
+    isDietologistInvitation: boolean;
+    hasAccentIcon: boolean;
+    icon: string;
+    badgeKey: string | null;
+    actionKey: string | null;
+    ariaLabel: string;
+}
 
 @Component({
     selector: 'fd-notifications-dialog',
@@ -27,6 +38,33 @@ export class NotificationsDialogComponent {
     protected readonly notifications = this.notificationService.notifications;
     protected readonly isLoading = this.notificationService.notificationsLoading;
     protected readonly isMarkingAllRead = signal(false);
+    protected readonly hasUnreadNotifications = computed(() => this.notifications().some(item => !item.isRead));
+    protected readonly notificationItems = computed<NotificationViewModel[]>(() =>
+        this.notifications().map(notification => {
+            const isDietologistInvitation = notification.type === 'DietologistInvitationReceived';
+            const isPasswordSetupSuggestion = notification.type === 'PasswordSetupSuggested';
+            const hasAccentIcon = isDietologistInvitation || isPasswordSetupSuggestion;
+
+            return {
+                notification,
+                isDietologistInvitation,
+                isPasswordSetupSuggestion,
+                hasAccentIcon,
+                icon: isDietologistInvitation ? 'medical_information' : isPasswordSetupSuggestion ? 'password' : 'notifications',
+                badgeKey: isDietologistInvitation
+                    ? 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE'
+                    : isPasswordSetupSuggestion
+                      ? 'NOTIFICATIONS.PASSWORD_SETUP_BADGE'
+                      : null,
+                actionKey: isDietologistInvitation
+                    ? 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION'
+                    : isPasswordSetupSuggestion
+                      ? 'NOTIFICATIONS.PASSWORD_SETUP_ACTION'
+                      : null,
+                ariaLabel: [notification.title.trim(), notification.body?.trim()].filter(Boolean).join('. '),
+            };
+        }),
+    );
 
     public constructor() {
         this.notificationService.ensureNotificationsLoaded();
@@ -77,62 +115,5 @@ export class NotificationsDialogComponent {
                     this.isMarkingAllRead.set(false);
                 },
             });
-    }
-
-    protected hasUnreadNotifications(): boolean {
-        return this.notifications().some(item => !item.isRead);
-    }
-
-    protected isPasswordSetupSuggestion(notification: NotificationItem): boolean {
-        return notification.type === 'PasswordSetupSuggested';
-    }
-
-    protected isDietologistInvitation(notification: NotificationItem): boolean {
-        return notification.type === 'DietologistInvitationReceived';
-    }
-
-    protected getNotificationIcon(notification: NotificationItem): string {
-        if (this.isDietologistInvitation(notification)) {
-            return 'medical_information';
-        }
-
-        if (this.isPasswordSetupSuggestion(notification)) {
-            return 'password';
-        }
-
-        return 'notifications';
-    }
-
-    protected hasNotificationAccentIcon(notification: NotificationItem): boolean {
-        return this.isDietologistInvitation(notification) || this.isPasswordSetupSuggestion(notification);
-    }
-
-    protected getNotificationBadgeKey(notification: NotificationItem): string | null {
-        if (this.isDietologistInvitation(notification)) {
-            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE';
-        }
-
-        if (this.isPasswordSetupSuggestion(notification)) {
-            return 'NOTIFICATIONS.PASSWORD_SETUP_BADGE';
-        }
-
-        return null;
-    }
-
-    protected getNotificationActionKey(notification: NotificationItem): string | null {
-        if (this.isDietologistInvitation(notification)) {
-            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION';
-        }
-
-        if (this.isPasswordSetupSuggestion(notification)) {
-            return 'NOTIFICATIONS.PASSWORD_SETUP_ACTION';
-        }
-
-        return null;
-    }
-
-    protected getNotificationAriaLabel(notification: NotificationItem): string {
-        const parts = [notification.title.trim(), notification.body?.trim()].filter(Boolean);
-        return parts.join('. ');
     }
 }

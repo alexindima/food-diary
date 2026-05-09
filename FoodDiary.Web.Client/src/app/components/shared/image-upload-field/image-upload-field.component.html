@@ -25,7 +25,7 @@
         />
 
         @if (selection.url) {
-            <img class="image-upload-field__preview" [src]="selection.url" [alt]="previewAlt()" />
+            <img class="image-upload-field__preview" [src]="selection.url" [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }" />
             <div class="image-upload-field__control">
                 <fd-ui-button
                     type="button"
@@ -96,7 +96,7 @@
                     <img
                         #cropImage
                         [src]="cropPreviewUrl"
-                        [alt]="previewAlt()"
+                        [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
                         (load)="onCropperImageLoadedAsync(cropImage)"
                         class="image-upload-field__cropper-image"
                     />

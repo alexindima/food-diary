@@ -17,48 +17,51 @@
             </div>
         } @else {
             <div class="notifications-dialog__list fd-grid fd-gap-sm" role="list" aria-live="polite">
-                @for (notification of notifications(); track notification.id) {
+                @for (item of notificationItems(); track item.notification.id) {
                     <div role="listitem">
                         <button
                             type="button"
                             class="notifications-dialog__item fd-grid fd-gap-xxs"
-                            [class.is-read]="notification.isRead"
-                            [class.notifications-dialog__item--without-icon]="!hasNotificationAccentIcon(notification)"
-                            [class.notifications-dialog__item--dietologist]="isDietologistInvitation(notification)"
-                            [class.notifications-dialog__item--security]="isPasswordSetupSuggestion(notification)"
-                            [attr.aria-label]="getNotificationAriaLabel(notification)"
-                            (click)="openNotification(notification)"
+                            [class.is-read]="item.notification.isRead"
+                            [class.notifications-dialog__item--without-icon]="!item.hasAccentIcon"
+                            [class.notifications-dialog__item--dietologist]="item.isDietologistInvitation"
+                            [class.notifications-dialog__item--security]="item.isPasswordSetupSuggestion"
+                            [attr.aria-label]="item.ariaLabel"
+                            (click)="openNotification(item.notification)"
                         >
-                            @if (hasNotificationAccentIcon(notification)) {
+                            @if (item.hasAccentIcon) {
                                 <span
                                     class="notifications-dialog__item-icon fd-place-center"
-                                    [class.notifications-dialog__item-icon--dietologist]="isDietologistInvitation(notification)"
-                                    [class.notifications-dialog__item-icon--security]="isPasswordSetupSuggestion(notification)"
+                                    [class.notifications-dialog__item-icon--dietologist]="item.isDietologistInvitation"
+                                    [class.notifications-dialog__item-icon--security]="item.isPasswordSetupSuggestion"
                                 >
-                                    <fd-ui-icon [name]="getNotificationIcon(notification)"></fd-ui-icon>
+                                    <fd-ui-icon [name]="item.icon"></fd-ui-icon>
                                 </span>
                             }
                             <div class="notifications-dialog__item-content fd-grid fd-gap-xxs">
                                 <div class="notifications-dialog__item-head fd-row fd-align-baseline fd-justify-between fd-gap-md">
                                     <div class="notifications-dialog__item-head-main fd-grid fd-gap-xxs">
-                                        @if (getNotificationBadgeKey(notification); as badgeKey) {
+                                        @if (item.badgeKey; as badgeKey) {
                                             <span class="notifications-dialog__item-badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                                                 {{ badgeKey | translate }}
                                             </span>
                                         }
-                                        <span class="notifications-dialog__item-title fd-ui-card-title">{{ notification.title }}</span>
+                                        <span class="notifications-dialog__item-title fd-ui-card-title">{{ item.notification.title }}</span>
                                     </div>
                                     <div class="notifications-dialog__item-meta fd-inline-center fd-justify-end fd-gap-xs">
                                         <span class="notifications-dialog__item-date fd-ui-caption">{{
-                                            notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
+                                            item.notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
                                         }}</span>
-                                        <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
+                                        <span
+                                            class="notifications-dialog__item-indicator"
+                                            [class.is-hidden]="item.notification.isRead"
+                                        ></span>
                                     </div>
                                 </div>
-                                @if (notification.body) {
-                                    <p class="notifications-dialog__item-body fd-ui-body-sm">{{ notification.body }}</p>
+                                @if (item.notification.body) {
+                                    <p class="notifications-dialog__item-body fd-ui-body-sm">{{ item.notification.body }}</p>
                                 }
-                                @if (getNotificationActionKey(notification); as actionKey) {
+                                @if (item.actionKey; as actionKey) {
                                     <div
                                         class="notifications-dialog__item-cta fd-ui-pill fd-ui-pill--compact fd-ui-action-text"
                                         aria-hidden="true"

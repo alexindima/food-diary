@@ -10,7 +10,7 @@ import { type NotificationItem, NotificationService } from '../../../services/no
 import { NotificationsDialogComponent } from './notifications-dialog.component';
 
 type NotificationsDialogComponentTestApi = NotificationsDialogComponent & {
-    getNotificationIcon(notification: NotificationItem): string;
+    notificationItems(): Array<{ icon: string }>;
 };
 
 describe('NotificationsDialogComponent', () => {
@@ -70,9 +70,7 @@ describe('NotificationsDialogComponent', () => {
         expect(card).toBeTruthy();
         expect(host.textContent).toContain('NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE');
         expect(host.textContent).toContain('NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION');
-        expect((component as NotificationsDialogComponentTestApi).getNotificationIcon(notificationService.notifications()[0])).toBe(
-            'medical_information',
-        );
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('medical_information');
     });
 
     it('marks unread invitation as read before navigation', () => {
@@ -117,8 +115,6 @@ describe('NotificationsDialogComponent', () => {
         expect(card).toBeTruthy();
         expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_BADGE');
         expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_ACTION');
-        expect((component as NotificationsDialogComponentTestApi).getNotificationIcon(notificationService.notifications()[0])).toBe(
-            'password',
-        );
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('password');
     });
 });

@@ -2,7 +2,7 @@
     <div class="client-dashboard__header fd-stack fd-gap-xs">
         <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">Back to clients</fd-ui-button>
         @if (client(); as currentClient) {
-            <h1 class="client-dashboard__title fd-page-title">{{ getClientTitle(currentClient) }}</h1>
+            <h1 class="client-dashboard__title fd-page-title">{{ clientTitle() }}</h1>
             <span class="client-dashboard__email fd-ui-caption">{{ currentClient.email }}</span>
             @if (currentClient.permissions.shareProfile) {
                 <div class="client-dashboard__profile-meta fd-row fd-wrap fd-gap-xs">
