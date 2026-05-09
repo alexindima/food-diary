@@ -64,13 +64,15 @@
     </div>
 
     <div class="nutrition-editor__macro-bar fd-row" aria-hidden="true">
-        @if (!macroState().isEmpty) {
-            @for (segment of macroState().segments; track segment.key) {
-                <span
-                    class="nutrition-editor__macro-bar-segment"
-                    [style.width.%]="segment.percent"
-                    [style.backgroundColor]="getMacroColor(segment.key)"
-                ></span>
+        @if (macroBarState(); as macroBar) {
+            @if (!macroBar.isEmpty) {
+                @for (segment of macroBar.segments; track segment.key) {
+                    <span
+                        class="nutrition-editor__macro-bar-segment"
+                        [style.width.%]="segment.percent"
+                        [style.backgroundColor]="segment.color"
+                    ></span>
+                }
             }
         }
     </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
@@ -62,8 +62,24 @@ export class NutritionEditorComponent {
         carbs: 'var(--fd-color-nutrition-carbs)',
         fiber: 'var(--fd-color-nutrition-fiber)',
     };
+    public readonly macroBarState = computed<NutritionMacroBarViewModel>(() => {
+        const state = this.macroState();
 
-    public getMacroColor(key: NutritionMacroSegment['key']): string {
-        return this.nutrientTextColors[key];
-    }
+        return {
+            isEmpty: state.isEmpty,
+            segments: state.segments.map(segment => ({
+                ...segment,
+                color: this.nutrientTextColors[segment.key],
+            })),
+        };
+    });
+}
+
+interface NutritionMacroBarViewModel {
+    isEmpty: boolean;
+    segments: NutritionMacroSegmentViewModel[];
+}
+
+interface NutritionMacroSegmentViewModel extends NutritionMacroSegment {
+    color: string;
 }
