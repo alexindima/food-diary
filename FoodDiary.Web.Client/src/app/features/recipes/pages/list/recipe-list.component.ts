@@ -40,6 +40,11 @@ import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import { type FavoriteRecipe, type Recipe, type RecipeVisibility } from '../../models/recipe.data';
 
+interface RecipeCardViewModel {
+    recipe: Recipe;
+    imageUrl: string | undefined;
+}
+
 @Component({
     selector: 'fd-recipe-list',
     templateUrl: './recipe-list.component.html',
@@ -85,8 +90,19 @@ export class RecipeListComponent {
     public readonly errorKey = this.recipeListFacade.errorKey;
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly showRecentSection = computed(() => this.recipeListFacade.showRecentSection());
-    public readonly recentRecipeItems = computed(() => this.recentRecipes());
+    public readonly recentRecipeItems = computed<RecipeCardViewModel[]>(() =>
+        this.recentRecipes().map(recipe => ({
+            recipe,
+            imageUrl: this.resolveImage(recipe),
+        })),
+    );
     public readonly allRecipesSectionItems = computed(() => this.recipeListFacade.allRecipesSectionItems());
+    public readonly allRecipeItems = computed<RecipeCardViewModel[]>(() =>
+        this.allRecipesSectionItems().map(recipe => ({
+            recipe,
+            imageUrl: this.resolveImage(recipe),
+        })),
+    );
     public readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
     public readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value));
     public readonly isEmptyState = computed(

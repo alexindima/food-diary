@@ -187,13 +187,13 @@
                                 <span class="recipe-list__section-line"></span>
                             </div>
                             <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
-                                @for (recipe of recentRecipeItems(); track recipe.id) {
+                                @for (item of recentRecipeItems(); track item.recipe.id) {
                                     <fd-recipe-card
-                                        [recipe]="recipe"
-                                        [imageUrl]="resolveImage(recipe)"
-                                        (open)="onRecipeClick(recipe)"
-                                        (addToMeal)="onAddToMeal(recipe)"
-                                        (favoriteChanged)="onRecipeFavoriteChanged(recipe, $event)"
+                                        [recipe]="item.recipe"
+                                        [imageUrl]="item.imageUrl"
+                                        (open)="onRecipeClick(item.recipe)"
+                                        (addToMeal)="onAddToMeal(item.recipe)"
+                                        (favoriteChanged)="onRecipeFavoriteChanged(item.recipe, $event)"
                                     />
                                 }
                             </div>
@@ -209,13 +209,13 @@
                                 <span class="recipe-list__section-line"></span>
                             </div>
                             <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
-                                @for (recipe of allRecipesSectionItems(); track recipe.id) {
+                                @for (item of allRecipeItems(); track item.recipe.id) {
                                     <fd-recipe-card
-                                        [recipe]="recipe"
-                                        [imageUrl]="resolveImage(recipe)"
-                                        (open)="onRecipeClick(recipe)"
-                                        (addToMeal)="onAddToMeal(recipe)"
-                                        (favoriteChanged)="onRecipeFavoriteChanged(recipe, $event)"
+                                        [recipe]="item.recipe"
+                                        [imageUrl]="item.imageUrl"
+                                        (open)="onRecipeClick(item.recipe)"
+                                        (addToMeal)="onAddToMeal(item.recipe)"
+                                        (favoriteChanged)="onRecipeFavoriteChanged(item.recipe, $event)"
                                     />
                                 }
                             </div>

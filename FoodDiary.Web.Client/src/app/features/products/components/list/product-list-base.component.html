@@ -186,13 +186,13 @@
                                 <span class="product-list__section-line"></span>
                             </div>
                             <div class="product-list__section-grid fd-grid fd-gap-card-profile">
-                                @for (product of recentProducts; track product.id) {
+                                @for (item of recentProductItems(); track item.product.id) {
                                     <fd-product-card
-                                        [product]="product"
-                                        [imageUrl]="resolveImage(product)"
-                                        (open)="onProductClick(product)"
-                                        (addToMeal)="onAddToMeal(product)"
-                                        (favoriteChanged)="onProductFavoriteChanged(product, $event)"
+                                        [product]="item.product"
+                                        [imageUrl]="item.imageUrl"
+                                        (open)="onProductClick(item.product)"
+                                        (addToMeal)="onAddToMeal(item.product)"
+                                        (favoriteChanged)="onProductFavoriteChanged(item.product, $event)"
                                     />
                                 }
                             </div>
@@ -208,13 +208,13 @@
                                 <span class="product-list__section-line"></span>
                             </div>
                             <div class="product-list__section-grid fd-grid fd-gap-card-profile">
-                                @for (product of allProductsSectionItems(); track product.id) {
+                                @for (item of allProductItems(); track item.product.id) {
                                     <fd-product-card
-                                        [product]="product"
-                                        [imageUrl]="resolveImage(product)"
-                                        (open)="onProductClick(product)"
-                                        (addToMeal)="onAddToMeal(product)"
-                                        (favoriteChanged)="onProductFavoriteChanged(product, $event)"
+                                        [product]="item.product"
+                                        [imageUrl]="item.imageUrl"
+                                        (open)="onProductClick(item.product)"
+                                        (addToMeal)="onAddToMeal(item.product)"
+                                        (favoriteChanged)="onProductFavoriteChanged(item.product, $event)"
                                     />
                                 }
                             </div>

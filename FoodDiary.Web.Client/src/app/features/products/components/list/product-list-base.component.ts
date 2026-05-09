@@ -33,6 +33,11 @@ import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
 import { ProductListFiltersDialogComponent, type ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
 
+interface ProductCardViewModel {
+    product: Product;
+    imageUrl: string | undefined;
+}
+
 @Component({
     selector: 'fd-product-list-base',
     standalone: true,
@@ -73,7 +78,7 @@ export class ProductListBaseComponent {
     public searchForm: FormGroup<ProductSearchFormGroup>;
     public productData: PagedData<Product> = new PagedData<Product>();
     public currentPageIndex = 0;
-    public recentProducts: Product[] = [];
+    public readonly recentProducts = signal<Product[]>([]);
     public readonly favorites = signal<FavoriteProduct[]>([]);
     public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
@@ -81,7 +86,13 @@ export class ProductListBaseComponent {
     public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasSearchValue = computed(() => !!this.searchForm.controls.search.value?.trim());
-    public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts.length > 0);
+    public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts().length > 0);
+    public readonly recentProductItems = computed<ProductCardViewModel[]>(() =>
+        this.recentProducts().map(product => ({
+            product,
+            imageUrl: this.resolveImage(product),
+        })),
+    );
     public readonly allProductsSectionItems = computed(() => {
         const products = this.productData.items();
         if (products.length === 0) {
@@ -92,9 +103,15 @@ export class ProductListBaseComponent {
             return products;
         }
 
-        const recentIds = new Set(this.recentProducts.map(product => product.id));
+        const recentIds = new Set(this.recentProducts().map(product => product.id));
         return products.filter(product => !recentIds.has(product.id));
     });
+    public readonly allProductItems = computed<ProductCardViewModel[]>(() =>
+        this.allProductsSectionItems().map(product => ({
+            product,
+            imageUrl: this.resolveImage(product),
+        })),
+    );
     public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
     public readonly hasActiveFilters = computed(() => this.searchForm.controls.onlyMine.value || this.selectedProductTypes().length > 0);
     public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
@@ -242,14 +259,14 @@ export class ProductListBaseComponent {
         return this.productService.query(page, limit, filters, includePublic).pipe(
             tap(data => {
                 this.productData.setData(data);
-                this.recentProducts = [];
+                this.recentProducts.set([]);
                 this.currentPageIndex = data.page - 1;
                 this.errorKey.set(null);
             }),
             map(() => void 0),
             catchError((_error: HttpErrorResponse) => {
                 this.productData.clearData();
-                this.recentProducts = [];
+                this.recentProducts.set([]);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
@@ -267,7 +284,7 @@ export class ProductListBaseComponent {
         return this.productService.queryOverview(1, this.pageSize, undefined, true, 10, 10).pipe(
             tap(data => {
                 this.productData.setData(data.allProducts);
-                this.recentProducts = data.recentItems;
+                this.recentProducts.set(data.recentItems);
                 this.favorites.set(data.favoriteItems);
                 this.favoriteTotalCount.set(data.favoriteTotalCount);
                 this.currentPageIndex = data.allProducts.page - 1;
@@ -276,7 +293,7 @@ export class ProductListBaseComponent {
             map(() => void 0),
             catchError((_error: HttpErrorResponse) => {
                 this.productData.clearData();
-                this.recentProducts = [];
+                this.recentProducts.set([]);
                 this.favorites.set([]);
                 this.favoriteTotalCount.set(0);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
@@ -416,8 +433,8 @@ export class ProductListBaseComponent {
         this.productData.items.update(items =>
             items.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
         );
-        this.recentProducts = this.recentProducts.map(product =>
-            product.id === productId ? { ...product, isFavorite, favoriteProductId } : product,
+        this.recentProducts.update(products =>
+            products.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
         );
     }
 }
