@@ -1,10 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DietologistService } from '../../api/dietologist.service';
 import { type ClientSummary } from '../../models/dietologist.data';
+
+interface ClientCardViewModel {
+    client: ClientSummary;
+    title: string;
+    initials: string;
+}
 
 @Component({
     selector: 'fd-dietologist-clients-page',
@@ -20,6 +26,13 @@ export class DietologistClientsPageComponent {
 
     public readonly clients = signal<ClientSummary[]>([]);
     public readonly loading = signal(true);
+    public readonly clientItems = computed<ClientCardViewModel[]>(() =>
+        this.clients().map(client => ({
+            client,
+            title: this.getClientTitle(client),
+            initials: this.getClientInitials(client),
+        })),
+    );
 
     public constructor() {
         this.dietologistService.getMyClients().subscribe({
@@ -37,12 +50,12 @@ export class DietologistClientsPageComponent {
         void this.router.navigate(['/dietologist', 'clients', client.userId]);
     }
 
-    public getClientTitle(client: ClientSummary): string {
+    private getClientTitle(client: ClientSummary): string {
         const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
         return fullName || client.email;
     }
 
-    public getClientInitials(client: ClientSummary): string {
+    private getClientInitials(client: ClientSummary): string {
         const parts = [client.firstName, client.lastName].filter((value): value is string => Boolean(value?.trim()));
         if (parts.length === 0) {
             return client.email.charAt(0).toUpperCase();

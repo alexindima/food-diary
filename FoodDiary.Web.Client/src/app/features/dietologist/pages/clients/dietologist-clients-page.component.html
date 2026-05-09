@@ -3,48 +3,48 @@
 
     @if (loading()) {
         <p class="fd-ui-body-sm">Loading...</p>
-    } @else if (clients().length === 0) {
+    } @else if (clientItems().length === 0) {
         <p class="dietologist-clients__empty fd-ui-body-sm">No clients yet. Clients can invite you by email.</p>
     } @else {
         <div class="dietologist-clients__list fd-stack fd-gap-sm">
-            @for (client of clients(); track client.userId) {
-                <fd-ui-card class="dietologist-clients__card" (click)="openClient(client)">
+            @for (item of clientItems(); track item.client.userId) {
+                <fd-ui-card class="dietologist-clients__card" (click)="openClient(item.client)">
                     <div class="dietologist-clients__card-content fd-row fd-justify-between fd-gap-md">
                         <div
                             class="dietologist-clients__avatar fd-inline-center"
-                            [class.dietologist-clients__avatar--image]="!!client.profileImage"
+                            [class.dietologist-clients__avatar--image]="!!item.client.profileImage"
                         >
-                            @if (client.profileImage) {
-                                <img [src]="client.profileImage" [alt]="getClientTitle(client)" />
+                            @if (item.client.profileImage) {
+                                <img [src]="item.client.profileImage" [alt]="item.title" />
                             } @else {
-                                <span>{{ getClientInitials(client) }}</span>
+                                <span>{{ item.initials }}</span>
                             }
                         </div>
                         <div class="dietologist-clients__info fd-stack fd-gap-xxs">
-                            <span class="dietologist-clients__name fd-ui-action-text">{{ getClientTitle(client) }}</span>
-                            <span class="dietologist-clients__email fd-ui-caption">{{ client.email }}</span>
-                            @if (client.permissions.shareProfile) {
+                            <span class="dietologist-clients__name fd-ui-action-text">{{ item.title }}</span>
+                            <span class="dietologist-clients__email fd-ui-caption">{{ item.client.email }}</span>
+                            @if (item.client.permissions.shareProfile) {
                                 <div class="dietologist-clients__meta fd-row fd-wrap fd-gap-xs">
-                                    @if (client.height) {
+                                    @if (item.client.height) {
                                         <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                                            {{ client.height }} cm
+                                            {{ item.client.height }} cm
                                         </span>
                                     }
-                                    @if (client.gender) {
+                                    @if (item.client.gender) {
                                         <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                                            {{ client.gender }}
+                                            {{ item.client.gender }}
                                         </span>
                                     }
-                                    @if (client.activityLevel) {
+                                    @if (item.client.activityLevel) {
                                         <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                                            {{ client.activityLevel }}
+                                            {{ item.client.activityLevel }}
                                         </span>
                                     }
                                 </div>
                             }
                         </div>
                         <span class="dietologist-clients__date fd-ui-caption">
-                            Connected {{ client.acceptedAtUtc | date: 'mediumDate' }}
+                            Connected {{ item.client.acceptedAtUtc | date: 'mediumDate' }}
                         </span>
                     </div>
                 </fd-ui-card>
