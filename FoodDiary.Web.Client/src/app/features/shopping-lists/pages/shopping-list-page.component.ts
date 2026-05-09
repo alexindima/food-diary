@@ -66,6 +66,14 @@ export class ShoppingListPageComponent {
     );
     public readonly listOptions = computed(() => this.facade.listOptions());
     public readonly isEmptyState = computed(() => this.items().length === 0);
+    public readonly itemViewModels = computed<ShoppingListItemViewModel[]>(() => {
+        this.activeLang();
+
+        return this.items().map(item => ({
+            ...item,
+            meta: this.formatItemMeta(item),
+        }));
+    });
     public readonly listSelectControl = new FormControl<string | null>(null);
     public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
     public readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
@@ -73,6 +81,7 @@ export class ShoppingListPageComponent {
 
     private readonly unitValues = Object.values(MeasurementUnit) as MeasurementUnit[];
     private readonly isMobileManageOpen = signal(false);
+    private readonly activeLang = signal(this.translateService.currentLang);
 
     public constructor() {
         this.itemForm = new FormGroup<ShoppingListItemFormGroup>({
@@ -83,7 +92,8 @@ export class ShoppingListPageComponent {
         });
 
         this.buildUnitOptions();
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
+            this.activeLang.set(event.lang);
             this.buildUnitOptions();
         });
 
@@ -154,7 +164,7 @@ export class ShoppingListPageComponent {
         this.facade.toggleItemChecked(item.id, checked);
     }
 
-    public formatItemMeta(item: ShoppingListItem): string {
+    private formatItemMeta(item: ShoppingListItem): string {
         const parts: string[] = [];
         if (item.amount) {
             const unitLabel = this.getUnitLabel(item.unit);
@@ -259,6 +269,10 @@ interface ShoppingListItemFormValues {
     amount: number | null;
     unit: MeasurementUnit | null;
     category: string | null;
+}
+
+interface ShoppingListItemViewModel extends ShoppingListItem {
+    meta: string;
 }
 
 type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;

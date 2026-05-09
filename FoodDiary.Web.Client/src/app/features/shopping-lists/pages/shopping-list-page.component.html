@@ -166,9 +166,9 @@
                     </fd-ui-button>
                 </form>
 
-                @if (items().length > 0) {
+                @if (itemViewModels().length > 0) {
                     <div class="shopping-list__items">
-                        @for (item of items(); track item.id) {
+                        @for (item of itemViewModels(); track item.id) {
                             <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
                                 <fd-ui-checkbox
                                     class="shopping-list__checkbox"
@@ -178,8 +178,8 @@
                                 />
                                 <div class="shopping-list__item-body">
                                     <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>
-                                    @if (formatItemMeta(item)) {
-                                        <div class="shopping-list__item-meta fd-ui-caption">{{ formatItemMeta(item) }}</div>
+                                    @if (item.meta) {
+                                        <div class="shopping-list__item-meta fd-ui-caption">{{ item.meta }}</div>
                                     }
                                 </div>
                                 <fd-ui-button
