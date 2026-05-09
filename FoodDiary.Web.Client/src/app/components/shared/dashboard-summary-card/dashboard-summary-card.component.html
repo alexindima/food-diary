@@ -114,13 +114,13 @@
             </div>
 
             <div class="dashboard-summary-card__bars fd-grid fd-gap-card-relaxed">
-                @for (bar of resolvedNutrientBars(); track bar.id) {
+                @for (bar of nutrientBarViewModels(); track bar.id) {
                     <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
                         <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
                             <span class="dashboard-summary-card__bar-label fd-ui-body-sm">
                                 {{ bar.labelKey ? (bar.labelKey | translate) : bar.label }}
                             </span>
-                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="getBarColor(bar)">
+                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
                                 {{ bar.current | number: '1.0-0' }}
                                 @if (bar.target > 0) {
                                     / {{ bar.target | number: '1.0-0' }}
@@ -131,12 +131,8 @@
                         <div class="dashboard-summary-card__bar-track fd-ui-progress-track">
                             <div
                                 class="dashboard-summary-card__bar-fill fd-ui-progress-fill"
-                                [style.background]="
-                                    bar.target > 0
-                                        ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'
-                                        : 'var(--fd-color-slate-300)'
-                                "
-                                [style.width.%]="bar.target > 0 ? clampPercent((bar.current / bar.target) * 100) : 100"
+                                [style.background]="bar.fillBackground"
+                                [style.width.%]="bar.fillWidth"
                             ></div>
                         </div>
                     </div>

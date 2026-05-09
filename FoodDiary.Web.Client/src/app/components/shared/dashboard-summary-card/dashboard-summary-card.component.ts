@@ -94,6 +94,15 @@ export class DashboardSummaryCardComponent {
     public readonly weeklyGradientStart = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.05));
     public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.15));
     public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? this.buildDefaultNutrientBars());
+    public readonly nutrientBarViewModels = computed<NutrientBarViewModel[]>(() =>
+        this.resolvedNutrientBars().map(bar => ({
+            ...bar,
+            valueColor: this.getBarColor(bar),
+            fillBackground:
+                bar.target > 0 ? `linear-gradient(90deg, ${bar.colorStart} 0%, ${bar.colorEnd} 100%)` : 'var(--fd-color-slate-300)',
+            fillWidth: bar.target > 0 ? this.clampPercent((bar.current / bar.target) * 100) : 100,
+        })),
+    );
     private readonly hasCalorieGoal = computed(() => this.normalizedDailyGoal() > 0);
     private readonly hasMacroGoals = computed(() => (this.nutrientBars() ?? []).some(bar => bar.target > 0));
     public readonly showNotice = computed(() => !this.hasCalorieGoal() || !this.hasMacroGoals());
@@ -395,11 +404,17 @@ export class DashboardSummaryCardComponent {
         ];
     }
 
-    public getBarColor(bar: NutrientBar): string {
+    private getBarColor(bar: NutrientBar): string {
         if (!bar.target || bar.target <= 0) {
             return 'var(--fd-color-gray-500-static)';
         }
         const pct = (bar.current / bar.target) * 100;
         return this.getColorForPercent(pct);
     }
+}
+
+interface NutrientBarViewModel extends NutrientBar {
+    valueColor: string;
+    fillBackground: string;
+    fillWidth: number;
 }
