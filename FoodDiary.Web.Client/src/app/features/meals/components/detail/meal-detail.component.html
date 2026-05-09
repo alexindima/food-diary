@@ -73,17 +73,14 @@
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
-                            <strong
-                                class="consumption-detail__quality-value fd-ui-body-sm"
-                                [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
-                            >
+                            <strong class="consumption-detail__quality-value fd-ui-body-sm" [fdUiHint]="qualityHintKey | translate">
                                 {{ qualityScore }}
                             </strong>
                         </div>
                     </div>
 
                     <div class="consumption-detail__macro-bars fd-stack fd-gap-sm">
-                        @for (macro of macroBlocks.slice(0, 3); track macro.labelKey) {
+                        @for (macro of macroSummaryBlocks(); track macro.labelKey) {
                             <div class="consumption-detail__macro-row">
                                 <span class="consumption-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
                                 <div class="consumption-detail__macro-track" aria-hidden="true">
@@ -174,7 +171,7 @@
                                 </strong>
                             </div>
                         }
-                        @if (getHiddenItemPreviewCount() > 0) {
+                        @if (hiddenItemPreviewCount() > 0) {
                             <button
                                 type="button"
                                 class="consumption-detail__list-more"
@@ -184,7 +181,7 @@
                                 @if (isItemPreviewExpanded()) {
                                     {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_HIDE' | translate }}
                                 } @else {
-                                    {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE' | translate: { count: getHiddenItemPreviewCount() } }}
+                                    {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE' | translate: { count: hiddenItemPreviewCount() } }}
                                 }
                             </button>
                         }

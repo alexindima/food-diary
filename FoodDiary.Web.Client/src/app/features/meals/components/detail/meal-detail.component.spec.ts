@@ -248,7 +248,7 @@ describe('MealDetailComponent', () => {
         const customComponent = customFixture.componentInstance;
 
         expect(customComponent.visibleItemPreview().map(item => item.name)).toEqual(['First item', 'Second item']);
-        expect(customComponent.getHiddenItemPreviewCount()).toBe(1);
+        expect(customComponent.hiddenItemPreviewCount()).toBe(1);
 
         customComponent.toggleItemPreviewExpanded();
 

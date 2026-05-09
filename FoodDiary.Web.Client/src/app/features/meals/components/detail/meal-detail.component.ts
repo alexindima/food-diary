@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -68,6 +68,7 @@ export class MealDetailComponent {
     public readonly alcohol: number;
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
+    public readonly qualityHintKey: string;
     public readonly itemsCount: number;
     public readonly formattedDate: string | null;
     public readonly mealTypeLabel: string | null;
@@ -87,7 +88,12 @@ export class MealDetailComponent {
         color: string;
         percent: number;
     }[];
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, 3));
     public readonly itemPreview: MealDetailItemPreview[];
+    public readonly visibleItemPreview = computed<MealDetailItemPreview[]>(() =>
+        this.isItemPreviewExpanded() ? this.itemPreview : this.itemPreview.slice(0, this.itemPreviewMaxItems),
+    );
+    public readonly hiddenItemPreviewCount = computed(() => Math.max(0, this.itemPreview.length - this.itemPreviewMaxItems));
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
         proteins: 'proteins',
@@ -114,6 +120,7 @@ export class MealDetailComponent {
         this.alcohol = data.totalAlcohol;
         this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
         this.qualityGrade = data.qualityGrade ?? 'yellow';
+        this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.itemsCount = this.getTotalItemsCount(data);
         this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
         this.mealTypeLabel = data.mealType ? this.translate.instant(`MEAL_TYPES.${data.mealType}`) : null;
@@ -347,14 +354,6 @@ export class MealDetailComponent {
         if (tab === 'summary' || tab === 'nutrients') {
             this.activeTab = tab;
         }
-    }
-
-    public visibleItemPreview(): MealDetailItemPreview[] {
-        return this.isItemPreviewExpanded() ? this.itemPreview : this.itemPreview.slice(0, this.itemPreviewMaxItems);
-    }
-
-    public getHiddenItemPreviewCount(): number {
-        return Math.max(0, this.itemPreview.length - this.itemPreviewMaxItems);
     }
 
     public toggleItemPreviewExpanded(): void {
