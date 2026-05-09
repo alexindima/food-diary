@@ -56,7 +56,8 @@ function getApplicableStages(plannedDurationHours: number): readonly FastingStag
 }
 
 export function resolveFastingStage(elapsedMs: number, plannedDurationHours: number): FastingStagePresentation {
-    const elapsedHours = Math.max(0, elapsedMs / 3_600_000);
+    const normalizedElapsedMs = Math.max(0, elapsedMs);
+    const elapsedHours = normalizedElapsedMs / 3_600_000;
     const applicableStages = getApplicableStages(plannedDurationHours);
     let currentIndex = 0;
 
@@ -78,6 +79,6 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
         color: currentStage.color,
         glowColor: currentStage.glowColor,
         nextTitleKey: nextStage ? nextStage.titleKey : null,
-        nextInMs: nextStage ? Math.max(0, nextStage.startsAtHours * 3_600_000 - elapsedMs) : null,
+        nextInMs: nextStage ? Math.max(0, nextStage.startsAtHours * 3_600_000 - normalizedElapsedMs) : null,
     };
 }

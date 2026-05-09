@@ -160,6 +160,35 @@ describe('FastingTimerCardComponent', () => {
         expect(percent.textContent.trim()).toBe('50%');
     });
 
+    it('uses facade elapsed time in page layout', async () => {
+        const fixture = await createHostFixtureAsync();
+
+        fixture.componentInstance.layout.set('page');
+        setSession(
+            fixture,
+            createExtendedSession({ plannedDurationHours: 10, initialPlannedDurationHours: 10, startedAtUtc: getStartedAtUtc(1) }),
+        );
+        getFacadeStub(fixture).elapsedMs.set(5 * 3_600_000);
+        fixture.detectChanges();
+
+        const elapsed = fixture.nativeElement.querySelector('.fasting-timer-card__elapsed') as HTMLElement;
+        const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
+        expect(elapsed.textContent.trim()).toBe('05:00:00');
+        expect(percent.textContent.trim()).toBe('50%');
+    });
+
+    it('advances dashboard elapsed time without a fasting facade provider', async () => {
+        const fixture = await createHostFixtureWithoutFacadeAsync();
+
+        fixture.componentInstance.session.set(createExtendedSession({ plannedDurationHours: 1, initialPlannedDurationHours: 1 }));
+        fixture.detectChanges();
+        vi.advanceTimersByTime(1_000);
+        fixture.detectChanges();
+
+        const elapsed = fixture.nativeElement.querySelector('.fasting-timer-card__elapsed') as HTMLElement;
+        expect(elapsed.textContent.trim()).toBe('00:00:01');
+    });
+
     it('marks progress rings as decorative', async () => {
         const fixture = await createHostFixtureAsync();
 
