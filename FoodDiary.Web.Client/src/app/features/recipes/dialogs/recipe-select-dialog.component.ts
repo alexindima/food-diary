@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, input, output, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    type ElementRef,
+    inject,
+    input,
+    output,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -52,6 +63,9 @@ export class RecipeSelectDialogComponent {
     public readonly embedded = input<boolean>(false);
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output<void>();
+    public readonly searchValue = signal<string | null>(null);
+    public readonly onlyMineFilter = signal(false);
+    public readonly searchSuffixIcon = computed(() => (this.searchValue() ? 'close' : undefined));
     protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
         this.recipeData.items().map(recipe => ({
             recipe,
@@ -76,6 +90,9 @@ export class RecipeSelectDialogComponent {
         this.searchForm.controls.search.valueChanges
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
+                tap(value => {
+                    this.searchValue.set(value);
+                }),
                 debounceTime(300),
                 switchMap(() => this.loadRecipes(1)),
             )
@@ -85,6 +102,9 @@ export class RecipeSelectDialogComponent {
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 distinctUntilChanged(),
+                tap(value => {
+                    this.onlyMineFilter.set(value);
+                }),
                 switchMap(() => this.loadRecipes(1)),
             )
             .subscribe();
@@ -121,6 +141,14 @@ export class RecipeSelectDialogComponent {
 
     public onRecipeClick(recipe: Recipe): void {
         this.handleSelection(recipe);
+    }
+
+    public clearSearch(): void {
+        this.searchForm.controls.search.setValue('');
+    }
+
+    public toggleOnlyMine(): void {
+        this.searchForm.controls.onlyMine.setValue(!this.onlyMineFilter());
     }
 
     private resolveImage(recipe: Recipe): string | undefined {

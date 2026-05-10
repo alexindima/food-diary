@@ -15,9 +15,9 @@
                 formControlName="search"
                 prefixIcon="search"
                 [label]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
-                [suffixButtonIcon]="searchForm.controls.search.value ? 'close' : undefined"
+                [suffixButtonIcon]="searchSuffixIcon()"
                 [suffixButtonAriaLabel]="'RECIPE_SELECT_DIALOG.SEARCH_CLEAR' | translate"
-                (suffixButtonClicked)="searchForm.controls.search.setValue('')"
+                (suffixButtonClicked)="clearSearch()"
             />
         </form>
         <fd-ui-button
@@ -25,11 +25,11 @@
             appearance="chip"
             variant="secondary"
             fill="outline"
-            [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+            [icon]="onlyMineFilter() ? 'person' : 'groups'"
             [fdUiHint]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
             [ariaLabel]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
-            (click)="searchForm.controls.onlyMine.setValue(!searchForm.controls.onlyMine.value)"
-            [class.recipe-select__filter-button--active]="searchForm.controls.onlyMine.value"
+            (click)="toggleOnlyMine()"
+            [class.recipe-select__filter-button--active]="onlyMineFilter()"
         />
     </div>
 

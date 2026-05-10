@@ -24,11 +24,11 @@
             appearance="chip"
             variant="secondary"
             fill="outline"
-            [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+            [icon]="onlyMineFilter() ? 'person' : 'groups'"
             [fdUiHint]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             (click)="toggleOnlyMine()"
-            [class.product-select__filter-button--active]="searchForm.controls.onlyMine.value"
+            [class.product-select__filter-button--active]="onlyMineFilter()"
         />
     </div>
 

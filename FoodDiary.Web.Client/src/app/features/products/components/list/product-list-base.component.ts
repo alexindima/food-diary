@@ -84,8 +84,10 @@ export class ProductListBaseComponent {
     public readonly isFavoritesOpen = signal(false);
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
+    public readonly searchValue = signal<string | null>(null);
+    public readonly onlyMineFilter = signal(false);
     public readonly isMobileView = this.viewportService.isMobile;
-    public readonly hasSearchValue = computed(() => !!this.searchForm.controls.search.value?.trim());
+    public readonly hasSearchValue = computed(() => !!this.searchValue()?.trim());
     public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts().length > 0);
     public readonly recentProductItems = computed<ProductCardViewModel[]>(() =>
         this.recentProducts().map(product => ({
@@ -113,7 +115,7 @@ export class ProductListBaseComponent {
         })),
     );
     public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
-    public readonly hasActiveFilters = computed(() => this.searchForm.controls.onlyMine.value || this.selectedProductTypes().length > 0);
+    public readonly hasActiveFilters = computed(() => this.onlyMineFilter() || this.selectedProductTypes().length > 0);
     public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
     public readonly isNoResultsState = computed(() => !this.hasVisibleProducts() && !this.isEmptyState());
     public readonly allProductsSectionLabelKey = computed(() =>
@@ -142,6 +144,9 @@ export class ProductListBaseComponent {
 
         this.searchForm.controls.search.valueChanges
             .pipe(
+                tap(value => {
+                    this.searchValue.set(value);
+                }),
                 debounceTime(300),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
                 takeUntilDestroyed(this.destroyRef),
@@ -151,6 +156,9 @@ export class ProductListBaseComponent {
         this.searchForm.controls.onlyMine.valueChanges
             .pipe(
                 distinctUntilChanged(),
+                tap(value => {
+                    this.onlyMineFilter.set(value);
+                }),
                 switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -252,7 +260,7 @@ export class ProductListBaseComponent {
         this.productData.setLoading(true);
         this.offProducts.set([]);
         const filters = new ProductFilters(search, this.selectedProductTypes());
-        const includePublic = !this.searchForm.controls.onlyMine.value;
+        const includePublic = !this.onlyMineFilter();
 
         this.searchOpenFoodFacts(search);
 
