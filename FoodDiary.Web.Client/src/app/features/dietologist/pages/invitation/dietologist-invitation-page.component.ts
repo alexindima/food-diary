@@ -1,12 +1,11 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { finalize } from 'rxjs';
+import { EMPTY, finalize, type Observable } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -17,7 +16,7 @@ type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expi
 
 @Component({
     selector: 'fd-dietologist-invitation-page',
-    imports: [TranslateModule, DatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiFormErrorComponent],
+    imports: [TranslateModule, FdUiButtonComponent, FdUiCardComponent, FdUiFormErrorComponent],
     templateUrl: './dietologist-invitation-page.component.html',
     styleUrl: './dietologist-invitation-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,13 +28,34 @@ export class DietologistInvitationPageComponent {
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly currentLanguage = signal(this.translateService.currentLang || this.translateService.defaultLang || 'en');
 
     public readonly state = signal<InvitationPageState>('loading');
     public readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
     public readonly errorMessage = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
+    public readonly invitationView = computed<DietologistInvitationView | null>(() => {
+        this.currentLanguage();
+        const invitation = this.invitation();
+        if (!invitation) {
+            return null;
+        }
+
+        const displayName = [invitation.clientFirstName, invitation.clientLastName].filter(Boolean).join(' ').trim();
+
+        return {
+            invitation,
+            displayName: displayName || invitation.clientEmail,
+            expiresDateLabel: this.formatMediumDate(invitation.expiresAtUtc),
+        };
+    });
 
     public constructor() {
+        ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.currentLanguage.set(this.translateService.currentLang || this.translateService.defaultLang || 'en');
+            });
         this.loadInvitation();
     }
 
@@ -147,4 +167,21 @@ export class DietologistInvitationPageComponent {
                 return 'ready';
         }
     }
+
+    private formatMediumDate(value: string): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat(this.currentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+            dateStyle: 'medium',
+        }).format(date);
+    }
+}
+
+interface DietologistInvitationView {
+    invitation: DietologistInvitationForCurrentUser;
+    displayName: string;
+    expiresDateLabel: string;
 }

@@ -2,19 +2,19 @@
     <fd-ui-card class="dietologist-invitation__card" [title]="'DIETOLOGIST_INVITATION.TITLE' | translate">
         @if (state() === 'loading') {
             <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.LOADING' | translate }}</p>
-        } @else if (state() === 'ready' && invitation(); as currentInvitation) {
+        } @else if (state() === 'ready' && invitationView(); as currentInvitation) {
             <p class="dietologist-invitation__description fd-ui-body-sm">
                 {{
                     'DIETOLOGIST_INVITATION.DESCRIPTION'
                         | translate
                             : {
-                                  name: (currentInvitation.clientFirstName || '') + ' ' + (currentInvitation.clientLastName || ''),
-                                  email: currentInvitation.clientEmail,
+                                  name: currentInvitation.displayName,
+                                  email: currentInvitation.invitation.clientEmail,
                               }
                 }}
             </p>
             <p class="dietologist-invitation__meta fd-ui-caption">
-                {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: (currentInvitation.expiresAtUtc | date: 'mediumDate') } }}
+                {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: currentInvitation.expiresDateLabel } }}
             </p>
             <div class="dietologist-invitation__actions fd-row fd-wrap fd-gap-sm">
                 <fd-ui-button type="button" variant="primary" [disabled]="isSubmitting()" [loading]="isSubmitting()" (click)="accept()">
