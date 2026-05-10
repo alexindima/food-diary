@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, type HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -41,7 +41,7 @@ describe('RetryInterceptor', () => {
 
     it('should not retry on 400 errors', () => {
         http.get('/api/test').subscribe({
-            error: error => {
+            error: (error: HttpErrorResponse) => {
                 expect(error.status).toBe(400);
             },
         });
@@ -52,7 +52,7 @@ describe('RetryInterceptor', () => {
 
     it('should not retry on 404 errors', () => {
         http.get('/api/test').subscribe({
-            error: error => {
+            error: (error: HttpErrorResponse) => {
                 expect(error.status).toBe(404);
             },
         });
@@ -63,7 +63,7 @@ describe('RetryInterceptor', () => {
 
     it('should not retry POST requests', () => {
         http.post('/api/test', { value: 1 }).subscribe({
-            error: error => {
+            error: (error: HttpErrorResponse) => {
                 expect(error.status).toBe(500);
             },
         });

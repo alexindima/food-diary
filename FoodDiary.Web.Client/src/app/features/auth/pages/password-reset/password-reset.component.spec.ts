@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { User } from '../../../../shared/models/user.data';
-import type { AuthResponse } from '../../models/auth.data';
+import type { AuthResponse, ConfirmPasswordResetRequest } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset.component';
 
 describe('PasswordResetComponent', () => {
@@ -116,7 +116,13 @@ describe('PasswordResetComponent', () => {
         component.onSubmit();
 
         expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledTimes(1);
-        const arg = authServiceSpy.confirmPasswordReset.mock.calls[authServiceSpy.confirmPasswordReset.mock.calls.length - 1][0];
+        const arg = authServiceSpy.confirmPasswordReset.mock.calls[authServiceSpy.confirmPasswordReset.mock.calls.length - 1][0] as
+            | ConfirmPasswordResetRequest
+            | undefined;
+        if (arg === undefined) {
+            throw new Error('Expected confirm password reset argument.');
+        }
+
         expect(arg.userId).toBe('user-1');
         expect(arg.token).toBe('tok-abc');
         expect(arg.newPassword).toBe('newPassword123');

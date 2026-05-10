@@ -582,7 +582,8 @@ export class BaseMealManageComponent {
     // --- Private methods ---
 
     private resolvePresetMealType(): string | null {
-        const stateMealType = this.router.getCurrentNavigation()?.extras.state?.['mealType'];
+        const navigationState = this.router.getCurrentNavigation()?.extras.state as { mealType?: unknown } | undefined;
+        const stateMealType = navigationState?.mealType;
         const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
         return normalizeMealType(typeof stateMealType === 'string' ? stateMealType : queryMealType);
     }
@@ -891,8 +892,9 @@ export class BaseMealManageComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (control.errors?.['min']) {
-            const min = control.errors['min'].min ?? 0;
+        const minError = control.getError('min') as { min?: number } | null;
+        if (minError) {
+            const min = minError.min ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

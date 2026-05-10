@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -210,10 +211,10 @@ export class ProductAiRecognitionDialogComponent {
                 description: this.getDescription(),
             })
             .pipe(
-                catchError(err => {
-                    if (err?.status === 403) {
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 403) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err?.status === 429) {
+                    } else if (err.status === 429) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_GENERIC');
@@ -242,8 +243,8 @@ export class ProductAiRecognitionDialogComponent {
         this.aiFoodService
             .calculateNutrition({ items: normalizedItems })
             .pipe(
-                catchError(err => {
-                    if (err?.status === 429) {
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 429) {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.NUTRITION_ERROR');

@@ -92,8 +92,9 @@ export class RecipeBasicInfoComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (errors['min']) {
-            const min = errors['min'].min ?? 0;
+        const minError = errors['min'] as { min?: number } | undefined;
+        if (minError) {
+            const min = minError.min ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

@@ -87,7 +87,8 @@ describe('DietologistInvitationPageComponent', () => {
         createComponent();
 
         expect(component.state()).toBe('accepted');
-        expect(fixture.nativeElement.textContent).toContain('DIETOLOGIST_INVITATION.SUCCESS_ACCEPT');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).toContain('DIETOLOGIST_INVITATION.SUCCESS_ACCEPT');
     });
 
     it('shows error state when invitation request fails', () => {

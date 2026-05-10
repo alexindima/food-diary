@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { type HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -104,7 +104,7 @@ describe('MealService', () => {
             next: () => {
                 expect.fail('Expected query to fail');
             },
-            error: error => {
+            error: (error: HttpErrorResponse) => {
                 expect(error.status).toBe(500);
             },
         });
@@ -316,7 +316,7 @@ describe('MealService', () => {
             next: () => {
                 expect.fail('Expected delete to fail');
             },
-            error: error => {
+            error: (error: HttpErrorResponse) => {
                 expect(error.status).toBe(500);
             },
         });

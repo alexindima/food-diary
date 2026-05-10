@@ -157,8 +157,9 @@ export class ChangePasswordDialogComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (control.errors?.['minlength']) {
-            const requiredLength = control.errors['minlength'].requiredLength;
+        const minLengthError = control.getError('minlength') as { requiredLength?: number } | null;
+        if (minLengthError) {
+            const requiredLength = minLengthError.requiredLength;
             return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
         }
 

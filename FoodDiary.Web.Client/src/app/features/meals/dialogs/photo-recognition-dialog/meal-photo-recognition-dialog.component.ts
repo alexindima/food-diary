@@ -1,5 +1,6 @@
 import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -304,10 +305,10 @@ export class MealPhotoRecognitionDialogComponent {
         this.aiFoodService
             .analyzeFoodImage({ imageAssetId: assetId })
             .pipe(
-                catchError(err => {
-                    if (err?.status === 403) {
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 403) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err?.status === 429) {
+                    } else if (err.status === 429) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
@@ -337,8 +338,8 @@ export class MealPhotoRecognitionDialogComponent {
         this.aiFoodService
             .calculateNutrition({ items })
             .pipe(
-                catchError(err => {
-                    if (err?.status === 429) {
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 429) {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');

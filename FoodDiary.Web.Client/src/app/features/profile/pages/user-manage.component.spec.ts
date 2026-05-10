@@ -143,7 +143,8 @@ describe('UserManageComponent dietologist section', () => {
         expect(component.dietologistForm.controls.shareProfile.value).toBe(true);
         expect(component.dietologistForm.controls.shareMeals.value).toBe(true);
         expect(component.dietologistForm.controls.shareFasting.value).toBe(true);
-        expect(fixture.nativeElement.textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
     });
 
     it('applies pending relationship state and disables email editing', async () => {
@@ -177,8 +178,9 @@ describe('UserManageComponent dietologist section', () => {
         expect(component.dietologistForm.controls.shareStatistics.value).toBe(false);
         expect(component.dietologistForm.controls.shareHydration.value).toBe(false);
         expect(component.dietologistForm.controls.shareFasting.value).toBe(true);
-        expect(fixture.nativeElement.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
-        expect(fixture.nativeElement.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
+        expect(host.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS');
     });
 
     it('asks for confirmation before disabling profile sharing', async () => {
@@ -395,12 +397,17 @@ describe('UserManageComponent dietologist section', () => {
         );
 
         expect(facade.openChangePasswordDialog).toHaveBeenCalledTimes(1);
-        expect(router.navigate).toHaveBeenCalledWith([], {
-            relativeTo: expect.anything(),
-            queryParams: { intent: null },
-            queryParamsHandling: 'merge',
-            replaceUrl: true,
-        });
+        const navigateOptions = router.navigate.mock.calls[0]?.[1] as
+            | { queryParams?: Record<string, unknown>; queryParamsHandling?: string; replaceUrl?: boolean }
+            | undefined;
+        if (navigateOptions === undefined) {
+            throw new Error('Expected router navigation options.');
+        }
+
+        expect(router.navigate.mock.calls[0]?.[0]).toEqual([]);
+        expect(navigateOptions.queryParams).toEqual({ intent: null });
+        expect(navigateOptions.queryParamsHandling).toBe('merge');
+        expect(navigateOptions.replaceUrl).toBe(true);
     });
 });
 

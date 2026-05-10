@@ -14,6 +14,16 @@ describe('FdUiRadioGroupComponent', () => {
         { value: 'c', label: 'Option C' },
     ];
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = host().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiRadioGroupComponent],
@@ -32,20 +42,19 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.componentRef.setInput('label', 'Choose one');
         fixture.detectChanges();
 
-        const label = fixture.debugElement.query(By.css('.fd-ui-radio-group__label'));
-        expect(label).toBeTruthy();
-        expect(label.nativeElement.textContent).toContain('Choose one');
+        const label = requireElement<HTMLElement>('.fd-ui-radio-group__label');
+        expect(label.textContent).toContain('Choose one');
     });
 
     it('should render options', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        const radioButtons = fixture.debugElement.queryAll(By.css('.fd-ui-radio'));
+        const radioButtons = Array.from(host().querySelectorAll<HTMLElement>('.fd-ui-radio'));
         expect(radioButtons.length).toBe(3);
-        expect(radioButtons[0].nativeElement.textContent).toContain('Option A');
-        expect(radioButtons[1].nativeElement.textContent).toContain('Option B');
-        expect(radioButtons[2].nativeElement.textContent).toContain('Option C');
+        expect(radioButtons[0].textContent).toContain('Option A');
+        expect(radioButtons[1].textContent).toContain('Option B');
+        expect(radioButtons[2].textContent).toContain('Option C');
     });
 
     it('should write value via CVA', () => {
@@ -104,17 +113,15 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.componentRef.setInput('error', 'This field is required');
         fixture.detectChanges();
 
-        const error = fixture.debugElement.query(By.css('.fd-ui-radio-group__error'));
-        expect(error).toBeTruthy();
-        expect(error.nativeElement.textContent).toContain('This field is required');
+        const error = requireElement<HTMLElement>('.fd-ui-radio-group__error');
+        expect(error.textContent).toContain('This field is required');
     });
 
     it('should display hint text', () => {
         fixture.componentRef.setInput('hint', 'Select your preference');
         fixture.detectChanges();
 
-        const hint = fixture.debugElement.query(By.css('.fd-ui-radio-group__hint'));
-        expect(hint).toBeTruthy();
-        expect(hint.nativeElement.textContent).toContain('Select your preference');
+        const hint = requireElement<HTMLElement>('.fd-ui-radio-group__hint');
+        expect(hint.textContent).toContain('Select your preference');
     });
 });

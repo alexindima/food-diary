@@ -212,11 +212,12 @@ export class BaseProductManageComponent {
             });
 
         if (!this.product()) {
-            const offProduct = history.state?.offProduct as OpenFoodFactsProduct | undefined;
+            const navigationState = history.state as { barcode?: unknown; offProduct?: unknown } | null;
+            const offProduct = navigationState?.offProduct as OpenFoodFactsProduct | undefined;
             if (offProduct) {
                 this.prefillFromOffProduct(offProduct);
             } else {
-                const barcode = history.state?.barcode as string | undefined;
+                const barcode = typeof navigationState?.barcode === 'string' ? navigationState.barcode : undefined;
                 if (barcode) {
                     this.productForm.controls.barcode.setValue(barcode);
                     this.lookupOpenFoodFacts(barcode);
@@ -590,9 +591,10 @@ export class BaseProductManageComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (errors['min']) {
+        const minError = errors['min'] as { min?: number } | undefined;
+        if (minError) {
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min: errors['min'].min,
+                min: minError.min,
             });
         }
 

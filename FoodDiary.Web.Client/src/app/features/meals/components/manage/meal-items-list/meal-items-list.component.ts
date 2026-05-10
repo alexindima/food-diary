@@ -258,8 +258,9 @@ export class MealItemsListComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (control.errors?.['min']) {
-            const min = control.errors['min'].min ?? 0;
+        const minError = control.getError('min') as { min?: number } | null;
+        if (minError) {
+            const min = minError.min ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

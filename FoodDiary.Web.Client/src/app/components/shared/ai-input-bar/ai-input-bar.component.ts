@@ -1,3 +1,4 @@
+import type { HttpErrorResponse } from '@angular/common/http';
 import type { WritableSignal } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -475,10 +476,10 @@ export class AiInputBarComponent {
 
         request$
             .pipe(
-                catchError(err => {
-                    if (err?.status === 403) {
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 403) {
                         state.errorKey.set(errorKeys.premium);
-                    } else if (err?.status === 429) {
+                    } else if (err.status === 429) {
                         state.errorKey.set(errorKeys.quota);
                     } else {
                         state.errorKey.set(errorKeys.generic);
@@ -513,8 +514,8 @@ export class AiInputBarComponent {
         this.aiFoodService
             .calculateNutrition({ items })
             .pipe(
-                catchError(err => {
-                    if (err?.status === 429) {
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 429) {
                         state.nutritionErrorKey.set(errorKeys.quota);
                     } else {
                         state.nutritionErrorKey.set(errorKeys.generic);

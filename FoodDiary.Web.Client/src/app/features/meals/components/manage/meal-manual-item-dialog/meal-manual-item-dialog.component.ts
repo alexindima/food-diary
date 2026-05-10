@@ -92,8 +92,9 @@ export class MealManualItemDialogComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (this.amount.errors?.['min']) {
-            const min = this.amount.errors['min'].min ?? 0.01;
+        const minError = this.amount.getError('min') as { min?: number } | null;
+        if (minError) {
+            const min = minError.min ?? 0.01;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

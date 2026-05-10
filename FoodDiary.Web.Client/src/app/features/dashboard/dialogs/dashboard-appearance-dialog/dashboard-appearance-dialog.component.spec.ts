@@ -92,7 +92,12 @@ describe('DashboardAppearanceDialogComponent', () => {
         saveResponse$.complete();
 
         expect(userService.updateAppearance).toHaveBeenCalledTimes(2);
-        expect(userService.updateAppearance.mock.calls[1][0].theme).toBe('leaf');
-        expect(userService.updateAppearance.mock.calls[1][0].uiStyle).toBe('modern');
+        const queuedAppearance = userService.updateAppearance.mock.calls[1]?.[0] as { theme: string; uiStyle: string } | undefined;
+        if (queuedAppearance === undefined) {
+            throw new Error('Expected queued appearance update.');
+        }
+
+        expect(queuedAppearance.theme).toBe('leaf');
+        expect(queuedAppearance.uiStyle).toBe('modern');
     });
 });
