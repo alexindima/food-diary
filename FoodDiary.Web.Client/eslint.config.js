@@ -303,7 +303,7 @@ export default [
             '@typescript-eslint/no-import-type-side-effects': 'error',
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-require-imports': 'error',
-            '@typescript-eslint/no-shadow': 'warn',
+            '@typescript-eslint/no-shadow': 'error',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {

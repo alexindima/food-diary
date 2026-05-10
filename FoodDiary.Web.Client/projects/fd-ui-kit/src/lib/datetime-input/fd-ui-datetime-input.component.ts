@@ -144,13 +144,13 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         this.onTouched();
     }
 
-    protected focusTimeInput(input: HTMLInputElement): void {
+    protected focusTimeInput(timeInput: HTMLInputElement): void {
         if (this.disabled()) {
             return;
         }
 
-        input.focus();
-        (input as { showPicker?: () => void }).showPicker?.();
+        timeInput.focus();
+        (timeInput as { showPicker?: () => void }).showPicker?.();
     }
 
     protected onFocusIn(): void {

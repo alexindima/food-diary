@@ -63,8 +63,8 @@ export class FdUiCalendarComponent {
         const selectedIso = this.value() ? this.toIsoDate(this.value()) : null;
         const activeIso = this.toIsoDate(this.activeDate());
 
-        return Array.from({ length: 6 }, (_, weekIndex) =>
-            Array.from({ length: 7 }, (_, dayIndex) => {
+        return Array.from({ length: 6 }, (_week, weekIndex) =>
+            Array.from({ length: 7 }, (_day, dayIndex) => {
                 const cellDate = this.addDays(gridStart, weekIndex * 7 + dayIndex);
                 const iso = this.toIsoDate(cellDate);
 

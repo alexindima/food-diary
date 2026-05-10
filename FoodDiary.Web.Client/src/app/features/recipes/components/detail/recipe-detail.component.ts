@@ -258,8 +258,8 @@ export class RecipeDetailComponent {
             return this.recipe.manualFiber;
         }
 
-        const computed = this.computeFiberFromSteps();
-        return computed ?? 0;
+        const computedFiber = this.computeFiberFromSteps();
+        return computedFiber ?? 0;
     }
 
     private resolveAlcoholValue(): number {
@@ -271,8 +271,8 @@ export class RecipeDetailComponent {
             return this.recipe.manualAlcohol;
         }
 
-        const computed = this.computeAlcoholFromSteps();
-        return computed ?? 0;
+        const computedAlcohol = this.computeAlcoholFromSteps();
+        return computedAlcohol ?? 0;
     }
 
     public onTabChange(tab: string): void {

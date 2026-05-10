@@ -46,9 +46,9 @@ export class FdUiCheckboxComponent implements ControlValueAccessor {
     }
 
     protected handleChange(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        this.checked = input.checked;
-        this.onChange(input.checked);
+        const checkboxInput = event.target as HTMLInputElement;
+        this.checked = checkboxInput.checked;
+        this.onChange(checkboxInput.checked);
     }
 
     protected handleBlur(): void {
