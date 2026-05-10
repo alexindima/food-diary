@@ -37,14 +37,14 @@ export class GoogleIdentityService {
     private callback: ((credential: string) => void) | null = null;
 
     public async initializeAsync(options: GoogleInitOptions): Promise<void> {
-        if (this.initializedClientId === options.clientId && this.callback) {
+        if (this.initializedClientId === options.clientId && this.callback !== null) {
             this.callback = options.callback;
             return;
         }
 
         await this.loadScriptAsync();
 
-        if (!window.google?.accounts?.id) {
+        if (window.google?.accounts?.id === undefined) {
             throw new Error('Google Identity Services unavailable');
         }
 
@@ -52,7 +52,7 @@ export class GoogleIdentityService {
         window.google.accounts.id.initialize({
             client_id: options.clientId,
             callback: response => {
-                if (response.credential) {
+                if (response.credential !== null && response.credential !== undefined && response.credential.length > 0) {
                     this.callback?.(response.credential);
                 }
             },
@@ -65,7 +65,7 @@ export class GoogleIdentityService {
     }
 
     public renderButton(target: HTMLElement, theme: 'outline' | 'filled_blue' = 'outline'): void {
-        if (!window.google?.accounts?.id) {
+        if (window.google?.accounts?.id === undefined) {
             return;
         }
 

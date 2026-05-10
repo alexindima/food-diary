@@ -53,11 +53,13 @@ export class LocalizationService {
 
     public applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
         const normalized = this.normalizeLanguage(language);
-        if (!normalized) {
+        if (normalized.length === 0) {
             return Promise.resolve();
         }
 
-        const current = this.translateService.getCurrentLang() || this.translateService.getFallbackLang();
+        const currentLang = this.translateService.getCurrentLang();
+        const fallbackLang = this.translateService.getFallbackLang();
+        const current = currentLang.length > 0 ? currentLang : fallbackLang;
         if (current === normalized) {
             this.persistLanguage(normalized);
             this.setDocumentLang(normalized);
@@ -68,7 +70,9 @@ export class LocalizationService {
     }
 
     public getCurrentLanguage(): string {
-        const current = this.translateService.getCurrentLang() || this.translateService.getFallbackLang();
+        const currentLang = this.translateService.getCurrentLang();
+        const fallbackLang = this.translateService.getFallbackLang();
+        const current = currentLang.length > 0 ? currentLang : fallbackLang;
         return this.normalizeLanguage(current);
     }
 
@@ -113,7 +117,7 @@ export class LocalizationService {
     }
 
     private normalizeLanguage(lang?: string | null): string {
-        if (!lang) {
+        if (lang === null || lang === undefined || lang.length === 0) {
             return 'en';
         }
 
@@ -133,7 +137,7 @@ export class LocalizationService {
         const withoutHash = pathname.split('#', 1)[0] ?? '/';
         const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
 
-        return withoutQuery || '/';
+        return withoutQuery.length > 0 ? withoutQuery : '/';
     }
 
     private persistLanguage(lang: string): void {
@@ -142,7 +146,7 @@ export class LocalizationService {
 
     private getStoredLanguage(): string | null {
         const value = this.storage.getItem('local', this.storageKey);
-        if (!value || value === 'undefined' || value === 'null') {
+        if (value === null || value.length === 0 || value === 'undefined' || value === 'null') {
             return null;
         }
         return value;
@@ -150,7 +154,7 @@ export class LocalizationService {
 
     private getDomainDefaultLanguage(): string | null {
         const hostname = this.document.location.hostname.toLowerCase();
-        if (!hostname) {
+        if (hostname.length === 0) {
             return null;
         }
 

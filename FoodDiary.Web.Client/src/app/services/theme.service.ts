@@ -140,7 +140,7 @@ export class ThemeService {
 
     private getStoredTheme(): AppThemeName | null {
         const value = this.localStorageRef?.getItem(this.themeStorageKey) ?? null;
-        if (!value || value === 'undefined' || value === 'null' || !isAppThemeName(value)) {
+        if (value === null || value.length === 0 || value === 'undefined' || value === 'null' || !isAppThemeName(value)) {
             return null;
         }
 
@@ -149,7 +149,7 @@ export class ThemeService {
 
     private getStoredUiStyle(): AppUiStyleName | null {
         const value = this.localStorageRef?.getItem(this.uiStyleStorageKey) ?? null;
-        if (!value || value === 'undefined' || value === 'null' || !isAppUiStyleName(value)) {
+        if (value === null || value.length === 0 || value === 'undefined' || value === 'null' || !isAppUiStyleName(value)) {
             return null;
         }
 
@@ -184,7 +184,7 @@ export class ThemeService {
 
     private updateBrowserThemeColor(color: string): void {
         const metaThemeColor = this.document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-        if (metaThemeColor) {
+        if (metaThemeColor !== null) {
             metaThemeColor.content = color;
         }
     }

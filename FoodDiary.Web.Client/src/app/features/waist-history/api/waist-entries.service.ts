@@ -14,6 +14,18 @@ import type {
     WaistEntrySummaryPoint,
 } from '../models/waist-entry.data';
 
+function addOptionalStringParam(params: Record<string, string | number>, key: string, value: string | undefined): void {
+    if (value !== undefined && value.length > 0) {
+        params[key] = value;
+    }
+}
+
+function addOptionalNumberParam(params: Record<string, string | number>, key: string, value: number | undefined): void {
+    if (value !== undefined) {
+        params[key] = value;
+    }
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -23,18 +35,10 @@ export class WaistEntriesService extends ApiService {
     public getEntries(filters?: WaistEntryFilters): Observable<WaistEntry[]> {
         const params: Record<string, string | number> = {};
 
-        if (filters?.dateFrom) {
-            params['dateFrom'] = filters.dateFrom;
-        }
-        if (filters?.dateTo) {
-            params['dateTo'] = filters.dateTo;
-        }
-        if (filters?.limit) {
-            params['limit'] = filters.limit;
-        }
-        if (filters?.sort) {
-            params['sort'] = filters.sort;
-        }
+        addOptionalStringParam(params, 'dateFrom', filters?.dateFrom);
+        addOptionalStringParam(params, 'dateTo', filters?.dateTo);
+        addOptionalNumberParam(params, 'limit', filters?.limit);
+        addOptionalStringParam(params, 'sort', filters?.sort);
 
         return this.get<WaistEntry[]>('', params).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Waist entries fetch error', error, [])),

@@ -38,7 +38,7 @@ export class TokenStorageService {
 
     public getRefreshToken(): string | null {
         const token = this.storage.getItem('local', 'refreshToken');
-        if (!token || token === 'undefined' || token === 'null') {
+        if (token === null || token.length === 0 || token === 'undefined' || token === 'null') {
             this.clearRefreshToken();
             return null;
         }
@@ -46,7 +46,7 @@ export class TokenStorageService {
     }
 
     public setRefreshToken(token: string | null | undefined): void {
-        if (!token) {
+        if (token === null || token === undefined || token.length === 0) {
             this.clearRefreshToken();
             return;
         }
@@ -59,14 +59,14 @@ export class TokenStorageService {
 
     public loadUserId(): string | null {
         const storedId = this.storage.getItem('local', 'userId');
-        if (!storedId || storedId === 'undefined') {
+        if (storedId === null || storedId.length === 0 || storedId === 'undefined') {
             return null;
         }
         return storedId;
     }
 
     public setUserId(userId: string | null): void {
-        if (userId) {
+        if (userId !== null && userId.length > 0) {
             this.storage.setItem('local', 'userId', userId);
         } else {
             this.storage.removeItem('local', 'userId');

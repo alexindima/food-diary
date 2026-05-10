@@ -33,7 +33,7 @@ export class ProductManageFacade {
                 .afterClosed(),
         );
 
-        return !!confirmed;
+        return confirmed === true;
     }
 
     public ensurePremiumAccess(): boolean {
@@ -45,7 +45,7 @@ export class ProductManageFacade {
             .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { preset: 'confirm' })
             .afterClosed()
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });
@@ -57,7 +57,7 @@ export class ProductManageFacade {
             this.fdDialogService.open(ConfirmDeleteDialogComponent, { data: confirmData, preset: 'confirm' }).afterClosed(),
         );
 
-        if (!confirmed) {
+        if (confirmed !== true) {
             return 'cancelled';
         }
 
@@ -77,14 +77,15 @@ export class ProductManageFacade {
         afterSave?: (product: Product) => Promise<void>,
     ): Promise<{ product: Product | null; error: HttpErrorResponse | null }> {
         try {
-            const savedProduct = product
-                ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
-                : await firstValueFrom(this.productService.create(productData));
+            const savedProduct =
+                product !== null
+                    ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
+                    : await firstValueFrom(this.productService.create(productData));
 
             await afterSave?.(savedProduct);
 
             if (!skipConfirmDialog) {
-                await this.showConfirmDialogAsync(Boolean(product));
+                await this.showConfirmDialogAsync(product !== null);
             }
 
             return { product: savedProduct, error: null };

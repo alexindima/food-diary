@@ -32,8 +32,7 @@ export class PushNotificationService {
         }
 
         this.swPush.subscription.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(subscription => {
-            this.isSubscribed.set(!!subscription);
-            this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
+            this.setSubscriptionState(subscription);
         });
 
         this.swPush.pushSubscriptionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(change => {
@@ -43,7 +42,7 @@ export class PushNotificationService {
         this.swPush.notificationClicks.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             const data = event.notification.data as { targetUrl?: string; url?: string } | undefined;
             const targetUrl = data?.targetUrl ?? data?.url;
-            if (targetUrl) {
+            if (targetUrl !== undefined && targetUrl.length > 0) {
                 void this.router.navigateByUrl(this.toAppUrl(targetUrl));
             }
 
@@ -77,32 +76,29 @@ export class PushNotificationService {
 
         try {
             const current = await firstValueFrom(this.swPush.subscription.pipe(take(1)));
-            if (current) {
-                await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(current)));
-                this.isSubscribed.set(true);
-                this.currentSubscriptionEndpoint.set(current.endpoint);
+            if (current !== null) {
+                await this.upsertSubscriptionAsync(current);
                 return 'already-subscribed';
             }
 
             const configuration = await firstValueFrom(this.notificationService.getWebPushConfiguration());
-            if (!configuration.enabled || !configuration.publicKey) {
+            const publicKey = this.getSubscriptionPublicKey(configuration);
+            if (publicKey === null) {
                 return 'unavailable';
             }
 
-            if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+            if (this.isNotificationPermissionDenied()) {
                 return 'blocked';
             }
 
             const subscription = await this.swPush.requestSubscription({
-                serverPublicKey: configuration.publicKey,
+                serverPublicKey: publicKey,
             });
 
-            await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(subscription)));
-            this.isSubscribed.set(true);
-            this.currentSubscriptionEndpoint.set(subscription.endpoint);
+            await this.upsertSubscriptionAsync(subscription);
             return 'subscribed';
         } catch {
-            if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+            if (this.isNotificationPermissionDenied()) {
                 return 'blocked';
             }
 
@@ -115,17 +111,15 @@ export class PushNotificationService {
     private async syncExistingSubscriptionAsync(): Promise<void> {
         try {
             const subscription = await firstValueFrom(this.swPush.subscription.pipe(take(1)));
-            this.isSubscribed.set(!!subscription);
-            this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
+            this.setSubscriptionState(subscription);
 
-            if (!subscription) {
+            if (subscription === null) {
                 return;
             }
 
-            await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(subscription)));
+            await this.upsertSubscriptionAsync(subscription);
         } catch {
-            this.isSubscribed.set(false);
-            this.currentSubscriptionEndpoint.set(null);
+            this.setSubscriptionState(null);
         }
     }
 
@@ -135,29 +129,26 @@ export class PushNotificationService {
     ): Promise<void> {
         try {
             if (!this.authService.isAuthenticated()) {
-                this.isSubscribed.set(!!newSubscription);
-                this.currentSubscriptionEndpoint.set(newSubscription?.endpoint ?? null);
+                this.setSubscriptionState(newSubscription);
                 return;
             }
 
-            if (oldSubscription) {
+            if (oldSubscription !== null) {
                 await firstValueFrom(this.notificationService.removeWebPushSubscription(oldSubscription.endpoint));
             }
 
-            if (newSubscription) {
-                await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(newSubscription)));
+            if (newSubscription !== null) {
+                await this.upsertSubscriptionAsync(newSubscription);
             }
 
-            this.isSubscribed.set(!!newSubscription);
-            this.currentSubscriptionEndpoint.set(newSubscription?.endpoint ?? null);
+            this.setSubscriptionState(newSubscription);
         } catch {
-            this.isSubscribed.set(!!newSubscription);
-            this.currentSubscriptionEndpoint.set(newSubscription?.endpoint ?? null);
+            this.setSubscriptionState(newSubscription);
         }
     }
 
     public async removeSubscriptionAsync(endpoint: string): Promise<boolean> {
-        if (!endpoint || this.isBusy()) {
+        if (endpoint.length === 0 || this.isBusy()) {
             return false;
         }
 
@@ -186,7 +177,7 @@ export class PushNotificationService {
         const json = subscription.toJSON();
         return {
             endpoint: subscription.endpoint,
-            expirationTime: subscription.expirationTime ? new Date(subscription.expirationTime).toISOString() : null,
+            expirationTime: subscription.expirationTime !== null ? new Date(subscription.expirationTime).toISOString() : null,
             keys: {
                 p256dh: json.keys?.['p256dh'] ?? '',
                 auth: json.keys?.['auth'] ?? '',
@@ -194,6 +185,28 @@ export class PushNotificationService {
             locale: this.localizationService.getCurrentLanguage(),
             userAgent: navigator.userAgent,
         };
+    }
+
+    private getSubscriptionPublicKey(configuration: { enabled: boolean; publicKey: string | null }): string | null {
+        if (!configuration.enabled || configuration.publicKey === null || configuration.publicKey.length === 0) {
+            return null;
+        }
+
+        return configuration.publicKey;
+    }
+
+    private isNotificationPermissionDenied(): boolean {
+        return typeof Notification !== 'undefined' && Notification.permission === 'denied';
+    }
+
+    private async upsertSubscriptionAsync(subscription: PushSubscription): Promise<void> {
+        await firstValueFrom(this.notificationService.upsertWebPushSubscription(this.mapSubscription(subscription)));
+        this.setSubscriptionState(subscription);
+    }
+
+    private setSubscriptionState(subscription: PushSubscription | null): void {
+        this.isSubscribed.set(subscription !== null);
+        this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
     }
 
     private toAppUrl(url: string): string {

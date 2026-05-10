@@ -67,7 +67,7 @@ export class BarcodeScannerComponent {
             // Wait for next tick so viewChild is available
             setTimeout(() => {
                 const video = this.videoRef()?.nativeElement;
-                if (video) {
+                if (video !== undefined) {
                     video.srcObject = this.stream;
                     void video.play();
                     this.isCameraReady.set(true);
@@ -81,7 +81,7 @@ export class BarcodeScannerComponent {
 
     private scanLoop(): void {
         const video = this.videoRef()?.nativeElement;
-        if (!video || !this.detector) {
+        if (video === undefined || this.detector === null) {
             return;
         }
 
@@ -94,13 +94,13 @@ export class BarcodeScannerComponent {
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             try {
                 const detector = this.detector;
-                if (!detector) {
+                if (detector === null) {
                     return;
                 }
                 const barcodes = await detector.detect(video);
                 if (barcodes.length > 0) {
                     this.stopCamera();
-                    this.dialogRef.close(barcodes[0].rawValue);
+                    this.dialogRef.close(barcodes[0]?.rawValue ?? null);
                     return;
                 }
             } catch {

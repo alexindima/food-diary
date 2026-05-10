@@ -24,6 +24,8 @@ import { NavigationService } from './navigation.service';
 import { ThemeService } from './theme.service';
 import { TokenStorageService } from './token-storage.service';
 
+const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -56,33 +58,21 @@ export class AuthService extends ApiService {
 
     public initializeAuth(): void {
         let token = this.tokenStorage.getToken();
-        if (!token) {
-            this.authTokenSignal.set(null);
-            this.userSignal.set(null);
-            this.emailConfirmedSignal.set(null);
-            this.tokenStorage.clearUserId();
-            this.tokenStorage.clearEmailConfirmed();
+        if (token === null || token.length === 0) {
+            this.clearStoredIdentity();
             return;
         }
 
-        if (this.jwtDecoder.isExpired(token, 30)) {
-            this.authTokenSignal.set(null);
-            this.tokenStorage.clearToken();
+        if (this.clearExpiredToken(token)) {
             token = null;
         }
 
-        if (!token) {
+        if (token === null || token.length === 0) {
             return;
         }
 
         this.authTokenSignal.set(token);
-        if (!this.userSignal()) {
-            const resolvedUserId = this.jwtDecoder.extractUserId(token);
-            if (resolvedUserId) {
-                this.tokenStorage.setUserId(resolvedUserId);
-                this.userSignal.set(resolvedUserId);
-            }
-        }
+        this.restoreUserIdFromToken(token);
         if (this.emailConfirmedSignal() === null) {
             const stored = this.tokenStorage.loadEmailConfirmed();
             this.emailConfirmedSignal.set(stored ?? true);
@@ -91,12 +81,24 @@ export class AuthService extends ApiService {
         this.linkTelegramIfAvailable();
     }
 
+    private restoreUserIdFromToken(token: string): void {
+        if (this.userSignal() !== null) {
+            return;
+        }
+
+        const resolvedUserId = this.jwtDecoder.extractUserId(token);
+        if (resolvedUserId !== null && resolvedUserId.length > 0) {
+            this.tokenStorage.setUserId(resolvedUserId);
+            this.userSignal.set(resolvedUserId);
+        }
+    }
+
     public async restoreSessionAsync(): Promise<void> {
         if (this.authReadySignal()) {
             return;
         }
 
-        if (this.sessionRestorePromise) {
+        if (this.sessionRestorePromise !== null) {
             return this.sessionRestorePromise;
         }
 
@@ -203,12 +205,12 @@ export class AuthService extends ApiService {
     }
 
     public refreshToken(): Observable<string | null> {
-        if (this.refreshInFlight$) {
+        if (this.refreshInFlight$ !== null) {
             return this.refreshInFlight$;
         }
 
         const refreshToken = this.tokenStorage.getRefreshToken();
-        if (!refreshToken) {
+        if (refreshToken === null || refreshToken.length === 0) {
             void this.onLogoutAsync(true);
             return of(null);
         }
@@ -216,7 +218,7 @@ export class AuthService extends ApiService {
         const refreshRequest$ = this.post<AuthResponse>('refresh', { refreshToken }).pipe(
             map(response => {
                 const accessToken = response.accessToken;
-                if (accessToken) {
+                if (accessToken.length > 0) {
                     this.applyAuthenticatedSession(response);
                 }
                 return accessToken;
@@ -273,7 +275,7 @@ export class AuthService extends ApiService {
         this.authTokenSignal.set(authResponse.accessToken);
 
         const preferredLanguage = authResponse.user.language;
-        if (preferredLanguage) {
+        if (preferredLanguage !== undefined && preferredLanguage.length > 0) {
             void this.localizationService.applyLanguagePreferenceAsync(preferredLanguage);
         }
 
@@ -286,7 +288,7 @@ export class AuthService extends ApiService {
         }
 
         const userId = authResponse.user.id;
-        if (userId) {
+        if (userId.length > 0) {
             this.tokenStorage.setUserId(userId);
             this.userSignal.set(userId);
         } else {
@@ -296,6 +298,16 @@ export class AuthService extends ApiService {
         }
     }
 
+    private clearExpiredToken(token: string): boolean {
+        if (!this.jwtDecoder.isExpired(token, TOKEN_EXPIRATION_LEEWAY_SECONDS)) {
+            return false;
+        }
+
+        this.authTokenSignal.set(null);
+        this.tokenStorage.clearToken();
+        return true;
+    }
+
     private async restoreSessionInternalAsync(): Promise<void> {
         this.captureImpersonationTokenFromQuery();
         this.initializeAuth();
@@ -303,20 +315,26 @@ export class AuthService extends ApiService {
             return;
         }
 
-        if (!this.tokenStorage.getRefreshToken()) {
-            this.userSignal.set(null);
-            this.emailConfirmedSignal.set(null);
-            this.tokenStorage.clearUserId();
-            this.tokenStorage.clearEmailConfirmed();
+        const refreshToken = this.tokenStorage.getRefreshToken();
+        if (refreshToken === null || refreshToken.length === 0) {
+            this.clearStoredIdentity();
             return;
         }
 
         await firstValueFrom(this.refreshToken());
     }
 
+    private clearStoredIdentity(): void {
+        this.authTokenSignal.set(null);
+        this.userSignal.set(null);
+        this.emailConfirmedSignal.set(null);
+        this.tokenStorage.clearUserId();
+        this.tokenStorage.clearEmailConfirmed();
+    }
+
     private linkTelegramIfAvailable(): void {
         const initData = this.getTelegramInitData();
-        if (!initData) {
+        if (initData === null || initData.length === 0) {
             return;
         }
 
@@ -334,7 +352,7 @@ export class AuthService extends ApiService {
     private getTelegramInitData(): string | null {
         const telegram = (window as { Telegram?: { WebApp?: { initData?: string } } }).Telegram;
         const initData = telegram?.WebApp?.initData;
-        if (!initData || typeof initData !== 'string') {
+        if (typeof initData !== 'string' || initData.length === 0) {
             return null;
         }
 
@@ -344,7 +362,7 @@ export class AuthService extends ApiService {
 
     private hasRole(role: string): boolean {
         const token = this.authTokenSignal();
-        if (!token) {
+        if (token === null || token.length === 0) {
             return false;
         }
 
@@ -362,7 +380,7 @@ export class AuthService extends ApiService {
 
         const url = new URL(window.location.href);
         const token = url.searchParams.get('impersonationToken');
-        if (!token) {
+        if (token === null || token.length === 0) {
             return;
         }
 

@@ -26,10 +26,10 @@ export class FdCardHoverDirective {
     public constructor() {
         const element: HTMLElement = this.elementRef.nativeElement;
         const { style } = element;
-        this.originalTransform = style.transform || null;
-        this.originalBoxShadow = style.boxShadow || null;
-        this.originalCursor = style.cursor || null;
-        this.originalTransition = style.transition || null;
+        this.originalTransform = style.transform.length > 0 ? style.transform : null;
+        this.originalBoxShadow = style.boxShadow.length > 0 ? style.boxShadow : null;
+        this.originalCursor = style.cursor.length > 0 ? style.cursor : null;
+        this.originalTransition = style.transition.length > 0 ? style.transition : null;
 
         this.renderer.setStyle(element, 'cursor', 'pointer');
         this.renderer.setStyle(element, 'transition', 'transform 0.2s ease, box-shadow 0.2s ease');
@@ -79,7 +79,7 @@ export class FdCardHoverDirective {
 
     private restoreStyle(property: string, value: string | null): void {
         const element: HTMLElement = this.elementRef.nativeElement;
-        if (value && value.length > 0) {
+        if (value !== null && value.length > 0) {
             this.renderer.setStyle(element, property, value);
         } else {
             this.renderer.removeStyle(element, property);

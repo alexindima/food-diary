@@ -81,7 +81,7 @@ export class ItemSelectDialogComponent {
                 })
                 .afterClosed()
                 .subscribe(product => {
-                    if (!product) {
+                    if (product === null || product === undefined) {
                         return;
                     }
                     this.completeWith({ type: 'Product', product });
@@ -95,7 +95,7 @@ export class ItemSelectDialogComponent {
             })
             .afterClosed()
             .subscribe(recipe => {
-                if (!recipe) {
+                if (recipe === null || recipe === undefined) {
                     return;
                 }
                 this.completeWith({ type: 'Recipe', recipe });
@@ -103,12 +103,12 @@ export class ItemSelectDialogComponent {
     }
 
     private completeWith(selection: ItemSelection | null): void {
-        if (!this.embedded() && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef !== null) {
             this.dialogRef.close(selection);
             return;
         }
 
-        if (!selection) {
+        if (selection === null) {
             this.createRecipeRequested.emit();
             return;
         }

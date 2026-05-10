@@ -29,7 +29,7 @@ export class UnauthorizedComponent {
             return;
         }
 
-        if (!this.returnUrl) {
+        if (this.returnUrl.length === 0) {
             return;
         }
 
@@ -39,15 +39,15 @@ export class UnauthorizedComponent {
     public goToLogin(): void {
         const url = new URL('/auth/login', environment.mainAppUrl);
         const adminReturnUrl = this.normalizeReturnUrl(this.returnUrl);
-        if (adminReturnUrl) {
+        if (adminReturnUrl.length > 0) {
             url.searchParams.set('adminReturnUrl', adminReturnUrl);
         }
         window.location.assign(url.toString());
     }
 
     private async tryRecoverFromSsoAsync(returnUrl: string): Promise<void> {
-        const cleanedUrl = await this.authService.tryApplySsoFromReturnUrlAsync(returnUrl);
-        if (!cleanedUrl) {
+        const cleanedUrl = (await this.authService.tryApplySsoFromReturnUrlAsync(returnUrl)) as string | null | undefined;
+        if (cleanedUrl === null || cleanedUrl === undefined || cleanedUrl.length === 0) {
             return;
         }
 
@@ -55,7 +55,7 @@ export class UnauthorizedComponent {
     }
 
     private normalizeReturnUrl(value: string): string {
-        if (!value) {
+        if (value.length === 0) {
             return '/';
         }
 

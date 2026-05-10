@@ -29,11 +29,12 @@ export class SeoService {
 
     public update(data: SeoData): void {
         const currentSiteUrl = this.getCurrentSiteUrl();
-        const translatedTitle = data.titleKey ? this.translate.instant(data.titleKey) : null;
-        const pageTitle = translatedTitle ? `${translatedTitle} | ${DEFAULT_TITLE}` : DEFAULT_TITLE;
-        const description = data.descriptionKey
-            ? this.translate.instant(data.descriptionKey)
-            : this.translate.instant('SEO.DEFAULT_DESCRIPTION');
+        const translatedTitle = data.titleKey !== null && data.titleKey !== undefined ? this.translate.instant(data.titleKey) : null;
+        const pageTitle = translatedTitle !== null && translatedTitle.length > 0 ? `${translatedTitle} | ${DEFAULT_TITLE}` : DEFAULT_TITLE;
+        const description =
+            data.descriptionKey !== undefined && data.descriptionKey.length > 0
+                ? this.translate.instant(data.descriptionKey)
+                : this.translate.instant('SEO.DEFAULT_DESCRIPTION');
         const currentUrl = this.buildSiteUrl(currentSiteUrl, data.path);
 
         this.title.setTitle(pageTitle);
@@ -56,7 +57,7 @@ export class SeoService {
         this.updateAlternateLinks(data.path);
         this.updateStructuredData(pageTitle, description, currentUrl, data);
 
-        if (data.noIndex) {
+        if (data.noIndex === true) {
             this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
         } else {
             this.meta.removeTag('name="robots"');
@@ -69,12 +70,12 @@ export class SeoService {
 
     private getCurrentSiteUrl(): string {
         const hostname = this.document.location.hostname.toLowerCase();
-        return hostname && RUSSIAN_HOSTS.has(hostname) ? RUSSIAN_SITE_URL : ENGLISH_SITE_URL;
+        return hostname.length > 0 && RUSSIAN_HOSTS.has(hostname) ? RUSSIAN_SITE_URL : ENGLISH_SITE_URL;
     }
 
     private buildSiteUrl(baseUrl: string, path?: string): string {
         const normalizedPath = this.normalizePath(path);
-        if (!normalizedPath || normalizedPath === '/') {
+        if (normalizedPath.length === 0 || normalizedPath === '/') {
             return baseUrl;
         }
 
@@ -82,14 +83,14 @@ export class SeoService {
     }
 
     private normalizePath(path?: string): string {
-        if (!path) {
+        if (path === undefined || path.length === 0) {
             return '/';
         }
 
         const withoutHash = path.split('#', 1)[0] ?? '/';
         const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
 
-        if (!withoutQuery || withoutQuery === '/') {
+        if (withoutQuery.length === 0 || withoutQuery === '/') {
             return '/';
         }
 
@@ -103,7 +104,7 @@ export class SeoService {
 
     private updateCanonical(url: string): void {
         let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
-        if (!link) {
+        if (link === null) {
             link = this.document.createElement('link');
             link.setAttribute('rel', 'canonical');
             this.document.head.appendChild(link);
@@ -120,7 +121,7 @@ export class SeoService {
 
         for (const alternate of alternates) {
             let link = this.document.querySelector(`link[rel="alternate"][hreflang="${alternate.hreflang}"]`);
-            if (!link) {
+            if (link === null) {
                 link = this.document.createElement('link');
                 link.setAttribute('rel', 'alternate');
                 link.setAttribute('hreflang', alternate.hreflang);
@@ -133,7 +134,7 @@ export class SeoService {
 
     private updateStructuredData(pageTitle: string, description: string, currentUrl: string, data: SeoData): void {
         let script = this.document.querySelector<HTMLScriptElement>(STRUCTURED_DATA_SELECTOR);
-        if (!script) {
+        if (script === null) {
             script = this.document.createElement('script');
             script.type = 'application/ld+json';
             script.setAttribute('data-seo-structured-data', 'app');
@@ -167,7 +168,7 @@ export class SeoService {
                     url: currentUrl,
                     description,
                     inLanguage,
-                    ...(featureList ? { featureList } : {}),
+                    ...(featureList !== undefined ? { featureList } : {}),
                     offers: {
                         '@type': 'Offer',
                         price: '0',
@@ -187,7 +188,7 @@ export class SeoService {
                     },
                     inLanguage,
                 },
-                ...(faqEntity ? [faqEntity] : []),
+                ...(faqEntity !== null ? [faqEntity] : []),
             ],
         };
 
@@ -224,7 +225,7 @@ export class SeoService {
     }
 
     private getStructuredFeatureList(baseKey?: string, featureKeys?: readonly string[]): string[] | undefined {
-        if (!baseKey || !featureKeys?.length) {
+        if (baseKey === undefined || baseKey.length === 0 || featureKeys === undefined || featureKeys.length === 0) {
             return undefined;
         }
 
@@ -236,7 +237,7 @@ export class SeoService {
         faqKeys: readonly string[] | undefined,
         currentUrl: string,
     ): Record<string, unknown> | null {
-        if (!baseKey || !faqKeys?.length) {
+        if (baseKey === undefined || baseKey.length === 0 || faqKeys === undefined || faqKeys.length === 0) {
             return null;
         }
 

@@ -25,7 +25,7 @@ export class MealPlanDetailPageComponent {
     public readonly facade = inject(MealPlanFacade);
     public readonly selectedPlanView = computed<MealPlanDetailViewModel | null>(() => {
         const plan = this.facade.selectedPlan();
-        if (!plan) {
+        if (plan === null) {
             return null;
         }
 
@@ -44,14 +44,14 @@ export class MealPlanDetailPageComponent {
 
     public constructor() {
         const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
+        if (id !== null && id.length > 0) {
             this.facade.loadPlan(id);
         }
     }
 
     public adopt(): void {
         const plan = this.facade.selectedPlan();
-        if (!plan) {
+        if (plan === null) {
             return;
         }
         this.facade.adopt(plan.id, () => void this.router.navigate(['/meal-plans']));
@@ -59,7 +59,7 @@ export class MealPlanDetailPageComponent {
 
     public generateShoppingList(): void {
         const plan = this.facade.selectedPlan();
-        if (!plan) {
+        if (plan === null) {
             return;
         }
         this.facade.generateShoppingList(plan.id, () => void this.router.navigate(['/shopping-lists']));

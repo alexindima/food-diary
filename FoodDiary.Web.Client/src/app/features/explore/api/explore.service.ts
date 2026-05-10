@@ -8,6 +8,18 @@ import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ExploreFilters, ExploreRecipe } from '../models/explore.data';
 
+function addOptionalStringParam(params: Record<string, string | number>, key: string, value: string | undefined): void {
+    if (value !== undefined && value.length > 0) {
+        params[key] = value;
+    }
+}
+
+function addOptionalNumberParam(params: Record<string, string | number>, key: string, value: number | undefined): void {
+    if (value !== undefined) {
+        params[key] = value;
+    }
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -17,18 +29,11 @@ export class ExploreService extends ApiService {
     public query(page: number, limit: number, filters?: ExploreFilters): Observable<PageOf<ExploreRecipe>> {
         const params: Record<string, string | number> = { page, limit };
 
-        if (filters?.search?.trim()) {
-            params['search'] = filters.search.trim();
-        }
-        if (filters?.category) {
-            params['category'] = filters.category;
-        }
-        if (filters?.maxPrepTime) {
-            params['maxPrepTime'] = filters.maxPrepTime;
-        }
-        if (filters?.sortBy) {
-            params['sortBy'] = filters.sortBy;
-        }
+        const search = filters?.search?.trim();
+        addOptionalStringParam(params, 'search', search);
+        addOptionalStringParam(params, 'category', filters?.category);
+        addOptionalNumberParam(params, 'maxPrepTime', filters?.maxPrepTime);
+        addOptionalStringParam(params, 'sortBy', filters?.sortBy);
 
         return this.get<PageOf<ExploreRecipe>>('', params).pipe(
             catchError((error: HttpErrorResponse) =>

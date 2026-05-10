@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 
+const BASE64_BLOCK_SIZE = 4;
+const EXPIRATION_SECONDS_TO_MS = 1000;
+
 @Injectable({
     providedIn: 'root',
 })
 export class JwtDecoderService {
     public decodePayload(token: string): Record<string, unknown> | null {
-        const [, payloadSegment] = token.split('.');
-        if (!payloadSegment) {
+        const payloadSegment = token.split('.').at(1);
+        if (payloadSegment === undefined || payloadSegment.length === 0) {
             return null;
         }
 
         try {
             const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
-            const padLength = (4 - (normalized.length % 4 || 4)) % 4;
+            const remainder = normalized.length % BASE64_BLOCK_SIZE;
+            const padLength = (BASE64_BLOCK_SIZE - (remainder === 0 ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
             const bytes = Uint8Array.from(decoded, character => character.charCodeAt(0));
@@ -24,26 +28,25 @@ export class JwtDecoderService {
     }
 
     public extractUserId(token: string | null): string | null {
-        if (!token) {
+        if (token === null || token.length === 0) {
             return null;
         }
 
         const payload = this.decodePayload(token);
-        if (!payload) {
+        if (payload === null) {
             return null;
         }
 
         return (
-            (payload['nameid'] as string) ||
-            (payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] as string) ||
-            (payload['sub'] as string) ||
-            null
+            this.stringClaim(payload, 'nameid') ??
+            this.stringClaim(payload, 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier') ??
+            this.stringClaim(payload, 'sub')
         );
     }
 
     public extractRoles(token: string): string[] {
         const payload = this.decodePayload(token);
-        if (!payload) {
+        if (payload === null) {
             return [];
         }
 
@@ -65,7 +68,7 @@ export class JwtDecoderService {
     }
 
     public isImpersonation(token: string | null): boolean {
-        if (!token) {
+        if (token === null || token.length === 0) {
             return false;
         }
 
@@ -74,7 +77,7 @@ export class JwtDecoderService {
     }
 
     public extractImpersonationActorId(token: string | null): string | null {
-        if (!token) {
+        if (token === null || token.length === 0) {
             return null;
         }
 
@@ -84,7 +87,7 @@ export class JwtDecoderService {
     }
 
     public extractImpersonationReason(token: string | null): string | null {
-        if (!token) {
+        if (token === null || token.length === 0) {
             return null;
         }
 
@@ -94,7 +97,7 @@ export class JwtDecoderService {
     }
 
     public extractExpirationTimeMs(token: string | null): number | null {
-        if (!token) {
+        if (token === null || token.length === 0) {
             return null;
         }
 
@@ -104,7 +107,7 @@ export class JwtDecoderService {
             return null;
         }
 
-        return exp * 1000;
+        return exp * EXPIRATION_SECONDS_TO_MS;
     }
 
     public isExpired(token: string | null, leewaySeconds = 0): boolean {
@@ -113,6 +116,11 @@ export class JwtDecoderService {
             return false;
         }
 
-        return expirationTimeMs <= Date.now() + leewaySeconds * 1000;
+        return expirationTimeMs <= Date.now() + leewaySeconds * EXPIRATION_SECONDS_TO_MS;
+    }
+
+    private stringClaim(payload: Record<string, unknown>, claim: string): string | null {
+        const value = payload[claim];
+        return typeof value === 'string' && value.length > 0 ? value : null;
     }
 }
