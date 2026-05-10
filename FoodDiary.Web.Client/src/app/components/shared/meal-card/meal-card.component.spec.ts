@@ -155,7 +155,8 @@ describe('MealCardComponent', () => {
     });
 
     it('should open collage preview when meal uses item collage images', () => {
-        const openSpy = vi.spyOn(dialogService, 'open').mockImplementation(() => Object.create(null));
+        const dialogRef = Object.create(null) as ReturnType<FdUiDialogService['open']>;
+        const openSpy = vi.spyOn(dialogService, 'open').mockImplementation(() => dialogRef);
         fixture.componentRef.setInput('meal', {
             ...mockMeal,
             imageUrl: null,

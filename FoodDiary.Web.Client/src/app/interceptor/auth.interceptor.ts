@@ -42,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
                         void this.authService.onLogoutAsync(true);
                         return throwError(() => error);
                     }),
-                    catchError(refreshError => {
+                    catchError((refreshError: unknown) => {
                         void this.authService.onLogoutAsync(true);
                         return throwError(() => refreshError);
                     }),

@@ -44,7 +44,7 @@ describe('DietologistInvitationPageComponent', () => {
         });
 
         const translateService = TestBed.inject(TranslateService);
-        vi.spyOn(translateService, 'instant').mockImplementation(((key: string | string[]) => key as string) as never);
+        vi.spyOn(translateService, 'instant').mockImplementation((key: string) => key);
 
         fixture = TestBed.createComponent(DietologistInvitationPageComponent);
         component = fixture.componentInstance;
