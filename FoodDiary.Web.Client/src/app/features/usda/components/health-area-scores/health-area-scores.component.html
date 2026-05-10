@@ -4,21 +4,19 @@
         @for (area of areas(); track area.key) {
             <div class="area-card fd-ui-stat-tile fd-ui-stat-tile--compact fd-ui-stat-tile--centered" [class]="'area-card--' + area.grade">
                 <span class="area-icon">{{ area.icon }}</span>
-                <span class="area-name fd-ui-stat-tile__label fd-ui-overline">{{ 'HEALTH_SCORES.' + area.key | translate }}</span>
+                <span class="area-name fd-ui-stat-tile__label fd-ui-overline">{{ area.labelKey | translate }}</span>
                 <div class="area-score-ring">
                     <svg viewBox="0 0 36 36" class="ring-svg">
                         <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                         <path
                             class="ring-fill"
-                            [attr.stroke-dasharray]="area.score + ', 100'"
+                            [attr.stroke-dasharray]="area.strokeDasharray"
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         />
                     </svg>
                     <span class="score-text fd-center fd-ui-stat-value">{{ area.score }}</span>
                 </div>
-                <span class="area-grade fd-ui-stat-tile__meta fd-ui-overline">{{
-                    'HEALTH_SCORES.GRADE_' + area.grade.toUpperCase() | translate
-                }}</span>
+                <span class="area-grade fd-ui-stat-tile__meta fd-ui-overline">{{ area.gradeKey | translate }}</span>
             </div>
         }
     </div>

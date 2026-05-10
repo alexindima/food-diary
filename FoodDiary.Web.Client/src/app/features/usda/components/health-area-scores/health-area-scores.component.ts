@@ -6,9 +6,12 @@ import { type HealthAreaScores } from '../../models/usda.data';
 
 interface HealthAreaDisplay {
     key: string;
+    labelKey: string;
     icon: string;
     score: number;
     grade: string;
+    gradeKey: string;
+    strokeDasharray: string;
 }
 
 @Component({
@@ -33,6 +36,11 @@ export class HealthAreaScoresComponent {
             { key: 'IMMUNE', icon: '\uD83D\uDEE1\uFE0F', score: s.immune.score, grade: s.immune.grade },
             { key: 'ENERGY', icon: '\u26A1', score: s.energy.score, grade: s.energy.grade },
             { key: 'ANTIOXIDANT', icon: '\uD83E\uDDEC', score: s.antioxidant.score, grade: s.antioxidant.grade },
-        ];
+        ].map(area => ({
+            ...area,
+            labelKey: `HEALTH_SCORES.${area.key}`,
+            gradeKey: `HEALTH_SCORES.GRADE_${area.grade.toUpperCase()}`,
+            strokeDasharray: `${area.score}, 100`,
+        }));
     });
 }
