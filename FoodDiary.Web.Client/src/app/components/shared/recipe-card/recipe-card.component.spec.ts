@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports -- shared card spec needs the concrete feature favorite service token
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { AuthService } from '../../../services/auth.service';
 import { RecipeCardComponent, type RecipeCardItem } from './recipe-card.component';

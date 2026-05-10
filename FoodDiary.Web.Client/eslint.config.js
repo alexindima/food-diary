@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-function-return-type -- local rule helpers are inferred from ESLint AST shapes */
 import angularPlugin from '@angular-eslint/eslint-plugin';
 import templatePlugin from '@angular-eslint/eslint-plugin-template';
 import templateParser from '@angular-eslint/template-parser';
+import eslintCommentsPlugin from '@eslint-community/eslint-plugin-eslint-comments';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import parser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
@@ -252,13 +253,27 @@ export default [
         plugins: {
             '@typescript-eslint': tsPlugin,
             '@angular-eslint': angularPlugin,
+            'eslint-comments': eslintCommentsPlugin,
             prettier: prettierPlugin,
             'simple-import-sort': simpleImportSortPlugin,
             local: localTsPlugin,
         },
         rules: {
             ...eslintConfigPrettier.rules,
+            complexity: ['warn', 10],
             'no-console': 'error',
+            'no-else-return': 'warn',
+            'no-lonely-if': 'warn',
+            'max-depth': ['warn', 4],
+            'max-lines-per-function': [
+                'warn',
+                {
+                    max: 80,
+                    skipBlankLines: true,
+                    skipComments: true,
+                },
+            ],
+            'max-params': ['warn', 4],
             'object-shorthand': ['error', 'always'],
             curly: ['error', 'all'],
             'no-redeclare': 'error',
@@ -304,6 +319,9 @@ export default [
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-require-imports': 'error',
             '@typescript-eslint/no-shadow': 'error',
+            'eslint-comments/no-unlimited-disable': 'warn',
+            'eslint-comments/no-unused-disable': 'warn',
+            'eslint-comments/require-description': 'warn',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
@@ -342,12 +360,30 @@ export default [
                 },
             ],
             '@typescript-eslint/await-thenable': 'error',
+            '@typescript-eslint/ban-ts-comment': [
+                'warn',
+                {
+                    'ts-expect-error': 'allow-with-description',
+                    'ts-ignore': true,
+                    'ts-nocheck': true,
+                    'ts-check': false,
+                    minimumDescriptionLength: 10,
+                },
+            ],
             '@typescript-eslint/consistent-generic-constructors': 'error',
             '@typescript-eslint/no-base-to-string': 'error',
             '@typescript-eslint/no-confusing-non-null-assertion': 'error',
             '@typescript-eslint/no-deprecated': 'error',
             '@typescript-eslint/no-duplicate-type-constituents': 'error',
             '@typescript-eslint/no-empty-object-type': 'error',
+            '@typescript-eslint/no-magic-numbers': [
+                'warn',
+                {
+                    ignore: [-1, 0, 1, 2],
+                    ignoreArrayIndexes: true,
+                    enforceConst: true,
+                },
+            ],
             '@typescript-eslint/no-for-in-array': 'error',
             '@typescript-eslint/no-implied-eval': 'error',
             '@typescript-eslint/no-misused-spread': 'error',
@@ -372,6 +408,17 @@ export default [
             '@typescript-eslint/require-array-sort-compare': 'error',
             '@typescript-eslint/require-await': 'error',
             '@typescript-eslint/restrict-template-expressions': 'error',
+            '@typescript-eslint/strict-boolean-expressions': [
+                'warn',
+                {
+                    allowString: false,
+                    allowNumber: false,
+                    allowNullableObject: false,
+                    allowNullableBoolean: false,
+                    allowNullableString: false,
+                    allowNullableNumber: false,
+                },
+            ],
             '@typescript-eslint/prefer-readonly': 'error',
             '@typescript-eslint/switch-exhaustiveness-check': 'error',
             '@typescript-eslint/unbound-method': [

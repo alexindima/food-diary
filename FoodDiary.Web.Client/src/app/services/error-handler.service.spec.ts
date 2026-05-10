@@ -64,7 +64,7 @@ describe('GlobalErrorHandler', () => {
         expect(() => {
             handler.handleError(new Error('Test'));
         }).not.toThrow();
-        // eslint-disable-next-line no-console
+        // eslint-disable-next-line no-console -- test verifies fallback logging when backend reporting fails
         expect(console.error).toHaveBeenCalledWith('Failed to send log to backend:', expect.any(Error));
     });
 });

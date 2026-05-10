@@ -6,7 +6,7 @@ import type { FdUiImagePreviewDialogData } from 'fd-ui-kit/image-preview-dialog/
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports -- shared card spec needs the concrete feature favorite service token
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
 import { AuthService } from '../../../services/auth.service';
 import { MealCardComponent, type MealCardItem } from './meal-card.component';
