@@ -300,7 +300,7 @@
                                     <div class="fasting__history-header fd-row fd-wrap fd-justify-between fd-gap-sm">
                                         <div class="fasting__history-heading fd-row fd-wrap fd-align-baseline fd-gap-xs">
                                             <span class="fasting__history-date fd-ui-stat-value">
-                                                {{ session.startedAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                                {{ historyItem.startedAtLabel }}
                                             </span>
                                             <span class="fasting__history-separator" aria-hidden="true">&middot;</span>
                                             <span class="fasting__history-details fd-ui-body-sm">
@@ -357,7 +357,7 @@
                                                     <div class="fasting__history-checkin-entry fd-stack fd-gap-xxs">
                                                         <div class="fasting__history-checkin-header fd-row fd-justify-between fd-gap-xs">
                                                             <div class="fasting__history-checkin-time fd-ui-caption">
-                                                                {{ checkIn.checkIn.checkedInAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                                                {{ checkIn.checkedInAtLabel }}
                                                             </div>
                                                         </div>
                                                         <div class="fasting__history-checkin-summary fd-ui-body-sm">

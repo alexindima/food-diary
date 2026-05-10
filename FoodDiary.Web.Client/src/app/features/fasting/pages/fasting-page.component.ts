@@ -16,7 +16,6 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { LocalizationService } from '../../../services/localization.service';
 import {
     FastingCheckInChartDialogComponent,
@@ -50,7 +49,6 @@ import {
         TranslatePipe,
         FdUiChipSelectComponent,
         FdUiEmojiPickerComponent,
-        LocalizedDatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -478,6 +476,7 @@ export class FastingPageComponent {
     private buildCheckInViewModel(checkIn: FastingCheckIn): FastingCheckInViewModel {
         return {
             checkIn,
+            checkedInAtLabel: this.formatSessionDateLabel(checkIn.checkedInAtUtc),
             relativeCheckedInAt: this.formatRelativeTime(checkIn.checkedInAtUtc),
             summary: this.getCheckInSummary(checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel),
             symptomLabels: checkIn.symptoms.map(symptom => this.getSymptomLabel(symptom)),
@@ -497,6 +496,7 @@ export class FastingPageComponent {
         const checkInCount = this.getSessionCheckInCount(session);
         return {
             session,
+            startedAtLabel: this.formatSessionDateLabel(session.startedAtUtc),
             accentColor: this.getHistoryAccentColor(session),
             sessionTypeLabel: this.getHistorySessionTypeLabel(session),
             protocolDisplay: this.getHistoryProtocolDisplay(session),
@@ -651,6 +651,7 @@ interface FastingMessageViewModel {
 
 interface FastingCheckInViewModel {
     checkIn: FastingCheckIn;
+    checkedInAtLabel: string;
     relativeCheckedInAt: string | null;
     summary: string;
     symptomLabels: string[];
@@ -658,6 +659,7 @@ interface FastingCheckInViewModel {
 
 interface FastingHistorySessionViewModel {
     session: FastingSession;
+    startedAtLabel: string;
     accentColor: string;
     sessionTypeLabel: string;
     protocolDisplay: string;
