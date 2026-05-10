@@ -1,3 +1,5 @@
+@let errors = fieldErrors();
+
 <fd-ui-card
     class="product-manage__card product-manage__card--basic"
     appearance="entry"
@@ -26,7 +28,7 @@
                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
                 [required]="true"
-                [error]="getControlError()('name')"
+                [error]="errors.name"
                 [options]="nameOptions()"
                 [loading]="isNameSearchLoading()"
                 [emptyText]="'PRODUCT_MANAGE.NAME_NO_SUGGESTIONS' | translate"
@@ -64,7 +66,7 @@
                 [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
                 [options]="productTypeOptions()"
-                [error]="getControlError()('productType')"
+                [error]="errors.productType"
             />
         </div>
         <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
@@ -84,7 +86,7 @@
                     [label]="'PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate"
                     [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
                     [required]="true"
-                    [error]="getControlError()('defaultPortionAmount')"
+                    [error]="errors.defaultPortionAmount"
                 />
             </div>
             <div class="product-manage__serving-part fd-stack fd-gap-xs">
@@ -93,7 +95,7 @@
                     size="lg"
                     [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
                     [options]="unitOptions()"
-                    [error]="getControlError()('baseUnit')"
+                    [error]="errors.baseUnit"
                 />
             </div>
         </div>
@@ -115,7 +117,7 @@
                 size="lg"
                 [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
                 [options]="visibilityOptions()"
-                [error]="getControlError()('visibility')"
+                [error]="errors.visibility"
             />
         </div>
         <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">

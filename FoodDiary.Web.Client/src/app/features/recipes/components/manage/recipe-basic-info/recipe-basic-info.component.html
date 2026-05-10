@@ -1,4 +1,5 @@
 <ng-container [formGroup]="formGroup()">
+    @let errors = fieldErrors();
     <fd-ui-card
         class="recipe-basic-info__card recipe-basic-info__card--basic"
         appearance="entry"
@@ -29,7 +30,7 @@
                     [label]="'RECIPE_MANAGE.NAME' | translate"
                     [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
                     [required]="true"
-                    [error]="getFieldError('name')"
+                    [error]="errors.name"
                 />
             </div>
             <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
@@ -48,7 +49,7 @@
                     size="lg"
                     [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
                     [required]="true"
-                    [error]="getFieldError('cookTime')"
+                    [error]="errors.cookTime"
                 />
             </div>
         </div>
@@ -60,7 +61,7 @@
                 type="number"
                 [step]="1"
                 [label]="'RECIPE_MANAGE.PREP_TIME' | translate"
-                [error]="getFieldError('prepTime')"
+                [error]="errors.prepTime"
             />
 
             <fd-ui-input
@@ -70,7 +71,7 @@
                 [step]="1"
                 [label]="'RECIPE_MANAGE.SERVINGS' | translate"
                 [required]="true"
-                [error]="getFieldError('servings')"
+                [error]="errors.servings"
             />
 
             <fd-ui-textarea
@@ -80,7 +81,7 @@
                 [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
                 [rows]="3"
                 [maxlength]="1000"
-                [error]="getFieldError('description')"
+                [error]="errors.description"
             />
         </div>
     </fd-ui-card>
@@ -101,7 +102,7 @@
                     [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
                     [required]="true"
                     [options]="visibilitySelectOptions()"
-                    [error]="getFieldError('visibility')"
+                    [error]="errors.visibility"
                 />
             </div>
             <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
@@ -111,7 +112,7 @@
                     [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
                     [rows]="4"
                     [maxlength]="1000"
-                    [error]="getFieldError('comment')"
+                    [error]="errors.comment"
                 />
             </div>
         </div>
