@@ -82,7 +82,7 @@ export class AdminUserEditDialogComponent {
     }
 
     private normalizeLanguage(value: string | null | undefined): 'en' | 'ru' | null {
-        if (!value) {
+        if (value === null || value === undefined || value.trim().length === 0) {
             return null;
         }
 

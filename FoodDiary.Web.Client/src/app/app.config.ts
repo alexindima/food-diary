@@ -35,7 +35,7 @@ const isBrowserEnvironment = typeof window !== 'undefined';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        ...(environment.enableGlobalErrorHandler && isBrowserEnvironment
+        ...(environment.enableGlobalErrorHandler === true && isBrowserEnvironment
             ? [
                   provideBrowserGlobalErrorListeners(),
                   {

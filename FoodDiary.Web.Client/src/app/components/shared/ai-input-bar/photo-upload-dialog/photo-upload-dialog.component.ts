@@ -19,7 +19,7 @@ export class PhotoUploadDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<PhotoUploadDialogComponent, ImageSelection | null>, { optional: true });
 
     public onImageChanged(selection: ImageSelection | null): void {
-        if (selection?.assetId) {
+        if ((selection?.assetId ?? '').trim().length > 0) {
             this.dialogRef?.close(selection);
         }
     }

@@ -60,7 +60,8 @@ export class AdminModerationActionDialogComponent {
 
     public onConfirm(): void {
         this.isSubmitting.set(true);
-        const action = { adminNote: this.adminNote.trim() || null };
+        const adminNote = this.adminNote.trim();
+        const action = { adminNote: adminNote.length > 0 ? adminNote : null };
 
         const operation =
             this.data.action === 'review'

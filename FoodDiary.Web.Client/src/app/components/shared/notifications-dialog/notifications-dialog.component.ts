@@ -79,7 +79,7 @@ export class NotificationsDialogComponent {
 
     protected openNotification(notification: NotificationItem): void {
         const navigate = (): void => {
-            if (!notification.targetUrl) {
+            if (notification.targetUrl === null || notification.targetUrl.trim().length === 0) {
                 return;
             }
 

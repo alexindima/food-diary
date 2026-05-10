@@ -40,7 +40,7 @@ export class FdUiMenuComponent {
 
     protected onKeydown(event: KeyboardEvent): void {
         const items = this.menuItems().filter(item => !item.disabled());
-        if (!items.length) {
+        if (items.length === 0) {
             if (event.key === 'Escape') {
                 event.preventDefault();
                 this.close();

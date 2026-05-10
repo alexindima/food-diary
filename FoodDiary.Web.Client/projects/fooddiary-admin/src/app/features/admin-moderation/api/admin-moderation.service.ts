@@ -26,7 +26,7 @@ export class AdminModerationService {
 
     public getReports(page: number, limit: number, status?: string | null): Observable<PagedResponse<AdminContentReport>> {
         let params = new HttpParams().set('page', page).set('limit', limit);
-        if (status) {
+        if (status !== null && status !== undefined && status.trim().length > 0) {
             params = params.set('status', status);
         }
 

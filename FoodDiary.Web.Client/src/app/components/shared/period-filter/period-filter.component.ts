@@ -38,7 +38,7 @@ export class PeriodFilterComponent {
                 return;
             }
 
-            if (range) {
+            if (range !== null) {
                 control.setValue({ start: range.start, end: range.end }, { emitEvent: false });
             }
 

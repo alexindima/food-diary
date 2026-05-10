@@ -8,6 +8,11 @@ import {
 } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
+const DEFAULT_SATIETY_LEVEL = 3;
+const MAX_SATIETY_LEVEL = 5;
+const MIN_SATIETY_LEVEL = 1;
+const LEGACY_SATIETY_SCALE_FACTOR = 2;
+
 @Component({
     selector: 'fd-meal-details-fields',
     imports: [TranslatePipe, FdUiEmojiPickerComponent],
@@ -23,9 +28,9 @@ export class MealDetailsFieldsComponent {
     public readonly date = input.required<string>();
     public readonly time = input.required<string>();
     public readonly comment = input.required<string>();
-    public readonly preMealSatietyLevel = model<number | null>(3);
-    public readonly postMealSatietyLevel = model<number | null>(3);
-    public readonly textareaRows = input(3);
+    public readonly preMealSatietyLevel = model<number | null>(DEFAULT_SATIETY_LEVEL);
+    public readonly postMealSatietyLevel = model<number | null>(DEFAULT_SATIETY_LEVEL);
+    public readonly textareaRows = input(DEFAULT_SATIETY_LEVEL);
     public readonly surface = input(true);
     public readonly density = input<'compact' | 'regular'>('compact');
     public readonly satietyLayout = input<'stacked' | 'columns'>('stacked');
@@ -93,14 +98,14 @@ export class MealDetailsFieldsComponent {
     }
 
     private normalizeSatietyLevel(value: number | null): number {
-        if (!value) {
-            return 3;
+        if (value === null || !Number.isFinite(value) || value <= 0) {
+            return DEFAULT_SATIETY_LEVEL;
         }
 
-        if (value > 5) {
-            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        if (value > MAX_SATIETY_LEVEL) {
+            return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / LEGACY_SATIETY_SCALE_FACTOR)));
         }
 
-        return Math.max(1, value);
+        return Math.max(MIN_SATIETY_LEVEL, value);
     }
 }

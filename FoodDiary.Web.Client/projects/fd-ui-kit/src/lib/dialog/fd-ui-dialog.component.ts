@@ -75,7 +75,7 @@ export class FdUiDialogComponent {
         afterNextRender(() => {
             const body = this.body()?.nativeElement;
 
-            if (!body) {
+            if (body === undefined) {
                 return;
             }
 

@@ -10,6 +10,10 @@ import type { QualityGrade } from '../../../features/products/models/product.dat
 import { MediaCardComponent } from '../media-card/media-card.component';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 
+const QUALITY_SCORE_MIN = 0;
+const QUALITY_SCORE_MAX = 100;
+const COLLAGE_VISIBLE_LIMIT = 4;
+
 export interface EntityCardNutrition {
     proteins: number;
     fats: number;
@@ -85,18 +89,18 @@ export class EntityCardComponent {
     public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
     public readonly normalizedQuality = computed(() => {
         const quality = this.quality();
-        if (!quality) {
+        if (quality === null) {
             return null;
         }
 
         return {
             ...quality,
-            score: Math.round(Math.min(100, Math.max(0, quality.score))),
+            score: Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, quality.score))),
             hintKey: `QUALITY.${quality.grade.toUpperCase()}`,
         };
     });
 
-    public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, 4));
+    public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, COLLAGE_VISIBLE_LIMIT));
     public readonly collageState = computed(() => {
         const images = this.visibleCollageImages();
 
@@ -106,9 +110,10 @@ export class EntityCardComponent {
             hasImages: images.length > 0,
         };
     });
-    public readonly hasPreviewImage = computed(() =>
-        Boolean(this.previewable() && (this.imageUrl()?.trim() ?? this.collageState().hasImages)),
-    );
+    public readonly hasPreviewImage = computed(() => {
+        const imageUrl = this.imageUrl()?.trim() ?? '';
+        return this.previewable() && (imageUrl.length > 0 || this.collageState().hasImages);
+    });
     public readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
         this.languageVersion();
         const hasPreviewImage = this.hasPreviewImage();

@@ -119,7 +119,7 @@ export class AdminBillingService {
         let params = new HttpParams().set('page', page).set('limit', limit);
 
         for (const [key, value] of Object.entries(filters)) {
-            if (value) {
+            if (typeof value === 'string' && value.trim().length > 0) {
                 params = params.set(key, value);
             }
         }

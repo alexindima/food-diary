@@ -6,6 +6,11 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
 
+const ADD_STEP_ML = 250;
+const PERCENT_MULTIPLIER = 100;
+const MAX_PERCENT = 200;
+const TRACK_WIDTH_MAX_PERCENT = 130;
+
 @Component({
     selector: 'fd-hydration-card',
     standalone: true,
@@ -15,7 +20,7 @@ import { NoticeBannerComponent } from '../../../../components/shared/notice-bann
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HydrationCardComponent {
-    private readonly addStep = 250;
+    private readonly addStep = ADD_STEP_ML;
 
     public readonly total = input.required<number>();
     public readonly goal = input.required<number | null>();
@@ -27,17 +32,17 @@ export class HydrationCardComponent {
     public readonly addAmount = computed(() => Math.max(1, this.addStep));
     public readonly hasGoal = computed(() => {
         const goal = this.goal();
-        return !!goal && goal > 0;
+        return goal !== null && goal > 0;
     });
     public readonly percent = computed(() => {
         if (!this.hasGoal()) {
             return 0;
         }
-        const value = (this.total() / (this.goal() ?? 1)) * 100;
-        return Math.max(0, Math.min(value, 200)); // allow slight overflow visualization
+        const value = (this.total() / (this.goal() ?? 1)) * PERCENT_MULTIPLIER;
+        return Math.max(0, Math.min(value, MAX_PERCENT)); // allow slight overflow visualization
     });
 
-    public readonly trackWidth = computed(() => `${Math.min(this.percent(), 130)}%`);
+    public readonly trackWidth = computed(() => `${Math.min(this.percent(), TRACK_WIDTH_MAX_PERCENT)}%`);
 
     public onAdd(): void {
         if (!this.canAdd()) {

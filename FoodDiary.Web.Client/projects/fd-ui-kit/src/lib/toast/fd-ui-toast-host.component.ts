@@ -30,7 +30,7 @@ export class FdUiToastHostComponent {
             const key = `${toast.verticalPosition}:${toast.horizontalPosition}`;
             const existing = grouped.get(key);
 
-            if (existing) {
+            if (existing !== undefined) {
                 existing.toasts.push(toast);
                 continue;
             }

@@ -8,6 +8,22 @@ import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.dire
 
 import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
 
+const PERCENT_MULTIPLIER = 100;
+
+const MOTIVATION_THRESHOLDS: ReadonlyArray<{ maxPercent: number; key: string }> = [
+    { maxPercent: 10, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P0_10' },
+    { maxPercent: 20, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P10_20' },
+    { maxPercent: 30, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P20_30' },
+    { maxPercent: 40, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P30_40' },
+    { maxPercent: 50, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P40_50' },
+    { maxPercent: 60, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P50_60' },
+    { maxPercent: 70, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P60_70' },
+    { maxPercent: 80, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P70_80' },
+    { maxPercent: 90, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P80_90' },
+    { maxPercent: 110, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P90_110' },
+    { maxPercent: 200, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P110_200' },
+];
+
 @Component({
     selector: 'fd-daily-progress-card',
     standalone: true,
@@ -37,7 +53,7 @@ export class DailyProgressCardComponent {
         if (!this.hasGoal()) {
             return 0;
         }
-        return Math.round(Math.max(0, (this.consumed() / this.goal()) * 100));
+        return Math.round(Math.max(0, (this.consumed() / this.goal()) * PERCENT_MULTIPLIER));
     });
 
     public readonly remaining = computed(() => {
@@ -54,7 +70,7 @@ export class DailyProgressCardComponent {
         }
 
         const goalValue = this.goal();
-        if (!goalValue || goalValue <= 0) {
+        if (goalValue <= 0) {
             return null;
         }
 
@@ -63,41 +79,7 @@ export class DailyProgressCardComponent {
             return 'DAILY_PROGRESS_CARD.MOTIVATION.NONE';
         }
 
-        const pct = (consumedValue / goalValue) * 100;
-
-        if (pct <= 10) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P0_10';
-        }
-        if (pct <= 20) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P10_20';
-        }
-        if (pct <= 30) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P20_30';
-        }
-        if (pct <= 40) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P30_40';
-        }
-        if (pct <= 50) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P40_50';
-        }
-        if (pct <= 60) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P50_60';
-        }
-        if (pct <= 70) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P60_70';
-        }
-        if (pct <= 80) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P70_80';
-        }
-        if (pct <= 90) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P80_90';
-        }
-        if (pct <= 110) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P90_110';
-        }
-        if (pct <= 200) {
-            return 'DAILY_PROGRESS_CARD.MOTIVATION.P110_200';
-        }
-        return 'DAILY_PROGRESS_CARD.MOTIVATION.ABOVE_200';
+        const percent = (consumedValue / goalValue) * PERCENT_MULTIPLIER;
+        return MOTIVATION_THRESHOLDS.find(item => percent <= item.maxPercent)?.key ?? 'DAILY_PROGRESS_CARD.MOTIVATION.ABOVE_200';
     });
 }

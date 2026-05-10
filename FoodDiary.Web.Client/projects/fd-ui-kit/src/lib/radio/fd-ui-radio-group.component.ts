@@ -71,7 +71,7 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
 
     protected handleKeydown(index: number, event: KeyboardEvent): void {
         const options = this.options();
-        if (!options.length) {
+        if (options.length === 0) {
             return;
         }
 

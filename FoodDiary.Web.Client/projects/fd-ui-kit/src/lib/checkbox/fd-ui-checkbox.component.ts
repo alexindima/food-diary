@@ -29,7 +29,7 @@ export class FdUiCheckboxComponent implements ControlValueAccessor {
     private onTouched: () => void = () => {};
 
     public writeValue(value: boolean | null): void {
-        this.checked = !!value;
+        this.checked = value === true;
     }
 
     public registerOnChange(fn: (value: boolean) => void): void {

@@ -5,6 +5,7 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
+const DEFAULT_ROWS = 4;
 
 @Component({
     selector: 'fd-ui-textarea',
@@ -28,7 +29,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly readonly = input(false);
-    public readonly rows = input(4);
+    public readonly rows = input(DEFAULT_ROWS);
     public readonly maxLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
@@ -44,7 +45,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-textarea ${this.sizeClass()}${this.error() ? ' fd-ui-textarea--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-textarea--floating' : ''}`,
+            `fd-ui-textarea ${this.sizeClass()}${this.error() !== null ? ' fd-ui-textarea--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-textarea--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));

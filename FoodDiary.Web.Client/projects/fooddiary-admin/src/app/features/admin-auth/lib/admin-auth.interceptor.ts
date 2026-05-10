@@ -3,10 +3,13 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
+const HTTP_UNAUTHORIZED = 401;
+const HTTP_FORBIDDEN = 403;
+
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
     const token = localStorage.getItem('authToken') ?? sessionStorage.getItem('authToken');
-    if (!token) {
+    if (token === null || token.trim().length === 0) {
         return next(req);
     }
 
@@ -22,12 +25,12 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
                 return throwError(() => error);
             }
 
-            if (error.status === 401 || error.status === 403) {
+            if (error.status === HTTP_UNAUTHORIZED || error.status === HTTP_FORBIDDEN) {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('refreshToken');
                 sessionStorage.removeItem('authToken');
 
-                const reason = error.status === 403 ? 'forbidden' : 'unauthenticated';
+                const reason = error.status === HTTP_FORBIDDEN ? 'forbidden' : 'unauthenticated';
                 const returnUrl = router.url;
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason, returnUrl },
