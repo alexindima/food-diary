@@ -15,9 +15,10 @@
 
                     @if (confidenceLabel()) {
                         <div
-                            class="tdee-card__confidence fd-ui-pill fd-ui-pill--compact fd-ui-overline tdee-card__confidence--{{
+                            [class]="
+                                'tdee-card__confidence fd-ui-pill fd-ui-pill--compact fd-ui-overline tdee-card__confidence--' +
                                 confidenceClass()
-                            }}"
+                            "
                         >
                             <fd-ui-icon name="verified" />
                             <span>{{ confidenceLabel()! | translate }}</span>

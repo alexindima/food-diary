@@ -67,9 +67,10 @@
                             }}</span>
                             <div class="consumption-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                                 <span
-                                    class="consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--{{
+                                    [class]="
+                                        'consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--' +
                                         qualityGrade
-                                    }}"
+                                    "
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>

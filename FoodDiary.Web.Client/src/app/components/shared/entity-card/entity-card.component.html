@@ -26,7 +26,7 @@
         } @else {
             @let collage = collageState();
             @if (collage.hasImages) {
-                <div class="entity-card__collage entity-card__collage--count-{{ collage.count }}">
+                <div [class]="'entity-card__collage entity-card__collage--count-' + collage.count">
                     @for (image of collage.images; track image.url) {
                         <img class="entity-card__collage-image" [src]="image.url" [alt]="image.alt" />
                     }
@@ -99,7 +99,7 @@
                     }}</span>
                     <div class="entity-card__quality-bar" aria-hidden="true">
                         <span
-                            class="entity-card__quality-fill entity-card__quality-fill--{{ cardQuality.grade }}"
+                            [class]="'entity-card__quality-fill entity-card__quality-fill--' + cardQuality.grade"
                             [style.width.%]="cardQuality.score"
                         ></span>
                     </div>

@@ -855,7 +855,7 @@ export default [
             '@angular-eslint/template/button-has-type': 'error',
             '@angular-eslint/template/mouse-events-have-key-events': 'error',
             '@angular-eslint/template/no-duplicate-attributes': 'error',
-            '@angular-eslint/template/no-interpolation-in-attributes': 'warn',
+            '@angular-eslint/template/no-interpolation-in-attributes': 'error',
             '@angular-eslint/template/prefer-self-closing-tags': 'error',
             '@angular-eslint/template/attributes-order': [
                 'error',
