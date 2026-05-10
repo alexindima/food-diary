@@ -146,7 +146,7 @@ export class StatisticsComponent {
         const timeZoneOffsetMinutes = -new Date().getTimezoneOffset();
         this.exportingFormat.set(format);
         this.exportService
-            .exportDiary(dateFrom, dateTo, format, locale, timeZoneOffsetMinutes)
+            .exportDiary({ dateFrom, dateTo, format, locale, timeZoneOffsetMinutes })
             .pipe(
                 finalize(() => {
                     this.exportingFormat.set(null);

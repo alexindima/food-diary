@@ -15,6 +15,15 @@ export interface CalorieMismatchWarning {
     actualCalories: number;
 }
 
+export interface CalorieMismatchWarningInput {
+    calories: number;
+    proteins: number;
+    fats: number;
+    carbs: number;
+    alcohol?: number;
+    threshold?: number;
+}
+
 export type NutritionMode = 'auto' | 'manual';
 
 /**
@@ -45,14 +54,8 @@ export function calculateCaloriesFromMacros(
  * Returns `null` when no warning should be shown (values are zero, missing, or
  * within the acceptable range).
  */
-export function calculateCalorieMismatchWarning(
-    calories: number,
-    proteins: number,
-    fats: number,
-    carbs: number,
-    alcohol: number = 0,
-    threshold: number = 0.2,
-): CalorieMismatchWarning | null {
+export function calculateCalorieMismatchWarning(input: CalorieMismatchWarningInput): CalorieMismatchWarning | null {
+    const { calories, proteins, fats, carbs, alcohol = 0, threshold = 0.2 } = input;
     const expectedCalories = calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
 
     if (expectedCalories <= 0 || calories <= 0) {

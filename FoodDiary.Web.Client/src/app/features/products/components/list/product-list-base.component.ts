@@ -290,28 +290,30 @@ export class ProductListBaseComponent {
         this.offProducts.set([]);
         this.searchOpenFoodFacts(this.searchForm.controls.search.value);
 
-        return this.productService.queryOverview(1, this.pageSize, undefined, true, 10, 10).pipe(
-            tap(data => {
-                this.productData.setData(data.allProducts);
-                this.recentProducts.set(data.recentItems);
-                this.favorites.set(data.favoriteItems);
-                this.favoriteTotalCount.set(data.favoriteTotalCount);
-                this.currentPageIndex = data.allProducts.page - 1;
-                this.errorKey.set(null);
-            }),
-            map(() => void 0),
-            catchError((_error: HttpErrorResponse) => {
-                this.productData.clearData();
-                this.recentProducts.set([]);
-                this.favorites.set([]);
-                this.favoriteTotalCount.set(0);
-                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
-                return of(void 0);
-            }),
-            finalize(() => {
-                this.productData.setLoading(false);
-            }),
-        );
+        return this.productService
+            .queryOverview({ page: 1, limit: this.pageSize, includePublic: true, recentLimit: 10, favoriteLimit: 10 })
+            .pipe(
+                tap(data => {
+                    this.productData.setData(data.allProducts);
+                    this.recentProducts.set(data.recentItems);
+                    this.favorites.set(data.favoriteItems);
+                    this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    this.currentPageIndex = data.allProducts.page - 1;
+                    this.errorKey.set(null);
+                }),
+                map(() => void 0),
+                catchError((_error: HttpErrorResponse) => {
+                    this.productData.clearData();
+                    this.recentProducts.set([]);
+                    this.favorites.set([]);
+                    this.favoriteTotalCount.set(0);
+                    this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                    return of(void 0);
+                }),
+                finalize(() => {
+                    this.productData.setLoading(false);
+                }),
+            );
     }
 
     private searchOpenFoodFacts(search: string | null): void {

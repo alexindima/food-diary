@@ -49,16 +49,42 @@ export class WeeklyCheckInPageComponent {
         }
 
         const cards: WeeklyCheckInTrendCardViewModel[] = [
-            this.createTrendCard('calories', 'WEEKLY_CHECK_IN.CALORIES', trends.calorieChange, 'GENERAL.UNITS.KCAL', '1.0-0'),
-            this.createTrendCard('protein', 'WEEKLY_CHECK_IN.PROTEIN', trends.proteinChange, 'GENERAL.UNITS.G', '1.1-1', false, ''),
-            this.createTrendCard('hydration', 'WEEKLY_CHECK_IN.HYDRATION', trends.hydrationChange, 'GENERAL.UNITS.ML', '1.0-0'),
+            this.createTrendCard({
+                key: 'calories',
+                labelKey: 'WEEKLY_CHECK_IN.CALORIES',
+                value: trends.calorieChange,
+                unitKey: 'GENERAL.UNITS.KCAL',
+                numberFormat: '1.0-0',
+            }),
+            this.createTrendCard({
+                key: 'protein',
+                labelKey: 'WEEKLY_CHECK_IN.PROTEIN',
+                value: trends.proteinChange,
+                unitKey: 'GENERAL.UNITS.G',
+                numberFormat: '1.1-1',
+                unitSeparator: '',
+            }),
+            this.createTrendCard({
+                key: 'hydration',
+                labelKey: 'WEEKLY_CHECK_IN.HYDRATION',
+                value: trends.hydrationChange,
+                unitKey: 'GENERAL.UNITS.ML',
+                numberFormat: '1.0-0',
+            }),
         ];
 
         if (trends.weightChange !== null) {
             cards.splice(
                 2,
                 0,
-                this.createTrendCard('weight', 'WEEKLY_CHECK_IN.WEIGHT', trends.weightChange, 'GENERAL.UNITS.KG', '1.1-1', true),
+                this.createTrendCard({
+                    key: 'weight',
+                    labelKey: 'WEEKLY_CHECK_IN.WEIGHT',
+                    value: trends.weightChange,
+                    unitKey: 'GENERAL.UNITS.KG',
+                    numberFormat: '1.1-1',
+                    invertPositive: true,
+                }),
             );
         }
 
@@ -71,15 +97,8 @@ export class WeeklyCheckInPageComponent {
         this.facade.initialize();
     }
 
-    private createTrendCard(
-        key: WeeklyCheckInTrendCardKey,
-        labelKey: string,
-        value: number,
-        unitKey: string,
-        numberFormat: string,
-        invertPositive = false,
-        unitSeparator = ' ',
-    ): WeeklyCheckInTrendCardViewModel {
+    private createTrendCard(config: WeeklyCheckInTrendCardConfig): WeeklyCheckInTrendCardViewModel {
+        const { key, labelKey, value, unitKey, numberFormat, invertPositive = false, unitSeparator = ' ' } = config;
         return {
             key,
             labelKey,
@@ -95,6 +114,16 @@ export class WeeklyCheckInPageComponent {
 }
 
 type WeeklyCheckInTrendCardKey = 'calories' | 'protein' | 'weight' | 'hydration';
+
+interface WeeklyCheckInTrendCardConfig {
+    key: WeeklyCheckInTrendCardKey;
+    labelKey: string;
+    value: number;
+    unitKey: string;
+    numberFormat: string;
+    invertPositive?: boolean;
+    unitSeparator?: string;
+}
 
 interface WeeklyCheckInTrendCardViewModel {
     key: WeeklyCheckInTrendCardKey;

@@ -142,22 +142,27 @@ export class DashboardFacade {
             this.isLoading.set(true);
         }
 
-        runTrackedRequest(this.destroyRef, this.isLoading, this.dashboardService.getSnapshot(targetDate, 1, 10, locale, this.trendDays), {
-            next: snapshot => {
-                this.snapshot.set(snapshot);
-                this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
-                if (clearHydrationUpdate) {
-                    this.isHydrationUpdating.set(false);
-                }
+        runTrackedRequest(
+            this.destroyRef,
+            this.isLoading,
+            this.dashboardService.getSnapshot({ date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays }),
+            {
+                next: snapshot => {
+                    this.snapshot.set(snapshot);
+                    this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
+                    if (clearHydrationUpdate) {
+                        this.isHydrationUpdating.set(false);
+                    }
+                },
+                error: () => {
+                    this.snapshot.set(null);
+                    this.layout.initializeLayout(null);
+                    if (clearHydrationUpdate) {
+                        this.isHydrationUpdating.set(false);
+                    }
+                },
             },
-            error: () => {
-                this.snapshot.set(null);
-                this.layout.initializeLayout(null);
-                if (clearHydrationUpdate) {
-                    this.isHydrationUpdating.set(false);
-                }
-            },
-        });
+        );
     }
 
     private getCurrentLocale(): string {

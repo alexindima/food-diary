@@ -8,6 +8,14 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 
+export interface DashboardSnapshotQuery {
+    date: Date;
+    page?: number;
+    pageSize?: number;
+    locale?: string;
+    trendDays?: number;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -15,33 +23,22 @@ export class DashboardService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.dashboard;
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
-    public getSnapshot(date: Date, page = 1, pageSize = 10, locale?: string, trendDays?: number): Observable<DashboardSnapshot | null> {
-        const params: Record<string, string | number> = {
-            date: date.toISOString(),
-            page,
-            pageSize,
-        };
-
-        if (locale) {
-            params['locale'] = locale;
-        }
-
-        if (trendDays) {
-            params['trendDays'] = trendDays;
-        }
-
+    public getSnapshot(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
+        const params = this.createSnapshotParams(query);
         return this.get<DashboardSnapshot>('', params).pipe(
             catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
 
-    public getSnapshotSilently(
-        date: Date,
-        page = 1,
-        pageSize = 10,
-        locale?: string,
-        trendDays?: number,
-    ): Observable<DashboardSnapshot | null> {
+    public getSnapshotSilently(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
+        const params = this.createSnapshotParams(query);
+        return this.get<DashboardSnapshot>('', params, undefined, this.silentLoadingContext).pipe(
+            catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
+        );
+    }
+
+    private createSnapshotParams(query: DashboardSnapshotQuery): Record<string, string | number> {
+        const { date, page = 1, pageSize = 10, locale, trendDays } = query;
         const params: Record<string, string | number> = {
             date: date.toISOString(),
             page,
@@ -56,8 +53,6 @@ export class DashboardService extends ApiService {
             params['trendDays'] = trendDays;
         }
 
-        return this.get<DashboardSnapshot>('', params, undefined, this.silentLoadingContext).pipe(
-            catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
-        );
+        return params;
     }
 }

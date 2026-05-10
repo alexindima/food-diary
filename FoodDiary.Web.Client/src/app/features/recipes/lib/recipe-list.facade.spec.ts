@@ -100,7 +100,14 @@ describe('RecipeListFacade', () => {
     it('loads initial overview and updates derived state', () => {
         facade.loadInitialOverview(1, 10, null, false).subscribe();
 
-        expect(recipeService.queryOverview).toHaveBeenCalledWith(1, 10, { search: null }, true, 10, 10);
+        expect(recipeService.queryOverview).toHaveBeenCalledWith({
+            page: 1,
+            limit: 10,
+            filters: { search: null },
+            includePublic: true,
+            recentLimit: 10,
+            favoriteLimit: 10,
+        });
         expect(facade.recipeData.items()).toEqual([recipe]);
         expect(facade.recentRecipes()).toEqual([recipe]);
         expect(facade.errorKey()).toBeNull();

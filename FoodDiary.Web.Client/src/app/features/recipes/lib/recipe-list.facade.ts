@@ -82,7 +82,7 @@ export class RecipeListFacade {
         const filters: RecipeFilters = { search };
         const includePublic = !onlyMine;
 
-        return this.recipeService.queryOverview(page, limit, filters, includePublic, 10, 10).pipe(
+        return this.recipeService.queryOverview({ page, limit, filters, includePublic, recentLimit: 10, favoriteLimit: 10 }).pipe(
             tap(data => {
                 this.recipeData.setData(data.allRecipes);
                 this.recentRecipes.set(data.recentItems);

@@ -463,7 +463,14 @@ export class MealManageFacade {
         const fats = getControlNumericValue(form.controls.manualFats);
         const carbs = getControlNumericValue(form.controls.manualCarbs);
         const alcohol = getControlNumericValue(form.controls.manualAlcohol);
-        return calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, calorieMismatchThreshold);
+        return calculateCalorieMismatchWarning({
+            calories,
+            proteins,
+            fats,
+            carbs,
+            alcohol,
+            threshold: calorieMismatchThreshold,
+        });
     }
 
     private roundTotals(totals: NutritionTotals): NutritionTotals {

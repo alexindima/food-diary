@@ -8,6 +8,15 @@ import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../models/recipe.data';
 
+export interface RecipeOverviewQuery {
+    page: number;
+    limit: number;
+    filters?: RecipeFilters;
+    includePublic?: boolean;
+    recentLimit?: number;
+    favoriteLimit?: number;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -47,14 +56,8 @@ export class RecipeService extends ApiService {
         );
     }
 
-    public queryOverview(
-        page: number,
-        limit: number,
-        filters?: RecipeFilters,
-        includePublic = true,
-        recentLimit = 10,
-        favoriteLimit = 10,
-    ): Observable<RecipeOverview> {
+    public queryOverview(query: RecipeOverviewQuery): Observable<RecipeOverview> {
+        const { page, limit, filters, includePublic = true, recentLimit = 10, favoriteLimit = 10 } = query;
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         const search = filters?.search?.trim();
         if (search) {

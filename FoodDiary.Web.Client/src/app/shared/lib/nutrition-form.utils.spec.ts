@@ -51,28 +51,28 @@ describe('nutrition-form.utils', () => {
 
     describe('calculateCalorieMismatchWarning', () => {
         it('should return null when calories is 0', () => {
-            expect(calculateCalorieMismatchWarning(0, 10, 5, 20)).toBeNull();
+            expect(calculateCalorieMismatchWarning({ calories: 0, proteins: 10, fats: 5, carbs: 20 })).toBeNull();
         });
 
         it('should return null when all macros are 0 (expectedCalories is 0)', () => {
-            expect(calculateCalorieMismatchWarning(100, 0, 0, 0)).toBeNull();
+            expect(calculateCalorieMismatchWarning({ calories: 100, proteins: 0, fats: 0, carbs: 0 })).toBeNull();
         });
 
         it('should return null when deviation is within default threshold (20%)', () => {
             // expected = 10*4 + 5*9 + 20*4 = 165
             // actual = 165 => deviation = 0
-            expect(calculateCalorieMismatchWarning(165, 10, 5, 20)).toBeNull();
+            expect(calculateCalorieMismatchWarning({ calories: 165, proteins: 10, fats: 5, carbs: 20 })).toBeNull();
         });
 
         it('should return null when deviation is exactly at the threshold', () => {
             // expected = 100 (e.g. 25*4 + 0 + 0)
             // actual = 120 => deviation = 20/100 = 0.2
-            expect(calculateCalorieMismatchWarning(120, 25, 0, 0)).toBeNull();
+            expect(calculateCalorieMismatchWarning({ calories: 120, proteins: 25, fats: 0, carbs: 0 })).toBeNull();
         });
 
         it('should return warning when deviation exceeds threshold', () => {
             // expected = 100, actual = 200 => deviation = 1.0
-            const result = calculateCalorieMismatchWarning(200, 25, 0, 0);
+            const result = calculateCalorieMismatchWarning({ calories: 200, proteins: 25, fats: 0, carbs: 0 });
             expect(result).toEqual({
                 expectedCalories: 100,
                 actualCalories: 200,
@@ -82,7 +82,7 @@ describe('nutrition-form.utils', () => {
         it('should return warning when actual is much lower than expected', () => {
             // expected = 10*4 + 10*9 + 10*4 = 170
             // actual = 50 => deviation = 120/170 ~ 0.706
-            const result = calculateCalorieMismatchWarning(50, 10, 10, 10);
+            const result = calculateCalorieMismatchWarning({ calories: 50, proteins: 10, fats: 10, carbs: 10 });
             expect(result).toEqual({
                 expectedCalories: 170,
                 actualCalories: 50,
@@ -92,7 +92,7 @@ describe('nutrition-form.utils', () => {
         it('should include alcohol in expected calories', () => {
             // expected = 0 + 0 + 0 + 10*7 = 70
             // actual = 100 => deviation = 30/70 ~ 0.43
-            const result = calculateCalorieMismatchWarning(100, 0, 0, 0, 10);
+            const result = calculateCalorieMismatchWarning({ calories: 100, proteins: 0, fats: 0, carbs: 0, alcohol: 10 });
             expect(result).toEqual({
                 expectedCalories: 70,
                 actualCalories: 100,
@@ -102,7 +102,7 @@ describe('nutrition-form.utils', () => {
         it('should respect custom threshold', () => {
             // expected = 100, actual = 110 => deviation = 0.1
             // With threshold 0.05 this should warn
-            const result = calculateCalorieMismatchWarning(110, 25, 0, 0, 0, 0.05);
+            const result = calculateCalorieMismatchWarning({ calories: 110, proteins: 25, fats: 0, carbs: 0, alcohol: 0, threshold: 0.05 });
             expect(result).toEqual({
                 expectedCalories: 100,
                 actualCalories: 110,
@@ -112,13 +112,15 @@ describe('nutrition-form.utils', () => {
         it('should not warn with a very permissive threshold', () => {
             // expected = 100, actual = 200 => deviation = 1.0
             // With threshold 2.0 this should not warn
-            expect(calculateCalorieMismatchWarning(200, 25, 0, 0, 0, 2.0)).toBeNull();
+            expect(
+                calculateCalorieMismatchWarning({ calories: 200, proteins: 25, fats: 0, carbs: 0, alcohol: 0, threshold: 2.0 }),
+            ).toBeNull();
         });
 
         it('should round expected and actual calories', () => {
             // expected = 3*4 + 2*9 + 7*4 = 12 + 18 + 28 = 58
             // actual = 100 => deviation > 0.2
-            const result = calculateCalorieMismatchWarning(100, 3, 2, 7);
+            const result = calculateCalorieMismatchWarning({ calories: 100, proteins: 3, fats: 2, carbs: 7 });
             expect(result).toEqual({
                 expectedCalories: 58,
                 actualCalories: 100,
@@ -127,7 +129,7 @@ describe('nutrition-form.utils', () => {
 
         it('should default alcohol to 0', () => {
             // expected = 25*4 = 100, actual = 130 => deviation = 0.3
-            const result = calculateCalorieMismatchWarning(130, 25, 0, 0);
+            const result = calculateCalorieMismatchWarning({ calories: 130, proteins: 25, fats: 0, carbs: 0 });
             expect(result).toEqual({
                 expectedCalories: 100,
                 actualCalories: 130,

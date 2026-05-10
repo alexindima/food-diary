@@ -6,19 +6,22 @@ import { ApiService } from '../../../services/api.service';
 
 export type ExportFormat = 'csv' | 'pdf';
 
+export interface ExportDiaryRequest {
+    dateFrom: string;
+    dateTo: string;
+    format?: ExportFormat;
+    locale?: string;
+    timeZoneOffsetMinutes?: number;
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class ExportService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.export;
 
-    public exportDiary(
-        dateFrom: string,
-        dateTo: string,
-        format: ExportFormat = 'csv',
-        locale?: string,
-        timeZoneOffsetMinutes?: number,
-    ): Observable<void> {
+    public exportDiary(request: ExportDiaryRequest): Observable<void> {
+        const { dateFrom, dateTo, format = 'csv', locale, timeZoneOffsetMinutes } = request;
         const ext = format === 'pdf' ? 'pdf' : 'csv';
         const reportOrigin = typeof window === 'undefined' ? undefined : window.location.origin;
         return this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).pipe(

@@ -18,7 +18,7 @@ import type { NutrientData } from '../../../../shared/models/charts.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
-import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
+import { RecipeManageFacade, type RecipeNutritionSummary } from '../../lib/recipe-manage.facade';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
 import type {
@@ -577,7 +577,7 @@ export class RecipeManageComponent {
             alcohol: this.totalAlcohol(),
         });
 
-        this.setNutrientSummary(summary.calories, summary.proteins, summary.fats, summary.carbs, summary.fiber, summary.alcohol);
+        this.setNutrientSummary(summary);
     }
 
     private updateSummaryFromForm(): void {
@@ -587,14 +587,14 @@ export class RecipeManageComponent {
             return;
         }
 
-        this.setNutrientSummary(
-            this.toRecipeTotal(this.recipeForm.controls.manualCalories.value),
-            this.toRecipeTotal(this.recipeForm.controls.manualProteins.value),
-            this.toRecipeTotal(this.recipeForm.controls.manualFats.value),
-            this.toRecipeTotal(this.recipeForm.controls.manualCarbs.value),
-            this.toRecipeTotal(this.recipeForm.controls.manualFiber.value),
-            this.toRecipeTotal(this.recipeForm.controls.manualAlcohol.value),
-        );
+        this.setNutrientSummary({
+            calories: this.toRecipeTotal(this.recipeForm.controls.manualCalories.value),
+            proteins: this.toRecipeTotal(this.recipeForm.controls.manualProteins.value),
+            fats: this.toRecipeTotal(this.recipeForm.controls.manualFats.value),
+            carbs: this.toRecipeTotal(this.recipeForm.controls.manualCarbs.value),
+            fiber: this.toRecipeTotal(this.recipeForm.controls.manualFiber.value),
+            alcohol: this.toRecipeTotal(this.recipeForm.controls.manualAlcohol.value),
+        });
         this.updateCalorieWarning();
     }
 
@@ -614,10 +614,10 @@ export class RecipeManageComponent {
 
     private recalculateNutrientsFromForm(): void {
         const summary = this.recipeManageFacade.calculateAutoSummary(this.recipeForm.controls.steps);
-        this.setNutrientSummary(summary.calories, summary.proteins, summary.fats, summary.carbs, summary.fiber, summary.alcohol);
+        this.setNutrientSummary(summary);
     }
 
-    private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number, fiber: number, alcohol: number): void {
+    private setNutrientSummary({ calories, proteins, fats, carbs, fiber, alcohol }: RecipeNutritionSummary): void {
         this.totalCalories.set(this.recipeManageFacade.roundNutritionValue(calories));
         this.totalFiber.set(this.recipeManageFacade.roundNutritionValue(fiber));
         this.totalAlcohol.set(this.recipeManageFacade.roundNutritionValue(alcohol));
@@ -668,7 +668,16 @@ export class RecipeManageComponent {
         const fats = this.getControlNumericValue(this.recipeForm.controls.manualFats);
         const carbs = this.getControlNumericValue(this.recipeForm.controls.manualCarbs);
         const alcohol = this.getControlNumericValue(this.recipeForm.controls.manualAlcohol);
-        this.nutritionWarning.set(calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold));
+        this.nutritionWarning.set(
+            calculateCalorieMismatchWarning({
+                calories,
+                proteins,
+                fats,
+                carbs,
+                alcohol,
+                threshold: this.calorieMismatchThreshold,
+            }),
+        );
     }
 
     private getControlNumericValue(control: FormControl<number | null>): number {

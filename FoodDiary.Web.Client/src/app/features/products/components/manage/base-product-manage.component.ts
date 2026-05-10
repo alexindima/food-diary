@@ -607,7 +607,16 @@ export class BaseProductManageComponent {
         const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
         const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
         const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
-        this.nutritionWarning.set(calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold));
+        this.nutritionWarning.set(
+            calculateCalorieMismatchWarning({
+                calories,
+                proteins,
+                fats,
+                carbs,
+                alcohol,
+                threshold: this.calorieMismatchThreshold,
+            }),
+        );
     }
 
     private updateMacroDistribution(): void {

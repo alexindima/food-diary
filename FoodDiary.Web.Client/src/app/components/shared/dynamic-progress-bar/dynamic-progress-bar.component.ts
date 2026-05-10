@@ -53,13 +53,14 @@ export class DynamicProgressBarComponent {
         if (this.progress() <= 100) {
             const greenIntensity = Math.round((this.progress() / 100) * 100);
             return this.toHex([80, 150 + greenIntensity, 80]);
-        } else if (this.progress() > 100 && this.progress() <= 125) {
+        }
+        if (this.progress() > 100 && this.progress() <= 125) {
             const orangeIntensity = Math.round(((this.progress() - 100) / 25) * 100);
             return this.toHex([255, 200 - orangeIntensity, 80]);
-        } else {
-            const redIntensity = Math.min(255, Math.round(((this.progress() - 125) / 50) * 255));
-            return this.toHex([255, 100 - redIntensity, 80 - redIntensity / 2]);
         }
+
+        const redIntensity = Math.min(255, Math.round(((this.progress() - 125) / 50) * 255));
+        return this.toHex([255, 100 - redIntensity, 80 - redIntensity / 2]);
     });
     public readonly textColorClass = computed(() => (this.progress() < 100 * 0.5 ? 'text-black' : 'text-white'));
 

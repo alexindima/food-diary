@@ -21,12 +21,13 @@ export class TokenStorageService {
                 this.storage.setItem('session', 'authToken', token);
                 this.storage.removeItem('local', 'authToken');
             }
+            return;
+        }
+
+        if (this.storage.getItem('local', 'authToken') !== null) {
+            this.storage.setItem('local', 'authToken', token);
         } else {
-            if (this.storage.getItem('local', 'authToken') !== null) {
-                this.storage.setItem('local', 'authToken', token);
-            } else {
-                this.storage.setItem('session', 'authToken', token);
-            }
+            this.storage.setItem('session', 'authToken', token);
         }
     }
 

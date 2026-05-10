@@ -62,7 +62,7 @@ describe('DashboardService', () => {
     it('should get snapshot with date param', () => {
         const date = new Date('2026-03-15T00:00:00.000Z');
 
-        service.getSnapshot(date).subscribe(result => {
+        service.getSnapshot({ date }).subscribe(result => {
             expect(result).toEqual(mockSnapshot);
         });
 
@@ -80,7 +80,7 @@ describe('DashboardService', () => {
     it('should include optional params', () => {
         const date = new Date('2026-03-15T00:00:00.000Z');
 
-        service.getSnapshot(date, 2, 20, 'en', 7).subscribe(result => {
+        service.getSnapshot({ date, page: 2, pageSize: 20, locale: 'en', trendDays: 7 }).subscribe(result => {
             expect(result).toEqual(mockSnapshot);
         });
 
@@ -100,7 +100,7 @@ describe('DashboardService', () => {
     it('should return null on error', () => {
         const date = new Date('2026-03-15T00:00:00.000Z');
 
-        service.getSnapshot(date).subscribe(result => {
+        service.getSnapshot({ date }).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -111,7 +111,7 @@ describe('DashboardService', () => {
     it('should mark silent snapshot requests to skip global loading', () => {
         const date = new Date('2026-03-15T00:00:00.000Z');
 
-        service.getSnapshotSilently(date).subscribe();
+        service.getSnapshotSilently({ date }).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/`);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);

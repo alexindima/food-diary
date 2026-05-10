@@ -15,6 +15,15 @@ import type {
     UpdateProductRequest,
 } from '../models/product.data';
 
+export interface ProductOverviewQuery {
+    page: number;
+    limit: number;
+    filters?: ProductFilters;
+    includePublic?: boolean;
+    recentLimit?: number;
+    favoriteLimit?: number;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -42,14 +51,8 @@ export class ProductService extends ApiService {
         return this.get<Product>(id).pipe(catchError((error: HttpErrorResponse) => fallbackApiError('Get product error', error, null)));
     }
 
-    public queryOverview(
-        page: number,
-        limit: number,
-        filters?: ProductFilters,
-        includePublic = true,
-        recentLimit = 10,
-        favoriteLimit = 10,
-    ): Observable<ProductOverview> {
+    public queryOverview(query: ProductOverviewQuery): Observable<ProductOverview> {
+        const { page, limit, filters, includePublic = true, recentLimit = 10, favoriteLimit = 10 } = query;
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         const search = filters?.search?.trim();
         if (search) {

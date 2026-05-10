@@ -6,13 +6,45 @@ const hours = (value: number): number => value * 3_600_000;
 
 describe('resolveFastingStage', () => {
     it.each([
-        [0, 16, 1, 3, 'FASTING.STAGES.EARLY.TITLE', 'FASTING.STAGES.TRANSITION.TITLE', '04:00:00'],
-        [4, 16, 2, 3, 'FASTING.STAGES.TRANSITION.TITLE', 'FASTING.STAGES.STORED_ENERGY.TITLE', '08:00:00'],
-        [12, 16, 3, 3, 'FASTING.STAGES.STORED_ENERGY.TITLE', null, null],
-        [16, 24, 4, 4, 'FASTING.STAGES.DEEP.TITLE', null, null],
-    ] as const)(
-        'resolves %i elapsed hours in a %i hour plan',
-        (elapsedHours, plannedHours, expectedIndex, expectedTotal, expectedTitleKey, expectedNextTitleKey, expectedNextIn) => {
+        {
+            elapsedHours: 0,
+            plannedHours: 16,
+            expectedIndex: 1,
+            expectedTotal: 3,
+            expectedTitleKey: 'FASTING.STAGES.EARLY.TITLE',
+            expectedNextTitleKey: 'FASTING.STAGES.TRANSITION.TITLE',
+            expectedNextIn: '04:00:00',
+        },
+        {
+            elapsedHours: 4,
+            plannedHours: 16,
+            expectedIndex: 2,
+            expectedTotal: 3,
+            expectedTitleKey: 'FASTING.STAGES.TRANSITION.TITLE',
+            expectedNextTitleKey: 'FASTING.STAGES.STORED_ENERGY.TITLE',
+            expectedNextIn: '08:00:00',
+        },
+        {
+            elapsedHours: 12,
+            plannedHours: 16,
+            expectedIndex: 3,
+            expectedTotal: 3,
+            expectedTitleKey: 'FASTING.STAGES.STORED_ENERGY.TITLE',
+            expectedNextTitleKey: null,
+            expectedNextIn: null,
+        },
+        {
+            elapsedHours: 16,
+            plannedHours: 24,
+            expectedIndex: 4,
+            expectedTotal: 4,
+            expectedTitleKey: 'FASTING.STAGES.DEEP.TITLE',
+            expectedNextTitleKey: null,
+            expectedNextIn: null,
+        },
+    ])(
+        'resolves elapsed fasting stage',
+        ({ elapsedHours, plannedHours, expectedIndex, expectedTotal, expectedTitleKey, expectedNextTitleKey, expectedNextIn }) => {
             const stage = resolveFastingStage(hours(elapsedHours), plannedHours);
 
             expect(stage.index).toBe(expectedIndex);
