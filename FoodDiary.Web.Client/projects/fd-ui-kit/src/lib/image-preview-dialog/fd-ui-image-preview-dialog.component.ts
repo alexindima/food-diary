@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiDialogComponent } from '../dialog/fd-ui-dialog.component';
@@ -21,11 +21,10 @@ export interface FdUiImagePreviewDialogCollageImage {
 @Component({
     selector: 'fd-ui-image-preview-dialog',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiDialogComponent],
+    imports: [NgOptimizedImage, CommonModule, TranslatePipe, FdUiDialogComponent],
     templateUrl: './fd-ui-image-preview-dialog.component.html',
     styleUrls: ['./fd-ui-image-preview-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
 })
 export class FdUiImagePreviewDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiImagePreviewDialogComponent, void>);

@@ -1,13 +1,15 @@
 <div
-    class="fd-ui-nutrient-input"
-    [ngClass]="[
-        'fd-ui-nutrient-input--' + size(),
-        'fd-ui-nutrient-input--' + variant(),
-        'fd-ui-nutrient-input--value-' + valueAlign(),
-        disabled ? 'fd-ui-nutrient-input--disabled' : '',
-        readonly() ? 'fd-ui-nutrient-input--readonly' : '',
-        error() ? 'fd-ui-nutrient-input--error' : '',
-    ]"
+    [class]="
+        'fd-ui-nutrient-input fd-ui-nutrient-input--' +
+        size() +
+        ' fd-ui-nutrient-input--' +
+        variant() +
+        ' fd-ui-nutrient-input--value-' +
+        valueAlign() +
+        (disabled ? ' fd-ui-nutrient-input--disabled' : '') +
+        (readonly() ? ' fd-ui-nutrient-input--readonly' : '') +
+        (error() ? ' fd-ui-nutrient-input--error' : '')
+    "
     [style.--fd-nutrient-tint]="tintColor() || null"
     [style.--fd-nutrient-text-color]="textColor() || null"
 >

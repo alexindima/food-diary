@@ -1,4 +1,4 @@
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,6 +28,7 @@ import type { Product } from '../../models/product.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         DecimalPipe,
+        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,

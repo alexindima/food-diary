@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -13,7 +14,7 @@ import type { NutritionTotals } from '../base-meal-manage.types';
     templateUrl: './meal-ai-sessions.component.html',
     styleUrls: ['../base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent],
+    imports: [NgOptimizedImage, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent],
 })
 export class MealAiSessionsComponent {
     private readonly translateService = inject(TranslateService);

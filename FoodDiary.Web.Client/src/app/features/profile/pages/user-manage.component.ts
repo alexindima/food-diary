@@ -1078,6 +1078,8 @@ export class UserManageComponent {
                 return 'USER_MANAGE.BILLING_STATUS_UNPAID';
             case 'incomplete':
                 return 'USER_MANAGE.BILLING_STATUS_INCOMPLETE';
+            case null:
+                return 'USER_MANAGE.BILLING_STATUS_FREE';
             default:
                 return 'USER_MANAGE.BILLING_STATUS_FREE';
         }

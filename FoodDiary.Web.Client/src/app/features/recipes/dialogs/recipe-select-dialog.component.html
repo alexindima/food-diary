@@ -46,7 +46,7 @@
                     >
                         <div class="recipe-select__thumb fd-place-center">
                             @if (item.imageUrl) {
-                                <img [src]="item.imageUrl" [alt]="item.recipe.name" />
+                                <img width="64" height="64" [ngSrc]="item.imageUrl" [alt]="item.recipe.name" />
                             } @else {
                                 <fd-ui-icon name="restaurant" />
                             }

@@ -138,7 +138,8 @@ export class DashboardSummaryCardComponent {
                 return 'DASHBOARD_SUMMARY.GOALS_TITLE';
             case 'macros':
                 return 'DASHBOARD_SUMMARY.MACROS_TITLE';
-            default:
+            case 'calories':
+            case 'ok':
                 return 'DASHBOARD_SUMMARY.CALORIES_TITLE';
         }
     });
@@ -148,7 +149,8 @@ export class DashboardSummaryCardComponent {
                 return 'DASHBOARD_SUMMARY.GOALS_BODY';
             case 'macros':
                 return 'DASHBOARD_SUMMARY.MACROS_BODY';
-            default:
+            case 'calories':
+            case 'ok':
                 return 'DASHBOARD_SUMMARY.CALORIES_BODY';
         }
     });

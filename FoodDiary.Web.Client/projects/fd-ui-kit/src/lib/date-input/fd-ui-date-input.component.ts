@@ -1,16 +1,6 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    ElementRef,
-    inject,
-    input,
-    LOCALE_ID,
-    signal,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
@@ -26,7 +16,6 @@ let uniqueId = 0;
     templateUrl: './fd-ui-date-input.component.html',
     styleUrls: ['./fd-ui-date-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

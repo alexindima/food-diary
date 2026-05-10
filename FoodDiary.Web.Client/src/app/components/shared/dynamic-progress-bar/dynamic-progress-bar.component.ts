@@ -1,9 +1,9 @@
-import { NgClass, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
     selector: 'fd-dynamic-progress-bar',
-    imports: [NgStyle, NgClass],
+    imports: [NgStyle],
     templateUrl: './dynamic-progress-bar.component.html',
     styleUrls: ['./dynamic-progress-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

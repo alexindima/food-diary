@@ -44,7 +44,7 @@ export class FdUiInlineAlertComponent {
                 return 'task_alt';
             case 'danger':
                 return 'error';
-            default:
+            case 'info':
                 return 'info';
         }
     });

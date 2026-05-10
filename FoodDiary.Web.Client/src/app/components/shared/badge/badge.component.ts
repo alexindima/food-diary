@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
@@ -7,7 +6,7 @@ type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
 @Component({
     selector: 'fd-badge',
     standalone: true,
-    imports: [FdUiIconComponent, NgClass],
+    imports: [FdUiIconComponent],
     templateUrl: './badge.component.html',
     styleUrls: ['./badge.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

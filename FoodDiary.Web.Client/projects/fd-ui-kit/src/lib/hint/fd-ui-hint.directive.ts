@@ -247,7 +247,7 @@ export class FdUiHintDirective {
                 return left;
             case 'right':
                 return right;
-            default:
+            case 'top':
                 return top;
         }
     }

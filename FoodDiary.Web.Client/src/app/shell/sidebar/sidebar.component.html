@@ -98,7 +98,7 @@
             >
                 @if (user.profileImage) {
                     <div class="sidebar__avatar sidebar__avatar--image fd-place-center">
-                        <img alt="Avatar" [src]="user.profileImage" />
+                        <img alt="Avatar" width="40" height="40" [ngSrc]="user.profileImage" />
                     </div>
                 } @else {
                     <div class="sidebar__avatar fd-place-center">

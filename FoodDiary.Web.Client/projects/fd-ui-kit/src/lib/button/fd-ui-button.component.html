@@ -1,7 +1,7 @@
 <button
     [attr.type]="type()"
     [disabled]="disabled() || loading()"
-    [ngClass]="classes()"
+    [class]="classes()"
     [attr.aria-label]="ariaLabel() || null"
     [attr.aria-busy]="loading() ? 'true' : null"
 >

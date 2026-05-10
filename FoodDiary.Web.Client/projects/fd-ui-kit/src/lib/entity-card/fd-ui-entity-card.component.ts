@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, input, signal } from '@angular/core';
 
 import { type FdUiCardAppearance, FdUiCardComponent } from '../card/fd-ui-card.component';
@@ -7,7 +7,7 @@ import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.direct
 @Component({
     selector: 'fd-ui-entity-card',
     standalone: true,
-    imports: [CommonModule, FdUiCardComponent],
+    imports: [NgOptimizedImage, CommonModule, FdUiCardComponent],
     templateUrl: './fd-ui-entity-card.component.html',
     styleUrls: ['./fd-ui-entity-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

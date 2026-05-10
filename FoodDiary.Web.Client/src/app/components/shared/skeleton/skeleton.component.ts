@@ -38,7 +38,7 @@ export class SkeletonComponent {
                     height: this.height() !== this.defaultTextHeight ? this.height() : this.defaultRectHeight,
                     'border-radius': this.borderRadius() !== this.defaultRadius ? this.borderRadius() : this.defaultRectRadius,
                 };
-            default:
+            case 'text':
                 return {
                     width: this.width(),
                     height: this.height(),

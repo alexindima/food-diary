@@ -1,6 +1,10 @@
 <div
-    class="fd-ui-datetime-input"
-    [ngClass]="[sizeClass(), error() ? 'fd-ui-datetime-input--has-error' : '', shouldFloatLabel() ? 'fd-ui-datetime-input--floating' : '']"
+    [class]="
+        'fd-ui-datetime-input ' +
+        sizeClass() +
+        (error() ? ' fd-ui-datetime-input--has-error' : '') +
+        (shouldFloatLabel() ? ' fd-ui-datetime-input--floating' : '')
+    "
 >
     <div class="fd-ui-datetime-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
         @if (label()) {

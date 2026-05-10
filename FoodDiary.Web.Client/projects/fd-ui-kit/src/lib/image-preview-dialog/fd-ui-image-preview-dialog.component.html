@@ -18,7 +18,7 @@
             (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
         >
             @if (imageUrl) {
-                <img class="fd-ui-image-preview-dialog__image" [src]="imageUrl" [alt]="alt" />
+                <img class="fd-ui-image-preview-dialog__image" width="1200" height="800" [ngSrc]="imageUrl" [alt]="alt" />
             } @else if (collageImages.length) {
                 <div
                     role="img"
@@ -26,7 +26,13 @@
                     [attr.aria-label]="alt"
                 >
                     @for (image of collageImages; track image.url) {
-                        <img class="fd-ui-image-preview-dialog__collage-image" [src]="image.url" [alt]="image.alt ?? ''" />
+                        <img
+                            class="fd-ui-image-preview-dialog__collage-image"
+                            width="512"
+                            height="512"
+                            [ngSrc]="image.url"
+                            [alt]="image.alt ?? ''"
+                        />
                     }
                 </div>
             }

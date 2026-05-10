@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { type FdUiDialogBodyScrollInset, FdUiDialogComponent, type FdUiDialogSize } from '../dialog/fd-ui-dialog.component';
 
@@ -10,7 +10,6 @@ import { type FdUiDialogBodyScrollInset, FdUiDialogComponent, type FdUiDialogSiz
     templateUrl: './fd-ui-dialog-shell.component.html',
     styleUrls: ['./fd-ui-dialog-shell.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
 })
 export class FdUiDialogShellComponent {
     public readonly title = input<string | undefined>();

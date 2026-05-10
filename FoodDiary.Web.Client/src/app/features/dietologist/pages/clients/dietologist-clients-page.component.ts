@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -18,7 +19,7 @@ interface ClientCardViewModel {
     selector: 'fd-dietologist-clients-page',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FdUiCardComponent],
+    imports: [NgOptimizedImage, FdUiCardComponent],
     templateUrl: './dietologist-clients-page.component.html',
     styleUrls: ['./dietologist-clients-page.component.scss'],
 })

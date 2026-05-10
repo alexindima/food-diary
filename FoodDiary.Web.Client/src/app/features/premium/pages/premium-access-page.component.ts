@@ -203,6 +203,8 @@ export class PremiumAccessPageComponent {
                 return 'PREMIUM_PAGE.STATUS.UNPAID';
             case 'incomplete':
                 return 'PREMIUM_PAGE.STATUS.INCOMPLETE';
+            case null:
+                return 'PREMIUM_PAGE.STATUS.NONE';
             default:
                 return 'PREMIUM_PAGE.STATUS.NONE';
         }

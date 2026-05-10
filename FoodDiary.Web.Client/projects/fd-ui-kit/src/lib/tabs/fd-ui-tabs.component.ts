@@ -10,7 +10,6 @@ import {
     output,
     signal,
     viewChildren,
-    ViewEncapsulation,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -30,7 +29,6 @@ export type FdUiTabsAppearance = 'default' | 'wrap-compact';
     templateUrl: './fd-ui-tabs.component.html',
     styleUrls: ['./fd-ui-tabs.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
 })
 export class FdUiTabsComponent {
     private static nextId = 0;

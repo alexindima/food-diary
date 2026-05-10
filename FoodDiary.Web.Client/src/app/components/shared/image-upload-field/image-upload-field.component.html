@@ -25,7 +25,13 @@
         />
 
         @if (selection.url) {
-            <img class="image-upload-field__preview" [src]="selection.url" [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }" />
+            <img
+                class="image-upload-field__preview"
+                width="512"
+                height="512"
+                [ngSrc]="selection.url"
+                [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
+            />
             <div class="image-upload-field__control">
                 <fd-ui-button
                     type="button"
@@ -96,7 +102,9 @@
                     <img
                         #cropImage
                         class="image-upload-field__cropper-image"
-                        [src]="cropPreviewUrl"
+                        width="512"
+                        height="512"
+                        [ngSrc]="cropPreviewUrl"
                         [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
                         (load)="onCropperImageLoadedAsync(cropImage)"
                     />

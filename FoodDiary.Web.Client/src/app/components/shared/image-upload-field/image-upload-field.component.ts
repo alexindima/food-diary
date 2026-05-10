@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -9,7 +10,6 @@ import {
     input,
     output,
     viewChild,
-    ViewEncapsulation,
 } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -29,11 +29,10 @@ import type { ImageSelection } from '../../../shared/models/image-upload.data';
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
     },
-    imports: [FdUiButtonComponent, TranslatePipe, FdUiHintDirective],
+    imports: [NgOptimizedImage, FdUiButtonComponent, TranslatePipe, FdUiHintDirective],
     templateUrl: './image-upload-field.component.html',
     styleUrls: ['./image-upload-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

@@ -1,6 +1,10 @@
 ﻿<div
-    class="fd-ui-textarea"
-    [ngClass]="[sizeClass(), error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel() ? 'fd-ui-textarea--floating' : '']"
+    [class]="
+        'fd-ui-textarea ' +
+        sizeClass() +
+        (error() ? ' fd-ui-textarea--has-error' : '') +
+        (shouldFloatLabel() ? ' fd-ui-textarea--floating' : '')
+    "
 >
     <div class="fd-ui-textarea__control-wrap" role="presentation" [style.background]="fillColor() || null" (click)="focusControl(control)">
         @if (label()) {

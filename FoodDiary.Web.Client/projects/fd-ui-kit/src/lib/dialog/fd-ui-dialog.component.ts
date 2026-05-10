@@ -12,7 +12,6 @@ import {
     input,
     signal,
     viewChild,
-    ViewEncapsulation,
 } from '@angular/core';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -41,7 +40,6 @@ export interface FdUiDialogData {
     templateUrl: './fd-ui-dialog.component.html',
     styleUrls: ['./fd-ui-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
 })
 export class FdUiDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiDialogComponent>, { optional: true });

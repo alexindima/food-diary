@@ -247,7 +247,7 @@ export class FastingPageComponent {
                 return 'var(--fd-color-sky-500)';
             case 'Postponed':
                 return 'var(--fd-color-ai)';
-            default:
+            case 'Active':
                 return 'var(--fd-color-slate-400)';
         }
     }
@@ -262,7 +262,7 @@ export class FastingPageComponent {
                 return 'FASTING.BADGE_SKIPPED';
             case 'Postponed':
                 return 'FASTING.BADGE_POSTPONED';
-            default:
+            case 'Active':
                 return 'FASTING.BADGE_INCOMPLETE';
         }
     }
@@ -537,7 +537,7 @@ export class FastingPageComponent {
                 return 'warning';
             case 'positive':
                 return 'success';
-            default:
+            case 'neutral':
                 return 'info';
         }
     }

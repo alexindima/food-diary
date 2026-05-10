@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -34,6 +34,7 @@ export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
     selector: 'fd-entity-card',
     standalone: true,
     imports: [
+        NgOptimizedImage,
         CommonModule,
         TranslatePipe,
         FdUiHintDirective,

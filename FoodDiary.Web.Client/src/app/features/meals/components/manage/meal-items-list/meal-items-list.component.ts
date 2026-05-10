@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +19,7 @@ import type { ConsumptionItemFormData, NutritionTotals } from '../base-meal-mana
     styleUrls: ['../base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,

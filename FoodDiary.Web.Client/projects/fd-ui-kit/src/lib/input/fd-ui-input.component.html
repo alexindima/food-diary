@@ -1,6 +1,12 @@
 <div
-    class="fd-ui-input"
-    [ngClass]="[sizeClass(), appearanceClass(), error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel() ? 'fd-ui-input--floating' : '']"
+    [class]="
+        'fd-ui-input ' +
+        sizeClass() +
+        ' ' +
+        appearanceClass() +
+        (error() ? ' fd-ui-input--has-error' : '') +
+        (shouldFloatLabel() ? ' fd-ui-input--floating' : '')
+    "
 >
     <div
         class="fd-ui-input__control-wrap"

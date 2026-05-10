@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -25,6 +26,7 @@ interface ProductSelectItemViewModel {
     styleUrls: ['./product-list-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,

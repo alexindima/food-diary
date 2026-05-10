@@ -239,7 +239,11 @@ export class DashboardComponent {
         });
     }
 
-    public handleDateChange(value: Date): void {
+    public handleDateChange(value: Date | null): void {
+        if (!value) {
+            return;
+        }
+
         this.facade.setSelectedDate(value);
     }
 
@@ -374,6 +378,8 @@ export class DashboardComponent {
                         break;
                     case 'applyGoal':
                         this.applyTdeeGoal(action.target);
+                        break;
+                    case undefined:
                         break;
                 }
             });

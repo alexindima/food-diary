@@ -15,7 +15,13 @@
     @if (imageUrl() || sourceText()) {
         <div class="ai-photo-result__preview-wrap">
             @if (imageUrl()) {
-                <img class="ai-photo-result__preview" [src]="imageUrl()" [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate" />
+                <img
+                    class="ai-photo-result__preview"
+                    width="512"
+                    height="512"
+                    [ngSrc]="imageUrl()!"
+                    [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate"
+                />
             } @else {
                 <div class="ai-photo-result__text-preview fd-stack fd-gap-xs">
                     <div class="ai-photo-result__text-preview-label fd-ui-overline">{{ sourceTextLabelKey() | translate }}</div>

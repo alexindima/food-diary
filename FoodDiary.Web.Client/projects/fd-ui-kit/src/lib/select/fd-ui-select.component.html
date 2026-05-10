@@ -1,6 +1,7 @@
 <div
-    class="fd-ui-select"
-    [ngClass]="[sizeClass(), error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel() ? 'fd-ui-select--floating' : '']"
+    [class]="
+        'fd-ui-select ' + sizeClass() + (error() ? ' fd-ui-select--has-error' : '') + (shouldFloatLabel() ? ' fd-ui-select--floating' : '')
+    "
 >
     <div
         #controlWrap

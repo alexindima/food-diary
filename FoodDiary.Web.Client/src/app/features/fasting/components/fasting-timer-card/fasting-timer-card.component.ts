@@ -201,7 +201,7 @@ export class FastingTimerCardComponent {
                 return 'FASTING.CYCLIC_TYPE';
             case 'Extended':
                 return 'FASTING.EXTENDED_TYPE';
-            default:
+            case 'Intermittent':
                 return 'FASTING.INTERMITTENT_TYPE';
         }
     }

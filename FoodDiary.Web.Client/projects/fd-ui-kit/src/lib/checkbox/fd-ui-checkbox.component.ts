@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 let nextId = 0;
@@ -9,7 +9,6 @@ let nextId = 0;
     templateUrl: './fd-ui-checkbox.component.html',
     styleUrls: ['./fd-ui-checkbox.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

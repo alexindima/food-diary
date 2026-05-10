@@ -21,6 +21,9 @@ export function placeholderIcon(slot?: string | null): string {
             return 'cookie';
         case 'OTHER':
             return 'more_horiz';
+        case null:
+        case undefined:
+            return 'restaurant_menu';
         default:
             return 'restaurant_menu';
     }

@@ -1,4 +1,5 @@
-﻿import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -59,7 +60,15 @@ interface AiDetailsToggleView {
 @Component({
     selector: 'fd-ai-photo-result',
     standalone: true,
-    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, DragDropModule, MealDetailsFieldsComponent],
+    imports: [
+        NgOptimizedImage,
+        TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
+        FdUiIconComponent,
+        DragDropModule,
+        MealDetailsFieldsComponent,
+    ],
     templateUrl: './ai-photo-result.component.html',
     styleUrls: ['./ai-photo-result.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

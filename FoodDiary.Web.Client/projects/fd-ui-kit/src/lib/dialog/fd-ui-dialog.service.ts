@@ -93,7 +93,7 @@ export class FdUiDialogService {
                     size: 'xl',
                     panelClass: ['fd-ui-dialog-panel--fullscreen'],
                 };
-            default:
+            case undefined:
                 return {};
         }
     }

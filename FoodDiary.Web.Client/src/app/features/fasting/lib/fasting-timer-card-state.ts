@@ -110,7 +110,8 @@ export function getFastingOccurrenceLabel(translate: TranslateFn, kind?: Fasting
             return translate('FASTING.FASTING_WINDOW');
         case 'EatingWindow':
             return translate('FASTING.EATING_WINDOW');
-        default:
+        case null:
+        case undefined:
             return null;
     }
 }

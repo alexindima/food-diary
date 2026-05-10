@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -69,6 +69,7 @@ type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
 @Component({
     selector: 'fd-sidebar',
     imports: [
+        NgOptimizedImage,
         TranslateModule,
         RouterModule,
         FdUiHintDirective,
@@ -166,7 +167,7 @@ export class SidebarComponent {
                 return 'SIDEBAR.REPORTS_AND_GOALS';
             case 'user':
                 return 'SIDEBAR.USER_MENU';
-            default:
+            case null:
                 return '';
         }
     });
@@ -178,7 +179,8 @@ export class SidebarComponent {
                 return this.bodyTrackingItems;
             case 'reports':
                 return this.mobileReportItems;
-            default:
+            case 'user':
+            case null:
                 return [];
         }
     });

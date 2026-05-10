@@ -1,5 +1,4 @@
-import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -7,11 +6,10 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 @Component({
     selector: 'fd-ui-nutrient-input',
     standalone: true,
-    imports: [NgClass, FdUiIconComponent],
+    imports: [FdUiIconComponent],
     templateUrl: './fd-ui-nutrient-input.component.html',
     styleUrls: ['./fd-ui-nutrient-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

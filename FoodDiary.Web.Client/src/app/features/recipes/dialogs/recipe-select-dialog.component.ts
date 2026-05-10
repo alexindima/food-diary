@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -42,6 +43,7 @@ interface RecipeSelectItemViewModel {
     styleUrls: ['./recipe-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,

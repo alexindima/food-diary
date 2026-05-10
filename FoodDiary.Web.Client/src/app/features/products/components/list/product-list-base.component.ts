@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -45,6 +45,7 @@ interface ProductCardViewModel {
     styleUrls: ['./product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        NgOptimizedImage,
         CommonModule,
         ReactiveFormsModule,
         TranslatePipe,

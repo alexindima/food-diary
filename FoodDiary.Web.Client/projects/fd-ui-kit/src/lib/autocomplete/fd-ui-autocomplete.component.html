@@ -1,6 +1,10 @@
 <div
-    class="fd-ui-autocomplete"
-    [ngClass]="[sizeClass(), error() ? 'fd-ui-autocomplete--has-error' : '', shouldFloatLabel() ? 'fd-ui-autocomplete--floating' : '']"
+    [class]="
+        'fd-ui-autocomplete ' +
+        sizeClass() +
+        (error() ? ' fd-ui-autocomplete--has-error' : '') +
+        (shouldFloatLabel() ? ' fd-ui-autocomplete--floating' : '')
+    "
 >
     <div
         #controlWrap
