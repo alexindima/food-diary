@@ -113,16 +113,13 @@ export class QuickConsumptionDrawerComponent {
     }
 
     private imageFor(item: QuickMealItem): string {
-        if (item.type === 'product' && item.product) {
-            const type = (item.product.productType as ProductType | undefined) ?? ProductType.Unknown;
-            return resolveProductImageUrl(item.product.imageUrl ?? undefined, type) ?? this.fallbackImage;
+        if (item.type === 'product') {
+            const product = item.product;
+            const type = (product?.productType as ProductType | undefined) ?? ProductType.Unknown;
+            return resolveProductImageUrl(product?.imageUrl ?? undefined, type) ?? this.fallbackImage;
         }
 
-        if (item.type === 'recipe' && item.recipe) {
-            return resolveRecipeImageUrl(item.recipe.imageUrl ?? undefined) ?? this.fallbackImage;
-        }
-
-        return this.fallbackImage;
+        return resolveRecipeImageUrl(item.recipe?.imageUrl ?? undefined) ?? this.fallbackImage;
     }
 
     private itemName(item: QuickMealItem): string {
@@ -205,12 +202,12 @@ export class QuickConsumptionDrawerComponent {
                 .afterClosed(),
         );
 
-        if (!saved) {
+        if (saved !== true) {
             return;
         }
 
         const updatedItem = this.toQuickMealItem(group);
-        if (!updatedItem) {
+        if (updatedItem === null) {
             return;
         }
 
@@ -238,7 +235,7 @@ export class QuickConsumptionDrawerComponent {
 
         if (sourceType === ConsumptionSourceType.Product) {
             const product = group.controls.product.value;
-            if (!product?.id) {
+            if (product?.id === undefined || product.id.length === 0) {
                 return null;
             }
 
@@ -251,7 +248,7 @@ export class QuickConsumptionDrawerComponent {
         }
 
         const recipe = group.controls.recipe.value;
-        if (!recipe?.id) {
+        if (recipe?.id === undefined || recipe.id.length === 0) {
             return null;
         }
 

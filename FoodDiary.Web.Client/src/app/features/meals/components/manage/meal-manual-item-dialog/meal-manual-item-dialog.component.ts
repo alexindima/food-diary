@@ -23,6 +23,8 @@ import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.s
 import { ConsumptionSourceType } from '../../../models/meal.data';
 import type { ConsumptionItemFormData } from '../base-meal-manage.types';
 
+const MIN_AMOUNT = 0.01;
+
 export type MealManualItemDialogData = {
     group: FormGroup<ConsumptionItemFormData>;
 };
@@ -56,16 +58,16 @@ export class MealManualItemDialogComponent {
     public readonly product = signal<Product | null>(this.data.group.controls.product.value);
     public readonly recipe = signal<Recipe | null>(this.data.group.controls.recipe.value);
     public readonly amount = new FormControl<number | null>(this.data.group.controls.amount.value, {
-        validators: [Validators.required, Validators.min(0.01)],
+        validators: [Validators.required, Validators.min(MIN_AMOUNT)],
     });
 
     public readonly itemSourceName = computed(() => this.recipe()?.name ?? this.product()?.name ?? '');
 
     public readonly itemSourceIcon = computed(() => {
-        if (this.recipe()) {
+        if (this.recipe() !== null) {
             return 'menu_book';
         }
-        if (this.product()) {
+        if (this.product() !== null) {
             return 'restaurant';
         }
         return 'search';
@@ -78,7 +80,7 @@ export class MealManualItemDialogComponent {
     );
 
     public readonly sourceError = computed(() =>
-        this.product() || this.recipe() ? null : this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR'),
+        this.product() !== null || this.recipe() !== null ? null : this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR'),
     );
 
     public readonly amountError = computed(() => {
@@ -88,13 +90,13 @@ export class MealManualItemDialogComponent {
             return null;
         }
 
-        if (this.amount.errors?.['required']) {
+        if (this.amount.errors?.['required'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
         const minError = this.amount.getError('min') as { min?: number } | null;
-        if (minError) {
-            const min = minError.min ?? 0.01;
+        if (minError !== null) {
+            const min = minError.min ?? MIN_AMOUNT;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 
@@ -120,7 +122,7 @@ export class MealManualItemDialogComponent {
                 .afterClosed(),
         );
 
-        if (!selection) {
+        if (selection === null || selection === undefined) {
             return;
         }
 
@@ -141,7 +143,7 @@ export class MealManualItemDialogComponent {
         this.amount.markAsUntouched();
         this.refreshAmountValidation();
         this.recipeWeight.loadServingWeight(selection.recipe).subscribe(servingWeight => {
-            if (servingWeight) {
+            if (servingWeight !== null && servingWeight > 0) {
                 this.amount.setValue(servingWeight);
             }
         });
@@ -151,7 +153,7 @@ export class MealManualItemDialogComponent {
         this.amount.markAsTouched();
         this.refreshAmountValidation();
 
-        if (!this.product() && !this.recipe()) {
+        if (this.product() === null && this.recipe() === null) {
             return;
         }
 

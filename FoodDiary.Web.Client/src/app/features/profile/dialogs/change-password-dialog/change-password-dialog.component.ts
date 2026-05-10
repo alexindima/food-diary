@@ -20,6 +20,7 @@ export interface ChangePasswordDialogData {
 }
 
 const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
+const PASSWORD_MIN_LENGTH = 6;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
 
@@ -53,7 +54,7 @@ export class ChangePasswordDialogComponent {
         }),
         newPassword: new FormControl<string>('', {
             nonNullable: true,
-            validators: [Validators.required, Validators.minLength(6)],
+            validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
         }),
         confirmPassword: new FormControl<string>('', {
             nonNullable: true,
@@ -113,7 +114,7 @@ export class ChangePasswordDialogComponent {
         request$.subscribe({
             next: success => {
                 this.isSubmitting.set(false);
-                if (success) {
+                if (success === true) {
                     this.dialogRef.close(true);
                     return;
                 }
@@ -149,25 +150,34 @@ export class ChangePasswordDialogComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control || !control.invalid || !control.touched) {
+        if (control === null || !control.invalid || !control.touched) {
             return null;
         }
 
-        if (control.errors?.['required']) {
+        if (control.errors?.['required'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minLengthError = control.getError('minlength') as { requiredLength?: number } | null;
-        if (minLengthError) {
-            const requiredLength = minLengthError.requiredLength;
-            return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
+        const minLengthErrorMessage = this.resolveMinLengthError(control);
+        if (minLengthErrorMessage !== null) {
+            return minLengthErrorMessage;
         }
 
-        if (control.errors?.['matchField']) {
+        if (control.errors?.['matchField'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.PASSWORD.MATCH');
         }
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    private resolveMinLengthError(control: AbstractControl): string | null {
+        const minLengthError = control.getError('minlength') as { requiredLength?: number } | null | undefined;
+        if (minLengthError === null || minLengthError === undefined) {
+            return null;
+        }
+
+        const requiredLength = minLengthError.requiredLength ?? PASSWORD_MIN_LENGTH;
+        return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
     }
 }
 

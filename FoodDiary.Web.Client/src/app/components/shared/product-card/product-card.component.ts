@@ -11,6 +11,8 @@ import type { FavoriteProduct, QualityGrade } from '../../../features/products/m
 import { AuthService } from '../../../services/auth.service';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 
+const QUALITY_SCORE_MAX = 100;
+
 export interface ProductCardItem {
     id?: string;
     name: string;
@@ -58,7 +60,7 @@ export class ProductCardComponent {
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
-    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.product().id));
+    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasProductId());
     public readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE',
     );
@@ -81,9 +83,9 @@ export class ProductCardComponent {
             return null;
         }
 
-        return Math.round(Math.min(100, Math.max(0, score)));
+        return Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(0, score)));
     });
-    public readonly hasPreviewImage = computed(() => Boolean(this.imageUrl()?.trim()));
+    public readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
     private favoriteProductId: string | null = null;
 
     public constructor() {
@@ -104,7 +106,7 @@ export class ProductCardComponent {
 
     public handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
-        if (!imageUrl) {
+        if (imageUrl === undefined || imageUrl.length === 0) {
             return;
         }
 
@@ -122,7 +124,7 @@ export class ProductCardComponent {
 
     public toggleFavorite(): void {
         const productId = this.product().id;
-        if (!productId || this.isFavoriteLoading()) {
+        if (productId === undefined || productId.length === 0 || this.isFavoriteLoading()) {
             return;
         }
 
@@ -154,7 +156,7 @@ export class ProductCardComponent {
     }
 
     private removeFavorite(productId: string): void {
-        if (this.favoriteProductId) {
+        if (this.favoriteProductId !== null && this.favoriteProductId.length > 0) {
             this.favoriteProductService
                 .remove(this.favoriteProductId)
                 .pipe(
@@ -181,7 +183,7 @@ export class ProductCardComponent {
             .pipe(
                 switchMap(favorites => {
                     const match = favorites.find((favorite: FavoriteProduct) => favorite.productId === productId);
-                    if (!match) {
+                    if (match === undefined) {
                         return of(null);
                     }
 
@@ -206,5 +208,10 @@ export class ProductCardComponent {
 
     private showFavoriteError(): void {
         this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
+    }
+
+    private hasProductId(): boolean {
+        const id = this.product().id;
+        return id !== undefined && id.length > 0;
     }
 }

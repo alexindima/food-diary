@@ -54,7 +54,7 @@ export class PaddleCheckoutService {
     public async openTransactionCheckoutAsync(transactionId: string, options: PaddleInitOptions): Promise<void> {
         await this.initializeAsync(options);
 
-        if (!window.Paddle?.Checkout) {
+        if (window.Paddle?.Checkout === undefined) {
             throw new Error('Paddle Checkout is unavailable');
         }
 
@@ -77,7 +77,7 @@ export class PaddleCheckoutService {
 
         await this.loadScriptAsync();
 
-        if (!window.Paddle) {
+        if (window.Paddle === undefined) {
             throw new Error('Paddle.js did not initialize');
         }
 
@@ -103,14 +103,14 @@ export class PaddleCheckoutService {
     }
 
     private async loadScriptAsync(): Promise<void> {
-        if (this.scriptLoadPromise) {
+        if (this.scriptLoadPromise !== null) {
             return this.scriptLoadPromise;
         }
 
         this.scriptLoadPromise = new Promise<void>((resolve, reject) => {
             const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`);
-            if (existingScript) {
-                if (window.Paddle) {
+            if (existingScript !== null) {
+                if (window.Paddle !== undefined) {
                     resolve();
                     return;
                 }

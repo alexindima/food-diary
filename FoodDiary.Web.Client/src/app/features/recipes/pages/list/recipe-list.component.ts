@@ -45,6 +45,8 @@ interface RecipeCardViewModel {
     imageUrl: string | undefined;
 }
 
+const SEARCH_DEBOUNCE_MS = 300;
+
 @Component({
     selector: 'fd-recipe-list',
     templateUrl: './recipe-list.component.html',
@@ -141,7 +143,7 @@ export class RecipeListComponent {
 
         this.searchForm.controls.search.valueChanges
             .pipe(
-                debounceTime(300),
+                debounceTime(SEARCH_DEBOUNCE_MS),
                 switchMap(value => this.recipeListFacade.loadRecipes(1, this.pageSize, value, this.searchForm.controls.onlyMine.value)),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -192,7 +194,7 @@ export class RecipeListComponent {
             .subscribe(result => {
                 const actionResult = result as RecipeDetailActionResult | undefined;
 
-                if (!actionResult) {
+                if (actionResult === undefined) {
                     return;
                 }
 
@@ -258,7 +260,7 @@ export class RecipeListComponent {
             )
             .afterClosed()
             .subscribe(result => {
-                if (!result || result.onlyMine === currentOnlyMine) {
+                if (result === null || result.onlyMine === currentOnlyMine) {
                     return;
                 }
 
@@ -304,7 +306,7 @@ export class RecipeListComponent {
             .getById(favorite.recipeId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(recipe => {
-                if (recipe) {
+                if (recipe !== null) {
                     this.onRecipeClick(recipe);
                 }
             });
@@ -315,7 +317,7 @@ export class RecipeListComponent {
             .getById(favorite.recipeId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(recipe => {
-                if (recipe) {
+                if (recipe !== null) {
                     this.onAddToMeal(recipe);
                 }
             });

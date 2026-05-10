@@ -34,7 +34,7 @@ import type { IngredientFormValues, StepFormData } from '../recipe-manage.types'
 export class RecipeStepCardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly formRevision = signal(0);
-    private readonly currentLanguage = signal((this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en');
+    private readonly currentLanguage = signal(this.getCurrentLanguage());
 
     public readonly stepFormGroup = input.required<FormGroup<StepFormData>>();
     public readonly stepIndex = input.required<number>();
@@ -57,7 +57,7 @@ export class RecipeStepCardComponent {
         this.formRevision();
         this.currentLanguage();
         const description = this.stepFormGroup().controls.description.value.trim();
-        if (!description) {
+        if (description.length === 0) {
             return this.translateService.instant('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
         }
         return description;
@@ -85,12 +85,12 @@ export class RecipeStepCardComponent {
         return this.ingredients.controls.map((ingredient, index) => {
             const food = ingredient.controls.food.value;
             const nestedRecipeId = ingredient.controls.nestedRecipeId.value;
-            const unitKey = food?.baseUnit ? `PRODUCT_AMOUNT_UNITS.${food.baseUnit}` : null;
+            const unitKey = food?.baseUnit !== undefined ? `PRODUCT_AMOUNT_UNITS.${food.baseUnit}` : null;
 
             return {
                 index,
-                prefixIcon: nestedRecipeId ? 'menu_book' : food ? 'restaurant' : 'search',
-                amountLabel: this.resolveIngredientAmountLabel(Boolean(nestedRecipeId), unitKey),
+                prefixIcon: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'menu_book' : food !== null ? 'restaurant' : 'search',
+                amountLabel: this.resolveIngredientAmountLabel(nestedRecipeId !== null && nestedRecipeId.length > 0, unitKey),
                 foodNameError: this.resolveControlError(ingredient.controls.foodName),
                 amountError: this.resolveControlError(ingredient.controls.amount),
             };
@@ -99,7 +99,7 @@ export class RecipeStepCardComponent {
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.currentLanguage.set((this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en');
+            this.currentLanguage.set(this.getCurrentLanguage());
         });
 
         effect(onCleanup => {
@@ -163,7 +163,7 @@ export class RecipeStepCardComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control) {
+        if (control === null) {
             return null;
         }
 
@@ -172,21 +172,21 @@ export class RecipeStepCardComponent {
         }
 
         const errors = control.errors;
-        if (!errors) {
+        if (errors === null) {
             return null;
         }
 
-        if (errors['required']) {
+        if (errors['required'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
         const minError = errors['min'] as { min?: number } | undefined;
-        if (minError) {
+        if (minError !== undefined) {
             const min = minError.min ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 
-        if (errors['nonEmptyArray']) {
+        if (errors['nonEmptyArray'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY');
         }
 
@@ -199,11 +199,21 @@ export class RecipeStepCardComponent {
         }
 
         const amountLabel = this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
-        if (!unitKey) {
+        if (unitKey === null || unitKey.length === 0) {
             return amountLabel;
         }
 
         return `${amountLabel} (${this.translateService.instant(unitKey)})`;
+    }
+
+    private getCurrentLanguage(): string {
+        const currentLang = this.translateService.getCurrentLang();
+        if (currentLang.length > 0) {
+            return currentLang;
+        }
+
+        const fallbackLang = this.translateService.getFallbackLang();
+        return fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 }
 

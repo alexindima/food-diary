@@ -25,6 +25,8 @@ export interface RecipeNutritionSummary {
     alcohol: number;
 }
 
+const NUTRIENT_ROUNDING_FACTOR = 100;
+
 @Injectable({ providedIn: 'root' })
 export class RecipeManageFacade {
     private readonly recipeService = inject(RecipeService);
@@ -71,7 +73,7 @@ export class RecipeManageFacade {
     }
 
     public getSummaryFromRecipe(recipeData: Recipe | null, fallback: RecipeNutritionSummary): RecipeNutritionSummary {
-        if (!recipeData) {
+        if (recipeData === null) {
             return {
                 calories: 0,
                 proteins: 0,
@@ -116,11 +118,11 @@ export class RecipeManageFacade {
                 const food = ingredientGroup.controls.food.value;
                 const amount = ingredientGroup.controls.amount.value;
 
-                if (!food || !amount || amount <= 0) {
+                if (food === null || amount === null || amount <= 0) {
                     return;
                 }
 
-                const baseAmount = food.baseAmount || 1;
+                const baseAmount = food.baseAmount > 0 ? food.baseAmount : 1;
                 const multiplier = amount / baseAmount;
 
                 calories += food.caloriesPerBase * multiplier;
@@ -207,7 +209,7 @@ export class RecipeManageFacade {
     }
 
     public async cancelManageAsync(): Promise<void> {
-        if (this.dialogRef) {
+        if (this.dialogRef !== null) {
             this.dialogRef.close(null);
             return;
         }
@@ -225,7 +227,7 @@ export class RecipeManageFacade {
 
     private async handleSubmitResponseAsync(response: Recipe): Promise<void> {
         this.clearGlobalError();
-        if (this.dialogRef) {
+        if (this.dialogRef !== null) {
             this.dialogRef.close(response);
             return;
         }
@@ -248,7 +250,7 @@ export class RecipeManageFacade {
     }
 
     private roundNutrient(value: number): number {
-        return Math.round(value * 100) / 100;
+        return Math.round(value * NUTRIENT_ROUNDING_FACTOR) / NUTRIENT_ROUNDING_FACTOR;
     }
 
     private normalizeServings(servings: number): number {

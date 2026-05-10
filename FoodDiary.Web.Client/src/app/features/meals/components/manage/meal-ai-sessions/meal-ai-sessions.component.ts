@@ -9,6 +9,8 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
 import type { NutritionTotals } from '../base-meal-manage.types';
 
+const FRACTION_EPSILON = 0.01;
+
 @Component({
     selector: 'fd-meal-ai-sessions',
     templateUrl: './meal-ai-sessions.component.html',
@@ -78,18 +80,18 @@ export class MealAiSessionsComponent {
             kcal: 'GENERAL.UNITS.KCAL',
         };
 
-        const unitKey = normalized ? unitMap[normalized] : null;
-        const unitLabel = unitKey ? this.translateService.instant(unitKey) : unit;
-        return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
+        const unitKey = normalized.length > 0 ? unitMap[normalized] : undefined;
+        const unitLabel = unitKey !== undefined ? this.translateService.instant(unitKey) : unit;
+        return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
 
     private formatAiName(name?: string | null): string {
-        if (!name) {
+        if (name === null || name === undefined || name.length === 0) {
             return '';
         }
 
         const trimmed = name.trim();
-        if (!trimmed) {
+        if (trimmed.length === 0) {
             return '';
         }
 
@@ -98,14 +100,24 @@ export class MealAiSessionsComponent {
     }
 
     private formatAiMacro(value: number, unitKey: string): string {
-        const locale = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
-        const hasFraction = Math.abs(value % 1) > 0.01;
+        const locale = this.getCurrentLanguage();
+        const hasFraction = Math.abs(value % 1) > FRACTION_EPSILON;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
             minimumFractionDigits: hasFraction ? 1 : 0,
         });
         const unitLabel = this.translateService.instant(unitKey);
         return `${formatter.format(value)} ${unitLabel}`.trim();
+    }
+
+    private getCurrentLanguage(): string {
+        const currentLang = this.translateService.getCurrentLang();
+        if (currentLang.length > 0) {
+            return currentLang;
+        }
+
+        const fallbackLang = this.translateService.getFallbackLang();
+        return fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 
     public getAiSessionLabel(index: number): string {

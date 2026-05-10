@@ -58,7 +58,7 @@ export class ProfileManageFacade {
     public submitUpdate(updateData: UpdateUserDto): void {
         this.userService.update(updateData).subscribe({
             next: user => {
-                if (!user) {
+                if (user === null) {
                     this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
                     return;
                 }
@@ -89,9 +89,9 @@ export class ProfileManageFacade {
             })
             .afterClosed()
             .subscribe(success => {
-                if (success) {
+                if (success === true) {
                     const current = this.user();
-                    if (current && !current.hasPassword) {
+                    if (current !== null && !current.hasPassword) {
                         this.user.set({ ...current, hasPassword: true });
                     }
                     this.openPasswordSuccessDialog();
@@ -118,7 +118,7 @@ export class ProfileManageFacade {
             })
             .afterClosed()
             .subscribe(confirmed => {
-                if (!confirmed || this.isDeleting()) {
+                if (confirmed !== true || this.isDeleting()) {
                     return;
                 }
 
@@ -132,7 +132,7 @@ export class ProfileManageFacade {
                     )
                     .subscribe({
                         next: success => {
-                            if (!success) {
+                            if (success !== true) {
                                 this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
                                 return;
                             }
@@ -164,7 +164,7 @@ export class ProfileManageFacade {
             .subscribe({
                 next: () => {
                     const current = this.user();
-                    if (current) {
+                    if (current !== null) {
                         this.user.set({ ...current, aiConsentAcceptedAt: null });
                     }
                 },
@@ -211,7 +211,7 @@ export class ProfileManageFacade {
     private loadUser(): void {
         this.userService.getOverview().subscribe({
             next: overview => {
-                if (!overview) {
+                if (overview === null) {
                     this.setGlobalError('USER_MANAGE.LOAD_ERROR');
                     return;
                 }
@@ -238,7 +238,7 @@ export class ProfileManageFacade {
             .open(UpdateSuccessDialogComponent, { size: 'sm' })
             .afterClosed()
             .subscribe(goToHome => {
-                if (goToHome) {
+                if (goToHome === true) {
                     void this.navigationService.navigateToHomeAsync();
                 }
             });
@@ -255,7 +255,7 @@ export class ProfileManageFacade {
             )
             .subscribe({
                 next: user => {
-                    if (!user) {
+                    if (user === null) {
                         this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
                     } else {
                         this.user.set(user);
@@ -289,7 +289,7 @@ export class ProfileManageFacade {
 
     private applyNotificationPreferences(preferences: NotificationPreferences): void {
         const current = this.user();
-        if (!current) {
+        if (current === null) {
             return;
         }
 
@@ -308,7 +308,7 @@ export class ProfileManageFacade {
     }
 
     public async removeWebPushSubscriptionAsync(endpoint: string): Promise<boolean> {
-        if (!endpoint || this.removingWebPushSubscriptionEndpoint()) {
+        if (endpoint.length === 0 || this.removingWebPushSubscriptionEndpoint() !== null) {
             return false;
         }
 

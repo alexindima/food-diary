@@ -12,6 +12,8 @@ import type { FavoriteRecipe } from '../../../features/recipes/models/recipe.dat
 import { AuthService } from '../../../services/auth.service';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 
+const QUALITY_SCORE_MAX = 100;
+
 export interface RecipeCardStep {
     ingredients?: Array<unknown> | null;
 }
@@ -65,7 +67,7 @@ export class RecipeCardComponent {
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
-    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.recipe().id));
+    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasRecipeId());
     public readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',
     );
@@ -88,9 +90,9 @@ export class RecipeCardComponent {
             return null;
         }
 
-        return Math.round(Math.min(100, Math.max(0, score)));
+        return Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(0, score)));
     });
-    public readonly hasPreviewImage = computed(() => Boolean(this.imageUrl()?.trim()));
+    public readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
     public readonly totalTime = computed(() => {
         const recipe = this.recipe();
         const prep = recipe.prepTime ?? 0;
@@ -100,7 +102,7 @@ export class RecipeCardComponent {
     });
     public readonly ingredientCount = computed(() => {
         const recipe = this.recipe();
-        if (!recipe.steps?.length) {
+        if (recipe.steps === null || recipe.steps === undefined || recipe.steps.length === 0) {
             return 0;
         }
 
@@ -109,7 +111,7 @@ export class RecipeCardComponent {
     public readonly description = computed(() => {
         const ingredients = `${this.translateService.instant('RECIPE_LIST.INGREDIENTS_COUNT')}: ${this.ingredientCount()}`;
         const totalTime = this.totalTime();
-        if (!totalTime) {
+        if (totalTime === null || totalTime <= 0) {
             return ingredients;
         }
 
@@ -135,7 +137,7 @@ export class RecipeCardComponent {
 
     public handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
-        if (!imageUrl) {
+        if (imageUrl === undefined || imageUrl.length === 0) {
             return;
         }
 
@@ -153,7 +155,7 @@ export class RecipeCardComponent {
 
     public toggleFavorite(): void {
         const recipeId = this.recipe().id;
-        if (!recipeId || this.isFavoriteLoading()) {
+        if (recipeId === undefined || recipeId.length === 0 || this.isFavoriteLoading()) {
             return;
         }
 
@@ -185,7 +187,7 @@ export class RecipeCardComponent {
     }
 
     private removeFavorite(recipeId: string): void {
-        if (this.favoriteRecipeId) {
+        if (this.favoriteRecipeId !== null && this.favoriteRecipeId.length > 0) {
             this.favoriteRecipeService
                 .remove(this.favoriteRecipeId)
                 .pipe(
@@ -212,7 +214,7 @@ export class RecipeCardComponent {
             .pipe(
                 switchMap(favorites => {
                     const match = favorites.find((favorite: FavoriteRecipe) => favorite.recipeId === recipeId);
-                    if (!match) {
+                    if (match === undefined) {
                         return of(null);
                     }
 
@@ -237,5 +239,10 @@ export class RecipeCardComponent {
 
     private showFavoriteError(): void {
         this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
+    }
+
+    private hasRecipeId(): boolean {
+        const id = this.recipe().id;
+        return id !== undefined && id.length > 0;
     }
 }

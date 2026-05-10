@@ -15,7 +15,7 @@ export class RecipeServingWeightService {
     private readonly cache = new Map<string, number | null>();
 
     public loadServingWeight(recipe: Recipe | null): Observable<number | null> {
-        if (!recipe?.id) {
+        if (recipe?.id === undefined || recipe.id.length === 0) {
             return of(null);
         }
 
@@ -25,7 +25,7 @@ export class RecipeServingWeightService {
         }
 
         const immediateWeight = this.calculateRecipeWeight(recipe);
-        if (immediateWeight && recipe.servings > 0) {
+        if (immediateWeight !== null && immediateWeight > 0 && recipe.servings > 0) {
             const servingWeight = immediateWeight / recipe.servings;
             this.cache.set(recipe.id, servingWeight);
             return of(servingWeight);
@@ -34,7 +34,7 @@ export class RecipeServingWeightService {
         return this.recipeLookupService.getById(recipe.id).pipe(
             map(fullRecipe => {
                 const computedWeight = this.calculateRecipeWeight(fullRecipe);
-                if (computedWeight && fullRecipe.servings > 0) {
+                if (computedWeight !== null && computedWeight > 0 && fullRecipe.servings > 0) {
                     const servingWeight = computedWeight / fullRecipe.servings;
                     this.cache.set(recipe.id, servingWeight);
                     return servingWeight;
@@ -50,16 +50,16 @@ export class RecipeServingWeightService {
     }
 
     public convertServingsToGrams(recipe: Recipe | null, servingsAmount: number): number {
-        const servingWeight = recipe?.id ? this.cache.get(recipe.id) : null;
-        if (servingWeight && servingWeight > 0) {
+        const servingWeight = recipe?.id !== undefined && recipe.id.length > 0 ? this.cache.get(recipe.id) : null;
+        if (servingWeight !== null && servingWeight !== undefined && servingWeight > 0) {
             return servingsAmount * servingWeight;
         }
         return servingsAmount;
     }
 
     public convertGramsToServings(recipe: Recipe | null, grams: number): number {
-        const servingWeight = recipe?.id ? this.cache.get(recipe.id) : null;
-        if (servingWeight && servingWeight > 0) {
+        const servingWeight = recipe?.id !== undefined && recipe.id.length > 0 ? this.cache.get(recipe.id) : null;
+        if (servingWeight !== null && servingWeight !== undefined && servingWeight > 0) {
             return grams / servingWeight;
         }
         return grams;
@@ -74,7 +74,7 @@ export class RecipeServingWeightService {
         recipe.steps.forEach(step => {
             step.ingredients.forEach(ingredient => {
                 const weight = this.calculateIngredientWeight(ingredient);
-                if (weight) {
+                if (weight !== null && weight > 0) {
                     total += weight;
                 }
             });
@@ -90,7 +90,7 @@ export class RecipeServingWeightService {
         }
 
         const unitRaw = ingredient.productBaseUnit?.toString().toUpperCase();
-        if (!unitRaw) {
+        if (unitRaw === undefined || unitRaw.length === 0) {
             return null;
         }
 

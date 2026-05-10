@@ -4,6 +4,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../shared/api/user.service';
 import type { DashboardLayoutSettings } from '../../../shared/models/user.data';
 
+const DEFAULT_VIEWPORT_WIDTH = 1024;
+const MOBILE_LAYOUT_BREAKPOINT = 768;
+
 const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     web: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
     mobile: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
@@ -16,7 +19,7 @@ export class DashboardLayoutService {
 
     private readonly layoutInitialized = signal<boolean>(false);
     private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
-    private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? 1024 : window.innerWidth);
+    private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? DEFAULT_VIEWPORT_WIDTH : window.innerWidth);
 
     public readonly layoutSettings = signal<DashboardLayoutSettings>({
         web: [...(DEFAULT_LAYOUT.web ?? [])],
@@ -25,7 +28,7 @@ export class DashboardLayoutService {
 
     public readonly isEditingLayout = signal<boolean>(false);
 
-    public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < 768 ? 'mobile' : 'web'));
+    public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < MOBILE_LAYOUT_BREAKPOINT ? 'mobile' : 'web'));
 
     public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
 
@@ -39,7 +42,7 @@ export class DashboardLayoutService {
             return false;
         }
         const previous = this.layoutSnapshot();
-        if (!previous) {
+        if (previous === null) {
             return false;
         }
         const current = this.normalizeLayout(this.layoutSettings());
@@ -87,7 +90,7 @@ export class DashboardLayoutService {
         }
 
         const snapshot = this.layoutSnapshot();
-        if (snapshot) {
+        if (snapshot !== null) {
             this.layoutSettings.set(this.normalizeLayout(snapshot));
         }
         this.isEditingLayout.set(false);
@@ -130,7 +133,7 @@ export class DashboardLayoutService {
         const layout = this.layoutSettings();
         const fallback = DEFAULT_LAYOUT[key] ?? [];
         const configured = layout[key];
-        const values = configured?.length ? configured : fallback;
+        const values = configured !== undefined && configured.length > 0 ? configured : fallback;
         return this.ensureSummary(values, fallback);
     }
 
@@ -143,7 +146,7 @@ export class DashboardLayoutService {
 
     private normalizeLayoutList(values: string[] | null | undefined, fallback: string[]): string[] {
         const allowed = new Set(fallback);
-        const source = values?.length ? values : fallback;
+        const source = values !== null && values !== undefined && values.length > 0 ? values : fallback;
         const filtered: string[] = [];
         for (const item of source) {
             if (allowed.has(item) && !filtered.includes(item)) {
@@ -166,7 +169,7 @@ export class DashboardLayoutService {
             .updateDashboardLayout(layout)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {
-                if (user?.dashboardLayout) {
+                if (user?.dashboardLayout !== undefined && user.dashboardLayout !== null) {
                     this.layoutSettings.set(this.normalizeLayout(user.dashboardLayout));
                 } else {
                     this.layoutSettings.set(layout);
@@ -177,7 +180,7 @@ export class DashboardLayoutService {
     private persistLayoutIfChanged(): void {
         const current = this.normalizeLayout(this.layoutSettings());
         const previous = this.layoutSnapshot();
-        if (previous && this.areLayoutsEqual(previous, current)) {
+        if (previous !== null && this.areLayoutsEqual(previous, current)) {
             return;
         }
 

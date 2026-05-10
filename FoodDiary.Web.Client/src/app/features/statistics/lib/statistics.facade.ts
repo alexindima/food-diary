@@ -32,6 +32,8 @@ import {
     type StatisticsRange,
 } from './statistics-data-mapper';
 
+const CENTIMETERS_PER_METER = 100;
+
 @Injectable({ providedIn: 'root' })
 export class StatisticsFacade {
     private readonly statisticsService = inject(StatisticsService);
@@ -101,16 +103,16 @@ export class StatisticsFacade {
 
         if (selectedTab === 'bmi') {
             const heightCm = this.userHeightCm();
-            if (!heightCm || heightCm <= 0) {
+            if (heightCm === null || heightCm <= 0) {
                 return null;
             }
 
-            const heightM = heightCm / 100;
+            const heightM = heightCm / CENTIMETERS_PER_METER;
             return buildBodyChartData(this.weightSummaryPoints(), point => point.averageWeight / (heightM * heightM), formatLabel);
         }
 
         const heightCm = this.userHeightCm();
-        if (!heightCm || heightCm <= 0) {
+        if (heightCm === null || heightCm <= 0) {
             return null;
         }
 
@@ -118,7 +120,7 @@ export class StatisticsFacade {
     });
     public readonly hasBodyData = computed(() => {
         const bodyChartData = this.bodyChartData();
-        return !!bodyChartData && (bodyChartData.datasets[0].data as (number | null)[]).some(value => value !== null);
+        return bodyChartData !== null && (bodyChartData.datasets[0].data as (number | null)[]).some(value => value !== null);
     });
 
     private readonly customRangeValue = toSignal(
@@ -147,7 +149,7 @@ export class StatisticsFacade {
             return;
         }
 
-        if (customRange?.start && customRange.end) {
+        if (customRange?.start !== undefined && customRange.end !== null) {
             this.loadAllData();
         }
     });
@@ -171,7 +173,7 @@ export class StatisticsFacade {
         this.selectedRange.set(value);
 
         const current = this.customRangeControl.value;
-        if (!current?.start || !current.end) {
+        if (current?.start === undefined || current.start === null || current.end === null) {
             const end = new Date();
             const start = new Date(end);
             start.setMonth(start.getMonth() - 1);
@@ -310,7 +312,13 @@ export class StatisticsFacade {
     }
 
     private getCurrentLocale(): string {
-        return (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en-US';
+        const currentLang = this.translateService.getCurrentLang();
+        if (currentLang.length > 0) {
+            return currentLang;
+        }
+
+        const fallbackLang = this.translateService.getFallbackLang();
+        return fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en-US';
     }
 
     private formatSummaryLabel(dateString: string): string {

@@ -7,6 +7,9 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 
+const CALORIE_TARGET_DIFF_THRESHOLD = 50;
+const WEIGHT_TREND_FRACTION_DIGITS = 2;
+
 @Component({
     selector: 'fd-tdee-insight-card',
     standalone: true,
@@ -27,7 +30,7 @@ export class TdeeInsightCardComponent {
 
     public readonly confidenceLabel = computed(() => {
         const data = this.insight();
-        if (!data || data.confidence === 'none') {
+        if (data === null || data.confidence === 'none') {
             return null;
         }
         return `TDEE_CARD.CONFIDENCE.${data.confidence.toUpperCase()}`;
@@ -44,30 +47,31 @@ export class TdeeInsightCardComponent {
             return null;
         }
         const sign = trend > 0 ? '+' : '';
-        return `${sign}${trend.toFixed(2)}`;
+        return `${sign}${trend.toFixed(WEIGHT_TREND_FRACTION_DIGITS)}`;
     });
 
     public readonly hintKey = computed(() => {
         const hint = this.insight()?.goalAdjustmentHint;
-        if (!hint) {
+        if (hint === undefined || hint.length === 0) {
             return null;
         }
         return `TDEE_CARD.HINTS.${hint.replace('hint.', '').toUpperCase()}`;
     });
 
     public readonly showSuggestion = computed(() => {
-        const data = this.insight();
-        if (!data?.suggestedCalorieTarget || !data.currentCalorieTarget) {
+        const suggestedCalorieTarget = this.insight()?.suggestedCalorieTarget ?? null;
+        const currentCalorieTarget = this.insight()?.currentCalorieTarget ?? null;
+        if (suggestedCalorieTarget === null || currentCalorieTarget === null) {
             return false;
         }
-        return Math.abs(data.suggestedCalorieTarget - data.currentCalorieTarget) > 50;
+        return Math.abs(suggestedCalorieTarget - currentCalorieTarget) > CALORIE_TARGET_DIFF_THRESHOLD;
     });
 
     public onApplyGoal(event?: Event): void {
         event?.stopPropagation();
 
         const target = this.insight()?.suggestedCalorieTarget;
-        if (target) {
+        if (target !== null && target !== undefined) {
             this.applyGoal.emit(target);
         }
     }

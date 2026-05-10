@@ -7,12 +7,14 @@ import { getWeightTrendRange } from './dashboard-date.utils';
 
 type WeightTrendValuePoint = WeightTrendPoint & { value: number };
 
+const TREND_ROUNDING_FACTOR = 10;
+
 function hasTrendValue(point: WeightTrendPoint): point is WeightTrendValuePoint {
     return point.value !== null;
 }
 
 function buildFallbackTrend(latestValue: number | null, selectedDate: Date, trendDays: number): WeightTrendPoint[] {
-    if (!latestValue) {
+    if (latestValue === null || latestValue <= 0) {
         return [];
     }
 
@@ -33,18 +35,18 @@ function computeTrendChange(series: WeightTrendPoint[]): number | null {
     const first = ordered.find(hasTrendValue);
     const last = [...ordered].reverse().find(hasTrendValue);
 
-    if (!first || !last) {
+    if (first === undefined || last === undefined) {
         return null;
     }
 
     const diff = last.value - first.value;
-    return Math.round(diff * 10) / 10;
+    return Math.round(diff * TREND_ROUNDING_FACTOR) / TREND_ROUNDING_FACTOR;
 }
 
 function computeTrendCurrent(series: WeightTrendPoint[], fallbackValue: number | null): number | null {
     const ordered = [...series].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     const last = [...ordered].reverse().find(hasTrendValue);
-    return last ? last.value : fallbackValue;
+    return last !== undefined ? last.value : fallbackValue;
 }
 
 export function createWeightTrendSignals(
@@ -62,7 +64,7 @@ export function createWeightTrendSignals(
             date: point.startDate,
             value: point.averageWeight > 0 ? point.averageWeight : null,
         }));
-        return points.length ? points : buildFallbackTrend(latestWeight(), selectedDate(), trendDays);
+        return points.length > 0 ? points : buildFallbackTrend(latestWeight(), selectedDate(), trendDays);
     });
 
     const weightTrendChange = computed(() => computeTrendChange(weightTrendSeries()));
@@ -86,7 +88,7 @@ export function createWaistTrendSignals(
             date: point.startDate,
             value: point.averageCircumference > 0 ? point.averageCircumference : null,
         }));
-        return points.length ? points : buildFallbackTrend(latestWaist(), selectedDate(), trendDays);
+        return points.length > 0 ? points : buildFallbackTrend(latestWaist(), selectedDate(), trendDays);
     });
 
     const waistTrendChange = computed(() => computeTrendChange(waistTrendSeries()));

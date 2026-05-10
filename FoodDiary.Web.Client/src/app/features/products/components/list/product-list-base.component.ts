@@ -38,6 +38,10 @@ interface ProductCardViewModel {
     imageUrl: string | undefined;
 }
 
+const DEFAULT_PAGE_SIZE = 10;
+const SEARCH_DEBOUNCE_MS = 300;
+const OFF_SEARCH_LIMIT = 5;
+
 @Component({
     selector: 'fd-product-list-base',
     standalone: true,
@@ -66,7 +70,7 @@ interface ProductCardViewModel {
 export class ProductListBaseComponent {
     protected readonly productService = inject(ProductService);
     protected readonly navigationService = inject(NavigationService);
-    protected readonly pageSize = 10;
+    protected readonly pageSize = DEFAULT_PAGE_SIZE;
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly quickConsumptionService = inject(QuickMealService);
     protected readonly favoriteProductService = inject(FavoriteProductService);
@@ -88,7 +92,7 @@ export class ProductListBaseComponent {
     public readonly searchValue = signal<string | null>(null);
     public readonly onlyMineFilter = signal(false);
     public readonly isMobileView = this.viewportService.isMobile;
-    public readonly hasSearchValue = computed(() => !!this.searchValue()?.trim());
+    public readonly hasSearchValue = computed(() => (this.searchValue()?.trim().length ?? 0) > 0);
     public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts().length > 0);
     public readonly recentProductItems = computed<ProductCardViewModel[]>(() =>
         this.recentProducts().map(product => ({
@@ -148,7 +152,7 @@ export class ProductListBaseComponent {
                 tap(value => {
                     this.searchValue.set(value);
                 }),
-                debounceTime(300),
+                debounceTime(SEARCH_DEBOUNCE_MS),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -196,7 +200,7 @@ export class ProductListBaseComponent {
             })
             .afterClosed()
             .subscribe(barcode => {
-                if (barcode) {
+                if (barcode !== null && barcode !== undefined && barcode.length > 0) {
                     this.searchForm.controls.search.setValue(barcode);
                 }
             });
@@ -232,7 +236,7 @@ export class ProductListBaseComponent {
             })
             .afterClosed()
             .subscribe(result => {
-                if (!result) {
+                if (result === null || result === undefined) {
                     return;
                 }
 
@@ -318,14 +322,14 @@ export class ProductListBaseComponent {
 
     private searchOpenFoodFacts(search: string | null): void {
         const trimmed = search?.trim();
-        if (!trimmed || trimmed.length < 2) {
+        if (trimmed === undefined || trimmed.length < 2) {
             this.offProducts.set([]);
             return;
         }
 
         this.offLoading.set(true);
         this.openFoodFactsService
-            .search(trimmed, 5)
+            .search(trimmed, OFF_SEARCH_LIMIT)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
@@ -392,7 +396,7 @@ export class ProductListBaseComponent {
             .getById(favorite.productId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(product => {
-                if (product) {
+                if (product !== null) {
                     this.onProductClick(product);
                 }
             });
@@ -403,7 +407,7 @@ export class ProductListBaseComponent {
             .getById(favorite.productId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(product => {
-                if (product) {
+                if (product !== null) {
                     this.onAddToMeal(product);
                 }
             });

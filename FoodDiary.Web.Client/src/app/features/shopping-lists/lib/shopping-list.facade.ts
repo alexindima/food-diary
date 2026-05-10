@@ -15,6 +15,8 @@ export type ShoppingListDraftItem = {
     category: string | null;
 };
 
+const TEMP_ID_RANDOM_RANGE = 10_000;
+
 @Injectable({ providedIn: 'root' })
 export class ShoppingListFacade {
     private readonly shoppingListService = inject(ShoppingListService);
@@ -54,7 +56,7 @@ export class ShoppingListFacade {
     }
 
     public selectList(id: string): void {
-        if (!id || id === this.lastLoadedListId()) {
+        if (id.length === 0 || id === this.lastLoadedListId()) {
             return;
         }
 
@@ -87,7 +89,7 @@ export class ShoppingListFacade {
 
     public addItem(draft: ShoppingListDraftItem): void {
         const name = draft.name.trim();
-        if (!name) {
+        if (name.length === 0) {
             return;
         }
 
@@ -124,7 +126,7 @@ export class ShoppingListFacade {
 
     public clearCurrentList(): void {
         const current = this.list();
-        if (!current) {
+        if (current === null) {
             return;
         }
 
@@ -147,7 +149,7 @@ export class ShoppingListFacade {
 
     public deleteCurrentList(): void {
         const current = this.list();
-        if (!current) {
+        if (current === null) {
             return;
         }
 
@@ -193,7 +195,7 @@ export class ShoppingListFacade {
                     this.lists.set(lists);
                     const currentSelection = this.selectedListId();
                     const selectedId =
-                        currentSelection && lists.some(list => list.id === currentSelection) ? currentSelection : lists[0].id;
+                        currentSelection !== null && lists.some(list => list.id === currentSelection) ? currentSelection : lists[0].id;
                     this.selectedListId.set(selectedId);
                     this.loadListById(selectedId);
                 },
@@ -230,7 +232,7 @@ export class ShoppingListFacade {
             .subscribe({
                 next: list => {
                     this.isLoading.set(false);
-                    if (list) {
+                    if (list !== null) {
                         this.applyList(list);
                         return;
                     }
@@ -311,12 +313,12 @@ export class ShoppingListFacade {
 
     private persistList(): void {
         const current = this.list();
-        if (!current || this.isSaving() || this.isLoading()) {
+        if (current === null || this.isSaving() || this.isLoading()) {
             return;
         }
 
         const name = this.listName().trim();
-        if (!name) {
+        if (name.length === 0) {
             return;
         }
 
@@ -347,6 +349,6 @@ export class ShoppingListFacade {
     }
 
     private createTempId(): string {
-        return `temp-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+        return `temp-${Date.now()}-${Math.floor(Math.random() * TEMP_ID_RANDOM_RANGE)}`;
     }
 }

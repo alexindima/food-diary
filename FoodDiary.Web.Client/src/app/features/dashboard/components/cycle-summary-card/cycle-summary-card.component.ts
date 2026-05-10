@@ -6,6 +6,8 @@ import { DashboardWidgetFrameComponent } from '../../../../components/shared/das
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
 import type { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 
+const MILLISECONDS_PER_DAY = 86_400_000;
+
 @Component({
     selector: 'fd-cycle-summary-card',
     standalone: true,
@@ -27,16 +29,16 @@ export class CycleSummaryCardComponent {
     public readonly cycleDay = computed(() => {
         const start = this.normalizedStart();
         const reference = this.normalizedReference();
-        if (!start || !reference) {
+        if (start === null || reference === null) {
             return null;
         }
-        const diff = Math.floor((reference.getTime() - start.getTime()) / 86400000);
+        const diff = Math.floor((reference.getTime() - start.getTime()) / MILLISECONDS_PER_DAY);
         return Math.max(1, diff + 1);
     });
 
     public readonly statusKey = computed(() => {
         const reference = this.normalizedReference();
-        if (!reference) {
+        if (reference === null) {
             return null;
         }
 
@@ -44,14 +46,14 @@ export class CycleSummaryCardComponent {
         const ovulation = this.normalizeDate(predictions?.ovulationDate ?? null);
         const nextPeriod = this.normalizeDate(predictions?.nextPeriodStart ?? null);
 
-        if (ovulation) {
+        if (ovulation !== null) {
             const days = this.daysBetween(reference, ovulation);
             if (days >= 0) {
                 return 'CYCLE_CARD.OVULATION_IN';
             }
         }
 
-        if (nextPeriod) {
+        if (nextPeriod !== null) {
             const days = this.daysBetween(reference, nextPeriod);
             if (days <= 0) {
                 return 'CYCLE_CARD.NEXT_PERIOD_TODAY';
@@ -64,7 +66,7 @@ export class CycleSummaryCardComponent {
 
     public readonly statusDays = computed(() => {
         const reference = this.normalizedReference();
-        if (!reference) {
+        if (reference === null) {
             return null;
         }
 
@@ -72,14 +74,14 @@ export class CycleSummaryCardComponent {
         const ovulation = this.normalizeDate(predictions?.ovulationDate ?? null);
         const nextPeriod = this.normalizeDate(predictions?.nextPeriodStart ?? null);
 
-        if (ovulation) {
+        if (ovulation !== null) {
             const days = this.daysBetween(reference, ovulation);
             if (days >= 0) {
                 return days;
             }
         }
 
-        if (nextPeriod) {
+        if (nextPeriod !== null) {
             const days = this.daysBetween(reference, nextPeriod);
             if (days > 0) {
                 return days;
@@ -89,14 +91,14 @@ export class CycleSummaryCardComponent {
         return null;
     });
 
-    public readonly hasCycle = computed(() => !!this.normalizedStart());
+    public readonly hasCycle = computed(() => this.normalizedStart() !== null);
 
     public onSetup(): void {
         this.setupAction.emit();
     }
 
     private normalizeDate(value: Date | string | null | undefined): Date | null {
-        if (!value) {
+        if (value === null || value === undefined || value === '') {
             return null;
         }
         const date = value instanceof Date ? value : new Date(value);
@@ -107,6 +109,6 @@ export class CycleSummaryCardComponent {
     }
 
     private daysBetween(from: Date, to: Date): number {
-        return Math.round((to.getTime() - from.getTime()) / 86400000);
+        return Math.round((to.getTime() - from.getTime()) / MILLISECONDS_PER_DAY);
     }
 }
