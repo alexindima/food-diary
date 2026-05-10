@@ -84,7 +84,7 @@ describe('FdUiConfirmDialogComponent', () => {
         const buttons = nativeEl.querySelectorAll('fd-ui-button');
         // With TranslateModule.forRoot() and no translations loaded, keys are returned as-is
         expect(buttons.length).toBe(2);
-        expect(buttons[0].textContent!.trim()).toBeTruthy();
-        expect(buttons[1].textContent!.trim()).toBeTruthy();
+        expect(buttons[0].textContent.trim()).toBeTruthy();
+        expect(buttons[1].textContent.trim()).toBeTruthy();
     });
 });

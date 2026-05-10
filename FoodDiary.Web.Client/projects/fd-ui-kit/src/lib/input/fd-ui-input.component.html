@@ -21,7 +21,7 @@
         }
         @if (prefixIcon()) {
             <span class="fd-ui-input__prefix" aria-hidden="true">
-                <fd-ui-icon [name]="prefixIcon()!"></fd-ui-icon>
+                <fd-ui-icon [name]="prefixIcon()!" />
             </span>
         }
         <input
@@ -52,7 +52,7 @@
                 [disabled]="disabled()"
                 (click)="triggerSuffixButton()"
             >
-                <fd-ui-icon [name]="suffixButtonIcon()!"></fd-ui-icon>
+                <fd-ui-icon [name]="suffixButtonIcon()!" />
             </button>
         }
     </div>

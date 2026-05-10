@@ -9,7 +9,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
-import { type LessonDetail } from '../../models/lesson.data';
+import type { LessonDetail } from '../../models/lesson.data';
 
 interface LessonDetailState extends LessonDetail {
     categoryLabelKey: string;

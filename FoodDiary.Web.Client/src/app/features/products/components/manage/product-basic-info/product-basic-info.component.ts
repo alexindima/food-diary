@@ -9,8 +9,8 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { type MeasurementUnit, type ProductSearchSuggestion, type ProductType, type ProductVisibility } from '../../../models/product.data';
-import { type ProductFormData } from '../base-product-manage.component';
+import type { MeasurementUnit, ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
+import type { ProductFormData } from '../base-product-manage.component';
 
 export type ProductNameSuggestion = ProductSearchSuggestion;
 

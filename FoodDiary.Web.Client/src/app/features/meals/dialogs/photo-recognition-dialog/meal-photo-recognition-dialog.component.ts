@@ -13,9 +13,9 @@ import { catchError, of } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { type FoodNutritionResponse, type FoodVisionItem } from '../../../../shared/models/ai.data';
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
-import { type MealAiSessionManageDto } from '../../models/meal.data';
+import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { MealAiSessionManageDto } from '../../models/meal.data';
 
 type PhotoAiDialogData = {
     initialSelection?: ImageSelection | null;

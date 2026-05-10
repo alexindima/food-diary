@@ -1,12 +1,12 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
-import { type PageOf } from '../../../shared/models/page-of.data';
-import { type ExploreFilters, type ExploreRecipe } from '../models/explore.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
+import type { ExploreFilters, ExploreRecipe } from '../models/explore.data';
 
 @Injectable({
     providedIn: 'root',

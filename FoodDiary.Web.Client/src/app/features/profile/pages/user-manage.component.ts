@@ -41,14 +41,14 @@ import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import { type FormGroupControls } from '../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../shared/lib/common.data';
 import {
     FASTING_REMINDER_PRESETS,
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
 import { parseIntegerInput } from '../../../shared/lib/number.utils';
-import { type ImageSelection } from '../../../shared/models/image-upload.data';
+import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { type ActivityLevelOption, Gender, type UiStyleOption, UpdateUserDto, type User } from '../../../shared/models/user.data';
 import {
     APP_THEMES,
@@ -59,9 +59,9 @@ import {
     isAppUiStyleName,
 } from '../../../theme/app-theme.config';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
-import { type DietologistPermissions, type DietologistRelationship } from '../../dietologist/models/dietologist.data';
+import type { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { PremiumBillingService } from '../../premium/api/premium-billing.service';
-import { type BillingOverview, type BillingPlan, type BillingProvider } from '../../premium/models/billing.models';
+import type { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -239,7 +239,7 @@ export class UserManageComponent {
     });
     public readonly billingRenewalLabelKey = computed(() => {
         const overview = this.billingOverview();
-        if (!overview || !overview.isPremium) {
+        if (!overview?.isPremium) {
             return 'USER_MANAGE.BILLING_RENEWAL_FREE';
         }
 
@@ -863,7 +863,7 @@ export class UserManageComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control || !control.invalid) {
+        if (!control?.invalid) {
             return null;
         }
 
@@ -1012,7 +1012,7 @@ export class UserManageComponent {
         const formData = this.userForm.getRawValue();
         return new UpdateUserDto({
             ...formData,
-            profileImage: formData.profileImage as ImageSelection | null,
+            profileImage: formData.profileImage,
         });
     }
 

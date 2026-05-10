@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { FastingService } from '../api/fasting.service';
-import { type FastingOverview, type FastingSession } from '../models/fasting.data';
+import type { FastingOverview, FastingSession } from '../models/fasting.data';
 import { FastingFacade } from './fasting.facade';
 
 describe('FastingFacade', () => {

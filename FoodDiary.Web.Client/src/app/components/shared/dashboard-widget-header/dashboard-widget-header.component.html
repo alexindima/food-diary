@@ -2,7 +2,7 @@
     @if (hasIcon()) {
         <div class="dashboard-widget-header__icon fd-inline-center" aria-hidden="true" [attr.data-tone]="iconTone()">
             @if (iconName()) {
-                <fd-ui-icon [name]="iconName()!"></fd-ui-icon>
+                <fd-ui-icon [name]="iconName()!" />
             } @else {
                 <span class="fd-ui-meta-text">{{ iconLabel() }}</span>
             }

@@ -5,7 +5,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GoalsService } from '../api/goals.service';
-import { type GoalsResponse } from '../models/goals.data';
+import type { GoalsResponse } from '../models/goals.data';
 import { GoalsFacade } from './goals.facade';
 
 describe('GoalsFacade', () => {

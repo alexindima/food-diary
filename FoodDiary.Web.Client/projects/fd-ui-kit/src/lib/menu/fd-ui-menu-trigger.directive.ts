@@ -3,7 +3,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { DestroyRef, Directive, effect, ElementRef, inject, input, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { type FdUiMenuComponent } from './fd-ui-menu.component';
+import type { FdUiMenuComponent } from './fd-ui-menu.component';
 
 @Directive({
     selector: '[fdUiMenuTrigger]',

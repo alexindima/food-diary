@@ -1,4 +1,4 @@
-import { type Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { UserManageComponent } from './pages/user-manage.component';
 

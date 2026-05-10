@@ -1,8 +1,8 @@
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
-import { type Product } from '../../../products/models/product.data';
-import { type Recipe } from '../../../recipes/models/recipe.data';
-import { type ConsumptionSourceType } from '../../models/meal.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { Product } from '../../../products/models/product.data';
+import type { Recipe } from '../../../recipes/models/recipe.data';
+import type { ConsumptionSourceType } from '../../models/meal.data';
 
 export type ConsumptionFormValues = {
     date: string;

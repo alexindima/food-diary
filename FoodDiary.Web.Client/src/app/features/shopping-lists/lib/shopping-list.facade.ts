@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
-import { type MeasurementUnit } from '../../products/models/product.data';
+import type { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import { type ShoppingList, type ShoppingListItem, type ShoppingListItemDto, type ShoppingListSummary } from '../models/shopping-list.data';
+import type { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
 
 export type ShoppingListDraftItem = {
     name: string;

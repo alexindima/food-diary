@@ -43,14 +43,14 @@
             <div class="dietologist-promo__permission-list">
                 @for (permission of permissions; track permission.key) {
                     <div class="dietologist-promo__permission-chip">
-                        <fd-ui-icon name="check_circle"></fd-ui-icon>
+                        <fd-ui-icon name="check_circle" />
                         <span>{{ permission.labelKey | translate }}</span>
                     </div>
                 }
             </div>
 
             <div class="dietologist-promo__note">
-                <fd-ui-icon name="tune"></fd-ui-icon>
+                <fd-ui-icon name="tune" />
                 <span>{{ 'LANDING_DIETOLOGIST.NOTE' | translate }}</span>
             </div>
         </div>

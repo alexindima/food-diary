@@ -1,7 +1,7 @@
-import { type MealManageDto } from '../../../features/meals/models/meal.data';
+import type { MealManageDto } from '../../../features/meals/models/meal.data';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
-import { type FoodNutritionResponse, type FoodVisionItem } from '../../../shared/models/ai.data';
-import { type AiInputBarResult, type AiInputBarResultItem } from './ai-input-bar.types';
+import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
+import type { AiInputBarResult, AiInputBarResultItem } from './ai-input-bar.types';
 
 export function mapNutritionItemsToAiInputBarItems(nutrition: FoodNutritionResponse, matches: FoodVisionItem[]): AiInputBarResultItem[] {
     return nutrition.items.map(item => {

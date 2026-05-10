@@ -12,7 +12,7 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
@@ -131,7 +131,7 @@ export class PasswordResetComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control || !control.invalid) {
+        if (!control?.invalid) {
             return null;
         }
 

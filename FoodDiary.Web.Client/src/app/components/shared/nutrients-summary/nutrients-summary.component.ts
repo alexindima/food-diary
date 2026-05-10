@@ -2,13 +2,13 @@ import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { type ChartData, type ChartOptions, type ChartTypeRegistry, type TooltipItem } from 'chart.js';
+import type { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { distinctUntilChanged, fromEvent, map } from 'rxjs';
 
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { type RecursivePartial } from '../../../shared/lib/common.data';
-import { type NutrientData } from '../../../shared/models/charts.data';
+import type { RecursivePartial } from '../../../shared/lib/common.data';
+import type { NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({

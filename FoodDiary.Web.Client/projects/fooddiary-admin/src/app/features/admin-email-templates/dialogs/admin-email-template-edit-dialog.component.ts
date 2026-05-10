@@ -13,7 +13,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
-import { type AdminEmailTemplate } from '../models/admin-email-template.data';
+import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 
 type TemplateForm = {
     key: FormControl<string>;
@@ -53,7 +53,7 @@ export class AdminEmailTemplateEditDialogComponent {
     public readonly isSendingTest = signal(false);
     public readonly testSendStatus = signal<'idle' | 'sent' | 'failed'>('idle');
     public readonly previewMode = signal<'html' | 'text'>('html');
-    public readonly previewHtml = signal<SafeHtml>('' as SafeHtml);
+    public readonly previewHtml = signal<SafeHtml>('');
     public readonly previewText = signal('');
     public readonly previewBrand = signal('FoodDiary');
     public readonly previewClientName = signal('Alex Johnson');

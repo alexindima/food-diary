@@ -42,7 +42,7 @@ export class AdminLessonEditDialogComponent {
     public readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
     public readonly isSaving = signal(false);
     public readonly showPreview = signal(false);
-    public readonly previewHtml = signal<SafeHtml>('' as SafeHtml);
+    public readonly previewHtml = signal<SafeHtml>('');
     public readonly contentLength = signal(this.data.content.length);
     public readonly contentMaxLength = CONTENT_MAX_LENGTH;
     public readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());

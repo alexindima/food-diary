@@ -2,18 +2,18 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { type ChartConfiguration } from 'chart.js';
+import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
-import {
-    type CreateWaistEntryPayload,
-    type UpdateWaistEntryPayload,
-    type WaistEntry,
-    type WaistEntryFilters,
-    type WaistEntrySummaryFilters,
-    type WaistEntrySummaryPoint,
+import type {
+    CreateWaistEntryPayload,
+    UpdateWaistEntryPayload,
+    WaistEntry,
+    WaistEntryFilters,
+    WaistEntrySummaryFilters,
+    WaistEntrySummaryPoint,
 } from '../models/waist-entry.data';
 
 export type WaistHistoryRange = 'week' | 'month' | 'year' | 'custom';
@@ -175,7 +175,7 @@ export class WaistHistoryFacade {
             return;
         }
 
-        if (customRange && customRange.start && customRange.end) {
+        if (customRange?.start && customRange.end) {
             this.loadEntries();
         }
     });
@@ -296,7 +296,7 @@ export class WaistHistoryFacade {
 
         if (value === 'custom') {
             const current = this.customRangeControl.value;
-            if (!current || !current.start || !current.end) {
+            if (!current?.start || !current.end) {
                 const end = new Date();
                 const start = new Date(end);
                 start.setMonth(start.getMonth() - 1);

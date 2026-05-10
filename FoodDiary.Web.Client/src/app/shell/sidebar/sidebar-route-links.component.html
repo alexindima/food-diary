@@ -7,7 +7,7 @@
         [class.is-pending]="pendingRoute() === item.route"
         (click)="itemSelected.emit(item)"
     >
-        <fd-ui-icon [name]="item.icon"></fd-ui-icon>
+        <fd-ui-icon [name]="item.icon" />
         <span class="fd-ui-action-text">{{ item.labelKey | translate }}</span>
     </a>
 }

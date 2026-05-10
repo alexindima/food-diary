@@ -16,7 +16,7 @@ import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveForm
 
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { type FdUiFieldSize } from '../types/field-size.type';
+import type { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 

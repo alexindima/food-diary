@@ -34,7 +34,7 @@ export class WeightSummaryCardComponent {
         if (!latest || !previous) {
             return {
                 label: this.translateService.instant('WEIGHT_CARD.NO_PREVIOUS'),
-                status: 'neutral' as TrendStatus,
+                status: 'neutral',
             };
         }
 
@@ -42,7 +42,7 @@ export class WeightSummaryCardComponent {
         if (Math.abs(diff) < 0.01) {
             return {
                 label: this.translateService.instant('WEIGHT_CARD.NO_CHANGE'),
-                status: 'neutral' as TrendStatus,
+                status: 'neutral',
             };
         }
 

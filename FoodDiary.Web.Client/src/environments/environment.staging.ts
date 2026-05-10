@@ -1,4 +1,4 @@
-import { type AppConfig } from '../app/types/app.data';
+import type { AppConfig } from '../app/types/app.data';
 
 const serverUrl = 'http://localhost:3000';
 

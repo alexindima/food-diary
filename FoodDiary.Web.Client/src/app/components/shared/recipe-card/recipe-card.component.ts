@@ -6,9 +6,9 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, of, switchMap } from 'rxjs';
 
-import { type QualityGrade } from '../../../features/products/models/product.data';
+import type { QualityGrade } from '../../../features/products/models/product.data';
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
-import { type FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
+import type { FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
 import { AuthService } from '../../../services/auth.service';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 

@@ -25,7 +25,7 @@
                             <button class="meals-preview__placeholder-main fd-row fd-min-w-0" type="button" (click)="add.emit(entry.slot)">
                                 <div class="meals-preview__placeholder-left fd-row fd-gap-card-content fd-min-w-0">
                                     <div class="meals-preview__placeholder-icon fd-place-center">
-                                        <fd-ui-icon [name]="entry.icon || 'restaurant_menu'"></fd-ui-icon>
+                                        <fd-ui-icon [name]="entry.icon || 'restaurant_menu'" />
                                     </div>
                                     <div class="meals-preview__placeholder-text fd-ui-body">
                                         {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}

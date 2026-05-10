@@ -35,7 +35,7 @@
                 class="sidebar__link sidebar__link--admin fd-grid fd-gap-xs fd-align-center"
                 (click)="onPrimaryAction(item.action)"
             >
-                <fd-ui-icon [name]="item.icon"></fd-ui-icon>
+                <fd-ui-icon [name]="item.icon" />
                 <span>{{ item.labelKey | translate }}</span>
             </button>
         }
@@ -44,7 +44,7 @@
     <div class="sidebar__section">
         <button class="sidebar__section-header fd-row fd-gap-xs fd-justify-between" type="button" (click)="toggleFoodTracking()">
             <span class="fd-ui-action-text">{{ 'SIDEBAR.FOOD_TRACKING' | translate }}</span>
-            <fd-ui-icon name="expand_more" [class.is-open]="isFoodTrackingOpen()"></fd-ui-icon>
+            <fd-ui-icon name="expand_more" [class.is-open]="isFoodTrackingOpen()" />
         </button>
         @if (isFoodTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary fd-grid fd-gap-xxs">
@@ -61,7 +61,7 @@
     <div class="sidebar__section">
         <button class="sidebar__section-header fd-row fd-gap-xs fd-justify-between" type="button" (click)="toggleBodyTracking()">
             <span class="fd-ui-action-text">{{ 'SIDEBAR.BODY_TRACKING' | translate }}</span>
-            <fd-ui-icon name="expand_more" [class.is-open]="isBodyTrackingOpen()"></fd-ui-icon>
+            <fd-ui-icon name="expand_more" [class.is-open]="isBodyTrackingOpen()" />
         </button>
         @if (isBodyTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary fd-grid fd-gap-xxs">
@@ -111,7 +111,7 @@
                         {{ userPlanLabelKey() | translate }}
                     </div>
                 </div>
-                <fd-ui-icon class="sidebar__user-arrow" name="expand_less" [class.is-open]="isUserMenuOpen()"></fd-ui-icon>
+                <fd-ui-icon class="sidebar__user-arrow" name="expand_less" [class.is-open]="isUserMenuOpen()" />
             </button>
 
             @if (isUserMenuOpen()) {
@@ -129,7 +129,7 @@
                         [class.is-pending]="pendingRoute() === '/profile'"
                         (click)="onDirectRouteClick('/profile')"
                     >
-                        <fd-ui-icon name="settings"></fd-ui-icon>
+                        <fd-ui-icon name="settings" />
                         <span>{{ 'HEADER.PROFILE' | translate }}</span>
                     </a>
                     <fd-ui-button
@@ -173,7 +173,7 @@
             [class.is-pending]="pendingRoute() === '/'"
             (click)="onDirectRouteClick('/', true); closeMobileMenus()"
         >
-            <fd-ui-icon name="dashboard"></fd-ui-icon>
+            <fd-ui-icon name="dashboard" />
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </a>
         <button
@@ -185,7 +185,7 @@
             [attr.aria-expanded]="isMobileFoodOpen()"
             (click)="toggleMobileFood(mobileFoodButton)"
         >
-            <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
+            <fd-ui-icon name="restaurant_menu" />
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.FOOD' | translate }}</span>
         </button>
         <button
@@ -197,7 +197,7 @@
             [attr.aria-expanded]="isMobileBodyOpen()"
             (click)="toggleMobileBody(mobileBodyButton)"
         >
-            <fd-ui-icon name="monitor_weight"></fd-ui-icon>
+            <fd-ui-icon name="monitor_weight" />
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.BODY' | translate }}</span>
         </button>
         <button
@@ -209,7 +209,7 @@
             [attr.aria-expanded]="isMobileReportsOpen()"
             (click)="toggleMobileReports(mobileReportsButton)"
         >
-            <fd-ui-icon name="bar_chart"></fd-ui-icon>
+            <fd-ui-icon name="bar_chart" />
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.REPORTS' | translate }}</span>
         </button>
         <button
@@ -221,7 +221,7 @@
             [attr.aria-expanded]="isMobileUserOpen()"
             (click)="toggleMobileUser(mobileUserButton)"
         >
-            <fd-ui-icon name="person"></fd-ui-icon>
+            <fd-ui-icon name="person" />
             @if (unreadNotificationCount() > 0) {
                 <span class="sidebar-mobile__item-dot" aria-hidden="true"></span>
             }
@@ -249,7 +249,7 @@
                         [class.is-pending]="pendingRoute() === '/profile'"
                         (click)="onDirectRouteClick('/profile'); closeMobileMenus()"
                     >
-                        <fd-ui-icon name="settings"></fd-ui-icon>
+                        <fd-ui-icon name="settings" />
                         <span class="fd-ui-action-text">{{ 'HEADER.PROFILE' | translate }}</span>
                     </a>
                     <fd-ui-button

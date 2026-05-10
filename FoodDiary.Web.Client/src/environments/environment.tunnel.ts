@@ -1,4 +1,4 @@
-import { type AppConfig } from '../app/types/app.data';
+import type { AppConfig } from '../app/types/app.data';
 
 const serverUrl = 'https://api-dev.fooddiary.club';
 

@@ -138,7 +138,7 @@
                     </div>
 
                     <div class="auth__social fd-stack fd-gap-xs">
-                        <div #googleLoginButton aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}" class="auth__google-button"></div>
+                        <div #googleLoginButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.LOGIN_BUTTON' | translate"></div>
                         @if (!googleReady()) {
                             <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
                                 {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}
@@ -216,11 +216,7 @@
                 </div>
 
                 <div class="auth__social fd-stack fd-gap-xs">
-                    <div
-                        #googleRegisterButton
-                        aria-label="{{ 'AUTH.GOOGLE.REGISTER_BUTTON' | translate }}"
-                        class="auth__google-button"
-                    ></div>
+                    <div #googleRegisterButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.REGISTER_BUTTON' | translate"></div>
                     @if (!googleReady()) {
                         <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
                             {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}

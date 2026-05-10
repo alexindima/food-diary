@@ -2,7 +2,7 @@ import { computed, inject, Injectable, resource } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { GamificationService } from '../api/gamification.service';
-import { type Badge, type GamificationData } from '../models/gamification.data';
+import type { Badge, GamificationData } from '../models/gamification.data';
 
 export interface BadgeDisplay extends Badge {
     icon: string;

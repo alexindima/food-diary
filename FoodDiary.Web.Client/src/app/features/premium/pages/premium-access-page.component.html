@@ -1,12 +1,12 @@
 <section fdPageContainer class="premium-access-page fd-stack">
-    <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate"></fd-page-header>
+    <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate" />
 
     @if (checkoutReturnState() === 'success') {
         <fd-notice-banner
             type="info"
             [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_TITLE' | translate"
             [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE' | translate"
-        ></fd-notice-banner>
+        />
     }
 
     @if (checkoutReturnState() === 'canceled') {
@@ -14,7 +14,7 @@
             type="warning"
             [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_TITLE' | translate"
             [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE' | translate"
-        ></fd-notice-banner>
+        />
     }
 
     @if (overviewCopyState().showCancelAtPeriodEndBanner) {
@@ -22,7 +22,7 @@
             type="warning"
             [title]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_TITLE' | translate"
             [message]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE' | translate"
-        ></fd-notice-banner>
+        />
     }
 
     @if (errorMessage(); as errorMessage) {
@@ -32,7 +32,7 @@
             [message]="errorMessage"
             [actionLabel]="'PREMIUM_PAGE.RETRY_ACTION' | translate"
             (action)="reloadOverviewAsync()"
-        ></fd-notice-banner>
+        />
     }
 
     <fd-ui-card class="premium-access-page__card premium-access-page__card--overview fd-grid fd-gap-card-profile">

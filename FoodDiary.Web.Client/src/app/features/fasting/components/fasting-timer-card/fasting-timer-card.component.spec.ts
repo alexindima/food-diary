@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../services/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
-import { type FastingSession } from '../../models/fasting.data';
+import type { FastingSession } from '../../models/fasting.data';
 import { FastingTimerCardComponent } from './fasting-timer-card.component';
 
 let localizationLanguage: string;

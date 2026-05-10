@@ -6,8 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { type User } from '../../../../shared/models/user.data';
-import { type AuthResponse } from '../../models/auth.data';
+import type { User } from '../../../../shared/models/user.data';
+import type { AuthResponse } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset.component';
 
 describe('PasswordResetComponent', () => {

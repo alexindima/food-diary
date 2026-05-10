@@ -2,17 +2,17 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { type ChartConfiguration } from 'chart.js';
+import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
-import {
-    type CreateWeightEntryPayload,
-    type WeightEntry,
-    type WeightEntryFilters,
-    type WeightEntrySummaryFilters,
-    type WeightEntrySummaryPoint,
+import type {
+    CreateWeightEntryPayload,
+    WeightEntry,
+    WeightEntryFilters,
+    WeightEntrySummaryFilters,
+    WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
 
 export type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
@@ -180,7 +180,7 @@ export class WeightHistoryFacade {
             return;
         }
 
-        if (customRange && customRange.start && customRange.end) {
+        if (customRange?.start && customRange.end) {
             this.loadEntries();
         }
     });
@@ -301,7 +301,7 @@ export class WeightHistoryFacade {
 
         if (value === 'custom') {
             const current = this.customRangeControl.value;
-            if (!current || !current.start || !current.end) {
+            if (!current?.start || !current.end) {
                 const end = new Date();
                 const start = new Date(end);
                 start.setMonth(start.getMonth() - 1);

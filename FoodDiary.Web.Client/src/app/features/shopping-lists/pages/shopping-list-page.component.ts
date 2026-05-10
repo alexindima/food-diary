@@ -19,10 +19,10 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../services/viewport.service';
-import { type FormGroupControls } from '../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListFacade } from '../lib/shopping-list.facade';
-import { type ShoppingListItem } from '../models/shopping-list.data';
+import type { ShoppingListItem } from '../models/shopping-list.data';
 
 @Component({
     selector: 'fd-shopping-list-page',

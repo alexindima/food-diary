@@ -119,7 +119,7 @@ export class SeoService {
         ];
 
         for (const alternate of alternates) {
-            let link = this.document.querySelector(`link[rel="alternate"][hreflang="${alternate.hreflang}"]`) as HTMLLinkElement | null;
+            let link = this.document.querySelector(`link[rel="alternate"][hreflang="${alternate.hreflang}"]`);
             if (!link) {
                 link = this.document.createElement('link');
                 link.setAttribute('rel', 'alternate');
@@ -132,7 +132,7 @@ export class SeoService {
     }
 
     private updateStructuredData(pageTitle: string, description: string, currentUrl: string, data: SeoData): void {
-        let script = this.document.querySelector(STRUCTURED_DATA_SELECTOR) as HTMLScriptElement | null;
+        let script = this.document.querySelector<HTMLScriptElement>(STRUCTURED_DATA_SELECTOR);
         if (!script) {
             script = this.document.createElement('script');
             script.type = 'application/ld+json';

@@ -30,8 +30,7 @@
                     [fdUiHint]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
                     [ariaLabel]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
                     (click)="toggleStepTitleEdit()"
-                >
-                </fd-ui-button>
+                />
             </div>
             <div class="recipe-step-card__header-actions fd-row fd-gap-xxs">
                 <fd-ui-button
@@ -42,8 +41,7 @@
                     [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"
-                >
-                </fd-ui-button>
+                />
                 <fd-ui-button type="button" variant="danger" fill="text" icon="delete" [disabled]="isFirst()" (click)="onRemoveStep()">
                     {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
                 </fd-ui-button>

@@ -16,7 +16,7 @@
             </div>
         </header>
 
-        <div aria-label="{{ 'FEATURES.CATEGORY_ARIA' | translate }}" class="features__category-strip fd-row fd-gap-sm" role="tablist">
+        <div class="features__category-strip fd-row fd-gap-sm" role="tablist" [aria-label]="'FEATURES.CATEGORY_ARIA' | translate">
             @for (category of categories; track category.key) {
                 <button
                     type="button"

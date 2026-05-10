@@ -7,7 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, of, switchMap } from 'rxjs';
 
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
-import { type FavoriteProduct, type QualityGrade } from '../../../features/products/models/product.data';
+import type { FavoriteProduct, QualityGrade } from '../../../features/products/models/product.data';
 import { AuthService } from '../../../services/auth.service';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 

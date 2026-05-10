@@ -1,4 +1,4 @@
-import { type Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { WeeklyCheckInPageComponent } from './pages/weekly-check-in-page.component';
 

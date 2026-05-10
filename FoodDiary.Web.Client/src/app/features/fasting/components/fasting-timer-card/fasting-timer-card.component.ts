@@ -8,7 +8,7 @@ import { DashboardWidgetFrameComponent } from '../../../../components/shared/das
 import { LocalizationService } from '../../../../services/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
-import { type FastingOccurrenceKind, type FastingSession } from '../../models/fasting.data';
+import type { FastingOccurrenceKind, FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from '../fasting-controls/fasting-controls.component';
 
 interface FastingTimerCardState {

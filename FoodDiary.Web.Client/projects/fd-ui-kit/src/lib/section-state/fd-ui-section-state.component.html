@@ -17,7 +17,7 @@
 
     @case ('error') {
         <div class="fd-ui-section-state__surface fd-ui-section-state__surface--error" role="alert">
-            <fd-ui-icon class="fd-ui-section-state__error-icon" [name]="errorIcon()"></fd-ui-icon>
+            <fd-ui-icon class="fd-ui-section-state__error-icon" [name]="errorIcon()" />
             <div class="fd-ui-section-state__error-title">{{ errorTitle() }}</div>
             <div class="fd-ui-section-state__error-message">{{ errorMessage() }}</div>
 

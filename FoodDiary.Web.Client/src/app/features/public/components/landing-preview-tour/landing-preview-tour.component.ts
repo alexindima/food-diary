@@ -13,7 +13,7 @@ import { RecipeCardComponent } from '../../../../components/shared/recipe-card/r
 import { AuthService } from '../../../../services/auth.service';
 import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
 import { type QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
-import { type Meal } from '../../../meals/models/meal.data';
+import type { Meal } from '../../../meals/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 

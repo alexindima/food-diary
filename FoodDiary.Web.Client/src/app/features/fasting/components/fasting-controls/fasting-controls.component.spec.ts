@@ -8,7 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../services/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
-import { type FastingProtocol, type FastingSession } from '../../models/fasting.data';
+import type { FastingProtocol, FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from './fasting-controls.component';
 
 describe('FastingControlsComponent', () => {

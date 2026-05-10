@@ -1,4 +1,4 @@
-import { type Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { WaistHistoryPageComponent } from './pages/waist-history-page.component';

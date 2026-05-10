@@ -1,4 +1,4 @@
-import { type FormArray, type FormControl, type FormGroup } from '@angular/forms';
+import type { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 type IsTuple<T> = T extends [infer _A, ...infer _B] | [] ? true : false;
 

@@ -121,7 +121,7 @@ describe('LocalizationService', () => {
     });
 
     it('should default to russian for the russian domain when no stored preference exists', async () => {
-        (mockDocument.location as Location).hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
+        mockDocument.location.hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
 
         await service.initializeLocalizationAsync();
 
@@ -130,7 +130,7 @@ describe('LocalizationService', () => {
 
     it('should prefer stored language over domain default', async () => {
         localStorage.setItem('fd_language', 'en');
-        (mockDocument.location as Location).hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
+        mockDocument.location.hostname = 'xn--b1adbcbrouc8l.xn--p1ai';
 
         await service.initializeLocalizationAsync();
 

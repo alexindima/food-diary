@@ -1,11 +1,11 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { type RecipeLikeStatus } from '../models/like.data';
+import type { RecipeLikeStatus } from '../models/like.data';
 
 @Injectable({
     providedIn: 'root',

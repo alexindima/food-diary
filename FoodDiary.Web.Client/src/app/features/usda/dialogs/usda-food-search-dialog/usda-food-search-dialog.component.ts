@@ -11,7 +11,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 
 import { UsdaService } from '../../api/usda.service';
-import { type UsdaFood } from '../../models/usda.data';
+import type { UsdaFood } from '../../models/usda.data';
 
 @Component({
     selector: 'fd-usda-food-search-dialog',

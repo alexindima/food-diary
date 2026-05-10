@@ -1,6 +1,6 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
-import { type FormGroup } from '@angular/forms';
+import type { FormGroup } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -14,7 +14,7 @@ import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 import { ConsumptionSourceType } from '../../models/meal.data';
-import { type ConsumptionItemFormData } from '../manage/base-meal-manage.types';
+import type { ConsumptionItemFormData } from '../manage/base-meal-manage.types';
 import {
     MealManualItemDialogComponent,
     type MealManualItemDialogData,

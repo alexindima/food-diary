@@ -1,8 +1,8 @@
 import { computed, type Signal } from '@angular/core';
 
-import { type WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
-import { type WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
-import { type WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
+import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
 import { getWeightTrendRange } from './dashboard-date.utils';
 
 type WeightTrendValuePoint = WeightTrendPoint & { value: number };
@@ -29,7 +29,7 @@ function buildFallbackTrend(latestValue: number | null, selectedDate: Date, tren
 }
 
 function computeTrendChange(series: WeightTrendPoint[]): number | null {
-    const ordered = [...series].sort((a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime());
+    const ordered = [...series].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     const first = ordered.find(hasTrendValue);
     const last = [...ordered].reverse().find(hasTrendValue);
 
@@ -42,7 +42,7 @@ function computeTrendChange(series: WeightTrendPoint[]): number | null {
 }
 
 function computeTrendCurrent(series: WeightTrendPoint[], fallbackValue: number | null): number | null {
-    const ordered = [...series].sort((a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime());
+    const ordered = [...series].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     const last = [...ordered].reverse().find(hasTrendValue);
     return last ? last.value : fallbackValue;
 }

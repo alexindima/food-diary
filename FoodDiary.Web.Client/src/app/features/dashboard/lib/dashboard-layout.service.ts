@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UserService } from '../../../shared/api/user.service';
-import { type DashboardLayoutSettings } from '../../../shared/models/user.data';
+import type { DashboardLayoutSettings } from '../../../shared/models/user.data';
 
 const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     web: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
@@ -130,7 +130,7 @@ export class DashboardLayoutService {
         const layout = this.layoutSettings();
         const fallback = DEFAULT_LAYOUT[key] ?? [];
         const configured = layout[key];
-        const values = configured && configured.length ? configured : fallback;
+        const values = configured?.length ? configured : fallback;
         return this.ensureSummary(values, fallback);
     }
 
@@ -143,7 +143,7 @@ export class DashboardLayoutService {
 
     private normalizeLayoutList(values: string[] | null | undefined, fallback: string[]): string[] {
         const allowed = new Set(fallback);
-        const source = values && values.length ? values : fallback;
+        const source = values?.length ? values : fallback;
         const filtered: string[] = [];
         for (const item of source) {
             if (allowed.has(item) && !filtered.includes(item)) {

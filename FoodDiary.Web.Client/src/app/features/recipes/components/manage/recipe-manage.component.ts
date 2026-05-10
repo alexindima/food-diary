@@ -6,33 +6,33 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { type NutrientData } from '../../../../shared/models/charts.data';
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { NutrientData } from '../../../../shared/models/charts.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
-import {
-    type CalorieMismatchWarning,
-    type IngredientFormData,
-    type IngredientFormValues,
-    type MacroBarState,
-    type MacroKey,
-    type NutritionMode,
-    type NutritionScaleMode,
-    type RecipeFormData,
-    type RecipeFormValues,
-    type StepFormData,
-    type StepFormValues,
+import type {
+    CalorieMismatchWarning,
+    IngredientFormData,
+    IngredientFormValues,
+    MacroBarState,
+    MacroKey,
+    NutritionMode,
+    NutritionScaleMode,
+    RecipeFormData,
+    RecipeFormValues,
+    StepFormData,
+    StepFormValues,
 } from './recipe-manage.types';
 import { RecipeStepsListComponent, type StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
 

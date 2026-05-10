@@ -5,7 +5,7 @@ import { FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
-import { type TdeeInsight } from '../../models/tdee-insight.data';
+import type { TdeeInsight } from '../../models/tdee-insight.data';
 
 @Component({
     selector: 'fd-tdee-insight-card',

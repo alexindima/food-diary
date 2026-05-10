@@ -1,4 +1,4 @@
-import { type Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { adminAuthGuard } from '../../guards/admin-auth.guard';
 import { AdminEmailTemplatesComponent } from './pages/admin-email-templates.component';

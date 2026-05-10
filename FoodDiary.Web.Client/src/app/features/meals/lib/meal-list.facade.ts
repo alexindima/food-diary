@@ -1,8 +1,8 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { type FdUiDateRangeValue } from 'fd-ui-kit';
+import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { toLocalDayEndIso, toLocalDayStartIso } from '../../../shared/lib/local-
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { FavoriteMealService } from '../api/favorite-meal.service';
 import { MealService } from '../api/meal.service';
-import { type FavoriteMeal, type Meal, type MealFilters } from '../models/meal.data';
+import type { FavoriteMeal, Meal, MealFilters } from '../models/meal.data';
 
 @Injectable()
 export class MealListFacade {

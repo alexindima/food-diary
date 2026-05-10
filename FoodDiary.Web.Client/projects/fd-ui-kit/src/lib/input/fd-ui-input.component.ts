@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { type FdUiFieldSize } from '../types/field-size.type';
+import type { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';

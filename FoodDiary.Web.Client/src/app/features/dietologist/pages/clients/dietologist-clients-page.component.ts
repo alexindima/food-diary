@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DietologistService } from '../../api/dietologist.service';
-import { type ClientSummary } from '../../models/dietologist.data';
+import type { ClientSummary } from '../../models/dietologist.data';
 
 interface ClientCardViewModel {
     client: ClientSummary;

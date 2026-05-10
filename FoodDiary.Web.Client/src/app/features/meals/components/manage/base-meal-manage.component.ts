@@ -1,4 +1,4 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -26,24 +26,24 @@ import {
 } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
-import { type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
 import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
-import { type AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
+import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { type UserAiUsageResponse } from '../../../../shared/models/ai.data';
-import { type NutrientData } from '../../../../shared/models/charts.data';
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
+import type { NutrientData } from '../../../../shared/models/charts.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
 import {
     type Consumption,
@@ -52,14 +52,14 @@ import {
     type ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
-import {
-    type CalorieMismatchWarning,
-    type ConsumptionFormData,
-    type ConsumptionItemFormData,
-    type MacroBarState,
-    type MacroKey,
-    type MealNutritionSummaryState,
-    type NutritionMode,
+import type {
+    CalorieMismatchWarning,
+    ConsumptionFormData,
+    ConsumptionItemFormData,
+    MacroBarState,
+    MacroKey,
+    MealNutritionSummaryState,
+    NutritionMode,
 } from './base-meal-manage.types';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
@@ -582,7 +582,7 @@ export class BaseMealManageComponent {
     // --- Private methods ---
 
     private resolvePresetMealType(): string | null {
-        const stateMealType = (this.router.getCurrentNavigation()?.extras.state as { mealType?: string } | undefined)?.mealType;
+        const stateMealType = this.router.getCurrentNavigation()?.extras.state?.mealType;
         const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
         return normalizeMealType(stateMealType ?? queryMealType);
     }

@@ -4,9 +4,9 @@ import { catchError, map, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
-import { type DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
+import type { DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
 import { ApiService } from '../../services/api.service';
-import { type NotificationPreferences, type WebPushSubscriptionItem } from '../../services/notification.service';
+import type { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {
     type ChangePasswordRequest,

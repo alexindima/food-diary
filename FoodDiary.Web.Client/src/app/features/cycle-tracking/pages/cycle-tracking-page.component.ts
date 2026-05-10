@@ -14,7 +14,7 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
-import { type CycleDay, type CyclePredictions, type CycleResponse } from '../models/cycle.data';
+import type { CycleDay, CyclePredictions, CycleResponse } from '../models/cycle.data';
 
 @Component({
     selector: 'fd-cycle-tracking-page',

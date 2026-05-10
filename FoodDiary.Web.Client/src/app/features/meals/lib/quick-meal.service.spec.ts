@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
-import { type Meal } from '../models/meal.data';
+import type { Meal } from '../models/meal.data';
 import { QuickMealService } from './quick-meal.service';
 
 describe('QuickMealService', () => {

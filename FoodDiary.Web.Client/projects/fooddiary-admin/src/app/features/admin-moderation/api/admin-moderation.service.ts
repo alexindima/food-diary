@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { type AdminContentReport, type AdminReportAction } from '../models/admin-moderation.data';
+import type { AdminContentReport, AdminReportAction } from '../models/admin-moderation.data';
 
 export type PagedResponse<T> = {
     items: T[];

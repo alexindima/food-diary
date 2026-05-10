@@ -16,12 +16,12 @@ import {
     type ItemSelectDialogData,
     type ItemSelection,
 } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
-import { type Product } from '../../../../products/models/product.data';
-import { type Recipe } from '../../../../recipes/models/recipe.data';
+import type { Product } from '../../../../products/models/product.data';
+import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { MealManageFacade } from '../../../lib/meal-manage.facade';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import { type ConsumptionItemFormData } from '../base-meal-manage.types';
+import type { ConsumptionItemFormData } from '../base-meal-manage.types';
 
 export type MealManualItemDialogData = {
     group: FormGroup<ConsumptionItemFormData>;

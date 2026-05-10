@@ -2,7 +2,7 @@ import { computed, inject, Injectable, resource } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
-import { type WeeklyCheckInData } from '../models/weekly-check-in.data';
+import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
 
 @Injectable()
 export class WeeklyCheckInFacade {

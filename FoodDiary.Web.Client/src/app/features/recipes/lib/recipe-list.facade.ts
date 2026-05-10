@@ -1,4 +1,4 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -8,8 +8,8 @@ import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';
-import { type RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
-import { type FavoriteRecipe, type Recipe, type RecipeFilters } from '../models/recipe.data';
+import type { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
+import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
 @Injectable()
 export class RecipeListFacade {

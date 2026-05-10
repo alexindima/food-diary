@@ -11,8 +11,8 @@ import {
     type NutritionControlNames,
     NutritionEditorComponent,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { type Consumption } from '../../../models/meal.data';
-import { type CalorieMismatchWarning, type ConsumptionFormData, type MacroBarState, type NutritionMode } from '../base-meal-manage.types';
+import type { Consumption } from '../../../models/meal.data';
+import type { CalorieMismatchWarning, ConsumptionFormData, MacroBarState, NutritionMode } from '../base-meal-manage.types';
 
 @Component({
     selector: 'fd-meal-nutrition-sidebar',

@@ -1,6 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
-import { type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -50,7 +49,7 @@ describe('FdUiDialogService', () => {
         });
 
         const service = TestBed.inject(FdUiDialogService);
-        service.open(DummyDialogComponent as Type<DummyDialogComponent>, { preset: 'detail' });
+        service.open(DummyDialogComponent, { preset: 'detail' });
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(open.mock.calls[0][1].panelClass).toContain('fd-ui-dialog-panel--detail');
@@ -74,7 +73,7 @@ describe('FdUiDialogService', () => {
         });
 
         const service = TestBed.inject(FdUiDialogService);
-        service.open(DummyDialogComponent as Type<DummyDialogComponent>, { preset: 'fullscreen' });
+        service.open(DummyDialogComponent, { preset: 'fullscreen' });
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(open.mock.calls[0][1].panelClass).toContain('fd-ui-dialog-panel--fullscreen');
@@ -97,7 +96,7 @@ describe('FdUiDialogService', () => {
         });
 
         const service = TestBed.inject(FdUiDialogService);
-        service.open(DummyDialogComponent as Type<DummyDialogComponent>, { size: 'xl' });
+        service.open(DummyDialogComponent, { size: 'xl' });
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(open.mock.calls[0][1].panelClass).toContain('fd-ui-dialog-panel--xl');
@@ -119,7 +118,7 @@ describe('FdUiDialogService', () => {
         });
 
         const service = TestBed.inject(FdUiDialogService);
-        service.open(DummyDialogComponent as Type<DummyDialogComponent>);
+        service.open(DummyDialogComponent);
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(open.mock.calls[0][1].autoFocus).toBe('first-tabbable');
@@ -141,7 +140,7 @@ describe('FdUiDialogService', () => {
         });
 
         const service = TestBed.inject(FdUiDialogService);
-        service.open(DummyDialogComponent as Type<DummyDialogComponent>);
+        service.open(DummyDialogComponent);
 
         expect(strategy.centerHorizontally).toHaveBeenCalledTimes(1);
         expect(strategy.top).toHaveBeenCalledWith('40px');
@@ -165,7 +164,7 @@ describe('FdUiDialogService', () => {
         });
 
         const service = TestBed.inject(FdUiDialogService);
-        service.open(DummyDialogComponent as Type<DummyDialogComponent>);
+        service.open(DummyDialogComponent);
 
         expect(strategy.centerHorizontally).toHaveBeenCalledTimes(1);
         expect(strategy.bottom).toHaveBeenCalledWith('0');

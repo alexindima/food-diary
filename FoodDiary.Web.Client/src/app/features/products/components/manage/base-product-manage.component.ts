@@ -1,4 +1,4 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -17,16 +17,16 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { catchError, debounceTime, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
-import { type ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import type { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     calculateCalorieMismatchWarning,
@@ -35,9 +35,9 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { UsdaService } from '../../../usda/api/usda.service';
-import { type Micronutrient, type UsdaFoodDetail } from '../../../usda/models/usda.data';
+import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
 import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
 import {

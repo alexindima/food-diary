@@ -3,13 +3,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { CyclesService } from '../api/cycles.service';
-import {
-    type CreateCyclePayload,
-    type CycleDay,
-    type CyclePredictions,
-    type CycleResponse,
-    type DailySymptoms,
-} from '../models/cycle.data';
+import type { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
 
 @Injectable()
 export class CycleTrackingFacade {

@@ -17,9 +17,9 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail.component';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
-import { type Recipe } from '../../../recipes/models/recipe.data';
+import type { Recipe } from '../../../recipes/models/recipe.data';
 import { ExploreService } from '../../api/explore.service';
-import { type ExploreFilters, type ExploreRecipe } from '../../models/explore.data';
+import type { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
 
 @Component({
     selector: 'fd-explore-page',
@@ -86,7 +86,7 @@ export class ExplorePageComponent {
     public onRecipeClick(recipe: ExploreRecipe): void {
         this.fdDialogService.open<RecipeDetailComponent, Recipe>(RecipeDetailComponent, {
             preset: 'detail',
-            data: recipe as Recipe,
+            data: recipe,
         });
     }
 

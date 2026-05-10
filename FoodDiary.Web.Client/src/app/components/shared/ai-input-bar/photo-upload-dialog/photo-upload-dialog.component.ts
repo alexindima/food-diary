@@ -5,7 +5,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ImageUploadFieldComponent } from '../../image-upload-field/image-upload-field.component';
 
 @Component({

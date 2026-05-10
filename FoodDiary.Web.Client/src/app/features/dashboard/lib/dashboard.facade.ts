@@ -4,13 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { auditTime, fromEvent } from 'rxjs';
 
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { type CycleResponse } from '../../cycle-tracking/models/cycle.data';
-import { type FastingSession } from '../../fasting/models/fasting.data';
+import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
+import type { FastingSession } from '../../fasting/models/fasting.data';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
-import { type Meal } from '../../meals/models/meal.data';
+import type { Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
-import { type DashboardSnapshot } from '../models/dashboard.data';
+import type { DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import {

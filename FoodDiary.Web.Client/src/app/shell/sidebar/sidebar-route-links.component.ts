@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
-import { type SidebarRouteItem } from './sidebar.models';
+import type { SidebarRouteItem } from './sidebar.models';
 
 @Component({
     selector: 'fd-sidebar-route-links',

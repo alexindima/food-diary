@@ -122,7 +122,7 @@ function installCssParseStderrFilter(): void {
         return;
     }
 
-    const originalWrite = stderr.write.bind(stderr) as (...args: unknown[]) => unknown;
+    const originalWrite = stderr.write.bind(stderr);
     const decoder = new TextDecoder();
 
     const filteredWrite = (...args: unknown[]): boolean => {
@@ -138,5 +138,5 @@ function installCssParseStderrFilter(): void {
         return Boolean(originalWrite(...args));
     };
 
-    stderr.write = filteredWrite as typeof stderr.write;
+    stderr.write = filteredWrite;
 }

@@ -1,5 +1,5 @@
 <div class="fd-error-state fd-stack fd-center fd-gap-xs">
-    <fd-ui-icon class="fd-error-state__icon" [name]="icon()"></fd-ui-icon>
+    <fd-ui-icon class="fd-error-state__icon" [name]="icon()" />
     <div class="fd-error-state__title fd-ui-card-title">{{ titleKey() | translate }}</div>
     <div class="fd-error-state__message fd-ui-body-sm">{{ messageKey() | translate }}</div>
     @if (showRetry()) {

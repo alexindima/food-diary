@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { type CanDeactivateFn } from '@angular/router';
+import type { CanDeactivateFn } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { from, isObservable, type Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {
     const dialogService = inject(FdUiDialogService);
     const handler = unsavedChangesService.getHandler();
 
-    if (!handler || !handler.hasChanges()) {
+    if (!handler?.hasChanges()) {
         return true;
     }
 

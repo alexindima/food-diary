@@ -1,4 +1,4 @@
-import { type ChartConfiguration, type ChartOptions } from 'chart.js';
+import type { ChartConfiguration, ChartOptions } from 'chart.js';
 
 /**
  * Converts a hex color string to an rgba string with the given alpha.

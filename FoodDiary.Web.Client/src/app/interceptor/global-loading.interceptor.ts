@@ -1,4 +1,4 @@
-import { type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest } from '@angular/common/http';
+import type { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { finalize, type Observable } from 'rxjs';
 

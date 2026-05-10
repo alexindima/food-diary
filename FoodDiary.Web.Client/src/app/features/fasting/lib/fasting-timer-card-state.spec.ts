@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type FastingSession } from '../models/fasting.data';
+import type { FastingSession } from '../models/fasting.data';
 import {
     buildFastingTimerCardComputedState,
     formatFastingDuration,

@@ -8,7 +8,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
-import { type MealPlan, type MealPlanDay, type MealPlanMeal } from '../../models/meal-plan.data';
+import type { MealPlan, MealPlanDay, MealPlanMeal } from '../../models/meal-plan.data';
 
 @Component({
     selector: 'fd-meal-plan-detail-page',

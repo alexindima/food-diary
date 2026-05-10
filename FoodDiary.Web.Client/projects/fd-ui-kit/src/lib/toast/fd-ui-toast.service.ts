@@ -1,4 +1,4 @@
-import { type AriaLivePoliteness } from '@angular/cdk/a11y';
+import type { AriaLivePoliteness } from '@angular/cdk/a11y';
 import { computed, Injectable, signal } from '@angular/core';
 import { type Observable, Subject } from 'rxjs';
 

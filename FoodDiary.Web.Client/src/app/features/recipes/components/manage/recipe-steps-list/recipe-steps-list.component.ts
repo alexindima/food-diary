@@ -4,8 +4,8 @@ import { type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/fo
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import { type FormGroupControls } from '../../../../../shared/lib/common.data';
-import { type StepFormData, type StepFormValues } from '../recipe-manage.types';
+import type { FormGroupControls } from '../../../../../shared/lib/common.data';
+import type { StepFormData, StepFormValues } from '../recipe-manage.types';
 import { RecipeStepCardComponent } from '../recipe-step-card/recipe-step-card.component';
 
 export interface StepIngredientEvent {

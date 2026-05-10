@@ -91,7 +91,7 @@ describe('FdUiToastService', () => {
         ref.onAction().subscribe(actionSpy);
         ref.afterDismissed().subscribe(dismissedSpy);
 
-        service.triggerAction(service.toasts()[0]!.id);
+        service.triggerAction(service.toasts()[0].id);
         vi.advanceTimersByTime(200);
 
         expect(actionSpy).toHaveBeenCalledTimes(1);

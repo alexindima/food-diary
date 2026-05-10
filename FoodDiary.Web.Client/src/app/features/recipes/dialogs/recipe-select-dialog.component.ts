@@ -23,12 +23,12 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
-import { type FormGroupControls } from '../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../shared/lib/common.data';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { RecipeService } from '../api/recipe.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
 import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
-import { type Recipe, type RecipeFilters } from '../models/recipe.data';
+import type { Recipe, RecipeFilters } from '../models/recipe.data';
 
 interface RecipeSelectItemViewModel {
     recipe: Recipe;

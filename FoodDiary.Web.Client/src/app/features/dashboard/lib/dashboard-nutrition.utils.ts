@@ -1,9 +1,9 @@
 import { computed, type Signal } from '@angular/core';
 
-import { type NutrientBar } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import { type MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
-import { type Meal } from '../../meals/models/meal.data';
-import { type DashboardSnapshot } from '../models/dashboard.data';
+import type { NutrientBar } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
+import type { Meal } from '../../meals/models/meal.data';
+import type { DashboardSnapshot } from '../models/dashboard.data';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 

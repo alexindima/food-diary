@@ -1,11 +1,11 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { type CreateHydrationEntryPayload, type HydrationDaily, type HydrationEntry } from '../models/hydration.data';
+import type { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../models/hydration.data';
 
 @Injectable({
     providedIn: 'root',

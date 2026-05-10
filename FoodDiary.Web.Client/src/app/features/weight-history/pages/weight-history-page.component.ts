@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { type ChartConfiguration } from 'chart.js';
+import type { ChartConfiguration } from 'chart.js';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { type FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -17,7 +17,7 @@ import { PeriodFilterComponent } from '../../../components/shared/period-filter/
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { WeightHistoryFacade } from '../lib/weight-history.facade';
-import { type WeightEntry } from '../models/weight-entry.data';
+import type { WeightEntry } from '../models/weight-entry.data';
 
 @Component({
     selector: 'fd-weight-history-page',

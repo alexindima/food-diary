@@ -2,14 +2,14 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { type ChartConfiguration } from 'chart.js';
+import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
-import { type WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
-import { type WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
 import { type MappedStatistics, StatisticsMapper } from '../models/statistics.data';
 import {
@@ -146,7 +146,7 @@ export class StatisticsFacade {
             return;
         }
 
-        if (customRange && customRange.start && customRange.end) {
+        if (customRange?.start && customRange.end) {
             this.loadAllData();
         }
     });
@@ -170,7 +170,7 @@ export class StatisticsFacade {
         this.selectedRange.set(value);
 
         const current = this.customRangeControl.value;
-        if (!current || !current.start || !current.end) {
+        if (!current?.start || !current.end) {
             const end = new Date();
             const start = new Date(end);
             start.setMonth(start.getMonth() - 1);
@@ -298,7 +298,7 @@ export class StatisticsFacade {
 
     private getDateLabelFormatter(): Intl.DateTimeFormat {
         const locale = this.getCurrentLocale();
-        if (!this.dateLabelFormatterCache || this.dateLabelFormatterCache.locale !== locale) {
+        if (this.dateLabelFormatterCache?.locale !== locale) {
             this.dateLabelFormatterCache = {
                 locale,
                 formatter: new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }),

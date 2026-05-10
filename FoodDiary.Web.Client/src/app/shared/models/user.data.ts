@@ -1,4 +1,4 @@
-import { type ImageSelection } from './image-upload.data';
+import type { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
 export type UiStyleOption = 'classic' | 'modern';
@@ -110,7 +110,7 @@ export class UpdateUserDto {
         this.socialPushNotificationsEnabled = normalizeBoolean(
             (formValues as { socialPushNotificationsEnabled?: boolean | null }).socialPushNotificationsEnabled,
         );
-        const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
+        const normalizedImage = normalizeProfileImage(formValues.profileImage);
         this.profileImage = normalizedImage?.url;
         this.profileImageAssetId = normalizedImage?.assetId;
     }

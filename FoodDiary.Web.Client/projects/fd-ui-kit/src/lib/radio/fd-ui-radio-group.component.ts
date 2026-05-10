@@ -101,6 +101,6 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     }
 
     protected trackByValue(_: number, option: FdUiRadioOption<T>): unknown {
-        return option.value as unknown;
+        return option.value;
     }
 }

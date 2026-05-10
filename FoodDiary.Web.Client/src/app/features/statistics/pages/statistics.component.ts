@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
-import { type FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { finalize } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';

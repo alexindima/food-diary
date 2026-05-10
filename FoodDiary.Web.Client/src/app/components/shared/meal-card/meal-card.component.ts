@@ -8,7 +8,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, of, switchMap } from 'rxjs';
 
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
-import { type QualityGrade } from '../../../features/products/models/product.data';
+import type { QualityGrade } from '../../../features/products/models/product.data';
 import { AuthService } from '../../../services/auth.service';
 import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
 import { type EntityCardCollageImage, EntityCardComponent } from '../entity-card/entity-card.component';

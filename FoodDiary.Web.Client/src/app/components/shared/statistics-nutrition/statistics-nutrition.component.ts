@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { type ChartConfiguration, type ChartOptions } from 'chart.js';
+import type { ChartConfiguration, ChartOptions } from 'chart.js';
 import { FdUiSectionStateComponent } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';

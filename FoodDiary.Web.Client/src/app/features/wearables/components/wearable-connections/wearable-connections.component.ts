@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { WearableService } from '../../api/wearable.service';
-import { type WearableConnection, type WearableProvider } from '../../models/wearable.data';
+import type { WearableConnection, WearableProvider } from '../../models/wearable.data';
 
 interface ProviderConfig {
     id: WearableProvider;

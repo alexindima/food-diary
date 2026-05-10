@@ -68,7 +68,7 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
         }
     }
 
-    const currentStage = applicableStages[currentIndex] as FastingStageDefinition;
+    const currentStage = applicableStages[currentIndex];
     const nextStage = (applicableStages as readonly (FastingStageDefinition | undefined)[])[currentIndex + 1] ?? null;
 
     return {

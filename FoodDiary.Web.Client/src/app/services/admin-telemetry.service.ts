@@ -3,7 +3,7 @@ import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { fallbackApiError } from '../shared/lib/api-error.utils';
-import { type FastingTelemetrySummary } from '../shared/models/admin-telemetry.data';
+import type { FastingTelemetrySummary } from '../shared/models/admin-telemetry.data';
 import { ApiService } from './api.service';
 
 @Injectable({

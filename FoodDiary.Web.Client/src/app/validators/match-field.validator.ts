@@ -1,4 +1,4 @@
-import { type AbstractControl, type ValidationErrors, type ValidatorFn } from '@angular/forms';
+import type { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function matchFieldValidator(matchTo: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {

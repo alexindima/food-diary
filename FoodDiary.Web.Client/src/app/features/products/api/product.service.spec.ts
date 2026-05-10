@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { type PageOf } from '../../../shared/models/page-of.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import {
     type CreateProductRequest,
     MeasurementUnit,

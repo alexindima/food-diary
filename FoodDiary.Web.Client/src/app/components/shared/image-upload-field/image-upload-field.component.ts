@@ -21,7 +21,7 @@ import { finalize, map, switchMap } from 'rxjs/operators';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import { type ImageSelection } from '../../../shared/models/image-upload.data';
+import type { ImageSelection } from '../../../shared/models/image-upload.data';
 
 @Component({
     selector: 'fd-image-upload-field',

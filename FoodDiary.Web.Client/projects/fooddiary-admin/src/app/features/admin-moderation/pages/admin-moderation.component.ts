@@ -11,7 +11,7 @@ import {
     type AdminModerationActionDialogData,
     type AdminModerationActionDialogResult,
 } from '../dialogs/admin-moderation-action-dialog.component';
-import { type AdminContentReport } from '../models/admin-moderation.data';
+import type { AdminContentReport } from '../models/admin-moderation.data';
 
 interface AdminContentReportViewModel extends AdminContentReport {
     targetIdShort: string;

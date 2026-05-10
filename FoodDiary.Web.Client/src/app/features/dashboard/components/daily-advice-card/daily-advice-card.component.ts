@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
-import { type DailyAdvice } from '../../models/daily-advice.data';
+import type { DailyAdvice } from '../../models/daily-advice.data';
 
 @Component({
     selector: 'fd-daily-advice-card',

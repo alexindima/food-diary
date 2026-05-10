@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
-import { type FoodNutritionResponse, type FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import { MealDetailsFieldsComponent } from '../../meal-details-fields/meal-details-fields.component';
-import { type AiInputBarMealDetails } from '../ai-input-bar.types';
+import type { AiInputBarMealDetails } from '../ai-input-bar.types';
 
 type EditableAiItem = {
     id: string;

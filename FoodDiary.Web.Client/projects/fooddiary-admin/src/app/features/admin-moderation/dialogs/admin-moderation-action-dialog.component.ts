@@ -8,7 +8,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
 import { AdminModerationService } from '../api/admin-moderation.service';
-import { type AdminContentReport } from '../models/admin-moderation.data';
+import type { AdminContentReport } from '../models/admin-moderation.data';
 
 export type AdminModerationActionDialogData = {
     report: AdminContentReport;

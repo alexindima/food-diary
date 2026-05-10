@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { RecipeManageComponent } from '../../components/manage/recipe-manage.component';
-import { type Recipe } from '../../models/recipe.data';
+import type { Recipe } from '../../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-edit',

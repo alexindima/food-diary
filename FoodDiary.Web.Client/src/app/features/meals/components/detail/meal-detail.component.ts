@@ -25,7 +25,7 @@ import {
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import { type ConsumptionAiItem, type Meal } from '../../models/meal.data';
+import type { ConsumptionAiItem, Meal } from '../../models/meal.data';
 
 @Component({
     selector: 'fd-meal-detail',

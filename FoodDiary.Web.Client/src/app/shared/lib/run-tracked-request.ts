@@ -1,4 +1,4 @@
-import { type DestroyRef, type WritableSignal } from '@angular/core';
+import type { DestroyRef, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, type Observable, type PartialObserver } from 'rxjs';
 

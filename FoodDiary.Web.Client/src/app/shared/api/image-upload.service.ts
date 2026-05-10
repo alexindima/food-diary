@@ -5,7 +5,7 @@ import { catchError, map, type Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { rethrowApiError } from '../lib/api-error.utils';
-import { type ImageUploadUrlResponse } from '../models/image-upload.data';
+import type { ImageUploadUrlResponse } from '../models/image-upload.data';
 
 @Injectable({
     providedIn: 'root',

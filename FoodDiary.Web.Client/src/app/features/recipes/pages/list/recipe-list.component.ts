@@ -28,7 +28,7 @@ import { RecipeCardComponent, type RecipeFavoriteChange } from '../../../../comp
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import type { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
@@ -38,7 +38,7 @@ import {
 } from '../../components/list/recipe-list-filters-dialog.component';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import { type FavoriteRecipe, type Recipe, type RecipeVisibility } from '../../models/recipe.data';
+import type { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
 
 interface RecipeCardViewModel {
     recipe: Recipe;

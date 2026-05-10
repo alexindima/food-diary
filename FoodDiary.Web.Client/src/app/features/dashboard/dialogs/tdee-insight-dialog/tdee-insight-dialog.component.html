@@ -3,7 +3,7 @@
         <section class="tdee-dialog__summary fd-stack fd-gap-sm" aria-labelledby="tdee-dialog-summary-title">
             <div class="tdee-dialog__summary-header fd-row fd-align-start fd-gap-sm">
                 <span class="tdee-dialog__summary-icon fd-inline-center" aria-hidden="true">
-                    <fd-ui-icon name="local_fire_department"></fd-ui-icon>
+                    <fd-ui-icon name="local_fire_department" />
                 </span>
                 <div class="tdee-dialog__summary-copy fd-stack fd-gap-xxs fd-min-w-0">
                     <div id="tdee-dialog-summary-title" class="tdee-dialog__state fd-ui-overline">
@@ -24,11 +24,11 @@
             @if (insight) {
                 <div class="tdee-dialog__confidence fd-row fd-wrap fd-gap-xs">
                     <span class="tdee-dialog__pill fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                        <fd-ui-icon name="verified"></fd-ui-icon>
+                        <fd-ui-icon name="verified" />
                         {{ confidenceKey | translate }}
                     </span>
                     <span class="tdee-dialog__pill fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                        <fd-ui-icon name="calendar_month"></fd-ui-icon>
+                        <fd-ui-icon name="calendar_month" />
                         {{ 'TDEE_DIALOG.DATA_DAYS' | translate: { days: insight.dataDaysUsed } }}
                     </span>
                 </div>
@@ -93,7 +93,7 @@
                         [class.tdee-dialog__setup-item--complete]="item.complete"
                     >
                         <span class="tdee-dialog__setup-icon fd-inline-center" aria-hidden="true">
-                            <fd-ui-icon [name]="item.complete ? 'check_circle' : item.icon"></fd-ui-icon>
+                            <fd-ui-icon [name]="item.complete ? 'check_circle' : item.icon" />
                         </span>
                         <div class="tdee-dialog__setup-copy fd-stack fd-gap-xxs fd-min-w-0">
                             <div class="tdee-dialog__setup-title fd-ui-action-text">{{ item.titleKey | translate }}</div>
@@ -106,7 +106,7 @@
 
         @if (hintKey || showSuggestion) {
             <section class="tdee-dialog__hint fd-row fd-align-start fd-gap-sm">
-                <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
+                <fd-ui-icon name="tips_and_updates" />
                 <div class="tdee-dialog__hint-copy fd-stack fd-gap-xxs">
                     @if (hintKey) {
                         <p class="tdee-dialog__hint-text fd-ui-body-sm">{{ hintKey | translate }}</p>

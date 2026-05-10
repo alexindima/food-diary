@@ -1,4 +1,4 @@
-import { type Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { CycleTrackingPageComponent } from './pages/cycle-tracking-page.component';
 

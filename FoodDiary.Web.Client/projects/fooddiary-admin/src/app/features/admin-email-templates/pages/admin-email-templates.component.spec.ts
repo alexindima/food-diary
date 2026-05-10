@@ -4,7 +4,7 @@ import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
-import { type AdminEmailTemplate } from '../models/admin-email-template.data';
+import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates.component';
 
 describe('AdminEmailTemplatesComponent', () => {

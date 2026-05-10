@@ -1,4 +1,4 @@
-import { type HttpErrorResponse, type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest } from '@angular/common/http';
+import type { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable, switchMap, throwError } from 'rxjs';
 

@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { type Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import {
-    type AdminEmailTemplate,
-    type AdminEmailTemplateTestRequest,
-    type AdminEmailTemplateUpsertRequest,
+import type {
+    AdminEmailTemplate,
+    AdminEmailTemplateTestRequest,
+    AdminEmailTemplateUpsertRequest,
 } from '../models/admin-email-template.data';
 
 @Injectable({ providedIn: 'root' })

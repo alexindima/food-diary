@@ -30,7 +30,7 @@ import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
-import { type SidebarActionItem, type SidebarNavItem, type SidebarRouteItem } from './sidebar.models';
+import type { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
 import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
 
 const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
@@ -434,7 +434,7 @@ export class SidebarComponent {
 
     private async confirmUnsavedChangesAsync(): Promise<boolean> {
         const handler = this.unsavedChangesService.getHandler();
-        if (!handler || !handler.hasChanges()) {
+        if (!handler?.hasChanges()) {
             return true;
         }
 

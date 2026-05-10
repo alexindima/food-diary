@@ -16,5 +16,5 @@ export function rethrowApiError(message: string, error: unknown): Observable<nev
 
 export function fallbackApiError<T>(message: string, error: unknown, fallbackValue: T): Observable<T> {
     logApiError(message, error);
-    return of(fallbackValue) as Observable<T>;
+    return of(fallbackValue);
 }

@@ -4,13 +4,13 @@ import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
-import {
-    type FoodNutritionRequest,
-    type FoodNutritionResponse,
-    type FoodTextRequest,
-    type FoodVisionRequest,
-    type FoodVisionResponse,
-    type UserAiUsageResponse,
+import type {
+    FoodNutritionRequest,
+    FoodNutritionResponse,
+    FoodTextRequest,
+    FoodVisionRequest,
+    FoodVisionResponse,
+    UserAiUsageResponse,
 } from '../models/ai.data';
 
 @Injectable({ providedIn: 'root' })

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { type PreloadingStrategy, type Route } from '@angular/router';
+import type { PreloadingStrategy, Route } from '@angular/router';
 import { EMPTY, from, type Observable, switchMap } from 'rxjs';
 
 import { AuthService } from './auth.service';

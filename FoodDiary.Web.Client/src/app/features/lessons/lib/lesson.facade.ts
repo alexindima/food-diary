@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import { LessonService } from '../api/lesson.service';
-import { type LessonDetail, type LessonSummary } from '../models/lesson.data';
+import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 
 @Injectable()
 export class LessonFacade {

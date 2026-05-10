@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, InjectionToken, input, signal } from '@angular/core';
-import { type AbstractControl } from '@angular/forms';
+import type { AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { merge } from 'rxjs';
 

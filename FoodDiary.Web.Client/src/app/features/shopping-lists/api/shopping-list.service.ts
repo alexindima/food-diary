@@ -1,16 +1,11 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import {
-    type ShoppingList,
-    type ShoppingListCreateDto,
-    type ShoppingListSummary,
-    type ShoppingListUpdateDto,
-} from '../models/shopping-list.data';
+import type { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
 
 @Injectable({
     providedIn: 'root',

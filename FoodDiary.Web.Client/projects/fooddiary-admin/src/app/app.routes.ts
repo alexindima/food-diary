@@ -1,4 +1,4 @@
-import { type Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.routes';
 import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';

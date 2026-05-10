@@ -24,7 +24,7 @@ import {
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
-import { type Recipe } from '../../models/recipe.data';
+import type { Recipe } from '../../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-detail',

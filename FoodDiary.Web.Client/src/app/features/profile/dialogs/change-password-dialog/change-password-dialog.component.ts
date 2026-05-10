@@ -11,8 +11,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { UserService } from '../../../../shared/api/user.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
-import { type ChangePasswordRequest, type SetPasswordRequest } from '../../../../shared/models/user.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 
 export interface ChangePasswordDialogData {

@@ -4,12 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import {
-    type ShoppingList,
-    type ShoppingListCreateDto,
-    type ShoppingListSummary,
-    type ShoppingListUpdateDto,
-} from '../models/shopping-list.data';
+import type { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
 import { ShoppingListService } from './shopping-list.service';
 
 describe('ShoppingListService', () => {

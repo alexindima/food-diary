@@ -74,7 +74,7 @@
                 @for (item of editItems(); track item.id; let i = $index) {
                     <div class="ai-photo-result__edit-row fd-gap-xs" cdkDrag>
                         <div class="ai-photo-result__edit-handle fd-inline-center" cdkDragHandle>
-                            <fd-ui-icon name="drag_indicator"></fd-ui-icon>
+                            <fd-ui-icon name="drag_indicator" />
                         </div>
                         <input
                             #nameInput
@@ -150,7 +150,7 @@
                 @if (showDetails()) {
                     <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="toggleDetails()">
                         <span>{{ detailsToggleView().labelKey | translate }}</span>
-                        <fd-ui-icon [name]="detailsToggleView().icon"></fd-ui-icon>
+                        <fd-ui-icon [name]="detailsToggleView().icon" />
                     </fd-ui-button>
                 } @else {
                     <span></span>

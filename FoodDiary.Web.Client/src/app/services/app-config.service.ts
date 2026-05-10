@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable, tap } from 'rxjs';
 
 import { rethrowApiError } from '../shared/lib/api-error.utils';
-import { type AppConfig } from '../types/app.data';
+import type { AppConfig } from '../types/app.data';
 
 @Injectable({
     providedIn: 'root',

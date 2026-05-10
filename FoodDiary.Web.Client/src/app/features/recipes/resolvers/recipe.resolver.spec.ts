@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { type ActivatedRouteSnapshot, type RouterStateSnapshot } from '@angular/router';
+import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { RecipeService } from '../api/recipe.service';
-import { type Recipe } from '../models/recipe.data';
+import type { Recipe } from '../models/recipe.data';
 import { recipeResolver } from './recipe.resolver';
 
 describe('recipeResolver', () => {

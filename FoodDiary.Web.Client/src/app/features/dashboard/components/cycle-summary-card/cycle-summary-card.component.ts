@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
-import { type CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
+import type { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 
 @Component({
     selector: 'fd-cycle-summary-card',

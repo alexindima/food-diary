@@ -70,9 +70,9 @@
                                         </div>
                                         <div class="goals__knob" aria-hidden="true"></div>
                                         <input
-                                            aria-label="{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}"
                                             class="goals__range"
                                             type="range"
+                                            [aria-label]="'GOALS_PAGE.DAILY_TARGET' | translate"
                                             [min]="minCalories"
                                             [max]="maxCalories"
                                             [value]="calorieTarget()"
@@ -145,9 +145,9 @@
                                                 <div class="goals__macro-rail"></div>
                                                 <div class="goals__macro-fill"></div>
                                                 <input
-                                                    aria-label="{{ water.labelKey | translate }}"
                                                     class="goals__macro-range"
                                                     type="range"
+                                                    [aria-label]="water.labelKey | translate"
                                                     [min]="0"
                                                     [max]="water.max"
                                                     [value]="water.value"
@@ -202,9 +202,9 @@
                                                 <div class="goals__macro-rail"></div>
                                                 <div class="goals__macro-fill"></div>
                                                 <input
-                                                    aria-label="{{ macro.labelKey | translate }}"
                                                     class="goals__macro-range"
                                                     type="range"
+                                                    [aria-label]="macro.labelKey | translate"
                                                     [min]="0"
                                                     [max]="macro.max"
                                                     [value]="macro.value"
@@ -247,9 +247,9 @@
                                                 <div class="goals__macro-rail"></div>
                                                 <div class="goals__macro-fill"></div>
                                                 <input
-                                                    aria-label="{{ fiber.labelKey | translate }}"
                                                     class="goals__macro-range"
                                                     type="range"
+                                                    [aria-label]="fiber.labelKey | translate"
                                                     [min]="0"
                                                     [max]="fiber.max"
                                                     [value]="fiber.value"

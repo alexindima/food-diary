@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import { AdminMailInboxService } from '../api/admin-mail-inbox.service';
-import { type AdminMailInboxMessageDetails, type AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
+import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
 interface AdminMailInboxMessageSummaryViewModel extends AdminMailInboxMessageSummary {
     categoryLabel: string;

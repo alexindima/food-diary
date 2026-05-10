@@ -2,7 +2,7 @@
     <div class="notifications-dialog__body" [attr.aria-busy]="isLoading()">
         @if (isLoading()) {
             <div class="notifications-dialog__state fd-place-center fd-gap-sm" role="status" aria-live="polite">
-                <fd-ui-icon name="hourglass_top"></fd-ui-icon>
+                <fd-ui-icon name="hourglass_top" />
                 <p class="fd-ui-body-sm">{{ 'COMMON.LOADING' | translate }}</p>
             </div>
         } @else if (notifications().length === 0) {
@@ -11,7 +11,7 @@
                 role="status"
                 aria-live="polite"
             >
-                <fd-ui-icon name="notifications_none"></fd-ui-icon>
+                <fd-ui-icon name="notifications_none" />
                 <p class="notifications-dialog__state-title fd-ui-card-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
                 <p class="notifications-dialog__state-text fd-ui-body-sm">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
             </div>
@@ -35,7 +35,7 @@
                                     [class.notifications-dialog__item-icon--dietologist]="item.isDietologistInvitation"
                                     [class.notifications-dialog__item-icon--security]="item.isPasswordSetupSuggestion"
                                 >
-                                    <fd-ui-icon [name]="item.icon"></fd-ui-icon>
+                                    <fd-ui-icon [name]="item.icon" />
                                 </span>
                             }
                             <div class="notifications-dialog__item-content fd-grid fd-gap-xxs">

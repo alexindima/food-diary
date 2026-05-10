@@ -10,7 +10,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import { type ConsumptionItemFormData, type NutritionTotals } from '../base-meal-manage.types';
+import type { ConsumptionItemFormData, NutritionTotals } from '../base-meal-manage.types';
 
 @Component({
     selector: 'fd-meal-items-list',
@@ -180,7 +180,7 @@ export class MealItemsListComponent {
         }
 
         const recipe = group.controls.recipe.value;
-        if (!recipe || !recipe.servings || recipe.servings <= 0) {
+        if (!recipe?.servings || recipe.servings <= 0) {
             return this.getEmptyTotals();
         }
 

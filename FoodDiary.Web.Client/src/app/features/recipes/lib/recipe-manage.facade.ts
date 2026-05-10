@@ -1,6 +1,6 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { type FormArray, type FormGroup } from '@angular/forms';
+import type { FormArray, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -13,8 +13,8 @@ import {
     type ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { RecipeService } from '../api/recipe.service';
-import { type IngredientFormData, type NutritionScaleMode, type StepFormData } from '../components/manage/recipe-manage.types';
-import { type Recipe, type RecipeDto } from '../models/recipe.data';
+import type { IngredientFormData, NutritionScaleMode, StepFormData } from '../components/manage/recipe-manage.types';
+import type { Recipe, RecipeDto } from '../models/recipe.data';
 
 export interface RecipeNutritionSummary {
     calories: number;

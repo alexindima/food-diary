@@ -173,6 +173,6 @@ describe('PushNotificationService', () => {
             }),
             getKey: vi.fn(),
             options,
-        } as unknown as PushSubscription & { unsubscribe: ReturnType<typeof vi.fn> };
+        };
     }
 });

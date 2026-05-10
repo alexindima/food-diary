@@ -3,7 +3,7 @@
         <div class="tdee-card__body">
             @if (isLoading()) {
                 <div class="tdee-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
-                    <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
+                    <fd-ui-icon name="hourglass_empty" />
                     <span>{{ 'TDEE_CARD.LOADING' | translate }}</span>
                 </div>
             } @else if (effectiveTdee()) {
@@ -19,7 +19,7 @@
                                 confidenceClass()
                             }}"
                         >
-                            <fd-ui-icon name="verified"></fd-ui-icon>
+                            <fd-ui-icon name="verified" />
                             <span>{{ confidenceLabel()! | translate }}</span>
                         </div>
                     }
@@ -57,7 +57,7 @@
 
                     @if (hintKey()) {
                         <div class="tdee-card__hint fd-row fd-align-start fd-gap-xs fd-ui-meta-text">
-                            <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
+                            <fd-ui-icon name="tips_and_updates" />
                             <span>{{ hintKey()! | translate }}</span>
                         </div>
                     }

@@ -1,4 +1,4 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -30,11 +30,11 @@ import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../../services/auth.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
-import { type GoogleLoginRequest } from '../../models/google-auth.data';
+import type { GoogleLoginRequest } from '../../models/google-auth.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -697,7 +697,7 @@ export class AuthComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control || !control.invalid) {
+        if (!control?.invalid) {
             return null;
         }
 

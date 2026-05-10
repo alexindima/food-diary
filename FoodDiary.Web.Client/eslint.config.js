@@ -301,7 +301,10 @@ export default [
                     fixStyle: 'inline-type-imports',
                 },
             ],
+            '@typescript-eslint/no-import-type-side-effects': 'error',
             '@typescript-eslint/no-explicit-any': 'error',
+            '@typescript-eslint/no-require-imports': 'error',
+            '@typescript-eslint/no-shadow': 'warn',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
@@ -341,6 +344,9 @@ export default [
             ],
             '@typescript-eslint/no-unnecessary-condition': 'error',
             '@typescript-eslint/no-confusing-void-expression': 'error',
+            '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+            '@typescript-eslint/prefer-optional-chain': 'warn',
+            '@typescript-eslint/prefer-nullish-coalescing': 'warn',
             '@typescript-eslint/require-await': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
             'local/async-function-suffix': 'error',
@@ -350,8 +356,15 @@ export default [
         files: ['**/*.ts'],
         ignores: ['**/*.spec.ts', '**/*.stories.ts'],
         rules: {
+            '@angular-eslint/computed-must-return': 'error',
             '@angular-eslint/prefer-signals': 'error',
             '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+            '@angular-eslint/no-attribute-decorator': 'error',
+            '@angular-eslint/no-duplicates-in-metadata-arrays': 'error',
+            '@angular-eslint/no-lifecycle-call': 'error',
+            '@angular-eslint/no-pipe-impure': 'error',
+            '@angular-eslint/no-uncalled-signals': 'error',
+            '@angular-eslint/use-injectable-provided-in': 'warn',
             'no-restricted-syntax': [
                 'error',
                 {
@@ -839,6 +852,12 @@ export default [
             '@angular-eslint/template/no-positive-tabindex': 'error',
             '@angular-eslint/template/label-has-associated-control': 'warn',
             '@angular-eslint/template/no-autofocus': 'warn',
+            '@angular-eslint/template/banana-in-box': 'error',
+            '@angular-eslint/template/button-has-type': 'warn',
+            '@angular-eslint/template/mouse-events-have-key-events': 'error',
+            '@angular-eslint/template/no-duplicate-attributes': 'warn',
+            '@angular-eslint/template/no-interpolation-in-attributes': 'warn',
+            '@angular-eslint/template/prefer-self-closing-tags': 'error',
             '@angular-eslint/template/attributes-order': [
                 'error',
                 {

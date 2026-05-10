@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';

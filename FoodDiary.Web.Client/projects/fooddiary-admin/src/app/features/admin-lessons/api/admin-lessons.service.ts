@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { type Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import {
-    type AdminLesson,
-    type AdminLessonCreateRequest,
-    type AdminLessonsImportRequest,
-    type AdminLessonsImportResponse,
-    type AdminLessonUpdateRequest,
+import type {
+    AdminLesson,
+    AdminLessonCreateRequest,
+    AdminLessonsImportRequest,
+    AdminLessonsImportResponse,
+    AdminLessonUpdateRequest,
 } from '../models/admin-lesson.data';
 
 @Injectable({ providedIn: 'root' })

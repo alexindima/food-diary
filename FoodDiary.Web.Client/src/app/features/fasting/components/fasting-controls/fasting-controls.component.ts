@@ -407,7 +407,7 @@ export class FastingControlsComponent {
 
     private getCurrentCyclicOccurrenceKind(): FastingSession['occurrenceKind'] | null {
         const session = this.currentSession();
-        if (!session || session.planType !== 'Cyclic' || session.endedAtUtc) {
+        if (session?.planType !== 'Cyclic' || session.endedAtUtc) {
             return null;
         }
 

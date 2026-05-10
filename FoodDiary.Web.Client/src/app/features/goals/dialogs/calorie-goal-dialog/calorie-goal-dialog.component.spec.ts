@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { GoalsService } from '../../api/goals.service';
-import { type GoalsResponse } from '../../models/goals.data';
+import type { GoalsResponse } from '../../models/goals.data';
 import { CalorieGoalDialogComponent, type CalorieGoalDialogData } from './calorie-goal-dialog.component';
 
 describe('CalorieGoalDialogComponent', () => {

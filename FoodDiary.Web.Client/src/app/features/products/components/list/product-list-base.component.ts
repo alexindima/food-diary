@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -22,7 +22,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../../meals/lib/quick-meal.service';
 import { FavoriteProductService } from '../../api/favorite-product.service';

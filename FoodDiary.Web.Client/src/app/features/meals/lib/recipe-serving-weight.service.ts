@@ -3,9 +3,9 @@ import { type Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { RecipeLookupService } from '../../../shared/api/recipe-lookup.service';
-import { type RecipeLookup, type RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';
+import type { RecipeLookup, RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';
 import { MeasurementUnit } from '../../products/models/product.data';
-import { type Recipe, type RecipeIngredient } from '../../recipes/models/recipe.data';
+import type { Recipe, RecipeIngredient } from '../../recipes/models/recipe.data';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +15,7 @@ export class RecipeServingWeightService {
     private readonly cache = new Map<string, number | null>();
 
     public loadServingWeight(recipe: Recipe | null): Observable<number | null> {
-        if (!recipe || !recipe.id) {
+        if (!recipe?.id) {
             return of(null);
         }
 

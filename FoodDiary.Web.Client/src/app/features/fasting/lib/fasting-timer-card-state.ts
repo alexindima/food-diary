@@ -44,7 +44,7 @@ export function buildFastingTimerCardComputedState(input: FastingTimerCardComput
         nextStageFormatted: baseStage?.nextInMs ? formatFastingDuration(baseStage.nextInMs) : null,
     };
 
-    if (!session || session.planType !== 'Intermittent' || session.endedAtUtc) {
+    if (session?.planType !== 'Intermittent' || session.endedAtUtc) {
         return fallback;
     }
 

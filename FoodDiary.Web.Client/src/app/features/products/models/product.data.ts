@@ -1,4 +1,4 @@
-import { type PageOf } from '../../../shared/models/page-of.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
 
 export interface Product {
     id: string; // Guid

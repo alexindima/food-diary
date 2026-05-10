@@ -5,9 +5,9 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
-import { type PageOf } from '../../../shared/models/page-of.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, type Product } from '../../products/models/product.data';
-import { type Recipe } from '../../recipes/models/recipe.data';
+import type { Recipe } from '../../recipes/models/recipe.data';
 import {
     type Consumption,
     type ConsumptionAiSession,

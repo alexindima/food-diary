@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
-import { type FoodNutritionRequest, type FoodVisionRequest } from '../models/ai.data';
+import type { FoodNutritionRequest, FoodVisionRequest } from '../models/ai.data';
 import { AiFoodService } from './ai-food.service';
 
 describe('AiFoodService', () => {

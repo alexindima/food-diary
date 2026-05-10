@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { type ChartConfiguration, type ScaleOptionsByType } from 'chart.js';
+import type { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
@@ -33,13 +33,13 @@ export class WeightTrendCardComponent {
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
         const ordered = [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         const values = ordered.map(point => point.value ?? null);
-        const hasValue = values.some(value => value !== null && !isNaN(value as number));
+        const hasValue = values.some(value => value !== null && !isNaN(value));
         if (!hasValue) {
             return null;
         }
 
         const labels = ordered.map(() => '');
-        const lastIndexFromEnd = [...values].reverse().findIndex(value => value !== null && !isNaN(value as number));
+        const lastIndexFromEnd = [...values].reverse().findIndex(value => value !== null && !isNaN(value));
         const lastIndex = lastIndexFromEnd === -1 ? -1 : values.length - 1 - lastIndexFromEnd;
 
         return {
@@ -133,7 +133,7 @@ export class WeightTrendCardComponent {
 
     public readonly dynamicChartOptions = computed<ChartConfiguration<'line'>['options']>(() => {
         const values = (this.chartData()?.datasets[0].data as (number | null)[] | undefined) ?? [];
-        const numeric = values.filter(v => typeof v === 'number') as number[];
+        const numeric = values.filter(v => typeof v === 'number');
         const minVal = numeric.length ? Math.min(...numeric) : 0;
         const maxVal = numeric.length ? Math.max(...numeric) : 1;
         const padding = Math.max(0.5, (maxVal - minVal) * 0.08);

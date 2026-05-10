@@ -1,12 +1,12 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { type Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { type DailyMicronutrientSummary, type UsdaFood, type UsdaFoodDetail } from '../models/usda.data';
+import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../models/usda.data';
 
 @Injectable({ providedIn: 'root' })
 export class UsdaService extends ApiService {

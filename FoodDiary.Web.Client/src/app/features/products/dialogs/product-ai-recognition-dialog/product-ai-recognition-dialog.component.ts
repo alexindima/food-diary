@@ -16,8 +16,8 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
-import { type FoodNutritionResponse, type FoodVisionItem } from '../../../../shared/models/ai.data';
-import { type ImageSelection } from '../../../../shared/models/image-upload.data';
+import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../models/product.data';
 
 type ProductAiDialogData = {

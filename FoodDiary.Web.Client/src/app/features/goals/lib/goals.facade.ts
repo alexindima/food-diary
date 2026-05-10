@@ -5,7 +5,7 @@ import { finalize } from 'rxjs';
 
 import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { GoalsService } from '../api/goals.service';
-import { type UpdateGoalsRequest } from '../models/goals.data';
+import type { UpdateGoalsRequest } from '../models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 

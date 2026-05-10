@@ -12,11 +12,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { type PageOf } from '../../../../shared/models/page-of.data';
+import type { PageOf } from '../../../../shared/models/page-of.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
-import { type FavoriteMeal, type Meal } from '../../models/meal.data';
-import { type MealOverview } from '../../models/meal.data';
+import type { FavoriteMeal, Meal } from '../../models/meal.data';
+import type { MealOverview } from '../../models/meal.data';
 import { MealListComponent } from './meal-list.component';
 
 function createMockMeal(overrides: Partial<Meal> = {}): Meal {

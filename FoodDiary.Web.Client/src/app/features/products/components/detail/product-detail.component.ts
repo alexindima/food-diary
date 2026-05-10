@@ -22,11 +22,11 @@ import {
     type NutritionMacroState,
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
-import { type NutrientData } from '../../../../shared/models/charts.data';
+import type { NutrientData } from '../../../../shared/models/charts.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
-import { type Product } from '../../models/product.data';
+import type { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-detail',

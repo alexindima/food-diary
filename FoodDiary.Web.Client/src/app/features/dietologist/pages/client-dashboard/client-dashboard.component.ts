@@ -4,7 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DietologistService } from '../../api/dietologist.service';
-import { type ClientSummary } from '../../models/dietologist.data';
+import type { ClientSummary } from '../../models/dietologist.data';
 
 @Component({
     selector: 'fd-client-dashboard',

@@ -5,8 +5,8 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
-import { type ConsumptionAiItemManageDto, type ConsumptionAiSessionManageDto } from '../../../models/meal.data';
-import { type NutritionTotals } from '../base-meal-manage.types';
+import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
+import type { NutritionTotals } from '../base-meal-manage.types';
 
 @Component({
     selector: 'fd-meal-ai-sessions',

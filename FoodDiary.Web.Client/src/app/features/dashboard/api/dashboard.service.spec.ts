@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
-import { type DashboardSnapshot } from '../models/dashboard.data';
+import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardService } from './dashboard.service';
 
 describe('DashboardService', () => {

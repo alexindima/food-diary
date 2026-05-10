@@ -1,12 +1,12 @@
-import { type HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { type Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { type WearableAuthUrl, type WearableConnection, type WearableDailySummary } from '../models/wearable.data';
+import type { WearableAuthUrl, WearableConnection, WearableDailySummary } from '../models/wearable.data';
 
 @Injectable({ providedIn: 'root' })
 export class WearableService extends ApiService {

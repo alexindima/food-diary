@@ -3,14 +3,14 @@
         <div class="daily-advice-card__body">
             @if (isLoading()) {
                 <div class="daily-advice-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
-                    <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
+                    <fd-ui-icon name="hourglass_empty" />
                     <span>{{ 'DASHBOARD.ADVICE_LOADING' | translate }}</span>
                 </div>
             } @else if (adviceState(); as advice) {
                 <div class="daily-advice-card__content fd-stack fd-gap-xs">
                     @if (advice.tagKey) {
                         <div class="daily-advice-card__chip fd-row fd-gap-xxs fd-ui-overline">
-                            <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
+                            <fd-ui-icon name="tips_and_updates" />
                             <span>{{ advice.tagKey | translate }}</span>
                         </div>
                     }
@@ -20,7 +20,7 @@
                 </div>
             } @else {
                 <div class="daily-advice-card__empty fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
-                    <fd-ui-icon name="lightbulb"></fd-ui-icon>
+                    <fd-ui-icon name="lightbulb" />
                     <span>{{ 'DASHBOARD.ADVICE_EMPTY' | translate }}</span>
                 </div>
             }

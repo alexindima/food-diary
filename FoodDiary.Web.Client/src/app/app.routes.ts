@@ -1,5 +1,5 @@
-import { type Type } from '@angular/core';
-import { type Route, type Routes } from '@angular/router';
+import type { Type } from '@angular/core';
+import type { Route, Routes } from '@angular/router';
 
 import { authRoutes } from './features/auth/auth.routes';
 import { authGuard } from './guards/auth.guard';

@@ -10,7 +10,7 @@ import { EMPTY, finalize, type Observable } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { DietologistService } from '../../api/dietologist.service';
-import { type DietologistInvitationForCurrentUser } from '../../models/dietologist.data';
+import type { DietologistInvitationForCurrentUser } from '../../models/dietologist.data';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
 

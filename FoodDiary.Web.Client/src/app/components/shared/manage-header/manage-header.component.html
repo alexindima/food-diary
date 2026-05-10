@@ -13,7 +13,7 @@
         />
         <h1 class="fd-manage-header__title fd-page-title">{{ title() }}</h1>
         <div class="fd-manage-header__actions fd-inline-center fd-gap-page-header-actions">
-            <ng-content select="[fdManageHeaderActions]"></ng-content>
+            <ng-content select="[fdManageHeaderActions]" />
         </div>
     </div>
     @if (subtitle()) {

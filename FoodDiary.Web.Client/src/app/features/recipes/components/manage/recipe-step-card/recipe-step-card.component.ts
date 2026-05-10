@@ -10,8 +10,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { type FormGroupControls } from '../../../../../shared/lib/common.data';
-import { type IngredientFormValues, type StepFormData } from '../recipe-manage.types';
+import type { FormGroupControls } from '../../../../../shared/lib/common.data';
+import type { IngredientFormValues, StepFormData } from '../recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-step-card',

@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { type WaistEntry } from '../models/waist-entry.data';
+import type { WaistEntry } from '../models/waist-entry.data';
 import { WaistEntriesService } from './waist-entries.service';
 
 describe('WaistEntriesService', () => {

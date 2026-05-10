@@ -21,18 +21,18 @@ import {
     type ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { calculateCalorieMismatchWarning, getControlNumericValue, roundNutrient } from '../../../shared/lib/nutrition-form.utils';
-import { type UserAiUsageResponse } from '../../../shared/models/ai.data';
-import { type ImageSelection } from '../../../shared/models/image-upload.data';
-import { type Product } from '../../products/models/product.data';
-import { type Recipe } from '../../recipes/models/recipe.data';
+import type { UserAiUsageResponse } from '../../../shared/models/ai.data';
+import type { ImageSelection } from '../../../shared/models/image-upload.data';
+import type { Product } from '../../products/models/product.data';
+import type { Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
-import {
-    type CalorieMismatchWarning,
-    type ConsumptionFormData,
-    type ConsumptionItemFormData,
-    type ConsumptionItemFormValues,
-    type MealNutritionSummaryState,
-    type NutritionTotals,
+import type {
+    CalorieMismatchWarning,
+    ConsumptionFormData,
+    ConsumptionItemFormData,
+    ConsumptionItemFormValues,
+    MealNutritionSummaryState,
+    NutritionTotals,
 } from '../components/manage/base-meal-manage.types';
 import {
     type ConsumptionManageRedirectAction,

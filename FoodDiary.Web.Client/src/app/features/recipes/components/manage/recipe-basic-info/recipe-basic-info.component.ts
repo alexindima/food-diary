@@ -8,8 +8,8 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { type RecipeVisibility } from '../../../models/recipe.data';
-import { type RecipeFormData } from '../recipe-manage.types';
+import type { RecipeVisibility } from '../../../models/recipe.data';
+import type { RecipeFormData } from '../recipe-manage.types';
 
 const ERROR_FIELDS = ['name', 'cookTime', 'prepTime', 'servings', 'description', 'visibility', 'comment'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];

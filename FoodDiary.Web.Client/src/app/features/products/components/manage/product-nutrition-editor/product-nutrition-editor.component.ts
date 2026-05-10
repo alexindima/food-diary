@@ -6,15 +6,15 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
+import type {
+    NutritionMacroState,
+    NutritionMismatchWarning,
+} from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import {
     type NutritionControlNames,
     NutritionEditorComponent,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import {
-    type NutritionMacroState,
-    type NutritionMismatchWarning,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { type NutritionMode, type ProductFormData } from '../base-product-manage.component';
+import type { NutritionMode, ProductFormData } from '../base-product-manage.component';
 
 @Component({
     selector: 'fd-product-nutrition-editor',

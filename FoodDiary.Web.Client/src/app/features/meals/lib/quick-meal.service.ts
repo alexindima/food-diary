@@ -2,8 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
-import { type Product } from '../../products/models/product.data';
-import { type Recipe } from '../../recipes/models/recipe.data';
+import type { Product } from '../../products/models/product.data';
+import type { Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
 import { type MealManageDto, MealSourceType } from '../models/meal.data';
 

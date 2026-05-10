@@ -16,7 +16,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { AuthService } from '../../../services/auth.service';
 import { PremiumBillingService } from '../api/premium-billing.service';
 import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
-import { type BillingOverview, type BillingPlan, type BillingProvider } from '../models/billing.models';
+import type { BillingOverview, BillingPlan, BillingProvider } from '../models/billing.models';
 
 @Component({
     selector: 'fd-premium-access-page',

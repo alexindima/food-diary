@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { type FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { PeriodFilterComponent } from './period-filter.component';
@@ -75,7 +75,7 @@ describe('PeriodFilterComponent', () => {
     it('should not emit for non-string values', () => {
         const periodFilter = hostFixture.debugElement.children[0].componentInstance as PeriodFilterComponent;
 
-        periodFilter.onRangeChange(42 as unknown as string);
+        periodFilter.onRangeChange(42);
 
         expect(host.lastEmittedValue).toBeNull();
     });

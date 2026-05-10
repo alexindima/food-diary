@@ -1,12 +1,12 @@
-import { type DashboardLayoutSettings } from '../../../shared/models/user.data';
-import { type CycleResponse } from '../../cycle-tracking/models/cycle.data';
-import { type FastingSession } from '../../fasting/models/fasting.data';
-import { type HydrationDaily } from '../../hydration/models/hydration.data';
-import { type Meal } from '../../meals/models/meal.data';
-import { type WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
-import { type WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
-import { type DailyAdvice } from './daily-advice.data';
-import { type TdeeInsight } from './tdee-insight.data';
+import type { DashboardLayoutSettings } from '../../../shared/models/user.data';
+import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
+import type { FastingSession } from '../../fasting/models/fasting.data';
+import type { HydrationDaily } from '../../hydration/models/hydration.data';
+import type { Meal } from '../../meals/models/meal.data';
+import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import type { DailyAdvice } from './daily-advice.data';
+import type { TdeeInsight } from './tdee-insight.data';
 
 export interface DashboardSnapshot {
     date: string;

@@ -1,10 +1,10 @@
 import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
-import { type ComponentType } from '@angular/cdk/portal';
+import type { ComponentType } from '@angular/cdk/portal';
+import type { StaticProvider } from '@angular/core';
 import { inject, Injectable } from '@angular/core';
-import { type StaticProvider } from '@angular/core';
 
-import { type FdUiDialogSize } from './fd-ui-dialog.component';
+import type { FdUiDialogSize } from './fd-ui-dialog.component';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';

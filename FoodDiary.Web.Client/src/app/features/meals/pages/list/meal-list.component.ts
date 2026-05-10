@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementR
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { type FdUiDateRangeValue } from 'fd-ui-kit';
+import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -21,11 +21,11 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
-import { type FormGroupControls } from '../../../../shared/lib/common.data';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
 import { MealListFacade } from '../../lib/meal-list.facade';
-import { type FavoriteMeal, type Meal } from '../../models/meal.data';
+import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
 interface FavoriteMealView {

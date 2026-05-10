@@ -11,7 +11,7 @@
                         @for (trend of trends; track trend.key) {
                             <fd-ui-accent-surface class="check-in__trend" accentSide="left" [accentColor]="trend.color" [tinted]="true">
                                 <div class="check-in__trend-row fd-row fd-gap-xs">
-                                    <fd-ui-icon [style.color]="trend.color" [name]="trend.icon"></fd-ui-icon>
+                                    <fd-ui-icon [style.color]="trend.color" [name]="trend.icon" />
                                     <div class="check-in__trend-info fd-stack">
                                         <span class="check-in__trend-label fd-ui-helper-text">{{ trend.labelKey | translate }}</span>
                                         <strong class="check-in__trend-value fd-ui-action-text">
@@ -69,7 +69,7 @@
                         <div class="check-in__suggestions fd-stack fd-gap-xs">
                             @for (suggestion of suggestionRows(); track suggestion.key) {
                                 <div class="check-in__suggestion fd-row fd-align-start fd-gap-xs">
-                                    <fd-ui-icon class="check-in__suggestion-icon" name="lightbulb"></fd-ui-icon>
+                                    <fd-ui-icon class="check-in__suggestion-icon" name="lightbulb" />
                                     <span class="fd-ui-body-sm">{{ suggestion.labelKey | translate }}</span>
                                 </div>
                             }
