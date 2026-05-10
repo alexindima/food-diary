@@ -58,6 +58,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || !!this.value());
     protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && !this.value());
+    protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
     protected readonly displayValue = computed(() => {
         const value = this.value();
         if (!value) {

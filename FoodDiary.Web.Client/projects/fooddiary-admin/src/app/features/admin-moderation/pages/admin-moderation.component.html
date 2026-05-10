@@ -25,17 +25,17 @@
                 </tr>
             </thead>
             <tbody>
-                @for (report of reports(); track report.id) {
+                @for (report of reportItems(); track report.id) {
                     <tr>
-                        <td>{{ report.targetType }} ({{ report.targetId | slice: 0 : 8 }}...)</td>
+                        <td>{{ report.targetType }} ({{ report.targetIdShort }})</td>
                         <td class="reason-cell">{{ report.reason }}</td>
                         <td>
                             <span class="status-badge status-badge--{{ report.status.toLowerCase() }}">
                                 {{ report.status }}
                             </span>
                         </td>
-                        <td>{{ report.createdAtUtc | date: 'short' }}</td>
-                        <td>{{ report.reviewedAtUtc ? (report.reviewedAtUtc | date: 'short') : '—' }}</td>
+                        <td>{{ report.createdText }}</td>
+                        <td>{{ report.reviewedText }}</td>
                         <td>
                             @if (report.status === 'Pending') {
                                 <div class="action-buttons fd-row fd-gap-control">

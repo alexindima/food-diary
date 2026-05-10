@@ -42,6 +42,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     protected readonly sizeClass = computed(() => `fd-ui-time-input--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
+    protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? 'HH:mm') : null));
 
     public writeValue(value: string | null): void {
         this.internalValue.set(value ?? '');

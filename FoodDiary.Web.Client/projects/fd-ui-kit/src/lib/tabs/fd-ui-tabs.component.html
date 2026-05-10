@@ -1,5 +1,5 @@
 <div class="fd-ui-tabs" [class]="appearanceClass()" role="tablist">
-    @for (tab of tabs(); track tab.value; let index = $index) {
+    @for (tab of tabItems(); track tab.value; let index = $index) {
         <button
             #tabButton
             type="button"
@@ -13,7 +13,7 @@
             (keydown)="onKeydown(index, $event)"
         >
             <span class="fd-ui-tabs__label">
-                {{ tab.label ?? (tab.labelKey ? (tab.labelKey | translate) : '') }}
+                {{ tab.labelText }}
             </span>
         </button>
     }

@@ -89,6 +89,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
         const text = String(this.internalValue()).trim();
         return this.isFocused() && text.length === 0;
     });
+    protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
 
     public writeValue(value: string | number | null): void {
         this.internalValue.set(value ?? '');

@@ -67,20 +67,16 @@
                                 }
                             </td>
                             <td>
-                                <span>{{ subscription.currentPeriodStartUtc | date: 'shortDate' }}</span>
-                                <span>{{ subscription.currentPeriodEndUtc | date: 'shortDate' }}</span>
+                                <span>{{ subscription.currentPeriodStartText }}</span>
+                                <span>{{ subscription.currentPeriodEndText }}</span>
                             </td>
-                            <td>{{ subscription.nextBillingAttemptUtc ? (subscription.nextBillingAttemptUtc | date: 'short') : '-' }}</td>
+                            <td>{{ subscription.nextBillingAttemptText }}</td>
                             <td>
                                 <span>Customer: {{ subscription.externalCustomerIdText }}</span>
                                 <span>Sub: {{ subscription.externalSubscriptionIdText }}</span>
                                 <span>PM: {{ subscription.externalPaymentMethodIdText }}</span>
                             </td>
-                            <td>
-                                {{
-                                    subscription.lastSyncedAtUtc || subscription.modifiedOnUtc || subscription.createdOnUtc | date: 'short'
-                                }}
-                            </td>
+                            <td>{{ subscription.updatedText }}</td>
                         </tr>
                     } @empty {
                         <tr>
@@ -108,7 +104,7 @@
                 <tbody>
                     @for (payment of paymentItems(); track payment.id) {
                         <tr>
-                            <td>{{ payment.createdOnUtc | date: 'short' }}</td>
+                            <td>{{ payment.createdText }}</td>
                             <td>
                                 <strong>{{ payment.userEmail }}</strong>
                                 <span>{{ payment.userId }}</span>
@@ -160,7 +156,7 @@
                 <tbody>
                     @for (event of webhookEventItems(); track event.id) {
                         <tr>
-                            <td>{{ event.processedAtUtc | date: 'short' }}</td>
+                            <td>{{ event.processedText }}</td>
                             <td>{{ event.provider }}</td>
                             <td>
                                 <strong>{{ event.eventType }}</strong>

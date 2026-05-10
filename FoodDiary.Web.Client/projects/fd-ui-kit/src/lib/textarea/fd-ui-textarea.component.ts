@@ -43,6 +43,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
+    protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
 
     public writeValue(value: string | number | null): void {
         this.internalValue.set(value === null ? '' : String(value));

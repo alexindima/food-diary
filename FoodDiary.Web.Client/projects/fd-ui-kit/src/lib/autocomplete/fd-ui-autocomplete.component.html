@@ -29,7 +29,7 @@
             [value]="queryText()"
             [required]="required()"
             [disabled]="disabled()"
-            [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? null) : null"
+            [attr.placeholder]="placeholderAttribute()"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
             [attr.aria-invalid]="error() ? 'true' : null"
             [attr.aria-expanded]="isOpen()"

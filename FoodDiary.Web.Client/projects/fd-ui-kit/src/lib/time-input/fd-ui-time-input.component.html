@@ -20,7 +20,7 @@
                 step="60"
                 inputmode="numeric"
                 [value]="internalValue()"
-                [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? 'HH:mm') : null"
+                [attr.placeholder]="placeholderAttribute()"
                 [disabled]="disabled()"
                 [attr.aria-describedby]="error() ? id() + '-error' : null"
                 [attr.aria-invalid]="error() ? 'true' : null"

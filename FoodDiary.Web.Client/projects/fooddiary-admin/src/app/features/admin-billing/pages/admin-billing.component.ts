@@ -1,5 +1,5 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { CommonModule, formatDate } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -16,12 +16,17 @@ import {
 } from '../api/admin-billing.service';
 
 interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
+    currentPeriodStartText: string;
+    currentPeriodEndText: string;
+    nextBillingAttemptText: string;
+    updatedText: string;
     externalCustomerIdText: string;
     externalSubscriptionIdText: string;
     externalPaymentMethodIdText: string;
 }
 
 interface AdminBillingPaymentViewModel extends AdminBillingPayment {
+    createdText: string;
     amountText: string;
     externalPaymentIdText: string;
     externalCustomerIdText: string;
@@ -29,6 +34,7 @@ interface AdminBillingPaymentViewModel extends AdminBillingPayment {
 }
 
 interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
+    processedText: string;
     eventIdText: string;
     externalObjectIdText: string;
 }
@@ -36,7 +42,7 @@ interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
 @Component({
     selector: 'fd-admin-billing',
     standalone: true,
-    imports: [CommonModule, FormsModule, DatePipe, FdUiButtonComponent, FdUiInputComponent],
+    imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './admin-billing.component.html',
     styleUrl: './admin-billing.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +50,7 @@ interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
 export class AdminBillingComponent {
     private readonly billingService = inject(AdminBillingService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly locale = inject(LOCALE_ID);
 
     public readonly activeTab = signal<AdminBillingTab>('subscriptions');
     public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
@@ -52,6 +59,10 @@ export class AdminBillingComponent {
     public readonly subscriptionItems = computed<AdminBillingSubscriptionViewModel[]>(() =>
         this.subscriptions().map(subscription => ({
             ...subscription,
+            currentPeriodStartText: this.formatDateLabel(subscription.currentPeriodStartUtc, 'shortDate'),
+            currentPeriodEndText: this.formatDateLabel(subscription.currentPeriodEndUtc, 'shortDate'),
+            nextBillingAttemptText: this.formatDateLabel(subscription.nextBillingAttemptUtc),
+            updatedText: this.formatDateLabel(subscription.lastSyncedAtUtc || subscription.modifiedOnUtc || subscription.createdOnUtc),
             externalCustomerIdText: this.shortId(subscription.externalCustomerId),
             externalSubscriptionIdText: this.shortId(subscription.externalSubscriptionId),
             externalPaymentMethodIdText: this.shortId(subscription.externalPaymentMethodId),
@@ -60,6 +71,7 @@ export class AdminBillingComponent {
     public readonly paymentItems = computed<AdminBillingPaymentViewModel[]>(() =>
         this.payments().map(payment => ({
             ...payment,
+            createdText: this.formatDateLabel(payment.createdOnUtc),
             amountText: this.formatMoney(payment.amount, payment.currency),
             externalPaymentIdText: this.shortId(payment.externalPaymentId),
             externalCustomerIdText: this.shortId(payment.externalCustomerId),
@@ -69,6 +81,7 @@ export class AdminBillingComponent {
     public readonly webhookEventItems = computed<AdminBillingWebhookEventViewModel[]>(() =>
         this.webhookEvents().map(event => ({
             ...event,
+            processedText: this.formatDateLabel(event.processedAtUtc),
             eventIdText: this.shortId(event.eventId),
             externalObjectIdText: this.shortId(event.externalObjectId),
         })),
@@ -132,6 +145,10 @@ export class AdminBillingComponent {
         }
 
         return currency ? `${amount.toFixed(2)} ${currency}` : amount.toFixed(2);
+    }
+
+    private formatDateLabel(value?: string | Date | null, format = 'short'): string {
+        return value ? formatDate(value, format, this.locale) : '-';
     }
 
     private shortId(value?: string | null): string {

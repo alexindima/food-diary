@@ -19,7 +19,7 @@
             [required]="required()"
             [readonly]="readonly()"
             [disabled]="disabled()"
-            [attr.placeholder]="shouldShowPlaceholder() ? (placeholder() ?? null) : null"
+            [attr.placeholder]="placeholderAttribute()"
             [attr.maxlength]="maxLength() ?? null"
             [attr.rows]="rows()"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
