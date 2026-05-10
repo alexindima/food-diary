@@ -29,6 +29,11 @@ interface QuickConsumptionItemView {
     trackingKey: string;
 }
 
+interface QuickConsumptionToggleView {
+    icon: string;
+    labelKey: string;
+}
+
 @Component({
     selector: 'fd-quick-consumption-drawer',
     standalone: true,
@@ -58,6 +63,29 @@ export class QuickConsumptionDrawerComponent {
 
     public readonly shouldRender = computed(() => this.forceShow() || this.hasItems());
     public readonly isInline = computed(() => this.layout() === 'inline');
+    public readonly collapsedToggleView = computed<QuickConsumptionToggleView>(() =>
+        this.isCollapsed()
+            ? {
+                  icon: 'expand_less',
+                  labelKey: 'QUICK_CONSUMPTION.EXPAND',
+              }
+            : {
+                  icon: 'expand_more',
+                  labelKey: 'QUICK_CONSUMPTION.COLLAPSE',
+              },
+    );
+    public readonly detailsToggleView = computed<QuickConsumptionToggleView>(() =>
+        this.isDetailsExpanded()
+            ? {
+                  icon: 'expand_less',
+                  labelKey: 'MEAL_DETAILS.HIDE',
+              }
+            : {
+                  icon: 'expand_more',
+                  labelKey: 'MEAL_DETAILS.ADD',
+              },
+    );
+    public readonly bodyInert = computed(() => (this.isCollapsed() ? '' : null));
     public readonly itemViews = computed<QuickConsumptionItemView[]>(() =>
         this.items().map(item => ({
             item,

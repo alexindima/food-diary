@@ -7,13 +7,13 @@
                     appearance="plain-icon"
                     variant="secondary"
                     fill="text"
-                    [icon]="isFavorite() ? 'star' : 'star_border'"
+                    [icon]="favoriteIcon()"
                     iconSize="sm"
                     [class.recipe-detail__favorite-btn--active]="isFavorite()"
                     [class.fd-favorite-button--active]="isFavorite()"
                     [disabled]="isFavoriteLoading()"
-                    [fdUiHint]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
-                    [ariaLabel]="(isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE') | translate"
+                    [fdUiHint]="favoriteAriaLabelKey() | translate"
+                    [ariaLabel]="favoriteAriaLabelKey() | translate"
                     (click)="toggleFavorite()"
                 />
                 <h2 class="recipe-detail__title">{{ recipe.name }}</h2>

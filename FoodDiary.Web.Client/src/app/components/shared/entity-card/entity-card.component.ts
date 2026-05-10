@@ -76,6 +76,7 @@ export class EntityCardComponent {
     public readonly favoriteToggle = output<void>();
     public readonly action = output<void>();
 
+    public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
     public readonly normalizedQuality = computed(() => {
         const quality = this.quality();
         if (!quality) {

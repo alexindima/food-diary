@@ -77,6 +77,10 @@ export class ProductDetailComponent {
     public readonly qualityGrade: string;
     public readonly qualityHintKey: string;
     public nutrientChartData: NutrientData;
+    public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    public readonly favoriteAriaLabelKey = computed(() =>
+        this.isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE',
+    );
     public readonly isDeleteDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
     public readonly isEditDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
     public readonly canModify = computed(() => !this.isEditDisabled());

@@ -66,6 +66,10 @@ export class RecipeCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.recipe().id));
+    public readonly favoriteAriaLabelKey = computed(() =>
+        this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',
+    );
+    public readonly ownershipIcon = computed(() => (this.recipe().isOwnedByCurrentUser ? 'person' : 'groups'));
     public readonly nutrition = computed(() => ({
         proteins: this.recipe().totalProteins ?? 0,
         fats: this.recipe().totalFats ?? 0,

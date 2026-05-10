@@ -25,7 +25,7 @@
             appearance="chip"
             variant="secondary"
             fill="outline"
-            [icon]="onlyMineFilter() ? 'person' : 'groups'"
+            [icon]="filterIcon()"
             [fdUiHint]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
             [ariaLabel]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
             (click)="toggleOnlyMine()"

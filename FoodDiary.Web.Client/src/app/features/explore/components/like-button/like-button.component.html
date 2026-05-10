@@ -3,7 +3,7 @@
     variant="secondary"
     fill="outline"
     [class.like-button--liked]="isLiked()"
-    [icon]="isLiked() ? 'favorite' : 'favorite_border'"
+    [icon]="icon()"
     iconSize="md"
     [disabled]="isToggling()"
     (click)="onToggle()"

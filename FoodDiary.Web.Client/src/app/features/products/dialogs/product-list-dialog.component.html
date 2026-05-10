@@ -24,7 +24,7 @@
             appearance="chip"
             variant="secondary"
             fill="outline"
-            [icon]="onlyMineFilter() ? 'person' : 'groups'"
+            [icon]="filterIcon()"
             [fdUiHint]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             (click)="toggleOnlyMine()"

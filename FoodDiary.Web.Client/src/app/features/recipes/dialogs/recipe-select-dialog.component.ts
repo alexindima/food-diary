@@ -66,6 +66,7 @@ export class RecipeSelectDialogComponent {
     public readonly searchValue = signal<string | null>(null);
     public readonly onlyMineFilter = signal(false);
     public readonly searchSuffixIcon = computed(() => (this.searchValue() ? 'close' : undefined));
+    public readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
     protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
         this.recipeData.items().map(recipe => ({
             recipe,

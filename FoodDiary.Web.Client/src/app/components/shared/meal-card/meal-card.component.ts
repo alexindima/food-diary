@@ -64,6 +64,9 @@ export class MealCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.meal().id));
+    public readonly favoriteAriaLabelKey = computed(() =>
+        this.isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE',
+    );
     public readonly nutrition = computed(() => ({
         proteins: this.meal().totalProteins,
         fats: this.meal().totalFats,

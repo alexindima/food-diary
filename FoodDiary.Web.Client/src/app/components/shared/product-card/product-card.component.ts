@@ -59,6 +59,10 @@ export class ProductCardComponent {
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.product().id));
+    public readonly favoriteAriaLabelKey = computed(() =>
+        this.isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE',
+    );
+    public readonly ownershipIcon = computed(() => (this.product().isOwnedByCurrentUser ? 'person' : 'groups'));
     public readonly nutrition = computed(() => ({
         proteins: this.product().proteinsPerBase,
         fats: this.product().fatsPerBase,

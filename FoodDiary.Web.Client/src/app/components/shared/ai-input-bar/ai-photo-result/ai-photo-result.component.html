@@ -59,15 +59,8 @@
                     (click)="reanalyzeRequested.emit()"
                 />
             </span>
-            <fd-ui-button
-                [variant]="isEditing() ? 'primary' : 'secondary'"
-                [fill]="isEditing() ? 'solid' : 'outline'"
-                size="sm"
-                (click)="isEditing() ? applyEditing() : startEditing()"
-            >
-                {{
-                    (isEditing() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON') | translate
-                }}
+            <fd-ui-button [variant]="editActionView().variant" [fill]="editActionView().fill" size="sm" (click)="handleEditAction()">
+                {{ editActionView().labelKey | translate }}
             </fd-ui-button>
             @if (isEditing()) {
                 <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="cancelEditing()">
@@ -156,8 +149,8 @@
             <div class="ai-photo-result__actions fd-ui-actions fd-ui-actions--split">
                 @if (showDetails()) {
                     <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="toggleDetails()">
-                        <span>{{ (isDetailsExpanded() ? 'MEAL_DETAILS.HIDE' : 'MEAL_DETAILS.ADD') | translate }}</span>
-                        <fd-ui-icon [name]="isDetailsExpanded() ? 'expand_less' : 'expand_more'"></fd-ui-icon>
+                        <span>{{ detailsToggleView().labelKey | translate }}</span>
+                        <fd-ui-icon [name]="detailsToggleView().icon"></fd-ui-icon>
                     </fd-ui-button>
                 } @else {
                     <span></span>

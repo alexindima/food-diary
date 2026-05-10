@@ -45,6 +45,17 @@ interface AiEditUnitOption {
     label: string;
 }
 
+interface AiEditActionView {
+    variant: 'primary' | 'secondary';
+    fill: 'solid' | 'outline';
+    labelKey: string;
+}
+
+interface AiDetailsToggleView {
+    icon: string;
+    labelKey: string;
+}
+
 @Component({
     selector: 'fd-ai-photo-result',
     standalone: true,
@@ -90,6 +101,30 @@ export class AiPhotoResultComponent {
             displayName: this.resolveDisplayName(item),
             amountLabel: this.resolveAmountLabel(item),
         })),
+    );
+    public readonly editActionView = computed<AiEditActionView>(() =>
+        this.isEditing()
+            ? {
+                  variant: 'primary',
+                  fill: 'solid',
+                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE',
+              }
+            : {
+                  variant: 'secondary',
+                  fill: 'outline',
+                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
+              },
+    );
+    public readonly detailsToggleView = computed<AiDetailsToggleView>(() =>
+        this.isDetailsExpanded()
+            ? {
+                  icon: 'expand_less',
+                  labelKey: 'MEAL_DETAILS.HIDE',
+              }
+            : {
+                  icon: 'expand_more',
+                  labelKey: 'MEAL_DETAILS.ADD',
+              },
     );
     public readonly nutritionSummary = computed<AiNutritionSummaryItem[]>(() => {
         const nutrition = this.nutrition();
@@ -196,6 +231,15 @@ export class AiPhotoResultComponent {
         } else {
             this.editApplied.emit(normalized);
         }
+    }
+
+    public handleEditAction(): void {
+        if (this.isEditing()) {
+            this.applyEditing();
+            return;
+        }
+
+        this.startEditing();
     }
 
     public cancelEditing(): void {

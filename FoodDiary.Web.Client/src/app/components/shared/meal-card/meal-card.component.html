@@ -6,7 +6,7 @@
     [showFavorite]="canToggleFavorite()"
     [isFavorite]="isFavorite()"
     [favoriteLoading]="isFavoriteLoading()"
-    [favoriteAriaLabel]="(isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE') | translate"
+    [favoriteAriaLabel]="favoriteAriaLabelKey() | translate"
     [ownershipIcon]="null"
     [title]="mealTime()"
     [titleMuted]="mealTitle()"

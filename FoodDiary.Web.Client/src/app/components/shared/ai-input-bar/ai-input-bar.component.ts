@@ -80,6 +80,8 @@ export class AiInputBarComponent {
     public readonly photoNutritionErrorKey = signal<string | null>(null);
     public readonly hasPhotoResult = computed(() => this.photoSelection() !== null);
     public readonly hasAttachedResult = computed(() => this.hasTextResult() || this.hasPhotoResult());
+    public readonly microphoneIcon = computed(() => (this.isListening() ? 'mic' : 'mic_none'));
+    public readonly textSubmitIcon = computed(() => (this.textIsAnalyzing() || this.textIsNutritionLoading() ? 'hourglass_empty' : 'send'));
 
     public readonly isDisabled = computed(
         () =>

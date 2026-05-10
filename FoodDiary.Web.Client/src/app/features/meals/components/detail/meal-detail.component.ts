@@ -56,6 +56,10 @@ export class MealDetailComponent {
 
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
+    public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    public readonly favoriteAriaLabelKey = computed(() =>
+        this.isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE',
+    );
     private initialFavoriteState = false;
     private favoriteMealId: string | null = null;
 

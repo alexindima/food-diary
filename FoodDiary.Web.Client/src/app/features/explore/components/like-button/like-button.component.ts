@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -21,6 +21,7 @@ export class LikeButtonComponent {
     public readonly isLiked = signal(false);
     public readonly totalLikes = signal(0);
     public readonly isToggling = signal(false);
+    public readonly icon = computed(() => (this.isLiked() ? 'favorite' : 'favorite_border'));
 
     public constructor() {
         effect(() => {

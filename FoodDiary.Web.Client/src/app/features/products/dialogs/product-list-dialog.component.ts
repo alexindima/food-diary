@@ -38,6 +38,7 @@ interface ProductSelectItemViewModel {
 export class ProductListDialogComponent extends ProductListBaseComponent {
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
+    protected readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
     protected readonly productItems = computed<ProductSelectItemViewModel[]>(() =>
         this.productData.items().map(product => ({
             product,

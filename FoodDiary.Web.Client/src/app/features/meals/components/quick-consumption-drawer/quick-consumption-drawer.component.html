@@ -18,9 +18,9 @@
                     class="quick-consumption__header-action"
                     variant="secondary"
                     fill="outline"
-                    [icon]="isCollapsed() ? 'expand_less' : 'expand_more'"
-                    [fdUiHint]="(isCollapsed() ? 'QUICK_CONSUMPTION.EXPAND' : 'QUICK_CONSUMPTION.COLLAPSE') | translate"
-                    [ariaLabel]="(isCollapsed() ? 'QUICK_CONSUMPTION.EXPAND' : 'QUICK_CONSUMPTION.COLLAPSE') | translate"
+                    [icon]="collapsedToggleView().icon"
+                    [fdUiHint]="collapsedToggleView().labelKey | translate"
+                    [ariaLabel]="collapsedToggleView().labelKey | translate"
                     (click)="toggleCollapsed()"
                 />
                 <fd-ui-button
@@ -39,7 +39,7 @@
             class="quick-consumption__body fd-grid fd-gap-sm"
             [class.quick-consumption__body--collapsed]="isCollapsed()"
             [attr.aria-hidden]="isCollapsed()"
-            [attr.inert]="isCollapsed() ? '' : null"
+            [attr.inert]="bodyInert()"
         >
             @if (hasItems()) {
                 <div class="quick-consumption__list fd-grid fd-gap-xs">
@@ -93,11 +93,11 @@
                     class="quick-consumption__details-toggle"
                     variant="secondary"
                     fill="text"
-                    [icon]="isDetailsExpanded() ? 'expand_less' : 'expand_more'"
-                    [ariaLabel]="(isDetailsExpanded() ? 'MEAL_DETAILS.HIDE' : 'MEAL_DETAILS.ADD') | translate"
+                    [icon]="detailsToggleView().icon"
+                    [ariaLabel]="detailsToggleView().labelKey | translate"
                     (click)="toggleDetails()"
                 >
-                    {{ (isDetailsExpanded() ? 'MEAL_DETAILS.HIDE' : 'MEAL_DETAILS.ADD') | translate }}
+                    {{ detailsToggleView().labelKey | translate }}
                 </fd-ui-button>
 
                 @if (isDetailsExpanded()) {
