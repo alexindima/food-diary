@@ -31,7 +31,7 @@ import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
-import { firstValueFrom, merge } from 'rxjs';
+import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { type AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -79,6 +79,10 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         }),
     }),
 };
+
+const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
+type GeneralErrorField = (typeof GENERAL_ERROR_FIELDS)[number];
+type GeneralFieldErrors = Record<GeneralErrorField, string | null>;
 
 @Component({
     selector: 'fd-base-meal-manage',
@@ -144,6 +148,7 @@ export class BaseMealManageComponent {
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     public readonly preMealSatietyAriaLabel = signal('');
     public readonly postMealSatietyAriaLabel = signal('');
+    public readonly generalFieldErrors = signal<GeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
     private populatedConsumptionId: string | null = null;
 
     public readonly macroBarState = computed<MacroBarState>(() => {
@@ -217,7 +222,15 @@ export class BaseMealManageComponent {
             this.buildNutritionModeOptions();
             this.buildSatietyEmojiOptions();
             this.updateSatietyAriaLabels();
+            this.updateGeneralFieldErrors();
         });
+        const formEvents = (this.consumptionForm as { events?: Observable<unknown> }).events ?? EMPTY;
+        merge(formEvents, this.consumptionForm.statusChanges, this.consumptionForm.valueChanges)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.updateGeneralFieldErrors();
+            });
+        this.updateGeneralFieldErrors();
         merge(
             this.consumptionForm.controls.preMealSatietyLevel.valueChanges,
             this.consumptionForm.controls.postMealSatietyLevel.valueChanges,
@@ -459,8 +472,25 @@ export class BaseMealManageComponent {
 
     // --- Form control helpers ---
 
-    public getControlError(controlName: keyof ConsumptionFormData): string | null {
+    private getControlError(controlName: keyof ConsumptionFormData): string | null {
         return this.resolveControlError(this.consumptionForm.controls[controlName]);
+    }
+
+    private updateGeneralFieldErrors(): void {
+        this.generalFieldErrors.set(
+            GENERAL_ERROR_FIELDS.reduce<GeneralFieldErrors>((errors, field) => {
+                errors[field] = this.getControlError(field);
+                return errors;
+            }, this.createEmptyGeneralFieldErrors()),
+        );
+    }
+
+    private createEmptyGeneralFieldErrors(): GeneralFieldErrors {
+        return {
+            date: null,
+            time: null,
+            mealType: null,
+        };
     }
 
     // --- Submit ---

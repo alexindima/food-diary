@@ -8,6 +8,7 @@
     />
 
     <form class="consumption-manage__form fd-stack fd-gap-lg" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
+        @let generalErrors = generalFieldErrors();
         <div class="consumption-manage__grid fd-grid fd-gap-xl">
             <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
                 <fd-ui-card
@@ -33,7 +34,7 @@
                                         size="lg"
                                         [label]="'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate"
                                         [required]="true"
-                                        [error]="getControlError('date')"
+                                        [error]="generalErrors.date"
                                     />
                                 </div>
                                 <div class="consumption-manage__field fd-stack fd-gap-xs">
@@ -42,7 +43,7 @@
                                         size="lg"
                                         [label]="'CONSUMPTION_MANAGE.CHOOSE_TIME' | translate"
                                         [required]="true"
-                                        [error]="getControlError('time')"
+                                        [error]="generalErrors.time"
                                     />
                                 </div>
                             </div>
@@ -53,7 +54,7 @@
                                     [label]="'CONSUMPTION_MANAGE.MEAL_TYPE_LABEL' | translate"
                                     [placeholder]="'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
                                     [options]="mealTypeSelectOptions"
-                                    [error]="getControlError('mealType')"
+                                    [error]="generalErrors.mealType"
                                 />
                             </div>
                         </div>
