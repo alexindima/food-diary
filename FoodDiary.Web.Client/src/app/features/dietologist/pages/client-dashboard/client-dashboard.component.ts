@@ -23,16 +23,16 @@ export class ClientDashboardComponent {
     public readonly loading = signal(true);
     public readonly clientTitle = computed(() => {
         const client = this.client();
-        if (!client) {
+        if (client === null) {
             return '';
         }
 
         const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
-        return fullName || client.email;
+        return fullName.length > 0 ? fullName : client.email;
     });
     public readonly hasAnyPermission = computed(() => {
         const p = this.client()?.permissions;
-        if (!p) {
+        if (p === undefined) {
             return false;
         }
 

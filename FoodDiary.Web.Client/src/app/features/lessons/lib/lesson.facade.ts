@@ -26,7 +26,7 @@ export class LessonFacade {
     private readonly selectedLessonResource = resource({
         params: () => this.selectedLessonId(),
         loader: async ({ params }): Promise<LessonDetail | null> => {
-            if (!params) {
+            if (params === null || params.length === 0) {
                 return null;
             }
 
@@ -46,7 +46,7 @@ export class LessonFacade {
     public readonly isLoading = computed(() => this.lessonsResource.isLoading());
     public readonly selectedLesson = computed(() => {
         const lesson = this.selectedLessonResource.hasValue() ? (this.selectedLessonResource.value() ?? null) : null;
-        if (!lesson) {
+        if (lesson === null) {
             return null;
         }
 
@@ -72,7 +72,9 @@ export class LessonFacade {
     }
 
     private getCurrentLocale(): string {
-        const lang = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
+        const currentLang = this.translateService.getCurrentLang();
+        const fallbackLang = this.translateService.getFallbackLang();
+        const lang = currentLang.length > 0 ? currentLang : fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en';
         return lang.split(/[-_]/)[0];
     }
 }

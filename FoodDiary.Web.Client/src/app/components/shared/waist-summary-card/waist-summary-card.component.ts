@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
+const TREND_EPSILON = 0.01;
+const TREND_DISPLAY_FRACTION_DIGITS = 1;
+
 @Component({
     selector: 'fd-waist-summary-card',
     standalone: true,
@@ -31,7 +34,7 @@ export class WaistSummaryCardComponent {
     public readonly trend = computed(() => {
         const latest = this.latest();
         const previous = this.previous();
-        if (!latest || !previous) {
+        if (latest === null || previous === null) {
             return {
                 label: this.translateService.instant('WAIST_CARD.NO_PREVIOUS'),
                 status: 'neutral',
@@ -39,7 +42,7 @@ export class WaistSummaryCardComponent {
         }
 
         const diff = latest - previous;
-        if (Math.abs(diff) < 0.01) {
+        if (Math.abs(diff) < TREND_EPSILON) {
             return {
                 label: this.translateService.instant('WAIST_CARD.NO_CHANGE'),
                 status: 'neutral',
@@ -56,7 +59,7 @@ export class WaistSummaryCardComponent {
         }
 
         return {
-            label: `${direction} ${Math.abs(diff).toFixed(1)} ${this.translateService.instant('WAIST_CARD.CM')}`,
+            label: `${direction} ${Math.abs(diff).toFixed(TREND_DISPLAY_FRACTION_DIGITS)} ${this.translateService.instant('WAIST_CARD.CM')}`,
             status,
         };
     });

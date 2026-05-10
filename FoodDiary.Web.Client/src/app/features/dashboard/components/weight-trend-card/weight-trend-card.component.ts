@@ -6,6 +6,21 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 
+const CHART_BORDER_WIDTH = 4;
+const CHART_TENSION = 0.48;
+const ACTIVE_POINT_RADIUS = 5;
+const INACTIVE_POINT_RADIUS = 0;
+const ACTIVE_POINT_HOVER_RADIUS = 6;
+const POINT_BORDER_WIDTH = 2;
+const TOOLTIP_PADDING = 8;
+const POINT_HIT_RADIUS = 16;
+const TREND_EPSILON = 0.01;
+const DISPLAY_FRACTION_DIGITS = 1;
+const ROUNDING_FACTOR = 10;
+const FILL_COLOR_PERCENT = 15;
+const Y_AXIS_PADDING_MIN = 0.5;
+const Y_AXIS_PADDING_RATIO = 0.08;
+
 export interface WeightTrendPoint {
     date: string | Date;
     value: number | null;
@@ -33,13 +48,13 @@ export class WeightTrendCardComponent {
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
         const ordered = [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         const values = ordered.map(point => point.value ?? null);
-        const hasValue = values.some(value => value !== null && !isNaN(value));
+        const hasValue = values.some(value => value !== null && !Number.isNaN(value));
         if (!hasValue) {
             return null;
         }
 
         const labels = ordered.map(() => '');
-        const lastIndexFromEnd = [...values].reverse().findIndex(value => value !== null && !isNaN(value));
+        const lastIndexFromEnd = [...values].reverse().findIndex(value => value !== null && !Number.isNaN(value));
         const lastIndex = lastIndexFromEnd === -1 ? -1 : values.length - 1 - lastIndexFromEnd;
 
         return {
@@ -49,15 +64,15 @@ export class WeightTrendCardComponent {
                     data: values,
                     borderColor: this.accentColor(),
                     backgroundColor: this.getFillColor(),
-                    borderWidth: 4,
-                    tension: 0.48,
+                    borderWidth: CHART_BORDER_WIDTH,
+                    tension: CHART_TENSION,
                     fill: true,
                     spanGaps: true,
-                    pointRadius: values.map((_, index) => (index === lastIndex ? 5 : 0)),
-                    pointHoverRadius: values.map((_, index) => (index === lastIndex ? 6 : 0)),
+                    pointRadius: values.map((_, index) => (index === lastIndex ? ACTIVE_POINT_RADIUS : INACTIVE_POINT_RADIUS)),
+                    pointHoverRadius: values.map((_, index) => (index === lastIndex ? ACTIVE_POINT_HOVER_RADIUS : INACTIVE_POINT_RADIUS)),
                     pointBackgroundColor: this.accentColor(),
                     pointBorderColor: 'var(--fd-color-white)',
-                    pointBorderWidth: 2,
+                    pointBorderWidth: POINT_BORDER_WIDTH,
                 },
             ],
         };
@@ -76,10 +91,10 @@ export class WeightTrendCardComponent {
                         if (value === null) {
                             return '';
                         }
-                        return `${value.toFixed(1)} kg`;
+                        return `${value.toFixed(DISPLAY_FRACTION_DIGITS)} kg`;
                     },
                 },
-                padding: 8,
+                padding: TOOLTIP_PADDING,
                 backgroundColor: 'var(--fd-color-slate-900)',
                 titleColor: 'var(--fd-color-slate-200)',
                 bodyColor: 'var(--fd-color-slate-200)',
@@ -98,7 +113,7 @@ export class WeightTrendCardComponent {
         },
         elements: {
             line: { borderCapStyle: 'round' },
-            point: { hitRadius: 16 },
+            point: { hitRadius: POINT_HIT_RADIUS },
         },
     };
 
@@ -107,10 +122,10 @@ export class WeightTrendCardComponent {
         if (value === null) {
             return 'neutral';
         }
-        if (value < -0.01) {
+        if (value < -TREND_EPSILON) {
             return 'positive';
         }
-        if (value > 0.01) {
+        if (value > TREND_EPSILON) {
             return 'negative';
         }
         return 'neutral';
@@ -121,9 +136,9 @@ export class WeightTrendCardComponent {
         if (delta === null) {
             return null;
         }
-        const rounded = Math.round(delta * 10) / 10;
+        const rounded = Math.round(delta * ROUNDING_FACTOR) / ROUNDING_FACTOR;
         const sign = rounded > 0 ? '+' : '';
-        return `${sign}${rounded.toFixed(1)}`;
+        return `${sign}${rounded.toFixed(DISPLAY_FRACTION_DIGITS)}`;
     });
 
     public readonly hasValue = computed(() => {
@@ -134,9 +149,9 @@ export class WeightTrendCardComponent {
     public readonly dynamicChartOptions = computed<ChartConfiguration<'line'>['options']>(() => {
         const values = (this.chartData()?.datasets[0].data as (number | null)[] | undefined) ?? [];
         const numeric = values.filter(v => typeof v === 'number');
-        const minVal = numeric.length ? Math.min(...numeric) : 0;
-        const maxVal = numeric.length ? Math.max(...numeric) : 1;
-        const padding = Math.max(0.5, (maxVal - minVal) * 0.08);
+        const minVal = numeric.length > 0 ? Math.min(...numeric) : 0;
+        const maxVal = numeric.length > 0 ? Math.max(...numeric) : 1;
+        const padding = Math.max(Y_AXIS_PADDING_MIN, (maxVal - minVal) * Y_AXIS_PADDING_RATIO);
         const suggestedMin = Math.max(0, minVal - padding);
         const baseOptions = this.baseChartOptions;
         const baseScales = baseOptions?.scales;
@@ -155,6 +170,6 @@ export class WeightTrendCardComponent {
     });
 
     private getFillColor(): string {
-        return `color-mix(in srgb, ${this.accentColor()} 15%, transparent)`;
+        return `color-mix(in srgb, ${this.accentColor()} ${FILL_COLOR_PERCENT}%, transparent)`;
     }
 }

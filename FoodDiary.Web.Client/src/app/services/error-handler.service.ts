@@ -26,7 +26,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
         if (error instanceof Error) {
             return {
-                message: error.message || 'Unknown error',
+                message: this.messageOrUnknown(error.message),
                 stack: error.stack ?? '',
                 location,
             };
@@ -35,7 +35,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         if (typeof error === 'object' && error !== null) {
             const candidate = error as { message?: unknown; stack?: unknown };
             return {
-                message: typeof candidate.message === 'string' && candidate.message ? candidate.message : 'Unknown error',
+                message: this.messageOrUnknown(candidate.message),
                 stack: typeof candidate.stack === 'string' ? candidate.stack : '',
                 location,
                 details: {
@@ -45,9 +45,13 @@ export class GlobalErrorHandler implements ErrorHandler {
         }
 
         return {
-            message: typeof error === 'string' && error ? error : 'Unknown error',
+            message: this.messageOrUnknown(error),
             stack: '',
             location,
         };
+    }
+
+    private messageOrUnknown(value: unknown): string {
+        return typeof value === 'string' && value.length > 0 ? value : 'Unknown error';
     }
 }

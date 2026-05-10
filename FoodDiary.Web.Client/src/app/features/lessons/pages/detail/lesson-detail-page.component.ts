@@ -39,7 +39,7 @@ export class LessonDetailPageComponent {
     public readonly facade = inject(LessonFacade);
     public readonly lesson = computed<LessonDetailState | null>(() => {
         const lesson = this.facade.selectedLesson();
-        if (!lesson) {
+        if (lesson === null) {
             return null;
         }
 
@@ -52,14 +52,14 @@ export class LessonDetailPageComponent {
 
     public constructor() {
         const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
+        if (id !== null && id.trim().length > 0) {
             this.facade.loadLesson(id);
         }
     }
 
     public markRead(): void {
         const lesson = this.facade.selectedLesson();
-        if (lesson && !lesson.isRead) {
+        if (lesson !== null && !lesson.isRead) {
             this.facade.markRead(lesson.id);
         }
     }

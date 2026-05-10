@@ -17,12 +17,12 @@ export class EmailVerificationRealtimeService {
     public readonly connected = this.connectedSignal.asReadonly();
 
     public async connectAsync(authService: AuthService, onVerified: () => void): Promise<void> {
-        if (this.connection) {
+        if (this.connection !== null) {
             return;
         }
 
         const token = authService.getToken();
-        if (!token) {
+        if (token === null || token.trim().length === 0) {
             return;
         }
 
@@ -49,7 +49,7 @@ export class EmailVerificationRealtimeService {
     }
 
     public async disconnectAsync(): Promise<void> {
-        if (!this.connection) {
+        if (this.connection === null) {
             return;
         }
 

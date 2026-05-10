@@ -18,12 +18,12 @@ export class NavigationService {
     }
 
     public async navigateToAuthAsync(mode: AuthMode, returnUrl?: string): Promise<void> {
-        const queryParams = returnUrl ? { returnUrl } : {};
+        const queryParams = returnUrl !== undefined && returnUrl.length > 0 ? { returnUrl } : {};
         await this.router.navigate(['/auth', mode], { queryParams });
     }
 
     public async navigateToEmailVerificationPendingAsync(options?: { autoResend?: boolean }): Promise<void> {
-        const queryParams = options?.autoResend ? { autoResend: 'true' } : {};
+        const queryParams = options?.autoResend === true ? { autoResend: 'true' } : {};
         await this.router.navigate(['/verify-pending'], { queryParams });
     }
 
@@ -48,12 +48,13 @@ export class NavigationService {
     }
 
     public async navigateToConsumptionAddAsync(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
-        const navigationExtras = mealType
-            ? {
-                  state: { mealType, ...(extras?.state ?? {}) },
-                  queryParams: { mealType },
-              }
-            : { state: extras?.state };
+        const navigationExtras =
+            mealType !== undefined && mealType.length > 0
+                ? {
+                      state: { mealType, ...(extras?.state ?? {}) },
+                      queryParams: { mealType },
+                  }
+                : { state: extras?.state };
         return await this.router.navigate(['/meals/add'], navigationExtras);
     }
 

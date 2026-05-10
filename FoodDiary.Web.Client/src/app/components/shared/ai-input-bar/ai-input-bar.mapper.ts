@@ -3,6 +3,11 @@ import { normalizeMealType, resolveMealTypeByTime } from '../../../shared/lib/me
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import type { AiInputBarResult, AiInputBarResultItem } from './ai-input-bar.types';
 
+const DEFAULT_SATIETY_LEVEL = 3;
+const MAX_SATIETY_LEVEL = 5;
+const MIN_SATIETY_LEVEL = 1;
+const AI_SATIETY_SCALE_FACTOR = 2;
+
 export function mapNutritionItemsToAiInputBarItems(nutrition: FoodNutritionResponse, matches: FoodVisionItem[]): AiInputBarResultItem[] {
     return nutrition.items.map(item => {
         const normalizedName = item.name.trim().toLowerCase();
@@ -26,7 +31,10 @@ export function mapNutritionItemsToAiInputBarItems(nutrition: FoodNutritionRespo
 }
 
 export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDate?: Date): MealManageDto {
-    const resolvedMealDate = mealDate ?? (result.date && result.time ? new Date(`${result.date}T${result.time}`) : new Date());
+    const resultDate = result.date ?? '';
+    const resultTime = result.time ?? '';
+    const hasResultDateTime = resultDate.length > 0 && resultTime.length > 0;
+    const resolvedMealDate = mealDate ?? (hasResultDateTime ? new Date(`${resultDate}T${resultTime}`) : new Date());
     const resolvedMealType = normalizeMealType(result.mealType) ?? resolveMealTypeByTime(resolvedMealDate);
 
     return {
@@ -53,13 +61,13 @@ export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDat
 }
 
 function normalizeSatietyLevel(value: number | null | undefined): number {
-    if (!value) {
-        return 3;
+    if (value === null || value === undefined || Number.isNaN(value)) {
+        return DEFAULT_SATIETY_LEVEL;
     }
 
-    if (value > 5) {
-        return Math.min(5, Math.max(1, Math.round(value / 2)));
+    if (value > MAX_SATIETY_LEVEL) {
+        return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / AI_SATIETY_SCALE_FACTOR)));
     }
 
-    return Math.max(1, value);
+    return Math.max(MIN_SATIETY_LEVEL, value);
 }

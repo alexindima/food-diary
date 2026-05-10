@@ -4,6 +4,7 @@ import { AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResp
 import express from 'express';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const DEFAULT_PORT = 4000;
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
     void angularApp
         .handle(req)
         .then(response => {
-            if (response) {
+            if (response !== null) {
                 void writeResponseToNodeResponse(response, res);
                 return;
             }
@@ -52,10 +53,10 @@ app.use((req, res, next) => {
  * Start the server if this module is the main entry point, or it is ran via PM2.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
-if (isMainModule(import.meta.url) || process.env['pm_id']) {
-    const port = process.env['PORT'] ?? 4000;
+if (isMainModule(import.meta.url) || process.env['pm_id'] !== undefined) {
+    const port = process.env['PORT'] ?? DEFAULT_PORT;
     app.listen(port, error => {
-        if (error) {
+        if (error !== undefined) {
             throw error;
         }
 

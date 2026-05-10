@@ -30,7 +30,7 @@ export function placeholderIcon(slot?: string | null): string {
 }
 
 export function placeholderLabel(slot?: string | null): string {
-    if (!slot) {
+    if (slot === null || slot === undefined || slot.length === 0) {
         return 'MEAL_CARD.MEAL_TYPES.OTHER';
     }
     return `MEAL_CARD.MEAL_TYPES.${slot}`;
@@ -39,7 +39,7 @@ export function placeholderLabel(slot?: string | null): string {
 export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | null>): Signal<NutrientBar[]> {
     return computed<NutrientBar[]>(() => {
         const s = snapshot();
-        if (!s) {
+        if (s === null) {
             return [];
         }
 
@@ -112,7 +112,7 @@ export function createConsumptionRingSignal(
             dailyGoal,
             dailyConsumed: consumedToday,
             weeklyConsumed: weeklyConsumed(),
-            weeklyGoal: s ? s.weeklyCalorieGoal : 0,
+            weeklyGoal: s === null ? 0 : s.weeklyCalorieGoal,
             nutrientBars: nutrientBars(),
         };
     });

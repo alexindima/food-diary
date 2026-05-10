@@ -72,7 +72,7 @@ export class AppComponent {
     }
 
     private getDeepestRoute(route: ActivatedRoute): ActivatedRoute {
-        while (route.firstChild) {
+        while (route.firstChild !== null) {
             route = route.firstChild;
         }
         return route;
@@ -83,7 +83,7 @@ export class AppComponent {
 
         return deepestRoute.pathFromRoot.reduce<SeoData>((seo, routePart) => {
             const routeSeo = routePart.snapshot.data['seo'] as SeoData | undefined;
-            return routeSeo ? { ...seo, ...routeSeo } : seo;
+            return routeSeo === undefined ? seo : { ...seo, ...routeSeo };
         }, {});
     }
 

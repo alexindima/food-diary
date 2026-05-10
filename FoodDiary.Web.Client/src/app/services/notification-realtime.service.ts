@@ -39,12 +39,12 @@ export class NotificationRealtimeService {
     }
 
     private async connectAsync(): Promise<void> {
-        if (this.connection || this.connecting()) {
+        if (this.connection !== null || this.connecting()) {
             return;
         }
 
         const token = this.authService.getToken();
-        if (!token) {
+        if (token === null || token.trim().length === 0) {
             return;
         }
 
@@ -94,7 +94,7 @@ export class NotificationRealtimeService {
     }
 
     private async disconnectAsync(): Promise<void> {
-        if (!this.connection) {
+        if (this.connection === null) {
             this.connectedSignal.set(false);
             return;
         }

@@ -20,13 +20,13 @@ export class DailyAdviceCardComponent {
 
     public readonly adviceState = computed(() => {
         const advice = this.advice();
-        if (!advice) {
+        if (advice === null) {
             return null;
         }
 
         return {
             value: advice.value,
-            tagKey: advice.tag ? `DASHBOARD.ADVICE_TAGS.${advice.tag.toUpperCase()}` : null,
+            tagKey: advice.tag !== null && advice.tag.length > 0 ? `DASHBOARD.ADVICE_TAGS.${advice.tag.toUpperCase()}` : null,
         };
     });
 }

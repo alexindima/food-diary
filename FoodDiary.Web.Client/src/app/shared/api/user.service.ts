@@ -126,7 +126,7 @@ export class UserService extends ApiService {
         return this.patch<void>('password/set', request).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current) {
+                if (current !== null) {
                     this.userSignal.set({ ...current, hasPassword: true });
                 }
             }),
@@ -139,7 +139,7 @@ export class UserService extends ApiService {
         return this.post<void>('ai-consent', {}).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current) {
+                if (current !== null) {
                     this.userSignal.set({ ...current, aiConsentAcceptedAt: new Date().toISOString() });
                 }
             }),
@@ -151,7 +151,7 @@ export class UserService extends ApiService {
         return this.delete<void>('ai-consent').pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current) {
+                if (current !== null) {
                     this.userSignal.set({ ...current, aiConsentAcceptedAt: null });
                 }
             }),

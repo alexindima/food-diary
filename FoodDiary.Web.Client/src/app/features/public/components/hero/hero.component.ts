@@ -39,7 +39,7 @@ export class HeroComponent {
 
     protected updateLanguage(): void {
         const target = this.language;
-        if (!target || target === this.currentLanguage) {
+        if (target.length === 0 || target === this.currentLanguage) {
             return;
         }
 
@@ -65,6 +65,8 @@ export class HeroComponent {
     }
 
     private getCurrentLanguage(): string {
-        return (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
+        const currentLang = this.translateService.getCurrentLang();
+        const fallbackLang = this.translateService.getFallbackLang();
+        return currentLang.length > 0 ? currentLang : fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 }
