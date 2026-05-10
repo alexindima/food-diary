@@ -14,6 +14,19 @@ class TestHostComponent {
 }
 
 describe('FdUiFormErrorComponent', () => {
+    function host(fixture: ComponentFixture<TestHostComponent>): HTMLElement {
+        return fixture.nativeElement as HTMLElement;
+    }
+
+    function requireElement<T extends Element>(fixture: ComponentFixture<TestHostComponent>, selector: string): T {
+        const element = host(fixture).querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    }
+
     async function createComponentAsync(): Promise<ComponentFixture<TestHostComponent>> {
         await TestBed.configureTestingModule({
             imports: [TranslateModule.forRoot(), TestHostComponent],
@@ -26,9 +39,8 @@ describe('FdUiFormErrorComponent', () => {
 
     it('renders an alert live region for the error message', async () => {
         const fixture = await createComponentAsync();
-        const errorText = fixture.nativeElement.querySelector('.fd-ui-form-error__text');
+        const errorText = requireElement<HTMLElement>(fixture, '.fd-ui-form-error__text');
 
-        expect(errorText).not.toBeNull();
         expect(errorText.getAttribute('role')).toBe('alert');
         expect(errorText.getAttribute('aria-live')).toBe('assertive');
     });

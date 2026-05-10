@@ -65,7 +65,7 @@ describe('NotificationsDialogComponent', () => {
             },
         ]);
 
-        const host: HTMLElement = fixture.nativeElement;
+        const host = fixture.nativeElement as HTMLElement;
         const card = host.querySelector('.notifications-dialog__item--dietologist');
         expect(card).toBeTruthy();
         expect(host.textContent).toContain('NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE');
@@ -87,7 +87,12 @@ describe('NotificationsDialogComponent', () => {
             },
         ]);
 
-        const card = fixture.nativeElement.querySelector('.notifications-dialog__item') as HTMLButtonElement;
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector<HTMLButtonElement>('.notifications-dialog__item');
+        if (card === null) {
+            throw new Error('Expected notification card to exist.');
+        }
+
         card.click();
         fixture.detectChanges();
 
@@ -110,7 +115,7 @@ describe('NotificationsDialogComponent', () => {
             },
         ]);
 
-        const host: HTMLElement = fixture.nativeElement;
+        const host = fixture.nativeElement as HTMLElement;
         const card = host.querySelector('.notifications-dialog__item--security');
         expect(card).toBeTruthy();
         expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_BADGE');

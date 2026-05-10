@@ -35,7 +35,13 @@ describe('FdUiHintDirective', () => {
         fixture = TestBed.createComponent(TestHostComponent);
         fixture.detectChanges();
 
-        trigger = fixture.nativeElement.querySelector('button');
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('button');
+        if (button === null) {
+            throw new Error('Expected hint trigger to exist.');
+        }
+
+        trigger = button;
     });
 
     afterEach(() => {

@@ -8,6 +8,16 @@ describe('FdUiNutrientInputComponent', () => {
     let component: FdUiNutrientInputComponent;
     let fixture: ComponentFixture<FdUiNutrientInputComponent>;
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const input = (): HTMLInputElement => {
+        const element = host().querySelector<HTMLInputElement>('input');
+        if (element === null) {
+            throw new Error('Expected nutrient input to exist.');
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiNutrientInputComponent],
@@ -45,7 +55,7 @@ describe('FdUiNutrientInputComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+        const inputEl = input();
         inputEl.value = '123';
         inputEl.dispatchEvent(new Event('input'));
 
@@ -57,7 +67,7 @@ describe('FdUiNutrientInputComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+        const inputEl = input();
         inputEl.value = '12abc3.5';
         inputEl.dispatchEvent(new Event('input'));
 
@@ -70,7 +80,7 @@ describe('FdUiNutrientInputComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+        const inputEl = input();
         inputEl.value = '12,5';
         inputEl.dispatchEvent(new Event('input'));
 
@@ -82,7 +92,7 @@ describe('FdUiNutrientInputComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+        const inputEl = input();
         inputEl.value = 'abc123';
         inputEl.dispatchEvent(new Event('input'));
 
@@ -97,7 +107,7 @@ describe('FdUiNutrientInputComponent', () => {
         fixture.detectChanges();
 
         expect(component.disabled).toBe(true);
-        const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+        const inputEl = input();
         expect(inputEl.disabled).toBe(true);
     });
 
@@ -105,7 +115,7 @@ describe('FdUiNutrientInputComponent', () => {
         const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
-        const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+        const inputEl = input();
         inputEl.dispatchEvent(new Event('blur'));
 
         expect(onTouchedSpy).toHaveBeenCalled();

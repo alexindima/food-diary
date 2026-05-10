@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiPaginationComponent } from './fd-ui-pagination.component';
@@ -7,6 +6,9 @@ import { FdUiPaginationComponent } from './fd-ui-pagination.component';
 describe('FdUiPaginationComponent', () => {
     let fixture: ComponentFixture<FdUiPaginationComponent>;
     let component: FdUiPaginationComponent;
+
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const pageButtons = (): HTMLButtonElement[] => Array.from(host().querySelectorAll<HTMLButtonElement>('.fd-ui-pagination__button'));
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -27,8 +29,7 @@ describe('FdUiPaginationComponent', () => {
         fixture.componentRef.setInput('pageSize', 10);
         fixture.detectChanges();
 
-        const pageButtons = fixture.debugElement.queryAll(By.css('.fd-ui-pagination__button'));
-        expect(pageButtons.length).toBe(7);
+        expect(pageButtons().length).toBe(7);
     });
 
     it('should set active page from pageIndex', () => {
@@ -37,8 +38,8 @@ describe('FdUiPaginationComponent', () => {
         fixture.componentRef.setInput('pageIndex', 3);
         fixture.detectChanges();
 
-        const activeButton = fixture.debugElement.query(By.css('.fd-ui-pagination__button--active'));
-        expect(activeButton.nativeElement.textContent.trim()).toBe('4');
+        const activeButton = host().querySelector<HTMLButtonElement>('.fd-ui-pagination__button--active');
+        expect(activeButton?.textContent.trim()).toBe('4');
     });
 
     it('should update pageIndex when page clicked', () => {
@@ -46,8 +47,8 @@ describe('FdUiPaginationComponent', () => {
         fixture.componentRef.setInput('pageSize', 10);
         fixture.detectChanges();
 
-        const pageButtons = fixture.debugElement.queryAll(By.css('.fd-ui-pagination__button'));
-        pageButtons[2].nativeElement.click();
+        const buttons = pageButtons();
+        buttons[2].click();
 
         expect(component.pageIndex()).toBe(1);
     });

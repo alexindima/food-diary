@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiCardComponent } from './fd-ui-card.component';
@@ -15,6 +14,16 @@ class CardWithContentHostComponent {}
 describe('FdUiCardComponent', () => {
     let component: FdUiCardComponent;
     let fixture: ComponentFixture<FdUiCardComponent>;
+
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = host().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -58,26 +67,24 @@ describe('FdUiCardComponent', () => {
         fixture.componentRef.setInput('title', 'Test Title');
         fixture.detectChanges();
 
-        const titleEl = fixture.debugElement.query(By.css('.fd-ui-card__title'));
-        expect(titleEl).toBeTruthy();
-        expect(titleEl.nativeElement.textContent.trim()).toBe('Test Title');
+        const titleEl = requireElement<HTMLElement>('.fd-ui-card__title');
+        expect(titleEl.textContent.trim()).toBe('Test Title');
     });
 
     it('should display meta', () => {
         fixture.componentRef.setInput('meta', '100 kcal');
         fixture.detectChanges();
 
-        const metaEl = fixture.debugElement.query(By.css('.fd-ui-card__meta'));
-        expect(metaEl).toBeTruthy();
-        expect(metaEl.nativeElement.textContent.trim()).toBe('100 kcal');
+        const metaEl = requireElement<HTMLElement>('.fd-ui-card__meta');
+        expect(metaEl.textContent.trim()).toBe('100 kcal');
     });
 
     it('should project content', () => {
         const hostFixture = TestBed.createComponent(CardWithContentHostComponent);
         hostFixture.detectChanges();
 
-        const projected = hostFixture.debugElement.query(By.css('.projected'));
-        expect(projected).toBeTruthy();
-        expect(projected.nativeElement.textContent.trim()).toBe('Projected content');
+        const projectedHost = hostFixture.nativeElement as HTMLElement;
+        const projected = projectedHost.querySelector<HTMLElement>('.projected');
+        expect(projected?.textContent.trim()).toBe('Projected content');
     });
 });

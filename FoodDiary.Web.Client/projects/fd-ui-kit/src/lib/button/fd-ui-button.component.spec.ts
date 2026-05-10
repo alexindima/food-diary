@@ -9,6 +9,16 @@ describe('FdUiButtonComponent', () => {
     let component: FdUiButtonComponent;
     let fixture: ComponentFixture<FdUiButtonComponent>;
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const button = (): HTMLButtonElement => {
+        const element = host().querySelector<HTMLButtonElement>('button');
+        if (element === null) {
+            throw new Error('Expected button to exist.');
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiButtonComponent],
@@ -90,27 +100,24 @@ describe('FdUiButtonComponent', () => {
         fixture.componentRef.setInput('type', 'submit');
         fixture.detectChanges();
 
-        const button = fixture.debugElement.query(By.css('button'));
-        expect(button.nativeElement.getAttribute('type')).toBe('submit');
+        expect(button().getAttribute('type')).toBe('submit');
     });
 
     it('should set disabled attribute', () => {
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
-        const button = fixture.debugElement.query(By.css('button'));
-        expect(button.nativeElement.disabled).toBe(true);
+        expect(button().disabled).toBe(true);
     });
 
     it('should disable button and show spinner when loading', () => {
         fixture.componentRef.setInput('loading', true);
         fixture.detectChanges();
 
-        const button = fixture.debugElement.query(By.css('button'));
         const spinner = fixture.debugElement.query(By.css('.fd-ui-button__spinner'));
 
-        expect(button.nativeElement.disabled).toBe(true);
-        expect(button.nativeElement.getAttribute('aria-busy')).toBe('true');
+        expect(button().disabled).toBe(true);
+        expect(button().getAttribute('aria-busy')).toBe('true');
         expect(spinner).toBeTruthy();
         expect(component.classes()).toContain('fd-ui-button--loading');
     });
@@ -119,19 +126,14 @@ describe('FdUiButtonComponent', () => {
         fixture.componentRef.setInput('loading', true);
         fixture.detectChanges();
 
-        const host = fixture.nativeElement as HTMLElement;
-        const button = host.querySelector('button');
-
-        expect(button).toBeTruthy();
-        expect(button ? getComputedStyle(button).position : null).toBe('relative');
+        expect(getComputedStyle(button()).position).toBe('relative');
     });
 
     it('should set aria-label attribute', () => {
         fixture.componentRef.setInput('ariaLabel', 'Close dialog');
         fixture.detectChanges();
 
-        const button = fixture.debugElement.query(By.css('button'));
-        expect(button.nativeElement.getAttribute('aria-label')).toBe('Close dialog');
+        expect(button().getAttribute('aria-label')).toBe('Close dialog');
     });
 
     it('should render icon when provided', () => {

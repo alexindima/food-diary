@@ -25,7 +25,7 @@ let uniqueId = 0;
     ],
 })
 export class FdUiDateInputComponent implements ControlValueAccessor {
-    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly locale = inject(LOCALE_ID);
 
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);

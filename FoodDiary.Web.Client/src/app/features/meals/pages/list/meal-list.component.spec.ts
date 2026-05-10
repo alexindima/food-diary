@@ -180,7 +180,8 @@ describe('MealListComponent', () => {
         fixture.detectChanges();
 
         // Mock scrollIntoView on the container element
-        const containerEl = fixture.nativeElement.querySelector('[fdpagecontainer]') as HTMLElement | null;
+        const host = fixture.nativeElement as HTMLElement;
+        const containerEl = host.querySelector<HTMLElement>('[fdpagecontainer]');
         if (containerEl) {
             containerEl.scrollIntoView = vi.fn();
         }
@@ -260,7 +261,12 @@ describe('MealListComponent', () => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date(2026, 4, 5, 0, 30));
         fixture.detectChanges();
-        const containerEl = fixture.nativeElement.querySelector('[fdpagecontainer]') as HTMLElement;
+        const host = fixture.nativeElement as HTMLElement;
+        const containerEl = host.querySelector<HTMLElement>('[fdpagecontainer]');
+        if (containerEl === null) {
+            throw new Error('Expected page container to exist.');
+        }
+
         containerEl.scrollIntoView = vi.fn();
 
         component.repeatFavorite({

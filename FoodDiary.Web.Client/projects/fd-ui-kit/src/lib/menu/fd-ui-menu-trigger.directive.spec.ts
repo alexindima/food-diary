@@ -43,7 +43,13 @@ describe('FdUiMenuTriggerDirective', () => {
         fixture = TestBed.createComponent(TestHostComponent);
         fixture.detectChanges();
 
-        trigger = fixture.nativeElement.querySelector('button');
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('button');
+        if (button === null) {
+            throw new Error('Expected menu trigger to exist.');
+        }
+
+        trigger = button;
     });
 
     async function flushOverlayFocusAsync(): Promise<void> {
@@ -59,7 +65,7 @@ describe('FdUiMenuTriggerDirective', () => {
     }
 
     function getMenuItems(): HTMLButtonElement[] {
-        return Array.from(overlayRoot.querySelectorAll('.fd-ui-menu__item'));
+        return Array.from(overlayRoot.querySelectorAll<HTMLButtonElement>('.fd-ui-menu__item'));
     }
 
     it('opens with ArrowUp and focuses the last enabled item', async () => {

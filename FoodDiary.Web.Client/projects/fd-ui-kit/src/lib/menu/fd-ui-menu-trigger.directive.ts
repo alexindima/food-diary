@@ -18,7 +18,7 @@ import type { FdUiMenuComponent } from './fd-ui-menu.component';
 export class FdUiMenuTriggerDirective {
     private readonly overlay = inject(Overlay);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly elementRef = inject(ElementRef<HTMLElement>);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private activeSubscriptions = new Subscription();
 

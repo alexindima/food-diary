@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 /**
  * Creates a mock dialog ref with common spy methods.

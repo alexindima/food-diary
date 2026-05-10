@@ -74,7 +74,7 @@ export class ProductListBaseComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
 
-    private readonly header = viewChild.required<PageHeaderComponent, ElementRef>(PageHeaderComponent, { read: ElementRef });
+    private readonly header = viewChild.required<PageHeaderComponent, ElementRef<HTMLElement>>(PageHeaderComponent, { read: ElementRef });
 
     public searchForm: FormGroup<ProductSearchFormGroup>;
     public productData: PagedData<Product> = new PagedData<Product>();

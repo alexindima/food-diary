@@ -8,6 +8,17 @@ describe('FdUiSatietyScaleComponent', () => {
     let component: FdUiSatietyScaleComponent;
     let fixture: ComponentFixture<FdUiSatietyScaleComponent>;
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const buttons = (): NodeListOf<HTMLButtonElement> => host().querySelectorAll<HTMLButtonElement>('.satiety-scale__option');
+    const container = (): HTMLElement => {
+        const element = host().querySelector<HTMLElement>('.satiety-scale');
+        if (element === null) {
+            throw new Error('Expected satiety scale container to exist.');
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiSatietyScaleComponent, TranslateModule.forRoot()],
@@ -23,8 +34,8 @@ describe('FdUiSatietyScaleComponent', () => {
     });
 
     it('should render 5 levels', () => {
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        expect(buttons.length).toBe(5);
+        const levelButtons = buttons();
+        expect(levelButtons.length).toBe(5);
         expect(DEFAULT_SATIETY_LEVELS.length).toBe(5);
     });
 
@@ -34,8 +45,8 @@ describe('FdUiSatietyScaleComponent', () => {
 
         expect(component['value']).toBe(5);
 
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        const selectedButton = buttons[4] as HTMLButtonElement;
+        const levelButtons = buttons();
+        const selectedButton = levelButtons[4];
         expect(selectedButton.classList).toContain('satiety-scale__option--selected');
     });
 
@@ -43,8 +54,8 @@ describe('FdUiSatietyScaleComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        (buttons[3] as HTMLButtonElement).click();
+        const levelButtons = buttons();
+        levelButtons[3].click();
         fixture.detectChanges();
 
         expect(onChangeSpy).toHaveBeenCalledWith(4);
@@ -55,12 +66,12 @@ describe('FdUiSatietyScaleComponent', () => {
         component.writeValue(4);
         fixture.detectChanges();
 
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        for (let i = 0; i < buttons.length; i++) {
+        const levelButtons = buttons();
+        for (let i = 0; i < levelButtons.length; i++) {
             if (i === 3) {
-                expect(buttons[i].classList).toContain('satiety-scale__option--selected');
+                expect(levelButtons[i].classList).toContain('satiety-scale__option--selected');
             } else {
-                expect(buttons[i].classList).not.toContain('satiety-scale__option--selected');
+                expect(levelButtons[i].classList).not.toContain('satiety-scale__option--selected');
             }
         }
     });
@@ -71,8 +82,8 @@ describe('FdUiSatietyScaleComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        (buttons[2] as HTMLButtonElement).click();
+        const levelButtons = buttons();
+        levelButtons[2].click();
         fixture.detectChanges();
 
         expect(onChangeSpy).not.toHaveBeenCalled();
@@ -80,26 +91,26 @@ describe('FdUiSatietyScaleComponent', () => {
     });
 
     it('should apply grid layout class by default', () => {
-        const container = fixture.nativeElement.querySelector('.satiety-scale');
-        expect(container.classList).toContain('satiety-scale--grid');
-        expect(container.classList).not.toContain('satiety-scale--vertical');
+        const scale = container();
+        expect(scale.classList).toContain('satiety-scale--grid');
+        expect(scale.classList).not.toContain('satiety-scale--vertical');
     });
 
     it('should apply vertical layout class', () => {
         fixture.componentRef.setInput('layout', 'vertical');
         fixture.detectChanges();
 
-        const container = fixture.nativeElement.querySelector('.satiety-scale');
-        expect(container.classList).toContain('satiety-scale--vertical');
-        expect(container.classList).not.toContain('satiety-scale--grid');
+        const scale = container();
+        expect(scale.classList).toContain('satiety-scale--vertical');
+        expect(scale.classList).not.toContain('satiety-scale--grid');
     });
 
     it('should call onTouched when level is selected', () => {
         const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        (buttons[1] as HTMLButtonElement).click();
+        const levelButtons = buttons();
+        levelButtons[1].click();
 
         expect(onTouchedSpy).toHaveBeenCalled();
     });
@@ -107,8 +118,8 @@ describe('FdUiSatietyScaleComponent', () => {
     it('should emit levelSelected output on click', () => {
         const emitSpy = vi.spyOn(component['levelSelected'], 'emit');
 
-        const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
-        (buttons[4] as HTMLButtonElement).click();
+        const levelButtons = buttons();
+        levelButtons[4].click();
 
         expect(emitSpy).toHaveBeenCalledWith(5);
     });
@@ -122,7 +133,7 @@ describe('FdUiSatietyScaleComponent', () => {
         fixture.detectChanges();
         expect(component['value']).toBeNull();
 
-        const selected = fixture.nativeElement.querySelectorAll('.satiety-scale__option--selected');
+        const selected = host().querySelectorAll<HTMLButtonElement>('.satiety-scale__option--selected');
         expect(selected.length).toBe(0);
     });
 });

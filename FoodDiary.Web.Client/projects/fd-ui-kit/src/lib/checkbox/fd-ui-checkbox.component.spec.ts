@@ -7,6 +7,16 @@ describe('FdUiCheckboxComponent', () => {
     let component: FdUiCheckboxComponent;
     let fixture: ComponentFixture<FdUiCheckboxComponent>;
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = host().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiCheckboxComponent],
@@ -25,7 +35,7 @@ describe('FdUiCheckboxComponent', () => {
         fixture.componentRef.setInput('label', 'Accept terms');
         fixture.detectChanges();
 
-        const checkboxEl = fixture.nativeElement.querySelector('.fd-ui-checkbox__label');
+        const checkboxEl = requireElement<HTMLElement>('.fd-ui-checkbox__label');
         expect(checkboxEl.textContent.trim()).toContain('Accept terms');
     });
 
@@ -33,8 +43,7 @@ describe('FdUiCheckboxComponent', () => {
         fixture.componentRef.setInput('hint', 'Please read carefully');
         fixture.detectChanges();
 
-        const hintEl = fixture.nativeElement.querySelector('.fd-ui-checkbox__hint');
-        expect(hintEl).toBeTruthy();
+        const hintEl = requireElement<HTMLElement>('.fd-ui-checkbox__hint');
         expect(hintEl.textContent.trim()).toBe('Please read carefully');
     });
 

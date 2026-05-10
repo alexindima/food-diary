@@ -15,6 +15,9 @@ describe('FdUiTabsComponent', () => {
         { value: 'meals', label: 'Meals' },
     ];
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const tabs = (): HTMLButtonElement[] => Array.from(host().querySelectorAll<HTMLButtonElement>('.fd-ui-tabs__tab'));
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiTabsComponent, TranslateModule.forRoot()],
@@ -33,18 +36,18 @@ describe('FdUiTabsComponent', () => {
     });
 
     it('should render tabs', () => {
-        const tabLabels = fixture.nativeElement.querySelectorAll('.fd-ui-tabs__tab');
+        const tabLabels = tabs();
         expect(tabLabels.length).toBe(3);
     });
 
     it('should set selected tab based on selectedValue', () => {
-        let tabLabels = fixture.nativeElement.querySelectorAll('.fd-ui-tabs__tab');
+        let tabLabels = tabs();
         expect(tabLabels[0].getAttribute('aria-selected')).toBe('true');
 
         fixture.componentRef.setInput('selectedValue', 'recipes');
         fixture.detectChanges();
 
-        tabLabels = fixture.nativeElement.querySelectorAll('.fd-ui-tabs__tab');
+        tabLabels = tabs();
         expect(tabLabels[1].getAttribute('aria-selected')).toBe('true');
     });
 
@@ -52,8 +55,8 @@ describe('FdUiTabsComponent', () => {
         const emitted: string[] = [];
         component.selectedValueChange.subscribe(value => emitted.push(value));
 
-        const tabButtons = fixture.debugElement.queryAll(By.css('.fd-ui-tabs__tab'));
-        tabButtons[1].nativeElement.click();
+        const tabButtons = tabs();
+        tabButtons[1].click();
         fixture.detectChanges();
 
         expect(component.selectedValue()).toBe('recipes');
@@ -62,7 +65,7 @@ describe('FdUiTabsComponent', () => {
 
     it('should support keyboard navigation', () => {
         const tabButtons = fixture.debugElement.queryAll(By.css('.fd-ui-tabs__tab'));
-        const secondTab = tabButtons[1].nativeElement as HTMLButtonElement;
+        const secondTab = tabs()[1];
 
         tabButtons[0].triggerEventHandler('keydown', new KeyboardEvent('keydown', { key: 'ArrowRight' }));
         fixture.detectChanges();

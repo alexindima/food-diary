@@ -7,6 +7,16 @@ describe('FdUiDateInputComponent', () => {
     let component: FdUiDateInputComponent;
     let fixture: ComponentFixture<FdUiDateInputComponent>;
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = host().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiDateInputComponent],
@@ -25,13 +35,12 @@ describe('FdUiDateInputComponent', () => {
         fixture.componentRef.setInput('label', 'Date of Birth');
         fixture.detectChanges();
 
-        const label = fixture.nativeElement.querySelector('.fd-ui-date-input__label-text');
-        expect(label).toBeTruthy();
+        const label = requireElement<HTMLElement>('.fd-ui-date-input__label-text');
         expect(label.textContent).toContain('Date of Birth');
     });
 
     it('should not render label when not provided', () => {
-        const label = fixture.nativeElement.querySelector('.fd-ui-date-input__label');
+        const label = host().querySelector('.fd-ui-date-input__label');
         expect(label).toBeNull();
     });
 
@@ -40,8 +49,7 @@ describe('FdUiDateInputComponent', () => {
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
 
-        const asterisk = fixture.nativeElement.querySelector('.fd-ui-date-input__required');
-        expect(asterisk).toBeTruthy();
+        const asterisk = requireElement<HTMLElement>('.fd-ui-date-input__required');
         expect(asterisk.textContent).toContain('*');
     });
 
@@ -50,7 +58,7 @@ describe('FdUiDateInputComponent', () => {
         fixture.componentRef.setInput('required', false);
         fixture.detectChanges();
 
-        const asterisk = fixture.nativeElement.querySelector('.fd-ui-date-input__required');
+        const asterisk = host().querySelector('.fd-ui-date-input__required');
         expect(asterisk).toBeNull();
     });
 
@@ -87,8 +95,7 @@ describe('FdUiDateInputComponent', () => {
         fixture.componentRef.setInput('error', 'Date is required');
         fixture.detectChanges();
 
-        const errorEl = fixture.nativeElement.querySelector('.fd-ui-date-input__error');
-        expect(errorEl).toBeTruthy();
+        const errorEl = requireElement<HTMLElement>('.fd-ui-date-input__error');
         expect(errorEl.textContent).toContain('Date is required');
     });
 
@@ -96,7 +103,7 @@ describe('FdUiDateInputComponent', () => {
         fixture.componentRef.setInput('error', null);
         fixture.detectChanges();
 
-        const errorEl = fixture.nativeElement.querySelector('.fd-ui-date-input__error');
+        const errorEl = host().querySelector('.fd-ui-date-input__error');
         expect(errorEl).toBeNull();
     });
 
@@ -104,12 +111,12 @@ describe('FdUiDateInputComponent', () => {
         fixture.componentRef.setInput('size', 'lg');
         fixture.detectChanges();
 
-        const container = fixture.nativeElement.querySelector('.fd-ui-date-input');
+        const container = requireElement<HTMLElement>('.fd-ui-date-input');
         expect(container.classList).toContain('fd-ui-date-input--size-lg');
     });
 
     it('should default to md size class', () => {
-        const container = fixture.nativeElement.querySelector('.fd-ui-date-input');
+        const container = requireElement<HTMLElement>('.fd-ui-date-input');
         expect(container.classList).toContain('fd-ui-date-input--size-md');
     });
 
@@ -119,7 +126,7 @@ describe('FdUiDateInputComponent', () => {
 
         expect(component['disabled']()).toBe(true);
 
-        const suffixButton = fixture.nativeElement.querySelector('.fd-ui-date-input__suffix') as HTMLButtonElement;
+        const suffixButton = requireElement<HTMLButtonElement>('.fd-ui-date-input__suffix');
         expect(suffixButton.disabled).toBe(true);
     });
 
@@ -144,7 +151,7 @@ describe('FdUiDateInputComponent', () => {
         component.writeValue('2025-03-15');
         fixture.detectChanges();
 
-        const inputEl = fixture.nativeElement.querySelector('.fd-ui-date-input__control') as HTMLInputElement;
+        const inputEl = requireElement<HTMLInputElement>('.fd-ui-date-input__control');
         expect(inputEl.value).toBeTruthy();
     });
 });

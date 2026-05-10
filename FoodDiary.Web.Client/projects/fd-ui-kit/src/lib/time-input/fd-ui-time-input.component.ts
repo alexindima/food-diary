@@ -34,7 +34,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
 
-    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
     private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;

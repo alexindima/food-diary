@@ -33,7 +33,7 @@ export class FdUiHintDirective {
     public readonly fdUiHintDisabled = input(false, { transform: booleanAttribute });
 
     private readonly overlay = inject(Overlay);
-    private readonly elementRef = inject(ElementRef<HTMLElement>);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly destroyRef = inject(DestroyRef);
     private readonly tooltipId = `fd-ui-hint-${nextHintId++}`;

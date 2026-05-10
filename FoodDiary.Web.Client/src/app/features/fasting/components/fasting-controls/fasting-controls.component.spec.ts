@@ -1,6 +1,5 @@
-import { type DebugElement, signal, type WritableSignal } from '@angular/core';
+import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
@@ -45,11 +44,11 @@ describe('FastingControlsComponent', () => {
     });
 
     it('renders setup controls and starts fasting from the CTA', () => {
-        expect(fixture.nativeElement.textContent).toContain('FASTING.MODE_INTERMITTENT');
-        expect(fixture.nativeElement.textContent).toContain('FASTING.START_FAST');
+        expect(host(fixture).textContent).toContain('FASTING.MODE_INTERMITTENT');
+        expect(host(fixture).textContent).toContain('FASTING.START_FAST');
 
         const startButton = getButtonByText(fixture, 'FASTING.START_FAST');
-        startButton.triggerEventHandler('click');
+        startButton.click();
 
         expect(facade.startFasting).toHaveBeenCalledTimes(1);
     });
@@ -87,7 +86,7 @@ describe('FastingControlsComponent', () => {
         facade.currentSession.set(createCyclicSession());
         fixture.detectChanges();
 
-        const text = fixture.nativeElement.textContent;
+        const text = host(fixture).textContent;
         expect(text).toContain('FASTING.SKIP_FASTING_PERIOD');
         expect(text).toContain('FASTING.SKIP_DAY');
         expect(text).toContain('FASTING.STOP_CYCLE');
@@ -123,7 +122,7 @@ describe('FastingControlsComponent', () => {
         facade.currentSession.set(createExtendedSession());
         fixture.detectChanges();
 
-        const text = fixture.nativeElement.textContent;
+        const text = host(fixture).textContent;
         expect(text).toContain('FASTING.EXTEND_GROUP');
         expect(text).toContain('FASTING.REDUCE_GROUP');
         expect(text).not.toContain('FASTING.ADD_DAY');
@@ -142,7 +141,7 @@ describe('FastingControlsComponent', () => {
         component.showCustomReduce();
         fixture.detectChanges();
 
-        const text = fixture.nativeElement.textContent;
+        const text = host(fixture).textContent;
         expect(text).toContain('FASTING.ADD_TIME');
         expect(text).toContain('FASTING.REDUCE_TIME');
 
@@ -178,8 +177,14 @@ describe('FastingControlsComponent', () => {
     });
 });
 
-function getButtonByText(fixture: ComponentFixture<FastingControlsComponent>, text: string): DebugElement {
-    const button = fixture.debugElement.queryAll(By.css('fd-ui-button')).find(element => element.nativeElement.textContent.includes(text));
+function host(fixture: ComponentFixture<FastingControlsComponent>): HTMLElement {
+    return fixture.nativeElement as HTMLElement;
+}
+
+function getButtonByText(fixture: ComponentFixture<FastingControlsComponent>, text: string): HTMLElement {
+    const button = Array.from(host(fixture).querySelectorAll<HTMLElement>('fd-ui-button')).find(element =>
+        element.textContent.includes(text),
+    );
     if (!button) {
         throw new Error(`Button with text "${text}" was not found.`);
     }

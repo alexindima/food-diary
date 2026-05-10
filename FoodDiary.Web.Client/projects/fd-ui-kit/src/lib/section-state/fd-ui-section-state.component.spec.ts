@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { describe, expect, it } from 'vitest';
 
 import { type FdUiSectionState, FdUiSectionStateComponent } from './fd-ui-section-state.component';
@@ -46,11 +45,21 @@ describe('FdUiSectionStateComponent', () => {
     let fixture: ComponentFixture<TestHostComponent>;
     let host: TestHostComponent;
 
+    const nativeHost = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = nativeHost().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+
     it('renders projected content in content state', async () => {
         fixture = await createComponentAsync();
         host = fixture.componentInstance;
 
-        expect(fixture.nativeElement.querySelector('.projected-content')?.textContent).toContain('Ready');
+        expect(requireElement<HTMLElement>('.projected-content').textContent).toContain('Ready');
     });
 
     it('renders loader in loading state', async () => {
@@ -59,7 +68,7 @@ describe('FdUiSectionStateComponent', () => {
         host.state.set('loading');
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('fd-ui-loader')).not.toBeNull();
+        expect(nativeHost().querySelector('fd-ui-loader')).not.toBeNull();
     });
 
     it('renders empty state in empty state', async () => {
@@ -68,7 +77,7 @@ describe('FdUiSectionStateComponent', () => {
         host.state.set('empty');
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('fd-ui-empty-state')).not.toBeNull();
+        expect(nativeHost().querySelector('fd-ui-empty-state')).not.toBeNull();
     });
 
     it('emits retry in error state', async () => {
@@ -77,7 +86,7 @@ describe('FdUiSectionStateComponent', () => {
         host.state.set('error');
         fixture.detectChanges();
 
-        fixture.debugElement.query(By.css('button')).nativeElement.click();
+        requireElement<HTMLButtonElement>('button').click();
         expect(host.retryCount()).toBe(1);
     });
 
@@ -88,7 +97,7 @@ describe('FdUiSectionStateComponent', () => {
         host.state.set('empty');
         fixture.detectChanges();
 
-        const sectionState = fixture.nativeElement.querySelector('fd-ui-section-state');
+        const sectionState = requireElement<HTMLElement>('fd-ui-section-state');
         expect(sectionState.classList.contains('fd-ui-section-state--compact')).toBe(true);
     });
 });

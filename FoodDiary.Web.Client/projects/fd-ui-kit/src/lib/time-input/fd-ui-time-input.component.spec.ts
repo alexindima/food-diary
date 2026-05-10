@@ -8,6 +8,16 @@ describe('FdUiTimeInputComponent', () => {
     let component: FdUiTimeInputComponent;
     let fixture: ComponentFixture<FdUiTimeInputComponent>;
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = host().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiTimeInputComponent],
@@ -27,13 +37,12 @@ describe('FdUiTimeInputComponent', () => {
         fixture.componentRef.setInput('label', 'Meal Time');
         fixture.detectChanges();
 
-        const label = fixture.nativeElement.querySelector('.fd-ui-time-input__label-text');
-        expect(label).toBeTruthy();
+        const label = requireElement<HTMLElement>('.fd-ui-time-input__label-text');
         expect(label.textContent).toContain('Meal Time');
     });
 
     it('should not render label when not provided', () => {
-        const label = fixture.nativeElement.querySelector('.fd-ui-time-input__label');
+        const label = host().querySelector('.fd-ui-time-input__label');
         expect(label).toBeNull();
     });
 
@@ -42,8 +51,7 @@ describe('FdUiTimeInputComponent', () => {
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
 
-        const asterisk = fixture.nativeElement.querySelector('.fd-ui-time-input__required');
-        expect(asterisk).toBeTruthy();
+        const asterisk = requireElement<HTMLElement>('.fd-ui-time-input__required');
         expect(asterisk.textContent).toContain('*');
     });
 
@@ -64,8 +72,7 @@ describe('FdUiTimeInputComponent', () => {
         fixture.componentRef.setInput('error', 'Invalid time');
         fixture.detectChanges();
 
-        const errorEl = fixture.nativeElement.querySelector('.fd-ui-time-input__error');
-        expect(errorEl).toBeTruthy();
+        const errorEl = requireElement<HTMLElement>('.fd-ui-time-input__error');
         expect(errorEl.textContent).toContain('Invalid time');
     });
 
@@ -73,7 +80,7 @@ describe('FdUiTimeInputComponent', () => {
         fixture.componentRef.setInput('error', null);
         fixture.detectChanges();
 
-        const errorEl = fixture.nativeElement.querySelector('.fd-ui-time-input__error');
+        const errorEl = host().querySelector('.fd-ui-time-input__error');
         expect(errorEl).toBeNull();
     });
 
@@ -95,12 +102,12 @@ describe('FdUiTimeInputComponent', () => {
         fixture.componentRef.setInput('size', 'lg');
         fixture.detectChanges();
 
-        const container = fixture.nativeElement.querySelector('.fd-ui-time-input');
+        const container = requireElement<HTMLElement>('.fd-ui-time-input');
         expect(container.classList).toContain('fd-ui-time-input--size-lg');
     });
 
     it('should default to md size class', () => {
-        const container = fixture.nativeElement.querySelector('.fd-ui-time-input');
+        const container = requireElement<HTMLElement>('.fd-ui-time-input');
         expect(container.classList).toContain('fd-ui-time-input--size-md');
     });
 

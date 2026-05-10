@@ -65,13 +65,13 @@ describe('FastingTimerCardComponent', () => {
         setSession(fixture, createSession());
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.textContent).toContain('Пост');
+        expect(host(fixture).textContent).toContain('Пост');
 
         localizationLanguage = 'en';
         await firstValueFrom(translateService.use('en'));
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.textContent).toContain('Fasting');
+        expect(host(fixture).textContent).toContain('Fasting');
     });
 
     it.each(['dashboard', 'page'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
@@ -105,9 +105,9 @@ describe('FastingTimerCardComponent', () => {
         setSession(fixture, createSession({ protocol: 'F16_8' }));
         fixture.detectChanges();
 
-        const separator = fixture.nativeElement.querySelector('.fasting-timer-card__summary-protocol-separator') as HTMLElement;
+        const separator = requireElement<HTMLElement>(fixture, '.fasting-timer-card__summary-protocol-separator');
         expect(separator.textContent.trim()).toBe('\u00b7');
-        expect(fixture.nativeElement.textContent).not.toContain('\u00c2');
+        expect(host(fixture).textContent).not.toContain('\u00c2');
     });
 
     it.each(['dashboard', 'page'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
@@ -117,7 +117,7 @@ describe('FastingTimerCardComponent', () => {
         setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(30) }));
         fixture.detectChanges();
 
-        const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
+        const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
         expect(percent.textContent.trim()).toBe('100%');
     });
 
@@ -128,7 +128,7 @@ describe('FastingTimerCardComponent', () => {
         setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(6) }));
         fixture.detectChanges();
 
-        const progressRing = fixture.nativeElement.querySelector('.fasting-timer-card__ring-progress') as SVGCircleElement;
+        const progressRing = requireElement<SVGCircleElement>(fixture, '.fasting-timer-card__ring-progress');
         const circumference = 2 * Math.PI * 90;
         expect(Number(progressRing.style.strokeDasharray)).toBeCloseTo(circumference);
         expect(Number(progressRing.style.strokeDashoffset)).toBeCloseTo(circumference * 0.75);
@@ -141,7 +141,7 @@ describe('FastingTimerCardComponent', () => {
         setSession(fixture, createSession());
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('.fasting-timer-card__ring-content--summary')).not.toBeNull();
+        expect(host(fixture).querySelector('.fasting-timer-card__ring-content--summary')).not.toBeNull();
     });
 
     it('builds timer display from session inputs', async () => {
@@ -154,8 +154,8 @@ describe('FastingTimerCardComponent', () => {
         );
         fixture.detectChanges();
 
-        const elapsed = fixture.nativeElement.querySelector('.fasting-timer-card__elapsed') as HTMLElement;
-        const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
+        const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
+        const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
         expect(elapsed.textContent.trim()).toBe('05:00:00');
         expect(percent.textContent.trim()).toBe('50%');
     });
@@ -171,8 +171,8 @@ describe('FastingTimerCardComponent', () => {
         getFacadeStub(fixture).elapsedMs.set(5 * 3_600_000);
         fixture.detectChanges();
 
-        const elapsed = fixture.nativeElement.querySelector('.fasting-timer-card__elapsed') as HTMLElement;
-        const percent = fixture.nativeElement.querySelector('.fasting-timer-card__percent') as HTMLElement;
+        const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
+        const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
         expect(elapsed.textContent.trim()).toBe('05:00:00');
         expect(percent.textContent.trim()).toBe('50%');
     });
@@ -185,7 +185,7 @@ describe('FastingTimerCardComponent', () => {
         vi.advanceTimersByTime(1_000);
         fixture.detectChanges();
 
-        const elapsed = fixture.nativeElement.querySelector('.fasting-timer-card__elapsed') as HTMLElement;
+        const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
         expect(elapsed.textContent.trim()).toBe('00:00:01');
     });
 
@@ -195,7 +195,7 @@ describe('FastingTimerCardComponent', () => {
         fixture.componentInstance.layout.set('dashboard');
         fixture.detectChanges();
 
-        const ringSvg = fixture.nativeElement.querySelector('.fasting-timer-card__ring-svg') as SVGElement;
+        const ringSvg = requireElement<SVGElement>(fixture, '.fasting-timer-card__ring-svg');
         expect(ringSvg.getAttribute('aria-hidden')).toBe('true');
         expect(ringSvg.getAttribute('focusable')).toBe('false');
     });
@@ -341,6 +341,19 @@ function createFastingFacadeStub(): FastingFacadeStub {
 
 function getFacadeStub(fixture: ComponentFixture<FastingTimerCardHostComponent>): FastingFacadeStub {
     return fixture.debugElement.injector.get(FastingFacade) as unknown as FastingFacadeStub;
+}
+
+function host(fixture: ComponentFixture<FastingTimerCardHostComponent>): HTMLElement {
+    return fixture.nativeElement as HTMLElement;
+}
+
+function requireElement<T extends Element>(fixture: ComponentFixture<FastingTimerCardHostComponent>, selector: string): T {
+    const element = host(fixture).querySelector<T>(selector);
+    if (element === null) {
+        throw new Error(`Expected element ${selector} to exist.`);
+    }
+
+    return element;
 }
 
 function setSession(fixture: ComponentFixture<FastingTimerCardHostComponent>, session: FastingSession | null): void {

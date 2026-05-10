@@ -14,6 +14,16 @@ describe('FdUiSelectComponent', () => {
         { value: 'cherry', label: 'Cherry' },
     ];
 
+    const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const requireElement = <T extends Element>(selector: string): T => {
+        const element = host().querySelector<T>(selector);
+        if (element === null) {
+            throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiSelectComponent],
@@ -33,8 +43,7 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('label', 'Fruit');
         fixture.detectChanges();
 
-        const labelEl = fixture.nativeElement.querySelector('.fd-ui-select__label-text');
-        expect(labelEl).toBeTruthy();
+        const labelEl = requireElement<HTMLElement>('.fd-ui-select__label-text');
         expect(labelEl.textContent.trim()).toBe('Fruit');
     });
 
@@ -43,8 +52,7 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
 
-        const requiredEl = fixture.nativeElement.querySelector('.fd-ui-select__required');
-        expect(requiredEl).toBeTruthy();
+        const requiredEl = requireElement<HTMLElement>('.fd-ui-select__required');
         expect(requiredEl.textContent.trim()).toBe('*');
     });
 
@@ -52,8 +60,7 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('error', 'This field is required');
         fixture.detectChanges();
 
-        const errorEl = fixture.nativeElement.querySelector('.fd-ui-select__error');
-        expect(errorEl).toBeTruthy();
+        const errorEl = requireElement<HTMLElement>('.fd-ui-select__error');
         expect(errorEl.textContent.trim()).toBe('This field is required');
     });
 
@@ -125,7 +132,7 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('size', 'lg');
         fixture.detectChanges();
 
-        const selectEl = fixture.nativeElement.querySelector('.fd-ui-select');
+        const selectEl = requireElement<HTMLElement>('.fd-ui-select');
         expect(selectEl.classList).toContain('fd-ui-select--size-lg');
     });
 

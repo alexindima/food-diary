@@ -12,7 +12,7 @@ import { FdUiMenuComponent } from './fd-ui-menu.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiMenuItemComponent {
-    private readonly host = inject(ElementRef<HTMLButtonElement>);
+    private readonly host = inject<ElementRef<HTMLButtonElement>>(ElementRef);
     private readonly parentMenu = inject(FdUiMenuComponent, { optional: true });
 
     public readonly type = input<'button' | 'submit' | 'reset'>('button');
