@@ -26,7 +26,7 @@
                         <span class="dashboard-appearance-dialog__swatch dashboard-appearance-dialog__swatch--{{ theme.name }}"></span>
                         <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ theme.labelKey | translate }}</span>
                         <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
-                            {{ 'DASHBOARD.APPEARANCE.THEME_DESCRIPTION_' + theme.name.toUpperCase() | translate }}
+                            {{ theme.descriptionKey | translate }}
                         </span>
                     </button>
                 }
@@ -63,7 +63,7 @@
                         </span>
                         <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ uiStyle.labelKey | translate }}</span>
                         <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
-                            {{ 'DASHBOARD.APPEARANCE.UI_STYLE_DESCRIPTION_' + uiStyle.name.toUpperCase() | translate }}
+                            {{ uiStyle.descriptionKey | translate }}
                         </span>
                     </button>
                 }
