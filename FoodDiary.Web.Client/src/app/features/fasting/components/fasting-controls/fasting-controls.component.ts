@@ -69,6 +69,28 @@ export class FastingControlsComponent {
     public readonly isReducePanelExpanded = signal(false);
     public readonly extendPanelToggleLabel = computed(() => (this.isExtendPanelExpanded() ? '-' : '+'));
     public readonly reducePanelToggleLabel = computed(() => (this.isReducePanelExpanded() ? '-' : '+'));
+    public readonly customExtendActionState = computed<FastingCustomActionState>(() =>
+        this.isCustomExtendExpanded()
+            ? {
+                  variant: 'primary',
+                  fill: 'solid',
+              }
+            : {
+                  variant: 'secondary',
+                  fill: 'outline',
+              },
+    );
+    public readonly customReduceActionState = computed<FastingCustomActionState>(() =>
+        this.isCustomReduceExpanded()
+            ? {
+                  variant: 'danger',
+                  fill: 'solid',
+              }
+            : {
+                  variant: 'secondary',
+                  fill: 'outline',
+              },
+    );
     public readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
     public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
@@ -474,4 +496,9 @@ export class FastingControlsComponent {
             })
             .afterClosed();
     }
+}
+
+interface FastingCustomActionState {
+    variant: 'primary' | 'secondary' | 'danger';
+    fill: 'solid' | 'outline';
 }

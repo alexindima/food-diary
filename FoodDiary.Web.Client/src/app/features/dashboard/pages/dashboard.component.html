@@ -105,13 +105,15 @@
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
                     [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
                 >
+                    @let blockStates = dashboardBlockStates();
+                    @let mealsState = mealsPreviewState();
                     @if (layout.isEditingLayout()) {
                         <fd-notice-banner
                             class="dashboard__edit-hint"
                             type="info"
                             [title]="'DASHBOARD.SETTINGS.TITLE' | translate"
                             [message]="'DASHBOARD.SETTINGS.HINT' | translate"
-                            [actionLabel]="layout.hasLayoutChanges() ? ('DASHBOARD.SETTINGS.SAVE' | translate) : null"
+                            [actionLabel]="editSaveActionLabelKey() ? (editSaveActionLabelKey()! | translate) : null"
                             (action)="layout.save()"
                         />
                     }
@@ -119,18 +121,16 @@
                         @if (shouldRenderFastingWidget()) {
                             <div
                                 class="dashboard__block dashboard__block--fasting fd-row"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('fasting')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : 'button'"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : 0"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('fasting') : null"
-                                [attr.aria-label]="
-                                    layout.isEditingLayout() ? ('DASHBOARD.FASTING_EDIT_TITLE' | translate) : ('FASTING.TITLE' | translate)
-                                "
+                                [class.dashboard__block--hidden]="blockStates.fasting.hidden"
+                                [attr.role]="blockStates.fasting.role"
+                                [attr.tabindex]="blockStates.fasting.tabIndex"
+                                [attr.aria-pressed]="blockStates.fasting.ariaPressed"
+                                [attr.aria-label]="blockStates.fasting.ariaLabelKey ? (blockStates.fasting.ariaLabelKey | translate) : null"
                                 (click)="handleFastingCardClick()"
                                 (keydown.enter)="handleFastingCardClick()"
                                 (keydown.space)="$event.preventDefault(); handleFastingCardClick()"
                             >
-                                <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                <fd-dashboard-card-shell [attr.inert]="blockStates.fasting.inert">
                                     <fd-fasting-timer-card
                                         class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
                                         [layout]="'dashboard'"
@@ -153,11 +153,11 @@
                         @if (layout.shouldRenderBlock('summary')) {
                             <div
                                 class="dashboard__block dashboard__block--locked"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('summary')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('summary') : null"
-                                [attr.aria-disabled]="layout.isEditingLayout() ? !layout.canToggleBlock('summary') : null"
+                                [class.dashboard__block--hidden]="blockStates.summary.hidden"
+                                [attr.role]="blockStates.summary.role"
+                                [attr.tabindex]="blockStates.summary.tabIndex"
+                                [attr.aria-pressed]="blockStates.summary.ariaPressed"
+                                [attr.aria-disabled]="blockStates.summary.ariaDisabled"
                                 (click)="layout.toggleBlock('summary')"
                                 (keydown.enter)="layout.toggleBlock('summary')"
                             >
@@ -168,7 +168,7 @@
                                         {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
                                     </div>
                                 }
-                                <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                <fd-dashboard-card-shell [attr.inert]="blockStates.summary.inert">
                                     <fd-dashboard-summary-card
                                         class="dashboard__card dashboard__card--ring"
                                         [dailyGoal]="consumptionRingData().dailyGoal"
@@ -186,28 +186,28 @@
                         @if (layout.shouldRenderBlock('meals')) {
                             <div
                                 class="dashboard__block dashboard__block--meals"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('meals')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('meals') : null"
+                                [class.dashboard__block--hidden]="blockStates.meals.hidden"
+                                [attr.role]="blockStates.meals.role"
+                                [attr.tabindex]="blockStates.meals.tabIndex"
+                                [attr.aria-pressed]="blockStates.meals.ariaPressed"
                                 (click)="layout.toggleBlock('meals')"
                                 (keydown.enter)="layout.toggleBlock('meals')"
                             >
                                 <fd-meals-preview
-                                    [attr.inert]="layout.isEditingLayout() ? '' : null"
+                                    [attr.inert]="blockStates.meals.inert"
                                     [entries]="mealPreviewEntries()"
                                     [titleText]="
-                                        isTodaySelected()
-                                            ? null
-                                            : ('DASHBOARD.MEALS_TITLE_FOR_DATE'
-                                              | translate: { date: (selectedDate() | localizedDate: 'd MMMM y') })
+                                        mealsState.titleText
+                                            ? (mealsState.titleText.key
+                                              | translate: { date: (mealsState.titleText.date | localizedDate: 'd MMMM y') })
+                                            : null
                                     "
                                     [titleKey]="'DASHBOARD.MEALS_TITLE'"
                                     [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
-                                    [emptyKey]="isTodaySelected() ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE'"
-                                    [showAddButtons]="isTodaySelected()"
-                                    [showAiButtons]="isTodaySelected()"
-                                    [showEmptyState]="!isTodaySelected()"
+                                    [emptyKey]="mealsState.emptyKey"
+                                    [showAddButtons]="mealsState.showDateActions"
+                                    [showAiButtons]="mealsState.showDateActions"
+                                    [showEmptyState]="mealsState.showEmptyState"
                                     (viewAll)="manageConsumptionsAsync()"
                                     (add)="addConsumptionAsync($event)"
                                     (aiMealCreated)="onMealCreated()"
@@ -221,15 +221,15 @@
                         @if (layout.shouldRenderBlock('hydration')) {
                             <div
                                 class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('hydration')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('hydration') : null"
+                                [class.dashboard__block--hidden]="blockStates.hydration.hidden"
+                                [attr.role]="blockStates.hydration.role"
+                                [attr.tabindex]="blockStates.hydration.tabIndex"
+                                [attr.aria-pressed]="blockStates.hydration.ariaPressed"
                                 (click)="layout.toggleBlock('hydration')"
                                 (keydown.enter)="layout.toggleBlock('hydration')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                    <fd-dashboard-card-shell [attr.inert]="blockStates.hydration.inert">
                                         <fd-hydration-card
                                             class="dashboard__card dashboard__card--hydration"
                                             [total]="hydration()?.totalMl ?? 0"
@@ -250,15 +250,15 @@
                         @if (layout.shouldRenderBlock('cycle')) {
                             <div
                                 class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('cycle')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('cycle') : null"
+                                [class.dashboard__block--hidden]="blockStates.cycle.hidden"
+                                [attr.role]="blockStates.cycle.role"
+                                [attr.tabindex]="blockStates.cycle.tabIndex"
+                                [attr.aria-pressed]="blockStates.cycle.ariaPressed"
                                 (click)="layout.toggleBlock('cycle')"
                                 (keydown.enter)="layout.toggleBlock('cycle')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                    <fd-dashboard-card-shell [attr.inert]="blockStates.cycle.inert">
                                         <fd-cycle-summary-card
                                             class="dashboard__card dashboard__card--cycle"
                                             [startDate]="cycle()?.startDate ?? null"
@@ -278,15 +278,15 @@
                         @if (layout.shouldRenderBlock('weight')) {
                             <div
                                 class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('weight')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('weight') : null"
+                                [class.dashboard__block--hidden]="blockStates.weight.hidden"
+                                [attr.role]="blockStates.weight.role"
+                                [attr.tabindex]="blockStates.weight.tabIndex"
+                                [attr.aria-pressed]="blockStates.weight.ariaPressed"
                                 (click)="layout.toggleBlock('weight')"
                                 (keydown.enter)="layout.toggleBlock('weight')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                    <fd-dashboard-card-shell [attr.inert]="blockStates.weight.inert">
                                         <fd-weight-trend-card
                                             class="dashboard__card dashboard__card--weight-trend"
                                             [currentWeight]="weightTrend.weightTrendCurrent()"
@@ -306,15 +306,15 @@
                         @if (layout.shouldRenderBlock('waist')) {
                             <div
                                 class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('waist')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('waist') : null"
+                                [class.dashboard__block--hidden]="blockStates.waist.hidden"
+                                [attr.role]="blockStates.waist.role"
+                                [attr.tabindex]="blockStates.waist.tabIndex"
+                                [attr.aria-pressed]="blockStates.waist.ariaPressed"
                                 (click)="layout.toggleBlock('waist')"
                                 (keydown.enter)="layout.toggleBlock('waist')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                    <fd-dashboard-card-shell [attr.inert]="blockStates.waist.inert">
                                         <fd-weight-trend-card
                                             class="dashboard__card dashboard__card--waist-trend"
                                             [title]="'WAIST_CARD.TITLE'"
@@ -338,17 +338,17 @@
                         @if (layout.shouldRenderBlock('tdee')) {
                             <div
                                 class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('tdee')"
-                                [attr.role]="'button'"
-                                [attr.tabindex]="0"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('tdee') : null"
-                                [attr.aria-label]="'TDEE_CARD.TITLE' | translate"
+                                [class.dashboard__block--hidden]="blockStates.tdee.hidden"
+                                [attr.role]="blockStates.tdee.role"
+                                [attr.tabindex]="blockStates.tdee.tabIndex"
+                                [attr.aria-pressed]="blockStates.tdee.ariaPressed"
+                                [attr.aria-label]="blockStates.tdee.ariaLabelKey ? (blockStates.tdee.ariaLabelKey | translate) : null"
                                 (click)="handleTdeeCardClick($event)"
                                 (keydown.enter)="handleTdeeCardClick($event)"
                                 (keydown.space)="$event.preventDefault(); handleTdeeCardClick($event)"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                    <fd-dashboard-card-shell [attr.inert]="blockStates.tdee.inert">
                                         <fd-tdee-insight-card
                                             class="dashboard__card dashboard__card--tdee"
                                             [insight]="tdeeInsight()"
@@ -366,15 +366,15 @@
                         @if (layout.shouldRenderBlock('advice')) {
                             <div
                                 class="dashboard__block"
-                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('advice')"
-                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
-                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
-                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('advice') : null"
+                                [class.dashboard__block--hidden]="blockStates.advice.hidden"
+                                [attr.role]="blockStates.advice.role"
+                                [attr.tabindex]="blockStates.advice.tabIndex"
+                                [attr.aria-pressed]="blockStates.advice.ariaPressed"
                                 (click)="layout.toggleBlock('advice')"
                                 (keydown.enter)="layout.toggleBlock('advice')"
                             >
                                 @defer (on viewport) {
-                                    <fd-dashboard-card-shell [attr.inert]="layout.isEditingLayout() ? '' : null">
+                                    <fd-dashboard-card-shell [attr.inert]="blockStates.advice.inert">
                                         <fd-daily-advice-card
                                             class="dashboard__card dashboard__card--advice"
                                             [advice]="dailyAdvice()"

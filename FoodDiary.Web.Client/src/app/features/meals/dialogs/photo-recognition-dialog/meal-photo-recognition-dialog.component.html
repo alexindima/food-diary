@@ -58,18 +58,13 @@
                         </span>
                         <span class="photo-ai-dialog__title-actions fd-row fd-gap-xxs">
                             <fd-ui-button
-                                [variant]="isEditing() ? 'primary' : 'secondary'"
-                                [fill]="isEditing() ? 'solid' : 'outline'"
+                                [variant]="editActionState().variant"
+                                [fill]="editActionState().fill"
                                 size="sm"
                                 class="photo-ai-dialog__edit-toggle"
-                                (click)="isEditing() ? applyEditing() : startEditing()"
+                                (click)="handleEditAction()"
                             >
-                                {{
-                                    (isEditing()
-                                        ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE'
-                                        : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON'
-                                    ) | translate
-                                }}
+                                {{ editActionState().labelKey | translate }}
                             </fd-ui-button>
                         </span>
                     </div>
@@ -206,10 +201,7 @@
                 [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
                 (click)="addToMeal()"
             >
-                {{
-                    (isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL')
-                        | translate
-                }}
+                {{ submitLabelKey() | translate }}
             </fd-ui-button>
         }
     </div>

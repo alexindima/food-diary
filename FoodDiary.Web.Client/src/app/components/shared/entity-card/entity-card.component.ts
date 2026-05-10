@@ -103,6 +103,21 @@ export class EntityCardComponent {
     public readonly hasPreviewImage = computed(() =>
         Boolean(this.previewable() && (this.imageUrl()?.trim() || this.collageState().hasImages)),
     );
+    public readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() =>
+        this.hasPreviewImage()
+            ? {
+                  hintKey: 'IMAGE_PREVIEW.OPEN',
+                  role: 'button',
+                  tabIndex: '0',
+                  ariaLabelKey: 'IMAGE_PREVIEW.OPEN',
+              }
+            : {
+                  hintKey: null,
+                  role: null,
+                  tabIndex: null,
+                  ariaLabelKey: null,
+              },
+    );
 
     public handleOpen(): void {
         this.open.emit();
@@ -127,4 +142,11 @@ export class EntityCardComponent {
         event.stopPropagation();
         this.action.emit();
     }
+}
+
+interface EntityCardPreviewInteractionState {
+    hintKey: string | null;
+    role: string | null;
+    tabIndex: string | null;
+    ariaLabelKey: string | null;
 }

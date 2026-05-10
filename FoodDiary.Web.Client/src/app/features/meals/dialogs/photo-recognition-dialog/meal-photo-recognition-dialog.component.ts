@@ -44,6 +44,12 @@ type MacroSummaryItem = {
     numberFormat: string;
 };
 
+type PhotoAiEditActionState = {
+    variant: 'primary' | 'secondary';
+    fill: 'solid' | 'outline';
+    labelKey: string;
+};
+
 const UNIT_OPTIONS: readonly UnitOptionView[] = [
     { value: 'g', labelKey: 'GENERAL.UNITS.G' },
     { value: 'ml', labelKey: 'GENERAL.UNITS.ML' },
@@ -114,6 +120,22 @@ export class MealPhotoRecognitionDialogComponent {
             this.toMacroSummaryItem('alcohol', 'GENERAL.NUTRIENTS.ALCOHOL', nutrition.alcohol, 'GENERAL.UNITS.G'),
         ];
     });
+    public readonly editActionState = computed<PhotoAiEditActionState>(() =>
+        this.isEditing()
+            ? {
+                  variant: 'primary',
+                  fill: 'solid',
+                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE',
+              }
+            : {
+                  variant: 'secondary',
+                  fill: 'outline',
+                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
+              },
+    );
+    public readonly submitLabelKey = computed(() =>
+        this.isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL',
+    );
     public readonly statusKey = computed(() => {
         if (!this.selection()) {
             return null;
@@ -383,6 +405,15 @@ export class MealPhotoRecognitionDialogComponent {
         } else {
             this.runNutrition(normalized);
         }
+    }
+
+    public handleEditAction(): void {
+        if (this.isEditing()) {
+            this.applyEditing();
+            return;
+        }
+
+        this.startEditing();
     }
 
     public cancelEditing(): void {

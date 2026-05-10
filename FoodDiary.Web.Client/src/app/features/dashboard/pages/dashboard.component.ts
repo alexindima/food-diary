@@ -131,6 +131,56 @@ export class DashboardComponent {
         const visibleBlocks = this.layout.visibleBlocks();
         return visibleBlocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
+    public readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
+    public readonly mealsPreviewState = computed(() => {
+        const isToday = this.isTodaySelected();
+
+        return {
+            titleText: isToday
+                ? null
+                : {
+                      key: 'DASHBOARD.MEALS_TITLE_FOR_DATE',
+                      date: this.selectedDate(),
+                  },
+            emptyKey: isToday ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE',
+            showDateActions: isToday,
+            showEmptyState: !isToday,
+        };
+    });
+    public readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
+        const editing = this.layout.isEditingLayout();
+        const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions = {}): DashboardBlockState => {
+            const isVisible = this.layout.isBlockVisible(blockId);
+            const isAlwaysInteractive = options.alwaysInteractive === true;
+            const role = editing || isAlwaysInteractive ? 'button' : null;
+
+            return {
+                hidden: editing && !isVisible,
+                role,
+                tabIndex: editing || isAlwaysInteractive ? 0 : -1,
+                ariaPressed: editing ? isVisible : null,
+                ariaDisabled: editing && options.locked ? !this.layout.canToggleBlock(blockId) : null,
+                ariaLabelKey: editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null),
+                inert: editing ? '' : null,
+            };
+        };
+
+        return {
+            fasting: stateFor('fasting', {
+                alwaysInteractive: true,
+                editingLabelKey: 'DASHBOARD.FASTING_EDIT_TITLE',
+                defaultLabelKey: 'FASTING.TITLE',
+            }),
+            summary: stateFor('summary', { locked: true }),
+            meals: stateFor('meals'),
+            hydration: stateFor('hydration'),
+            cycle: stateFor('cycle'),
+            weight: stateFor('weight'),
+            waist: stateFor('waist'),
+            tdee: stateFor('tdee', { alwaysInteractive: true, defaultLabelKey: 'TDEE_CARD.TITLE' }),
+            advice: stateFor('advice'),
+        };
+    });
 
     public constructor() {
         this.facade.initialize();
@@ -336,4 +386,23 @@ export class DashboardComponent {
         this.resizeObserver.observe(element);
         this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
     }
+}
+
+type DashboardBlockId = 'fasting' | 'summary' | 'meals' | 'hydration' | 'cycle' | 'weight' | 'waist' | 'tdee' | 'advice';
+
+interface DashboardBlockState {
+    hidden: boolean;
+    role: 'button' | null;
+    tabIndex: number;
+    ariaPressed: boolean | null;
+    ariaDisabled: boolean | null;
+    ariaLabelKey: string | null;
+    inert: string | null;
+}
+
+interface DashboardBlockStateOptions {
+    alwaysInteractive?: boolean;
+    locked?: boolean;
+    editingLabelKey?: string;
+    defaultLabelKey?: string;
 }

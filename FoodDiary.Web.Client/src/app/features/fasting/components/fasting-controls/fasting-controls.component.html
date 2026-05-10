@@ -203,8 +203,8 @@
                                     <fd-ui-button
                                         type="button"
                                         class="fasting-controls__protocol-action"
-                                        [variant]="isCustomExtendExpanded() ? 'primary' : 'secondary'"
-                                        [fill]="isCustomExtendExpanded() ? 'solid' : 'outline'"
+                                        [variant]="customExtendActionState().variant"
+                                        [fill]="customExtendActionState().fill"
                                         size="sm"
                                         (click)="showCustomExtend()"
                                         [disabled]="isExtending() || isReducing() || isEnding()"
@@ -280,8 +280,8 @@
                                     <fd-ui-button
                                         type="button"
                                         class="fasting-controls__protocol-action"
-                                        [variant]="isCustomReduceExpanded() ? 'danger' : 'secondary'"
-                                        [fill]="isCustomReduceExpanded() ? 'solid' : 'outline'"
+                                        [variant]="customReduceActionState().variant"
+                                        [fill]="customReduceActionState().fill"
                                         size="sm"
                                         (click)="showCustomReduce()"
                                         [disabled]="isReducing() || isExtending() || isEnding()"
