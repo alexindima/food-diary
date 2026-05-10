@@ -26,8 +26,9 @@
                                 {{ 'USER_MANAGE.ACCOUNT_DESC' | translate }}
                             </div>
                             <div class="user-manage__status-row fd-row fd-wrap fd-gap-xs">
-                                <fd-ui-status-badge [tone]="getProfileStatusTone()">
-                                    {{ getProfileStatusKey() | translate }}
+                                @let status = profileStatus();
+                                <fd-ui-status-badge [tone]="status.tone">
+                                    {{ status.key | translate }}
                                 </fd-ui-status-badge>
                             </div>
                         </div>
@@ -480,16 +481,16 @@
                                 emptyIcon="devices"
                             >
                                 <div class="user-manage__notifications-device-list fd-stack fd-gap-xs">
-                                    @for (subscription of connectedDevices(); track subscription.endpoint) {
+                                    @for (device of connectedDeviceItems(); track device.subscription.endpoint) {
                                         <div
                                             class="user-manage__notifications-device-item fd-row fd-gap-md fd-justify-between fd-ui-surface fd-ui-surface--raised"
                                         >
                                             <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
                                                 <div class="user-manage__notifications-label">
-                                                    {{ getConnectedDeviceLabel(subscription) }}
+                                                    {{ device.label }}
                                                 </div>
                                                 <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
-                                                    @if (isCurrentDevice(subscription)) {
+                                                    @if (device.isCurrent) {
                                                         <span
                                                             class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
                                                         >
@@ -498,7 +499,7 @@
                                                     }
                                                 </div>
                                                 <div class="user-manage__notifications-hint">
-                                                    {{ getConnectedDeviceMeta(subscription) }}
+                                                    {{ device.meta }}
                                                 </div>
                                             </div>
 
@@ -508,11 +509,12 @@
                                                 variant="secondary"
                                                 size="sm"
                                                 icon="close"
-                                                [loading]="removingConnectedDeviceEndpoint() === subscription.endpoint"
+                                                [loading]="removingConnectedDeviceEndpoint() === device.subscription.endpoint"
                                                 [disabled]="
-                                                    pushNotificationsBusy() || removingConnectedDeviceEndpoint() === subscription.endpoint
+                                                    pushNotificationsBusy() ||
+                                                    removingConnectedDeviceEndpoint() === device.subscription.endpoint
                                                 "
-                                                (click)="removeConnectedDeviceAsync(subscription)"
+                                                (click)="removeConnectedDeviceAsync(device.subscription)"
                                             >
                                                 {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE' | translate }}
                                             </fd-ui-button>
@@ -563,13 +565,9 @@
                                     </div>
                                     @if (isDietologistConnected()) {
                                         <div class="user-manage__dietologist-info-list fd-stack fd-gap-xxs">
-                                            @if (dietologistRelationship()?.acceptedAtUtc) {
+                                            @if (dietologistAcceptedDateLabel(); as acceptedDate) {
                                                 <div class="user-manage__dietologist-info-row">
-                                                    {{
-                                                        'USER_MANAGE.DIETOLOGIST_CONNECTED_DATE'
-                                                            | translate
-                                                                : { date: formatLocalizedDate(dietologistRelationship()?.acceptedAtUtc) }
-                                                    }}
+                                                    {{ 'USER_MANAGE.DIETOLOGIST_CONNECTED_DATE' | translate: { date: acceptedDate } }}
                                                 </div>
                                             }
                                             <div class="user-manage__dietologist-hint">
@@ -613,7 +611,7 @@
                                                 size="lg"
                                                 [label]="'USER_MANAGE.DIETOLOGIST_EMAIL' | translate"
                                                 [placeholder]="'USER_MANAGE.DIETOLOGIST_EMAIL_PLACEHOLDER' | translate"
-                                                [error]="getControlError(dietologistForm.controls.email)"
+                                                [error]="dietologistInviteEmailError()"
                                             />
                                         </div>
                                         <div class="user-manage__dietologist-summary-actions fd-row fd-justify-end fd-align-start">
@@ -654,12 +652,9 @@
                                         </span>
                                     </div>
                                 }
-                                @if (isDietologistPending() && dietologistRelationship()?.expiresAtUtc) {
+                                @if (isDietologistPending() && dietologistExpiresDateLabel(); as expiresDate) {
                                     <div class="user-manage__dietologist-meta">
-                                        {{
-                                            'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES'
-                                                | translate: { date: formatLocalizedDate(dietologistRelationship()?.expiresAtUtc) }
-                                        }}
+                                        {{ 'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES' | translate: { date: expiresDate } }}
                                     </div>
                                 }
                             </div>

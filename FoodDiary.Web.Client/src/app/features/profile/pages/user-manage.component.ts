@@ -29,7 +29,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize } from 'rxjs';
+import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -129,6 +129,7 @@ export class UserManageComponent {
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
     private readonly hasTrackedNotificationsView = signal(false);
     private readonly pendingPasswordSetupIntent = signal(false);
+    private readonly languageVersion = signal(0);
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
@@ -186,6 +187,28 @@ export class UserManageComponent {
     public readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
     public readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
     public readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
+    public readonly profileStatus = signal<ProfileStatusViewModel>({
+        key: 'USER_MANAGE.PROFILE_STATUS_SAVED',
+        tone: 'success',
+    });
+    public readonly connectedDeviceItems = computed<ConnectedDeviceViewModel[]>(() => {
+        this.languageVersion();
+        return this.connectedDevices().map(subscription => ({
+            subscription,
+            label: this.buildConnectedDeviceLabel(subscription),
+            meta: this.buildConnectedDeviceMeta(subscription),
+            isCurrent: this.isCurrentDevice(subscription),
+        }));
+    });
+    public readonly dietologistInviteEmailError = signal<string | null>(null);
+    public readonly dietologistAcceptedDateLabel = computed(() => {
+        this.languageVersion();
+        return this.formatLocalizedDate(this.dietologistRelationship()?.acceptedAtUtc);
+    });
+    public readonly dietologistExpiresDateLabel = computed(() => {
+        this.languageVersion();
+        return this.formatLocalizedDate(this.dietologistRelationship()?.expiresAtUtc);
+    });
     public readonly billingStatusLabelKey = computed(() =>
         this.getBillingStatusLabelKey(this.billingOverview()?.subscriptionStatus ?? null),
     );
@@ -291,6 +314,8 @@ export class UserManageComponent {
         this.buildSelectOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildSelectOptions();
+            this.languageVersion.update(version => version + 1);
+            this.updateDietologistInviteEmailError();
         });
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             this.pendingPasswordSetupIntent.set(params.get('intent') === 'set-password');
@@ -333,6 +358,11 @@ export class UserManageComponent {
         effect(() => {
             this.syncDietologistFormFromRelationship(this.facade.dietologistRelationship());
         });
+        effect(() => {
+            this.globalError();
+            this.isSavingProfile();
+            this.updateProfileStatus();
+        });
 
         effect(() => {
             const version = this.notificationService.notificationsChangedVersion();
@@ -350,10 +380,21 @@ export class UserManageComponent {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.facade.clearGlobalError();
             this.queueUserAutosave();
+            this.updateProfileStatus();
+        });
+        this.userForm.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.updateProfileStatus();
         });
         this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.dietologistError.set(null);
         });
+        const dietologistFormEvents = (this.dietologistForm as { events?: Observable<unknown> }).events ?? EMPTY;
+        merge(dietologistFormEvents, this.dietologistForm.statusChanges, this.dietologistForm.valueChanges)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.updateDietologistInviteEmailError();
+            });
+        this.updateDietologistInviteEmailError();
 
         this.facade.initialize();
         this.loadBillingOverview();
@@ -552,13 +593,13 @@ export class UserManageComponent {
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVED_TOAST'));
     }
 
-    public getConnectedDeviceLabel(subscription: WebPushSubscriptionItem): string {
+    private buildConnectedDeviceLabel(subscription: WebPushSubscriptionItem): string {
         const browser = this.getBrowserLabel(subscription.userAgent);
         const platform = this.getPlatformLabel(subscription.userAgent);
         return platform ? `${browser} / ${platform}` : browser;
     }
 
-    public getConnectedDeviceMeta(subscription: WebPushSubscriptionItem): string {
+    private buildConnectedDeviceMeta(subscription: WebPushSubscriptionItem): string {
         const segments = [
             subscription.endpointHost,
             subscription.locale?.toUpperCase() ?? null,
@@ -632,6 +673,7 @@ export class UserManageComponent {
         }
 
         this.dietologistForm.controls.email.markAsTouched();
+        this.updateDietologistInviteEmailError();
         if (this.dietologistForm.invalid) {
             return;
         }
@@ -770,7 +812,11 @@ export class UserManageComponent {
             });
     }
 
-    public getControlError(control: AbstractControl | null): string | null {
+    private updateDietologistInviteEmailError(): void {
+        this.dietologistInviteEmailError.set(this.resolveControlError(this.dietologistForm.controls.email));
+    }
+
+    private resolveControlError(control: AbstractControl | null): string | null {
         if (!control || !control.invalid) {
             return null;
         }
@@ -815,37 +861,27 @@ export class UserManageComponent {
         return Number.isInteger(value) ? `${value}` : value.toFixed(1);
     }
 
-    public getProfileStatusKey(): string {
+    private updateProfileStatus(): void {
+        this.profileStatus.set(this.buildProfileStatus());
+    }
+
+    private buildProfileStatus(): ProfileStatusViewModel {
         if (this.globalError() && this.userForm.dirty) {
-            return 'USER_MANAGE.PROFILE_STATUS_ERROR';
+            return { key: 'USER_MANAGE.PROFILE_STATUS_ERROR', tone: 'danger' };
         }
 
         if (this.isSavingProfile()) {
-            return 'USER_MANAGE.PROFILE_STATUS_SAVING';
+            return { key: 'USER_MANAGE.PROFILE_STATUS_SAVING', tone: 'muted' };
         }
 
         if (this.userForm.dirty) {
-            return this.userForm.valid ? 'USER_MANAGE.PROFILE_STATUS_PENDING' : 'USER_MANAGE.PROFILE_STATUS_INVALID';
+            return {
+                key: this.userForm.valid ? 'USER_MANAGE.PROFILE_STATUS_PENDING' : 'USER_MANAGE.PROFILE_STATUS_INVALID',
+                tone: 'warning',
+            };
         }
 
-        return 'USER_MANAGE.PROFILE_STATUS_SAVED';
-    }
-
-    public getProfileStatusTone(): 'success' | 'warning' | 'danger' | 'muted' {
-        const statusKey = this.getProfileStatusKey();
-        if (statusKey === 'USER_MANAGE.PROFILE_STATUS_ERROR') {
-            return 'danger';
-        }
-
-        if (statusKey === 'USER_MANAGE.PROFILE_STATUS_PENDING' || statusKey === 'USER_MANAGE.PROFILE_STATUS_INVALID') {
-            return 'warning';
-        }
-
-        if (statusKey === 'USER_MANAGE.PROFILE_STATUS_SAVING') {
-            return 'muted';
-        }
-
-        return 'success';
+        return { key: 'USER_MANAGE.PROFILE_STATUS_SAVED', tone: 'success' };
     }
 
     public getNotificationsStatusKey(): string | null {
@@ -911,6 +947,7 @@ export class UserManageComponent {
         this.userForm.patchValue(userData, { emitEvent: false });
         this.userForm.markAsPristine();
         this.userForm.markAsUntouched();
+        this.updateProfileStatus();
     }
 
     private queueUserAutosave(): void {
@@ -1228,7 +1265,7 @@ export class UserManageComponent {
         }).format(date);
     }
 
-    public formatLocalizedDate(value: string | null | undefined): string | null {
+    private formatLocalizedDate(value: string | null | undefined): string | null {
         if (!value) {
             return null;
         }
@@ -1329,3 +1366,15 @@ interface DietologistFormValues {
 
 type DietologistFormData = FormGroupControls<DietologistFormValues>;
 type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;
+
+interface ProfileStatusViewModel {
+    key: string;
+    tone: 'success' | 'warning' | 'danger' | 'muted';
+}
+
+interface ConnectedDeviceViewModel {
+    subscription: WebPushSubscriptionItem;
+    label: string;
+    meta: string;
+    isCurrent: boolean;
+}

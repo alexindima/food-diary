@@ -322,15 +322,15 @@ describe('UserManageComponent dietologist section', () => {
     it('reports pending and saving profile states for autosave feedback', async () => {
         await createComponentAsync(null);
 
-        expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_SAVED');
+        expect(component.profileStatus().key).toBe('USER_MANAGE.PROFILE_STATUS_SAVED');
 
         component.userForm.controls.firstName.markAsDirty();
         component.userForm.controls.firstName.setValue('Alex');
-        expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_PENDING');
+        expect(component.profileStatus().key).toBe('USER_MANAGE.PROFILE_STATUS_PENDING');
 
         facade.isSavingProfile.set(true);
         fixture.detectChanges();
-        expect(component.getProfileStatusKey()).toBe('USER_MANAGE.PROFILE_STATUS_SAVING');
+        expect(component.profileStatus().key).toBe('USER_MANAGE.PROFILE_STATUS_SAVING');
     });
 
     it('reports the current notifications background action status', async () => {
