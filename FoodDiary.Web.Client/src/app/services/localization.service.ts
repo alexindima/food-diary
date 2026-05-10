@@ -57,7 +57,7 @@ export class LocalizationService {
             return Promise.resolve();
         }
 
-        const current = this.translateService.currentLang || this.translateService.getDefaultLang();
+        const current = this.translateService.getCurrentLang() || this.translateService.getFallbackLang();
         if (current === normalized) {
             this.persistLanguage(normalized);
             this.setDocumentLang(normalized);
@@ -68,7 +68,7 @@ export class LocalizationService {
     }
 
     public getCurrentLanguage(): string {
-        const current = this.translateService.currentLang || this.translateService.getDefaultLang();
+        const current = this.translateService.getCurrentLang() || this.translateService.getFallbackLang();
         return this.normalizeLanguage(current);
     }
 

@@ -14,7 +14,11 @@ describe('DashboardFacade', () => {
     let dashboardService: { getSnapshot: ReturnType<typeof vi.fn> };
     let hydrationService: { addEntry: ReturnType<typeof vi.fn> };
     let layout: { initializeLayout: ReturnType<typeof vi.fn>; updateViewportWidth: ReturnType<typeof vi.fn> };
-    let translateService: { currentLang: string; getDefaultLang: ReturnType<typeof vi.fn>; onLangChange: Subject<unknown> };
+    let translateService: {
+        getCurrentLang: ReturnType<typeof vi.fn>;
+        getFallbackLang: ReturnType<typeof vi.fn>;
+        onLangChange: Subject<unknown>;
+    };
 
     const snapshot: DashboardSnapshot = {
         date: '2026-03-15',
@@ -43,8 +47,8 @@ describe('DashboardFacade', () => {
         hydrationService = { addEntry: vi.fn() };
         layout = { initializeLayout: vi.fn(), updateViewportWidth: vi.fn() };
         translateService = {
-            currentLang: 'en',
-            getDefaultLang: vi.fn(() => 'en'),
+            getCurrentLang: vi.fn(() => 'en'),
+            getFallbackLang: vi.fn(() => 'en'),
             onLangChange: new Subject(),
         };
 

@@ -2,7 +2,6 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -136,7 +135,6 @@ describe('MealListComponent', () => {
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                provideNoopAnimations(),
                 { provide: MealService, useValue: mockMealService },
                 { provide: NavigationService, useValue: mockNavigationService },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },

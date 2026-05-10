@@ -10,13 +10,13 @@ import { LocalizationService } from './localization.service';
 
 type TranslateServiceMock = {
     addLangs: ReturnType<typeof vi.fn>;
-    setDefaultLang: ReturnType<typeof vi.fn>;
+    setFallbackLang: ReturnType<typeof vi.fn>;
     use: ReturnType<typeof vi.fn>;
     getBrowserLang: ReturnType<typeof vi.fn>;
-    getDefaultLang: ReturnType<typeof vi.fn>;
+    getCurrentLang: ReturnType<typeof vi.fn>;
+    getFallbackLang: ReturnType<typeof vi.fn>;
     instant: ReturnType<typeof vi.fn>;
     setTranslation: ReturnType<typeof vi.fn>;
-    currentLang: string;
     onLangChange: Observable<LangChangeEvent>;
 };
 
@@ -34,21 +34,19 @@ describe('LocalizationService', () => {
     let translationLoaderSpy: TranslationLoaderMock;
     let routerEventsSubject: Subject<unknown>;
     let documentLang: string | null;
-    let currentLangValue: string;
 
     beforeEach(() => {
         langChangeSubject = new Subject<LangChangeEvent>();
-        currentLangValue = 'en';
 
         translateSpy = {
             addLangs: vi.fn(),
-            setDefaultLang: vi.fn(),
+            setFallbackLang: vi.fn(),
             use: vi.fn(),
             getBrowserLang: vi.fn(),
-            getDefaultLang: vi.fn(),
+            getCurrentLang: vi.fn(),
+            getFallbackLang: vi.fn(),
             instant: vi.fn(),
             setTranslation: vi.fn(),
-            currentLang: currentLangValue,
             onLangChange: langChangeSubject.asObservable(),
         };
 
@@ -57,16 +55,9 @@ describe('LocalizationService', () => {
             configurable: true,
         });
 
-        Object.defineProperty(translateSpy, 'currentLang', {
-            get: () => currentLangValue,
-            set: (v: string) => {
-                currentLangValue = v;
-            },
-            configurable: true,
-        });
-
         translateSpy.use.mockReturnValue(of({}));
-        translateSpy.getDefaultLang.mockReturnValue('en');
+        translateSpy.getCurrentLang.mockReturnValue('en');
+        translateSpy.getFallbackLang.mockReturnValue('en');
         translateSpy.getBrowserLang.mockReturnValue('en');
         translationLoaderSpy = {
             isPublicRoute: vi.fn().mockReturnValue(true),
@@ -154,8 +145,8 @@ describe('LocalizationService', () => {
     });
 
     it('should apply language preference', async () => {
-        currentLangValue = 'en';
-        translateSpy.getDefaultLang.mockReturnValue('en');
+        translateSpy.getCurrentLang.mockReturnValue('en');
+        translateSpy.getFallbackLang.mockReturnValue('en');
 
         await service.applyLanguagePreferenceAsync('ru');
 
@@ -163,8 +154,8 @@ describe('LocalizationService', () => {
     });
 
     it('should not call use() if language is already set', async () => {
-        currentLangValue = 'en';
-        translateSpy.getDefaultLang.mockReturnValue('en');
+        translateSpy.getCurrentLang.mockReturnValue('en');
+        translateSpy.getFallbackLang.mockReturnValue('en');
         translateSpy.use.mockClear();
 
         await service.applyLanguagePreferenceAsync('en');

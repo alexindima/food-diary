@@ -140,6 +140,6 @@ export class NotificationsDialogComponent {
     }
 
     private resolveLocale(): string {
-        return this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US';
+        return this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US';
     }
 }

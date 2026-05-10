@@ -64,7 +64,7 @@ describe('WaistHistoryFacade', () => {
 
     it('loads entries, summary, desired waist, and profile on initialize', () => {
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(waistEntriesService.getEntries).toHaveBeenCalledTimes(1);
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
@@ -78,7 +78,7 @@ describe('WaistHistoryFacade', () => {
 
     it('submits a new entry and reloads the list', () => {
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
         waistEntriesService.getEntries.mockClear();
         waistEntriesService.getSummary.mockClear();
 

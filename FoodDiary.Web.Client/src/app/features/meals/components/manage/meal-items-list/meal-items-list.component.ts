@@ -71,7 +71,7 @@ export class MealItemsListComponent {
             : null,
     );
 
-    private readonly activeLang = signal(this.translateService.currentLang);
+    private readonly activeLang = signal(this.translateService.getCurrentLang());
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -198,7 +198,7 @@ export class MealItemsListComponent {
     }
 
     private formatManualMacro(value: number, unitKey: string): string {
-        const locale = (this.translateService.currentLang || this.translateService.defaultLang) ?? 'en';
+        const locale = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
@@ -241,7 +241,7 @@ export class MealItemsListComponent {
     }
 
     private formatNumber(value: number): string {
-        const locale = (this.translateService.currentLang || this.translateService.defaultLang) ?? 'en';
+        const locale = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         return new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,

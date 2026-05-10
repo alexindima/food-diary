@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -18,7 +17,6 @@ describe('MealSatietyLevelDialogComponent', () => {
         TestBed.configureTestingModule({
             imports: [MealSatietyLevelDialogComponent, TranslateModule.forRoot()],
             providers: [
-                provideNoopAnimations(),
                 { provide: FdUiDialogRef, useValue: dialogRefSpy },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],

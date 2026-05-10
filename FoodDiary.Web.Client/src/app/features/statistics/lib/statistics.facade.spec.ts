@@ -57,8 +57,8 @@ describe('StatisticsFacade', () => {
                     provide: TranslateService,
                     useValue: {
                         instant: vi.fn((key: string) => key),
-                        currentLang: 'en',
-                        defaultLang: 'en',
+                        getCurrentLang: vi.fn(() => 'en'),
+                        getFallbackLang: vi.fn(() => 'en'),
                     },
                 },
             ],
@@ -69,7 +69,7 @@ describe('StatisticsFacade', () => {
 
     it('loads statistics, body summaries, and user profile on initialize', () => {
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(statisticsService.getAggregatedStatistics).toHaveBeenCalled();
         expect(weightEntriesService.getSummary).toHaveBeenCalled();
@@ -83,13 +83,13 @@ describe('StatisticsFacade', () => {
 
     it('reloads aggregated data when the selected range changes', () => {
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
         statisticsService.getAggregatedStatistics.mockClear();
         weightEntriesService.getSummary.mockClear();
         waistEntriesService.getSummary.mockClear();
 
         facade.changeRange('month');
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(statisticsService.getAggregatedStatistics).toHaveBeenCalledTimes(1);
         expect(weightEntriesService.getSummary).toHaveBeenCalledTimes(1);
@@ -101,7 +101,7 @@ describe('StatisticsFacade', () => {
         statisticsService.getAggregatedStatistics.mockReturnValueOnce(throwError(() => new Error('load failed')));
 
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(facade.hasLoadError()).toBe(true);
         expect(facade.chartStatisticsData()).toBeNull();
@@ -111,7 +111,7 @@ describe('StatisticsFacade', () => {
         weightEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('body failed')));
 
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(facade.hasBodyLoadError()).toBe(true);
         expect(facade.weightSummaryPoints()).toEqual([]);
@@ -134,12 +134,12 @@ describe('StatisticsFacade', () => {
         );
 
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(facade.hasLoadError()).toBe(true);
 
         facade.reload();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(facade.hasLoadError()).toBe(false);
         expect(facade.chartStatisticsData()?.calories).toEqual([2200]);

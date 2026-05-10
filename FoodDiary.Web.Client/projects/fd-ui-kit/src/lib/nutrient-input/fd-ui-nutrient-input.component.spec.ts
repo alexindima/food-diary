@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input.component';
@@ -21,7 +20,7 @@ describe('FdUiNutrientInputComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiNutrientInputComponent],
-            providers: [provideNoopAnimations()],
+            providers: [],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiNutrientInputComponent);

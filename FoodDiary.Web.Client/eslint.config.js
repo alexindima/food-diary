@@ -344,7 +344,7 @@ export default [
             '@typescript-eslint/await-thenable': 'error',
             '@typescript-eslint/no-base-to-string': 'error',
             '@typescript-eslint/no-confusing-non-null-assertion': 'error',
-            '@typescript-eslint/no-deprecated': 'warn',
+            '@typescript-eslint/no-deprecated': 'error',
             '@typescript-eslint/no-duplicate-type-constituents': 'error',
             '@typescript-eslint/no-for-in-array': 'error',
             '@typescript-eslint/no-implied-eval': 'error',

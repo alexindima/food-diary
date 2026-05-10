@@ -2,7 +2,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -34,7 +33,7 @@ describe('FdUiMenuTriggerDirective', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent],
-            providers: [provideNoopAnimations(), provideRouter([])],
+            providers: [provideRouter([])],
         }).compileComponents();
 
         overlayContainer = TestBed.inject(OverlayContainer);

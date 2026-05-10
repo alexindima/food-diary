@@ -72,7 +72,7 @@ export class LessonFacade {
     }
 
     private getCurrentLocale(): string {
-        const lang = (this.translateService.currentLang || this.translateService.getDefaultLang()) ?? 'en';
+        const lang = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
         return lang.split(/[-_]/)[0];
     }
 }

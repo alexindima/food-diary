@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -61,7 +60,6 @@ describe('ProductDetailComponent', () => {
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                provideNoopAnimations(),
                 { provide: FD_UI_DIALOG_DATA, useValue: mockProduct },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -129,7 +127,6 @@ describe('ProductDetailComponent', () => {
                 providers: [
                     provideHttpClient(),
                     provideHttpClientTesting(),
-                    provideNoopAnimations(),
                     { provide: FD_UI_DIALOG_DATA, useValue: notOwnedProduct },
                     { provide: FdUiDialogRef, useValue: mockDialogRef },
                     { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -156,7 +153,6 @@ describe('ProductDetailComponent', () => {
                 providers: [
                     provideHttpClient(),
                     provideHttpClientTesting(),
-                    provideNoopAnimations(),
                     { provide: FD_UI_DIALOG_DATA, useValue: usedProduct },
                     { provide: FdUiDialogRef, useValue: mockDialogRef },
                     { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -181,7 +177,6 @@ describe('ProductDetailComponent', () => {
                 providers: [
                     provideHttpClient(),
                     provideHttpClientTesting(),
-                    provideNoopAnimations(),
                     { provide: FD_UI_DIALOG_DATA, useValue: usedProduct },
                     { provide: FdUiDialogRef, useValue: mockDialogRef },
                     { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -208,7 +203,6 @@ describe('ProductDetailComponent', () => {
                 providers: [
                     provideHttpClient(),
                     provideHttpClientTesting(),
-                    provideNoopAnimations(),
                     { provide: FD_UI_DIALOG_DATA, useValue: usedProduct },
                     { provide: FdUiDialogRef, useValue: mockDialogRef },
                     { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -249,7 +243,6 @@ describe('ProductDetailComponent', () => {
                 providers: [
                     provideHttpClient(),
                     provideHttpClientTesting(),
-                    provideNoopAnimations(),
                     { provide: FD_UI_DIALOG_DATA, useValue: notOwnedProduct },
                     { provide: FdUiDialogRef, useValue: mockDialogRef },
                     { provide: FdUiDialogService, useValue: mockFdDialogService },

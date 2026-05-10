@@ -81,7 +81,7 @@ export class ShoppingListPageComponent {
 
     private readonly unitValues = Object.values(MeasurementUnit) as MeasurementUnit[];
     private readonly isMobileManageOpen = signal(false);
-    private readonly activeLang = signal(this.translateService.currentLang);
+    private readonly activeLang = signal(this.translateService.getCurrentLang());
 
     public constructor() {
         this.itemForm = new FormGroup<ShoppingListItemFormGroup>({

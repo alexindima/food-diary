@@ -281,7 +281,7 @@ export class MealListComponent {
     }
 
     private formatGroupDate(date: Date): string {
-        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
             day: 'numeric',
             month: 'long',
             year: 'numeric',

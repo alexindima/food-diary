@@ -233,7 +233,7 @@ export class PremiumAccessPageComponent {
             return null;
         }
 
-        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
             dateStyle: 'medium',
         }).format(date);
     }
@@ -307,7 +307,7 @@ export class PremiumAccessPageComponent {
             await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
                 token: paddleClientToken,
                 environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
-                locale: (this.translateService.currentLang || this.translateService.getDefaultLang()) ?? 'en',
+                locale: (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en',
             });
 
             await this.router.navigate([], {

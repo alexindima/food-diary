@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -73,7 +72,6 @@ describe('MealDetailComponent', () => {
         await TestBed.configureTestingModule({
             imports: [MealDetailComponent, TranslateModule.forRoot()],
             providers: [
-                provideNoopAnimations(),
                 { provide: FD_UI_DIALOG_DATA, useValue: mockMeal },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -183,7 +181,6 @@ describe('MealDetailComponent', () => {
         await TestBed.configureTestingModule({
             imports: [MealDetailComponent, TranslateModule.forRoot()],
             providers: [
-                provideNoopAnimations(),
                 { provide: FD_UI_DIALOG_DATA, useValue: meal },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -237,7 +234,6 @@ describe('MealDetailComponent', () => {
         await TestBed.configureTestingModule({
             imports: [MealDetailComponent, TranslateModule.forRoot()],
             providers: [
-                provideNoopAnimations(),
                 { provide: FD_UI_DIALOG_DATA, useValue: meal },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },

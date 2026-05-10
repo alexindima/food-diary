@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
@@ -35,7 +34,6 @@ describe('FdUiDialogComponent', () => {
             providers: [
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
                 { provide: FdUiDialogRef, useValue: dialogRefSpy },
-                provideNoopAnimations(),
             ],
         });
 
@@ -116,7 +114,7 @@ describe('FdUiDialogComponent', () => {
     it('should render custom header instead of built-in title block', () => {
         TestBed.configureTestingModule({
             imports: [DialogWithCustomHeaderHostComponent],
-            providers: [provideNoopAnimations()],
+            providers: [],
         });
 
         const hostFixture = TestBed.createComponent(DialogWithCustomHeaderHostComponent);

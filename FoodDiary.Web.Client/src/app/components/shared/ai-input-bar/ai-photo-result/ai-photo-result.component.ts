@@ -171,7 +171,7 @@ export class AiPhotoResultComponent {
     }
 
     private resolveMacroLabel(value: number, unitKey: string): string {
-        const locale = this.translateService.currentLang;
+        const locale = this.translateService.getCurrentLang();
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,

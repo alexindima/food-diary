@@ -10,7 +10,7 @@ describe('SeoService', () => {
     let service: SeoService;
     let titleService: Title;
     let metaService: Meta;
-    let translateService: { instant: ReturnType<typeof vi.fn>; currentLang: string };
+    let translateService: { instant: ReturnType<typeof vi.fn>; getCurrentLang: ReturnType<typeof vi.fn> };
     let document: Document;
 
     type SeoServiceInternals = {
@@ -20,7 +20,7 @@ describe('SeoService', () => {
     beforeEach(() => {
         translateService = {
             instant: vi.fn((key: string) => key),
-            currentLang: 'en',
+            getCurrentLang: vi.fn(() => 'en'),
         };
 
         TestBed.configureTestingModule({

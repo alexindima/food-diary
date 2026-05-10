@@ -34,7 +34,7 @@ import type { IngredientFormValues, StepFormData } from '../recipe-manage.types'
 export class RecipeStepCardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly formRevision = signal(0);
-    private readonly currentLanguage = signal((this.translateService.currentLang || this.translateService.defaultLang) ?? 'en');
+    private readonly currentLanguage = signal((this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en');
 
     public readonly stepFormGroup = input.required<FormGroup<StepFormData>>();
     public readonly stepIndex = input.required<number>();
@@ -99,7 +99,7 @@ export class RecipeStepCardComponent {
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.currentLanguage.set((this.translateService.currentLang || this.translateService.defaultLang) ?? 'en');
+            this.currentLanguage.set((this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en');
         });
 
         effect(onCleanup => {

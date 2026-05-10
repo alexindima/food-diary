@@ -3,7 +3,6 @@ import '@angular/compiler';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiHintDirective } from './fd-ui-hint.directive';
@@ -26,7 +25,7 @@ describe('FdUiHintDirective', () => {
 
         await TestBed.configureTestingModule({
             imports: [TestHostComponent],
-            providers: [provideNoopAnimations()],
+            providers: [],
         }).compileComponents();
 
         overlayContainer = TestBed.inject(OverlayContainer);

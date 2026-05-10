@@ -310,7 +310,7 @@ export class StatisticsFacade {
     }
 
     private getCurrentLocale(): string {
-        return (this.translateService.currentLang || this.translateService.defaultLang) ?? 'en-US';
+        return (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en-US';
     }
 
     private formatSummaryLabel(dateString: string): string {

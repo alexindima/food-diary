@@ -126,7 +126,7 @@ describe('UserManageComponent dietologist section', () => {
 
         const translateService = TestBed.inject(TranslateService);
         vi.spyOn(translateService, 'instant').mockImplementation((key: string) => key);
-        translateService.setDefaultLang('en');
+        translateService.setFallbackLang('en');
         translateService.use('en');
 
         fixture = TestBed.createComponent(UserManageComponent);

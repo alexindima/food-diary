@@ -97,7 +97,7 @@ export class SeoService {
     }
 
     private getOpenGraphLocale(): string {
-        const currentLang = this.translate.currentLang.toLowerCase();
+        const currentLang = this.translate.getCurrentLang().toLowerCase();
         return currentLang === 'ru' ? 'ru_RU' : 'en_US';
     }
 
@@ -141,7 +141,7 @@ export class SeoService {
         }
 
         const currentSiteUrl = this.getCurrentSiteUrl();
-        const inLanguage = this.translate.currentLang === 'ru' ? 'ru' : 'en';
+        const inLanguage = this.translate.getCurrentLang() === 'ru' ? 'ru' : 'en';
         const normalizedPath = this.normalizePath(this.document.location.pathname);
         const isLandingPage = ROOT_PATHS.has(normalizedPath);
         const featureList = isLandingPage
@@ -211,7 +211,7 @@ export class SeoService {
         return {
             '@type': 'FAQPage',
             url: currentUrl,
-            inLanguage: this.translate.currentLang === 'ru' ? 'ru' : 'en',
+            inLanguage: this.translate.getCurrentLang() === 'ru' ? 'ru' : 'en',
             mainEntity: faqItems.map(item => ({
                 '@type': 'Question',
                 name: this.translate.instant(`LANDING_FAQ.ITEMS.${item}.QUESTION`),
@@ -243,7 +243,7 @@ export class SeoService {
         return {
             '@type': 'FAQPage',
             url: currentUrl,
-            inLanguage: this.translate.currentLang === 'ru' ? 'ru' : 'en',
+            inLanguage: this.translate.getCurrentLang() === 'ru' ? 'ru' : 'en',
             mainEntity: faqKeys.map(item => ({
                 '@type': 'Question',
                 name: this.translate.instant(`${baseKey}.FAQ.ITEMS.${item}.QUESTION`),

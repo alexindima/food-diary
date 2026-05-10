@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -43,7 +42,7 @@ describe('PeriodFilterComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent, TranslateModule.forRoot()],
-            providers: [provideNoopAnimations()],
+            providers: [],
         }).compileComponents();
 
         hostFixture = TestBed.createComponent(TestHostComponent);

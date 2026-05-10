@@ -64,7 +64,7 @@ describe('WeightHistoryFacade', () => {
 
     it('loads entries, summary, desired weight, and profile on initialize', () => {
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
 
         expect(weightEntriesService.getEntries).toHaveBeenCalledTimes(1);
         expect(weightEntriesService.getSummary).toHaveBeenCalledTimes(1);
@@ -79,7 +79,7 @@ describe('WeightHistoryFacade', () => {
 
     it('submits a new entry and reloads the list', () => {
         facade.initialize();
-        TestBed.flushEffects();
+        TestBed.tick();
         weightEntriesService.getEntries.mockClear();
         weightEntriesService.getSummary.mockClear();
 

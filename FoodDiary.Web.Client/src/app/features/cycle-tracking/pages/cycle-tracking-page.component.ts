@@ -132,7 +132,7 @@ export class CycleTrackingPageComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
             ...options,
             timeZone,
         }).format(date);
