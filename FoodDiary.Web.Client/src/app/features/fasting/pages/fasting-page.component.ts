@@ -119,6 +119,7 @@ export class FastingPageComponent {
 
         return {
             stats,
+            hasPersonalSummary: this.hasPersonalSummary(stats),
             topSymptomLabel: this.getTopSymptomLabel(stats.topSymptom),
         };
     });
@@ -136,6 +137,13 @@ export class FastingPageComponent {
     public readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
     public readonly isLoadingMoreHistory = this.facade.isLoadingMoreHistory;
     public readonly visibleHistory = this.history;
+    public readonly historyItems = computed<FastingHistorySessionViewModel[]>(() => {
+        this.currentLanguage();
+        this.expandedHistorySessionId();
+        this.sessionCheckInVisibleCount();
+
+        return this.visibleHistory().map(session => this.buildHistorySessionViewModel(session));
+    });
     public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
     public readonly isCheckInExpanded = signal(false);
     public readonly expandedHistorySessionId = signal<string | null>(null);
@@ -485,6 +493,25 @@ export class FastingPageComponent {
         };
     }
 
+    private buildHistorySessionViewModel(session: FastingSession): FastingHistorySessionViewModel {
+        const checkInCount = this.getSessionCheckInCount(session);
+        return {
+            session,
+            accentColor: this.getHistoryAccentColor(session),
+            sessionTypeLabel: this.getHistorySessionTypeLabel(session),
+            protocolDisplay: this.getHistoryProtocolDisplay(session),
+            badgeKey: this.getHistoryBadgeKey(session.status),
+            hasCheckIns: checkInCount > 0,
+            checkInCount,
+            canViewChart: checkInCount > 1,
+            isExpanded: this.isHistorySessionExpanded(session.id),
+            checkInRegionId: this.getHistoryCheckInRegionId(session.id),
+            toggleKey: this.getHistoryCheckInToggleKey(session),
+            visibleCheckIns: this.getVisibleSessionCheckIns(session).map(checkIn => this.buildCheckInViewModel(checkIn)),
+            canLoadMoreCheckIns: this.canLoadMoreSessionCheckIns(session),
+        };
+    }
+
     private getHistoryChartSubtitle(session: FastingSession): string {
         return `${this.formatSessionDateLabel(session.startedAtUtc)} · ${this.getHistorySessionTypeLabel(session)} · ${this.getHistoryProtocolDisplay(session)}`;
     }
@@ -611,6 +638,7 @@ export class FastingPageComponent {
 
 interface FastingStatsViewModel {
     stats: FastingStats;
+    hasPersonalSummary: boolean;
     topSymptomLabel: string;
 }
 
@@ -626,4 +654,20 @@ interface FastingCheckInViewModel {
     relativeCheckedInAt: string | null;
     summary: string;
     symptomLabels: string[];
+}
+
+interface FastingHistorySessionViewModel {
+    session: FastingSession;
+    accentColor: string;
+    sessionTypeLabel: string;
+    protocolDisplay: string;
+    badgeKey: string;
+    hasCheckIns: boolean;
+    checkInCount: number;
+    canViewChart: boolean;
+    isExpanded: boolean;
+    checkInRegionId: string;
+    toggleKey: string;
+    visibleCheckIns: FastingCheckInViewModel[];
+    canLoadMoreCheckIns: boolean;
 }
