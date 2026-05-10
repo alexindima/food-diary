@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -65,6 +65,7 @@ export class RecipeDetailComponent {
     public readonly alcohol: number;
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
+    public readonly qualityHintKey: string;
     public readonly macroBlocks: {
         labelKey: string;
         value: number;
@@ -72,6 +73,7 @@ export class RecipeDetailComponent {
         color: string;
         percent: number;
     }[];
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, 3));
     public readonly ingredientPreview: {
         name: string;
         amount: number;
@@ -117,6 +119,7 @@ export class RecipeDetailComponent {
         this.alcohol = this.resolveAlcoholValue();
         this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
         this.qualityGrade = data.qualityGrade ?? 'yellow';
+        this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
         this.ingredientPreview = this.buildIngredientPreview();

@@ -59,17 +59,14 @@
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>
-                            <strong
-                                class="recipe-detail__quality-value fd-ui-body-sm"
-                                [fdUiHint]="'QUALITY.' + qualityGrade.toUpperCase() | translate"
-                            >
+                            <strong class="recipe-detail__quality-value fd-ui-body-sm" [fdUiHint]="qualityHintKey | translate">
                                 {{ qualityScore }}
                             </strong>
                         </div>
                     </div>
 
                     <div class="recipe-detail__macro-bars fd-stack fd-gap-sm">
-                        @for (macro of macroBlocks.slice(0, 3); track macro.labelKey) {
+                        @for (macro of macroSummaryBlocks(); track macro.labelKey) {
                             <div class="recipe-detail__macro-row">
                                 <span class="recipe-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
                                 <div class="recipe-detail__macro-track" aria-hidden="true">
