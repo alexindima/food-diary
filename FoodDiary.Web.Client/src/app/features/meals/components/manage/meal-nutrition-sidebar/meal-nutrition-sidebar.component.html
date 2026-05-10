@@ -13,10 +13,10 @@
                 [formGroup]="consumptionForm()"
                 [controlNames]="nutritionControlNames()"
                 [macroState]="macroBarState()"
-                [readonly]="consumptionForm().controls.isNutritionAutoCalculated.value"
+                [readonly]="isNutritionReadonly()"
                 [caloriesError]="caloriesError()"
                 [macrosError]="macrosError()"
-                [showManualHint]="!consumptionForm().controls.isNutritionAutoCalculated.value"
+                [showManualHint]="showManualNutritionHint()"
                 [manualHintKey]="'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT'"
                 [warning]="nutritionWarning()"
             >

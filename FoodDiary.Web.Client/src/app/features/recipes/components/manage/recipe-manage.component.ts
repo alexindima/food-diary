@@ -110,7 +110,9 @@ export class RecipeManageComponent {
 
     public recipeForm: FormGroup<RecipeFormData>;
     public visibilitySelectOptions: FdUiSelectOption<RecipeVisibility>[] = [];
-    public nutritionMode: NutritionMode = 'auto';
+    public readonly nutritionMode = signal<NutritionMode>('auto');
+    public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
+    public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public nutritionScaleMode: NutritionScaleMode = 'recipe';
     public nutritionScaleModeOptions: FdUiSegmentedToggleOption[] = [];
@@ -141,7 +143,7 @@ export class RecipeManageComponent {
         this.buildVisibilityOptions();
         this.buildNutritionModeOptions();
         this.buildNutritionScaleModeOptions();
-        this.nutritionMode = this.recipeForm.controls.calculateNutritionAutomatically.value ? 'auto' : 'manual';
+        this.nutritionMode.set(this.recipeForm.controls.calculateNutritionAutomatically.value ? 'auto' : 'manual');
         this.translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
             this.buildVisibilityOptions();
             this.buildNutritionModeOptions();
@@ -155,7 +157,7 @@ export class RecipeManageComponent {
         this.updateCalorieWarning();
 
         this.recipeForm.controls.calculateNutritionAutomatically.valueChanges.pipe(takeUntilDestroyed()).subscribe(isAuto => {
-            this.nutritionMode = isAuto ? 'auto' : 'manual';
+            this.nutritionMode.set(isAuto ? 'auto' : 'manual');
             if (!this.isFormReady) {
                 return;
             }
@@ -239,11 +241,11 @@ export class RecipeManageComponent {
 
     public onNutritionModeChange(nextMode: string): void {
         const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
-        if (this.nutritionMode === resolvedMode) {
+        if (this.nutritionMode() === resolvedMode) {
             return;
         }
 
-        this.nutritionMode = resolvedMode;
+        this.nutritionMode.set(resolvedMode);
         this.recipeForm.controls.calculateNutritionAutomatically.setValue(resolvedMode === 'auto');
     }
 

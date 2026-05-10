@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -45,6 +45,8 @@ export class MealNutritionSidebarComponent {
     public readonly nutritionModeChange = output<string>();
     public readonly cancel = output<void>();
     public readonly submit = output<void>();
+    public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
+    public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
 
     public onNutritionModeChange(nextMode: string): void {
         this.nutritionModeChange.emit(nextMode);
