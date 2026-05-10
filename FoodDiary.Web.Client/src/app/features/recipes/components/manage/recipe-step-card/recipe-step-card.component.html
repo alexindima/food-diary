@@ -8,17 +8,17 @@
                     [class.recipe-step-card__drag--disabled]="dragDisabled()"
                     aria-hidden="true"
                 ></span>
-                @if (isStepTitleEditing) {
+                @if (isStepTitleEditing()) {
                     <fd-ui-input
                         class="recipe-step-card__title-input"
                         appearance="inline-edit"
                         formControlName="title"
-                        [placeholder]="titleDisplay"
+                        [placeholder]="titleDisplay()"
                         (blur)="onStepTitleBlur()"
                     />
                 } @else {
                     <span class="recipe-step-card__title fd-ui-action-text">
-                        {{ titleDisplay }}
+                        {{ titleDisplay() }}
                     </span>
                 }
                 <fd-ui-button
@@ -53,10 +53,10 @@
         @if (!isExpanded()) {
             <div class="recipe-step-card__summary fd-stack fd-gap-xxs">
                 <div class="recipe-step-card__summary-description fd-ui-body-sm">
-                    {{ descriptionSummary }}
+                    {{ descriptionSummary() }}
                 </div>
                 <div class="recipe-step-card__summary-meta fd-ui-caption">
-                    {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount } }}
+                    {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount() } }}
                 </div>
             </div>
         }
@@ -83,7 +83,7 @@
                         [rows]="3"
                         [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                         [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
-                        [error]="descriptionError"
+                        [error]="descriptionError()"
                     />
                 </div>
             </div>
@@ -92,7 +92,8 @@
                 <div class="recipe-step-card__subtitle fd-ui-caption">
                     {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
                 </div>
-                @for (ingredient of ingredients.controls; track $index; let ingredientIndex = $index; let firstIngredient = $first) {
+                @for (row of ingredientRows(); track row.index; let firstIngredient = $first) {
+                    @let ingredient = ingredients.controls[row.index];
                     @let foodNameControl = ingredient.controls.foodName;
                     @let foodNameErrors = foodNameControl.errors;
                     @let foodNameErrorKey =
@@ -121,11 +122,7 @@
                                   : amountErrors
                                     ? 'FORM_ERRORS.UNKNOWN'
                                     : null;
-                    @let productUnitKey =
-                        ingredient.controls.food.value?.baseUnit
-                            ? 'PRODUCT_AMOUNT_UNITS.' + ingredient.controls.food.value?.baseUnit
-                            : null;
-                    <div class="recipe-ingredient fd-row fd-gap-md" [formGroupName]="ingredientIndex">
+                    <div class="recipe-ingredient fd-row fd-gap-md" [formGroupName]="row.index">
                         <input type="hidden" formControlName="food" />
                         <input type="hidden" formControlName="nestedRecipeId" />
                         <fd-ui-input
@@ -135,15 +132,9 @@
                             [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                             [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
                             [readonly]="true"
-                            [prefixIcon]="
-                                ingredient.controls.nestedRecipeId.value
-                                    ? 'menu_book'
-                                    : ingredient.controls.food.value
-                                      ? 'restaurant'
-                                      : 'search'
-                            "
+                            [prefixIcon]="row.prefixIcon"
                             [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                            (click)="onProductSelectClick(ingredientIndex)"
+                            (click)="onProductSelectClick(row.index)"
                             [error]="foodNameErrorKey ? (foodNameErrorKey | translate: { min: foodNameErrors?.['min']?.min ?? 0 }) : null"
                         />
 
@@ -153,13 +144,7 @@
                                 size="lg"
                                 type="number"
                                 [step]="0.01"
-                                [label]="
-                                    ingredient.controls.nestedRecipeId.value
-                                        ? ('RECIPE_SELECT_DIALOG.SERVINGS' | translate)
-                                        : productUnitKey
-                                          ? ('RECIPE_MANAGE.INGREDIENT_AMOUNT' | translate) + ' (' + (productUnitKey | translate) + ')'
-                                          : ('RECIPE_MANAGE.INGREDIENT_AMOUNT' | translate)
-                                "
+                                [label]="row.amountLabel"
                                 [error]="amountErrorKey ? (amountErrorKey | translate: { min: amountErrors?.['min']?.min ?? 0 }) : null"
                             />
                             <fd-ui-button
@@ -170,7 +155,7 @@
                                 [fdUiHint]="'COMMON.DELETE' | translate"
                                 [ariaLabel]="'COMMON.DELETE' | translate"
                                 [disabled]="firstIngredient"
-                                (click)="onRemoveIngredient(ingredientIndex)"
+                                (click)="onRemoveIngredient(row.index)"
                             />
                         </div>
                     </div>
