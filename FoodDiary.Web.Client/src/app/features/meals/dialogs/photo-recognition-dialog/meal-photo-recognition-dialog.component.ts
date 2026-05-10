@@ -1,7 +1,7 @@
 import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -22,6 +22,33 @@ type PhotoAiDialogData = {
     initialSession?: MealAiSessionManageDto | null;
     mode?: 'edit' | 'create';
 };
+
+type RecognizedItemView = {
+    item: FoodVisionItem;
+    displayName: string;
+    amount: number;
+    unit: string | null | undefined;
+    unitKey: string | null;
+};
+
+type UnitOptionView = {
+    value: string;
+    labelKey: string;
+};
+
+type MacroSummaryItem = {
+    key: 'calories' | 'protein' | 'fat' | 'carbs' | 'fiber' | 'alcohol';
+    labelKey: string;
+    value: number;
+    unitKey: string;
+    numberFormat: string;
+};
+
+const UNIT_OPTIONS: readonly UnitOptionView[] = [
+    { value: 'g', labelKey: 'GENERAL.UNITS.G' },
+    { value: 'ml', labelKey: 'GENERAL.UNITS.ML' },
+    { value: 'pcs', labelKey: 'GENERAL.UNITS.PCS' },
+];
 
 @Component({
     selector: 'fd-meal-photo-recognition-dialog',
@@ -44,7 +71,6 @@ type PhotoAiDialogData = {
 export class MealPhotoRecognitionDialogComponent {
     private readonly dialogData = inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly aiFoodService = inject(AiFoodService);
-    private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>, {
         optional: true,
     });
@@ -63,7 +89,31 @@ export class MealPhotoRecognitionDialogComponent {
     public readonly editItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
     private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
-    private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
+    public readonly unitOptions = UNIT_OPTIONS;
+    public readonly resultViews = computed<RecognizedItemView[]>(() =>
+        this.results().map(item => ({
+            item,
+            displayName: this.toDisplayName(item),
+            amount: item.amount,
+            unit: item.unit,
+            unitKey: this.resolveUnitKey(item.unit),
+        })),
+    );
+    public readonly macroSummaryItems = computed<MacroSummaryItem[]>(() => {
+        const nutrition = this.nutrition();
+        if (!nutrition) {
+            return [];
+        }
+
+        return [
+            this.toMacroSummaryItem('calories', 'GENERAL.NUTRIENTS.CALORIES', nutrition.calories, 'GENERAL.UNITS.KCAL'),
+            this.toMacroSummaryItem('protein', 'GENERAL.NUTRIENTS.PROTEIN', nutrition.protein, 'GENERAL.UNITS.G'),
+            this.toMacroSummaryItem('fat', 'GENERAL.NUTRIENTS.FAT', nutrition.fat, 'GENERAL.UNITS.G'),
+            this.toMacroSummaryItem('carbs', 'GENERAL.NUTRIENTS.CARB', nutrition.carbs, 'GENERAL.UNITS.G'),
+            this.toMacroSummaryItem('fiber', 'GENERAL.NUTRIENTS.FIBER', nutrition.fiber, 'GENERAL.UNITS.G'),
+            this.toMacroSummaryItem('alcohol', 'GENERAL.NUTRIENTS.ALCOHOL', nutrition.alcohol, 'GENERAL.UNITS.G'),
+        ];
+    });
     public readonly statusKey = computed(() => {
         if (!this.selection()) {
             return null;
@@ -91,16 +141,9 @@ export class MealPhotoRecognitionDialogComponent {
         }
     }
 
-    public getDisplayName(item: FoodVisionItem): string {
+    private toDisplayName(item: FoodVisionItem): string {
         const rawName = item.nameLocal?.trim() || item.nameEn;
         return this.capitalizeLabel(rawName);
-    }
-
-    public formatAmount(item: FoodVisionItem): string {
-        const amount = item.amount;
-        const unitKey = this.resolveUnitKey(item.unit);
-        const unitLabel = unitKey ? this.translateService.instant(unitKey) : item.unit;
-        return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
 
     private resolveUnitKey(unit?: string | null): string | null {
@@ -290,17 +333,6 @@ export class MealPhotoRecognitionDialogComponent {
             });
     }
 
-    public formatMacro(value: number, unitKey: string): string {
-        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
-        const hasFraction = Math.abs(value % 1) > 0.01;
-        const formatter = new Intl.NumberFormat(locale, {
-            maximumFractionDigits: hasFraction ? 1 : 0,
-            minimumFractionDigits: hasFraction ? 1 : 0,
-        });
-        const unitLabel = this.translateService.instant(unitKey);
-        return `${formatter.format(value)} ${unitLabel}`.trim();
-    }
-
     public startEditing(): void {
         const items = this.results().length
             ? this.results()
@@ -394,15 +426,6 @@ export class MealPhotoRecognitionDialogComponent {
 
     public addEditItem(): void {
         this.editItems.update(items => [...items, { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' }]);
-    }
-
-    public getUnitOptions(): readonly string[] {
-        return this.unitOptions;
-    }
-
-    public getUnitLabel(unit: string): string {
-        const unitKey = this.resolveUnitKey(unit);
-        return unitKey ? this.translateService.instant(unitKey) : unit;
     }
 
     private createEditId(): string {
@@ -561,6 +584,17 @@ export class MealPhotoRecognitionDialogComponent {
 
     private normalizeName(value?: string | null): string {
         return (value ?? '').trim().toLowerCase();
+    }
+
+    private toMacroSummaryItem(key: MacroSummaryItem['key'], labelKey: string, value: number, unitKey: string): MacroSummaryItem {
+        const hasFraction = Math.abs(value % 1) > 0.01;
+        return {
+            key,
+            labelKey,
+            value,
+            unitKey,
+            numberFormat: hasFraction ? '1.1-1' : '1.0-0',
+        };
     }
 }
 

@@ -104,8 +104,8 @@
                                         (change)="updateEditItem(i, 'unit', unitSelect.value)"
                                         #unitSelect
                                     >
-                                        @for (unit of getUnitOptions(); track unit) {
-                                            <option [value]="unit">{{ getUnitLabel(unit) }}</option>
+                                        @for (unit of unitOptions; track unit.value) {
+                                            <option [value]="unit.value">{{ unit.labelKey | translate }}</option>
                                         }
                                     </select>
                                     <fd-ui-button
@@ -142,76 +142,42 @@
                                 </div>
                             </div>
                             <div class="photo-ai-dialog__table-body fd-stack">
-                                <div
-                                    class="photo-ai-dialog__table-row fd-grid fd-gap-xs fd-align-center"
-                                    *ngFor="let item of results(); let i = index"
-                                >
-                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-body-sm">
-                                        {{ getDisplayName(item) }}
+                                @for (itemView of resultViews(); track itemView.item) {
+                                    <div class="photo-ai-dialog__table-row fd-grid fd-gap-xs fd-align-center">
+                                        <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-body-sm">
+                                            {{ itemView.displayName }}
+                                        </div>
+                                        <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-value">
+                                            {{ itemView.amount }}
+                                            @if (itemView.unitKey) {
+                                                {{ itemView.unitKey | translate }}
+                                            } @else if (itemView.unit) {
+                                                {{ itemView.unit }}
+                                            }
+                                        </div>
                                     </div>
-                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-value">
-                                        {{ formatAmount(item) }}
-                                    </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     }
 
                     @if (!isNutritionLoading()) {
-                        @if (nutrition()) {
+                        @if (macroSummaryItems().length) {
                             <div class="photo-ai-dialog__nutrition fd-stack fd-gap-xs">
                                 <div class="photo-ai-dialog__nutrition-title fd-ui-card-title">
                                     {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE' | translate }}
                                 </div>
                                 <div class="photo-ai-dialog__nutrition-grid fd-grid">
-                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                            {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}
-                                        </span>
-                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                            {{ formatMacro(nutrition()!.calories, 'GENERAL.UNITS.KCAL') }}
-                                        </span>
-                                    </div>
-                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                            {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}
-                                        </span>
-                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                            {{ formatMacro(nutrition()!.protein, 'GENERAL.UNITS.G') }}
-                                        </span>
-                                    </div>
-                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                            {{ 'GENERAL.NUTRIENTS.FAT' | translate }}
-                                        </span>
-                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                            {{ formatMacro(nutrition()!.fat, 'GENERAL.UNITS.G') }}
-                                        </span>
-                                    </div>
-                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                            {{ 'GENERAL.NUTRIENTS.CARB' | translate }}
-                                        </span>
-                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                            {{ formatMacro(nutrition()!.carbs, 'GENERAL.UNITS.G') }}
-                                        </span>
-                                    </div>
-                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                            {{ 'GENERAL.NUTRIENTS.FIBER' | translate }}
-                                        </span>
-                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                            {{ formatMacro(nutrition()!.fiber, 'GENERAL.UNITS.G') }}
-                                        </span>
-                                    </div>
-                                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                            {{ 'GENERAL.NUTRIENTS.ALCOHOL' | translate }}
-                                        </span>
-                                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                            {{ formatMacro(nutrition()!.alcohol, 'GENERAL.UNITS.G') }}
-                                        </span>
-                                    </div>
+                                    @for (macro of macroSummaryItems(); track macro.key) {
+                                        <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
+                                            <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
+                                                {{ macro.labelKey | translate }}
+                                            </span>
+                                            <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
+                                                {{ macro.value | number: macro.numberFormat }} {{ macro.unitKey | translate }}
+                                            </span>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         } @else {
