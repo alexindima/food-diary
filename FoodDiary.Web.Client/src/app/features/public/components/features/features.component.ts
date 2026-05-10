@@ -38,6 +38,8 @@ export class FeaturesComponent {
         },
     ].map(category => ({
         ...category,
+        tabId: `features-tab-${category.key}`,
+        panelId: `features-panel-${category.key}`,
         labelKey: `FEATURES.CATEGORIES.${category.key}.LABEL`,
         eyebrowKey: `FEATURES.CATEGORIES.${category.key}.EYEBROW`,
         titleKey: `FEATURES.CATEGORIES.${category.key}.TITLE`,
@@ -70,6 +72,8 @@ interface FeatureCategory {
     eyebrowKey: string;
     titleKey: string;
     descriptionKey: string;
+    tabId: string;
+    panelId: string;
     itemKeys: FeatureItem[];
 }
 

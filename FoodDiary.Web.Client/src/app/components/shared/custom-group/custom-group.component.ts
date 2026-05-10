@@ -43,6 +43,7 @@ export class CustomGroupComponent {
     public closeButtonClick = output<void>();
 
     public readonly isOpen = signal<boolean>(true);
+    public readonly accordionToggleLabel = computed(() => (this.isOpen() ? '-' : '+'));
     public readonly titleLeftOffset = computed<string>(() => {
         return this.isAccordion()
             ? 'calc(var(--fd-size-control-xs) + var(--fd-space-sm))'

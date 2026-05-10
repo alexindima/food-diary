@@ -67,6 +67,8 @@ export class FastingControlsComponent {
     public readonly isCustomReduceExpanded = signal(false);
     public readonly isExtendPanelExpanded = signal(false);
     public readonly isReducePanelExpanded = signal(false);
+    public readonly extendPanelToggleLabel = computed(() => (this.isExtendPanelExpanded() ? '-' : '+'));
+    public readonly reducePanelToggleLabel = computed(() => (this.isReducePanelExpanded() ? '-' : '+'));
     public readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
     public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');

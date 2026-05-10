@@ -93,6 +93,24 @@ export class GoalsPageComponent {
             value: this.facade.bodyTargetValues()[target.key],
         })),
     );
+    protected readonly ringProgressOffset = computed(() => `${this.progressPercent()}%`);
+    protected readonly ringKnobAngle = computed(() => `${this.knobAngle()}deg`);
+    protected readonly cyclingDayControls = computed(() =>
+        this.daysOfWeek.map(day => ({
+            ...day,
+            inputId: `cycling-day-${day.key}`,
+        })),
+    );
+    protected readonly waterViewState = computed(() => this.withMacroProgressStyles(this.waterState()));
+    protected readonly coreMacroViewStates = computed(() => this.coreMacroStates().map(macro => this.withMacroProgressStyles(macro)));
+    protected readonly fiberMacroViewState = computed(() => {
+        const fiber = this.fiberMacroState();
+        if (!fiber) {
+            return null;
+        }
+
+        return this.withMacroProgressStyles(fiber);
+    });
 
     protected toggleCalorieCycling(): void {
         this.facade.toggleCalorieCycling();
@@ -248,6 +266,14 @@ export class GoalsPageComponent {
             value: preset.key,
             label: this.translateService.instant(preset.labelKey),
         }));
+    }
+
+    private withMacroProgressStyles<T extends { percent: number }>(state: T): T & { progressOffset: string; progressRatio: number } {
+        return {
+            ...state,
+            progressOffset: `${state.percent}%`,
+            progressRatio: state.percent / 100,
+        };
     }
 
     protected readonly bodyTargets: BodyTarget[] = [

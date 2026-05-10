@@ -45,9 +45,9 @@
                                 <div class="goals__card-inner goals__card-inner--center">
                                     <div
                                         class="goals__ring"
-                                        [style.--goals-progress]="progressPercent() + '%'"
+                                        [style.--goals-progress]="ringProgressOffset()"
                                         [style.--goals-accent]="accentColor()"
-                                        [style.--goals-angle]="knobAngle() + 'deg'"
+                                        [style.--goals-angle]="ringKnobAngle()"
                                         (pointerdown)="startRingDrag($event)"
                                         (pointermove)="onRingHover($event)"
                                         (pointerleave)="onRingLeave($event)"
@@ -93,16 +93,13 @@
                                     </div>
                                     @if (calorieCyclingEnabled()) {
                                         <div class="goals__cycling-days">
-                                            @for (day of daysOfWeek; track day.key) {
+                                            @for (day of cyclingDayControls(); track day.key) {
                                                 <div class="goals__cycling-day">
-                                                    <label
-                                                        class="goals__cycling-day-label fd-ui-meta-text"
-                                                        [attr.for]="'cycling-day-' + day.key"
-                                                    >
+                                                    <label class="goals__cycling-day-label fd-ui-meta-text" [attr.for]="day.inputId">
                                                         {{ day.labelKey | translate }}
                                                     </label>
                                                     <input
-                                                        [id]="'cycling-day-' + day.key"
+                                                        [id]="day.inputId"
                                                         type="number"
                                                         class="goals__cycling-day-input"
                                                         [min]="0"
@@ -117,7 +114,7 @@
                                 </div>
                             </fd-ui-card>
 
-                            @if (waterState(); as water) {
+                            @if (waterViewState(); as water) {
                                 <fd-ui-card class="goals__card goals__card--water" [title]="'GOALS_PAGE.WATER_TITLE' | translate">
                                     <div class="goals__card-inner goals__card-inner--column">
                                         <div class="goals__macro goals__macro--slider">
@@ -140,8 +137,8 @@
 
                                             <div
                                                 class="goals__macro-slider"
-                                                [style.--macro-progress]="water.percent + '%'"
-                                                [style.--macro-progress-ratio]="water.percent / 100"
+                                                [style.--macro-progress]="water.progressOffset"
+                                                [style.--macro-progress-ratio]="water.progressRatio"
                                                 [style.--macro-accent]="water.accent"
                                                 [style.--macro-gradient]="water.gradient"
                                             >
@@ -176,7 +173,7 @@
                                             (ngModelChange)="onMacroPresetModelChange($event)"
                                         />
                                     </div>
-                                    @for (macro of coreMacroStates(); track macro.key) {
+                                    @for (macro of coreMacroViewStates(); track macro.key) {
                                         <div class="goals__macro goals__macro--slider">
                                             <div class="goals__macro-header">
                                                 <div class="goals__macro-label">
@@ -197,8 +194,8 @@
 
                                             <div
                                                 class="goals__macro-slider"
-                                                [style.--macro-progress]="macro.percent + '%'"
-                                                [style.--macro-progress-ratio]="macro.percent / 100"
+                                                [style.--macro-progress]="macro.progressOffset"
+                                                [style.--macro-progress-ratio]="macro.progressRatio"
                                                 [style.--macro-accent]="macro.accent"
                                                 [style.--macro-gradient]="macro.gradient"
                                             >
@@ -219,7 +216,7 @@
                                 </div>
                             </fd-ui-card>
 
-                            @if (fiberMacroState(); as fiber) {
+                            @if (fiberMacroViewState(); as fiber) {
                                 <fd-ui-card class="goals__card goals__card--fiber" [title]="'GOALS_PAGE.FIBER_GROUP' | translate">
                                     <div class="goals__card-inner goals__card-inner--column">
                                         <div class="goals__macro goals__macro--slider">
@@ -242,8 +239,8 @@
 
                                             <div
                                                 class="goals__macro-slider"
-                                                [style.--macro-progress]="fiber.percent + '%'"
-                                                [style.--macro-progress-ratio]="fiber.percent / 100"
+                                                [style.--macro-progress]="fiber.progressOffset"
+                                                [style.--macro-progress-ratio]="fiber.progressRatio"
                                                 [style.--macro-accent]="fiber.accent"
                                                 [style.--macro-gradient]="fiber.gradient"
                                             >

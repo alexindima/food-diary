@@ -8,7 +8,7 @@
     </div>
 
     @if (progress() > 100) {
-        <div class="dynamic-progress-bar-overflow-line" [ngStyle]="{ left: maxPosition() + '%' }"></div>
-        <div class="dynamic-progress-bar-overflow-label fd-ui-caption" [ngStyle]="{ left: maxPosition() + '%' }">100%</div>
+        <div class="dynamic-progress-bar-overflow-line" [ngStyle]="{ left: maxPositionOffset() }"></div>
+        <div class="dynamic-progress-bar-overflow-label fd-ui-caption" [ngStyle]="{ left: maxPositionOffset() }">100%</div>
     }
 </div>

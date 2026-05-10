@@ -87,6 +87,7 @@ export class WeeklyCheckInPageComponent {
             unitKey,
             unitSeparator,
             numberFormat,
+            valuePrefix: value > 0 ? '+' : '',
             color: this.facade.getTrendColor(value, invertPositive),
             icon: this.facade.getTrendIcon(value),
         };
@@ -102,6 +103,7 @@ interface WeeklyCheckInTrendCardViewModel {
     unitKey: string;
     unitSeparator: string;
     numberFormat: string;
+    valuePrefix: string;
     color: string;
     icon: string;
 }

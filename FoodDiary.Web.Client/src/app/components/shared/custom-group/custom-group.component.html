@@ -5,7 +5,7 @@
         </div>
         @if (isAccordion()) {
             <button type="button" class="custom-group__toggle" (click)="toggleAccordion()">
-                {{ isOpen() ? '-' : '+' }}
+                {{ accordionToggleLabel() }}
             </button>
         }
         @if (showCloseButton()) {

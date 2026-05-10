@@ -14,10 +14,10 @@
                                     <fd-ui-icon [style.color]="trend.color" [name]="trend.icon"></fd-ui-icon>
                                     <div class="check-in__trend-info fd-stack">
                                         <span class="check-in__trend-label fd-ui-helper-text">{{ trend.labelKey | translate }}</span>
-                                        <strong class="check-in__trend-value fd-ui-action-text"
-                                            >{{ trend.value > 0 ? '+' : '' }}{{ trend.value | number: trend.numberFormat
-                                            }}{{ trend.unitSeparator }}{{ trend.unitKey | translate }}</strong
-                                        >
+                                        <strong class="check-in__trend-value fd-ui-action-text">
+                                            {{ trend.valuePrefix }}{{ trend.value | number: trend.numberFormat }}{{ trend.unitSeparator
+                                            }}{{ trend.unitKey | translate }}
+                                        </strong>
                                     </div>
                                 </div>
                             </fd-ui-accent-surface>

@@ -11,6 +11,7 @@ interface HealthAreaDisplay {
     score: number;
     grade: string;
     gradeKey: string;
+    gradeClass: string;
     strokeDasharray: string;
 }
 
@@ -40,6 +41,7 @@ export class HealthAreaScoresComponent {
             ...area,
             labelKey: `HEALTH_SCORES.${area.key}`,
             gradeKey: `HEALTH_SCORES.GRADE_${area.grade.toUpperCase()}`,
+            gradeClass: `area-card--${area.grade}`,
             strokeDasharray: `${area.score}, 100`,
         }));
     });

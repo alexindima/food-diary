@@ -173,7 +173,7 @@
                                     {{ 'FASTING.EXTEND_GROUP' | translate }}
                                 </span>
                                 <span class="fasting-controls__extend-panel-toggle fd-ui-body-sm">
-                                    {{ isExtendPanelExpanded() ? '-' : '+' }}
+                                    {{ extendPanelToggleLabel() }}
                                 </span>
                             </button>
                             @if (isExtendPanelExpanded()) {
@@ -250,7 +250,7 @@
                                     {{ 'FASTING.REDUCE_GROUP' | translate }}
                                 </span>
                                 <span class="fasting-controls__extend-panel-toggle fd-ui-body-sm">
-                                    {{ isReducePanelExpanded() ? '-' : '+' }}
+                                    {{ reducePanelToggleLabel() }}
                                 </span>
                             </button>
                             @if (isReducePanelExpanded()) {

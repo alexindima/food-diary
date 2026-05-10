@@ -24,8 +24,8 @@
                     class="features__category-chip fd-inline-center fd-gap-xs"
                     [class.features__category-chip--active]="activeCategoryKey() === category.key"
                     [attr.aria-selected]="activeCategoryKey() === category.key"
-                    [attr.aria-controls]="'features-panel-' + category.key"
-                    [attr.id]="'features-tab-' + category.key"
+                    [attr.aria-controls]="category.panelId"
+                    [attr.id]="category.tabId"
                     (click)="selectCategory(category.key)"
                 >
                     <fd-ui-icon [name]="category.icon" size="md" />
@@ -38,8 +38,8 @@
             <section
                 class="features__panel fd-grid fd-gap-lg fd-align-start"
                 role="tabpanel"
-                [attr.id]="'features-panel-' + category.key"
-                [attr.aria-labelledby]="'features-tab-' + category.key"
+                [attr.id]="category.panelId"
+                [attr.aria-labelledby]="category.tabId"
             >
                 <div class="features__panel-copy">
                     <span class="features__panel-eyebrow">{{ category.eyebrowKey | translate }}</span>

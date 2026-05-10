@@ -143,6 +143,8 @@ export class DashboardSummaryCardComponent {
     });
     public readonly dailyGradientId = this.gradientIdDaily;
     public readonly weeklyGradientId = this.gradientIdWeekly;
+    public readonly dailyGradientStroke = `url(#${this.gradientIdDaily})`;
+    public readonly weeklyGradientStroke = `url(#${this.gradientIdWeekly})`;
 
     public constructor() {
         effect(onCleanup => {

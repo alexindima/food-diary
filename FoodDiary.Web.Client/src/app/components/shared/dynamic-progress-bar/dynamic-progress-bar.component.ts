@@ -31,6 +31,7 @@ export class DynamicProgressBarComponent {
         }
         return currentValue > maxValue ? (maxValue / currentValue) * 100 : 100;
     });
+    public readonly maxPositionOffset = computed<string>(() => `${this.maxPosition()}%`);
 
     public readonly textPosition = computed<string>(() => {
         let position;
