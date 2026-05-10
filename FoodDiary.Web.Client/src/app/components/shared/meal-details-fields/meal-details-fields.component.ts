@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -18,6 +18,7 @@ import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety
 export class MealDetailsFieldsComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly languageVersion = signal(0);
 
     public readonly date = input.required<string>();
     public readonly time = input.required<string>();
@@ -37,15 +38,19 @@ export class MealDetailsFieldsComponent {
 
     public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
     public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+    public readonly preMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('before'));
+    public readonly postMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('after'));
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
             this.hungerEmojiOptions = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
             this.satietyEmojiOptions = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
         });
     }
 
-    public getSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
+    private buildSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
+        this.languageVersion();
         const value = kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel();
         const meta = this.getSatietyLevelMeta(kind, value);
         const fieldLabel = this.translateService.instant(kind === 'before' ? 'MEAL_DETAILS.SATIETY_BEFORE' : 'MEAL_DETAILS.SATIETY_AFTER');
