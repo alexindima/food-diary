@@ -6,10 +6,10 @@
     <fd-page-body>
         @if (facade.isDetailLoading()) {
             <fd-ui-loader />
-        } @else if (facade.selectedPlan(); as plan) {
+        } @else if (selectedPlanView(); as plan) {
             <header class="meal-plan-detail__header fd-stack fd-gap-xs">
                 <div class="meal-plan-detail__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                    {{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}
+                    {{ plan.dietTypeKey | translate }}
                 </div>
                 <h1 class="meal-plan-detail__title fd-ui-display-sm">{{ plan.name }}</h1>
                 @if (plan.description) {
@@ -37,7 +37,7 @@
                             @for (meal of day.meals; track meal.id) {
                                 <div class="meal-plan-meal fd-row fd-gap-md">
                                     <div class="meal-plan-meal__type fd-ui-overline">
-                                        {{ 'MEAL_PLANS.MEAL_TYPE.' + meal.mealType.toUpperCase() | translate }}
+                                        {{ meal.mealTypeKey | translate }}
                                     </div>
                                     <div class="meal-plan-meal__recipe fd-ui-helper-strong">{{ meal.recipeName ?? meal.recipeId }}</div>
                                     <div class="meal-plan-meal__nutrition fd-row fd-gap-xs fd-ui-caption-strong">

@@ -28,14 +28,14 @@
     <fd-page-body>
         @if (facade.isLoading()) {
             <fd-ui-loader />
-        } @else if (facade.plans().length === 0) {
+        } @else if (planCards().length === 0) {
             <div class="meal-plans-list__empty fd-stack fd-align-center fd-gap-sm">
                 <fd-ui-icon name="restaurant_menu" size="xl" />
                 <span>{{ 'MEAL_PLANS.EMPTY' | translate }}</span>
             </div>
         } @else {
             <div class="meal-plans-list__grid fd-grid fd-gap-lg">
-                @for (plan of facade.plans(); track plan.id) {
+                @for (plan of planCards(); track plan.id) {
                     <div
                         class="meal-plan-card fd-stack fd-gap-xs"
                         fdCardHover
@@ -45,7 +45,7 @@
                         (keydown.enter)="openPlan(plan.id)"
                     >
                         <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                            {{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}
+                            {{ plan.dietTypeKey | translate }}
                         </div>
                         <h3 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h3>
                         @if (plan.description) {

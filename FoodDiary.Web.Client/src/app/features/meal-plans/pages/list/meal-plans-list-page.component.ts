@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -10,7 +10,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
-import { DIET_TYPES, type DietType } from '../../models/meal-plan.data';
+import { DIET_TYPES, type DietType, type MealPlanSummary } from '../../models/meal-plan.data';
 
 @Component({
     selector: 'fd-meal-plans-list-page',
@@ -34,6 +34,12 @@ export class MealPlansListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(MealPlanFacade);
     public readonly dietTypes = DIET_TYPES;
+    public readonly planCards = computed<MealPlanCardViewModel[]>(() =>
+        this.facade.plans().map(plan => ({
+            ...plan,
+            dietTypeKey: `MEAL_PLANS.DIET_TYPE.${plan.dietType.toUpperCase()}`,
+        })),
+    );
 
     public constructor() {
         this.facade.loadPlans();
@@ -46,4 +52,8 @@ export class MealPlansListPageComponent {
     public openPlan(id: string): void {
         void this.router.navigate(['/meal-plans', id]);
     }
+}
+
+interface MealPlanCardViewModel extends MealPlanSummary {
+    dietTypeKey: string;
 }
