@@ -898,7 +898,13 @@ export default [
             '@angular-eslint/template/no-call-expression': 'warn',
             '@angular-eslint/template/no-duplicate-attributes': 'error',
             '@angular-eslint/template/no-empty-control-flow': 'warn',
-            '@angular-eslint/template/no-inline-styles': 'warn',
+            '@angular-eslint/template/no-inline-styles': [
+                'error',
+                {
+                    allowBindToStyle: true,
+                    allowNgStyle: true,
+                },
+            ],
             '@angular-eslint/template/no-interpolation-in-attributes': 'error',
             '@angular-eslint/template/no-negated-async': 'warn',
             '@angular-eslint/template/no-non-null-assertion': 'error',
