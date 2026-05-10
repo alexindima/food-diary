@@ -9,7 +9,7 @@ export class TokenStorageService {
     private readonly storage = inject(BrowserStorageService);
 
     public getToken(): string | null {
-        return this.storage.getItem('local', 'authToken') || this.storage.getItem('session', 'authToken') || null;
+        return this.storage.getItem('local', 'authToken') ?? this.storage.getItem('session', 'authToken') ?? null;
     }
 
     public setToken(token: string, rememberMe?: boolean): void {

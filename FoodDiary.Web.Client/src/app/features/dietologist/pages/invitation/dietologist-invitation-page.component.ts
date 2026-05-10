@@ -28,7 +28,7 @@ export class DietologistInvitationPageComponent {
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly currentLanguage = signal(this.translateService.currentLang || this.translateService.defaultLang || 'en');
+    private readonly currentLanguage = signal((this.translateService.currentLang || this.translateService.defaultLang) ?? 'en');
 
     public readonly state = signal<InvitationPageState>('loading');
     public readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
@@ -54,7 +54,7 @@ export class DietologistInvitationPageComponent {
         ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.currentLanguage.set(this.translateService.currentLang || this.translateService.defaultLang || 'en');
+                this.currentLanguage.set((this.translateService.currentLang || this.translateService.defaultLang) ?? 'en');
             });
         this.loadInvitation();
     }

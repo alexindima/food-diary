@@ -625,7 +625,7 @@ export class BaseMealManageComponent {
             date: this.getDateInputValue(new Date(consumption.date)),
             time: this.getTimeInputValue(new Date(consumption.date)),
             mealType: normalizeMealType(consumption.mealType),
-            comment: consumption.comment || null,
+            comment: consumption.comment ?? null,
             imageUrl: {
                 url: consumption.imageUrl ?? null,
                 assetId: consumption.imageAssetId ?? null,

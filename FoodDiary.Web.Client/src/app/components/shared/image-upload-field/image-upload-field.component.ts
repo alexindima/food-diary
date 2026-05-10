@@ -437,12 +437,12 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             }
 
             const fileName = this.originalFile?.name ?? 'avatar.png';
-            const croppedFile = new File([blob], fileName, { type: this.originalFile?.type || 'image/png' });
+            const croppedFile = new File([blob], fileName, { type: this.originalFile?.type ?? 'image/png' });
             this.isCropping = false;
             this.destroyCropper();
             this.clearCropState();
             this.uploadFile(croppedFile);
-        }, this.originalFile?.type || 'image/png');
+        }, this.originalFile?.type ?? 'image/png');
     }
 
     private clearCropState(): void {

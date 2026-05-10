@@ -164,7 +164,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private toDisplayName(item: FoodVisionItem): string {
-        const rawName = item.nameLocal?.trim() || item.nameEn;
+        const rawName = item.nameLocal?.trim() ?? item.nameEn;
         return this.capitalizeLabel(rawName);
     }
 

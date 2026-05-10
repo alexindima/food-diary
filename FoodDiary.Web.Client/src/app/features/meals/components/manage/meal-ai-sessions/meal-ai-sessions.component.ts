@@ -42,7 +42,7 @@ export class MealAiSessionsComponent {
                 isExpanded,
                 hiddenItemsCount: this.getHiddenAiItemsCount(session.items, this.aiPreviewMaxItems),
                 visibleItems: visibleItems.map(item => ({
-                    nameLabel: this.formatAiName(item.nameLocal || item.nameEn),
+                    nameLabel: this.formatAiName(item.nameLocal ?? item.nameEn),
                     amountLabel: this.formatAiAmount(item.amount, item.unit),
                 })),
                 caloriesLabel: this.formatAiMacro(totals.calories, 'GENERAL.UNITS.KCAL'),
@@ -97,7 +97,7 @@ export class MealAiSessionsComponent {
     }
 
     private formatAiMacro(value: number, unitKey: string): string {
-        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const locale = (this.translateService.currentLang || this.translateService.defaultLang) ?? 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,

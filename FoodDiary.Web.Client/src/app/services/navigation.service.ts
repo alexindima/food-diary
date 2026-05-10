@@ -28,7 +28,7 @@ export class NavigationService {
     }
 
     public async navigateToReturnUrlAsync(returnUrl: string | null): Promise<void> {
-        await this.router.navigateByUrl(returnUrl || '/dashboard');
+        await this.router.navigateByUrl(returnUrl ?? '/dashboard');
     }
 
     public async navigateToProductListAsync(): Promise<void> {

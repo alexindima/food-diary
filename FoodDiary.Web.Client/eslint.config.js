@@ -345,7 +345,7 @@ export default [
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',
             '@typescript-eslint/prefer-optional-chain': 'error',
-            '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+            '@typescript-eslint/prefer-nullish-coalescing': 'error',
             '@typescript-eslint/require-await': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
             'local/async-function-suffix': 'error',

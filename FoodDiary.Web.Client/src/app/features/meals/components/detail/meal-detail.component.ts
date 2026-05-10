@@ -246,7 +246,7 @@ export class MealDetailComponent {
     }
 
     private getAiItemName(item: ConsumptionAiItem): string {
-        return item.nameLocal?.trim() || item.nameEn.trim() || this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM');
+        return (item.nameLocal?.trim() ?? item.nameEn.trim()) || this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM');
     }
 
     private getAiItemUnitKey(unit: string): string | null {

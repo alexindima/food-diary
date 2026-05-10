@@ -293,7 +293,7 @@ export class PremiumAccessPageComponent {
             return;
         }
 
-        const paddleClientToken = this.overview()?.paddleClientToken?.trim() || environment.paddleClientToken?.trim();
+        const paddleClientToken = this.overview()?.paddleClientToken?.trim() ?? environment.paddleClientToken?.trim();
         if (!paddleClientToken) {
             const message = 'Paddle client token is not configured.';
             this.errorMessage.set(message);
@@ -305,7 +305,7 @@ export class PremiumAccessPageComponent {
             await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
                 token: paddleClientToken,
                 environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
-                locale: this.translateService.currentLang || this.translateService.getDefaultLang() || 'en',
+                locale: (this.translateService.currentLang || this.translateService.getDefaultLang()) ?? 'en',
             });
 
             await this.router.navigate([], {

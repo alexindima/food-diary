@@ -115,7 +115,7 @@ export class RecipeSelectDialogComponent {
         this.recipeData.setLoading(true);
         const includePublic = !this.searchForm.controls.onlyMine.value;
         const filters: RecipeFilters = {
-            search: this.searchForm.controls.search.value || undefined,
+            search: this.searchForm.controls.search.value ?? undefined,
         };
 
         return this.recipeService.query(page, 10, filters, includePublic).pipe(

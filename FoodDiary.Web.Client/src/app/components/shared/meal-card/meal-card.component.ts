@@ -113,7 +113,7 @@ export class MealCardComponent {
         const itemImages = this.resolveItemImages();
         return itemImages.length > 1 ? itemImages : [];
     });
-    public readonly hasPreviewImage = computed(() => Boolean(this.resolvePreviewImage() || this.collageImages().length > 0));
+    public readonly hasPreviewImage = computed(() => Boolean(this.resolvePreviewImage() ?? this.collageImages().length > 0));
 
     public readonly itemCount = computed(() => {
         const meal = this.meal();
@@ -271,7 +271,7 @@ export class MealCardComponent {
         const result: EntityCardCollageImage[] = [];
 
         for (const item of this.meal().items ?? []) {
-            const imageUrl = item?.product?.imageUrl?.trim() || item?.recipe?.imageUrl?.trim();
+            const imageUrl = item?.product?.imageUrl?.trim() ?? item?.recipe?.imageUrl?.trim();
             if (!imageUrl || seen.has(imageUrl)) {
                 continue;
             }
@@ -279,7 +279,7 @@ export class MealCardComponent {
             seen.add(imageUrl);
             result.push({
                 url: imageUrl,
-                alt: item?.product?.name?.trim() || item?.recipe?.name?.trim() || this.mealTitle(),
+                alt: item?.product?.name?.trim() ?? item?.recipe?.name?.trim() ?? this.mealTitle(),
             });
 
             if (result.length === 4) {
@@ -297,7 +297,7 @@ export class MealCardComponent {
                 seen.add(imageUrl);
                 result.push({
                     url: imageUrl,
-                    alt: session?.notes?.trim() || this.mealTitle(),
+                    alt: session?.notes?.trim() ?? this.mealTitle(),
                 });
 
                 if (result.length === 4) {

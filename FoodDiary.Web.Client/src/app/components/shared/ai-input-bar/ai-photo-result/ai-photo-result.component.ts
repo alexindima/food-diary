@@ -150,7 +150,7 @@ export class AiPhotoResultComponent {
     private readonly sourceItems = signal<EditableAiItem[]>([]);
 
     private resolveDisplayName(item: FoodVisionItem): string {
-        const rawName = item.nameLocal?.trim() || item.nameEn;
+        const rawName = item.nameLocal?.trim() ?? item.nameEn;
         return this.capitalizeLabel(rawName);
     }
 
@@ -162,7 +162,7 @@ export class AiPhotoResultComponent {
     }
 
     private resolveMacroLabel(value: number, unitKey: string): string {
-        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const locale = this.translateService.currentLang;
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,

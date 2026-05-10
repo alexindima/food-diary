@@ -91,22 +91,20 @@ export class GoogleIdentityService {
         if (this.scriptLoaded()) {
             return;
         }
-        if (!this.initializationPromise) {
-            this.initializationPromise = new Promise<void>((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = this.scriptUrl;
-                script.async = true;
-                script.defer = true;
-                script.onload = (): void => {
-                    this.scriptLoaded.set(true);
-                    resolve();
-                };
-                script.onerror = (): void => {
-                    reject(new Error('Failed to load Google Identity script'));
-                };
-                document.head.appendChild(script);
-            });
-        }
+        this.initializationPromise ??= new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = this.scriptUrl;
+            script.async = true;
+            script.defer = true;
+            script.onload = (): void => {
+                this.scriptLoaded.set(true);
+                resolve();
+            };
+            script.onerror = (): void => {
+                reject(new Error('Failed to load Google Identity script'));
+            };
+            document.head.appendChild(script);
+        });
         return this.initializationPromise;
     }
 }

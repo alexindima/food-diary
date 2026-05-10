@@ -168,7 +168,7 @@ export class ProductAiRecognitionDialogComponent {
 
         const result: ProductAiRecognitionResult = {
             name: name || this.getFallbackName(),
-            description: this.getDescription() || null,
+            description: this.getDescription() ?? null,
             image: image ? { ...image } : null,
             baseAmount,
             baseUnit,
@@ -194,7 +194,7 @@ export class ProductAiRecognitionDialogComponent {
 
     public itemNames(): string[] {
         return this.results()
-            .map(item => this.capitalizeName(item.nameLocal?.trim() || item.nameEn.trim() || ''))
+            .map(item => this.capitalizeName((item.nameLocal?.trim() ?? item.nameEn.trim()) || ''))
             .filter(Boolean);
     }
 
@@ -263,7 +263,7 @@ export class ProductAiRecognitionDialogComponent {
 
     private applyNutritionToForm(items: FoodVisionItem[], nutrition: FoodNutritionResponse): void {
         const primary = (items as Array<FoodVisionItem | undefined>)[0];
-        const name = this.capitalizeName(primary?.nameLocal?.trim() || primary?.nameEn.trim() || '');
+        const name = this.capitalizeName(primary?.nameLocal?.trim() ?? primary?.nameEn.trim() ?? '');
         const baseUnit = this.resolveUnit(primary?.unit);
         this.resultForm.patchValue({
             name,

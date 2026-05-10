@@ -22,7 +22,7 @@ export class FdUiIconComponent {
     public readonly decorative = input(true);
     public readonly ariaLabel = input<string | null>(null);
     public readonly fontSet = input<string>();
-    protected readonly glyphClass = computed(() => this.fontSet()?.trim() || 'material-icons');
+    protected readonly glyphClass = computed(() => this.fontSet()?.trim() ?? 'material-icons');
 
     protected readonly resolvedSize = computed(() => {
         const size = this.size();

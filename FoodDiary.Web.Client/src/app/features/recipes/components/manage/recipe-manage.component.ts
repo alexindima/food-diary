@@ -350,9 +350,9 @@ export class RecipeManageComponent {
                     }));
 
                 return {
-                    title: step.title || null,
-                    imageUrl: step.imageUrl?.url || null,
-                    imageAssetId: step.imageUrl?.assetId || null,
+                    title: step.title ?? null,
+                    imageUrl: step.imageUrl?.url ?? null,
+                    imageAssetId: step.imageUrl?.assetId ?? null,
                     description: step.description,
                     ingredients,
                 };
@@ -361,11 +361,11 @@ export class RecipeManageComponent {
 
         return {
             name: formValue.name,
-            description: formValue.description || null,
-            comment: formValue.comment || null,
-            category: formValue.category || null,
-            imageUrl: formValue.imageUrl?.url || null,
-            imageAssetId: formValue.imageUrl?.assetId || null,
+            description: formValue.description ?? null,
+            comment: formValue.comment ?? null,
+            category: formValue.category ?? null,
+            imageUrl: formValue.imageUrl?.url ?? null,
+            imageAssetId: formValue.imageUrl?.assetId ?? null,
             prepTime: formValue.prepTime ?? 0,
             cookTime: formValue.cookTime ?? 0,
             servings: formValue.servings,

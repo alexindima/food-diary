@@ -198,9 +198,9 @@ export class AuthComponent {
         effect(() => {
             const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
-            this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : this.initialReturnUrl();
+            this.returnUrl = this.useRouting() ? (this.route?.snapshot.queryParams['returnUrl'] ?? null) : this.initialReturnUrl();
             this.adminReturnUrl = this.useRouting()
-                ? this.route?.snapshot.queryParams['adminReturnUrl'] || null
+                ? (this.route?.snapshot.queryParams['adminReturnUrl'] ?? null)
                 : this.initialAdminReturnUrl();
         });
         effect(() => {
@@ -522,7 +522,7 @@ export class AuthComponent {
         }
 
         try {
-            const parsed = new URL(decoded, environment.adminAppUrl || window.location.origin);
+            const parsed = new URL(decoded, environment.adminAppUrl ?? window.location.origin);
             if (environment.adminAppUrl) {
                 const adminOrigin = new URL(environment.adminAppUrl).origin;
                 if (parsed.origin !== adminOrigin) {

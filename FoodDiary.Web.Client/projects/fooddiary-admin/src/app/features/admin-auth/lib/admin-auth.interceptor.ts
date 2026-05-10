@@ -5,7 +5,7 @@ import { catchError, throwError } from 'rxjs';
 
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken') ?? sessionStorage.getItem('authToken');
     if (!token) {
         return next(req);
     }

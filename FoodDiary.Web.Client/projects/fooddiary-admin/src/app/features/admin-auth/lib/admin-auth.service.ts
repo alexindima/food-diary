@@ -13,7 +13,7 @@ export class AdminAuthService {
     private readonly tokenSignal = signal<string | null>(this.getToken());
 
     public getToken(): string | null {
-        return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        return localStorage.getItem('authToken') ?? sessionStorage.getItem('authToken');
     }
 
     public isAuthenticated(): boolean {
@@ -130,7 +130,7 @@ export class AdminAuthService {
 
     private captureTokenFromQuery(): void {
         const params = new URLSearchParams(window.location.search);
-        const token = params.get('authToken') || params.get('accessToken');
+        const token = params.get('authToken') ?? params.get('accessToken');
         if (!token) {
             return;
         }

@@ -389,7 +389,7 @@ export class MealManageFacade {
         return items.controls.reduce(
             (totals, group) => {
                 const sourceType = group.controls.sourceType.value;
-                const amount = group.controls.amount.value || 0;
+                const amount = group.controls.amount.value ?? 0;
 
                 if (sourceType === ConsumptionSourceType.Product) {
                     const food = group.controls.product.value;

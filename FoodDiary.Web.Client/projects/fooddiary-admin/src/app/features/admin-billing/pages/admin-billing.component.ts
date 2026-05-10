@@ -62,7 +62,7 @@ export class AdminBillingComponent {
             currentPeriodStartText: this.formatDateLabel(subscription.currentPeriodStartUtc, 'shortDate'),
             currentPeriodEndText: this.formatDateLabel(subscription.currentPeriodEndUtc, 'shortDate'),
             nextBillingAttemptText: this.formatDateLabel(subscription.nextBillingAttemptUtc),
-            updatedText: this.formatDateLabel(subscription.lastSyncedAtUtc || subscription.modifiedOnUtc || subscription.createdOnUtc),
+            updatedText: this.formatDateLabel(subscription.lastSyncedAtUtc ?? subscription.modifiedOnUtc ?? subscription.createdOnUtc),
             externalCustomerIdText: this.shortId(subscription.externalCustomerId),
             externalSubscriptionIdText: this.shortId(subscription.externalSubscriptionId),
             externalPaymentMethodIdText: this.shortId(subscription.externalPaymentMethodId),

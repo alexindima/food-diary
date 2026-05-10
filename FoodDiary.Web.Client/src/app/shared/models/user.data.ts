@@ -128,7 +128,7 @@ export class UpdateUserAppearanceDto {
 
 const normalizeString = (value: string | null | undefined): string | undefined => {
     const trimmed = value?.trim();
-    return trimmed ? trimmed : undefined;
+    return trimmed ?? undefined;
 };
 
 const normalizeDate = (value: Date | string | null | undefined): Date | undefined => {
@@ -188,8 +188,7 @@ const normalizeUiStyle = (value: UiStyleOption | string | null | undefined): str
     return normalized ? normalized : undefined;
 };
 
-const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined =>
-    value === null || value === undefined ? undefined : value;
+const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined => value ?? undefined;
 
 const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | undefined => {
     if (!value) {

@@ -27,7 +27,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         if (error instanceof Error) {
             return {
                 message: error.message || 'Unknown error',
-                stack: error.stack || '',
+                stack: error.stack ?? '',
                 location,
             };
         }

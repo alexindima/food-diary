@@ -8,9 +8,9 @@ export class LoginRequest {
     public rememberMe: boolean;
 
     public constructor(formValue: Partial<LoginRequest>) {
-        this.email = formValue.email || '';
-        this.password = formValue.password || '';
-        this.rememberMe = formValue.rememberMe || false;
+        this.email = formValue.email ?? '';
+        this.password = formValue.password ?? '';
+        this.rememberMe = formValue.rememberMe ?? false;
     }
 }
 
@@ -21,8 +21,8 @@ export class RegisterRequest {
     public clientOrigin?: string;
 
     public constructor(formValue: Partial<RegisterRequest>) {
-        this.email = formValue.email || '';
-        this.password = formValue.password || '';
+        this.email = formValue.email ?? '';
+        this.password = formValue.password ?? '';
         this.language = formValue.language;
         this.clientOrigin = formValue.clientOrigin;
     }
@@ -33,8 +33,8 @@ export class RestoreAccountRequest {
     public password: string;
 
     public constructor(formValue: Partial<RestoreAccountRequest>) {
-        this.email = formValue.email || '';
-        this.password = formValue.password || '';
+        this.email = formValue.email ?? '';
+        this.password = formValue.password ?? '';
     }
 }
 
@@ -43,7 +43,7 @@ export class PasswordResetRequest {
     public clientOrigin?: string;
 
     public constructor(formValue: Partial<PasswordResetRequest>) {
-        this.email = formValue.email || '';
+        this.email = formValue.email ?? '';
         this.clientOrigin = formValue.clientOrigin;
     }
 }
@@ -54,9 +54,9 @@ export class ConfirmPasswordResetRequest {
     public newPassword: string;
 
     public constructor(formValue: Partial<ConfirmPasswordResetRequest>) {
-        this.userId = formValue.userId || '';
-        this.token = formValue.token || '';
-        this.newPassword = formValue.newPassword || '';
+        this.userId = formValue.userId ?? '';
+        this.token = formValue.token ?? '';
+        this.newPassword = formValue.newPassword ?? '';
     }
 }
 

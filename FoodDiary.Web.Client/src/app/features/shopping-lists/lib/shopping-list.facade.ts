@@ -99,7 +99,7 @@ export class ShoppingListFacade {
                 name,
                 amount: this.normalizeAmount(draft.amount),
                 unit: draft.unit ?? null,
-                category: draft.category?.trim() || null,
+                category: draft.category?.trim() ?? null,
                 productId: null,
                 isChecked: false,
                 sortOrder: this.items().length + 1,

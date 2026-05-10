@@ -106,7 +106,7 @@ export class EntityCardComponent {
         };
     });
     public readonly hasPreviewImage = computed(() =>
-        Boolean(this.previewable() && (this.imageUrl()?.trim() || this.collageState().hasImages)),
+        Boolean(this.previewable() && (this.imageUrl()?.trim() ?? this.collageState().hasImages)),
     );
     public readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
         this.languageVersion();

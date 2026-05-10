@@ -145,7 +145,7 @@ export class ShoppingListPageComponent {
             name,
             amount: this.itemForm.controls.amount.value,
             unit: this.itemForm.controls.unit.value ?? null,
-            category: this.itemForm.controls.category.value?.trim() || null,
+            category: this.itemForm.controls.category.value?.trim() ?? null,
         });
 
         this.itemForm.reset({

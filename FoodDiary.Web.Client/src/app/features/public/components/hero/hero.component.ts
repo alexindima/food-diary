@@ -65,6 +65,6 @@ export class HeroComponent {
     }
 
     private getCurrentLanguage(): string {
-        return this.translateService.currentLang || this.translateService.getDefaultLang() || 'en';
+        return (this.translateService.currentLang || this.translateService.getDefaultLang()) ?? 'en';
     }
 }

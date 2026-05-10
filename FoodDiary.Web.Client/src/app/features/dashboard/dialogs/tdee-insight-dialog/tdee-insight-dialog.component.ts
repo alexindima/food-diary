@@ -43,7 +43,7 @@ export class TdeeInsightDialogComponent {
 
     public readonly insight = this.data?.insight ?? null;
     public readonly effectiveTdee = this.insight?.adaptiveTdee ?? this.insight?.estimatedTdee ?? null;
-    public readonly hasProfileBasis = !!(this.insight?.estimatedTdee || this.insight?.bmr);
+    public readonly hasProfileBasis = !!(this.insight?.estimatedTdee ?? this.insight?.bmr);
     public readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= 14 || !!this.insight?.adaptiveTdee;
     public readonly hasBodyTrend =
         !!this.insight?.adaptiveTdee || (this.insight?.weightTrendPerWeek !== null && this.insight?.weightTrendPerWeek !== undefined);

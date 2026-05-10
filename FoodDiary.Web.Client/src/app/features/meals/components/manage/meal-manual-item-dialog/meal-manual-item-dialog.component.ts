@@ -59,7 +59,7 @@ export class MealManualItemDialogComponent {
         validators: [Validators.required, Validators.min(0.01)],
     });
 
-    public readonly itemSourceName = computed(() => this.recipe()?.name || this.product()?.name || '');
+    public readonly itemSourceName = computed(() => this.recipe()?.name ?? this.product()?.name ?? '');
 
     public readonly itemSourceIcon = computed(() => {
         if (this.recipe()) {

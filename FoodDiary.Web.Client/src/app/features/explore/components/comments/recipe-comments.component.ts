@@ -49,7 +49,7 @@ export class RecipeCommentsComponent {
 
         return this.comments().map(comment => ({
             comment,
-            authorLabel: comment.authorFirstName || comment.authorUsername || 'User',
+            authorLabel: comment.authorFirstName ?? comment.authorUsername ?? 'User',
             dateLabel: this.formatShortDate(comment.createdAtUtc),
         }));
     });

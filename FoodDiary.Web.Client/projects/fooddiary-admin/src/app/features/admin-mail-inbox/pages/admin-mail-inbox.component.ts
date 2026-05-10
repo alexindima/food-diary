@@ -64,14 +64,14 @@ export class AdminMailInboxComponent {
         }
 
         if (this.selectedBodyMode() === 'html') {
-            return message.htmlBody || '';
+            return message.htmlBody ?? '';
         }
 
         if (this.selectedBodyMode() === 'raw') {
             return message.rawMime;
         }
 
-        return message.textBody || '';
+        return message.textBody ?? '';
     });
     public readonly dmarcTotalMessages = computed(() => {
         const report = this.selectedMessage()?.dmarcReport;

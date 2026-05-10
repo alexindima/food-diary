@@ -121,9 +121,7 @@ export class FdUiHintDirective {
             return;
         }
 
-        if (!this.overlayRef) {
-            this.overlayRef = this.createOverlay();
-        }
+        this.overlayRef ??= this.createOverlay();
 
         if (this.overlayRef.hasAttached()) {
             return;

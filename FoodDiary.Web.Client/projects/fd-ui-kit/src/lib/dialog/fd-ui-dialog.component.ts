@@ -63,7 +63,7 @@ export class FdUiDialogComponent {
         transform: booleanAttribute,
     });
 
-    public readonly showHeader = computed(() => Boolean(this.title() || this.subtitle() || this.dismissible()));
+    public readonly showHeader = computed(() => Boolean(this.title() ?? this.subtitle() ?? this.dismissible()));
     public readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
     public readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
     public readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());

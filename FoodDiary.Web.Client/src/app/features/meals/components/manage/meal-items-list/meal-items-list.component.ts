@@ -87,12 +87,12 @@ export class MealItemsListComponent {
 
     public getProductName(index: number): string {
         const control = this.formArray().at(index).controls.product;
-        return control.value?.name || '';
+        return control.value?.name ?? '';
     }
 
     public getRecipeName(index: number): string {
         const control = this.formArray().at(index).controls.recipe;
-        return control.value?.name || '';
+        return control.value?.name ?? '';
     }
 
     public getAmountUnitLabel(index: number): string | null {
@@ -160,7 +160,7 @@ export class MealItemsListComponent {
 
     private getManualItemTotals(index: number): NutritionTotals {
         const group = this.formArray().at(index);
-        const amount = group.controls.amount.value || 0;
+        const amount = group.controls.amount.value ?? 0;
 
         if (group.controls.sourceType.value === ConsumptionSourceType.Product) {
             const product = group.controls.product.value;
@@ -196,7 +196,7 @@ export class MealItemsListComponent {
     }
 
     private formatManualMacro(value: number, unitKey: string): string {
-        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const locale = (this.translateService.currentLang || this.translateService.defaultLang) ?? 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
@@ -207,7 +207,7 @@ export class MealItemsListComponent {
     }
 
     private formatManualAmount(index: number): string {
-        const amount = this.formArray().at(index).controls.amount.value || 0;
+        const amount = this.formArray().at(index).controls.amount.value ?? 0;
         const unitLabel = this.getAmountUnitLabel(index);
         return unitLabel ? `${this.formatNumber(amount)} ${unitLabel}`.trim() : this.formatNumber(amount);
     }
@@ -239,7 +239,7 @@ export class MealItemsListComponent {
     }
 
     private formatNumber(value: number): string {
-        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const locale = (this.translateService.currentLang || this.translateService.defaultLang) ?? 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         return new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
