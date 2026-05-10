@@ -15,7 +15,7 @@ export class UnsavedChangesService {
     }
 
     public clear(handler?: UnsavedChangesHandler): void {
-        if (!handler || this.handler === handler) {
+        if (handler === undefined || this.handler === handler) {
             this.handler = null;
         }
     }

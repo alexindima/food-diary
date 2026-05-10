@@ -15,6 +15,8 @@ interface HealthAreaDisplay {
     strokeDasharray: string;
 }
 
+const MAX_HEALTH_AREA_SCORE = 100;
+
 @Component({
     selector: 'fd-health-area-scores',
     standalone: true,
@@ -28,7 +30,7 @@ export class HealthAreaScoresComponent {
 
     public readonly areas = computed<HealthAreaDisplay[]>(() => {
         const s = this.scores();
-        if (!s) {
+        if (s === null) {
             return [];
         }
         return [
@@ -42,7 +44,7 @@ export class HealthAreaScoresComponent {
             labelKey: `HEALTH_SCORES.${area.key}`,
             gradeKey: `HEALTH_SCORES.GRADE_${area.grade.toUpperCase()}`,
             gradeClass: `area-card--${area.grade}`,
-            strokeDasharray: `${area.score}, 100`,
+            strokeDasharray: `${area.score}, ${MAX_HEALTH_AREA_SCORE}`,
         }));
     });
 }

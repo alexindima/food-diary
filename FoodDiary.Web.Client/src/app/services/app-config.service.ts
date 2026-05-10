@@ -22,7 +22,7 @@ export class AppConfigService {
     }
 
     public getConfig(): AppConfig {
-        if (!this.config) {
+        if (this.config === null) {
             throw new Error('App config is not loaded');
         }
         return this.config;

@@ -22,7 +22,7 @@ export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {
     const dialogService = inject(FdUiDialogService);
     const handler = unsavedChangesService.getHandler();
 
-    if (!handler?.hasChanges()) {
+    if (handler?.hasChanges() !== true) {
         return true;
     }
 

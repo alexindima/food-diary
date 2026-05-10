@@ -12,6 +12,9 @@ interface WearableMetric {
     unit: string;
 }
 
+const MINUTES_PER_HOUR = 60;
+const HOURS_PRECISION_FACTOR = 10;
+
 @Component({
     selector: 'fd-wearable-daily-card',
     standalone: true,
@@ -25,7 +28,7 @@ export class WearableDailyCardComponent {
 
     public readonly metrics = computed<WearableMetric[]>(() => {
         const s = this.summary();
-        if (!s) {
+        if (s === null) {
             return [];
         }
 
@@ -43,7 +46,14 @@ export class WearableDailyCardComponent {
             result.push(this.createMetric('ACTIVE_MINUTES', '\u26A1', s.activeMinutes, 'min'));
         }
         if (s.sleepMinutes !== null) {
-            result.push(this.createMetric('SLEEP', '\uD83D\uDE34', Math.round((s.sleepMinutes / 60) * 10) / 10, 'h'));
+            result.push(
+                this.createMetric(
+                    'SLEEP',
+                    '\uD83D\uDE34',
+                    Math.round((s.sleepMinutes / MINUTES_PER_HOUR) * HOURS_PRECISION_FACTOR) / HOURS_PRECISION_FACTOR,
+                    'h',
+                ),
+            );
         }
         return result;
     });

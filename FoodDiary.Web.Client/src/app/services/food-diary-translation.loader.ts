@@ -42,7 +42,7 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     private loadBundle(lang: string, bundle: TranslationBundle): Observable<TranslationDictionary> {
         const key = `${lang}:${bundle}`;
         const cached = this.cache.get(key);
-        if (cached) {
+        if (cached !== undefined) {
             return cached;
         }
 

@@ -361,7 +361,7 @@ export class LandingPreviewTourComponent {
 
     private scrollDraftIntoView(): void {
         const draftBlock = this.draftBlock()?.nativeElement;
-        if (!draftBlock) {
+        if (draftBlock === undefined) {
             return;
         }
 

@@ -44,7 +44,7 @@ export class WeeklyCheckInPageComponent {
     public readonly trendCards = computed<WeeklyCheckInTrendCardViewModel[]>(() => {
         const trends = this.facade.trends();
 
-        if (!trends) {
+        if (trends === undefined) {
             return [];
         }
 

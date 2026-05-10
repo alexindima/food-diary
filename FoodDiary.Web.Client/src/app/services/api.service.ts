@@ -46,7 +46,7 @@ export abstract class ApiService {
     }
 
     private buildHttpParams(params?: HttpRequestParams): HttpParams | undefined {
-        if (!params) {
+        if (params === undefined) {
             return undefined;
         }
 

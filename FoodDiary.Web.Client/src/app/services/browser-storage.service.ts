@@ -20,7 +20,7 @@ export class BrowserStorageService {
 
     public getJson<T>(scope: StorageScope, key: string): T | null {
         const value = this.getItem(scope, key);
-        if (!value) {
+        if (value === null || value.length === 0) {
             return null;
         }
 

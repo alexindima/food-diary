@@ -142,7 +142,9 @@ export class StatisticsComponent {
         const range = this.currentRange();
         const dateFrom = normalizeStartOfDay(range.start).toISOString();
         const dateTo = normalizeEndOfDay(range.end).toISOString();
-        const locale = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? undefined;
+        const currentLang = this.translateService.getCurrentLang();
+        const fallbackLang = this.translateService.getFallbackLang();
+        const locale = currentLang.length > 0 ? currentLang : fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : undefined;
         const timeZoneOffsetMinutes = -new Date().getTimezoneOffset();
         this.exportingFormat.set(format);
         this.exportService

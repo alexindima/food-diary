@@ -3,7 +3,7 @@ import { type Observable, of, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 function logApiError(message: string, error: unknown): void {
-    if (!environment.enableGlobalErrorHandler) {
+    if (environment.enableGlobalErrorHandler !== true) {
         // eslint-disable-next-line no-console -- Fallback logging when the global handler is disabled.
         console.error(message, error);
     }

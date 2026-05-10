@@ -2,7 +2,7 @@ import type { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/fo
 
 export function matchFieldValidator(matchTo: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-        if (!control.parent) {
+        if (control.parent === null) {
             return null;
         }
 

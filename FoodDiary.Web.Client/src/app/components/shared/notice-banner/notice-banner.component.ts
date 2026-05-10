@@ -18,10 +18,14 @@ export class NoticeBannerComponent {
     public readonly actionLabel = input<string | null>(null);
     public readonly action = output<void>();
 
-    public readonly showAction = computed(() => !!this.actionLabel());
+    public readonly showAction = computed(() => {
+        const actionLabel = this.actionLabel();
+        return actionLabel !== null && actionLabel.length > 0;
+    });
 
     public onAction(): void {
-        if (!this.actionLabel()) {
+        const actionLabel = this.actionLabel();
+        if (actionLabel === null || actionLabel.length === 0) {
             return;
         }
         this.action.emit();

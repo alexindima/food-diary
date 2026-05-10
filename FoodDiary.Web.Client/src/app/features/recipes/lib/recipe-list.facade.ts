@@ -11,6 +11,10 @@ import { RecipeService } from '../api/recipe.service';
 import type { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
+const RECIPE_PAGE_SIZE = 10;
+const OVERVIEW_RECENT_LIMIT = 10;
+const OVERVIEW_FAVORITE_LIMIT = 10;
+
 @Injectable({ providedIn: 'root' })
 export class RecipeListFacade {
     private readonly recipeService = inject(RecipeService);
@@ -19,7 +23,7 @@ export class RecipeListFacade {
     private readonly toastService = inject(FdUiToastService);
     private readonly quickMealService = inject(QuickMealService);
 
-    public readonly pageSize = 10;
+    public readonly pageSize = RECIPE_PAGE_SIZE;
     public readonly recipeData = new PagedData<Recipe>();
     public readonly currentPageIndex = signal(0);
     public readonly recentRecipes = signal<Recipe[]>([]);
@@ -82,28 +86,37 @@ export class RecipeListFacade {
         const filters: RecipeFilters = { search };
         const includePublic = !onlyMine;
 
-        return this.recipeService.queryOverview({ page, limit, filters, includePublic, recentLimit: 10, favoriteLimit: 10 }).pipe(
-            tap(data => {
-                this.recipeData.setData(data.allRecipes);
-                this.recentRecipes.set(data.recentItems);
-                this.favoriteRecipes.set(data.favoriteItems);
-                this.favoriteTotalCount.set(data.favoriteTotalCount);
-                this.currentPageIndex.set(data.allRecipes.page - 1);
-                this.errorKey.set(null);
-            }),
-            map(() => void 0),
-            catchError((_error: HttpErrorResponse) => {
-                this.recipeData.clearData();
-                this.recentRecipes.set([]);
-                this.favoriteRecipes.set([]);
-                this.favoriteTotalCount.set(0);
-                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
-                return of(void 0);
-            }),
-            finalize(() => {
-                this.recipeData.setLoading(false);
-            }),
-        );
+        return this.recipeService
+            .queryOverview({
+                page,
+                limit,
+                filters,
+                includePublic,
+                recentLimit: OVERVIEW_RECENT_LIMIT,
+                favoriteLimit: OVERVIEW_FAVORITE_LIMIT,
+            })
+            .pipe(
+                tap(data => {
+                    this.recipeData.setData(data.allRecipes);
+                    this.recentRecipes.set(data.recentItems);
+                    this.favoriteRecipes.set(data.favoriteItems);
+                    this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    this.currentPageIndex.set(data.allRecipes.page - 1);
+                    this.errorKey.set(null);
+                }),
+                map(() => void 0),
+                catchError((_error: HttpErrorResponse) => {
+                    this.recipeData.clearData();
+                    this.recentRecipes.set([]);
+                    this.favoriteRecipes.set([]);
+                    this.favoriteTotalCount.set(0);
+                    this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+                    return of(void 0);
+                }),
+                finalize(() => {
+                    this.recipeData.setLoading(false);
+                }),
+            );
     }
 
     public async navigateToAddRecipeAsync(): Promise<void> {
@@ -169,6 +182,6 @@ export class RecipeListFacade {
     }
 
     private hasSearchValue(value: string | null): boolean {
-        return !!value?.trim();
+        return value !== null && value.trim().length > 0;
     }
 }

@@ -29,6 +29,6 @@ export class FrontendLoggerService {
     }
 
     private shouldLog(options?: FrontendLoggerOptions): boolean {
-        return !options?.devOnly || environment.buildVersion === 'dev';
+        return options?.devOnly !== true || environment.buildVersion === 'dev';
     }
 }
