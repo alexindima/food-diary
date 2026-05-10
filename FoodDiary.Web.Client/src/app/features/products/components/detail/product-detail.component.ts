@@ -60,6 +60,7 @@ export class ProductDetailComponent {
 
     public product: Product;
     public readonly productTypeKey: string;
+    public readonly baseUnitKey: string;
     public readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'PRODUCT_DETAIL.TABS.SUMMARY' },
         { value: 'nutrients', labelKey: 'PRODUCT_DETAIL.TABS.NUTRIENTS' },
@@ -114,6 +115,7 @@ export class ProductDetailComponent {
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteProductId = this.product.favoriteProductId ?? null;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
+        this.baseUnitKey = `GENERAL.UNITS.${this.product.baseUnit}`;
         this.qualityScore = Math.round(Math.min(100, Math.max(0, this.product.qualityScore)));
         this.qualityGrade = this.product.qualityGrade;
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;

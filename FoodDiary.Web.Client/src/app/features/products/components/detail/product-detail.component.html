@@ -45,7 +45,7 @@
                             </strong>
                             <span class="product-detail__hero-meta fd-ui-body-sm">
                                 {{ product.defaultPortionAmount }}
-                                {{ 'GENERAL.UNITS.' + product.baseUnit | translate }}
+                                {{ baseUnitKey | translate }}
                                 ·
                                 {{ productTypeKey | translate }}
                             </span>
@@ -93,7 +93,7 @@
                         }}</span>
                         <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
                             {{ product.defaultPortionAmount }}
-                            {{ 'GENERAL.UNITS.' + product.baseUnit | translate }}
+                            {{ baseUnitKey | translate }}
                         </strong>
                     </fd-ui-accent-surface>
 

@@ -35,6 +35,12 @@ export class WeeklyCheckInPageComponent {
     public readonly thisWeek = this.facade.thisWeek;
     public readonly lastWeek = this.facade.lastWeek;
     public readonly suggestions = this.facade.suggestions;
+    public readonly suggestionRows = computed(() =>
+        this.suggestions().map(suggestion => ({
+            key: suggestion,
+            labelKey: `WEEKLY_CHECK_IN.${suggestion}`,
+        })),
+    );
     public readonly trendCards = computed<WeeklyCheckInTrendCardViewModel[]>(() => {
         const trends = this.facade.trends();
 

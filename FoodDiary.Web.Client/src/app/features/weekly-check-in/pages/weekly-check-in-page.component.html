@@ -65,12 +65,12 @@
                 </fd-ui-card>
 
                 <fd-ui-card class="check-in__card" [title]="'WEEKLY_CHECK_IN.SUGGESTIONS_TITLE' | translate">
-                    @if (suggestions().length > 0) {
+                    @if (suggestionRows().length > 0) {
                         <div class="check-in__suggestions fd-stack fd-gap-xs">
-                            @for (s of suggestions(); track s) {
+                            @for (suggestion of suggestionRows(); track suggestion.key) {
                                 <div class="check-in__suggestion fd-row fd-align-start fd-gap-xs">
                                     <fd-ui-icon class="check-in__suggestion-icon" name="lightbulb"></fd-ui-icon>
-                                    <span class="fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.' + s | translate }}</span>
+                                    <span class="fd-ui-body-sm">{{ suggestion.labelKey | translate }}</span>
                                 </div>
                             }
                         </div>
