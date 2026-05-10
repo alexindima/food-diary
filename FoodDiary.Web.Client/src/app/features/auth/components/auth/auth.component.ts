@@ -23,7 +23,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { firstValueFrom } from 'rxjs';
+import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../../services/auth.service';
@@ -49,6 +49,17 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         userExists: () => 'FORM_ERRORS.USER_EXISTS',
     }),
 };
+
+const LOGIN_ERROR_FIELDS = ['email', 'password'] as const;
+const REGISTER_ERROR_FIELDS = ['email', 'password', 'confirmPassword'] as const;
+const PASSWORD_RESET_ERROR_FIELDS = ['email'] as const;
+
+type LoginErrorField = (typeof LOGIN_ERROR_FIELDS)[number];
+type RegisterErrorField = (typeof REGISTER_ERROR_FIELDS)[number];
+type PasswordResetErrorField = (typeof PASSWORD_RESET_ERROR_FIELDS)[number];
+type LoginFieldErrors = Record<LoginErrorField, string | null>;
+type RegisterFieldErrors = Record<RegisterErrorField, string | null>;
+type PasswordResetFieldErrors = Record<PasswordResetErrorField, string | null>;
 
 @Component({
     selector: 'fd-auth',
@@ -102,6 +113,9 @@ export class AuthComponent {
     public readonly passwordResetSent = signal<boolean>(false);
     public readonly passwordResetCooldownSeconds = signal<number>(0);
     public readonly loginAutofillDetected = signal<boolean>(false);
+    public readonly loginFieldErrors = signal<LoginFieldErrors>(this.createEmptyLoginFieldErrors());
+    public readonly registerFieldErrors = signal<RegisterFieldErrors>(this.createEmptyRegisterFieldErrors());
+    public readonly passwordResetFieldErrors = signal<PasswordResetFieldErrors>(this.createEmptyPasswordResetFieldErrors());
     private passwordResetCooldownTimerId: number | null = null;
     private loginAutofillCheckTimerIds: number[] = [];
     private hasLoginNativeInteraction = false;
@@ -155,6 +169,26 @@ export class AuthComponent {
         this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.registerForm.controls.confirmPassword.updateValueAndValidity();
         });
+        const loginFormEvents = (this.loginForm as { events?: Observable<unknown> }).events ?? EMPTY;
+        const registerFormEvents = (this.registerForm as { events?: Observable<unknown> }).events ?? EMPTY;
+        const passwordResetFormEvents = (this.passwordResetForm as { events?: Observable<unknown> }).events ?? EMPTY;
+        merge(
+            loginFormEvents,
+            this.loginForm.statusChanges,
+            this.loginForm.valueChanges,
+            registerFormEvents,
+            this.registerForm.statusChanges,
+            this.registerForm.valueChanges,
+            passwordResetFormEvents,
+            this.passwordResetForm.statusChanges,
+            this.passwordResetForm.valueChanges,
+            this.translateService.onLangChange,
+        )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.updateFieldErrors();
+            });
+        this.updateFieldErrors();
 
         effect(() => {
             this.renderGoogleButton();
@@ -527,6 +561,7 @@ export class AuthComponent {
             const emailField = this.registerForm.controls.email;
             emailField.updateValueAndValidity();
             emailField.setErrors({ userExists: true });
+            this.updateFieldErrors();
         } else if (errorCode === 'Authentication.AccountDeleted') {
             this.setGlobalError('AUTH.REGISTER.ACCOUNT_DELETED');
         } else {
@@ -617,7 +652,49 @@ export class AuthComponent {
         }
     }
 
-    public getControlError(control: AbstractControl | null): string | null {
+    private updateFieldErrors(): void {
+        this.loginFieldErrors.set(
+            LOGIN_ERROR_FIELDS.reduce<LoginFieldErrors>((errors, field) => {
+                errors[field] = this.resolveControlError(this.loginForm.controls[field]);
+                return errors;
+            }, this.createEmptyLoginFieldErrors()),
+        );
+        this.registerFieldErrors.set(
+            REGISTER_ERROR_FIELDS.reduce<RegisterFieldErrors>((errors, field) => {
+                errors[field] = this.resolveControlError(this.registerForm.controls[field]);
+                return errors;
+            }, this.createEmptyRegisterFieldErrors()),
+        );
+        this.passwordResetFieldErrors.set(
+            PASSWORD_RESET_ERROR_FIELDS.reduce<PasswordResetFieldErrors>((errors, field) => {
+                errors[field] = this.resolveControlError(this.passwordResetForm.controls[field]);
+                return errors;
+            }, this.createEmptyPasswordResetFieldErrors()),
+        );
+    }
+
+    private createEmptyLoginFieldErrors(): LoginFieldErrors {
+        return {
+            email: null,
+            password: null,
+        };
+    }
+
+    private createEmptyRegisterFieldErrors(): RegisterFieldErrors {
+        return {
+            email: null,
+            password: null,
+            confirmPassword: null,
+        };
+    }
+
+    private createEmptyPasswordResetFieldErrors(): PasswordResetFieldErrors {
+        return {
+            email: null,
+        };
+    }
+
+    private resolveControlError(control: AbstractControl | null): string | null {
         if (!control || !control.invalid) {
             return null;
         }

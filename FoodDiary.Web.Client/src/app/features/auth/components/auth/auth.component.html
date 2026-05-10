@@ -18,6 +18,7 @@
                     class="auth__form fd-stack fd-gap-md"
                     [attr.aria-busy]="isPasswordResetting()"
                 >
+                    @let passwordResetErrors = passwordResetFieldErrors();
                     <div class="auth__field fd-stack fd-gap-xs">
                         <fd-ui-input
                             appearance="auth"
@@ -26,7 +27,7 @@
                             [label]="'AUTH.RESET.EMAIL' | translate"
                             [placeholder]="'AUTH.RESET.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
-                            [error]="getControlError(passwordResetForm.controls.email)"
+                            [error]="passwordResetErrors.email"
                         />
                     </div>
 
@@ -72,6 +73,7 @@
                     class="auth__form fd-stack fd-gap-md"
                     [attr.aria-busy]="isSubmitting() || isRestoring()"
                 >
+                    @let loginErrors = loginFieldErrors();
                     <div class="auth__field fd-stack fd-gap-xs">
                         <fd-ui-input
                             appearance="auth"
@@ -80,7 +82,7 @@
                             [label]="'AUTH.LOGIN.EMAIL' | translate"
                             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="username"
-                            [error]="getControlError(loginForm.controls.email)"
+                            [error]="loginErrors.email"
                         />
                     </div>
 
@@ -92,7 +94,7 @@
                             [label]="'AUTH.LOGIN.PASSWORD' | translate"
                             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="current-password"
-                            [error]="getControlError(loginForm.controls.password)"
+                            [error]="loginErrors.password"
                         />
                     </div>
 
@@ -152,6 +154,7 @@
                 class="auth__form fd-stack fd-gap-md"
                 [attr.aria-busy]="isSubmitting()"
             >
+                @let registerErrors = registerFieldErrors();
                 <div class="auth__field fd-stack fd-gap-xs">
                     <fd-ui-input
                         appearance="auth"
@@ -160,7 +163,7 @@
                         [label]="'AUTH.REGISTER.EMAIL' | translate"
                         [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
                         autocomplete="email"
-                        [error]="getControlError(registerForm.controls.email)"
+                        [error]="registerErrors.email"
                     />
                 </div>
                 <div class="auth__field fd-stack fd-gap-xs">
@@ -171,7 +174,7 @@
                         [label]="'AUTH.REGISTER.PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="new-password"
-                        [error]="getControlError(registerForm.controls.password)"
+                        [error]="registerErrors.password"
                     />
                 </div>
                 <div class="auth__field fd-stack fd-gap-xs">
@@ -182,7 +185,7 @@
                         [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="new-password"
-                        [error]="getControlError(registerForm.controls.confirmPassword)"
+                        [error]="registerErrors.confirmPassword"
                     />
                 </div>
 
