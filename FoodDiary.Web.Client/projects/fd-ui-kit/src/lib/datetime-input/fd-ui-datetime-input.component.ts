@@ -39,6 +39,10 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     protected readonly isFocused = signal(false);
     protected readonly sizeClass = computed(() => `fd-ui-datetime-input--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || !!this.dateValue() || this.timeValue().trim().length > 0);
+    protected readonly hostClass = computed(
+        () =>
+            `fd-ui-datetime-input ${this.sizeClass()}${this.error() ? ' fd-ui-datetime-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-datetime-input--floating' : ''}`,
+    );
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly host = inject(ElementRef<HTMLElement>);

@@ -1,11 +1,4 @@
-<div
-    [class]="
-        'fd-ui-date-input ' +
-        sizeClass() +
-        (error() ? ' fd-ui-date-input--has-error' : '') +
-        (shouldFloatLabel() ? ' fd-ui-date-input--floating' : '')
-    "
->
+<div [class]="hostClass()">
     <div class="fd-ui-date-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
         @if (label()) {
             <label class="fd-ui-date-input__label" [attr.for]="id()">

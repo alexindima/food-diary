@@ -77,6 +77,10 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     protected readonly sizeClass = computed(() => `fd-ui-input--size-${this.size()}`);
     protected readonly appearanceClass = computed(() => `fd-ui-input--appearance-${this.appearance()}`);
+    protected readonly hostClass = computed(
+        () =>
+            `fd-ui-input ${this.sizeClass()} ${this.appearanceClass()}${this.error() ? ' fd-ui-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-input--floating' : ''}`,
+    );
     protected readonly isDateInput = computed(() => {
         const type = this.type();
         return type === 'date' || type === 'datetime-local' || type === 'time';

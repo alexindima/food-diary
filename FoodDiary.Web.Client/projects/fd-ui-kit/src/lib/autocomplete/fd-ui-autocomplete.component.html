@@ -1,11 +1,4 @@
-<div
-    [class]="
-        'fd-ui-autocomplete ' +
-        sizeClass() +
-        (error() ? ' fd-ui-autocomplete--has-error' : '') +
-        (shouldFloatLabel() ? ' fd-ui-autocomplete--floating' : '')
-    "
->
+<div [class]="hostClass()">
     <div
         #controlWrap
         #origin="cdkOverlayOrigin"

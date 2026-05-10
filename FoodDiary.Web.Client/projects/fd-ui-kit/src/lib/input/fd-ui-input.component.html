@@ -1,13 +1,4 @@
-<div
-    [class]="
-        'fd-ui-input ' +
-        sizeClass() +
-        ' ' +
-        appearanceClass() +
-        (error() ? ' fd-ui-input--has-error' : '') +
-        (shouldFloatLabel() ? ' fd-ui-input--floating' : '')
-    "
->
+<div [class]="hostClass()">
     <div
         class="fd-ui-input__control-wrap"
         role="presentation"

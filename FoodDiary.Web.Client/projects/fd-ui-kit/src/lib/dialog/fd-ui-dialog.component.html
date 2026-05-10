@@ -1,17 +1,4 @@
-<div
-    role="dialog"
-    aria-modal="true"
-    [attr.aria-labelledby]="title() ? dialogTitleId : null"
-    [class]="
-        'fd-ui-dialog fd-ui-dialog--size-' +
-        size() +
-        ' fd-ui-dialog--body-scroll-' +
-        bodyScrollInset() +
-        (isBodyScrollInsetVisible() ? ' fd-ui-dialog--body-scrollable' : '') +
-        (showBuiltInHeader() || hasCustomHeader() ? ' fd-ui-dialog--has-header' : '') +
-        (hasFooter() ? ' fd-ui-dialog--has-footer' : '')
-    "
->
+<div role="dialog" aria-modal="true" [attr.aria-labelledby]="title() ? dialogTitleId : null" [class]="hostClass()">
     @if (hasCustomHeader()) {
         <header class="fd-ui-dialog__header fd-ui-dialog__header--custom">
             <ng-content select="[fdUiDialogHeader]" />

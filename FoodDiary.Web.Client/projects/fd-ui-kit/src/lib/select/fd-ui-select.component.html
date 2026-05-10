@@ -1,8 +1,4 @@
-<div
-    [class]="
-        'fd-ui-select ' + sizeClass() + (error() ? ' fd-ui-select--has-error' : '') + (shouldFloatLabel() ? ' fd-ui-select--floating' : '')
-    "
->
+<div [class]="hostClass()">
     <div
         #controlWrap
         #origin="cdkOverlayOrigin"

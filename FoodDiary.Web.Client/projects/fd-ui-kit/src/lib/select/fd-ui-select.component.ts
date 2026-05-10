@@ -55,6 +55,10 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     protected readonly sizeClass = computed(() => `fd-ui-select--size-${this.size()}`);
+    protected readonly hostClass = computed(
+        () =>
+            `fd-ui-select ${this.sizeClass()}${this.error() ? ' fd-ui-select--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-select--floating' : ''}`,
+    );
     protected readonly selectedIndex = computed(() => this.options().findIndex(option => this.isEqual(option.value, this.internalValue())));
 
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.selectedIndex() >= 0);

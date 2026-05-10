@@ -49,6 +49,10 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
+    protected get hostClass(): string {
+        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()}${this.disabled ? ' fd-ui-nutrient-input--disabled' : ''}${this.readonly() ? ' fd-ui-nutrient-input--readonly' : ''}${this.error() ? ' fd-ui-nutrient-input--error' : ''}`;
+    }
+
     public writeValue(value: string | number | null): void {
         this.value = value === null ? '' : String(value);
         this.updateInputMeasure(this.value);

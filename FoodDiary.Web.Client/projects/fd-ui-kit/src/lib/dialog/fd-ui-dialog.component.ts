@@ -66,6 +66,10 @@ export class FdUiDialogComponent {
     public readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
     public readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());
     public readonly hasFooter = computed(() => Boolean(this.footerSlot()));
+    public readonly hostClass = computed(
+        () =>
+            `fd-ui-dialog fd-ui-dialog--size-${this.size()} fd-ui-dialog--body-scroll-${this.bodyScrollInset()}${this.isBodyScrollInsetVisible() ? ' fd-ui-dialog--body-scrollable' : ''}${this.showBuiltInHeader() || this.hasCustomHeader() ? ' fd-ui-dialog--has-header' : ''}${this.hasFooter() ? ' fd-ui-dialog--has-footer' : ''}`,
+    );
 
     public constructor() {
         afterNextRender(() => {
