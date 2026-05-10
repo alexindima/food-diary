@@ -24,7 +24,7 @@ export interface WhtStatusInfo {
     class: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WaistHistoryFacade {
     private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly userService = inject(UserService);

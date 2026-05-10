@@ -5,7 +5,7 @@ import { finalize } from 'rxjs';
 import { CyclesService } from '../api/cycles.service';
 import type { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
     private readonly fb = inject(FormBuilder);

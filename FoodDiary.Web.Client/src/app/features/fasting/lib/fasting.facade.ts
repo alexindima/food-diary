@@ -25,7 +25,7 @@ interface FastingPromptState {
     snoozedUntilUtc?: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FastingFacade {
     private static readonly PromptSnoozeHours = 4;
     private static readonly HistoryPageSize = 10;

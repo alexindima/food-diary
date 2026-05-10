@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MealPlanFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(MealPlanService);

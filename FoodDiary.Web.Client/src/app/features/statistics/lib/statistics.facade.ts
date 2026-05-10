@@ -32,7 +32,7 @@ import {
     type StatisticsRange,
 } from './statistics-data-mapper';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class StatisticsFacade {
     private readonly statisticsService = inject(StatisticsService);
     private readonly weightEntriesService = inject(WeightEntriesService);

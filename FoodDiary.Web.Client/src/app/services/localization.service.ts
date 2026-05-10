@@ -9,7 +9,7 @@ import type { MeasurementUnit } from '../features/products/models/product.data';
 import { BrowserStorageService } from './browser-storage.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LocalizationService {
     private static readonly russianDefaultHosts = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai']);
 

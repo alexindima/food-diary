@@ -11,7 +11,7 @@ import { RecipeService } from '../api/recipe.service';
 import type { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RecipeListFacade {
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);

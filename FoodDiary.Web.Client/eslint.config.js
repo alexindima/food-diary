@@ -363,7 +363,7 @@ export default [
             '@angular-eslint/no-lifecycle-call': 'error',
             '@angular-eslint/no-pipe-impure': 'error',
             '@angular-eslint/no-uncalled-signals': 'error',
-            '@angular-eslint/use-injectable-provided-in': 'warn',
+            '@angular-eslint/use-injectable-provided-in': 'error',
             'no-restricted-syntax': [
                 'error',
                 {

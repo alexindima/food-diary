@@ -23,7 +23,7 @@ export interface BmiStatusInfo {
     class: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WeightHistoryFacade {
     private readonly weightEntriesService = inject(WeightEntriesService);
     private readonly userService = inject(UserService);

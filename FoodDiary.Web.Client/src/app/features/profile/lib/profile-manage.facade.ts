@@ -20,7 +20,7 @@ import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ProfileManageFacade {
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);

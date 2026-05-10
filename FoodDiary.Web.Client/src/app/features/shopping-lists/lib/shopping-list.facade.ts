@@ -15,7 +15,7 @@ export type ShoppingListDraftItem = {
     category: string | null;
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ShoppingListFacade {
     private readonly shoppingListService = inject(ShoppingListService);
     private readonly translateService = inject(TranslateService);

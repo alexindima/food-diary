@@ -12,7 +12,7 @@ import { FavoriteMealService } from '../api/favorite-meal.service';
 import { MealService } from '../api/meal.service';
 import type { FavoriteMeal, Meal, MealFilters } from '../models/meal.data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MealListFacade {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);

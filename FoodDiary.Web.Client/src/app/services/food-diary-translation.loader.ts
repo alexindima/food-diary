@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 type TranslationDictionary = TranslationObject;
 type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly http = inject(HttpClient);
     private readonly document = inject(DOCUMENT);

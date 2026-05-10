@@ -25,7 +25,7 @@ export interface RecipeNutritionSummary {
     alcohol: number;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RecipeManageFacade {
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);

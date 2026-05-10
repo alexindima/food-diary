@@ -9,7 +9,7 @@ const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     mobile: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DashboardLayoutService {
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);

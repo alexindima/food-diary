@@ -50,7 +50,7 @@ type SliderConfig = {
 
 export type BodyTargetKey = 'weight' | 'waist';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
     private readonly toastService = inject(FdUiToastService);

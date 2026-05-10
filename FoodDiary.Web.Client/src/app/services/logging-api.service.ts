@@ -25,7 +25,7 @@ export type ClientTelemetryEvent = {
     details?: Record<string, unknown>;
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoggingApiService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = environment.apiUrls.logs;

@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WeeklyCheckInFacade {
     private readonly service = inject(WeeklyCheckInService);
     private readonly dataResource = resource({

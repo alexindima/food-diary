@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LessonFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(LessonService);

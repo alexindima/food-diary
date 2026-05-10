@@ -3,7 +3,7 @@ import { type ErrorHandler, inject, Injectable } from '@angular/core';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GlobalErrorHandler implements ErrorHandler {
     private readonly frontendObservabilityService = inject(FrontendObservabilityService);
     private readonly logger = inject(FrontendLoggerService);

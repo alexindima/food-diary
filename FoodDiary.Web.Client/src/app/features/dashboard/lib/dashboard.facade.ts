@@ -22,7 +22,7 @@ import {
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);

@@ -9,7 +9,7 @@ export interface BadgeDisplay extends Badge {
     nameKey: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GamificationFacade {
     private readonly healthScoreCircleCircumference = 2 * Math.PI * 90;
     private readonly gamificationService = inject(GamificationService);
