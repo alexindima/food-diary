@@ -87,7 +87,7 @@
                             <fd-ui-emoji-picker
                                 [options]="hungerEmojiOptions"
                                 [selectedValue]="consumptionForm.controls.preMealSatietyLevel.value"
-                                [ariaLabel]="getSatietyButtonAriaLabel('preMealSatietyLevel')"
+                                [ariaLabel]="preMealSatietyAriaLabel()"
                                 (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
                             />
                         </div>
@@ -98,7 +98,7 @@
                             <fd-ui-emoji-picker
                                 [options]="satietyEmojiOptions"
                                 [selectedValue]="consumptionForm.controls.postMealSatietyLevel.value"
-                                [ariaLabel]="getSatietyButtonAriaLabel('postMealSatietyLevel')"
+                                [ariaLabel]="postMealSatietyAriaLabel()"
                                 (selectedValueChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
                             />
                         </div>

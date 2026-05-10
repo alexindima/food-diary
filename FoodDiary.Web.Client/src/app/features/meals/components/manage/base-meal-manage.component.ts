@@ -31,7 +31,7 @@ import { type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, merge } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import { type AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -142,6 +142,8 @@ export class BaseMealManageComponent {
     public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
     public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    public readonly preMealSatietyAriaLabel = signal('');
+    public readonly postMealSatietyAriaLabel = signal('');
     private populatedConsumptionId: string | null = null;
 
     public readonly macroBarState = computed<MacroBarState>(() => {
@@ -214,7 +216,17 @@ export class BaseMealManageComponent {
             this.buildMealTypeOptions();
             this.buildNutritionModeOptions();
             this.buildSatietyEmojiOptions();
+            this.updateSatietyAriaLabels();
         });
+        merge(
+            this.consumptionForm.controls.preMealSatietyLevel.valueChanges,
+            this.consumptionForm.controls.postMealSatietyLevel.valueChanges,
+        )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.updateSatietyAriaLabels();
+            });
+        this.updateSatietyAriaLabels();
 
         this.updateManualNutritionValidators(true);
         this.updateItemValidationRules();
@@ -420,13 +432,18 @@ export class BaseMealManageComponent {
         };
     }
 
-    public getSatietyButtonAriaLabel(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): string {
+    private getSatietyButtonAriaLabel(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): string {
         const labelKey =
             controlName === 'preMealSatietyLevel' ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' : 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL';
         const meta = this.getSatietyLevelMeta(controlName, this.consumptionForm.controls[controlName].value);
         const sectionLabel = this.translateService.instant(labelKey);
 
         return `${sectionLabel}. ${meta.label}. ${meta.description}`;
+    }
+
+    private updateSatietyAriaLabels(): void {
+        this.preMealSatietyAriaLabel.set(this.getSatietyButtonAriaLabel('preMealSatietyLevel'));
+        this.postMealSatietyAriaLabel.set(this.getSatietyButtonAriaLabel('postMealSatietyLevel'));
     }
 
     public onSatietyLevelChange(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel', value: FdUiEmojiPickerValue | null): void {
