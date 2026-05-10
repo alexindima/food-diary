@@ -369,7 +369,7 @@ export default [
             '@typescript-eslint/prefer-promise-reject-errors': 'warn',
             '@typescript-eslint/require-array-sort-compare': 'warn',
             '@typescript-eslint/require-await': 'error',
-            '@typescript-eslint/restrict-template-expressions': 'warn',
+            '@typescript-eslint/restrict-template-expressions': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
             '@typescript-eslint/switch-exhaustiveness-check': 'warn',
             '@typescript-eslint/unbound-method': 'warn',

@@ -254,13 +254,9 @@ export class ShoppingListPageComponent {
             return null;
         }
 
-        if (typeof unit === 'string') {
-            const key = `GENERAL.UNITS.${unit}`;
-            const translated = this.translateService.instant(key);
-            return translated === key ? unit : translated;
-        }
-
-        return this.translateService.instant(`GENERAL.UNITS.${unit}`);
+        const key = `GENERAL.UNITS.${unit}`;
+        const translated = this.translateService.instant(key);
+        return translated === key ? unit : translated;
     }
 }
 
