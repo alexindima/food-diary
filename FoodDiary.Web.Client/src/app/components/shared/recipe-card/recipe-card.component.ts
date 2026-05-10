@@ -102,6 +102,15 @@ export class RecipeCardComponent {
 
         return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     });
+    public readonly description = computed(() => {
+        const ingredients = `${this.translateService.instant('RECIPE_LIST.INGREDIENTS_COUNT')}: ${this.ingredientCount()}`;
+        const totalTime = this.totalTime();
+        if (!totalTime) {
+            return ingredients;
+        }
+
+        return `${ingredients} - ${totalTime} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
+    });
     private favoriteRecipeId: string | null = null;
 
     public constructor() {

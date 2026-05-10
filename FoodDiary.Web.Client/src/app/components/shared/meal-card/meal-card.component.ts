@@ -118,6 +118,7 @@ export class MealCardComponent {
         const aiCount = meal.aiSessions?.reduce((total, session) => total + (session?.items?.length ?? 0), 0) ?? 0;
         return manualCount + aiCount;
     });
+    public readonly description = computed(() => `${this.translateService.instant('MEAL_CARD.ITEM_COUNT')}: ${this.itemCount()}`);
     public readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
     public readonly mealTitle = computed(() => {
         const mealType = this.meal().mealType?.trim();
