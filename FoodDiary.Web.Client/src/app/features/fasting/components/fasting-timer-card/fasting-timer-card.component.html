@@ -155,8 +155,8 @@
             stroke-width="8"
             stroke-linecap="round"
             [style.stroke]="progressStrokeColor()"
-            [style.stroke-dasharray]="2 * Math.PI * 90"
-            [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - normalizedProgressPercent() / 100)"
+            [style.stroke-dasharray]="ringStrokeDasharray"
+            [style.stroke-dashoffset]="ringStrokeDashoffset()"
         />
     </svg>
 </ng-template>

@@ -34,7 +34,7 @@
                         <div class="progress-bar fd-ui-progress-track">
                             <div
                                 class="progress-fill fd-ui-progress-fill"
-                                [style.width.%]="Math.min(nutrient.percentDailyValue, 100)"
+                                [style.width.%]="nutrient.percentDailyValueWidth"
                                 [class.fill-low]="nutrient.percentDailyValue < 25"
                                 [class.fill-mid]="nutrient.percentDailyValue >= 25 && nutrient.percentDailyValue < 75"
                                 [class.fill-good]="nutrient.percentDailyValue >= 75"

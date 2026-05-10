@@ -12,7 +12,7 @@
                         <div class="dv-bar-container">
                             <div
                                 class="dv-bar"
-                                [style.width.%]="Math.min(nutrient.percentDailyValue, 100)"
+                                [style.width.%]="nutrient.percentDailyValueWidth"
                                 [class.dv-low]="nutrient.percentDailyValue < 15"
                                 [class.dv-good]="nutrient.percentDailyValue >= 15 && nutrient.percentDailyValue <= 100"
                                 [class.dv-high]="nutrient.percentDailyValue > 100"
@@ -36,7 +36,7 @@
                         <div class="dv-bar-container">
                             <div
                                 class="dv-bar"
-                                [style.width.%]="Math.min(nutrient.percentDailyValue, 100)"
+                                [style.width.%]="nutrient.percentDailyValueWidth"
                                 [class.dv-low]="nutrient.percentDailyValue < 15"
                                 [class.dv-good]="nutrient.percentDailyValue >= 15 && nutrient.percentDailyValue <= 100"
                                 [class.dv-high]="nutrient.percentDailyValue > 100"

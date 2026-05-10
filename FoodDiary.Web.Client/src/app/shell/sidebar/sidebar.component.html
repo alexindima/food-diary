@@ -155,7 +155,7 @@
             <div class="sidebar-mobile__progress-head">
                 <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
                 <span class="sidebar-mobile__progress-value fd-ui-caption">
-                    {{ Math.round(dailyConsumedKcal()) }}/{{ Math.round(dailyGoalKcal()) }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                    {{ dailyConsumedKcalRounded() }}/{{ dailyGoalKcalRounded() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
                 </span>
             </div>
             <div class="sidebar-mobile__progress-track fd-ui-progress-track" aria-hidden="true">

@@ -772,6 +772,7 @@
         "ITEMS_AI_HIDE": "Hide",
         "ITEMS_MANUAL_SUMMARY": "Added manually",
         "MANUAL_ITEM_EDIT": "Edit manual item",
+        "MANUAL_ITEM_EDIT_NAMED": "Edit manual item: {{name}}",
         "MANUAL_ITEM_DIALOG_TITLE": "Manual item",
         "MANUAL_ITEM_DIALOG_SAVE": "Save item"
     },

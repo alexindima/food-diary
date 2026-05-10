@@ -68,7 +68,7 @@
                                     fill="text"
                                     icon="edit"
                                     [fdUiHint]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
-                                    [ariaLabel]="('CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate) + ': ' + itemView.name"
+                                    [ariaLabel]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT_NAMED' | translate: { name: itemView.name }"
                                     (click)="edit(itemView.item)"
                                 />
                                 <fd-ui-button

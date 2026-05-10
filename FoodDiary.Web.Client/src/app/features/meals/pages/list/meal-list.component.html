@@ -72,16 +72,12 @@
             (loadMore)="loadFavorites()"
         >
             <div class="consumption-list__favorites-grid fd-grid fd-gap-xs">
-                @for (fav of favorites(); track fav.id) {
+                @for (favoriteView of favoriteViews(); track favoriteView.favorite.id) {
+                    @let fav = favoriteView.favorite;
                     <div class="consumption-list__favorite-card fd-row fd-justify-between fd-gap-xs">
                         <div class="consumption-list__favorite-info">
                             <div class="consumption-list__favorite-name">
-                                {{
-                                    fav.name ||
-                                        (fav.mealType
-                                            ? ('MEAL_TYPES.' + fav.mealType | translate)
-                                            : ('CONSUMPTION_LIST.FAVORITE_UNNAMED' | translate))
-                                }}
+                                {{ favoriteView.displayName || (favoriteView.displayNameKey | translate) }}
                             </div>
                             <div class="consumption-list__favorite-meta">
                                 {{ fav.totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} &middot;

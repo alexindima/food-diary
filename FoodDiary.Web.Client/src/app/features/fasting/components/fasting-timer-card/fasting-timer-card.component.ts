@@ -35,6 +35,9 @@ interface FastingTimerCardState {
     showGlow: boolean;
 }
 
+const RING_RADIUS = 90;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
 @Component({
     selector: 'fd-fasting-timer-card',
     standalone: true,
@@ -61,11 +64,12 @@ export class FastingTimerCardComponent {
 
         this.stopTimer();
     });
-    protected readonly Math = Math;
     protected readonly normalizedProgressPercent = computed(() => {
         const progress = this.viewState().progressPercent;
         return Number.isFinite(progress) ? Math.max(0, Math.min(progress, 100)) : 0;
     });
+    protected readonly ringStrokeDasharray = RING_CIRCUMFERENCE;
+    protected readonly ringStrokeDashoffset = computed(() => RING_CIRCUMFERENCE * (1 - this.normalizedProgressPercent() / 100));
     public readonly layout = input<'dashboard' | 'page'>('page');
     public readonly session = input<FastingSession | null>(null);
     private readonly usesFacadeTimer = computed(() => this.layout() === 'page' && this.facade !== null);

@@ -4,6 +4,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { type DailyMicronutrient } from '../../models/usda.data';
 
+type DailyMicronutrientView = DailyMicronutrient & {
+    percentDailyValueWidth: number | null;
+};
+
 @Component({
     selector: 'fd-daily-micronutrient-card',
     standalone: true,
@@ -13,8 +17,6 @@ import { type DailyMicronutrient } from '../../models/usda.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DailyMicronutrientCardComponent {
-    protected readonly Math = Math;
-
     public readonly nutrients = input<DailyMicronutrient[]>([]);
     public readonly linkedCount = input(0);
     public readonly totalCount = input(0);
@@ -38,6 +40,14 @@ export class DailyMicronutrientCardComponent {
     public readonly keyNutrients = computed(() =>
         this.nutrients()
             .filter(n => DailyMicronutrientCardComponent.KEY_NUTRIENT_IDS.has(n.nutrientId))
+            .map(nutrient => this.toView(nutrient))
             .sort((a, b) => a.name.localeCompare(b.name)),
     );
+
+    private toView(nutrient: DailyMicronutrient): DailyMicronutrientView {
+        return {
+            ...nutrient,
+            percentDailyValueWidth: nutrient.percentDailyValue === null ? null : Math.min(Math.max(nutrient.percentDailyValue, 0), 100),
+        };
+    }
 }

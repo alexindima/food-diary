@@ -83,7 +83,6 @@ type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
-    protected readonly Math = Math;
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
     private readonly authService = inject(AuthService);
@@ -184,6 +183,8 @@ export class SidebarComponent {
     });
     protected readonly dailyConsumedKcal = signal(0);
     protected readonly dailyGoalKcal = signal(0);
+    protected readonly dailyConsumedKcalRounded = computed(() => Math.round(this.dailyConsumedKcal()));
+    protected readonly dailyGoalKcalRounded = computed(() => Math.round(this.dailyGoalKcal()));
     protected readonly dailyProgressPercent = computed(() => {
         const goal = this.dailyGoalKcal();
         if (goal <= 0) {

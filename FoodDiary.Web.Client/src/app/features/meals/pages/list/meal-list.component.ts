@@ -29,6 +29,12 @@ import { MealListFacade } from '../../lib/meal-list.facade';
 import { type FavoriteMeal, type Meal } from '../../models/meal.data';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
+interface FavoriteMealView {
+    favorite: FavoriteMeal;
+    displayName: string | null;
+    displayNameKey: string;
+}
+
 @Component({
     selector: 'fd-meal-list',
     templateUrl: './meal-list.component.html',
@@ -65,6 +71,13 @@ export class MealListComponent {
     public readonly consumptionData = this.mealListFacade.consumptionData;
     public readonly errorKey = this.mealListFacade.errorKey;
     public readonly favorites = this.mealListFacade.favorites;
+    public readonly favoriteViews = computed<FavoriteMealView[]>(() =>
+        this.favorites().map(favorite => ({
+            favorite,
+            displayName: favorite.name,
+            displayNameKey: favorite.mealType ? `MEAL_TYPES.${favorite.mealType}` : 'CONSUMPTION_LIST.FAVORITE_UNNAMED',
+        })),
+    );
     public readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
     public readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
