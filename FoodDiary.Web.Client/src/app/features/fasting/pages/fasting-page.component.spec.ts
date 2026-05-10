@@ -82,7 +82,7 @@ describe('FastingPageComponent', () => {
             ],
         });
 
-        expect(component.getCurrentCheckInCtaKey()).toBe('FASTING.CHECK_IN.UPDATE_ACTION');
+        expect(component.currentCheckInCtaKey()).toBe('FASTING.CHECK_IN.UPDATE_ACTION');
         expect(component.hasCurrentSessionTimeline()).toBe(true);
         expect(component.currentSessionRecentCheckIns()).toHaveLength(1);
     });

@@ -110,6 +110,29 @@ export class FastingPageComponent {
     });
     public readonly alerts = computed(() => this.facade.insightsData().alerts);
     public readonly insights = computed(() => this.facade.insightsData().insights);
+    public readonly statsView = computed<FastingStatsViewModel | null>(() => {
+        this.currentLanguage();
+        const stats = this.stats();
+        if (!stats) {
+            return null;
+        }
+
+        return {
+            stats,
+            topSymptomLabel: this.getTopSymptomLabel(stats.topSymptom),
+        };
+    });
+    public readonly visibleAlertItems = computed(() => {
+        this.currentLanguage();
+        const session = this.currentSession();
+        return this.alerts()
+            .filter(alert => this.facade.isPromptVisible(session, alert))
+            .map(alert => this.buildMessageViewModel(alert));
+    });
+    public readonly insightItems = computed(() => {
+        this.currentLanguage();
+        return this.insights().map(insight => this.buildMessageViewModel(insight));
+    });
     public readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
     public readonly isLoadingMoreHistory = this.facade.isLoadingMoreHistory;
     public readonly visibleHistory = this.history;
@@ -118,6 +141,14 @@ export class FastingPageComponent {
     public readonly expandedHistorySessionId = signal<string | null>(null);
     public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
     public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
+    public readonly currentSessionLatestCheckInView = computed<FastingCheckInViewModel | null>(() => {
+        this.currentLanguage();
+        const checkIn = this.currentSessionLatestCheckIn();
+        return checkIn ? this.buildCheckInViewModel(checkIn) : null;
+    });
+    public readonly currentCheckInCtaKey = computed(() =>
+        this.hasCurrentCheckIn() ? 'FASTING.CHECK_IN.UPDATE_ACTION' : 'FASTING.CHECK_IN.ADD_ACTION',
+    );
     public readonly currentSessionRecentCheckIns = computed(() => {
         const session = this.currentSession();
         if (!session) {
@@ -126,11 +157,6 @@ export class FastingPageComponent {
 
         return this.getSessionCheckIns(session).slice(0, 3);
     });
-    public readonly visibleAlerts = computed(() => {
-        const session = this.currentSession();
-        return this.alerts().filter(alert => this.facade.isPromptVisible(session, alert));
-    });
-
     public constructor() {
         this.facade.initialize();
 
@@ -338,10 +364,6 @@ export class FastingPageComponent {
         });
     }
 
-    public getCurrentCheckInCtaKey(): string {
-        return this.hasCurrentCheckIn() ? 'FASTING.CHECK_IN.UPDATE_ACTION' : 'FASTING.CHECK_IN.ADD_ACTION';
-    }
-
     public hasCurrentSessionTimeline(): boolean {
         return this.currentSessionRecentCheckIns().length > 0;
     }
@@ -445,6 +467,24 @@ export class FastingPageComponent {
         return this.translateService.instant(`FASTING.CHECK_IN.SYMPTOMS.${symptom.toUpperCase()}`);
     }
 
+    private buildCheckInViewModel(checkIn: FastingCheckIn): FastingCheckInViewModel {
+        return {
+            checkIn,
+            relativeCheckedInAt: this.formatRelativeTime(checkIn.checkedInAtUtc),
+            summary: this.getCheckInSummary(checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel),
+            symptomLabels: checkIn.symptoms.map(symptom => this.getSymptomLabel(symptom)),
+        };
+    }
+
+    private buildMessageViewModel(message: FastingMessage): FastingMessageViewModel {
+        return {
+            message,
+            severity: this.getAlertSeverity(message),
+            title: this.getTranslatedMessage(message, 'titleKey'),
+            body: this.getTranslatedMessage(message, 'bodyKey'),
+        };
+    }
+
     private getHistoryChartSubtitle(session: FastingSession): string {
         return `${this.formatSessionDateLabel(session.startedAtUtc)} · ${this.getHistorySessionTypeLabel(session)} · ${this.getHistoryProtocolDisplay(session)}`;
     }
@@ -459,12 +499,12 @@ export class FastingPageComponent {
         }).format(new Date(value));
     }
 
-    public getTranslatedMessage(descriptor: FastingMessage, field: 'titleKey' | 'bodyKey'): string {
+    private getTranslatedMessage(descriptor: FastingMessage, field: 'titleKey' | 'bodyKey'): string {
         const key = descriptor[field];
         return this.translateService.instant(key, this.resolveMessageParams(descriptor.bodyParams));
     }
 
-    public getAlertSeverity(message: FastingMessage): FdUiInlineAlertSeverity {
+    private getAlertSeverity(message: FastingMessage): FdUiInlineAlertSeverity {
         switch (message.tone) {
             case 'warning':
                 return 'warning';
@@ -567,4 +607,23 @@ export class FastingPageComponent {
 
         return this.getMoodEmoji(level);
     }
+}
+
+interface FastingStatsViewModel {
+    stats: FastingStats;
+    topSymptomLabel: string;
+}
+
+interface FastingMessageViewModel {
+    message: FastingMessage;
+    severity: FdUiInlineAlertSeverity;
+    title: string;
+    body: string;
+}
+
+interface FastingCheckInViewModel {
+    checkIn: FastingCheckIn;
+    relativeCheckedInAt: string | null;
+    summary: string;
+    symptomLabels: string[];
 }

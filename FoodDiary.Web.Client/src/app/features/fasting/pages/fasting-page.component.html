@@ -18,7 +18,8 @@
                 />
 
                 <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">
-                    @if (stats(); as s) {
+                    @if (statsView(); as statsVm) {
+                        @let s = statsVm.stats;
                         <div class="fasting__stats fasting__stats--primary">
                             <fd-ui-accent-surface
                                 class="fasting__stat fd-ui-stat-tile"
@@ -112,9 +113,7 @@
                                         <span class="fasting__stat-label fasting__stat-label--compact fd-ui-meta-text">
                                             {{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}
                                         </span>
-                                        <strong class="fasting__personal-summary-text fd-ui-body">{{
-                                            getTopSymptomLabel(s.topSymptom)
-                                        }}</strong>
+                                        <strong class="fasting__personal-summary-text fd-ui-body">{{ statsVm.topSymptomLabel }}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -125,18 +124,18 @@
                 </fd-ui-card>
             </div>
 
-            @if (isActive() && visibleAlerts().length > 0) {
+            @if (isActive() && visibleAlertItems().length > 0) {
                 <div class="fasting__alerts-section">
-                    @for (alert of visibleAlerts(); track alert.id) {
+                    @for (alert of visibleAlertItems(); track alert.message.id) {
                         <fd-ui-inline-alert
                             appearance="alert"
-                            [severity]="getAlertSeverity(alert)"
-                            [title]="getTranslatedMessage(alert, 'titleKey')"
-                            [message]="getTranslatedMessage(alert, 'bodyKey')"
+                            [severity]="alert.severity"
+                            [title]="alert.title"
+                            [message]="alert.body"
                             [primaryActionLabel]="'FASTING.PROMPTS.SNOOZE' | translate"
                             [secondaryActionLabel]="'FASTING.PROMPTS.DISMISS' | translate"
-                            (primaryAction)="snoozePrompt(alert.id)"
-                            (secondaryAction)="dismissPrompt(alert.id)"
+                            (primaryAction)="snoozePrompt(alert.message.id)"
+                            (secondaryAction)="dismissPrompt(alert.message.id)"
                         />
                     }
                 </div>
@@ -149,29 +148,24 @@
                             <div class="fasting__checkin-summary fd-stack fd-gap-card-profile">
                                 <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
 
-                                @if (currentSessionLatestCheckIn(); as latestCheckIn) {
+                                @if (currentSessionLatestCheckInView(); as latestCheckIn) {
                                     <div class="fasting__checkin-meta fd-ui-meta-text">
-                                        {{
-                                            'FASTING.CHECK_IN.LAST_SAVED'
-                                                | translate: { value: formatRelativeTime(latestCheckIn.checkedInAtUtc) }
-                                        }}
+                                        {{ 'FASTING.CHECK_IN.LAST_SAVED' | translate: { value: latestCheckIn.relativeCheckedInAt } }}
                                     </div>
                                     <div class="fasting__checkin-summary-text fd-ui-body-sm">
-                                        {{
-                                            getCheckInSummary(latestCheckIn.hungerLevel, latestCheckIn.energyLevel, latestCheckIn.moodLevel)
-                                        }}
+                                        {{ latestCheckIn.summary }}
                                     </div>
-                                    @if (latestCheckIn.symptoms.length > 0) {
+                                    @if (latestCheckIn.symptomLabels.length > 0) {
                                         <div class="fasting__history-symptoms fd-row fd-wrap fd-gap-xxs">
-                                            @for (symptom of latestCheckIn.symptoms; track symptom) {
+                                            @for (symptomLabel of latestCheckIn.symptomLabels; track symptomLabel) {
                                                 <span class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption">
-                                                    {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
+                                                    {{ symptomLabel }}
                                                 </span>
                                             }
                                         </div>
                                     }
-                                    @if (latestCheckIn.notes) {
-                                        <p class="fasting__checkin-summary-note fd-ui-caption">{{ latestCheckIn.notes }}</p>
+                                    @if (latestCheckIn.checkIn.notes) {
+                                        <p class="fasting__checkin-summary-note fd-ui-caption">{{ latestCheckIn.checkIn.notes }}</p>
                                     }
                                 }
 
@@ -182,7 +176,7 @@
                                         (click)="openCheckInForm()"
                                         [disabled]="isEnding() || isUpdatingCycle()"
                                     >
-                                        {{ getCurrentCheckInCtaKey() | translate }}
+                                        {{ currentCheckInCtaKey() | translate }}
                                     </fd-ui-button>
                                 </div>
                             </div>
@@ -273,16 +267,16 @@
                 </fd-ui-card>
             }
 
-            @if (insights().length > 0) {
+            @if (insightItems().length > 0) {
                 <div class="fasting__insights-section fd-stack fd-gap-xs">
                     <div class="fasting__section-label fd-ui-card-title">{{ 'FASTING.INSIGHTS.TITLE' | translate }}</div>
                     <div class="fasting__insights fd-stack fd-gap-xs">
-                        @for (insight of insights(); track insight.titleKey) {
+                        @for (insight of insightItems(); track insight.message.titleKey) {
                             <fd-ui-inline-alert
                                 appearance="notice"
-                                [severity]="getAlertSeverity(insight)"
-                                [title]="getTranslatedMessage(insight, 'titleKey')"
-                                [message]="getTranslatedMessage(insight, 'bodyKey')"
+                                [severity]="insight.severity"
+                                [title]="insight.title"
+                                [message]="insight.body"
                             />
                         }
                     </div>
