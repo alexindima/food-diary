@@ -77,8 +77,8 @@
                                     fill="none"
                                     stroke-width="10"
                                     stroke-linecap="round"
-                                    [style.stroke-dasharray]="2 * Math.PI * 90"
-                                    [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - healthScore() / 100)"
+                                    [style.stroke-dasharray]="healthScoreRing().strokeDasharray"
+                                    [style.stroke-dashoffset]="healthScoreRing().strokeDashoffset"
                                 />
                             </svg>
                             <div class="gamification__score-content fd-stack fd-align-center fd-justify-center">
@@ -97,19 +97,15 @@
                         <div class="gamification__badges fd-grid fd-gap-card-header">
                             @for (badge of earnedBadges(); track badge.key) {
                                 <div class="gamification__badge gamification__badge--earned fd-stack fd-align-center fd-gap-card-header">
-                                    <fd-ui-icon class="gamification__badge-icon" [name]="getBadgeIcon(badge)"></fd-ui-icon>
-                                    <span class="gamification__badge-label fd-ui-overline">{{
-                                        'GAMIFICATION.BADGE_' + badge.key | uppercase | translate
-                                    }}</span>
+                                    <fd-ui-icon class="gamification__badge-icon" [name]="badge.icon"></fd-ui-icon>
+                                    <span class="gamification__badge-label fd-ui-overline">{{ badge.nameKey | translate }}</span>
                                     <span class="gamification__badge-threshold fd-ui-meta-text">{{ badge.threshold }}</span>
                                 </div>
                             }
                             @for (badge of lockedBadges(); track badge.key) {
                                 <div class="gamification__badge gamification__badge--locked fd-stack fd-align-center fd-gap-card-header">
-                                    <fd-ui-icon class="gamification__badge-icon" [name]="getBadgeIcon(badge)"></fd-ui-icon>
-                                    <span class="gamification__badge-label fd-ui-overline">{{
-                                        'GAMIFICATION.BADGE_' + badge.key | uppercase | translate
-                                    }}</span>
+                                    <fd-ui-icon class="gamification__badge-icon" [name]="badge.icon"></fd-ui-icon>
+                                    <span class="gamification__badge-label fd-ui-overline">{{ badge.nameKey | translate }}</span>
                                     <span class="gamification__badge-threshold fd-ui-meta-text">{{ badge.threshold }}</span>
                                 </div>
                             }

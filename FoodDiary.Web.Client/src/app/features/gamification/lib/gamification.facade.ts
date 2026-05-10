@@ -4,8 +4,14 @@ import { firstValueFrom } from 'rxjs';
 import { GamificationService } from '../api/gamification.service';
 import { type Badge, type GamificationData } from '../models/gamification.data';
 
+export interface BadgeDisplay extends Badge {
+    icon: string;
+    nameKey: string;
+}
+
 @Injectable()
 export class GamificationFacade {
+    private readonly healthScoreCircleCircumference = 2 * Math.PI * 90;
     private readonly gamificationService = inject(GamificationService);
     private readonly dataResource = resource({
         loader: async (): Promise<GamificationData> => firstValueFrom(this.gamificationService.getData()),
@@ -20,14 +26,27 @@ export class GamificationFacade {
     public readonly healthScore = computed(() => this.data()?.healthScore ?? 0);
     public readonly weeklyAdherence = computed(() => Math.round((this.data()?.weeklyAdherence ?? 0) * 100));
     public readonly badges = computed(() => this.data()?.badges ?? []);
-    public readonly earnedBadges = computed(() => this.badges().filter(b => b.isEarned));
-    public readonly lockedBadges = computed(() => this.badges().filter(b => !b.isEarned));
+    public readonly healthScoreRing = computed(() => ({
+        strokeDasharray: this.healthScoreCircleCircumference,
+        strokeDashoffset: this.healthScoreCircleCircumference * (1 - this.healthScore() / 100),
+    }));
+    public readonly badgeDisplays = computed(() => this.badges().map(badge => this.toBadgeDisplay(badge)));
+    public readonly earnedBadges = computed(() => this.badgeDisplays().filter(badge => badge.isEarned));
+    public readonly lockedBadges = computed(() => this.badgeDisplays().filter(badge => !badge.isEarned));
 
     public initialize(): void {
         this.dataResource.reload();
     }
 
-    public getBadgeIcon(badge: Badge): string {
+    private toBadgeDisplay(badge: Badge): BadgeDisplay {
+        return {
+            ...badge,
+            icon: this.getBadgeIcon(badge),
+            nameKey: `GAMIFICATION.BADGE_${badge.key.toUpperCase()}`,
+        };
+    }
+
+    private getBadgeIcon(badge: Badge): string {
         if (badge.category === 'streak') {
             return 'local_fire_department';
         }
