@@ -116,19 +116,18 @@ const isFrameworkNamedCallback = node => {
 
     const propertyName = getPropertyName(parent.key);
 
-    return propertyName === 'loadComponent' ||
+    return (
+        propertyName === 'loadComponent' ||
         propertyName === 'loadChildren' ||
         propertyName === 'loader' ||
         propertyName === 'bootstrap' ||
         propertyName === 'resolve' ||
         propertyName === 'canActivate' ||
-        propertyName === 'canMatch';
+        propertyName === 'canMatch'
+    );
 };
 
-const isFrameworkFunctionName = name =>
-    name === 'bootstrap' ||
-    name === 'loader' ||
-    name.endsWith('Guard');
+const isFrameworkFunctionName = name => name === 'bootstrap' || name === 'loader' || name.endsWith('Guard');
 
 const getPropertyName = key => {
     if (key.type === 'Identifier') {
@@ -345,7 +344,7 @@ export default [
             '@typescript-eslint/no-unnecessary-condition': 'error',
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',
-            '@typescript-eslint/prefer-optional-chain': 'warn',
+            '@typescript-eslint/prefer-optional-chain': 'error',
             '@typescript-eslint/prefer-nullish-coalescing': 'warn',
             '@typescript-eslint/require-await': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
@@ -853,7 +852,7 @@ export default [
             '@angular-eslint/template/label-has-associated-control': 'warn',
             '@angular-eslint/template/no-autofocus': 'warn',
             '@angular-eslint/template/banana-in-box': 'error',
-            '@angular-eslint/template/button-has-type': 'warn',
+            '@angular-eslint/template/button-has-type': 'error',
             '@angular-eslint/template/mouse-events-have-key-events': 'error',
             '@angular-eslint/template/no-duplicate-attributes': 'warn',
             '@angular-eslint/template/no-interpolation-in-attributes': 'warn',

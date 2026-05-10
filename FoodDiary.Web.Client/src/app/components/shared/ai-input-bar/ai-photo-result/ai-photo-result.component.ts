@@ -211,7 +211,7 @@ export class AiPhotoResultComponent {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
         const normalized: FoodVisionItem[] = edited.map(item => ({
             nameEn: item.nameEn.trim() || item.name.trim(),
-            nameLocal: item.nameLocal && item.nameLocal.trim().length ? item.nameLocal.trim() : null,
+            nameLocal: item.nameLocal?.trim().length ? item.nameLocal.trim() : null,
             amount: item.amount,
             unit: item.unit,
             confidence: 1,

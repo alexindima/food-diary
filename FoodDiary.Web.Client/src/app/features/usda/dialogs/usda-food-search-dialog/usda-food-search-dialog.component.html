@@ -9,7 +9,7 @@
             <div class="no-results">{{ 'USDA_SEARCH.NO_RESULTS' | translate }}</div>
         }
         @for (food of results(); track food.fdcId) {
-            <button class="result-item" [class.selected]="selectedFood()?.fdcId === food.fdcId" (click)="selectFood(food)">
+            <button type="button" class="result-item" [class.selected]="selectedFood()?.fdcId === food.fdcId" (click)="selectFood(food)">
                 <span class="food-name fd-ui-action-text">{{ food.description }}</span>
                 @if (food.foodCategory) {
                     <span class="food-category fd-ui-caption">{{ food.foodCategory }}</span>

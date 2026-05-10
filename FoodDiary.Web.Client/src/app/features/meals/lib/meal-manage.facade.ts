@@ -408,7 +408,7 @@ export class MealManageFacade {
                 }
 
                 const recipe = group.controls.recipe.value;
-                if (recipe && recipe.servings && recipe.servings > 0) {
+                if (recipe?.servings && recipe.servings > 0) {
                     const servings = recipe.servings <= 0 ? 1 : recipe.servings;
                     const caloriesPerServing = (recipe.totalCalories ?? 0) / servings;
                     const proteinsPerServing = (recipe.totalProteins ?? 0) / servings;
