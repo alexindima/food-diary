@@ -120,6 +120,13 @@ export class ProductAiRecognitionDialogComponent {
         }
         return null;
     });
+    public readonly canApply = computed(() => Boolean(this.nutrition()));
+    public readonly itemNames = computed(() =>
+        this.results()
+            .map(item => this.capitalizeName((item.nameLocal?.trim() ?? item.nameEn.trim()) || ''))
+            .filter(Boolean),
+    );
+    public readonly hasMultipleItems = computed(() => this.results().length > 1);
 
     public onImageChanged(selection: ImageSelection | null): void {
         this.selection.set(selection);
@@ -187,20 +194,6 @@ export class ProductAiRecognitionDialogComponent {
     public close(): void {
         this.cleanupAsset();
         this.dialogRef?.close(null);
-    }
-
-    public canApply(): boolean {
-        return Boolean(this.nutrition());
-    }
-
-    public itemNames(): string[] {
-        return this.results()
-            .map(item => this.capitalizeName((item.nameLocal?.trim() ?? item.nameEn.trim()) || ''))
-            .filter(Boolean);
-    }
-
-    public hasMultipleItems(): boolean {
-        return this.results().length > 1;
     }
 
     private runAnalysis(assetId: string): void {

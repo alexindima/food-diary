@@ -900,7 +900,10 @@ export default [
             '@angular-eslint/template/button-has-type': 'error',
             '@angular-eslint/template/mouse-events-have-key-events': 'error',
             '@angular-eslint/template/no-any': 'error',
-            '@angular-eslint/template/no-call-expression': 'warn',
+            // Disabled after auditing all existing matches: Angular signal, input, model,
+            // computed, and query reads are template calls by design, so this rule cannot
+            // distinguish the preferred signal style from expensive method calls.
+            '@angular-eslint/template/no-call-expression': 'off',
             '@angular-eslint/template/no-duplicate-attributes': 'error',
             '@angular-eslint/template/no-empty-control-flow': 'error',
             '@angular-eslint/template/no-inline-styles': [
