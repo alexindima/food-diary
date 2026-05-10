@@ -10,7 +10,17 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
-import { LESSON_CATEGORIES } from '../../models/lesson.data';
+import { LESSON_CATEGORIES, type LessonSummary } from '../../models/lesson.data';
+
+interface LessonCategoryOption {
+    value: string;
+    labelKey: string;
+}
+
+interface LessonListItem extends LessonSummary {
+    categoryLabelKey: string;
+    difficultyLabelKey: string;
+}
 
 @Component({
     selector: 'fd-lessons-list-page',
@@ -33,7 +43,10 @@ import { LESSON_CATEGORIES } from '../../models/lesson.data';
 export class LessonsListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(LessonFacade);
-    public readonly categories = LESSON_CATEGORIES;
+    public readonly categories: LessonCategoryOption[] = LESSON_CATEGORIES.map(category => ({
+        value: category,
+        labelKey: `LESSONS.CATEGORY.${category}`,
+    }));
 
     public constructor() {
         this.facade.loadLessons();
@@ -47,6 +60,13 @@ export class LessonsListPageComponent {
         const read = all.filter(l => l.isRead).length;
         return { read, total: all.length, percent: Math.round((read / all.length) * 100) };
     });
+    public readonly lessons = computed<LessonListItem[]>(() =>
+        this.facade.lessons().map(lesson => ({
+            ...lesson,
+            categoryLabelKey: `LESSONS.CATEGORY.${lesson.category}`,
+            difficultyLabelKey: `LESSONS.DIFFICULTY.${lesson.difficulty}`,
+        })),
+    );
 
     public filterByCategory(category: string | null): void {
         this.facade.loadLessons(category);

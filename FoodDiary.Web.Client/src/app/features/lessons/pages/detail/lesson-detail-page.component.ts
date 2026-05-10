@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -9,6 +9,12 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
+import { type LessonDetail } from '../../models/lesson.data';
+
+interface LessonDetailState extends LessonDetail {
+    categoryLabelKey: string;
+    difficultyLabelKey: string;
+}
 
 @Component({
     selector: 'fd-lesson-detail-page',
@@ -31,6 +37,18 @@ export class LessonDetailPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     public readonly facade = inject(LessonFacade);
+    public readonly lesson = computed<LessonDetailState | null>(() => {
+        const lesson = this.facade.selectedLesson();
+        if (!lesson) {
+            return null;
+        }
+
+        return {
+            ...lesson,
+            categoryLabelKey: `LESSONS.CATEGORY.${lesson.category}`,
+            difficultyLabelKey: `LESSONS.DIFFICULTY.${lesson.difficulty}`,
+        };
+    });
 
     public constructor() {
         const id = this.route.snapshot.paramMap.get('id');

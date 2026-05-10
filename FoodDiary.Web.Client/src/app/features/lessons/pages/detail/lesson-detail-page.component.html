@@ -6,14 +6,14 @@
     <fd-page-body>
         @if (facade.isDetailLoading()) {
             <fd-ui-loader />
-        } @else if (facade.selectedLesson(); as lesson) {
+        } @else if (lesson(); as lesson) {
             <article class="lesson-detail__article">
                 <div class="lesson-detail__meta-row fd-row fd-gap-sm">
                     <span class="lesson-detail__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                        {{ 'LESSONS.CATEGORY.' + lesson.category | translate }}
+                        {{ lesson.categoryLabelKey | translate }}
                     </span>
                     <span class="lesson-detail__difficulty fd-ui-field-label--floating">
-                        {{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}
+                        {{ lesson.difficultyLabelKey | translate }}
                     </span>
                     <span class="lesson-detail__time fd-ui-field-label--floating">
                         {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}

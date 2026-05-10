@@ -23,14 +23,14 @@
         >
             {{ 'LESSONS.FILTER_ALL' | translate }}
         </fd-ui-button>
-        @for (cat of categories; track cat) {
+        @for (cat of categories; track cat.value) {
             <fd-ui-button
                 variant="secondary"
-                [fill]="facade.categoryFilter() === cat ? 'solid' : 'outline'"
+                [fill]="facade.categoryFilter() === cat.value ? 'solid' : 'outline'"
                 size="sm"
-                (click)="filterByCategory(cat)"
+                (click)="filterByCategory(cat.value)"
             >
-                {{ 'LESSONS.CATEGORY.' + cat | translate }}
+                {{ cat.labelKey | translate }}
             </fd-ui-button>
         }
     </div>
@@ -38,14 +38,14 @@
     <fd-page-body>
         @if (facade.isLoading()) {
             <fd-ui-loader />
-        } @else if (facade.lessons().length === 0) {
+        } @else if (lessons().length === 0) {
             <div class="lessons-list__empty fd-stack fd-align-center fd-gap-sm">
                 <fd-ui-icon name="school" size="xl" />
                 <span>{{ 'LESSONS.EMPTY' | translate }}</span>
             </div>
         } @else {
             <div class="lessons-list__grid fd-grid fd-gap-lg">
-                @for (lesson of facade.lessons(); track lesson.id) {
+                @for (lesson of lessons(); track lesson.id) {
                     <div
                         class="lesson-card fd-stack fd-gap-xs"
                         fdCardHover
@@ -57,7 +57,7 @@
                     >
                         <div class="lesson-card__top fd-row fd-justify-between">
                             <span class="lesson-card__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                                {{ 'LESSONS.CATEGORY.' + lesson.category | translate }}
+                                {{ lesson.categoryLabelKey | translate }}
                             </span>
                             @if (lesson.isRead) {
                                 <fd-ui-icon class="lesson-card__check" name="check_circle" />
@@ -68,7 +68,7 @@
                             <p class="lesson-card__summary fd-ui-caption">{{ lesson.summary }}</p>
                         }
                         <div class="lesson-card__meta fd-row fd-gap-sm fd-ui-field-label--floating">
-                            <span>{{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}</span>
+                            <span>{{ lesson.difficultyLabelKey | translate }}</span>
                             <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
                         </div>
                     </div>
