@@ -97,10 +97,10 @@ export class WaistHistoryPageComponent {
     ];
 
     public readonly whtSegments: WhtSegment[] = [
-        { labelKey: 'WAIST_HISTORY.WHT_SEGMENTS.UNDER', from: 0, to: 0.4, class: 'waist-history-page__wht-segment--under' },
-        { labelKey: 'WAIST_HISTORY.WHT_SEGMENTS.NORMAL', from: 0.4, to: 0.5, class: 'waist-history-page__wht-segment--normal' },
-        { labelKey: 'WAIST_HISTORY.WHT_SEGMENTS.ELEVATED', from: 0.5, to: 0.6, class: 'waist-history-page__wht-segment--elevated' },
-        { labelKey: 'WAIST_HISTORY.WHT_SEGMENTS.HIGH', from: 0.6, to: this.whtScaleMax, class: 'waist-history-page__wht-segment--high' },
+        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.UNDER', 0, 0.4, 'waist-history-page__wht-segment--under'),
+        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.NORMAL', 0.4, 0.5, 'waist-history-page__wht-segment--normal'),
+        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.ELEVATED', 0.5, 0.6, 'waist-history-page__wht-segment--elevated'),
+        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.HIGH', 0.6, this.whtScaleMax, 'waist-history-page__wht-segment--high'),
     ];
 
     public constructor() {
@@ -131,15 +131,17 @@ export class WaistHistoryPageComponent {
         this.facade.changeRange(value);
     }
 
-    public getSegmentWidth(segment: WhtSegment): string {
-        const width = ((segment.to - segment.from) / this.whtScaleMax) * 100;
-        return `${width}%`;
+    private createWhtSegment(labelKey: string, from: number, to: number, className: string): WhtSegment {
+        return {
+            labelKey,
+            width: `${((to - from) / this.whtScaleMax) * 100}%`,
+            class: className,
+        };
     }
 }
 
 interface WhtSegment {
     labelKey: string;
-    from: number;
-    to: number;
+    width: string;
     class: string;
 }
