@@ -155,9 +155,13 @@
                 </div>
             </div>
         }
-    }
 
-    @if (isActive()) {
+        <div class="fasting-controls__actions fd-ui-actions">
+            <fd-ui-button [loading]="isStarting()" [disabled]="isStarting()" (click)="startFasting()">
+                {{ 'FASTING.START_FAST' | translate }}
+            </fd-ui-button>
+        </div>
+    } @else {
         @if (isActiveExtendedSession()) {
             <div class="fasting-controls__active-actions fasting-controls__active-actions--extended">
                 @if (canExtendActiveSession()) {
@@ -359,11 +363,5 @@
                 </fd-ui-button>
             </div>
         }
-    } @else {
-        <div class="fasting-controls__actions fd-ui-actions">
-            <fd-ui-button [loading]="isStarting()" [disabled]="isStarting()" (click)="startFasting()">
-                {{ 'FASTING.START_FAST' | translate }}
-            </fd-ui-button>
-        </div>
     }
 </div>

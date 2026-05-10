@@ -83,8 +83,7 @@
                     />
                 </form>
             </div>
-        }
-        @if (isMobileView()) {
+        } @else {
             <div fdPageHeaderExtra class="product-list__mobile-search" [class.product-list__mobile-search--open]="isMobileSearchVisible()">
                 <form class="product-list__search-form product-list__search-form--mobile" [formGroup]="searchForm">
                     <fd-ui-input

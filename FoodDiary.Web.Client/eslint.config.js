@@ -902,7 +902,7 @@ export default [
             '@angular-eslint/template/no-interpolation-in-attributes': 'error',
             '@angular-eslint/template/no-negated-async': 'warn',
             '@angular-eslint/template/no-non-null-assertion': 'warn',
-            '@angular-eslint/template/prefer-at-else': 'warn',
+            '@angular-eslint/template/prefer-at-else': 'error',
             '@angular-eslint/template/prefer-at-empty': 'error',
             '@angular-eslint/template/prefer-built-in-pipes': 'error',
             '@angular-eslint/template/prefer-class-binding': 'warn',

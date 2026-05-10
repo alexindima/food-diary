@@ -57,9 +57,7 @@
                     {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount() } }}
                 </div>
             </div>
-        }
-
-        @if (isExpanded()) {
+        } @else {
             <div class="recipe-step-card__content">
                 <div class="recipe-step-card__image">
                     <fd-image-upload-field
