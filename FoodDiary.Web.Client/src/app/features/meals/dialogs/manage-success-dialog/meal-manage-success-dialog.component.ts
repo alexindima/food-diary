@@ -23,6 +23,7 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
 export class MealManageSuccessDialogComponent {
     public readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<MealManageSuccessDialogComponent, ConsumptionManageRedirectAction>>(FdUiDialogRef);
+    public readonly titleKey = this.data.isEdit ? 'CONSUMPTION_MANAGE.EDIT_SUCCESS' : 'CONSUMPTION_MANAGE.CREATE_SUCCESS';
 
     public close(action: ConsumptionManageRedirectAction): void {
         this.dialogRef.close(action);

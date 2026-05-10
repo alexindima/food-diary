@@ -229,6 +229,15 @@ export class BaseProductManageComponent {
         const currentProduct = this.product();
         return !!currentProduct && currentProduct.isOwnedByCurrentUser;
     });
+    public readonly manageHeaderState = computed<ProductManageHeaderState>(() => {
+        const isEdit = !!this.product();
+
+        return {
+            titleKey: isEdit ? 'PRODUCT_MANAGE.EDIT_TITLE' : 'PRODUCT_MANAGE.ADD_TITLE',
+            submitIcon: isEdit ? 'save' : 'add',
+            submitLabelKey: isEdit ? 'PRODUCT_MANAGE.SAVE_BUTTON' : 'PRODUCT_MANAGE.ADD_BUTTON',
+        };
+    });
 
     public openBarcodeScanner(): void {
         this.fdDialogService
@@ -922,4 +931,10 @@ export type ProductFormData = FormGroupControls<ProductFormValues>;
 interface CalorieMismatchWarning {
     expectedCalories: number;
     actualCalories: number;
+}
+
+interface ProductManageHeaderState {
+    titleKey: string;
+    submitIcon: 'save' | 'add';
+    submitLabelKey: string;
 }

@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -6,10 +7,11 @@ import {
     DestroyRef,
     type ElementRef,
     inject,
+    signal,
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button.component';
@@ -23,7 +25,6 @@ import { MealsPreviewComponent } from '../../../components/shared/meals-preview/
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
@@ -52,7 +53,6 @@ import { DashboardLayoutService } from '../lib/dashboard-layout.service';
         FdUiDatePickerButtonComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        LocalizedDatePipe,
         DashboardSummaryCardComponent,
         HydrationCardComponent,
         WeightTrendCardComponent,
@@ -75,10 +75,12 @@ export class DashboardComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
     private readonly facade = inject(DashboardFacade);
     public readonly layout = inject(DashboardLayoutService);
+    private readonly languageVersion = signal(0);
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
     private resizeObserver: ResizeObserver | null = null;
@@ -132,27 +134,59 @@ export class DashboardComponent {
         return visibleBlocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
     public readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
-    public readonly mealsPreviewState = computed(() => {
+    public readonly editSaveActionLabel = computed(() => {
+        const labelKey = this.editSaveActionLabelKey();
+        return labelKey ? this.translateService.instant(labelKey) : null;
+    });
+    public readonly dashboardHeaderState = computed<DashboardHeaderState>(() => {
+        this.languageVersion();
         const isToday = this.isTodaySelected();
+        const selectedDateLabel = this.formatSelectedDate();
 
         return {
-            titleText: isToday
-                ? null
-                : {
-                      key: 'DASHBOARD.MEALS_TITLE_FOR_DATE',
-                      date: this.selectedDate(),
-                  },
+            isToday,
+            fullTitleKey: isToday ? 'DASHBOARD.TITLE' : 'DASHBOARD.TITLE_FOR_DATE',
+            compactTitleKey: isToday ? 'DASHBOARD.TITLE_SHORT' : 'DASHBOARD.TITLE_FOR_DATE_SHORT',
+            titleParams: isToday ? null : { date: selectedDateLabel },
+            selectedDateLabel,
+        };
+    });
+    public readonly mealsPreviewState = computed(() => {
+        this.languageVersion();
+        const isToday = this.isTodaySelected();
+        const selectedDateLabel = this.formatSelectedDate();
+
+        return {
+            titleText: isToday ? null : this.translateService.instant('DASHBOARD.MEALS_TITLE_FOR_DATE', { date: selectedDateLabel }),
             emptyKey: isToday ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE',
             showDateActions: isToday,
             showEmptyState: !isToday,
         };
     });
+    public readonly hydrationCardState = computed(() => {
+        const hydration = this.hydration();
+
+        return {
+            total: hydration?.totalMl ?? 0,
+            goal: hydration?.goalMl ?? null,
+        };
+    });
+    public readonly cycleCardState = computed(() => {
+        const cycle = this.cycle();
+
+        return {
+            startDate: cycle?.startDate ?? null,
+            predictions: cycle?.predictions ?? null,
+        };
+    });
     public readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
+        this.languageVersion();
         const editing = this.layout.isEditingLayout();
         const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions = {}): DashboardBlockState => {
             const isVisible = this.layout.isBlockVisible(blockId);
             const isAlwaysInteractive = options.alwaysInteractive === true;
             const role = editing || isAlwaysInteractive ? 'button' : null;
+            const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
 
             return {
                 hidden: editing && !isVisible,
@@ -160,7 +194,7 @@ export class DashboardComponent {
                 tabIndex: editing || isAlwaysInteractive ? 0 : -1,
                 ariaPressed: editing ? isVisible : null,
                 ariaDisabled: editing && options.locked ? !this.layout.canToggleBlock(blockId) : null,
-                ariaLabelKey: editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null),
+                ariaLabel: ariaLabelKey ? this.translateService.instant(ariaLabelKey) : null,
                 inert: editing ? '' : null,
             };
         };
@@ -184,6 +218,9 @@ export class DashboardComponent {
 
     public constructor() {
         this.facade.initialize();
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
         afterNextRender(() => {
             this.observeDashboardWidth();
         });
@@ -386,6 +423,18 @@ export class DashboardComponent {
         this.resizeObserver.observe(element);
         this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
     }
+
+    private formatSelectedDate(): string {
+        return formatDate(this.selectedDate(), 'd MMMM y', this.translateService.getCurrentLang());
+    }
+}
+
+interface DashboardHeaderState {
+    isToday: boolean;
+    fullTitleKey: string;
+    compactTitleKey: string;
+    titleParams: { date: string } | null;
+    selectedDateLabel: string;
 }
 
 type DashboardBlockId = 'fasting' | 'summary' | 'meals' | 'hydration' | 'cycle' | 'weight' | 'waist' | 'tdee' | 'advice';
@@ -396,7 +445,7 @@ interface DashboardBlockState {
     tabIndex: number;
     ariaPressed: boolean | null;
     ariaDisabled: boolean | null;
-    ariaLabelKey: string | null;
+    ariaLabel: string | null;
     inert: string | null;
 }
 

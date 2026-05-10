@@ -68,6 +68,11 @@ export class MealItemsListComponent {
                 };
             });
     });
+    public readonly arrayError = computed(() =>
+        this.formArray().touched && this.formArray().errors?.['nonEmptyArray']
+            ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY')
+            : null,
+    );
 
     private readonly activeLang = signal(this.translateService.currentLang);
 

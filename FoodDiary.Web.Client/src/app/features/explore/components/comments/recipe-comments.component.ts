@@ -43,6 +43,7 @@ export class RecipeCommentsComponent {
     public readonly editingCommentId = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
     public readonly hasMore = computed(() => this.comments().length < this.totalItems());
+    public readonly submitLabelKey = computed(() => (this.editingCommentId() ? 'COMMON.SAVE' : 'COMMENTS.POST'));
     public readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
         this.languageVersion();
 

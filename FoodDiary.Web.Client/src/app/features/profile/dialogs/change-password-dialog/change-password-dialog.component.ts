@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -64,6 +64,10 @@ export class ChangePasswordDialogComponent {
     public readonly passwordError = signal<string | null>(null);
     public readonly isSubmitting = signal<boolean>(false);
     public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    public readonly dialogCopyState = computed(() => ({
+        titleKey: this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD' : 'USER_MANAGE.SET_PASSWORD',
+        submitLabelKey: this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_SAVE' : 'USER_MANAGE.SET_PASSWORD_SAVE',
+    }));
 
     public constructor() {
         const formEvents = (this.form as { events?: Observable<unknown> }).events ?? EMPTY;

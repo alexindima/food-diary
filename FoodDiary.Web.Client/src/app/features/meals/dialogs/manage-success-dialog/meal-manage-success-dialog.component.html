@@ -1,7 +1,4 @@
-<fd-ui-dialog
-    [title]="data.isEdit ? ('CONSUMPTION_MANAGE.EDIT_SUCCESS' | translate) : ('CONSUMPTION_MANAGE.CREATE_SUCCESS' | translate)"
-    size="sm"
->
+<fd-ui-dialog [title]="titleKey | translate" size="sm">
     <div fdUiDialogFooter class="meal-manage-success-dialog__footer">
         <fd-ui-button fill="text" (click)="close('Home')">
             {{ 'CONSUMPTION_MANAGE.GO_TO_HOME_BUTTON' | translate }}

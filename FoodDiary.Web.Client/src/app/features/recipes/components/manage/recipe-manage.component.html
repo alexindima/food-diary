@@ -1,7 +1,7 @@
 <div class="recipe-manage fd-stack" fdPageContainer>
     <fd-manage-header
         class="recipe-manage__header"
-        [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
+        [title]="manageHeaderState().titleKey | translate"
         [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
@@ -98,7 +98,7 @@
                                 [disabled]="recipeForm.invalid || isSubmitting()"
                                 [loading]="isSubmitting()"
                             >
-                                {{ recipe() ? ('RECIPE_MANAGE.SAVE_BUTTON' | translate) : ('RECIPE_MANAGE.ADD_BUTTON' | translate) }}
+                                {{ manageHeaderState().submitLabelKey | translate }}
                             </fd-ui-button>
                         </div>
                     </div>

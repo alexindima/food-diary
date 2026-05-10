@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
@@ -26,6 +27,10 @@ export interface NutrientBar {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardSummaryCardComponent {
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly translateService = inject(TranslateService);
+    private readonly languageVersion = signal(0);
+
     private static readonly COLOR_FALLBACK_RGB: [number, number, number] = [90, 169, 250];
     private static readonly CSS_VAR_PATTERN = /^var\((--[^),\s]+)(?:,\s*([^)]+))?\)$/;
     private static readonly CSS_COLOR_CHANNELS: Partial<Record<string, [number, number, number]>> = {
@@ -95,13 +100,19 @@ export class DashboardSummaryCardComponent {
     public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.15));
     public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? this.buildDefaultNutrientBars());
     public readonly nutrientBarViewModels = computed<NutrientBarViewModel[]>(() =>
-        this.resolvedNutrientBars().map(bar => ({
-            ...bar,
-            valueColor: this.getBarColor(bar),
-            fillBackground:
-                bar.target > 0 ? `linear-gradient(90deg, ${bar.colorStart} 0%, ${bar.colorEnd} 100%)` : 'var(--fd-color-slate-300)',
-            fillWidth: bar.target > 0 ? this.clampPercent((bar.current / bar.target) * 100) : 100,
-        })),
+        this.resolvedNutrientBars().map(bar => {
+            this.languageVersion();
+
+            return {
+                ...bar,
+                labelText: bar.labelKey ? this.translateService.instant(bar.labelKey) : bar.label,
+                unitText: bar.unitKey ? this.translateService.instant(bar.unitKey) : bar.unit,
+                valueColor: this.getBarColor(bar),
+                fillBackground:
+                    bar.target > 0 ? `linear-gradient(90deg, ${bar.colorStart} 0%, ${bar.colorEnd} 100%)` : 'var(--fd-color-slate-300)',
+                fillWidth: bar.target > 0 ? this.clampPercent((bar.current / bar.target) * 100) : 100,
+            };
+        }),
     );
     private readonly hasCalorieGoal = computed(() => this.normalizedDailyGoal() > 0);
     private readonly hasMacroGoals = computed(() => (this.nutrientBars() ?? []).some(bar => bar.target > 0));
@@ -147,6 +158,10 @@ export class DashboardSummaryCardComponent {
     public readonly weeklyGradientStroke = `url(#${this.gradientIdWeekly})`;
 
     public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
+
         effect(onCleanup => {
             const target = this.dailyPercent();
             this.startAnimation(this.animatedDailyPercent, target);
@@ -416,6 +431,8 @@ export class DashboardSummaryCardComponent {
 }
 
 interface NutrientBarViewModel extends NutrientBar {
+    labelText: string;
+    unitText: string;
     valueColor: string;
     fillBackground: string;
     fillWidth: number;

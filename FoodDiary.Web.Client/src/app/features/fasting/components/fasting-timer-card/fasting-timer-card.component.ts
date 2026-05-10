@@ -114,7 +114,7 @@ export class FastingTimerCardComponent {
     protected readonly isPageSummaryLayout = computed(() => this.layout() === 'page' && this.viewState().isActive);
     protected readonly cardChrome = computed<FastingTimerCardChrome>(() => ({
         density: this.isDashboardLayout() || this.isPageSummaryLayout() ? 'compact' : 'default',
-        titleKey: this.layout() === 'page' ? 'FASTING.TITLE' : null,
+        title: this.layout() === 'page' ? this.translateService.instant('FASTING.TITLE') : '',
         showPageControls: this.layout() === 'page',
     }));
     protected readonly isEatingPhase = computed(() => {
@@ -229,6 +229,6 @@ export class FastingTimerCardComponent {
 
 interface FastingTimerCardChrome {
     density: 'compact' | 'default';
-    titleKey: string | null;
+    title: string;
     showPageControls: boolean;
 }

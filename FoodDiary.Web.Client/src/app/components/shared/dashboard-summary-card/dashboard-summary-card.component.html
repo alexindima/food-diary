@@ -118,14 +118,14 @@
                     <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
                         <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
                             <span class="dashboard-summary-card__bar-label fd-ui-body-sm">
-                                {{ bar.labelKey ? (bar.labelKey | translate) : bar.label }}
+                                {{ bar.labelText }}
                             </span>
                             <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
                                 {{ bar.current | number: '1.0-0' }}
                                 @if (bar.target > 0) {
                                     / {{ bar.target | number: '1.0-0' }}
                                 }
-                                {{ bar.unitKey ? (bar.unitKey | translate) : bar.unit }}
+                                {{ bar.unitText }}
                             </span>
                         </div>
                         <div class="dashboard-summary-card__bar-track fd-ui-progress-track">

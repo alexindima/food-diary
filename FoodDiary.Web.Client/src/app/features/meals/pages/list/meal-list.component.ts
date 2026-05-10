@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -19,7 +19,6 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
 import { type FormGroupControls } from '../../../../shared/lib/common.data';
@@ -56,7 +55,6 @@ interface FavoriteMealView {
         MealCardComponent,
         AiInputBarComponent,
         FavoritesSectionComponent,
-        LocalizedDatePipe,
     ],
     providers: [MealListFacade],
 })
@@ -66,6 +64,8 @@ export class MealListComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
+    private readonly translateService = inject(TranslateService);
+    private readonly languageVersion = signal(0);
 
     public searchForm: FormGroup<SearchFormGroup>;
     public readonly consumptionData = this.mealListFacade.consumptionData;
@@ -80,7 +80,10 @@ export class MealListComponent {
     );
     public readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
     public readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;
-    public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
+    public readonly groupedConsumptions = computed(() => {
+        this.languageVersion();
+        return this.groupByDate(this.consumptionData.items());
+    });
     public readonly isFavoritesOpen = signal(false);
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasDateFilter = computed(() => {
@@ -102,6 +105,9 @@ export class MealListComponent {
         });
 
         this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
 
         this.searchForm.valueChanges
             .pipe(
@@ -261,19 +267,28 @@ export class MealListComponent {
         return this.searchForm.controls.dateRange.value;
     }
 
-    private groupByDate(items: Meal[]): { date: Date; items: Meal[] }[] {
-        const buckets = new Map<string, { date: Date; items: Meal[] }>();
+    private groupByDate(items: Meal[]): MealDateGroupView[] {
+        const buckets = new Map<string, MealDateGroupView>();
 
         for (const item of items) {
             const date = new Date(item.date);
             const key = this.toLocalDateInputValue(date);
             if (!buckets.has(key)) {
-                buckets.set(key, { date: new Date(date.getFullYear(), date.getMonth(), date.getDate()), items: [] });
+                const groupDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                buckets.set(key, { date: groupDate, dateLabel: this.formatGroupDate(groupDate), items: [] });
             }
             buckets.get(key)!.items.push(item);
         }
 
         return Array.from(buckets.values()).sort((a, b) => b.date.getTime() - a.date.getTime());
+    }
+
+    private formatGroupDate(date: Date): string {
+        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        }).format(date);
     }
 
     private toLocalDateInputValue(date: Date): string {
@@ -289,3 +304,9 @@ interface SearchFormValues {
 }
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;
+
+interface MealDateGroupView {
+    date: Date;
+    dateLabel: string;
+    items: Meal[];
+}

@@ -2,20 +2,16 @@
     @if (layout.isEditingLayout()) {
         <div class="dashboard__edit-overlay"></div>
     }
+    @let headerState = dashboardHeaderState();
     <header class="dashboard__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-page-header-actions">
         <div class="dashboard__title-block fd-stack fd-gap-xxs">
             <h1 class="dashboard__title fd-ui-page-title">
-                @if (isTodaySelected()) {
-                    <span class="dashboard__title-text dashboard__title-text--full">{{ 'DASHBOARD.TITLE' | translate }}</span>
-                    <span class="dashboard__title-text dashboard__title-text--compact">{{ 'DASHBOARD.TITLE_SHORT' | translate }}</span>
-                } @else {
-                    <span class="dashboard__title-text dashboard__title-text--full">
-                        {{ 'DASHBOARD.TITLE_FOR_DATE' | translate: { date: (selectedDate() | localizedDate: 'd MMMM y') } }}
-                    </span>
-                    <span class="dashboard__title-text dashboard__title-text--compact">
-                        {{ 'DASHBOARD.TITLE_FOR_DATE_SHORT' | translate: { date: (selectedDate() | localizedDate: 'd MMMM y') } }}
-                    </span>
-                }
+                <span class="dashboard__title-text dashboard__title-text--full">
+                    {{ headerState.fullTitleKey | translate: headerState.titleParams }}
+                </span>
+                <span class="dashboard__title-text dashboard__title-text--compact">
+                    {{ headerState.compactTitleKey | translate: headerState.titleParams }}
+                </span>
             </h1>
             <p class="dashboard__subtitle fd-ui-page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
         </div>
@@ -26,7 +22,7 @@
                     class="dashboard__date-button"
                     [value]="selectedDate()"
                     [disabled]="layout.isEditingLayout()"
-                    [ariaLabel]="(selectedDate() | localizedDate: 'd MMMM y') ?? ''"
+                    [ariaLabel]="headerState.selectedDateLabel"
                     [hint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
                     (valueChange)="handleDateChange($event)"
                 />
@@ -113,7 +109,7 @@
                             type="info"
                             [title]="'DASHBOARD.SETTINGS.TITLE' | translate"
                             [message]="'DASHBOARD.SETTINGS.HINT' | translate"
-                            [actionLabel]="editSaveActionLabelKey() ? (editSaveActionLabelKey()! | translate) : null"
+                            [actionLabel]="editSaveActionLabel()"
                             (action)="layout.save()"
                         />
                     }
@@ -125,7 +121,7 @@
                                 [attr.role]="blockStates.fasting.role"
                                 [attr.tabindex]="blockStates.fasting.tabIndex"
                                 [attr.aria-pressed]="blockStates.fasting.ariaPressed"
-                                [attr.aria-label]="blockStates.fasting.ariaLabelKey ? (blockStates.fasting.ariaLabelKey | translate) : null"
+                                [attr.aria-label]="blockStates.fasting.ariaLabel"
                                 (click)="handleFastingCardClick()"
                                 (keydown.enter)="handleFastingCardClick()"
                                 (keydown.space)="$event.preventDefault(); handleFastingCardClick()"
@@ -196,12 +192,7 @@
                                 <fd-meals-preview
                                     [attr.inert]="blockStates.meals.inert"
                                     [entries]="mealPreviewEntries()"
-                                    [titleText]="
-                                        mealsState.titleText
-                                            ? (mealsState.titleText.key
-                                              | translate: { date: (mealsState.titleText.date | localizedDate: 'd MMMM y') })
-                                            : null
-                                    "
+                                    [titleText]="mealsState.titleText"
                                     [titleKey]="'DASHBOARD.MEALS_TITLE'"
                                     [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
                                     [emptyKey]="mealsState.emptyKey"
@@ -219,6 +210,7 @@
 
                     <div class="dashboard__column dashboard__column--aside fd-grid fd-gap-lg">
                         @if (layout.shouldRenderBlock('hydration')) {
+                            @let hydrationState = hydrationCardState();
                             <div
                                 class="dashboard__block"
                                 [class.dashboard__block--hidden]="blockStates.hydration.hidden"
@@ -232,8 +224,8 @@
                                     <fd-dashboard-card-shell [attr.inert]="blockStates.hydration.inert">
                                         <fd-hydration-card
                                             class="dashboard__card dashboard__card--hydration"
-                                            [total]="hydration()?.totalMl ?? 0"
-                                            [goal]="hydration()?.goalMl ?? null"
+                                            [total]="hydrationState.total"
+                                            [goal]="hydrationState.goal"
                                             [isLoading]="isHydrationLoading()"
                                             [canAdd]="isTodaySelected()"
                                             (addClick)="addHydration($event)"
@@ -248,6 +240,7 @@
                             </div>
                         }
                         @if (layout.shouldRenderBlock('cycle')) {
+                            @let cycleState = cycleCardState();
                             <div
                                 class="dashboard__block"
                                 [class.dashboard__block--hidden]="blockStates.cycle.hidden"
@@ -261,8 +254,8 @@
                                     <fd-dashboard-card-shell [attr.inert]="blockStates.cycle.inert">
                                         <fd-cycle-summary-card
                                             class="dashboard__card dashboard__card--cycle"
-                                            [startDate]="cycle()?.startDate ?? null"
-                                            [predictions]="cycle()?.predictions ?? null"
+                                            [startDate]="cycleState.startDate"
+                                            [predictions]="cycleState.predictions"
                                             [referenceDate]="selectedDate()"
                                             [isLoading]="isCycleLoading()"
                                             (setupAction)="openCycleTrackingAsync()"
@@ -342,7 +335,7 @@
                                 [attr.role]="blockStates.tdee.role"
                                 [attr.tabindex]="blockStates.tdee.tabIndex"
                                 [attr.aria-pressed]="blockStates.tdee.ariaPressed"
-                                [attr.aria-label]="blockStates.tdee.ariaLabelKey ? (blockStates.tdee.ariaLabelKey | translate) : null"
+                                [attr.aria-label]="blockStates.tdee.ariaLabel"
                                 (click)="handleTdeeCardClick($event)"
                                 (keydown.enter)="handleTdeeCardClick($event)"
                                 (keydown.space)="$event.preventDefault(); handleTdeeCardClick($event)"

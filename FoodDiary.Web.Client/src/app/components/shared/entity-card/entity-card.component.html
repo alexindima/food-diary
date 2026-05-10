@@ -8,16 +8,17 @@
     (keydown.enter)="handleOpen()"
     (keydown.space)="handleOpen(); $event.preventDefault()"
 >
+    @let previewInteraction = previewInteractionState();
     <div
         fdMediaCardMedia
         class="entity-card__thumb fd-place-center"
         [class.entity-card__thumb--has-image]="!!imageUrl() || collageState().hasImages"
         [class.entity-card__thumb--previewable]="hasPreviewImage()"
-        [fdUiHint]="previewInteractionState().hintKey ? (previewInteractionState().hintKey! | translate) : null"
+        [fdUiHint]="previewInteraction.hint"
         [fdUiHintDisabled]="!hasPreviewImage()"
-        [attr.role]="previewInteractionState().role"
-        [attr.tabindex]="previewInteractionState().tabIndex"
-        [attr.aria-label]="previewInteractionState().ariaLabelKey ? (previewInteractionState().ariaLabelKey! | translate) : null"
+        [attr.role]="previewInteraction.role"
+        [attr.tabindex]="previewInteraction.tabIndex"
+        [attr.aria-label]="previewInteraction.ariaLabel"
         (click)="handlePreview($event)"
         (keydown.enter)="handlePreview($event)"
         (keydown.space)="handlePreview($event); $event.preventDefault()"

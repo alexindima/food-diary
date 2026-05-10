@@ -4,7 +4,7 @@
             <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
 
             <div class="consumption-item-select__content">
-                @if (activeTab === 'Product') {
+                @if (activeTab() === 'Product') {
                     <fd-product-list-dialog [embedded]="true" (productSelected)="onProductSelected($event)" />
                 } @else {
                     <fd-recipe-select-dialog
@@ -18,11 +18,7 @@
 
         <div fdUiDialogFooter class="consumption-item-select__footer fd-ui-actions fd-ui-actions--end">
             <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateAction()">
-                {{
-                    activeTab === 'Product'
-                        ? ('PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate)
-                        : ('RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate)
-                }}
+                {{ createActionLabelKey() | translate }}
             </fd-ui-button>
         </div>
     </fd-ui-dialog>
@@ -31,7 +27,7 @@
         <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
 
         <div class="consumption-item-select__content">
-            @if (activeTab === 'Product') {
+            @if (activeTab() === 'Product') {
                 <fd-product-list-dialog [embedded]="true" (productSelected)="onProductSelected($event)" />
             } @else {
                 <fd-recipe-select-dialog

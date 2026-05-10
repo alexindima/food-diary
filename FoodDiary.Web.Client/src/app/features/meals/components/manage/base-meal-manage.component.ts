@@ -152,6 +152,9 @@ export class BaseMealManageComponent {
     public readonly preMealSatietyAriaLabel = signal('');
     public readonly postMealSatietyAriaLabel = signal('');
     public readonly generalFieldErrors = signal<GeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
+    public readonly manageHeaderState = computed(() => ({
+        titleKey: this.consumption() ? 'CONSUMPTION_MANAGE.EDIT_TITLE' : 'CONSUMPTION_MANAGE.ADD_TITLE',
+    }));
     private populatedConsumptionId: string | null = null;
 
     public readonly macroBarState = computed<MacroBarState>(() => {

@@ -113,6 +113,14 @@ export class RecipeManageComponent {
     public readonly nutritionMode = signal<NutritionMode>('auto');
     public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
+    public readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
+        const isEdit = !!this.recipe();
+
+        return {
+            titleKey: isEdit ? 'RECIPE_MANAGE.EDIT_TITLE' : 'RECIPE_MANAGE.ADD_TITLE',
+            submitLabelKey: isEdit ? 'RECIPE_MANAGE.SAVE_BUTTON' : 'RECIPE_MANAGE.ADD_BUTTON',
+        };
+    });
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public nutritionScaleMode: NutritionScaleMode = 'recipe';
     public nutritionScaleModeOptions: FdUiSegmentedToggleOption[] = [];
@@ -751,4 +759,9 @@ export class RecipeManageComponent {
         const upper = value.toString().toUpperCase();
         return upper === RecipeVisibility.Private.toUpperCase() ? RecipeVisibility.Private : RecipeVisibility.Public;
     }
+}
+
+interface RecipeManageHeaderState {
+    titleKey: string;
+    submitLabelKey: string;
 }

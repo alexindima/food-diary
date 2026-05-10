@@ -1,7 +1,7 @@
 <div class="product-manage fd-stack" fdPageContainer>
     <fd-manage-header
         class="product-manage__header"
-        [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
+        [title]="manageHeaderState().titleKey | translate"
         [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
@@ -71,31 +71,17 @@
                                     (click)="onDeleteProductAsync()"
                                 />
                             }
-                            @if (product()) {
-                                <fd-ui-button
-                                    type="submit"
-                                    class="product-manage__action-button"
-                                    appearance="brand-action"
-                                    icon="save"
-                                    [fullWidth]="true"
-                                    [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
-                                    [loading]="isSubmitting()"
-                                >
-                                    {{ 'PRODUCT_MANAGE.SAVE_BUTTON' | translate }}
-                                </fd-ui-button>
-                            } @else {
-                                <fd-ui-button
-                                    type="submit"
-                                    class="product-manage__action-button"
-                                    appearance="brand-action"
-                                    icon="add"
-                                    [fullWidth]="true"
-                                    [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
-                                    [loading]="isSubmitting()"
-                                >
-                                    {{ 'PRODUCT_MANAGE.ADD_BUTTON' | translate }}
-                                </fd-ui-button>
-                            }
+                            <fd-ui-button
+                                type="submit"
+                                class="product-manage__action-button"
+                                appearance="brand-action"
+                                [icon]="manageHeaderState().submitIcon"
+                                [fullWidth]="true"
+                                [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
+                                [loading]="isSubmitting()"
+                            >
+                                {{ manageHeaderState().submitLabelKey | translate }}
+                            </fd-ui-button>
                         </div>
                         @if (globalError()) {
                             <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />

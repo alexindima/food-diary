@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -56,7 +56,10 @@ export class ItemSelectDialogComponent {
             labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB',
         },
     ];
-    public activeTab: 'Product' | 'Recipe' = this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product';
+    public readonly activeTab = signal<'Product' | 'Recipe'>(this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product');
+    public readonly createActionLabelKey = computed(() =>
+        this.activeTab() === 'Product' ? 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' : 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON',
+    );
 
     public onProductSelected(product: Product): void {
         this.completeWith({ type: 'Product', product });
@@ -71,7 +74,7 @@ export class ItemSelectDialogComponent {
     }
 
     public onCreateAction(): void {
-        if (this.activeTab === 'Product') {
+        if (this.activeTab() === 'Product') {
             this.fdDialogService
                 .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                     preset: 'fullscreen',

@@ -1,4 +1,4 @@
-<fd-ui-dialog [title]="data.titleKey | translate" [subtitle]="data.subtitleKey ? (data.subtitleKey | translate) : undefined" size="lg">
+<fd-ui-dialog [title]="data.titleKey | translate" [subtitle]="subtitle()" size="lg">
     <fd-ui-satiety-scale layout="vertical" [ngModel]="selectedValue()" (ngModelChange)="onValueSelected($event)" />
 
     <div fdUiDialogFooter>

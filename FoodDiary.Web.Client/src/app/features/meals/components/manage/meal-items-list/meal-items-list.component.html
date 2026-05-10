@@ -103,8 +103,5 @@
         </div>
     }
 
-    <fd-ui-form-error
-        class="consumption-item__error"
-        [error]="formArray().touched && formArray().errors?.['nonEmptyArray'] ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
-    />
+    <fd-ui-form-error class="consumption-item__error" [error]="arrayError()" />
 </fd-ui-card>

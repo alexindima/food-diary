@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
@@ -46,6 +47,10 @@ export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardComponent {
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly translateService = inject(TranslateService);
+    private readonly languageVersion = signal(0);
+
     public readonly imageUrl = input<string | null | undefined>(null);
     public readonly collageImages = input<ReadonlyArray<EntityCardCollageImage>>([]);
     public readonly imageAlt = input.required<string>();
@@ -103,21 +108,24 @@ export class EntityCardComponent {
     public readonly hasPreviewImage = computed(() =>
         Boolean(this.previewable() && (this.imageUrl()?.trim() || this.collageState().hasImages)),
     );
-    public readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() =>
-        this.hasPreviewImage()
-            ? {
-                  hintKey: 'IMAGE_PREVIEW.OPEN',
-                  role: 'button',
-                  tabIndex: '0',
-                  ariaLabelKey: 'IMAGE_PREVIEW.OPEN',
-              }
-            : {
-                  hintKey: null,
-                  role: null,
-                  tabIndex: null,
-                  ariaLabelKey: null,
-              },
-    );
+    public readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
+        this.languageVersion();
+        const hasPreviewImage = this.hasPreviewImage();
+        const previewLabel = hasPreviewImage ? this.translateService.instant('IMAGE_PREVIEW.OPEN') : null;
+
+        return {
+            hint: previewLabel,
+            role: hasPreviewImage ? 'button' : null,
+            tabIndex: hasPreviewImage ? '0' : null,
+            ariaLabel: previewLabel,
+        };
+    });
+
+    public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
+    }
 
     public handleOpen(): void {
         this.open.emit();
@@ -145,8 +153,8 @@ export class EntityCardComponent {
 }
 
 interface EntityCardPreviewInteractionState {
-    hintKey: string | null;
+    hint: string | null;
     role: string | null;
     tabIndex: string | null;
-    ariaLabelKey: string | null;
+    ariaLabel: string | null;
 }

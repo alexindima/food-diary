@@ -16,7 +16,7 @@
                 [loading]="isSubmitting()"
                 (click)="onSubmitAsync()"
             >
-                {{ (editingCommentId() ? 'COMMON.SAVE' : 'COMMENTS.POST') | translate }}
+                {{ submitLabelKey() | translate }}
             </fd-ui-button>
         </div>
     </div>

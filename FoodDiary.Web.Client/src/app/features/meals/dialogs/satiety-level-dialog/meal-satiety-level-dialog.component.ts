@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -28,6 +28,11 @@ export class MealSatietyLevelDialogComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly selectedValue = signal<number | null>(null);
+    public readonly subtitleKey = computed(() => this.data.subtitleKey ?? null);
+    public readonly subtitle = computed(() => {
+        const key = this.subtitleKey();
+        return key ? this.translateService.instant(key) : undefined;
+    });
 
     public constructor() {
         this.selectedValue.set(this.data.value ?? 3);
