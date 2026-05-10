@@ -8,6 +8,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -16,6 +17,9 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid' | 'error';
+const ERROR_FIELDS = ['password', 'confirmPassword'] as const;
+type ErrorField = (typeof ERROR_FIELDS)[number];
+type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-password-reset',
@@ -45,6 +49,7 @@ export class PasswordResetComponent {
     public readonly isSubmitting = signal(false);
     public readonly errorMessage = signal<string | null>(null);
     public readonly token = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
+    public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
 
     public readonly form = new FormGroup<PasswordResetFormGroup>({
         password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
@@ -59,6 +64,13 @@ export class PasswordResetComponent {
         this.form.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.form.controls.confirmPassword.updateValueAndValidity();
         });
+        const formEvents = (this.form as { events?: Observable<unknown> }).events ?? EMPTY;
+        merge(formEvents, this.form.statusChanges, this.form.valueChanges, this.translateService.onLangChange)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.updateFieldErrors();
+            });
+        this.updateFieldErrors();
     }
 
     public onSubmit(): void {
@@ -102,7 +114,23 @@ export class PasswordResetComponent {
         void this.navigationService.navigateToAuthAsync('login');
     }
 
-    public getControlError(control: AbstractControl | null): string | null {
+    private updateFieldErrors(): void {
+        this.fieldErrors.set(
+            ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
+                errors[field] = this.resolveControlError(this.form.controls[field]);
+                return errors;
+            }, this.createEmptyFieldErrors()),
+        );
+    }
+
+    private createEmptyFieldErrors(): FieldErrors {
+        return {
+            password: null,
+            confirmPassword: null,
+        };
+    }
+
+    private resolveControlError(control: AbstractControl | null): string | null {
         if (!control || !control.invalid) {
             return null;
         }

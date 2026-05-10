@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -7,6 +8,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { UserService } from '../../../../shared/api/user.service';
 import { type FormGroupControls } from '../../../../shared/lib/common.data';
@@ -16,6 +18,10 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
 export interface ChangePasswordDialogData {
     hasPassword?: boolean;
 }
+
+const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
+type ErrorField = (typeof ERROR_FIELDS)[number];
+type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-change-password-dialog',
@@ -36,6 +42,7 @@ export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly data = inject<ChangePasswordDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     public readonly hasPassword = this.data.hasPassword ?? true;
 
@@ -56,6 +63,17 @@ export class ChangePasswordDialogComponent {
 
     public readonly passwordError = signal<string | null>(null);
     public readonly isSubmitting = signal<boolean>(false);
+    public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+
+    public constructor() {
+        const formEvents = (this.form as { events?: Observable<unknown> }).events ?? EMPTY;
+        merge(formEvents, this.form.statusChanges, this.form.valueChanges, this.translateService.onLangChange)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.updateFieldErrors();
+            });
+        this.updateFieldErrors();
+    }
 
     public onCancel(): void {
         if (this.isSubmitting()) {
@@ -67,6 +85,7 @@ export class ChangePasswordDialogComponent {
 
     public onSubmit(): void {
         this.form.markAllAsTouched();
+        this.updateFieldErrors();
         if (this.form.invalid || this.isSubmitting()) {
             return;
         }
@@ -104,13 +123,25 @@ export class ChangePasswordDialogComponent {
         });
     }
 
-    public getControlError(controlName: keyof ChangePasswordFormValues): string | null {
-        const control = this.form.controls[controlName];
-        return this.resolveControlError(control);
-    }
-
     private setPasswordError(key: string): void {
         this.passwordError.set(this.translateService.instant(key));
+    }
+
+    private updateFieldErrors(): void {
+        this.fieldErrors.set(
+            ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
+                errors[field] = this.resolveControlError(this.form.controls[field]);
+                return errors;
+            }, this.createEmptyFieldErrors()),
+        );
+    }
+
+    private createEmptyFieldErrors(): FieldErrors {
+        return {
+            currentPassword: null,
+            newPassword: null,
+            confirmPassword: null,
+        };
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
