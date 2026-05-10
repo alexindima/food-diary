@@ -14,7 +14,11 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 export class LandingStepsComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
 
-    protected readonly stepKeys = ['STEP1', 'STEP2', 'STEP3'] as const;
+    protected readonly steps = ['STEP1', 'STEP2', 'STEP3'].map(key => ({
+        key,
+        titleKey: `LANDING_STEPS.${key}.TITLE`,
+        textKey: `LANDING_STEPS.${key}.TEXT`,
+    }));
 
     public async openAuthAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');

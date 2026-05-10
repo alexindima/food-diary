@@ -6,14 +6,14 @@
             <p class="dietologist-promo__subtitle">{{ 'LANDING_DIETOLOGIST.SUBTITLE' | translate }}</p>
 
             <div class="dietologist-promo__steps">
-                @for (stepKey of workflowSteps; track stepKey; let index = $index) {
+                @for (step of workflowSteps; track step.key; let index = $index) {
                     <article class="dietologist-promo__step">
                         <div class="dietologist-promo__step-index">{{ index + 1 }}</div>
                         <div>
                             <h3 class="dietologist-promo__step-title">
-                                {{ 'LANDING_DIETOLOGIST.STEPS.' + stepKey + '.TITLE' | translate }}
+                                {{ step.titleKey | translate }}
                             </h3>
-                            <p class="dietologist-promo__step-text">{{ 'LANDING_DIETOLOGIST.STEPS.' + stepKey + '.TEXT' | translate }}</p>
+                            <p class="dietologist-promo__step-text">{{ step.textKey | translate }}</p>
                         </div>
                     </article>
                 }
@@ -41,10 +41,10 @@
 
             <div class="dietologist-promo__permission-label">{{ 'LANDING_DIETOLOGIST.CARD.PERMISSIONS' | translate }}</div>
             <div class="dietologist-promo__permission-list">
-                @for (permissionKey of permissionKeys; track permissionKey) {
+                @for (permission of permissions; track permission.key) {
                     <div class="dietologist-promo__permission-chip">
                         <fd-ui-icon name="check_circle"></fd-ui-icon>
-                        <span>{{ 'LANDING_DIETOLOGIST.PERMISSIONS.' + permissionKey | translate }}</span>
+                        <span>{{ permission.labelKey | translate }}</span>
                     </div>
                 }
             </div>

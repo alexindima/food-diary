@@ -14,29 +14,35 @@ export class FeaturesComponent {
         {
             key: 'TRACK',
             icon: 'restaurant_menu',
-            itemKeys: ['LOG_MEALS', 'PRODUCT_LIBRARY', 'RECIPE_FLOW'],
+            itemKeys: this.createItemKeys(['LOG_MEALS', 'PRODUCT_LIBRARY', 'RECIPE_FLOW']),
         },
         {
             key: 'PLAN',
             icon: 'event_note',
-            itemKeys: ['MEAL_PLANS', 'SHOPPING_LISTS', 'GOALS'],
+            itemKeys: this.createItemKeys(['MEAL_PLANS', 'SHOPPING_LISTS', 'GOALS']),
         },
         {
             key: 'PROGRESS',
             icon: 'bar_chart',
-            itemKeys: ['STATISTICS', 'BODY_HISTORY', 'WEEKLY_CHECKINS'],
+            itemKeys: this.createItemKeys(['STATISTICS', 'BODY_HISTORY', 'WEEKLY_CHECKINS']),
         },
         {
             key: 'SPECIAL',
             icon: 'health_and_safety',
-            itemKeys: ['FASTING', 'CYCLE_TRACKING', 'PREMIUM_AI'],
+            itemKeys: this.createItemKeys(['FASTING', 'CYCLE_TRACKING', 'PREMIUM_AI']),
         },
         {
             key: 'MOTIVATION',
             icon: 'school',
-            itemKeys: ['LESSONS', 'GAMIFICATION', 'PROFILE_SYNC'],
+            itemKeys: this.createItemKeys(['LESSONS', 'GAMIFICATION', 'PROFILE_SYNC']),
         },
-    ];
+    ].map(category => ({
+        ...category,
+        labelKey: `FEATURES.CATEGORIES.${category.key}.LABEL`,
+        eyebrowKey: `FEATURES.CATEGORIES.${category.key}.EYEBROW`,
+        titleKey: `FEATURES.CATEGORIES.${category.key}.TITLE`,
+        descriptionKey: `FEATURES.CATEGORIES.${category.key}.DESCRIPTION`,
+    }));
 
     protected readonly activeCategoryKey = signal<string>(this.categories[0].key);
     protected readonly activeCategory = computed(
@@ -46,10 +52,30 @@ export class FeaturesComponent {
     protected selectCategory(categoryKey: string): void {
         this.activeCategoryKey.set(categoryKey);
     }
+
+    private createItemKeys(keys: string[]): FeatureItem[] {
+        return keys.map(key => ({
+            key,
+            kickerKey: `FEATURES.ITEMS.${key}.KICKER`,
+            titleKey: `FEATURES.ITEMS.${key}.TITLE`,
+            descriptionKey: `FEATURES.ITEMS.${key}.DESCRIPTION`,
+        }));
+    }
 }
 
 interface FeatureCategory {
     icon: string;
     key: string;
-    itemKeys: string[];
+    labelKey: string;
+    eyebrowKey: string;
+    titleKey: string;
+    descriptionKey: string;
+    itemKeys: FeatureItem[];
+}
+
+interface FeatureItem {
+    key: string;
+    kickerKey: string;
+    titleKey: string;
+    descriptionKey: string;
 }

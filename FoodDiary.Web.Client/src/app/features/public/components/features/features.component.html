@@ -29,7 +29,7 @@
                     (click)="selectCategory(category.key)"
                 >
                     <fd-ui-icon [name]="category.icon" size="md" />
-                    <span>{{ 'FEATURES.CATEGORIES.' + category.key + '.LABEL' | translate }}</span>
+                    <span>{{ category.labelKey | translate }}</span>
                 </button>
             }
         </div>
@@ -42,18 +42,18 @@
                 [attr.aria-labelledby]="'features-tab-' + category.key"
             >
                 <div class="features__panel-copy">
-                    <span class="features__panel-eyebrow">{{ 'FEATURES.CATEGORIES.' + category.key + '.EYEBROW' | translate }}</span>
-                    <h3 class="features__panel-title">{{ 'FEATURES.CATEGORIES.' + category.key + '.TITLE' | translate }}</h3>
-                    <p class="features__panel-text">{{ 'FEATURES.CATEGORIES.' + category.key + '.DESCRIPTION' | translate }}</p>
+                    <span class="features__panel-eyebrow">{{ category.eyebrowKey | translate }}</span>
+                    <h3 class="features__panel-title">{{ category.titleKey | translate }}</h3>
+                    <p class="features__panel-text">{{ category.descriptionKey | translate }}</p>
                 </div>
 
                 <div class="features__cards fd-grid fd-gap-md" aria-live="polite">
-                    @for (itemKey of category.itemKeys; track itemKey) {
+                    @for (item of category.itemKeys; track item.key) {
                         <article class="features__card fd-stack fd-gap-sm">
                             <div class="features__card-accent"></div>
-                            <p class="features__card-kicker">{{ 'FEATURES.ITEMS.' + itemKey + '.KICKER' | translate }}</p>
-                            <h4 class="features__card-title">{{ 'FEATURES.ITEMS.' + itemKey + '.TITLE' | translate }}</h4>
-                            <p class="features__card-description">{{ 'FEATURES.ITEMS.' + itemKey + '.DESCRIPTION' | translate }}</p>
+                            <p class="features__card-kicker">{{ item.kickerKey | translate }}</p>
+                            <h4 class="features__card-title">{{ item.titleKey | translate }}</h4>
+                            <p class="features__card-description">{{ item.descriptionKey | translate }}</p>
                         </article>
                     }
                 </div>

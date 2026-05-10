@@ -13,8 +13,15 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 export class DietologistPromoComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
 
-    protected readonly workflowSteps = ['INVITE', 'SHARE', 'ADJUST'];
-    protected readonly permissionKeys = ['MEALS', 'STATISTICS', 'WEIGHT', 'GOALS', 'FASTING'];
+    protected readonly workflowSteps = ['INVITE', 'SHARE', 'ADJUST'].map(key => ({
+        key,
+        titleKey: `LANDING_DIETOLOGIST.STEPS.${key}.TITLE`,
+        textKey: `LANDING_DIETOLOGIST.STEPS.${key}.TEXT`,
+    }));
+    protected readonly permissions = ['MEALS', 'STATISTICS', 'WEIGHT', 'GOALS', 'FASTING'].map(key => ({
+        key,
+        labelKey: `LANDING_DIETOLOGIST.PERMISSIONS.${key}`,
+    }));
 
     protected async openAuthAsync(mode: 'login' | 'register'): Promise<void> {
         const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
