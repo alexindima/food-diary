@@ -6,16 +6,16 @@
                     <fd-ui-icon name="hourglass_empty"></fd-ui-icon>
                     <span>{{ 'DASHBOARD.ADVICE_LOADING' | translate }}</span>
                 </div>
-            } @else if (advice()) {
+            } @else if (adviceState(); as advice) {
                 <div class="daily-advice-card__content fd-stack fd-gap-xs">
-                    @if (advice()?.tag) {
+                    @if (advice.tagKey) {
                         <div class="daily-advice-card__chip fd-row fd-gap-xxs fd-ui-overline">
                             <fd-ui-icon name="tips_and_updates"></fd-ui-icon>
-                            <span>{{ 'DASHBOARD.ADVICE_TAGS.' + (advice()?.tag | uppercase) | translate }}</span>
+                            <span>{{ advice.tagKey | translate }}</span>
                         </div>
                     }
                     <p class="daily-advice-card__text fd-ui-body">
-                        {{ advice()?.value }}
+                        {{ advice.value }}
                     </p>
                 </div>
             } @else {

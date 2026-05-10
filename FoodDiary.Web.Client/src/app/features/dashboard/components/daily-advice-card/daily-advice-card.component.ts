@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
@@ -18,12 +18,15 @@ export class DailyAdviceCardComponent {
     public readonly advice = input<DailyAdvice | null>(null);
     public readonly isLoading = input<boolean>(false);
 
-    public tagLabel(): string | null {
-        const tag = this.advice()?.tag;
-        if (!tag) {
+    public readonly adviceState = computed(() => {
+        const advice = this.advice();
+        if (!advice) {
             return null;
         }
 
-        return tag.replace(/_/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase());
-    }
+        return {
+            value: advice.value,
+            tagKey: advice.tag ? `DASHBOARD.ADVICE_TAGS.${advice.tag.toUpperCase()}` : null,
+        };
+    });
 }
