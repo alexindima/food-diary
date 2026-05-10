@@ -140,14 +140,11 @@
                                         icon="lock"
                                         (click)="openChangePasswordDialog()"
                                     >
-                                        {{ (hasPassword() ? 'USER_MANAGE.CHANGE_PASSWORD' : 'USER_MANAGE.SET_PASSWORD') | translate }}
+                                        {{ passwordActionState().buttonLabelKey | translate }}
                                     </fd-ui-button>
                                 </div>
                                 <div class="user-manage__account-row-field user-manage__card-subtitle">
-                                    {{
-                                        (hasPassword() ? 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION' : 'USER_MANAGE.SET_PASSWORD_DESCRIPTION')
-                                            | translate
-                                    }}
+                                    {{ passwordActionState().descriptionKey | translate }}
                                 </div>
                             </div>
                         </div>
@@ -180,11 +177,11 @@
                                 {{ 'USER_MANAGE.BILLING_RETRY' | translate }}
                             </fd-ui-button>
                         </div>
-                    } @else if (billingOverview(); as billing) {
+                    } @else if (billingView(); as billing) {
                         <div class="user-manage__billing-summary fd-stack fd-gap-md">
                             <div class="user-manage__billing-primary fd-row fd-wrap fd-gap-sm fd-justify-between">
                                 <div class="user-manage__billing-plan">{{ billingPlanLabelKey() | translate }}</div>
-                                <fd-ui-status-badge [tone]="billing.isPremium ? 'success' : 'muted'">
+                                <fd-ui-status-badge [tone]="billing.statusTone">
                                     {{ billingStatusLabelKey() | translate }}
                                 </fd-ui-status-badge>
                             </div>
@@ -207,17 +204,12 @@
                                 @if (billingCurrentPeriodEndLabel(); as endDate) {
                                     <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">
-                                            {{
-                                                (billing.cancelAtPeriodEnd
-                                                    ? 'USER_MANAGE.BILLING_ACCESS_ENDS'
-                                                    : 'USER_MANAGE.BILLING_PERIOD_END'
-                                                ) | translate
-                                            }}
+                                            {{ billing.endLabelKey | translate }}
                                         </span>
                                         <strong>{{ endDate }}</strong>
                                     </div>
                                 }
-                                @if (!billing.cancelAtPeriodEnd && billingNextAttemptLabel(); as nextAttemptDate) {
+                                @if (billing.showNextAttempt && billingNextAttemptLabel(); as nextAttemptDate) {
                                     <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_NEXT_CHARGE' | translate }}</span>
                                         <strong>{{ nextAttemptDate }}</strong>
@@ -226,7 +218,7 @@
                             </div>
 
                             <div class="user-manage__billing-actions fd-row fd-wrap fd-gap-xs">
-                                @if (billing.manageBillingAvailable) {
+                                @if (billing.overview.manageBillingAvailable) {
                                     <fd-ui-button
                                         type="button"
                                         variant="secondary"
@@ -238,18 +230,12 @@
                                         {{ 'USER_MANAGE.BILLING_MANAGE' | translate }}
                                     </fd-ui-button>
                                 }
-                                <fd-ui-button
-                                    type="button"
-                                    [variant]="billing.isPremium ? 'secondary' : 'primary'"
-                                    (click)="openPremiumPage()"
-                                >
-                                    {{
-                                        (billing.isPremium ? 'USER_MANAGE.BILLING_VIEW_PREMIUM' : 'USER_MANAGE.BILLING_UPGRADE') | translate
-                                    }}
+                                <fd-ui-button type="button" [variant]="billing.premiumActionVariant" (click)="openPremiumPage()">
+                                    {{ billing.premiumActionLabelKey | translate }}
                                 </fd-ui-button>
                             </div>
 
-                            @if (billing.isPremium && !billing.manageBillingAvailable) {
+                            @if (billing.showManagedSupportNote) {
                                 <div class="user-manage__billing-note fd-ui-body-sm">
                                     {{ 'USER_MANAGE.BILLING_SUPPORT_MANAGED' | translate }}
                                 </div>
@@ -293,7 +279,7 @@
                         <div class="user-manage__card-text fd-stack fd-gap-xxs">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</div>
-                            @if (getNotificationsStatusKey(); as notificationsStatusKey) {
+                            @if (notificationsStatusKey(); as notificationsStatusKey) {
                                 <div class="user-manage__section-status">
                                     {{ notificationsStatusKey | translate }}
                                 </div>
@@ -475,7 +461,7 @@
 
                             <fd-ui-section-state
                                 appearance="compact"
-                                [state]="isLoadingConnectedDevices() ? 'loading' : connectedDevices().length === 0 ? 'empty' : 'content'"
+                                [state]="connectedDevicesSectionState()"
                                 [loadingLabel]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate"
                                 [emptyMessage]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate"
                                 emptyIcon="devices"

@@ -171,6 +171,14 @@ export class UserManageComponent {
     );
     public readonly hasAiConsent = computed(() => !!this.facade.user()?.aiConsentAcceptedAt);
     public readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
+    public readonly passwordActionState = computed<PasswordActionState>(() => {
+        const hasPassword = this.hasPassword();
+
+        return {
+            buttonLabelKey: hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD' : 'USER_MANAGE.SET_PASSWORD',
+            descriptionKey: hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION' : 'USER_MANAGE.SET_PASSWORD_DESCRIPTION',
+        };
+    });
     public readonly pushNotificationsEnabled = computed(() => this.facade.user()?.pushNotificationsEnabled ?? false);
     public readonly fastingPushNotificationsEnabled = computed(() => this.facade.user()?.fastingPushNotificationsEnabled ?? true);
     public readonly socialPushNotificationsEnabled = computed(() => this.facade.user()?.socialPushNotificationsEnabled ?? true);
@@ -244,6 +252,30 @@ export class UserManageComponent {
         }
 
         return 'USER_MANAGE.BILLING_RENEWAL_MANUAL';
+    });
+    public readonly billingView = computed<BillingViewModel | null>(() => {
+        const overview = this.billingOverview();
+        if (!overview) {
+            return null;
+        }
+
+        return {
+            overview,
+            statusTone: overview.isPremium ? 'success' : 'muted',
+            endLabelKey: overview.cancelAtPeriodEnd ? 'USER_MANAGE.BILLING_ACCESS_ENDS' : 'USER_MANAGE.BILLING_PERIOD_END',
+            showNextAttempt: !overview.cancelAtPeriodEnd,
+            premiumActionVariant: overview.isPremium ? 'secondary' : 'primary',
+            premiumActionLabelKey: overview.isPremium ? 'USER_MANAGE.BILLING_VIEW_PREMIUM' : 'USER_MANAGE.BILLING_UPGRADE',
+            showManagedSupportNote: overview.isPremium && !overview.manageBillingAvailable,
+        };
+    });
+    public readonly notificationsStatusKey = computed(() => this.buildNotificationsStatusKey());
+    public readonly connectedDevicesSectionState = computed<'loading' | 'content' | 'empty'>(() => {
+        if (this.isLoadingConnectedDevices()) {
+            return 'loading';
+        }
+
+        return this.connectedDevices().length === 0 ? 'empty' : 'content';
     });
     public readonly pushNotificationsAccountStatusKey = computed(() =>
         this.pushNotificationsEnabled()
@@ -875,6 +907,10 @@ export class UserManageComponent {
         return Number.isInteger(value) ? `${value}` : value.toFixed(1);
     }
 
+    public getNotificationsStatusKey(): string | null {
+        return this.notificationsStatusKey();
+    }
+
     private updateProfileStatus(): void {
         this.profileStatus.set(this.buildProfileStatus());
     }
@@ -898,7 +934,7 @@ export class UserManageComponent {
         return { key: 'USER_MANAGE.PROFILE_STATUS_SAVED', tone: 'success' };
     }
 
-    public getNotificationsStatusKey(): string | null {
+    private buildNotificationsStatusKey(): string | null {
         if (this.isSchedulingTestNotification()) {
             return 'USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING';
         }
@@ -1409,4 +1445,19 @@ interface ConnectedDeviceViewModel {
     label: string;
     meta: string;
     isCurrent: boolean;
+}
+
+interface PasswordActionState {
+    buttonLabelKey: string;
+    descriptionKey: string;
+}
+
+interface BillingViewModel {
+    overview: BillingOverview;
+    statusTone: 'success' | 'muted';
+    endLabelKey: string;
+    showNextAttempt: boolean;
+    premiumActionVariant: 'secondary' | 'primary';
+    premiumActionLabelKey: string;
+    showManagedSupportNote: boolean;
 }

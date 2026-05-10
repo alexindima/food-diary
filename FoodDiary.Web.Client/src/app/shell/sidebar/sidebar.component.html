@@ -108,7 +108,7 @@
                 <div class="sidebar__user-meta fd-stack">
                     <div class="sidebar__user-name fd-ui-action-text">{{ user.username || user.email }}</div>
                     <div class="sidebar__user-plan fd-ui-caption">
-                        {{ (isPremium() ? 'SIDEBAR.PLAN_PRO' : 'SIDEBAR.PLAN_FREE') | translate }}
+                        {{ userPlanLabelKey() | translate }}
                     </div>
                 </div>
                 <fd-ui-icon class="sidebar__user-arrow" name="expand_less" [class.is-open]="isUserMenuOpen()"></fd-ui-icon>

@@ -3,6 +3,7 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
     effect,
     type ElementRef,
@@ -116,6 +117,7 @@ export class AuthComponent {
     public readonly loginFieldErrors = signal<LoginFieldErrors>(this.createEmptyLoginFieldErrors());
     public readonly registerFieldErrors = signal<RegisterFieldErrors>(this.createEmptyRegisterFieldErrors());
     public readonly passwordResetFieldErrors = signal<PasswordResetFieldErrors>(this.createEmptyPasswordResetFieldErrors());
+    public readonly loginSubmitLabelKey = computed(() => (this.isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN'));
     private passwordResetCooldownTimerId: number | null = null;
     private loginAutofillCheckTimerIds: number[] = [];
     private hasLoginNativeInteraction = false;

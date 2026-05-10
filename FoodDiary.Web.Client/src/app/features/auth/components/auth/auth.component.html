@@ -114,7 +114,7 @@
                             [loading]="isSubmitting()"
                             [fullWidth]="true"
                         >
-                            {{ (isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN') | translate }}
+                            {{ loginSubmitLabelKey() | translate }}
                         </fd-ui-button>
                         <fd-ui-form-error [error]="globalError()" />
                         @if (showRestoreAction()) {

@@ -112,6 +112,11 @@ export class FastingTimerCardComponent {
     protected readonly isDashboardLayout = computed(() => this.layout() === 'dashboard');
     protected readonly isSetupLayout = computed(() => this.layout() === 'page' && !this.viewState().isActive);
     protected readonly isPageSummaryLayout = computed(() => this.layout() === 'page' && this.viewState().isActive);
+    protected readonly cardChrome = computed<FastingTimerCardChrome>(() => ({
+        density: this.isDashboardLayout() || this.isPageSummaryLayout() ? 'compact' : 'default',
+        titleKey: this.layout() === 'page' ? 'FASTING.TITLE' : null,
+        showPageControls: this.layout() === 'page',
+    }));
     protected readonly isEatingPhase = computed(() => {
         const { occurrenceKind } = this.viewState();
         return occurrenceKind === 'EatDay' || occurrenceKind === 'EatingWindow';
@@ -220,4 +225,10 @@ export class FastingTimerCardComponent {
         clearInterval(this.timerInterval);
         this.timerInterval = null;
     }
+}
+
+interface FastingTimerCardChrome {
+    density: 'compact' | 'default';
+    titleKey: string | null;
+    showPageControls: boolean;
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,6 +47,14 @@ export class ExplorePageComponent {
 
     public readonly searchControl = new FormControl('');
     public readonly sortBy = signal<'newest' | 'popular'>('newest');
+    public readonly sortActions = computed<ExploreSortAction[]>(() => {
+        const selectedSort = this.sortBy();
+
+        return [
+            { value: 'newest', labelKey: 'EXPLORE.SORT_NEWEST', variant: selectedSort === 'newest' ? 'primary' : 'outline' },
+            { value: 'popular', labelKey: 'EXPLORE.SORT_POPULAR', variant: selectedSort === 'popular' ? 'primary' : 'outline' },
+        ];
+    });
     public readonly recipeData = new PagedData<ExploreRecipe>();
     public readonly currentPageIndex = signal(0);
     public readonly pageSize = 20;
@@ -101,4 +109,10 @@ export class ExplorePageComponent {
                 this.recipeData.setData(data);
             });
     }
+}
+
+interface ExploreSortAction {
+    value: 'newest' | 'popular';
+    labelKey: string;
+    variant: 'primary' | 'outline';
 }

@@ -135,6 +135,7 @@ export class SidebarComponent {
 
         return 'SIDEBAR.STATUS_USER';
     });
+    protected readonly userPlanLabelKey = computed(() => (this.isPremium() ? 'SIDEBAR.PLAN_PRO' : 'SIDEBAR.PLAN_FREE'));
     protected readonly openDesktopSection = signal<DesktopSectionId>('food');
     protected readonly isUserMenuOpen = signal(false);
     protected readonly mobileSheet = signal<MobileSheetId>(null);

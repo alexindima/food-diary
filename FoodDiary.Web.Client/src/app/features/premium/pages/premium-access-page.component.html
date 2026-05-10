@@ -17,7 +17,7 @@
         ></fd-notice-banner>
     }
 
-    @if (overview()?.cancelAtPeriodEnd) {
+    @if (overviewCopyState().showCancelAtPeriodEndBanner) {
         <fd-notice-banner
             type="warning"
             [title]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_TITLE' | translate"
@@ -40,7 +40,7 @@
             <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
                 <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
                 <p class="premium-access-page__text fd-ui-body">
-                    {{ (isPremium() ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE') | translate }}
+                    {{ overviewCopyState().stateLabelKey | translate }}
                 </p>
             </div>
 
@@ -77,7 +77,7 @@
 
             @if (currentPeriodEndLabel(); as currentPeriodEnd) {
                 <p class="premium-access-page__meta fd-ui-body-sm">
-                    {{ (overview.cancelAtPeriodEnd ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON') | translate }}
+                    {{ overviewCopyState().periodLabelKey | translate }}
                     <strong>{{ currentPeriodEnd }}</strong>
                 </p>
             }

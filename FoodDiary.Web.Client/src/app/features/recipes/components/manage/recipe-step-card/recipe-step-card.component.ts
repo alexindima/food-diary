@@ -77,6 +77,7 @@ export class RecipeStepCardComponent {
         this.currentLanguage();
         return this.resolveControlError(this.stepFormGroup().controls.description);
     });
+    public readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
     public readonly ingredientRows = computed<RecipeIngredientRowView[]>(() => {
         this.formRevision();
         this.currentLanguage();
@@ -90,6 +91,8 @@ export class RecipeStepCardComponent {
                 index,
                 prefixIcon: nestedRecipeId ? 'menu_book' : food ? 'restaurant' : 'search',
                 amountLabel: this.resolveIngredientAmountLabel(Boolean(nestedRecipeId), unitKey),
+                foodNameError: this.resolveControlError(ingredient.controls.foodName),
+                amountError: this.resolveControlError(ingredient.controls.amount),
             };
         });
     });
@@ -207,4 +210,6 @@ interface RecipeIngredientRowView {
     index: number;
     prefixIcon: 'menu_book' | 'restaurant' | 'search';
     amountLabel: string;
+    foodNameError: string | null;
+    amountError: string | null;
 }

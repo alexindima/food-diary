@@ -96,6 +96,10 @@ export class CycleTrackingPageComponent {
         return this.days().map(day => ({
             day,
             dateLabel: this.formatDate(day.date, { day: 'numeric', month: 'short', year: 'numeric' }),
+            accentColor: day.isPeriod
+                ? 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))'
+                : 'var(--fd-color-sky-500)',
+            badgeLabelKey: day.isPeriod ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_FOLLICULAR',
         }));
     });
 
@@ -150,4 +154,6 @@ interface CyclePredictionViewModel {
 interface CycleDayViewModel {
     day: CycleDay;
     dateLabel: string;
+    accentColor: string;
+    badgeLabelKey: string;
 }

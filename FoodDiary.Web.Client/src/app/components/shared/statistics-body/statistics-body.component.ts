@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { type ChartConfiguration } from 'chart.js';
 import { FdUiSectionStateComponent } from 'fd-ui-kit';
@@ -28,6 +28,17 @@ export class StatisticsBodyComponent {
 
     public readonly selectedTabChange = output<string>();
     public readonly retry = output<void>();
+    public readonly sectionState = computed<'loading' | 'error' | 'content' | 'empty'>(() => {
+        if (this.isLoading()) {
+            return 'loading';
+        }
+
+        if (this.hasLoadError()) {
+            return 'error';
+        }
+
+        return this.hasBodyData() ? 'content' : 'empty';
+    });
 
     public onTabChange(value: string): void {
         this.selectedTabChange.emit(value);

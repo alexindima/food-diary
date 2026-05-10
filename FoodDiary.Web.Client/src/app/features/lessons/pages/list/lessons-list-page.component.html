@@ -15,21 +15,8 @@
     </header>
 
     <div class="lessons-list__filters fd-row fd-gap-xs fd-wrap">
-        <fd-ui-button
-            variant="secondary"
-            [fill]="facade.categoryFilter() === null ? 'solid' : 'outline'"
-            size="sm"
-            (click)="filterByCategory(null)"
-        >
-            {{ 'LESSONS.FILTER_ALL' | translate }}
-        </fd-ui-button>
-        @for (cat of categories; track cat.value) {
-            <fd-ui-button
-                variant="secondary"
-                [fill]="facade.categoryFilter() === cat.value ? 'solid' : 'outline'"
-                size="sm"
-                (click)="filterByCategory(cat.value)"
-            >
+        @for (cat of categoryFilterOptions(); track cat.value) {
+            <fd-ui-button variant="secondary" [fill]="cat.fill" size="sm" (click)="filterByCategory(cat.value)">
                 {{ cat.labelKey | translate }}
             </fd-ui-button>
         }

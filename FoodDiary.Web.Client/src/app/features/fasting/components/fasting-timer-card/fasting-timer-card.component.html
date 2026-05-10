@@ -1,8 +1,9 @@
+@let chrome = cardChrome();
 <fd-ui-card
     class="fasting-timer-card"
     [class.fasting-timer-card--setup]="isSetupLayout()"
-    [density]="isDashboardLayout() || isPageSummaryLayout() ? 'compact' : 'default'"
-    [title]="layout() === 'page' ? ('FASTING.TITLE' | translate) : ''"
+    [density]="chrome.density"
+    [title]="chrome.titleKey ? (chrome.titleKey | translate) : ''"
 >
     <div
         class="fasting-timer-card__layout"
@@ -31,7 +32,7 @@
             }
         }
 
-        @if (layout() === 'page') {
+        @if (chrome.showPageControls) {
             <div
                 class="fasting-timer-card__controls-slot"
                 [class.fasting-timer-card__controls-slot--page-summary]="isPageSummaryLayout()"

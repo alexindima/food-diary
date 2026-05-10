@@ -82,6 +82,15 @@ export class PremiumAccessPageComponent {
             statusLabelKey: this.getStatusLabelKey(overview?.subscriptionStatus ?? null),
         };
     });
+    public readonly overviewCopyState = computed<PremiumOverviewCopyState>(() => {
+        const overview = this.overview();
+
+        return {
+            stateLabelKey: this.isPremium() ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
+            periodLabelKey: overview?.cancelAtPeriodEnd ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
+            showCancelAtPeriodEndBanner: overview?.cancelAtPeriodEnd ?? false,
+        };
+    });
     public readonly currentPeriodEndLabel = computed(() => {
         this.languageVersion();
         return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
@@ -334,6 +343,12 @@ export class PremiumAccessPageComponent {
 interface PremiumOverviewBadgesViewModel {
     planLabelKey: string | null;
     statusLabelKey: string;
+}
+
+interface PremiumOverviewCopyState {
+    stateLabelKey: string;
+    periodLabelKey: string;
+    showCancelAtPeriodEndBanner: boolean;
 }
 
 interface PremiumPlanCardViewModel {

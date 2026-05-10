@@ -33,7 +33,22 @@ import { DIET_TYPES, type DietType, type MealPlanSummary } from '../../models/me
 export class MealPlansListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(MealPlanFacade);
-    public readonly dietTypes = DIET_TYPES;
+    private readonly dietTypeDefinitions: MealPlanDietFilterViewModel[] = [
+        { value: null, labelKey: 'MEAL_PLANS.FILTER_ALL', fill: 'outline' },
+        ...DIET_TYPES.map(type => ({
+            value: type.value,
+            labelKey: type.labelKey,
+            fill: 'outline' as const,
+        })),
+    ];
+    public readonly dietFilterOptions = computed<MealPlanDietFilterViewModel[]>(() => {
+        const selectedType = this.facade.dietTypeFilter();
+
+        return this.dietTypeDefinitions.map(type => ({
+            ...type,
+            fill: selectedType === type.value ? 'solid' : 'outline',
+        }));
+    });
     public readonly planCards = computed<MealPlanCardViewModel[]>(() =>
         this.facade.plans().map(plan => ({
             ...plan,
@@ -56,4 +71,10 @@ export class MealPlansListPageComponent {
 
 interface MealPlanCardViewModel extends MealPlanSummary {
     dietTypeKey: string;
+}
+
+interface MealPlanDietFilterViewModel {
+    value: DietType | null;
+    labelKey: string;
+    fill: 'solid' | 'outline';
 }

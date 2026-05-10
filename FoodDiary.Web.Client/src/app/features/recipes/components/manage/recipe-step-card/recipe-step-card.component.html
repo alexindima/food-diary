@@ -38,7 +38,7 @@
                     type="button"
                     variant="secondary"
                     fill="text"
-                    [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
+                    [icon]="expandedIcon()"
                     [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"
@@ -93,35 +93,6 @@
                     {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
                 </div>
                 @for (row of ingredientRows(); track row.index; let firstIngredient = $first) {
-                    @let ingredient = ingredients.controls[row.index];
-                    @let foodNameControl = ingredient.controls.foodName;
-                    @let foodNameErrors = foodNameControl.errors;
-                    @let foodNameErrorKey =
-                        !foodNameControl.touched && !foodNameControl.dirty
-                            ? null
-                            : foodNameErrors?.['required']
-                              ? 'FORM_ERRORS.REQUIRED'
-                              : foodNameErrors?.['min']
-                                ? 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO'
-                                : foodNameErrors?.['nonEmptyArray']
-                                  ? 'FORM_ERRORS.NON_EMPTY_ARRAY'
-                                  : foodNameErrors
-                                    ? 'FORM_ERRORS.UNKNOWN'
-                                    : null;
-                    @let amountControl = ingredient.controls.amount;
-                    @let amountErrors = amountControl.errors;
-                    @let amountErrorKey =
-                        !amountControl.touched && !amountControl.dirty
-                            ? null
-                            : amountErrors?.['required']
-                              ? 'FORM_ERRORS.REQUIRED'
-                              : amountErrors?.['min']
-                                ? 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO'
-                                : amountErrors?.['nonEmptyArray']
-                                  ? 'FORM_ERRORS.NON_EMPTY_ARRAY'
-                                  : amountErrors
-                                    ? 'FORM_ERRORS.UNKNOWN'
-                                    : null;
                     <div class="recipe-ingredient fd-row fd-gap-md" [formGroupName]="row.index">
                         <input type="hidden" formControlName="food" />
                         <input type="hidden" formControlName="nestedRecipeId" />
@@ -135,7 +106,7 @@
                             [prefixIcon]="row.prefixIcon"
                             [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
                             (click)="onProductSelectClick(row.index)"
-                            [error]="foodNameErrorKey ? (foodNameErrorKey | translate: { min: foodNameErrors?.['min']?.min ?? 0 }) : null"
+                            [error]="row.foodNameError"
                         />
 
                         <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">
@@ -145,7 +116,7 @@
                                 type="number"
                                 [step]="0.01"
                                 [label]="row.amountLabel"
-                                [error]="amountErrorKey ? (amountErrorKey | translate: { min: amountErrors?.['min']?.min ?? 0 }) : null"
+                                [error]="row.amountError"
                             />
                             <fd-ui-button
                                 type="button"

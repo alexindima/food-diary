@@ -5,21 +5,8 @@
     </header>
 
     <div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs">
-        <fd-ui-button
-            variant="secondary"
-            [fill]="facade.dietTypeFilter() === null ? 'solid' : 'outline'"
-            size="sm"
-            (click)="filterByDiet(null)"
-        >
-            {{ 'MEAL_PLANS.FILTER_ALL' | translate }}
-        </fd-ui-button>
-        @for (dt of dietTypes; track dt.value) {
-            <fd-ui-button
-                variant="secondary"
-                [fill]="facade.dietTypeFilter() === dt.value ? 'solid' : 'outline'"
-                size="sm"
-                (click)="filterByDiet(dt.value)"
-            >
+        @for (dt of dietFilterOptions(); track dt.value) {
+            <fd-ui-button variant="secondary" [fill]="dt.fill" size="sm" (click)="filterByDiet(dt.value)">
                 {{ dt.labelKey | translate }}
             </fd-ui-button>
         }

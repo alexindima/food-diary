@@ -9,12 +9,11 @@
                 type="text"
             />
             <div class="explore-sort fd-row fd-gap-xs">
-                <fd-ui-button [variant]="sortBy() === 'newest' ? 'primary' : 'outline'" size="sm" (click)="onSortChange('newest')">
-                    {{ 'EXPLORE.SORT_NEWEST' | translate }}
-                </fd-ui-button>
-                <fd-ui-button [variant]="sortBy() === 'popular' ? 'primary' : 'outline'" size="sm" (click)="onSortChange('popular')">
-                    {{ 'EXPLORE.SORT_POPULAR' | translate }}
-                </fd-ui-button>
+                @for (action of sortActions(); track action.value) {
+                    <fd-ui-button [variant]="action.variant" size="sm" (click)="onSortChange(action.value)">
+                        {{ action.labelKey | translate }}
+                    </fd-ui-button>
+                }
             </div>
         </div>
 

@@ -190,11 +190,7 @@
                                 <fd-ui-accent-surface
                                     class="cycle-tracking__day"
                                     accentSide="left"
-                                    [accentColor]="
-                                        item.day.isPeriod
-                                            ? 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))'
-                                            : 'var(--fd-color-sky-500)'
-                                    "
+                                    [accentColor]="item.accentColor"
                                     [tinted]="true"
                                 >
                                     <div class="cycle-tracking__day-header fd-row fd-justify-between fd-gap-card-header">
@@ -205,11 +201,7 @@
                                             class="cycle-tracking__day-badge fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text"
                                             [class.cycle-tracking__day-badge--period]="item.day.isPeriod"
                                         >
-                                            {{
-                                                item.day.isPeriod
-                                                    ? ('CYCLE_TRACKING.BADGE_PERIOD' | translate)
-                                                    : ('CYCLE_TRACKING.BADGE_FOLLICULAR' | translate)
-                                            }}
+                                            {{ item.badgeLabelKey | translate }}
                                         </div>
                                     </div>
                                     <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">

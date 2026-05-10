@@ -13,8 +13,9 @@ import { LessonFacade } from '../../lib/lesson.facade';
 import { LESSON_CATEGORIES, type LessonSummary } from '../../models/lesson.data';
 
 interface LessonCategoryOption {
-    value: string;
+    value: string | null;
     labelKey: string;
+    fill: 'solid' | 'outline';
 }
 
 interface LessonListItem extends LessonSummary {
@@ -43,10 +44,13 @@ interface LessonListItem extends LessonSummary {
 export class LessonsListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(LessonFacade);
-    public readonly categories: LessonCategoryOption[] = LESSON_CATEGORIES.map(category => ({
-        value: category,
-        labelKey: `LESSONS.CATEGORY.${category}`,
-    }));
+    private readonly categoryDefinitions = [
+        { value: null, labelKey: 'LESSONS.FILTER_ALL' },
+        ...LESSON_CATEGORIES.map(category => ({
+            value: category,
+            labelKey: `LESSONS.CATEGORY.${category}`,
+        })),
+    ];
 
     public constructor() {
         this.facade.loadLessons();
@@ -59,6 +63,14 @@ export class LessonsListPageComponent {
         }
         const read = all.filter(l => l.isRead).length;
         return { read, total: all.length, percent: Math.round((read / all.length) * 100) };
+    });
+    public readonly categoryFilterOptions = computed<LessonCategoryOption[]>(() => {
+        const selectedCategory = this.facade.categoryFilter();
+
+        return this.categoryDefinitions.map(category => ({
+            ...category,
+            fill: selectedCategory === category.value ? 'solid' : 'outline',
+        }));
     });
     public readonly lessons = computed<LessonListItem[]>(() =>
         this.facade.lessons().map(lesson => ({
