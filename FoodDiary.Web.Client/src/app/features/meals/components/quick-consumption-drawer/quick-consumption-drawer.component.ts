@@ -1,7 +1,7 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { type FormGroup } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -20,6 +20,15 @@ import {
     type MealManualItemDialogData,
 } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog.component';
 
+interface QuickConsumptionItemView {
+    item: QuickMealItem;
+    imageUrl: string;
+    name: string;
+    amount: number;
+    unitKey: string;
+    trackingKey: string;
+}
+
 @Component({
     selector: 'fd-quick-consumption-drawer',
     standalone: true,
@@ -32,7 +41,6 @@ export class QuickConsumptionDrawerComponent {
     private static nextId = 0;
 
     private readonly quickService = inject(QuickMealService);
-    private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
@@ -50,6 +58,16 @@ export class QuickConsumptionDrawerComponent {
 
     public readonly shouldRender = computed(() => this.forceShow() || this.hasItems());
     public readonly isInline = computed(() => this.layout() === 'inline');
+    public readonly itemViews = computed<QuickConsumptionItemView[]>(() =>
+        this.items().map(item => ({
+            item,
+            imageUrl: this.imageFor(item),
+            name: this.itemName(item),
+            amount: item.amount,
+            unitKey: this.unitKeyFor(item),
+            trackingKey: `${item.key}-${item.flashId ?? 0}`,
+        })),
+    );
 
     public constructor() {
         let hadItems = this.hasItems();
@@ -66,7 +84,7 @@ export class QuickConsumptionDrawerComponent {
         });
     }
 
-    public imageFor(item: QuickMealItem): string {
+    private imageFor(item: QuickMealItem): string {
         if (item.type === 'product' && item.product) {
             const type = (item.product.productType as ProductType | undefined) ?? ProductType.Unknown;
             return resolveProductImageUrl(item.product.imageUrl ?? undefined, type) ?? this.fallbackImage;
@@ -79,18 +97,16 @@ export class QuickConsumptionDrawerComponent {
         return this.fallbackImage;
     }
 
-    public itemName(item: QuickMealItem): string {
+    private itemName(item: QuickMealItem): string {
         return item.type === 'product' ? (item.product?.name ?? '') : (item.recipe?.name ?? '');
     }
 
-    public removeItemAriaLabel(item: QuickMealItem): string {
-        return this.translateService.instant('QUICK_CONSUMPTION.REMOVE_ITEM_NAMED', {
-            name: this.itemName(item),
-        });
-    }
+    private unitKeyFor(item: QuickMealItem): string {
+        if (item.type === 'product') {
+            return `GENERAL.UNITS.${item.product?.baseUnit ?? 'G'}`;
+        }
 
-    public editItemAriaLabel(item: QuickMealItem): string {
-        return this.translateService.instant('CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT') + ': ' + this.itemName(item);
+        return 'QUICK_CONSUMPTION.SERVINGS';
     }
 
     public updateDate(value: string): void {

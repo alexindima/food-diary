@@ -43,27 +43,22 @@
         >
             @if (hasItems()) {
                 <div class="quick-consumption__list fd-grid fd-gap-xs">
-                    @for (item of items(); track item.key + '-' + (item.flashId ?? 0)) {
+                    @for (itemView of itemViews(); track itemView.trackingKey) {
                         <div
                             class="quick-consumption__item fd-grid fd-gap-xs fd-align-center"
-                            [class.quick-consumption__item--flash]="!!item.flashId"
+                            [class.quick-consumption__item--flash]="!!itemView.item.flashId"
                         >
                             <div class="quick-consumption__thumb fd-place-center">
-                                <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
+                                <img [ngSrc]="itemView.imageUrl" width="44" height="44" alt="" loading="lazy" />
                             </div>
                             <div class="quick-consumption__info fd-grid fd-gap-xxs">
                                 <div class="quick-consumption__name fd-ui-action-text">
-                                    {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
+                                    {{ itemView.name }}
                                 </div>
                                 <div class="quick-consumption__meta fd-ui-body-sm">
                                     {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
-                                    @if (item.type === 'product') {
-                                        {{ item.amount | number: '1.0-1' }}
-                                        {{ 'GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G') | translate }}
-                                    } @else {
-                                        {{ item.amount | number: '1.0-1' }}
-                                        {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
-                                    }
+                                    {{ itemView.amount | number: '1.0-1' }}
+                                    {{ itemView.unitKey | translate }}
                                 </div>
                             </div>
                             <div class="quick-consumption__item-actions fd-row fd-gap-xxs">
@@ -73,8 +68,8 @@
                                     fill="text"
                                     icon="edit"
                                     [fdUiHint]="'CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate"
-                                    [ariaLabel]="editItemAriaLabel(item)"
-                                    (click)="edit(item)"
+                                    [ariaLabel]="('CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT' | translate) + ': ' + itemView.name"
+                                    (click)="edit(itemView.item)"
                                 />
                                 <fd-ui-button
                                     class="quick-consumption__item-action quick-consumption__item-action--danger"
@@ -82,8 +77,8 @@
                                     fill="text"
                                     icon="delete"
                                     [fdUiHint]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
-                                    [ariaLabel]="removeItemAriaLabel(item)"
-                                    (click)="remove(item.key)"
+                                    [ariaLabel]="'QUICK_CONSUMPTION.REMOVE_ITEM_NAMED' | translate: { name: itemView.name }"
+                                    (click)="remove(itemView.item.key)"
                                 />
                             </div>
                         </div>
