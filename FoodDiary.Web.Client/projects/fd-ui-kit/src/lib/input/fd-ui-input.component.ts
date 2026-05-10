@@ -1,6 +1,6 @@
 ﻿import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, forwardRef, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -21,7 +21,7 @@ export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiInputComponent => FdUiInputComponent),
+            useExisting: FdUiInputComponent,
             multi: true,
         },
     ],

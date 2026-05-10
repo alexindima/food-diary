@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, model, signal } from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 
@@ -28,14 +28,11 @@ export class FdUiCalendarComponent {
     private readonly today = this.stripTime(new Date());
     private readonly activeDate = signal<Date>(this.today);
 
-    public readonly value = input<Date | null>(null);
-    public readonly displayMonth = input<Date | null>(null);
+    public readonly value = model<Date | null>(null);
+    public readonly displayMonth = model<Date | null>(null);
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
     public readonly weekStartsOn = input<0 | 1>(1);
-
-    public readonly valueChange = output<Date>();
-    public readonly displayMonthChange = output<Date>();
 
     protected readonly visibleMonth = computed(() => {
         const month = this.displayMonth() ?? this.value() ?? this.activeDate();
@@ -93,7 +90,7 @@ export class FdUiCalendarComponent {
 
         const normalized = this.stripTime(date);
         this.activeDate.set(normalized);
-        this.valueChange.emit(normalized);
+        this.value.set(normalized);
     }
 
     protected showPreviousMonth(): void {
@@ -146,7 +143,7 @@ export class FdUiCalendarComponent {
         this.activeDate.set(normalized);
 
         if (normalized.getMonth() !== this.visibleMonth().getMonth() || normalized.getFullYear() !== this.visibleMonth().getFullYear()) {
-            this.displayMonthChange.emit(this.startOfMonth(normalized));
+            this.displayMonth.set(this.startOfMonth(normalized));
         }
 
         this.focusCell(normalized);
@@ -154,7 +151,7 @@ export class FdUiCalendarComponent {
 
     private changeMonth(offset: number): void {
         const target = this.startOfMonth(this.addMonths(this.visibleMonth(), offset));
-        this.displayMonthChange.emit(target);
+        this.displayMonth.set(target);
         this.focusCell(this.activeDate());
     }
 

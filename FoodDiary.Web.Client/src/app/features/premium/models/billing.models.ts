@@ -1,5 +1,5 @@
 export type BillingPlan = 'monthly' | 'yearly';
-export type BillingProvider = 'Paddle' | 'YooKassa' | 'Stripe' | string;
+export type BillingProvider = string;
 
 export interface BillingOverview {
     isPremium: boolean;

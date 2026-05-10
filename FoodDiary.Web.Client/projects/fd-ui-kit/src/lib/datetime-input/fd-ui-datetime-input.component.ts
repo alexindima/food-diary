@@ -5,7 +5,6 @@ import {
     computed,
     DestroyRef,
     ElementRef,
-    forwardRef,
     inject,
     input,
     signal,
@@ -31,7 +30,7 @@ let uniqueId = 0;
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiDatetimeInputComponent => FdUiDatetimeInputComponent),
+            useExisting: FdUiDatetimeInputComponent,
             multi: true,
         },
     ],

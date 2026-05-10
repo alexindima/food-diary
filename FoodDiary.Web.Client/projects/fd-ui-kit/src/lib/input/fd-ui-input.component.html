@@ -39,7 +39,7 @@
             [attr.aria-describedby]="error() ? id() + '-error' : null"
             [attr.aria-invalid]="error() ? 'true' : null"
             (animationstart)="onAnimationStart($event, control.value)"
-            (input)="onInput($any($event.target).value)"
+            (input)="onInput(control.value)"
             (focus)="onFocus()"
             (blur)="onBlur()"
         />

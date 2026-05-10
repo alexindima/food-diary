@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, input, model, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, ViewEncapsulation } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 let nextId = 0;
@@ -14,7 +14,7 @@ let nextId = 0;
         {
             provide: NG_VALUE_ACCESSOR,
             multi: true,
-            useExisting: forwardRef(() => FdUiCheckboxComponent),
+            useExisting: FdUiCheckboxComponent,
         },
     ],
 })

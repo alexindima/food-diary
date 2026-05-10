@@ -157,11 +157,19 @@ export class QuickConsumptionDrawerComponent {
         this.isCollapsed.update(value => !value);
     }
 
-    public updatePreMealSatietyLevel(value: number): void {
+    public updatePreMealSatietyLevel(value: number | null): void {
+        if (value === null) {
+            return;
+        }
+
         this.quickService.updateDetails({ preMealSatietyLevel: value });
     }
 
-    public updatePostMealSatietyLevel(value: number): void {
+    public updatePostMealSatietyLevel(value: number | null): void {
+        if (value === null) {
+            return;
+        }
+
         this.quickService.updateDetails({ postMealSatietyLevel: value });
     }
 

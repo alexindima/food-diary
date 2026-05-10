@@ -3,7 +3,7 @@ export type AdminMailInboxMessageSummary = {
     fromAddress?: string | null;
     toRecipients: string[];
     subject?: string | null;
-    category: 'general' | 'dmarc-report' | string;
+    category: string;
     status: string;
     receivedAtUtc: string;
 };

@@ -5,7 +5,6 @@ import {
     Component,
     computed,
     ElementRef,
-    forwardRef,
     inject,
     input,
     LOCALE_ID,
@@ -31,7 +30,7 @@ let uniqueId = 0;
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiDateInputComponent => FdUiDateInputComponent),
+            useExisting: FdUiDateInputComponent,
             multi: true,
         },
     ],
@@ -116,7 +115,11 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         this.onTouched();
     }
 
-    protected onDateSelect(value: Date): void {
+    protected onDateSelect(value: Date | null): void {
+        if (!value) {
+            return;
+        }
+
         const normalized = this.stripTime(value);
         this.value.set(normalized);
         this.displayMonth.set(normalized);
@@ -124,7 +127,11 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         this.closeDatePicker();
     }
 
-    protected onDisplayMonthChange(value: Date): void {
+    protected onDisplayMonthChange(value: Date | null): void {
+        if (!value) {
+            return;
+        }
+
         this.displayMonth.set(value);
     }
 

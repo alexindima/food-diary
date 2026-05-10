@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface FdUiRadioOption<T = unknown> {
@@ -18,7 +18,7 @@ let nextId = 0;
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FdUiRadioGroupComponent),
+            useExisting: FdUiRadioGroupComponent,
             multi: true,
         },
     ],

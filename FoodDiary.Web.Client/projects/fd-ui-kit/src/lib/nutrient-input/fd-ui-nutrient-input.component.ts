@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, ViewEncapsulation } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -15,7 +15,7 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiNutrientInputComponent => FdUiNutrientInputComponent),
+            useExisting: FdUiNutrientInputComponent,
             multi: true,
         },
     ],

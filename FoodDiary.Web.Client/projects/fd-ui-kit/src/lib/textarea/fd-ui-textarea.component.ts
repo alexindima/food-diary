@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, forwardRef, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -16,7 +16,7 @@ let uniqueId = 0;
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiTextareaComponent => FdUiTextareaComponent),
+            useExisting: FdUiTextareaComponent,
             multi: true,
         },
     ],

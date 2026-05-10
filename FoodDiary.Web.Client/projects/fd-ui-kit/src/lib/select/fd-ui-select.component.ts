@@ -1,16 +1,6 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    type ElementRef,
-    forwardRef,
-    input,
-    signal,
-    viewChild,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, signal, viewChild, ViewEncapsulation } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -35,7 +25,7 @@ export interface FdUiSelectOption<T = unknown> {
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiSelectComponent => FdUiSelectComponent),
+            useExisting: FdUiSelectComponent,
             multi: true,
         },
     ],

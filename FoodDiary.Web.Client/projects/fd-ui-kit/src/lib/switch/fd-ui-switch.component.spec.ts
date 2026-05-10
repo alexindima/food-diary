@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiSwitchComponent } from './fd-ui-switch.component';
 
@@ -19,15 +19,13 @@ describe('FdUiSwitchComponent', () => {
     });
 
     it('toggles checked state on click', () => {
-        const checkedChangeSpy = vi.fn();
-        component.checkedChange.subscribe(checkedChangeSpy);
         const button = fixture.debugElement.query(By.css('.fd-ui-switch')).nativeElement as HTMLButtonElement;
 
         button.click();
         fixture.detectChanges();
 
-        expect(checkedChangeSpy).toHaveBeenCalledWith(true);
-        expect(button.getAttribute('aria-checked')).toBe('false');
+        expect(component.checked()).toBe(true);
+        expect(button.getAttribute('aria-checked')).toBe('true');
     });
 
     it('does not toggle when disabled', () => {

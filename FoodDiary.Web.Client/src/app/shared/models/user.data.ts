@@ -120,7 +120,7 @@ export class UpdateUserAppearanceDto {
     public theme?: string;
     public uiStyle?: string;
 
-    public constructor(formValues: { theme?: string | null; uiStyle?: UiStyleOption | string | null }) {
+    public constructor(formValues: { theme?: string | null; uiStyle?: string | null }) {
         this.theme = normalizeTheme(formValues.theme);
         this.uiStyle = normalizeUiStyle(formValues.uiStyle);
     }
@@ -179,7 +179,7 @@ const normalizeTheme = (value: string | null | undefined): string | undefined =>
     return normalized ? normalized : undefined;
 };
 
-const normalizeUiStyle = (value: UiStyleOption | string | null | undefined): string | undefined => {
+const normalizeUiStyle = (value: string | null | undefined): string | undefined => {
     if (!value) {
         return undefined;
     }

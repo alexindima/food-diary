@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, model, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -23,8 +23,8 @@ export class MealDetailsFieldsComponent {
     public readonly date = input.required<string>();
     public readonly time = input.required<string>();
     public readonly comment = input.required<string>();
-    public readonly preMealSatietyLevel = input<number | null>(3);
-    public readonly postMealSatietyLevel = input<number | null>(3);
+    public readonly preMealSatietyLevel = model<number | null>(3);
+    public readonly postMealSatietyLevel = model<number | null>(3);
     public readonly textareaRows = input(3);
     public readonly surface = input(true);
     public readonly density = input<'compact' | 'regular'>('compact');
@@ -33,9 +33,6 @@ export class MealDetailsFieldsComponent {
     public readonly dateChange = output<string>();
     public readonly timeChange = output<string>();
     public readonly commentChange = output<string>();
-    public readonly preMealSatietyLevelChange = output<number>();
-    public readonly postMealSatietyLevelChange = output<number>();
-
     public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
     public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
     public readonly preMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('before'));
@@ -64,9 +61,9 @@ export class MealDetailsFieldsComponent {
 
         const normalized = this.normalizeSatietyLevel(value);
         if (kind === 'before') {
-            this.preMealSatietyLevelChange.emit(normalized);
+            this.preMealSatietyLevel.set(normalized);
         } else {
-            this.postMealSatietyLevelChange.emit(normalized);
+            this.postMealSatietyLevel.set(normalized);
         }
     }
 

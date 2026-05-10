@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, forwardRef, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -17,7 +17,7 @@ let uniqueId = 0;
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiTimeInputComponent => FdUiTimeInputComponent),
+            useExisting: FdUiTimeInputComponent,
             multi: true,
         },
     ],

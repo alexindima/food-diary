@@ -33,7 +33,7 @@
                     [value]="timeValue()"
                     [attr.placeholder]="shouldFloatLabel() ? null : 'HH:mm'"
                     [disabled]="disabled()"
-                    (input)="onTimeInput($any($event.target).value)"
+                    (input)="onTimeInput(timeInput.value)"
                     (blur)="onTimeBlur()"
                 />
                 <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled()" (click)="focusTimeInput(timeInput)">

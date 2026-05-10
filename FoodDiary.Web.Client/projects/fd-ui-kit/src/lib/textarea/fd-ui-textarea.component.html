@@ -24,7 +24,7 @@
             [attr.rows]="rows()"
             [attr.aria-describedby]="error() ? id() + '-error' : null"
             [attr.aria-invalid]="error() ? 'true' : null"
-            (input)="onInput($any($event.target).value)"
+            (input)="onInput(control.value)"
             (focus)="onFocus()"
             (blur)="onBlur()"
         ></textarea>

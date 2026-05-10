@@ -35,7 +35,7 @@
             [attr.aria-expanded]="isOpen()"
             [attr.aria-controls]="id() + '-listbox'"
             [attr.aria-activedescendant]="activeOptionId()"
-            (input)="onInput($any($event.target).value)"
+            (input)="onInput(control.value)"
             (focus)="onFocus()"
             (blur)="onBlur()"
             (keydown)="onControlKeydown($event)"

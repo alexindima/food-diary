@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 
 @Component({
     selector: 'fd-ui-switch',
@@ -8,8 +8,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiSwitchComponent {
-    public readonly checked = input(false);
-    public readonly checkedChange = output<boolean>();
+    public readonly checked = model(false);
     public readonly disabled = input(false);
     public readonly ariaLabel = input('');
     public readonly onLabel = input('On');
@@ -21,6 +20,6 @@ export class FdUiSwitchComponent {
             return;
         }
 
-        this.checkedChange.emit(!this.checked());
+        this.checked.update(checked => !checked);
     }
 }

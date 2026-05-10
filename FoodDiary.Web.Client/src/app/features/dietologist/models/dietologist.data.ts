@@ -35,7 +35,7 @@ export interface DietologistInfo {
 
 export interface DietologistRelationship {
     invitationId: string;
-    status: 'Pending' | 'Accepted' | string;
+    status: string;
     email: string;
     firstName: string | null;
     lastName: string | null;

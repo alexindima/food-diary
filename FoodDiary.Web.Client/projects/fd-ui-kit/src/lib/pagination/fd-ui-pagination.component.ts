@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 
 @Component({
     selector: 'fd-ui-pagination',
@@ -10,8 +10,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 export class FdUiPaginationComponent {
     public readonly length = input(0);
     public readonly pageSize = input(10);
-    public readonly pageIndex = input(0);
-    public readonly pageIndexChange = output<number>();
+    public readonly pageIndex = model(0);
 
     protected readonly pageCount = computed(() => {
         const size = Math.max(this.pageSize(), 1);
@@ -34,6 +33,6 @@ export class FdUiPaginationComponent {
             return;
         }
 
-        this.pageIndexChange.emit(nextIndex);
+        this.pageIndex.set(nextIndex);
     }
 }

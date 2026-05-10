@@ -25,7 +25,7 @@
                 [attr.aria-describedby]="error() ? id() + '-error' : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
                 (focus)="onFocus()"
-                (input)="onInput($any($event.target).value)"
+                (input)="onInput(timeInput.value)"
                 (blur)="onBlur()"
             />
             <button type="button" class="fd-ui-time-input__suffix" [disabled]="disabled()" (click)="focusTime(timeInput)">

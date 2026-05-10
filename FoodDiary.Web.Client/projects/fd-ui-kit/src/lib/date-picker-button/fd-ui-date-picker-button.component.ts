@@ -1,6 +1,6 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input, model, signal } from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
@@ -15,7 +15,7 @@ import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiDatePickerButtonComponent {
-    public readonly value = input<Date | null>(null);
+    public readonly value = model<Date | null>(null);
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
     public readonly disabled = input(false, { transform: booleanAttribute });
@@ -23,7 +23,6 @@ export class FdUiDatePickerButtonComponent {
     public readonly hint = input<string | null>(null);
     public readonly icon = input('calendar_today');
 
-    public readonly valueChange = output<Date>();
     protected readonly isOpen = signal(false);
     protected readonly displayMonth = signal(this.value() ?? new Date());
 
@@ -40,12 +39,20 @@ export class FdUiDatePickerButtonComponent {
         this.isOpen.set(false);
     }
 
-    protected onCalendarSelect(value: Date): void {
-        this.valueChange.emit(value);
+    protected onCalendarSelect(value: Date | null): void {
+        if (!value) {
+            return;
+        }
+
+        this.value.set(value);
         this.close();
     }
 
-    protected onDisplayMonthChange(value: Date): void {
+    protected onDisplayMonthChange(value: Date | null): void {
+        if (!value) {
+            return;
+        }
+
         this.displayMonth.set(value);
     }
 

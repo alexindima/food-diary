@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, output } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -102,7 +102,7 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FdUiSatietyScaleComponent),
+            useExisting: FdUiSatietyScaleComponent,
             multi: true,
         },
     ],

@@ -41,10 +41,7 @@ describe('FdUiPaginationComponent', () => {
         expect(activeButton.nativeElement.textContent.trim()).toBe('4');
     });
 
-    it('should emit pageIndexChange when page clicked', () => {
-        const emitted: number[] = [];
-        component.pageIndexChange.subscribe(value => emitted.push(value));
-
+    it('should update pageIndex when page clicked', () => {
         fixture.componentRef.setInput('length', 100);
         fixture.componentRef.setInput('pageSize', 10);
         fixture.detectChanges();
@@ -52,6 +49,6 @@ describe('FdUiPaginationComponent', () => {
         const pageButtons = fixture.debugElement.queryAll(By.css('.fd-ui-pagination__button'));
         pageButtons[2].nativeElement.click();
 
-        expect(emitted).toEqual([1]);
+        expect(component.pageIndex()).toBe(1);
     });
 });

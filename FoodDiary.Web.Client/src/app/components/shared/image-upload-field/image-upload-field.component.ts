@@ -5,7 +5,6 @@ import {
     computed,
     effect,
     type ElementRef,
-    forwardRef,
     inject,
     input,
     output,
@@ -38,7 +37,7 @@ import type { ImageSelection } from '../../../shared/models/image-upload.data';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => ImageUploadFieldComponent),
+            useExisting: ImageUploadFieldComponent,
             multi: true,
         },
     ],

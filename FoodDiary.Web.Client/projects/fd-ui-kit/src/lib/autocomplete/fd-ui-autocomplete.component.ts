@@ -1,6 +1,6 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, type ElementRef, forwardRef, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, output, signal, viewChild } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
@@ -28,7 +28,7 @@ export interface FdUiAutocompleteOption<T = unknown> {
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiAutocompleteComponent => FdUiAutocompleteComponent),
+            useExisting: FdUiAutocompleteComponent,
             multi: true,
         },
     ],
