@@ -93,6 +93,38 @@
                     {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
                 </div>
                 @for (ingredient of ingredients.controls; track $index; let ingredientIndex = $index; let firstIngredient = $first) {
+                    @let foodNameControl = ingredient.controls.foodName;
+                    @let foodNameErrors = foodNameControl.errors;
+                    @let foodNameErrorKey =
+                        !foodNameControl.touched && !foodNameControl.dirty
+                            ? null
+                            : foodNameErrors?.['required']
+                              ? 'FORM_ERRORS.REQUIRED'
+                              : foodNameErrors?.['min']
+                                ? 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO'
+                                : foodNameErrors?.['nonEmptyArray']
+                                  ? 'FORM_ERRORS.NON_EMPTY_ARRAY'
+                                  : foodNameErrors
+                                    ? 'FORM_ERRORS.UNKNOWN'
+                                    : null;
+                    @let amountControl = ingredient.controls.amount;
+                    @let amountErrors = amountControl.errors;
+                    @let amountErrorKey =
+                        !amountControl.touched && !amountControl.dirty
+                            ? null
+                            : amountErrors?.['required']
+                              ? 'FORM_ERRORS.REQUIRED'
+                              : amountErrors?.['min']
+                                ? 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO'
+                                : amountErrors?.['nonEmptyArray']
+                                  ? 'FORM_ERRORS.NON_EMPTY_ARRAY'
+                                  : amountErrors
+                                    ? 'FORM_ERRORS.UNKNOWN'
+                                    : null;
+                    @let productUnitKey =
+                        ingredient.controls.food.value?.baseUnit
+                            ? 'PRODUCT_AMOUNT_UNITS.' + ingredient.controls.food.value?.baseUnit
+                            : null;
                     <div class="recipe-ingredient fd-row fd-gap-md" [formGroupName]="ingredientIndex">
                         <input type="hidden" formControlName="food" />
                         <input type="hidden" formControlName="nestedRecipeId" />
@@ -103,10 +135,16 @@
                             [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                             [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
                             [readonly]="true"
-                            [prefixIcon]="getIngredientIcon(ingredientIndex)"
+                            [prefixIcon]="
+                                ingredient.controls.nestedRecipeId.value
+                                    ? 'menu_book'
+                                    : ingredient.controls.food.value
+                                      ? 'restaurant'
+                                      : 'search'
+                            "
                             [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
                             (click)="onProductSelectClick(ingredientIndex)"
-                            [error]="getIngredientControlError(ingredientIndex, 'foodName')"
+                            [error]="foodNameErrorKey ? (foodNameErrorKey | translate: { min: foodNameErrors?.['min']?.min ?? 0 }) : null"
                         />
 
                         <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">
@@ -115,8 +153,14 @@
                                 size="lg"
                                 type="number"
                                 [step]="0.01"
-                                [label]="getIngredientAmountLabel(ingredientIndex)"
-                                [error]="getIngredientControlError(ingredientIndex, 'amount')"
+                                [label]="
+                                    ingredient.controls.nestedRecipeId.value
+                                        ? ('RECIPE_SELECT_DIALOG.SERVINGS' | translate)
+                                        : productUnitKey
+                                          ? ('RECIPE_MANAGE.INGREDIENT_AMOUNT' | translate) + ' (' + (productUnitKey | translate) + ')'
+                                          : ('RECIPE_MANAGE.INGREDIENT_AMOUNT' | translate)
+                                "
+                                [error]="amountErrorKey ? (amountErrorKey | translate: { min: amountErrors?.['min']?.min ?? 0 }) : null"
                             />
                             <fd-ui-button
                                 type="button"

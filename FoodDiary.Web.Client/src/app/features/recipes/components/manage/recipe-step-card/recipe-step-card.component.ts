@@ -94,32 +94,6 @@ export class RecipeStepCardComponent {
         this.isTitleEditing = false;
     }
 
-    public getIngredientIcon(ingredientIndex: number): string {
-        const ingredient = this.ingredients.at(ingredientIndex);
-        if (ingredient.controls.nestedRecipeId.value) {
-            return 'menu_book';
-        }
-        if (ingredient.controls.food.value) {
-            return 'restaurant';
-        }
-        return 'search';
-    }
-
-    public getIngredientAmountLabel(ingredientIndex: number): string {
-        const ingredient = this.ingredients.at(ingredientIndex);
-        if (ingredient.controls.nestedRecipeId.value) {
-            return this.translateService.instant('RECIPE_SELECT_DIALOG.SERVINGS');
-        }
-        const baseLabel = this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
-        const unit = this.getProductUnit(ingredientIndex);
-        return unit ? `${baseLabel} (${unit})` : baseLabel;
-    }
-
-    public getIngredientControlError(ingredientIndex: number, controlName: 'food' | 'foodName' | 'amount'): string | null {
-        const ingredient = this.ingredients.at(ingredientIndex);
-        return this.resolveControlError(ingredient.controls[controlName]);
-    }
-
     public onProductSelectClick(ingredientIndex: number): void {
         this.selectProduct.emit(ingredientIndex);
     }
@@ -138,12 +112,6 @@ export class RecipeStepCardComponent {
 
     public onToggleExpanded(): void {
         this.toggleExpanded.emit();
-    }
-
-    private getProductUnit(ingredientIndex: number): string | null {
-        const foodControl = this.ingredients.at(ingredientIndex).controls.food;
-        const unit = foodControl.value?.baseUnit;
-        return unit ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
     }
 
     private commitStepTitle(): void {
