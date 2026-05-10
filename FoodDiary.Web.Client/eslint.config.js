@@ -372,7 +372,12 @@ export default [
             '@typescript-eslint/restrict-template-expressions': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
             '@typescript-eslint/switch-exhaustiveness-check': 'error',
-            '@typescript-eslint/unbound-method': 'warn',
+            '@typescript-eslint/unbound-method': [
+                'error',
+                {
+                    ignoreStatic: true,
+                },
+            ],
             'local/async-function-suffix': 'error',
         },
     },

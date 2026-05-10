@@ -11,6 +11,7 @@ describe('GlobalLoadingInterceptor', () => {
     let http: HttpClient;
     let httpTesting: HttpTestingController;
     let globalLoadingService: GlobalLoadingService;
+    let trackRequestSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -27,7 +28,7 @@ describe('GlobalLoadingInterceptor', () => {
         http = TestBed.inject(HttpClient);
         httpTesting = TestBed.inject(HttpTestingController);
         globalLoadingService = TestBed.inject(GlobalLoadingService);
-        vi.spyOn(globalLoadingService, 'trackRequest');
+        trackRequestSpy = vi.spyOn(globalLoadingService, 'trackRequest');
     });
 
     afterEach(() => {
@@ -41,7 +42,7 @@ describe('GlobalLoadingInterceptor', () => {
         const req = httpTesting.expectOne('/api/meals');
         req.flush({});
 
-        expect(globalLoadingService.trackRequest).toHaveBeenCalledTimes(1);
+        expect(trackRequestSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should skip tracking when SKIP_GLOBAL_LOADING context is true', () => {
@@ -50,7 +51,7 @@ describe('GlobalLoadingInterceptor', () => {
         const req = httpTesting.expectOne('/api/meals');
         req.flush({});
 
-        expect(globalLoadingService.trackRequest).not.toHaveBeenCalled();
+        expect(trackRequestSpy).not.toHaveBeenCalled();
     });
 
     it('should not track POST requests by default', () => {
@@ -59,7 +60,7 @@ describe('GlobalLoadingInterceptor', () => {
         const req = httpTesting.expectOne('/api/meals');
         req.flush({});
 
-        expect(globalLoadingService.trackRequest).not.toHaveBeenCalled();
+        expect(trackRequestSpy).not.toHaveBeenCalled();
     });
 
     it('should allow forcing tracking for non-GET requests', () => {
@@ -68,6 +69,6 @@ describe('GlobalLoadingInterceptor', () => {
         const req = httpTesting.expectOne('/api/meals');
         req.flush({});
 
-        expect(globalLoadingService.trackRequest).toHaveBeenCalledTimes(1);
+        expect(trackRequestSpy).toHaveBeenCalledTimes(1);
     });
 });
