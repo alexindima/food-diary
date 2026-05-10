@@ -103,8 +103,8 @@
                             (change)="updateEditItem(i, 'unit', unitSelect.value)"
                             #unitSelect
                         >
-                            @for (unit of getUnitOptions(); track unit) {
-                                <option [value]="unit">{{ getUnitLabel(unit) }}</option>
+                            @for (unit of editUnitOptions(); track unit.value) {
+                                <option [value]="unit.value">{{ unit.label }}</option>
                             }
                         </select>
                         <fd-ui-button
@@ -124,10 +124,10 @@
             </fd-ui-button>
         } @else {
             <div class="ai-photo-result__table fd-stack fd-gap-xxs">
-                @for (item of results(); track item.nameEn) {
+                @for (item of resultRows(); track item.key) {
                     <div class="ai-photo-result__table-row fd-row fd-justify-between">
-                        <span class="ai-photo-result__item-name fd-ui-body-sm">{{ getDisplayName(item) }}</span>
-                        <span class="ai-photo-result__item-amount fd-ui-caption">{{ formatAmount(item) }}</span>
+                        <span class="ai-photo-result__item-name fd-ui-body-sm">{{ item.displayName }}</span>
+                        <span class="ai-photo-result__item-amount fd-ui-caption">{{ item.amountLabel }}</span>
                     </div>
                 }
             </div>
@@ -136,42 +136,12 @@
         @if (!isNutritionLoading() && nutrition()) {
             <div class="ai-photo-result__nutrition">
                 <div class="ai-photo-result__nutrition-grid">
-                    <div class="ai-photo-result__nutrition-item fd-stack">
-                        <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}</span>
-                        <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
-                            formatMacro(nutrition()!.calories, 'GENERAL.UNITS.KCAL')
-                        }}</span>
-                    </div>
-                    <div class="ai-photo-result__nutrition-item fd-stack">
-                        <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}</span>
-                        <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
-                            formatMacro(nutrition()!.protein, 'GENERAL.UNITS.G')
-                        }}</span>
-                    </div>
-                    <div class="ai-photo-result__nutrition-item fd-stack">
-                        <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.FAT' | translate }}</span>
-                        <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
-                            formatMacro(nutrition()!.fat, 'GENERAL.UNITS.G')
-                        }}</span>
-                    </div>
-                    <div class="ai-photo-result__nutrition-item fd-stack">
-                        <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.CARB' | translate }}</span>
-                        <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
-                            formatMacro(nutrition()!.carbs, 'GENERAL.UNITS.G')
-                        }}</span>
-                    </div>
-                    <div class="ai-photo-result__nutrition-item fd-stack">
-                        <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.FIBER' | translate }}</span>
-                        <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
-                            formatMacro(nutrition()!.fiber, 'GENERAL.UNITS.G')
-                        }}</span>
-                    </div>
-                    <div class="ai-photo-result__nutrition-item fd-stack">
-                        <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ 'GENERAL.NUTRIENTS.ALCOHOL' | translate }}</span>
-                        <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{
-                            formatMacro(nutrition()!.alcohol, 'GENERAL.UNITS.G')
-                        }}</span>
-                    </div>
+                    @for (item of nutritionSummary(); track item.labelKey) {
+                        <div class="ai-photo-result__nutrition-item fd-stack">
+                            <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ item.labelKey | translate }}</span>
+                            <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{ item.value }}</span>
+                        </div>
+                    }
                 </div>
             </div>
         }

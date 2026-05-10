@@ -1,5 +1,5 @@
 ﻿import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
@@ -28,6 +28,22 @@ type EditChangeSummary = {
     addedItems: EditableAiItem[];
     amountChanges: AmountChange[];
 };
+
+interface AiResultRow {
+    key: string;
+    displayName: string;
+    amountLabel: string;
+}
+
+interface AiNutritionSummaryItem {
+    labelKey: string;
+    value: string;
+}
+
+interface AiEditUnitOption {
+    value: string;
+    label: string;
+}
 
 @Component({
     selector: 'fd-ai-photo-result',
@@ -68,21 +84,49 @@ export class AiPhotoResultComponent {
     public readonly preMealSatietyLevel = signal<number | null>(3);
     public readonly postMealSatietyLevel = signal<number | null>(3);
     public readonly editItems = signal<EditableAiItem[]>([]);
+    public readonly resultRows = computed<AiResultRow[]>(() =>
+        this.results().map(item => ({
+            key: item.nameEn,
+            displayName: this.resolveDisplayName(item),
+            amountLabel: this.resolveAmountLabel(item),
+        })),
+    );
+    public readonly nutritionSummary = computed<AiNutritionSummaryItem[]>(() => {
+        const nutrition = this.nutrition();
+        if (!nutrition) {
+            return [];
+        }
+
+        return [
+            { labelKey: 'GENERAL.NUTRIENTS.CALORIES', value: this.resolveMacroLabel(nutrition.calories, 'GENERAL.UNITS.KCAL') },
+            { labelKey: 'GENERAL.NUTRIENTS.PROTEIN', value: this.resolveMacroLabel(nutrition.protein, 'GENERAL.UNITS.G') },
+            { labelKey: 'GENERAL.NUTRIENTS.FAT', value: this.resolveMacroLabel(nutrition.fat, 'GENERAL.UNITS.G') },
+            { labelKey: 'GENERAL.NUTRIENTS.CARB', value: this.resolveMacroLabel(nutrition.carbs, 'GENERAL.UNITS.G') },
+            { labelKey: 'GENERAL.NUTRIENTS.FIBER', value: this.resolveMacroLabel(nutrition.fiber, 'GENERAL.UNITS.G') },
+            { labelKey: 'GENERAL.NUTRIENTS.ALCOHOL', value: this.resolveMacroLabel(nutrition.alcohol, 'GENERAL.UNITS.G') },
+        ];
+    });
+    public readonly editUnitOptions = computed<AiEditUnitOption[]>(() =>
+        this.unitOptions.map(unit => ({
+            value: unit,
+            label: this.resolveUnitLabel(unit),
+        })),
+    );
     private readonly sourceItems = signal<EditableAiItem[]>([]);
 
-    public getDisplayName(item: FoodVisionItem): string {
+    private resolveDisplayName(item: FoodVisionItem): string {
         const rawName = item.nameLocal?.trim() || item.nameEn;
         return this.capitalizeLabel(rawName);
     }
 
-    public formatAmount(item: FoodVisionItem): string {
+    private resolveAmountLabel(item: FoodVisionItem): string {
         const amount = item.amount;
         const unitKey = this.resolveUnitKey(item.unit);
         const unitLabel = unitKey ? this.translateService.instant(unitKey) : item.unit;
         return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
 
-    public formatMacro(value: number, unitKey: string): string {
+    private resolveMacroLabel(value: number, unitKey: string): string {
         const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
         const hasFraction = Math.abs(value % 1) > 0.01;
         const formatter = new Intl.NumberFormat(locale, {
@@ -93,11 +137,7 @@ export class AiPhotoResultComponent {
         return `${formatter.format(value)} ${unitLabel}`.trim();
     }
 
-    public getUnitOptions(): readonly string[] {
-        return this.unitOptions;
-    }
-
-    public getUnitLabel(unit: string): string {
+    private resolveUnitLabel(unit: string): string {
         const unitKey = this.resolveUnitKey(unit);
         return unitKey ? this.translateService.instant(unitKey) : unit;
     }
