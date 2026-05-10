@@ -68,7 +68,7 @@
             [showLoadMore]="hasMoreFavorites()"
             [isLoadingMore]="isFavoritesLoadingMore()"
             [loadMoreLabel]="'CONSUMPTION_LIST.FAVORITES_LOAD_MORE' | translate"
-            (toggle)="toggleFavorites()"
+            (toggleRequested)="toggleFavorites()"
             (loadMore)="loadFavorites()"
         >
             <div class="consumption-list__favorites-grid fd-grid fd-gap-xs">

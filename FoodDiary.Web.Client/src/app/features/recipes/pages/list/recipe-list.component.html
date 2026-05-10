@@ -121,7 +121,7 @@
                     [showLoadMore]="hasMoreFavorites()"
                     [isLoadingMore]="isFavoritesLoadingMore()"
                     [loadMoreLabel]="'RECIPE_LIST.FAVORITES_LOAD_MORE' | translate"
-                    (toggle)="toggleFavorites()"
+                    (toggleRequested)="toggleFavorites()"
                     (loadMore)="loadFavorites()"
                 >
                     <div class="recipe-list__favorites-grid fd-grid fd-gap-xs">

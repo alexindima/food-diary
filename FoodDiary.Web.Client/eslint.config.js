@@ -395,7 +395,7 @@ export default [
             '@angular-eslint/no-forward-ref': 'warn',
             '@angular-eslint/no-implicit-take-until-destroyed': 'error',
             '@angular-eslint/no-input-rename': 'warn',
-            '@angular-eslint/no-output-native': 'warn',
+            '@angular-eslint/no-output-native': 'error',
             '@angular-eslint/no-output-on-prefix': 'warn',
             '@angular-eslint/no-output-rename': 'warn',
             '@angular-eslint/prefer-inject': 'warn',

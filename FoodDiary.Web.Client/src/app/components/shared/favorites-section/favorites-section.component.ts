@@ -17,11 +17,11 @@ export class FavoritesSectionComponent {
     public readonly isLoadingMore = input(false);
     public readonly loadMoreLabel = input<string | null>(null);
 
-    public readonly toggle = output<void>();
+    public readonly toggleRequested = output<void>();
     public readonly loadMore = output<void>();
 
     public onToggle(): void {
-        this.toggle.emit();
+        this.toggleRequested.emit();
     }
 
     public onLoadMore(): void {

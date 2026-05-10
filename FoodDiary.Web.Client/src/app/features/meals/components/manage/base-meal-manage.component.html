@@ -169,7 +169,7 @@
                     [consumption]="consumption() ?? null"
                     [globalError]="globalError()"
                     (nutritionModeChange)="onNutritionModeChange($event)"
-                    (cancel)="onCancelAsync()"
+                    (cancelRequested)="onCancelAsync()"
                 />
             </div>
         </div>

@@ -122,7 +122,7 @@
                     [showLoadMore]="hasMoreFavorites()"
                     [isLoadingMore]="isFavoritesLoadingMore()"
                     [loadMoreLabel]="'PRODUCT_LIST.FAVORITES_LOAD_MORE' | translate"
-                    (toggle)="toggleFavorites()"
+                    (toggleRequested)="toggleFavorites()"
                     (loadMore)="loadFavorites()"
                 >
                     <div class="product-list__favorites-grid fd-grid fd-gap-xs">
