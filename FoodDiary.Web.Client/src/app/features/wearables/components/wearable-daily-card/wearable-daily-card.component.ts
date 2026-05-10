@@ -6,6 +6,7 @@ import { type WearableDailySummary } from '../../models/wearable.data';
 
 interface WearableMetric {
     key: string;
+    labelKey: string;
     icon: string;
     value: number;
     unit: string;
@@ -30,20 +31,30 @@ export class WearableDailyCardComponent {
 
         const result: WearableMetric[] = [];
         if (s.steps !== null) {
-            result.push({ key: 'STEPS', icon: '\uD83D\uDEB6', value: s.steps, unit: '' });
+            result.push(this.createMetric('STEPS', '\uD83D\uDEB6', s.steps, ''));
         }
         if (s.heartRate !== null) {
-            result.push({ key: 'HEART_RATE', icon: '\u2764\uFE0F', value: s.heartRate, unit: 'bpm' });
+            result.push(this.createMetric('HEART_RATE', '\u2764\uFE0F', s.heartRate, 'bpm'));
         }
         if (s.caloriesBurned !== null) {
-            result.push({ key: 'CALORIES_BURNED', icon: '\uD83D\uDD25', value: s.caloriesBurned, unit: 'kcal' });
+            result.push(this.createMetric('CALORIES_BURNED', '\uD83D\uDD25', s.caloriesBurned, 'kcal'));
         }
         if (s.activeMinutes !== null) {
-            result.push({ key: 'ACTIVE_MINUTES', icon: '\u26A1', value: s.activeMinutes, unit: 'min' });
+            result.push(this.createMetric('ACTIVE_MINUTES', '\u26A1', s.activeMinutes, 'min'));
         }
         if (s.sleepMinutes !== null) {
-            result.push({ key: 'SLEEP', icon: '\uD83D\uDE34', value: Math.round((s.sleepMinutes / 60) * 10) / 10, unit: 'h' });
+            result.push(this.createMetric('SLEEP', '\uD83D\uDE34', Math.round((s.sleepMinutes / 60) * 10) / 10, 'h'));
         }
         return result;
     });
+
+    private createMetric(key: string, icon: string, value: number, unit: string): WearableMetric {
+        return {
+            key,
+            labelKey: `WEARABLES.${key}`,
+            icon,
+            value,
+            unit,
+        };
+    }
 }
