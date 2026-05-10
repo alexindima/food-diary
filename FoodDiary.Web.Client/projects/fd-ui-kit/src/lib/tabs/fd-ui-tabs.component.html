@@ -1,4 +1,4 @@
-<div class="fd-ui-tabs" role="tablist" [class]="appearanceClass()">
+<div role="tablist" [class]="'fd-ui-tabs ' + appearanceClass()">
     @for (tab of tabItems(); track tab.value; let index = $index) {
         <button
             #tabButton
