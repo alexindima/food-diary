@@ -15,10 +15,10 @@ const PRODUCT_STUBS: Record<ProductType, string> = {
 };
 
 export function resolveProductImageUrl(imageUrl: string | null | undefined, type: ProductType | null | undefined): string | undefined {
-    if (imageUrl && imageUrl.trim().length > 0) {
+    if (imageUrl !== null && imageUrl !== undefined && imageUrl.trim().length > 0) {
         return imageUrl;
     }
-    if (!type) {
+    if (type === null || type === undefined) {
         return PRODUCT_STUBS[ProductType.Unknown];
     }
     return PRODUCT_STUBS[type];

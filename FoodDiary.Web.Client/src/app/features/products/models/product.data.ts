@@ -87,11 +87,11 @@ export class ProductFilters {
     public productTypes?: ProductType[];
 
     public constructor(search: string | null, productTypes?: ProductType[]) {
-        if (search) {
+        if (search !== null && search.trim().length > 0) {
             this.search = search;
         }
 
-        if (productTypes && productTypes.length > 0) {
+        if (productTypes !== undefined && productTypes.length > 0) {
             this.productTypes = productTypes;
         }
     }

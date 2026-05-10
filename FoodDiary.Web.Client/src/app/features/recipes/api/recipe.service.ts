@@ -17,6 +17,10 @@ export interface RecipeOverviewQuery {
     favoriteLimit?: number;
 }
 
+const DEFAULT_RECENT_RECIPE_LIMIT = 10;
+const DEFAULT_RECIPE_OVERVIEW_RECENT_LIMIT = 10;
+const DEFAULT_RECIPE_OVERVIEW_FAVORITE_LIMIT = 10;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -31,7 +35,7 @@ export class RecipeService extends ApiService {
         };
 
         const search = filters?.search?.trim();
-        if (search) {
+        if (search !== undefined && search.length > 0) {
             params['search'] = search;
         }
 
@@ -49,7 +53,7 @@ export class RecipeService extends ApiService {
         );
     }
 
-    public getRecent(limit = 10, includePublic = true): Observable<Recipe[]> {
+    public getRecent(limit = DEFAULT_RECENT_RECIPE_LIMIT, includePublic = true): Observable<Recipe[]> {
         const params: Record<string, string | number | boolean> = { limit, includePublic };
         return this.get<Recipe[]>('recent', params).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Get recent recipes error', error, [])),
@@ -57,10 +61,17 @@ export class RecipeService extends ApiService {
     }
 
     public queryOverview(query: RecipeOverviewQuery): Observable<RecipeOverview> {
-        const { page, limit, filters, includePublic = true, recentLimit = 10, favoriteLimit = 10 } = query;
+        const {
+            page,
+            limit,
+            filters,
+            includePublic = true,
+            recentLimit = DEFAULT_RECIPE_OVERVIEW_RECENT_LIMIT,
+            favoriteLimit = DEFAULT_RECIPE_OVERVIEW_FAVORITE_LIMIT,
+        } = query;
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         const search = filters?.search?.trim();
-        if (search) {
+        if (search !== undefined && search.length > 0) {
             params['search'] = search;
         }
 

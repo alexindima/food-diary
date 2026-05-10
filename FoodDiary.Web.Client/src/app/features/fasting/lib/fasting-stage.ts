@@ -17,6 +17,8 @@ interface FastingStageDefinition {
     glowColor: string;
 }
 
+const MS_PER_HOUR = 3_600_000;
+
 const FASTING_STAGE_DEFINITIONS: readonly FastingStageDefinition[] = [
     {
         startsAtHours: 0,
@@ -57,7 +59,7 @@ function getApplicableStages(plannedDurationHours: number): readonly FastingStag
 
 export function resolveFastingStage(elapsedMs: number, plannedDurationHours: number): FastingStagePresentation {
     const normalizedElapsedMs = Math.max(0, elapsedMs);
-    const elapsedHours = normalizedElapsedMs / 3_600_000;
+    const elapsedHours = normalizedElapsedMs / MS_PER_HOUR;
     const applicableStages = getApplicableStages(plannedDurationHours);
     let currentIndex = 0;
 
@@ -70,6 +72,7 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
 
     const currentStage = applicableStages[currentIndex];
     const nextStage = (applicableStages as readonly (FastingStageDefinition | undefined)[])[currentIndex + 1] ?? null;
+    const nextStageStartsAtMs = nextStage?.startsAtHours === undefined ? null : nextStage.startsAtHours * MS_PER_HOUR;
 
     return {
         index: currentIndex + 1,
@@ -78,7 +81,7 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
         descriptionKey: currentStage.descriptionKey,
         color: currentStage.color,
         glowColor: currentStage.glowColor,
-        nextTitleKey: nextStage ? nextStage.titleKey : null,
-        nextInMs: nextStage ? Math.max(0, nextStage.startsAtHours * 3_600_000 - normalizedElapsedMs) : null,
+        nextTitleKey: nextStage?.titleKey ?? null,
+        nextInMs: nextStageStartsAtMs === null ? null : Math.max(0, nextStageStartsAtMs - normalizedElapsedMs),
     };
 }

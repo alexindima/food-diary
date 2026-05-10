@@ -27,7 +27,7 @@ export class ExportService extends ApiService {
         return this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).pipe(
             map(response => {
                 const blob = response.body;
-                if (!blob) {
+                if (blob === null) {
                     return;
                 }
 
@@ -45,7 +45,7 @@ export class ExportService extends ApiService {
     }
 
     private extractFileName(contentDisposition: string | null): string | null {
-        if (!contentDisposition) {
+        if (contentDisposition === null || contentDisposition.length === 0) {
             return null;
         }
 

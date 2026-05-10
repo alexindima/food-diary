@@ -58,7 +58,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
             })
             .afterClosed()
             .subscribe(product => {
-                if (product) {
+                if (product !== null && product !== undefined) {
                     this.handleSelection(product);
                 }
             });
@@ -71,7 +71,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     }
 
     private handleSelection(product: Product): void {
-        if (!this.embedded() && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef !== null) {
             this.dialogRef.close(product);
         } else {
             this.productSelected.emit(product);

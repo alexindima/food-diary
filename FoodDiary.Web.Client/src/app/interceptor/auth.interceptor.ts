@@ -5,20 +5,22 @@ import { catchError, type Observable, switchMap, throwError } from 'rxjs';
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
 
+const HTTP_UNAUTHORIZED = 401;
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private readonly authService = inject(AuthService);
 
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const skipAuth = req.context.get(SKIP_AUTH);
-        if (skipAuth) {
+        if (skipAuth === true) {
             return next.handle(req);
         }
 
         const token = this.authService.getToken();
         let request = req;
 
-        if (token) {
+        if (token !== null && token.trim().length > 0) {
             request = req.clone({
                 headers: req.headers.set('Authorization', `Bearer ${token}`),
             });
@@ -26,13 +28,13 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
-                if (error.status !== 401 || this.isAuthRequest(req.url)) {
+                if (error.status !== HTTP_UNAUTHORIZED || this.isAuthRequest(req.url)) {
                     return throwError(() => error);
                 }
 
                 return this.authService.refreshToken().pipe(
                     switchMap(accessToken => {
-                        if (accessToken) {
+                        if (accessToken !== null && accessToken.trim().length > 0) {
                             const newRequest = req.clone({
                                 headers: req.headers.set('Authorization', `Bearer ${accessToken}`),
                             });

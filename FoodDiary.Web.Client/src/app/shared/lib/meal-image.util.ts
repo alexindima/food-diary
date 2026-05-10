@@ -7,10 +7,10 @@ const MEAL_STUBS: Record<string, string> = {
 };
 
 export function resolveMealImageUrl(imageUrl: string | null | undefined, mealType: string | null | undefined): string | undefined {
-    if (imageUrl && imageUrl.trim().length > 0) {
+    if (imageUrl !== null && imageUrl !== undefined && imageUrl.trim().length > 0) {
         return imageUrl;
     }
-    if (!mealType) {
+    if (mealType === null || mealType === undefined || mealType.trim().length === 0) {
         return MEAL_STUBS['OTHER'];
     }
 

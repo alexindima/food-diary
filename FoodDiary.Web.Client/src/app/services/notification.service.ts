@@ -115,7 +115,7 @@ export class NotificationService {
             return;
         }
 
-        if (this.unreadCountRequest$ || (this.unreadCountLoaded() && !options.force)) {
+        if (this.unreadCountRequest$ !== null || (this.unreadCountLoaded() && options.force !== true)) {
             return;
         }
 

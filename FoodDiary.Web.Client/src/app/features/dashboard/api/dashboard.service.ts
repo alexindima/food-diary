@@ -16,6 +16,9 @@ export interface DashboardSnapshotQuery {
     trendDays?: number;
 }
 
+const DEFAULT_DASHBOARD_PAGE = 1;
+const DEFAULT_DASHBOARD_PAGE_SIZE = 10;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -38,18 +41,18 @@ export class DashboardService extends ApiService {
     }
 
     private createSnapshotParams(query: DashboardSnapshotQuery): Record<string, string | number> {
-        const { date, page = 1, pageSize = 10, locale, trendDays } = query;
+        const { date, page = DEFAULT_DASHBOARD_PAGE, pageSize = DEFAULT_DASHBOARD_PAGE_SIZE, locale, trendDays } = query;
         const params: Record<string, string | number> = {
             date: date.toISOString(),
             page,
             pageSize,
         };
 
-        if (locale) {
+        if (locale !== undefined && locale.trim().length > 0) {
             params['locale'] = locale;
         }
 
-        if (trendDays) {
+        if (trendDays !== undefined) {
             params['trendDays'] = trendDays;
         }
 
