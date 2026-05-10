@@ -35,7 +35,7 @@ describe('FrontendObservabilityService', () => {
             location: 'http://localhost/test',
         });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['category']).toBe('client_error');
         expect(payload['name']).toBe('global-error');
         expect(payload['level']).toBe('error');
@@ -50,7 +50,7 @@ describe('FrontendObservabilityService', () => {
             outcome: 'success',
         });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['category']).toBe('http_request');
         expect(payload['durationMs']).toBe(123.5);
         expect((payload['details'] as Record<string, unknown>)['url']).toBe('/api/v1/products');
@@ -66,7 +66,7 @@ describe('FrontendObservabilityService', () => {
     it('should log notification preference changes as user actions', () => {
         service.recordNotificationPreferenceChanged('push', true, { permission: 'granted' });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['category']).toBe('user_action');
         expect(payload['name']).toBe('notifications.preference.changed');
         expect(payload['outcome']).toBe('enabled');
@@ -76,7 +76,7 @@ describe('FrontendObservabilityService', () => {
     it('should log notification subscription events as user actions', () => {
         service.recordNotificationSubscriptionEvent('subscription.ensure', 'blocked', { result: 'blocked' });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['category']).toBe('user_action');
         expect(payload['name']).toBe('notifications.subscription.ensure');
         expect(payload['outcome']).toBe('blocked');
@@ -89,7 +89,7 @@ describe('FrontendObservabilityService', () => {
             followUpReminderHours: 24,
         });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['category']).toBe('user_action');
         expect(payload['name']).toBe('fasting.reminder-preset.selected');
         expect((payload['details'] as Record<string, unknown>)['presetId']).toBe('steady');
@@ -103,7 +103,7 @@ describe('FrontendObservabilityService', () => {
             presetId: 'starter',
         });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['name']).toBe('fasting.reminder-timing.saved');
         expect((payload['details'] as Record<string, unknown>)['source']).toBe('preset');
     });
@@ -114,7 +114,7 @@ describe('FrontendObservabilityService', () => {
             hungerLevel: 3,
         });
 
-        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['name']).toBe('fasting.check-in.saved');
         expect((payload['details'] as Record<string, unknown>)['sessionId']).toBe('session-1');
     });

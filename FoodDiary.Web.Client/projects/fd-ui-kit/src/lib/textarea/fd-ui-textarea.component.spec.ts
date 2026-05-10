@@ -40,7 +40,7 @@ describe('FdUiTextareaComponent', () => {
 
         const label = el.querySelector('.fd-ui-textarea__label-text');
         expect(label).toBeTruthy();
-        expect(label!.textContent).toBe('Description');
+        expect(label?.textContent).toBe('Description');
     });
 
     it('should show required asterisk', () => {
@@ -50,40 +50,43 @@ describe('FdUiTextareaComponent', () => {
 
         const asterisk = el.querySelector('.fd-ui-textarea__required');
         expect(asterisk).toBeTruthy();
-        expect(asterisk!.textContent).toBe('*');
+        expect(asterisk?.textContent).toBe('*');
     });
 
     it('should write value via CVA (string)', () => {
         component.writeValue('hello');
         fixture.detectChanges();
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        expect(textarea.value).toBe('hello');
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea?.value).toBe('hello');
     });
 
     it('should write value via CVA (null converts to empty string)', () => {
         component.writeValue(null);
         fixture.detectChanges();
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        expect(textarea.value).toBe('');
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea?.value).toBe('');
     });
 
     it('should write value via CVA (number converts to string)', () => {
         component.writeValue(42);
         fixture.detectChanges();
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        expect(textarea.value).toBe('42');
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea?.value).toBe('42');
     });
 
     it('should call onChange on input', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        textarea.value = 'new text';
-        textarea.dispatchEvent(new Event('input'));
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea).toBeTruthy();
+        if (textarea) {
+            textarea.value = 'new text';
+        }
+        textarea?.dispatchEvent(new Event('input'));
 
         expect(onChangeSpy).toHaveBeenCalledWith('new text');
     });
@@ -92,8 +95,9 @@ describe('FdUiTextareaComponent', () => {
         const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        textarea.dispatchEvent(new Event('blur'));
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea).toBeTruthy();
+        textarea?.dispatchEvent(new Event('blur'));
 
         expect(onTouchedSpy).toHaveBeenCalled();
     });
@@ -102,8 +106,8 @@ describe('FdUiTextareaComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        expect(textarea.disabled).toBe(true);
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea?.disabled).toBe(true);
     });
 
     it('should not process input when disabled', () => {
@@ -111,9 +115,12 @@ describe('FdUiTextareaComponent', () => {
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        textarea.value = 'blocked';
-        textarea.dispatchEvent(new Event('input'));
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea).toBeTruthy();
+        if (textarea) {
+            textarea.value = 'blocked';
+        }
+        textarea?.dispatchEvent(new Event('input'));
 
         expect(onChangeSpy).not.toHaveBeenCalled();
     });
@@ -122,12 +129,13 @@ describe('FdUiTextareaComponent', () => {
         fixture.componentRef.setInput('label', 'Bio');
         fixture.detectChanges();
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        textarea.dispatchEvent(new Event('focus'));
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea).toBeTruthy();
+        textarea?.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-textarea');
-        expect(wrapper!.classList).toContain('fd-ui-textarea--floating');
+        expect(wrapper?.classList).toContain('fd-ui-textarea--floating');
     });
 
     it('should float label when has value', () => {
@@ -136,7 +144,7 @@ describe('FdUiTextareaComponent', () => {
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-textarea');
-        expect(wrapper!.classList).toContain('fd-ui-textarea--floating');
+        expect(wrapper?.classList).toContain('fd-ui-textarea--floating');
     });
 
     it('should display error message', () => {
@@ -145,15 +153,15 @@ describe('FdUiTextareaComponent', () => {
 
         const errorEl = el.querySelector('.fd-ui-textarea__error');
         expect(errorEl).toBeTruthy();
-        expect(errorEl!.textContent).toBe('Too short');
+        expect(errorEl?.textContent).toBe('Too short');
     });
 
     it('should set rows attribute', () => {
         fixture.componentRef.setInput('rows', 8);
         fixture.detectChanges();
 
-        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        expect(textarea.getAttribute('rows')).toBe('8');
+        const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+        expect(textarea?.getAttribute('rows')).toBe('8');
     });
 
     it('should apply size class', () => {
@@ -161,7 +169,7 @@ describe('FdUiTextareaComponent', () => {
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-textarea');
-        expect(wrapper!.classList).toContain('fd-ui-textarea--size-sm');
+        expect(wrapper?.classList).toContain('fd-ui-textarea--size-sm');
     });
 
     describe('with TestHost (FormControl integration)', () => {
@@ -178,14 +186,17 @@ describe('FdUiTextareaComponent', () => {
             hostComponent.ctrl.setValue('form value');
             hostFixture.detectChanges();
 
-            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-            expect(textarea.value).toBe('form value');
+            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+            expect(textarea?.value).toBe('form value');
         });
 
         it('should propagate input value to FormControl', () => {
-            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-            textarea.value = 'typed';
-            textarea.dispatchEvent(new Event('input'));
+            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+            expect(textarea).toBeTruthy();
+            if (textarea) {
+                textarea.value = 'typed';
+            }
+            textarea?.dispatchEvent(new Event('input'));
             hostFixture.detectChanges();
 
             expect(hostComponent.ctrl.value).toBe('typed');
@@ -194,8 +205,9 @@ describe('FdUiTextareaComponent', () => {
         it('should mark control as touched on blur', () => {
             expect(hostComponent.ctrl.touched).toBe(false);
 
-            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-            textarea.dispatchEvent(new Event('blur'));
+            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+            expect(textarea).toBeTruthy();
+            textarea?.dispatchEvent(new Event('blur'));
             hostFixture.detectChanges();
 
             expect(hostComponent.ctrl.touched).toBe(true);
@@ -205,8 +217,8 @@ describe('FdUiTextareaComponent', () => {
             hostComponent.ctrl.disable();
             hostFixture.detectChanges();
 
-            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-            expect(textarea.disabled).toBe(true);
+            const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
+            expect(textarea?.disabled).toBe(true);
         });
     });
 });

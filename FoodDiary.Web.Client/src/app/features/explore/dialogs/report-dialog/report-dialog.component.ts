@@ -44,7 +44,7 @@ export class ReportDialogComponent {
         const dto: CreateReportDto = {
             targetType: this.data.targetType,
             targetId: this.data.targetId,
-            reason: this.reasonControl.value!.trim(),
+            reason: (this.reasonControl.value ?? '').trim(),
         };
 
         this.reportService

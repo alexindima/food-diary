@@ -274,7 +274,7 @@ export class MealListComponent {
                 const groupDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                 buckets.set(key, { date: groupDate, dateLabel: this.formatGroupDate(groupDate), items: [] });
             }
-            buckets.get(key)!.items.push(item);
+            buckets.get(key)?.items.push(item);
         }
 
         return Array.from(buckets.values()).sort((a, b) => b.date.getTime() - a.date.getTime());

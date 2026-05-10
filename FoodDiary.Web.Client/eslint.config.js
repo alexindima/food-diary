@@ -350,7 +350,7 @@ export default [
             '@typescript-eslint/no-implied-eval': 'warn',
             '@typescript-eslint/no-misused-spread': 'error',
             '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
-            '@typescript-eslint/no-non-null-assertion': 'warn',
+            '@typescript-eslint/no-non-null-assertion': 'error',
             '@typescript-eslint/no-redundant-type-constituents': 'error',
             '@typescript-eslint/no-unnecessary-template-expression': 'error',
             '@typescript-eslint/no-unnecessary-condition': 'error',

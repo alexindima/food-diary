@@ -460,7 +460,7 @@ export class BaseProductManageComponent {
             const alcoholPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.alcoholPerBase) * normalizeFactor);
 
             const productData: CreateProductRequest = {
-                name: this.productForm.value.name!,
+                name: this.productForm.controls.name.value,
                 barcode: this.productForm.value.barcode ?? null,
                 brand: this.productForm.value.brand ?? null,
                 productType: this.productForm.value.productType ?? ProductType.Unknown,
@@ -471,14 +471,14 @@ export class BaseProductManageComponent {
                 imageAssetId: this.productForm.value.imageUrl?.assetId ?? null,
                 baseAmount,
                 defaultPortionAmount,
-                baseUnit: this.productForm.value.baseUnit!,
+                baseUnit: this.productForm.controls.baseUnit.value,
                 caloriesPerBase,
                 proteinsPerBase,
                 fatsPerBase,
                 carbsPerBase,
                 fiberPerBase,
                 alcoholPerBase,
-                visibility: this.productForm.value.visibility!,
+                visibility: this.productForm.controls.visibility.value,
             };
             const product = this.product();
             const nextUsdaFdcId = this.productForm.controls.usdaFdcId.value;

@@ -40,7 +40,7 @@ describe('FdUiInputComponent', () => {
 
         const label = el.querySelector('.fd-ui-input__label-text');
         expect(label).toBeTruthy();
-        expect(label!.textContent).toBe('Username');
+        expect(label?.textContent).toBe('Username');
     });
 
     it('should show required asterisk when required', () => {
@@ -50,7 +50,7 @@ describe('FdUiInputComponent', () => {
 
         const asterisk = el.querySelector('.fd-ui-input__required');
         expect(asterisk).toBeTruthy();
-        expect(asterisk!.textContent).toBe('*');
+        expect(asterisk?.textContent).toBe('*');
     });
 
     it('should render prefix icon', () => {
@@ -74,8 +74,9 @@ describe('FdUiInputComponent', () => {
         fixture.detectChanges();
 
         const spy = vi.spyOn(component.suffixButtonClicked, 'emit');
-        const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix')!;
-        button.click();
+        const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix');
+        expect(button).toBeTruthy();
+        button?.click();
 
         expect(spy).toHaveBeenCalled();
     });
@@ -86,8 +87,9 @@ describe('FdUiInputComponent', () => {
         fixture.detectChanges();
 
         const spy = vi.spyOn(component.suffixButtonClicked, 'emit');
-        const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix')!;
-        button.click();
+        const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix');
+        expect(button).toBeTruthy();
+        button?.click();
 
         expect(spy).not.toHaveBeenCalled();
     });
@@ -96,17 +98,20 @@ describe('FdUiInputComponent', () => {
         component.writeValue('hello');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        expect(input.value).toBe('hello');
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input?.value).toBe('hello');
     });
 
     it('should call onChange on input event', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        input.value = 'test';
-        input.dispatchEvent(new Event('input'));
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input).toBeTruthy();
+        if (input) {
+            input.value = 'test';
+        }
+        input?.dispatchEvent(new Event('input'));
 
         expect(onChangeSpy).toHaveBeenCalledWith('test');
     });
@@ -115,8 +120,9 @@ describe('FdUiInputComponent', () => {
         const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        input.dispatchEvent(new Event('blur'));
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input).toBeTruthy();
+        input?.dispatchEvent(new Event('blur'));
 
         expect(onTouchedSpy).toHaveBeenCalled();
     });
@@ -125,8 +131,8 @@ describe('FdUiInputComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        expect(input.disabled).toBe(true);
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input?.disabled).toBe(true);
     });
 
     it('should not process input when disabled', () => {
@@ -134,9 +140,12 @@ describe('FdUiInputComponent', () => {
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        input.value = 'blocked';
-        input.dispatchEvent(new Event('input'));
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input).toBeTruthy();
+        if (input) {
+            input.value = 'blocked';
+        }
+        input?.dispatchEvent(new Event('input'));
 
         expect(onChangeSpy).not.toHaveBeenCalled();
     });
@@ -145,12 +154,13 @@ describe('FdUiInputComponent', () => {
         fixture.componentRef.setInput('label', 'Name');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        input.dispatchEvent(new Event('focus'));
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input).toBeTruthy();
+        input?.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
-        expect(wrapper!.classList).toContain('fd-ui-input--floating');
+        expect(wrapper?.classList).toContain('fd-ui-input--floating');
     });
 
     it('should float label when has value', () => {
@@ -159,40 +169,44 @@ describe('FdUiInputComponent', () => {
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
-        expect(wrapper!.classList).toContain('fd-ui-input--floating');
+        expect(wrapper?.classList).toContain('fd-ui-input--floating');
     });
 
     it('should float label when native input has autofilled value before focus', () => {
         fixture.componentRef.setInput('label', 'Email');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        input.value = 'autofilled@example.com';
-        input.dispatchEvent(new Event('focus'));
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input).toBeTruthy();
+        if (input) {
+            input.value = 'autofilled@example.com';
+        }
+        input?.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
-        expect(wrapper!.classList).toContain('fd-ui-input--floating');
+        expect(wrapper?.classList).toContain('fd-ui-input--floating');
     });
 
     it('should show placeholder only when focused and empty', () => {
         fixture.componentRef.setInput('placeholder', 'Enter text');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input).toBeTruthy();
 
         // Not focused and empty: no placeholder
-        expect(input.getAttribute('placeholder')).toBeNull();
+        expect(input?.getAttribute('placeholder')).toBeNull();
 
         // Focused and empty: show placeholder
-        input.dispatchEvent(new Event('focus'));
+        input?.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
-        expect(input.getAttribute('placeholder')).toBe('Enter text');
+        expect(input?.getAttribute('placeholder')).toBe('Enter text');
 
         // Focused with value: no placeholder
         component.writeValue('x');
         fixture.detectChanges();
-        expect(input.getAttribute('placeholder')).toBeNull();
+        expect(input?.getAttribute('placeholder')).toBeNull();
     });
 
     it('should display error message', () => {
@@ -201,7 +215,7 @@ describe('FdUiInputComponent', () => {
 
         const errorEl = el.querySelector('.fd-ui-input__error');
         expect(errorEl).toBeTruthy();
-        expect(errorEl!.textContent).toBe('Field is required');
+        expect(errorEl?.textContent).toBe('Field is required');
     });
 
     it('should apply size class', () => {
@@ -209,15 +223,15 @@ describe('FdUiInputComponent', () => {
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
-        expect(wrapper!.classList).toContain('fd-ui-input--size-lg');
+        expect(wrapper?.classList).toContain('fd-ui-input--size-lg');
     });
 
     it('should set type attribute on input element', () => {
         fixture.componentRef.setInput('type', 'password');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        expect(input.getAttribute('type')).toBe('password');
+        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
+        expect(input?.getAttribute('type')).toBe('password');
     });
 
     describe('with TestHost (FormControl integration)', () => {
@@ -234,23 +248,29 @@ describe('FdUiInputComponent', () => {
             hostComponent.ctrl.setValue('from form');
             hostFixture.detectChanges();
 
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-            expect(input.value).toBe('from form');
+            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
+            expect(input?.value).toBe('from form');
         });
 
         it('should propagate input value to FormControl', () => {
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-            input.value = 'typed';
-            input.dispatchEvent(new Event('input'));
+            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
+            expect(input).toBeTruthy();
+            if (input) {
+                input.value = 'typed';
+            }
+            input?.dispatchEvent(new Event('input'));
             hostFixture.detectChanges();
 
             expect(hostComponent.ctrl.value).toBe('typed');
         });
 
         it('should sync native autofilled value to FormControl on focus', () => {
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-            input.value = 'autofilled@example.com';
-            input.dispatchEvent(new Event('focus'));
+            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
+            expect(input).toBeTruthy();
+            if (input) {
+                input.value = 'autofilled@example.com';
+            }
+            input?.dispatchEvent(new Event('focus'));
             hostFixture.detectChanges();
 
             expect(hostComponent.ctrl.value).toBe('autofilled@example.com');
@@ -259,8 +279,9 @@ describe('FdUiInputComponent', () => {
         it('should mark control as touched on blur', () => {
             expect(hostComponent.ctrl.touched).toBe(false);
 
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-            input.dispatchEvent(new Event('blur'));
+            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
+            expect(input).toBeTruthy();
+            input?.dispatchEvent(new Event('blur'));
             hostFixture.detectChanges();
 
             expect(hostComponent.ctrl.touched).toBe(true);
@@ -270,8 +291,8 @@ describe('FdUiInputComponent', () => {
             hostComponent.ctrl.disable();
             hostFixture.detectChanges();
 
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-            expect(input.disabled).toBe(true);
+            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
+            expect(input?.disabled).toBe(true);
         });
     });
 });

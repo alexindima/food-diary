@@ -187,11 +187,11 @@ describe('nutrition-form.utils', () => {
             expect(result.isEmpty).toBe(false);
             expect(result.segments.length).toBe(2);
 
-            const proteinSegment = result.segments.find(s => s.key === 'proteins')!;
-            const fatSegment = result.segments.find(s => s.key === 'fats')!;
+            const proteinSegment = result.segments.find(s => s.key === 'proteins');
+            const fatSegment = result.segments.find(s => s.key === 'fats');
 
-            expect(proteinSegment.percent).toBeCloseTo(89.595, 2);
-            expect(fatSegment.percent).toBeCloseTo(10.405, 2);
+            expect(proteinSegment?.percent).toBeCloseTo(89.595, 2);
+            expect(fatSegment?.percent).toBeCloseTo(10.405, 2);
         });
 
         it('should have segments that sum to 100%', () => {

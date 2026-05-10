@@ -75,7 +75,7 @@ export class RecipeCommentsComponent {
             return;
         }
 
-        const text = this.commentControl.value!.trim();
+        const text = (this.commentControl.value ?? '').trim();
         const editId = this.editingCommentId();
         this.isSubmitting.set(true);
 

@@ -100,7 +100,10 @@ export class FdUiToastService {
                 ),
             );
             this.scheduleDismiss(existingToast.id, options.duration ?? 5000);
-            return this.refs.get(existingToast.id)!;
+            const existingRef = this.refs.get(existingToast.id);
+            if (existingRef) {
+                return existingRef;
+            }
         }
 
         const id = this.generateId();

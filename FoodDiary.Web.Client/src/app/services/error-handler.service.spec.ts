@@ -27,7 +27,7 @@ describe('GlobalErrorHandler', () => {
         handler.handleError(error);
 
         expect(observabilitySpy.recordClientError).toHaveBeenCalledTimes(1);
-        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['location']).toBeDefined();
     });
 
@@ -35,14 +35,14 @@ describe('GlobalErrorHandler', () => {
         const error = new Error('Something went wrong');
         handler.handleError(error);
 
-        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['message']).toBe('Something went wrong');
     });
 
     it("should use 'Unknown error' when no message", () => {
         handler.handleError({});
 
-        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['message']).toBe('Unknown error');
     });
 
@@ -50,7 +50,7 @@ describe('GlobalErrorHandler', () => {
         const error = new Error('With stack');
         handler.handleError(error);
 
-        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)![0] as Record<string, unknown>;
+        const payload = observabilitySpy.recordClientError.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['stack']).toBeTruthy();
         expect((payload['stack'] as string).length).toBeGreaterThan(0);
     });

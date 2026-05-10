@@ -93,7 +93,11 @@ export class BarcodeScannerComponent {
     private async scanFrameAsync(video: HTMLVideoElement): Promise<void> {
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             try {
-                const barcodes = await this.detector!.detect(video);
+                const detector = this.detector;
+                if (!detector) {
+                    return;
+                }
+                const barcodes = await detector.detect(video);
                 if (barcodes.length > 0) {
                     this.stopCamera();
                     this.dialogRef.close(barcodes[0].rawValue);

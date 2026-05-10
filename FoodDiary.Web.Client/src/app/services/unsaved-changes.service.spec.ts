@@ -31,7 +31,7 @@ describe('UnsavedChangesService', () => {
         service.register(handler);
         const result = service.getHandler();
         expect(result).toBe(handler);
-        expect(result!.hasChanges).toBeDefined();
+        expect(result?.hasChanges).toBeDefined();
     });
 
     it('should clear handler when called without argument', () => {

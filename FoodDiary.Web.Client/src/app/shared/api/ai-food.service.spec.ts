@@ -106,9 +106,9 @@ describe('AiFoodService', () => {
         };
 
         service.getUsageSummary().subscribe(response => {
-            expect(response!.inputLimit).toBe(10000);
-            expect(response!.inputUsed).toBe(2500);
-            expect(response!.resetAtUtc).toBe('2026-04-01T00:00:00Z');
+            expect(response?.inputLimit).toBe(10000);
+            expect(response?.inputUsed).toBe(2500);
+            expect(response?.resetAtUtc).toBe('2026-04-01T00:00:00Z');
         });
 
         const req = httpMock.expectOne(`${baseUrl}/usage/me`);

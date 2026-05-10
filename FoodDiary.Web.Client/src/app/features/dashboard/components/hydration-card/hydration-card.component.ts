@@ -25,7 +25,10 @@ export class HydrationCardComponent {
     public readonly goalAction = output<void>();
 
     public readonly addAmount = computed(() => Math.max(1, this.addStep));
-    public readonly hasGoal = computed(() => !!this.goal() && this.goal()! > 0);
+    public readonly hasGoal = computed(() => {
+        const goal = this.goal();
+        return !!goal && goal > 0;
+    });
     public readonly percent = computed(() => {
         if (!this.hasGoal()) {
             return 0;

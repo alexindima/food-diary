@@ -116,9 +116,10 @@ export class StatisticsFacade {
 
         return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
     });
-    public readonly hasBodyData = computed(
-        () => !!this.bodyChartData() && (this.bodyChartData()!.datasets[0].data as (number | null)[]).some(value => value !== null),
-    );
+    public readonly hasBodyData = computed(() => {
+        const bodyChartData = this.bodyChartData();
+        return !!bodyChartData && (bodyChartData.datasets[0].data as (number | null)[]).some(value => value !== null);
+    });
 
     private readonly customRangeValue = toSignal(
         this.customRangeControl.valueChanges.pipe(

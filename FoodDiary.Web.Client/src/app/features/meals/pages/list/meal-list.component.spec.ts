@@ -210,8 +210,8 @@ describe('MealListComponent', () => {
         const march15Group = grouped.find(g => g.date.getFullYear() === 2024 && g.date.getMonth() === 2 && g.date.getDate() === 15);
         expect(march16Group).toBeDefined();
         expect(march15Group).toBeDefined();
-        expect(march15Group!.items.length).toBe(2);
-        expect(march16Group!.items.length).toBe(1);
+        expect(march15Group?.items.length).toBe(2);
+        expect(march16Group?.items.length).toBe(1);
     });
 
     it('should group meals by local calendar date instead of UTC date', () => {

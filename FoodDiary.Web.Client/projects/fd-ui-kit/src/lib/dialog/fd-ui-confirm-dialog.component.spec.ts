@@ -40,9 +40,9 @@ describe('FdUiConfirmDialogComponent', () => {
         const titleEl = nativeEl.querySelector('.fd-ui-dialog__title');
         const messageEl = nativeEl.querySelector('.fd-ui-confirm-dialog__message');
         expect(titleEl).toBeTruthy();
-        expect(titleEl!.textContent).toContain('Delete Item');
+        expect(titleEl?.textContent).toContain('Delete Item');
         expect(messageEl).toBeTruthy();
-        expect(messageEl!.textContent).toContain('This action cannot be undone.');
+        expect(messageEl?.textContent).toContain('This action cannot be undone.');
     });
 
     it('should close with true on confirm', () => {
@@ -62,7 +62,7 @@ describe('FdUiConfirmDialogComponent', () => {
         const nativeEl = fixture.nativeElement as HTMLElement;
         const confirmBtn = nativeEl.querySelector('.fd-ui-dialog__footer fd-ui-button:last-child button');
         expect(confirmBtn).toBeTruthy();
-        expect(confirmBtn!.classList).toContain('fd-ui-button--danger');
+        expect(confirmBtn?.classList).toContain('fd-ui-button--danger');
     });
 
     it('should use custom button labels when provided', () => {

@@ -116,9 +116,9 @@ describe('MealService', () => {
     it('should get meal by id', () => {
         service.getById('m1').subscribe(result => {
             expect(result).not.toBeNull();
-            expect(result!.id).toBe('m1');
-            expect(result!.date).toBe('2026-03-28');
-            expect(result!.mealType).toBe('LUNCH');
+            expect(result?.id).toBe('m1');
+            expect(result?.date).toBe('2026-03-28');
+            expect(result?.mealType).toBe('LUNCH');
         });
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);
@@ -145,7 +145,7 @@ describe('MealService', () => {
 
         service.create(createData).subscribe(result => {
             expect(result).not.toBeNull();
-            expect(result!.id).toBe('m1');
+            expect(result?.id).toBe('m1');
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);
@@ -278,7 +278,7 @@ describe('MealService', () => {
 
         service.update('m1', updateData).subscribe(result => {
             expect(result).not.toBeNull();
-            expect(result!.id).toBe('m1');
+            expect(result?.id).toBe('m1');
         });
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);

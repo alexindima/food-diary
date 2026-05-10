@@ -19,8 +19,8 @@ export class DashboardLayoutService {
     private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? 1024 : window.innerWidth);
 
     public readonly layoutSettings = signal<DashboardLayoutSettings>({
-        web: [...DEFAULT_LAYOUT.web!],
-        mobile: [...DEFAULT_LAYOUT.mobile!],
+        web: [...(DEFAULT_LAYOUT.web ?? [])],
+        mobile: [...(DEFAULT_LAYOUT.mobile ?? [])],
     });
 
     public readonly isEditingLayout = signal<boolean>(false);

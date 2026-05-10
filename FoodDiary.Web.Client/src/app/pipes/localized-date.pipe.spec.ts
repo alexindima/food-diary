@@ -35,7 +35,7 @@ describe('LocalizedDatePipe', () => {
         const result = pipe.transform(date);
         expect(result).toBeDefined();
         expect(typeof result).toBe('string');
-        expect(result!.length).toBeGreaterThan(0);
+        expect(result?.length).toBeGreaterThan(0);
     });
 
     it('should return undefined for null input', () => {

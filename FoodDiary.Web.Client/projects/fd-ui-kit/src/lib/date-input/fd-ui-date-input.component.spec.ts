@@ -59,9 +59,9 @@ describe('FdUiDateInputComponent', () => {
 
         const dateValue = component['value']();
         expect(dateValue).toBeTruthy();
-        expect(dateValue!.getFullYear()).toBe(2025);
-        expect(dateValue!.getMonth()).toBe(2);
-        expect(dateValue!.getDate()).toBe(15);
+        expect(dateValue?.getFullYear()).toBe(2025);
+        expect(dateValue?.getMonth()).toBe(2);
+        expect(dateValue?.getDate()).toBe(15);
     });
 
     it('should write null value via CVA', () => {
@@ -78,9 +78,9 @@ describe('FdUiDateInputComponent', () => {
 
         const dateValue = component['value']();
         expect(dateValue).toBeTruthy();
-        expect(dateValue!.getFullYear()).toBe(2025);
-        expect(dateValue!.getMonth()).toBe(5);
-        expect(dateValue!.getDate()).toBe(20);
+        expect(dateValue?.getFullYear()).toBe(2025);
+        expect(dateValue?.getMonth()).toBe(5);
+        expect(dateValue?.getDate()).toBe(20);
     });
 
     it('should display error', () => {

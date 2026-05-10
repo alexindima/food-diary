@@ -10,7 +10,11 @@ export const mealResolver: ResolveFn<Meal | null> = route => {
     const mealService = inject(MealService);
     const navigationService = inject(NavigationService);
 
-    const mealId = route.paramMap.get('id')!;
+    const mealId = route.paramMap.get('id');
+    if (!mealId) {
+        void navigationService.navigateToConsumptionListAsync();
+        return of(null);
+    }
 
     return mealService.getById(mealId).pipe(
         map(meal => {
