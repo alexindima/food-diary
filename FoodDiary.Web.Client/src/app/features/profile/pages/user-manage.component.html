@@ -198,13 +198,13 @@
                                     <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_RENEWAL' | translate }}</span>
                                     <strong>{{ billingRenewalLabelKey() | translate }}</strong>
                                 </div>
-                                @if (billing.currentPeriodStartUtc) {
+                                @if (billingCurrentPeriodStartLabel(); as startDate) {
                                     <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_PERIOD_START' | translate }}</span>
-                                        <strong>{{ billing.currentPeriodStartUtc | date: 'mediumDate' }}</strong>
+                                        <strong>{{ startDate }}</strong>
                                     </div>
                                 }
-                                @if (billing.currentPeriodEndUtc) {
+                                @if (billingCurrentPeriodEndLabel(); as endDate) {
                                     <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">
                                             {{
@@ -214,13 +214,13 @@
                                                 ) | translate
                                             }}
                                         </span>
-                                        <strong>{{ billing.currentPeriodEndUtc | date: 'mediumDate' }}</strong>
+                                        <strong>{{ endDate }}</strong>
                                     </div>
                                 }
-                                @if (billing.nextBillingAttemptUtc && !billing.cancelAtPeriodEnd) {
+                                @if (!billing.cancelAtPeriodEnd && billingNextAttemptLabel(); as nextAttemptDate) {
                                     <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                                         <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_NEXT_CHARGE' | translate }}</span>
-                                        <strong>{{ billing.nextBillingAttemptUtc | date: 'mediumDate' }}</strong>
+                                        <strong>{{ nextAttemptDate }}</strong>
                                     </div>
                                 }
                             </div>

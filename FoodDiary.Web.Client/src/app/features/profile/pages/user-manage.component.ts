@@ -1,4 +1,4 @@
-import { DatePipe, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -92,7 +92,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiFormErrorComponent,
         FdUiStatusBadgeComponent,
         FdUiSwitchComponent,
-        DatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -217,6 +216,18 @@ export class UserManageComponent {
     public readonly billingProviderLabel = computed(() => {
         const overview = this.billingOverview();
         return this.getBillingProviderLabel(overview?.subscriptionProvider ?? overview?.provider ?? null);
+    });
+    public readonly billingCurrentPeriodStartLabel = computed(() => {
+        this.languageVersion();
+        return this.formatLocalizedDate(this.billingOverview()?.currentPeriodStartUtc);
+    });
+    public readonly billingCurrentPeriodEndLabel = computed(() => {
+        this.languageVersion();
+        return this.formatLocalizedDate(this.billingOverview()?.currentPeriodEndUtc);
+    });
+    public readonly billingNextAttemptLabel = computed(() => {
+        this.languageVersion();
+        return this.formatLocalizedDate(this.billingOverview()?.nextBillingAttemptUtc);
     });
     public readonly billingRenewalLabelKey = computed(() => {
         const overview = this.billingOverview();

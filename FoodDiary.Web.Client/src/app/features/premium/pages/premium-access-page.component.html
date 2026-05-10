@@ -75,10 +75,10 @@
                 }
             </div>
 
-            @if (overview.currentPeriodEndUtc) {
+            @if (currentPeriodEndLabel(); as currentPeriodEnd) {
                 <p class="premium-access-page__meta fd-ui-body-sm">
                     {{ (overview.cancelAtPeriodEnd ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON') | translate }}
-                    <strong>{{ overview.currentPeriodEndUtc | date: 'mediumDate' }}</strong>
+                    <strong>{{ currentPeriodEnd }}</strong>
                 </p>
             }
 

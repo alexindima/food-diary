@@ -1,6 +1,7 @@
-import { CommonModule, DatePipe, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -25,7 +26,6 @@ import { type BillingOverview, type BillingPlan, type BillingProvider } from '..
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
-        DatePipe,
         FdPageContainerDirective,
         PageHeaderComponent,
         FdUiButtonComponent,
@@ -42,6 +42,7 @@ export class PremiumAccessPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
 
@@ -53,6 +54,7 @@ export class PremiumAccessPageComponent {
     public readonly portalLoading = signal(false);
     public readonly errorMessage = signal<string | null>(null);
     public readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
+    private readonly languageVersion = signal(0);
 
     public readonly canManageBilling = computed(() => this.overview()?.manageBillingAvailable ?? false);
     public readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
@@ -79,6 +81,10 @@ export class PremiumAccessPageComponent {
             planLabelKey: this.isPremium() && overview?.plan ? this.getPlanLabelKey(overview.plan) : null,
             statusLabelKey: this.getStatusLabelKey(overview?.subscriptionStatus ?? null),
         };
+    });
+    public readonly currentPeriodEndLabel = computed(() => {
+        this.languageVersion();
+        return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
     });
     public readonly planCards = computed<PremiumPlanCardViewModel[]>(() => {
         const providers = this.availableProviders().map(provider => ({
@@ -112,6 +118,9 @@ export class PremiumAccessPageComponent {
     });
 
     public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
         void this.initializePageAsync();
     }
 
@@ -201,6 +210,21 @@ export class PremiumAccessPageComponent {
             default:
                 return provider;
         }
+    }
+
+    private formatMediumDate(value: string | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+            dateStyle: 'medium',
+        }).format(date);
     }
 
     private async initializePageAsync(): Promise<void> {
