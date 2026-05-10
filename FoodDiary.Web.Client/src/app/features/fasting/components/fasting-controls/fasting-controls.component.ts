@@ -72,6 +72,29 @@ export class FastingControlsComponent {
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     public readonly cyclicPresets = CYCLIC_PRESETS;
+    public readonly customIntermittentEatingWindowHours = computed(() => Math.max(1, 24 - this.customIntermittentFastHours()));
+    public readonly cyclicEatDayEatingWindowHours = computed(() => Math.max(1, 24 - this.cyclicEatDayFastHours()));
+    public readonly endActionLabelKey = computed(() => {
+        if (this.isCurrentSessionCyclic()) {
+            return 'FASTING.STOP_CYCLE';
+        }
+
+        return this.isCurrentSessionIntermittent() ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST';
+    });
+    public readonly canManageCurrentCyclicDay = computed(() => {
+        const session = this.currentSession();
+        return (
+            !!session &&
+            !session.endedAtUtc &&
+            session.planType === 'Cyclic' &&
+            (session.occurrenceKind === 'FastDay' || session.occurrenceKind === 'EatDay')
+        );
+    });
+    public readonly skipCycleActionLabelKey = computed(() =>
+        this.getCurrentCyclicOccurrenceKind() === 'EatDay' ? 'FASTING.START_FAST_NOW' : 'FASTING.SKIP_FASTING_PERIOD',
+    );
+    public readonly postponeCycleActionLabelKey = computed(() => 'FASTING.SKIP_DAY');
+    public readonly isCustomCyclicPresetSelected = computed(() => this.cyclicUsesCustomPreset());
     public readonly modeOptions = computed(() =>
         this.buildSegmentedToggleOptions([
             { labelKey: 'FASTING.MODE_INTERMITTENT', value: 'intermittent' },
@@ -262,7 +285,7 @@ export class FastingControlsComponent {
         this.openCycleActionDialog(
             this.getSkipCycleConfirmTitleKey(),
             this.getSkipCycleConfirmMessageKey(),
-            this.getSkipCycleActionLabelKey(),
+            this.skipCycleActionLabelKey(),
             () => {
                 this.facade.skipCyclicDay();
             },
@@ -273,49 +296,11 @@ export class FastingControlsComponent {
         this.openCycleActionDialog(
             this.getPostponeCycleConfirmTitleKey(),
             this.getPostponeCycleConfirmMessageKey(),
-            this.getPostponeCycleActionLabelKey(),
+            this.postponeCycleActionLabelKey(),
             () => {
                 this.facade.postponeCyclicDay();
             },
         );
-    }
-
-    public getEndActionLabelKey(): string {
-        if (this.isCurrentSessionCyclic()) {
-            return 'FASTING.STOP_CYCLE';
-        }
-
-        return this.isCurrentSessionIntermittent() ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST';
-    }
-
-    public canManageCurrentCyclicDay(): boolean {
-        const session = this.currentSession();
-        return (
-            !!session &&
-            !session.endedAtUtc &&
-            session.planType === 'Cyclic' &&
-            (session.occurrenceKind === 'FastDay' || session.occurrenceKind === 'EatDay')
-        );
-    }
-
-    public getSkipCycleActionLabelKey(): string {
-        return this.getCurrentCyclicOccurrenceKind() === 'EatDay' ? 'FASTING.START_FAST_NOW' : 'FASTING.SKIP_FASTING_PERIOD';
-    }
-
-    public getPostponeCycleActionLabelKey(): string {
-        return 'FASTING.SKIP_DAY';
-    }
-
-    public isCustomCyclicPresetSelected(): boolean {
-        return this.cyclicUsesCustomPreset();
-    }
-
-    public getCustomIntermittentEatingWindowHours(): number {
-        return Math.max(1, 24 - this.customIntermittentFastHours());
-    }
-
-    public getCyclicEatDayEatingWindowHours(): number {
-        return Math.max(1, 24 - this.cyclicEatDayFastHours());
     }
 
     private buildProtocolOptions(protocols: readonly { labelKey: string; value: FastingProtocol }[]): FdUiSegmentedToggleOption[] {

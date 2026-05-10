@@ -38,7 +38,7 @@
                                 />
                             </div>
                             <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
-                                {{ customIntermittentFastHours() }}:{{ getCustomIntermittentEatingWindowHours() }}
+                                {{ customIntermittentFastHours() }}:{{ customIntermittentEatingWindowHours() }}
                             </div>
                         </div>
                     }
@@ -148,7 +148,7 @@
                                 />
                             </div>
                             <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
-                                {{ cyclicEatDayFastHours() }}:{{ getCyclicEatDayEatingWindowHours() }}
+                                {{ cyclicEatDayFastHours() }}:{{ cyclicEatDayEatingWindowHours() }}
                             </div>
                         </div>
                     }
@@ -325,7 +325,7 @@
                         [loading]="isEnding()"
                         [disabled]="isEnding() || isReducing() || isExtending() || isUpdatingCycle()"
                     >
-                        {{ getEndActionLabelKey() | translate }}
+                        {{ endActionLabelKey() | translate }}
                     </fd-ui-button>
                 </div>
             </div>
@@ -340,7 +340,7 @@
                             (click)="skipCyclicDay()"
                             [disabled]="isUpdatingCycle() || isEnding()"
                         >
-                            {{ getSkipCycleActionLabelKey() | translate }}
+                            {{ skipCycleActionLabelKey() | translate }}
                         </fd-ui-button>
                         <fd-ui-button
                             variant="secondary"
@@ -349,13 +349,13 @@
                             (click)="postponeCyclicDay()"
                             [disabled]="isUpdatingCycle() || isEnding()"
                         >
-                            {{ getPostponeCycleActionLabelKey() | translate }}
+                            {{ postponeCycleActionLabelKey() | translate }}
                         </fd-ui-button>
                     </div>
                 }
 
                 <fd-ui-button size="sm" (click)="endFasting()" [loading]="isEnding()" [disabled]="isEnding() || isUpdatingCycle()">
-                    {{ getEndActionLabelKey() | translate }}
+                    {{ endActionLabelKey() | translate }}
                 </fd-ui-button>
             </div>
         }
