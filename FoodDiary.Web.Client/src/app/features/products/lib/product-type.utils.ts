@@ -15,7 +15,7 @@ const PRODUCT_TYPE_ALIASES: Partial<Record<string, ProductType>> = {
 };
 
 export function normalizeProductType(value?: ProductType | string | null): ProductType | null {
-    if (!value) {
+    if (value === null || value === undefined || value.toString().trim().length === 0) {
         return null;
     }
 

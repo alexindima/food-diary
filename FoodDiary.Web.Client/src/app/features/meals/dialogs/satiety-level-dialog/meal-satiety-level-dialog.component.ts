@@ -14,6 +14,8 @@ export interface SatietyLevelDialogData {
     value: number | null;
 }
 
+const DEFAULT_SATIETY_LEVEL = 3;
+
 @Component({
     selector: 'fd-meal-satiety-level-dialog',
     standalone: true,
@@ -26,16 +28,17 @@ export class MealSatietyLevelDialogComponent {
     public readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<MealSatietyLevelDialogComponent>>(FdUiDialogRef);
     private readonly translateService = inject(TranslateService);
+    private readonly defaultSatietyLevel = DEFAULT_SATIETY_LEVEL;
 
     public readonly selectedValue = signal<number | null>(null);
     public readonly subtitleKey = computed(() => this.data.subtitleKey ?? null);
     public readonly subtitle = computed(() => {
         const key = this.subtitleKey();
-        return key ? this.translateService.instant(key) : undefined;
+        return key !== null && key.trim().length > 0 ? this.translateService.instant(key) : undefined;
     });
 
     public constructor() {
-        this.selectedValue.set(this.data.value ?? 3);
+        this.selectedValue.set(this.data.value ?? this.defaultSatietyLevel);
     }
 
     public onValueSelected(level: number): void {

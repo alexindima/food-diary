@@ -22,6 +22,9 @@ import {
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
 
+const DASHBOARD_TREND_DAYS = 7;
+const RESIZE_AUDIT_MS = 150;
+
 @Injectable({ providedIn: 'root' })
 export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
@@ -33,7 +36,8 @@ export class DashboardFacade {
 
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
-    private readonly trendDays = 7;
+    private readonly trendDays = DASHBOARD_TREND_DAYS;
+    private readonly resizeAuditMs = RESIZE_AUDIT_MS;
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
@@ -95,7 +99,7 @@ export class DashboardFacade {
 
         if (typeof window !== 'undefined') {
             fromEvent(window, 'resize')
-                .pipe(auditTime(150), takeUntilDestroyed(this.destroyRef))
+                .pipe(auditTime(this.resizeAuditMs), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
                     this.layout.updateViewportWidth(window.innerWidth);
                 });
@@ -166,7 +170,9 @@ export class DashboardFacade {
     }
 
     private getCurrentLocale(): string {
-        const lang = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
+        const currentLang = this.translateService.getCurrentLang();
+        const fallbackLang = this.translateService.getFallbackLang() ?? 'en';
+        const lang = currentLang.length > 0 ? currentLang : fallbackLang.length > 0 ? fallbackLang : 'en';
         return lang.split(/[-_]/)[0];
     }
 }

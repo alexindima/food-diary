@@ -26,7 +26,7 @@ export class PremiumBillingService extends ApiService {
     }
 
     public createCheckoutSession(plan: BillingPlan, provider?: BillingProvider): Observable<CheckoutSessionResponse> {
-        const payload = provider ? { plan, provider } : { plan };
+        const payload = provider !== undefined ? { plan, provider } : { plan };
         return this.post<CheckoutSessionResponse>('checkout-session', payload).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Create checkout session error', error)),
         );

@@ -108,7 +108,7 @@ export class FdUiDialogService {
     }
 
     private asArray(classes: string | string[] | undefined): string[] {
-        if (!classes) {
+        if (classes === undefined || classes.length === 0) {
             return [];
         }
         return Array.isArray(classes) ? classes : [classes];

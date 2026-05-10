@@ -65,7 +65,7 @@ export class DietologistClientsPageComponent {
 
     private getClientTitle(client: ClientSummary): string {
         const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
-        return fullName || client.email;
+        return fullName.length > 0 ? fullName : client.email;
     }
 
     private getClientInitials(client: ClientSummary): string {

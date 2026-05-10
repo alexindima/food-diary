@@ -19,7 +19,7 @@ export class MealPlanFacade {
     private readonly selectedPlanResource = resource({
         params: () => this.selectedPlanId(),
         loader: async ({ params }): Promise<MealPlan | null> => {
-            if (!params) {
+            if (params === null || params.trim().length === 0) {
                 return null;
             }
 

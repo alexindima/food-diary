@@ -15,7 +15,7 @@ export class LessonService extends ApiService {
 
     public getAll(locale: string, category?: string): Observable<LessonSummary[]> {
         const params: Record<string, string> = { locale };
-        if (category) {
+        if (category !== undefined && category.trim().length > 0) {
             params['category'] = category;
         }
         return super

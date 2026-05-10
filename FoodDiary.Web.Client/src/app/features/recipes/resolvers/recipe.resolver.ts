@@ -11,7 +11,7 @@ export const recipeResolver: ResolveFn<Recipe | null> = route => {
     const navigationService = inject(NavigationService);
 
     const recipeId = route.paramMap.get('id');
-    if (!recipeId) {
+    if (recipeId === null || recipeId.trim().length === 0) {
         void navigationService.navigateToRecipeListAsync();
         return of(null);
     }

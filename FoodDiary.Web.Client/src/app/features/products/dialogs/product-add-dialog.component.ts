@@ -43,7 +43,7 @@ export class ProductAddDialogComponent extends BaseProductManageComponent {
 
     public override async onSubmitAsync(): Promise<Product | null> {
         const product = await super.onSubmitAsync();
-        if (product) {
+        if (product !== null) {
             this.dialogRef.close(product);
         }
 

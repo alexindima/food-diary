@@ -32,7 +32,7 @@ function readCssColor(variable: string, fallback: string): string {
     }
 
     const value = window.getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
-    return value || fallback;
+    return value.length > 0 ? value : fallback;
 }
 
 function getChartColor(key: keyof typeof CHART_COLOR_VARIABLES): string {

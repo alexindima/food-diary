@@ -75,7 +75,7 @@ export class ProductBasicInfoComponent {
 
     public onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
         const suggestion = option.data as ProductNameSuggestion | undefined;
-        if (suggestion) {
+        if (suggestion !== undefined) {
             this.nameSuggestionSelected.emit(suggestion);
         }
     }

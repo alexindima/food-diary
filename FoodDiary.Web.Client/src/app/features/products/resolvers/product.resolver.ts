@@ -11,7 +11,7 @@ export const productResolver: ResolveFn<Product | null> = route => {
     const navigationService = inject(NavigationService);
 
     const productId = route.paramMap.get('id');
-    if (!productId) {
+    if (productId === null || productId.trim().length === 0) {
         void navigationService.navigateToProductListAsync();
         return of(null);
     }

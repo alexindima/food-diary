@@ -16,7 +16,7 @@ export class MealPlanService extends ApiService {
 
     public getAll(dietType?: string): Observable<MealPlanSummary[]> {
         const params: Record<string, string> = {};
-        if (dietType) {
+        if (dietType !== undefined && dietType.trim().length > 0) {
             params['dietType'] = dietType;
         }
         return super

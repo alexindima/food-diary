@@ -111,7 +111,7 @@ export class DashboardAppearanceDialogComponent {
             )
             .subscribe({
                 next: user => {
-                    if (!user) {
+                    if (user === null) {
                         this.handlePersistError();
                         return;
                     }

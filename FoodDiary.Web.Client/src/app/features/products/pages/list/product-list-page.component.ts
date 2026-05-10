@@ -61,7 +61,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
             .subscribe(data => {
                 const result = data as ProductDetailActionResult | undefined;
 
-                if (!result) {
+                if (result === undefined) {
                     return;
                 }
 
@@ -76,30 +76,24 @@ export class ProductListPageComponent extends ProductListBaseComponent {
                     return;
                 }
 
-                {
-                    if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
-                        return;
-                    }
-                    this.isDeleteInProgress = true;
-                    this.productData.setLoading(true);
-                    this.productService
-                        .deleteById(result.id)
-                        .pipe(finalize(() => (this.isDeleteInProgress = false)))
-                        .subscribe({
-                            next: () => {
-                                this.scrollToTop();
-                                this.loadProducts(
-                                    this.currentPageIndex + 1,
-                                    this.pageSize,
-                                    this.searchForm.controls.search.value,
-                                ).subscribe();
-                            },
-                            error: () => {
-                                this.productData.setLoading(false);
-                                this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
-                            },
-                        });
+                if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
+                    return;
                 }
+                this.isDeleteInProgress = true;
+                this.productData.setLoading(true);
+                this.productService
+                    .deleteById(result.id)
+                    .pipe(finalize(() => (this.isDeleteInProgress = false)))
+                    .subscribe({
+                        next: () => {
+                            this.scrollToTop();
+                            this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+                        },
+                        error: () => {
+                            this.productData.setLoading(false);
+                            this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
+                        },
+                    });
             });
     }
 }
