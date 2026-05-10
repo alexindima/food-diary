@@ -26,7 +26,7 @@ describe('NoticeBannerComponent', () => {
         fixture.componentRef.setInput('message', 'Test Message');
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         expect(el.querySelector('.fd-notice__title')?.textContent.trim()).toBe('Test Title');
         expect(el.querySelector('.fd-notice__message')?.textContent.trim()).toBe('Test Message');
     });
@@ -35,7 +35,7 @@ describe('NoticeBannerComponent', () => {
         fixture.componentRef.setInput('actionLabel', 'Click Me');
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const actionBtn = el.querySelector('.fd-notice__action');
         expect(actionBtn).toBeTruthy();
         expect(actionBtn?.textContent.trim()).toBe('Click Me');
@@ -44,7 +44,7 @@ describe('NoticeBannerComponent', () => {
     it('should not show action button when actionLabel is null', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const actionBtn = el.querySelector('.fd-notice__action');
         expect(actionBtn).toBeNull();
     });
@@ -56,7 +56,7 @@ describe('NoticeBannerComponent', () => {
         const actionSpy = vi.fn();
         component.action.subscribe(actionSpy);
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const actionBtn = el.querySelector<HTMLButtonElement>('.fd-notice__action');
         actionBtn?.click();
 
@@ -93,7 +93,7 @@ describe('NoticeBannerComponent', () => {
                 fixture.componentRef.setInput('type', type);
                 fixture.detectChanges();
 
-                const el: HTMLElement = fixture.nativeElement;
+                const el = fixture.nativeElement as HTMLElement;
                 const notice = el.querySelector('.fd-notice');
                 const toneClass = type === 'error' ? 'fd-ui-notice-surface--danger' : `fd-ui-notice-surface--${type}`;
                 expect(notice?.classList.contains('fd-ui-notice-surface')).toBe(true);
@@ -104,7 +104,7 @@ describe('NoticeBannerComponent', () => {
 
     it('should default to info type', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const notice = el.querySelector('.fd-notice');
         expect(notice?.classList.contains('fd-ui-notice-surface')).toBe(true);
         expect(notice?.classList.contains('fd-ui-notice-surface--info')).toBe(true);

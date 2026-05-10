@@ -24,7 +24,7 @@ describe('ManageHeaderComponent', () => {
 
     it('should render title', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const titleEl = el.querySelector('.fd-manage-header__title');
         expect(titleEl?.textContent.trim()).toBe('Manage Title');
     });
@@ -33,7 +33,7 @@ describe('ManageHeaderComponent', () => {
         fixture.componentRef.setInput('subtitle', 'Some subtitle');
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const subtitleEl = el.querySelector('.fd-manage-header__subtitle');
         expect(subtitleEl).toBeTruthy();
         expect(subtitleEl?.textContent.trim()).toBe('Some subtitle');
@@ -42,7 +42,7 @@ describe('ManageHeaderComponent', () => {
     it('should not render subtitle when null', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const subtitleEl = el.querySelector('.fd-manage-header__subtitle');
         expect(subtitleEl).toBeNull();
     });
@@ -53,7 +53,7 @@ describe('ManageHeaderComponent', () => {
         const backSpy = vi.fn();
         component.back.subscribe(backSpy);
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const backBtn = el.querySelector<HTMLElement>('.fd-manage-header__back');
         backBtn?.click();
 

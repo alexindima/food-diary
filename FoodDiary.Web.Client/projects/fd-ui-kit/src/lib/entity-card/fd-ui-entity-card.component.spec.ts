@@ -29,7 +29,7 @@ describe('FdUiEntityCardComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestHostComponent);
-        hostEl = fixture.nativeElement;
+        hostEl = fixture.nativeElement as HTMLElement;
         fixture.detectChanges();
     });
 

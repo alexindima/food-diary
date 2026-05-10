@@ -26,7 +26,7 @@ describe('FdUiInputComponent', () => {
 
         fixture = TestBed.createComponent(FdUiInputComponent);
         component = fixture.componentInstance;
-        el = fixture.nativeElement;
+        el = fixture.nativeElement as HTMLElement;
         fixture.detectChanges();
     });
 

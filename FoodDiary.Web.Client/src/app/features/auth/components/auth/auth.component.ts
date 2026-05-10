@@ -196,11 +196,11 @@ export class AuthComponent {
             this.renderGoogleButton();
         });
         effect(() => {
-            const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
+            const routeMode = this.route?.snapshot.paramMap.get('mode') === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
-            this.returnUrl = this.useRouting() ? (this.route?.snapshot.queryParams['returnUrl'] ?? null) : this.initialReturnUrl();
+            this.returnUrl = this.useRouting() ? (this.route?.snapshot.queryParamMap.get('returnUrl') ?? null) : this.initialReturnUrl();
             this.adminReturnUrl = this.useRouting()
-                ? (this.route?.snapshot.queryParams['adminReturnUrl'] ?? null)
+                ? (this.route?.snapshot.queryParamMap.get('adminReturnUrl') ?? null)
                 : this.initialAdminReturnUrl();
         });
         effect(() => {

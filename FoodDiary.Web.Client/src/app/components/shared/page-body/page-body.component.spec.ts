@@ -29,7 +29,7 @@ describe('PageBodyComponent', () => {
 
         const fixture = TestBed.createComponent(PageBodyComponent);
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         expect(el.querySelector('.fd-page-body')).toBeTruthy();
     });
 
@@ -40,7 +40,7 @@ describe('PageBodyComponent', () => {
 
         const hostFixture = TestBed.createComponent(TestHostComponent);
         hostFixture.detectChanges();
-        const el: HTMLElement = hostFixture.nativeElement;
+        const el = hostFixture.nativeElement as HTMLElement;
         const projected = el.querySelector('.projected');
         expect(projected).toBeTruthy();
         expect(projected?.textContent.trim()).toBe('Projected content');

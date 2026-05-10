@@ -62,7 +62,7 @@ describe('ProductCardComponent', () => {
 
     it('should display product name', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const nameEl = el.querySelector('.entity-card__name');
         expect(nameEl?.textContent.trim()).toBe('Test Product');
     });
@@ -73,7 +73,7 @@ describe('ProductCardComponent', () => {
         const openSpy = vi.fn();
         component.open.subscribe(openSpy);
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
 
@@ -93,7 +93,7 @@ describe('ProductCardComponent', () => {
 
     it('should display calories per base', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const caloriesEl = el.querySelector('.entity-card__calories-value');
         expect(caloriesEl?.textContent.trim()).toBe('290');
     });
@@ -101,7 +101,7 @@ describe('ProductCardComponent', () => {
     it('should display quality score progress', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const labelEl = el.querySelector('.entity-card__quality-label');
         const valueEl = el.querySelector('.entity-card__quality-value');
         const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
@@ -115,7 +115,7 @@ describe('ProductCardComponent', () => {
         fixture.componentRef.setInput('imageUrl', 'https://example.com/photo.jpg');
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const img = el.querySelector('.entity-card__thumb img');
         expect(img).toBeTruthy();
     });
@@ -123,7 +123,7 @@ describe('ProductCardComponent', () => {
     it('should show icon when imageUrl is not provided', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const icon = el.querySelector('.entity-card__thumb fd-ui-icon');
         expect(icon).toBeTruthy();
     });

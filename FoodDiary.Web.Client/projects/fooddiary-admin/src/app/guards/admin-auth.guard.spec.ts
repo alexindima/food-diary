@@ -43,7 +43,7 @@ describe('adminAuthGuard', () => {
         });
 
         route = new ActivatedRouteSnapshot();
-        state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url: '/users?page=2' });
+        state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url: '/users?page=2' }) as RouterStateSnapshot;
     });
 
     it('should allow authenticated admin', async () => {

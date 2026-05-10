@@ -26,7 +26,7 @@ describe('FdUiTextareaComponent', () => {
 
         fixture = TestBed.createComponent(FdUiTextareaComponent);
         component = fixture.componentInstance;
-        el = fixture.nativeElement;
+        el = fixture.nativeElement as HTMLElement;
         fixture.detectChanges();
     });
 

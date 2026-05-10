@@ -64,7 +64,7 @@ describe('RecipeCardComponent', () => {
 
     it('should display recipe name', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const titleEl = el.querySelector('.entity-card__name');
         expect(titleEl?.textContent.trim()).toBe('Test Recipe');
     });
@@ -75,7 +75,7 @@ describe('RecipeCardComponent', () => {
         const openSpy = vi.fn();
         component.open.subscribe(openSpy);
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
 
@@ -162,7 +162,7 @@ describe('RecipeCardComponent', () => {
 
     it('should display calories', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const caloriesEl = el.querySelector('.entity-card__calories-value');
         expect(caloriesEl?.textContent.trim()).toBe('368');
     });
@@ -170,7 +170,7 @@ describe('RecipeCardComponent', () => {
     it('should display quality score progress', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const labelEl = el.querySelector('.entity-card__quality-label');
         const valueEl = el.querySelector('.entity-card__quality-value');
         const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');

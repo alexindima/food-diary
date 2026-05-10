@@ -7,6 +7,7 @@ import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../services/localization.service';
+import type { FastingCheckInChartDialogData } from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
 import { FastingFacade } from '../lib/fasting.facade';
 import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
 import { FastingPageComponent } from './fasting-page.component';
@@ -140,17 +141,15 @@ describe('FastingPageComponent', () => {
 
         expect(component.canViewSessionCheckInChart(multiCheckInSession)).toBe(true);
         expect(dialogService.open).toHaveBeenCalledTimes(1);
-        expect(dialogService.open).toHaveBeenCalledWith(
-            expect.anything(),
-            expect.objectContaining({
-                size: 'lg',
-                panelClass: 'fd-ui-dialog-panel--chart',
-                data: expect.objectContaining({
-                    title: 'FASTING.CHECK_IN.CHART_TITLE',
-                    checkIns: multiCheckInSession.checkIns,
-                }),
-            }),
-        );
+        const call = dialogService.open.mock.calls[0] as
+            | [unknown, { size?: string; panelClass?: string; data?: FastingCheckInChartDialogData }]
+            | undefined;
+        const options = call?.[1];
+
+        expect(options?.size).toBe('lg');
+        expect(options?.panelClass).toBe('fd-ui-dialog-panel--chart');
+        expect(options?.data?.title).toBe('FASTING.CHECK_IN.CHART_TITLE');
+        expect(options?.data?.checkIns).toEqual(multiCheckInSession.checkIns);
     });
 
     it('tracks session check-in pagination locally', () => {

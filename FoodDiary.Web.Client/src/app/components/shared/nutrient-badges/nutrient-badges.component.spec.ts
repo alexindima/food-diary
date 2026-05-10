@@ -29,42 +29,42 @@ describe('NutrientBadgesComponent', () => {
 
     it('should render all nutrient values', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const chips = el.querySelectorAll('.nutrient-badges__chip-value');
         expect(chips.length).toBe(5);
     });
 
     it('should render protein value', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const proteinChip = el.querySelector('.nutrient-badges__chip--protein .nutrient-badges__chip-value');
         expect(proteinChip?.textContent).toContain('25');
     });
 
     it('should render fat value', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const fatChip = el.querySelector('.nutrient-badges__chip--fat .nutrient-badges__chip-value');
         expect(fatChip?.textContent).toContain('10');
     });
 
     it('should render carb value', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const carbChip = el.querySelector('.nutrient-badges__chip--carb .nutrient-badges__chip-value');
         expect(carbChip?.textContent).toContain('50');
     });
 
     it('should render fiber value', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const fiberChip = el.querySelector('.nutrient-badges__chip--fiber .nutrient-badges__chip-value');
         expect(fiberChip?.textContent).toContain('8');
     });
 
     it('should render alcohol value', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const alcoholChip = el.querySelector('.nutrient-badges__chip--alcohol .nutrient-badges__chip-value');
         expect(alcoholChip?.textContent).toContain('0');
     });

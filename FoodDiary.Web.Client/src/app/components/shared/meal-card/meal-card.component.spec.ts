@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiImagePreviewDialogData } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -67,7 +68,7 @@ describe('MealCardComponent', () => {
 
     it('should display calories', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const caloriesEl = el.querySelector('.entity-card__calories-value');
         expect(caloriesEl?.textContent.trim()).toBe('650');
     });
@@ -78,7 +79,7 @@ describe('MealCardComponent', () => {
         const openSpy = vi.fn();
         component.open.subscribe(openSpy);
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
 
@@ -169,18 +170,14 @@ describe('MealCardComponent', () => {
 
         component.handlePreview();
 
-        expect(openSpy).toHaveBeenCalledWith(
-            expect.any(Function),
-            expect.objectContaining({
-                data: expect.objectContaining({
-                    imageUrl: undefined,
-                    collageImages: [
-                        { url: 'https://example.com/product.jpg', alt: 'Product' },
-                        { url: 'https://example.com/recipe.jpg', alt: 'Recipe' },
-                    ],
-                }),
-            }),
-        );
+        const call = openSpy.mock.calls[0] as Parameters<FdUiDialogService['open']> | undefined;
+        const data = call?.[1]?.data as FdUiImagePreviewDialogData | undefined;
+
+        expect(data?.imageUrl).toBeUndefined();
+        expect(data?.collageImages).toEqual([
+            { url: 'https://example.com/product.jpg', alt: 'Product' },
+            { url: 'https://example.com/recipe.jpg', alt: 'Recipe' },
+        ]);
     });
 
     it('should use AI session image when meal imageUrl is empty', () => {
@@ -250,7 +247,7 @@ describe('MealCardComponent', () => {
     it('should display quality score progress', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const labelEl = el.querySelector('.entity-card__quality-label');
         const valueEl = el.querySelector('.entity-card__quality-value');
         const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
@@ -268,7 +265,7 @@ describe('MealCardComponent', () => {
         });
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const fillEl = el.querySelector<HTMLElement>('.entity-card__quality-fill');
 
         expect(fillEl?.classList.contains('entity-card__quality-fill--red')).toBe(true);

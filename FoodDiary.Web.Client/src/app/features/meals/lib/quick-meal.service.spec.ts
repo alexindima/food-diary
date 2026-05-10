@@ -124,9 +124,9 @@ describe('QuickMealService', () => {
             expect.objectContaining({
                 key: 'product-product-1',
                 amount: 90,
-                flashId: expect.any(Number),
             }),
         ]);
+        expect(typeof service.items()[0]?.flashId).toBe('number');
     });
 
     it('merges draft items when an edit changes the source to an existing item', () => {

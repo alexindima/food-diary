@@ -66,12 +66,10 @@ describe('ProductListFiltersDialogComponent', () => {
         component.toggleType(ProductType.Seafood);
         component.onApply();
 
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(
-            expect.objectContaining({
-                onlyMine: true,
-                productTypes: expect.arrayContaining([ProductType.Seafood]),
-            }),
-        );
+        const result = dialogRefSpy.close.mock.calls[0]?.[0] as ProductListFiltersDialogData | undefined;
+
+        expect(result?.onlyMine).toBe(true);
+        expect(result?.productTypes).toContain(ProductType.Seafood);
     });
 
     it('should cancel without applying', () => {

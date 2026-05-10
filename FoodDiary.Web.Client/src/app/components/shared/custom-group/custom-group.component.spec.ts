@@ -24,14 +24,14 @@ describe('CustomGroupComponent', () => {
 
     it('should render title', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const titleEl = el.querySelector('.custom-group__title span');
         expect(titleEl?.textContent.trim()).toBe('Group Title');
     });
 
     it('should not render unused action controls', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
 
         expect(el.querySelector('.custom-group__toggle')).toBeNull();
         expect(el.querySelector('.custom-group__button')).toBeNull();

@@ -207,21 +207,21 @@ describe('DynamicProgressBarComponent', () => {
     describe('DOM rendering', () => {
         it('should show overflow line when progress exceeds 100%', () => {
             setInputs(150, 100);
-            const el: HTMLElement = fixture.nativeElement;
+            const el = fixture.nativeElement as HTMLElement;
             const overflowLine = el.querySelector('.dynamic-progress-bar-overflow-line');
             expect(overflowLine).toBeTruthy();
         });
 
         it('should not show overflow line when progress is at or below 100%', () => {
             setInputs(80, 100);
-            const el: HTMLElement = fixture.nativeElement;
+            const el = fixture.nativeElement as HTMLElement;
             const overflowLine = el.querySelector('.dynamic-progress-bar-overflow-line');
             expect(overflowLine).toBeNull();
         });
 
         it('should display current value and percentage in bar text', () => {
             setInputs(75, 100);
-            const el: HTMLElement = fixture.nativeElement;
+            const el = fixture.nativeElement as HTMLElement;
             const title = el.querySelector('.dynamic-progress-bar-title');
             expect(title?.textContent.trim()).toContain('75');
             expect(title?.textContent.trim()).toContain('75%');

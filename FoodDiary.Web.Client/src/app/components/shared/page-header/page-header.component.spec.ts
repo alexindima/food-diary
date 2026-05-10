@@ -24,7 +24,7 @@ describe('PageHeaderComponent', () => {
 
     it('should render title', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const titleEl = el.querySelector('.fd-page-title');
         expect(titleEl?.textContent.trim()).toBe('Page Title');
     });
@@ -33,7 +33,7 @@ describe('PageHeaderComponent', () => {
         fixture.componentRef.setInput('subtitle', 'A subtitle');
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const subtitleEl = el.querySelector('.fd-page-subtitle');
         expect(subtitleEl).toBeTruthy();
         expect(subtitleEl?.textContent.trim()).toBe('A subtitle');
@@ -42,7 +42,7 @@ describe('PageHeaderComponent', () => {
     it('should not render subtitle when not provided', () => {
         fixture.detectChanges();
 
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const subtitleEl = el.querySelector('.fd-page-subtitle');
         expect(subtitleEl).toBeNull();
     });
@@ -56,14 +56,14 @@ describe('PageHeaderComponent', () => {
         fixture.componentRef.setInput('stickyOnMobile', false);
         fixture.detectChanges();
 
-        const hostEl: HTMLElement = fixture.nativeElement;
+        const hostEl = fixture.nativeElement as HTMLElement;
         expect(hostEl.classList.contains('fd-page-header--mobile-static')).toBe(true);
     });
 
     it('should not apply mobile-static host class when stickyOnMobile is true', () => {
         fixture.detectChanges();
 
-        const hostEl: HTMLElement = fixture.nativeElement;
+        const hostEl = fixture.nativeElement as HTMLElement;
         expect(hostEl.classList.contains('fd-page-header--mobile-static')).toBe(false);
     });
 });

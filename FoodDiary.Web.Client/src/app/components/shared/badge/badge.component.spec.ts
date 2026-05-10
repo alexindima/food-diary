@@ -24,7 +24,7 @@ describe('BadgeComponent', () => {
 
     it('should render label text', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const labelEl = el.querySelector('.fd-badge__label');
         expect(labelEl?.textContent.trim()).toBe('Test Label');
     });
@@ -47,7 +47,7 @@ describe('BadgeComponent', () => {
             it(`should apply fd-badge--${variant} as CSS class`, () => {
                 fixture.componentRef.setInput('variant', variant);
                 fixture.detectChanges();
-                const el: HTMLElement = fixture.nativeElement;
+                const el = fixture.nativeElement as HTMLElement;
                 const badge = el.querySelector('.fd-badge');
                 expect(badge?.classList.contains(`fd-badge--${variant}`)).toBe(true);
             });
@@ -57,14 +57,14 @@ describe('BadgeComponent', () => {
     it('should show icon when icon input is provided', () => {
         fixture.componentRef.setInput('icon', 'star');
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const iconEl = el.querySelector('.fd-badge__icon');
         expect(iconEl).toBeTruthy();
     });
 
     it('should not show icon when icon input is not provided', () => {
         fixture.detectChanges();
-        const el: HTMLElement = fixture.nativeElement;
+        const el = fixture.nativeElement as HTMLElement;
         const iconEl = el.querySelector('.fd-badge__icon');
         expect(iconEl).toBeNull();
     });

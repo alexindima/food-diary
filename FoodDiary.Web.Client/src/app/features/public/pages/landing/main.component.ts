@@ -74,7 +74,7 @@ export class MainComponent {
     public constructor() {
         const path = this.route.snapshot.routeConfig?.path ?? '';
         if (path.startsWith('auth')) {
-            const modeParam = this.route.snapshot.params['mode'];
+            const modeParam = this.route.snapshot.paramMap.get('mode');
             const mode: 'login' | 'register' = modeParam === 'register' ? 'register' : 'login';
             void this.openAuthDialogAsync(mode);
         }

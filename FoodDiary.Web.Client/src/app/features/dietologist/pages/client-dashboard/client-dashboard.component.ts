@@ -49,7 +49,7 @@ export class ClientDashboardComponent {
     });
 
     public constructor() {
-        const clientId = this.route.snapshot.params['clientId'];
+        const clientId = this.route.snapshot.paramMap.get('clientId');
         this.dietologistService.getMyClients().subscribe({
             next: clients => {
                 const found = clients.find(c => c.userId === clientId) ?? null;

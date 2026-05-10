@@ -19,7 +19,7 @@ export class FdCardHoverDirective {
     private readonly originalCursor: string | null = null;
     private readonly originalTransition: string | null = null;
 
-    private readonly elementRef = inject(ElementRef<HTMLElement>);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
     private readonly destroyRef = inject(DestroyRef);
 

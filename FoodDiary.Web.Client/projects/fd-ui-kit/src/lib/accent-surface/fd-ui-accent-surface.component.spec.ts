@@ -13,7 +13,7 @@ describe('FdUiAccentSurfaceComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiAccentSurfaceComponent);
-        hostEl = fixture.nativeElement;
+        hostEl = fixture.nativeElement as HTMLElement;
         fixture.detectChanges();
     });
 

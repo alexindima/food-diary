@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -41,7 +41,7 @@ describe('MainComponent', () => {
                     useValue: {
                         snapshot: {
                             routeConfig: { path },
-                            params,
+                            paramMap: convertToParamMap(params),
                             queryParamMap: {
                                 get: (key: string): string | null => queryParams[key] ?? null,
                             },
