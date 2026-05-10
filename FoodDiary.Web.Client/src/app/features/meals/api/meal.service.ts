@@ -58,7 +58,7 @@ export class MealService extends ApiService {
     }
 
     public getById(id: string): Observable<Meal | null> {
-        return this.get<ConsumptionResponseDto>(`${id}`).pipe(
+        return this.get<ConsumptionResponseDto>(id).pipe(
             map(response => this.mapConsumption(response)),
             catchError(() => of(null)),
         );
@@ -72,14 +72,14 @@ export class MealService extends ApiService {
     }
 
     public update(id: string, data: MealManageDto): Observable<Meal | null> {
-        return this.patch<ConsumptionResponseDto>(`${id}`, data).pipe(
+        return this.patch<ConsumptionResponseDto>(id, data).pipe(
             map(response => this.mapConsumption(response)),
             catchError(() => of(null)),
         );
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(`${id}`).pipe(catchError(error => rethrowApiError('Delete meal error', error)));
+        return this.delete<void>(id).pipe(catchError(error => rethrowApiError('Delete meal error', error)));
     }
 
     public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal> {

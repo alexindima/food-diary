@@ -15,7 +15,7 @@ export class RecipeLookupService extends ApiService {
 
     public getById(id: string, includePublic = true): Observable<RecipeLookup> {
         const params = { includePublic };
-        return this.get<RecipeLookup>(`${id}`, params).pipe(
+        return this.get<RecipeLookup>(id, params).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Get recipe lookup error', error)),
         );
     }

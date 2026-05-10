@@ -39,9 +39,7 @@ export class ProductService extends ApiService {
     }
 
     public getById(id: string): Observable<Product | null> {
-        return this.get<Product>(`${id}`).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get product error', error, null)),
-        );
+        return this.get<Product>(id).pipe(catchError((error: HttpErrorResponse) => fallbackApiError('Get product error', error, null)));
     }
 
     public queryOverview(
@@ -91,13 +89,11 @@ export class ProductService extends ApiService {
     }
 
     public update(id: string, data: UpdateProductRequest): Observable<Product> {
-        return this.patch<Product>(`${id}`, data).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Update product error', error)),
-        );
+        return this.patch<Product>(id, data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Update product error', error)));
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(`${id}`).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete product error', error)));
+        return this.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete product error', error)));
     }
 
     public duplicate(id: string): Observable<Product> {

@@ -54,15 +54,13 @@ export class WaistEntriesService extends ApiService {
     }
 
     public update(id: string, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {
-        return this.put<WaistEntry>(`${id}`, payload).pipe(
+        return this.put<WaistEntry>(id, payload).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Update waist entry error', error)),
         );
     }
 
     public remove(id: string): Observable<void> {
-        return super
-            .delete<void>(`${id}`)
-            .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete waist entry error', error)));
+        return super.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete waist entry error', error)));
     }
 
     public getSummary(filters: WaistEntrySummaryFilters): Observable<WaistEntrySummaryPoint[]> {

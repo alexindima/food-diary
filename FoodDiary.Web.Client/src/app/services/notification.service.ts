@@ -81,7 +81,7 @@ export class NotificationService {
     private readonly authService = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
 
-    private readonly baseUrl = `${environment.apiUrls.auth.replace('/auth', '/notifications')}`;
+    private readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
     public readonly unreadCount = signal(0);

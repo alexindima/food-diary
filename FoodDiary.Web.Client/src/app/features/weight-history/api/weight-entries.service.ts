@@ -54,15 +54,13 @@ export class WeightEntriesService extends ApiService {
     }
 
     public update(id: string, payload: UpdateWeightEntryPayload): Observable<WeightEntry> {
-        return this.put<WeightEntry>(`${id}`, payload).pipe(
+        return this.put<WeightEntry>(id, payload).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Update weight entry error', error)),
         );
     }
 
     public remove(id: string): Observable<void> {
-        return super
-            .delete<void>(`${id}`)
-            .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete weight entry error', error)));
+        return super.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete weight entry error', error)));
     }
 
     public getSummary(filters: WeightEntrySummaryFilters): Observable<WeightEntrySummaryPoint[]> {

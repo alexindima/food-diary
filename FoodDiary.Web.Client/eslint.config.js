@@ -352,7 +352,7 @@ export default [
             '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
             '@typescript-eslint/no-non-null-assertion': 'warn',
             '@typescript-eslint/no-redundant-type-constituents': 'warn',
-            '@typescript-eslint/no-unnecessary-template-expression': 'warn',
+            '@typescript-eslint/no-unnecessary-template-expression': 'error',
             '@typescript-eslint/no-unnecessary-condition': 'error',
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',

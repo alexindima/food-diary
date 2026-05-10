@@ -26,7 +26,7 @@ export class ShoppingListService extends ApiService {
     }
 
     public getById(id: string): Observable<ShoppingList | null> {
-        return this.get<ShoppingList>(`${id}`).pipe(
+        return this.get<ShoppingList>(id).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Get shopping list error', error, null)),
         );
     }
@@ -38,14 +38,12 @@ export class ShoppingListService extends ApiService {
     }
 
     public update(id: string, data: ShoppingListUpdateDto): Observable<ShoppingList> {
-        return this.patch<ShoppingList>(`${id}`, data).pipe(
+        return this.patch<ShoppingList>(id, data).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Update shopping list error', error)),
         );
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(`${id}`).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Delete shopping list error', error)),
-        );
+        return this.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete shopping list error', error)));
     }
 }

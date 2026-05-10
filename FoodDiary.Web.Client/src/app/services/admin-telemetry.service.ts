@@ -10,7 +10,7 @@ import { ApiService } from './api.service';
     providedIn: 'root',
 })
 export class AdminTelemetryService extends ApiService {
-    protected readonly baseUrl = `${environment.apiUrls.auth.replace('/auth', '/admin/telemetry')}`;
+    protected readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/admin/telemetry');
 
     public getFastingSummary(hours: number = 24): Observable<FastingTelemetrySummary | null> {
         return this.get<FastingTelemetrySummary>('fasting', { hours }).pipe(

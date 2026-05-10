@@ -35,7 +35,7 @@ export class RecipeService extends ApiService {
 
     public getById(id: string, includePublic = true): Observable<Recipe | null> {
         const params = { includePublic };
-        return this.get<Recipe>(`${id}`, params).pipe(
+        return this.get<Recipe>(id, params).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Get recipe error', error, null)),
         );
     }
@@ -78,13 +78,11 @@ export class RecipeService extends ApiService {
     }
 
     public update(id: string, data: RecipeDto): Observable<Recipe> {
-        return this.patch<Recipe>(`${id}`, data).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Update recipe error', error)),
-        );
+        return this.patch<Recipe>(id, data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Update recipe error', error)));
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(`${id}`).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete recipe error', error)));
+        return this.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete recipe error', error)));
     }
 
     public duplicate(id: string): Observable<Recipe> {
