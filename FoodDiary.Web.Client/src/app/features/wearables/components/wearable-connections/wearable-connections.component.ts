@@ -1,16 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { WearableService } from '../../api/wearable.service';
-import { type WearableConnection } from '../../models/wearable.data';
+import { type WearableConnection, type WearableProvider } from '../../models/wearable.data';
 
 interface ProviderConfig {
-    id: string;
+    id: WearableProvider;
     name: string;
     icon: string;
+}
+
+interface ProviderRow extends ProviderConfig {
+    connection: WearableConnection | undefined;
 }
 
 @Component({
@@ -33,13 +37,21 @@ export class WearableConnectionsComponent {
         { id: 'Garmin', name: 'Garmin', icon: '\u2328\uFE0F' },
         { id: 'AppleHealth', name: 'Apple Health', icon: '\uD83C\uDF4F' },
     ];
+    public readonly providerRows = computed<ProviderRow[]>(() => {
+        const activeConnections = new Map(
+            this.connections()
+                .filter(connection => connection.isActive)
+                .map(connection => [connection.provider, connection]),
+        );
+
+        return this.providers.map(provider => ({
+            ...provider,
+            connection: activeConnections.get(provider.id),
+        }));
+    });
 
     public constructor() {
         this.loadConnections();
-    }
-
-    public getConnection(providerId: string): WearableConnection | undefined {
-        return this.connections().find(c => c.provider === providerId && c.isActive);
     }
 
     public connect(providerId: string): void {
