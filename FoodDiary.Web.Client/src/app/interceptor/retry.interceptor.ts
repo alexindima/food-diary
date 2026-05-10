@@ -1,6 +1,6 @@
 import { HttpErrorResponse, type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { type Observable, retry, timer } from 'rxjs';
+import { type Observable, retry, throwError, timer } from 'rxjs';
 
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {
@@ -14,7 +14,7 @@ export class RetryInterceptor implements HttpInterceptor {
                 count: 3,
                 delay: (error, retryCount) => {
                     if (error instanceof HttpErrorResponse && error.status >= 400 && error.status < 500) {
-                        throw error;
+                        return throwError(() => error);
                     }
 
                     const delayMs = Math.pow(2, retryCount - 1) * 1000;

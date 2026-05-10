@@ -463,7 +463,7 @@ export class AiInputBarComponent {
 
     private runAnalysisRequest(
         state: AiInputBarChannelState,
-        request$: ReturnType<AiFoodService['parseFoodText']> | ReturnType<AiFoodService['analyzeFoodImage']>,
+        request$: ReturnType<AiFoodService['parseFoodText']>,
         errorKeys: { premium: string; quota: string; generic: string },
         onItems: (items: FoodVisionItem[]) => void,
     ): void {

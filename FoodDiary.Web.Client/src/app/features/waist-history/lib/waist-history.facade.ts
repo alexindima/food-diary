@@ -9,7 +9,6 @@ import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type {
     CreateWaistEntryPayload,
-    UpdateWaistEntryPayload,
     WaistEntry,
     WaistEntryFilters,
     WaistEntrySummaryFilters,
@@ -373,7 +372,7 @@ export class WaistHistoryFacade {
             });
     }
 
-    private buildPayload(): CreateWaistEntryPayload | UpdateWaistEntryPayload | null {
+    private buildPayload(): CreateWaistEntryPayload | null {
         const rawDate = this.form.value.date;
         const rawCircumference = this.form.value.circumference;
         if (!rawDate || rawCircumference === null || rawCircumference === undefined) {

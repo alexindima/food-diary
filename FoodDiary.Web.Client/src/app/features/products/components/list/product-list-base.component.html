@@ -267,7 +267,7 @@
                                     @if (offProduct.brand) {
                                         <div class="product-list__off-brand fd-ui-caption">{{ offProduct.brand }}</div>
                                     }
-                                    @if (offProduct.caloriesPer100G != null) {
+                                    @if (offProduct.caloriesPer100G !== null && offProduct.caloriesPer100G !== undefined) {
                                         <div class="product-list__off-kcal fd-ui-caption">
                                             {{ offProduct.caloriesPer100G | number: '1.0-0' }} {{ 'PRODUCT_LIST.OFF_KCAL' | translate }}
                                         </div>

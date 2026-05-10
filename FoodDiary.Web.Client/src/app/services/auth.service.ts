@@ -113,7 +113,11 @@ export class AuthService extends ApiService {
     }
 
     public login(data: LoginRequest): Observable<AuthResponse> {
-        const loginData = { ...data, rememberMe: undefined };
+        const loginData = {
+            email: data.email,
+            password: data.password,
+            rememberMe: undefined,
+        };
         return this.post<AuthResponse>('login', loginData).pipe(
             tap(response => {
                 this.onLogin(response, data.rememberMe || false);
@@ -123,7 +127,12 @@ export class AuthService extends ApiService {
     }
 
     public register(data: RegisterRequest): Observable<AuthResponse> {
-        return this.post<AuthResponse>('register', { ...data, clientOrigin: this.getClientOrigin() }).pipe(
+        return this.post<AuthResponse>('register', {
+            email: data.email,
+            password: data.password,
+            language: data.language,
+            clientOrigin: this.getClientOrigin(),
+        }).pipe(
             tap(response => {
                 this.onLogin(response, false);
             }),
@@ -165,9 +174,10 @@ export class AuthService extends ApiService {
     }
 
     public requestPasswordReset(data: PasswordResetRequest): Observable<void> {
-        return this.post<void>('password-reset/request', { ...data, clientOrigin: this.getClientOrigin() }).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Password reset request error', error)),
-        );
+        return this.post<void>('password-reset/request', {
+            email: data.email,
+            clientOrigin: this.getClientOrigin(),
+        }).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Password reset request error', error)));
     }
 
     public confirmPasswordReset(data: ConfirmPasswordResetRequest): Observable<AuthResponse> {

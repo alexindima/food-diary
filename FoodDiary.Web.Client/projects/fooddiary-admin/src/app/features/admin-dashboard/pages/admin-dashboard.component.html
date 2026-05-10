@@ -86,28 +86,24 @@
                     <div class="admin-dashboard__preset-list fd-grid fd-gap-sm">
                         <div class="admin-dashboard__section-subtitle fd-ui-body-xs">Top reminder presets</div>
 
-                        @if (telemetry.topPresets.length === 0) {
-                            <p>No reminder preset data yet.</p>
-                        } @else {
-                            @for (preset of telemetry.topPresets; track preset.presetId) {
-                                <div class="admin-dashboard__preset-item fd-grid fd-gap-xxs">
-                                    <div class="admin-dashboard__preset-header fd-row fd-justify-between fd-gap-md">
-                                        <strong
-                                            >{{ preset.firstReminderHours ?? '-' }}h / {{ preset.followUpReminderHours ?? '-' }}h</strong
-                                        >
-                                        <span>{{ preset.selectionCount }} selections</span>
-                                    </div>
-                                    <div class="admin-dashboard__preset-meta">Key: {{ preset.presetId }}</div>
-                                    <div class="admin-dashboard__preset-meta">
-                                        Started {{ preset.startedSessions }}, check-ins {{ preset.savedCheckIns }}, completed
-                                        {{ preset.completedSessions }}
-                                    </div>
-                                    <div class="admin-dashboard__preset-meta">
-                                        Check-in rate {{ preset.checkInRatePercentText }}%, completion rate
-                                        {{ preset.completionRatePercentText }}%
-                                    </div>
+                        @for (preset of telemetry.topPresets; track preset.presetId) {
+                            <div class="admin-dashboard__preset-item fd-grid fd-gap-xxs">
+                                <div class="admin-dashboard__preset-header fd-row fd-justify-between fd-gap-md">
+                                    <strong>{{ preset.firstReminderHours ?? '-' }}h / {{ preset.followUpReminderHours ?? '-' }}h</strong>
+                                    <span>{{ preset.selectionCount }} selections</span>
                                 </div>
-                            }
+                                <div class="admin-dashboard__preset-meta">Key: {{ preset.presetId }}</div>
+                                <div class="admin-dashboard__preset-meta">
+                                    Started {{ preset.startedSessions }}, check-ins {{ preset.savedCheckIns }}, completed
+                                    {{ preset.completedSessions }}
+                                </div>
+                                <div class="admin-dashboard__preset-meta">
+                                    Check-in rate {{ preset.checkInRatePercentText }}%, completion rate
+                                    {{ preset.completionRatePercentText }}%
+                                </div>
+                            </div>
+                        } @empty {
+                            <p>No reminder preset data yet.</p>
                         }
                     </div>
                 } @else {

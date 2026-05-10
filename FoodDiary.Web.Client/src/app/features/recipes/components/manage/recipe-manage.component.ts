@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -59,6 +59,7 @@ import { RecipeStepsListComponent, type StepIngredientEvent } from './recipe-ste
 export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly expandedSteps = new Set<number>();
     private lastRecipeId: string | null = null;
 
@@ -548,7 +549,7 @@ export class RecipeManageComponent {
     // -- Nutrition calculation --
 
     private setupFormValueChangeTracking(): void {
-        this.recipeForm.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.recipeForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (!this.isFormReady) {
                 return;
             }
@@ -556,7 +557,7 @@ export class RecipeManageComponent {
             this.updateCalorieWarning();
         });
 
-        this.recipeForm.controls.steps.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.recipeForm.controls.steps.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (!this.isFormReady) {
                 return;
             }
