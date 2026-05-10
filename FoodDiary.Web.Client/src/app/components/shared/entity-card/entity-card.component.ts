@@ -85,12 +85,22 @@ export class EntityCardComponent {
         return {
             ...quality,
             score: Math.round(Math.min(100, Math.max(0, quality.score))),
+            hintKey: `QUALITY.${quality.grade.toUpperCase()}`,
         };
     });
 
     public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, 4));
+    public readonly collageState = computed(() => {
+        const images = this.visibleCollageImages();
+
+        return {
+            images,
+            count: images.length,
+            hasImages: images.length > 0,
+        };
+    });
     public readonly hasPreviewImage = computed(() =>
-        Boolean(this.previewable() && (this.imageUrl()?.trim() || this.visibleCollageImages().length > 0)),
+        Boolean(this.previewable() && (this.imageUrl()?.trim() || this.collageState().hasImages)),
     );
 
     public handleOpen(): void {
