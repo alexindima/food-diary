@@ -119,9 +119,11 @@ describe('FdUiButtonComponent', () => {
         fixture.componentRef.setInput('loading', true);
         fixture.detectChanges();
 
-        const button = fixture.debugElement.query(By.css('button'));
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector('button');
 
-        expect(getComputedStyle(button.nativeElement).position).toBe('relative');
+        expect(button).toBeTruthy();
+        expect(button ? getComputedStyle(button).position : null).toBe('relative');
     });
 
     it('should set aria-label attribute', () => {

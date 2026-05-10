@@ -272,7 +272,7 @@ export class AuthComponent {
             },
             error: (error: HttpErrorResponse) => {
                 this.isSubmitting.set(false);
-                this.handleLoginError(error.error?.error);
+                this.handleLoginError(this.getApiErrorCode(error));
             },
         });
     }
@@ -328,7 +328,7 @@ export class AuthComponent {
             },
             error: (error: HttpErrorResponse) => {
                 this.isSubmitting.set(false);
-                this.handleRegisterError(error.error?.error);
+                this.handleRegisterError(this.getApiErrorCode(error));
             },
         });
     }
@@ -717,8 +717,9 @@ export class AuthComponent {
                 continue;
             }
 
-            const controlParams = typeof errors[key] === 'object' ? errors[key] : {};
-            const result = resolver(errors[key]);
+            const controlError: unknown = errors[key];
+            const controlParams = this.getValidationParams(controlError);
+            const result = resolver(controlError);
 
             if (typeof result === 'string') {
                 return this.translateService.instant(result, controlParams);
@@ -739,6 +740,19 @@ export class AuthComponent {
                 control.markAsTouched();
             }
         });
+    }
+
+    private getApiErrorCode(error: HttpErrorResponse): string | undefined {
+        const responseBody: unknown = error.error;
+        return this.isRecord(responseBody) && typeof responseBody['error'] === 'string' ? responseBody['error'] : undefined;
+    }
+
+    private getValidationParams(error: unknown): Record<string, unknown> {
+        return this.isRecord(error) ? error : {};
+    }
+
+    private isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === 'object' && value !== null && !Array.isArray(value);
     }
 }
 

@@ -183,7 +183,7 @@ export class RecipeManageFacade {
             )
             .subscribe({
                 next: recipe => void this.handleSubmitResponseAsync(recipe),
-                error: error => {
+                error: (error: HttpErrorResponse) => {
                     this.handleSubmitError(error);
                 },
             });
@@ -200,7 +200,7 @@ export class RecipeManageFacade {
             )
             .subscribe({
                 next: recipe => void this.handleSubmitResponseAsync(recipe),
-                error: error => {
+                error: (error: HttpErrorResponse) => {
                     this.handleSubmitError(error);
                 },
             });
@@ -234,8 +234,17 @@ export class RecipeManageFacade {
     }
 
     private handleSubmitError(error?: HttpErrorResponse): void {
-        const message = error?.error?.message ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        const message = this.getErrorMessage(error) ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
         this.setGlobalError(message, false);
+    }
+
+    private getErrorMessage(error: HttpErrorResponse | undefined): string | null {
+        const responseBody: unknown = error?.error;
+        return this.isRecord(responseBody) && typeof responseBody['message'] === 'string' ? responseBody['message'] : null;
+    }
+
+    private isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === 'object' && value !== null && !Array.isArray(value);
     }
 
     private roundNutrient(value: number): number {

@@ -24,12 +24,12 @@ export class FdCardHoverDirective {
     private readonly destroyRef = inject(DestroyRef);
 
     public constructor() {
-        const element = this.elementRef.nativeElement;
+        const element: HTMLElement = this.elementRef.nativeElement;
         const { style } = element;
-        this.originalTransform = style.transform ?? null;
-        this.originalBoxShadow = style.boxShadow ?? null;
-        this.originalCursor = style.cursor ?? null;
-        this.originalTransition = style.transition ?? null;
+        this.originalTransform = style.transform || null;
+        this.originalBoxShadow = style.boxShadow || null;
+        this.originalCursor = style.cursor || null;
+        this.originalTransition = style.transition || null;
 
         this.renderer.setStyle(element, 'cursor', 'pointer');
         this.renderer.setStyle(element, 'transition', 'transform 0.2s ease, box-shadow 0.2s ease');
@@ -55,7 +55,7 @@ export class FdCardHoverDirective {
     }
 
     private applyHoverStyles(): void {
-        const element = this.elementRef.nativeElement;
+        const element: HTMLElement = this.elementRef.nativeElement;
         const styles = getComputedStyle(element);
         const cssTransform = styles.getPropertyValue('--fd-card-hover-transform').trim();
         const cssShadow = styles.getPropertyValue('--fd-card-hover-shadow').trim();
@@ -78,7 +78,7 @@ export class FdCardHoverDirective {
     }
 
     private restoreStyle(property: string, value: string | null): void {
-        const element = this.elementRef.nativeElement;
+        const element: HTMLElement = this.elementRef.nativeElement;
         if (value && value.length > 0) {
             this.renderer.setStyle(element, property, value);
         } else {

@@ -37,7 +37,7 @@ export class FdUiHintDirective {
     private readonly sanitizer = inject(DomSanitizer);
     private readonly destroyRef = inject(DestroyRef);
     private readonly tooltipId = `fd-ui-hint-${nextHintId++}`;
-    private readonly initialAriaDescribedBy = this.elementRef.nativeElement.getAttribute('aria-describedby');
+    private readonly initialAriaDescribedBy: string | null = this.elementRef.nativeElement.getAttribute('aria-describedby');
     private overlayRef: OverlayRef | null = null;
     private showTimeoutId: number | null = null;
     private hideTimeoutId: number | null = null;
@@ -262,7 +262,7 @@ export class FdUiHintDirective {
     }
 
     private syncAriaDescribedBy(isVisible: boolean): void {
-        const host = this.elementRef.nativeElement;
+        const host: HTMLElement = this.elementRef.nativeElement;
         const tokens = new Set(
             (this.initialAriaDescribedBy ?? '')
                 .split(/\s+/)

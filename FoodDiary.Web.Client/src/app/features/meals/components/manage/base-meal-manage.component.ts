@@ -584,7 +584,7 @@ export class BaseMealManageComponent {
     private resolvePresetMealType(): string | null {
         const stateMealType = this.router.getCurrentNavigation()?.extras.state?.['mealType'];
         const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
-        return normalizeMealType(stateMealType ?? queryMealType);
+        return normalizeMealType(typeof stateMealType === 'string' ? stateMealType : queryMealType);
     }
 
     private setAutoMealTypeFromDate(): void {

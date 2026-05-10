@@ -356,7 +356,7 @@ export default [
             '@typescript-eslint/no-unnecessary-condition': 'error',
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',
-            '@typescript-eslint/no-unsafe-argument': 'warn',
+            '@typescript-eslint/no-unsafe-argument': 'error',
             '@typescript-eslint/no-unsafe-assignment': 'warn',
             '@typescript-eslint/no-unsafe-call': 'warn',
             '@typescript-eslint/no-unsafe-member-access': 'warn',

@@ -87,8 +87,9 @@ export class FdUiFormErrorComponent {
                 continue;
             }
 
-            const controlParams = typeof controlErrors[key] === 'object' ? controlErrors[key] : {};
-            const result = resolver(controlErrors[key]);
+            const controlError: unknown = controlErrors[key];
+            const controlParams = this.getValidationParams(controlError);
+            const result = resolver(controlError);
 
             if (typeof result === 'string') {
                 return this.translate.instant(result, { ...controlParams, ...(this.context() ?? {}) });
@@ -103,4 +104,12 @@ export class FdUiFormErrorComponent {
 
         return this.translate.instant('FORM_ERRORS.UNKNOWN');
     });
+
+    private getValidationParams(error: unknown): Record<string, unknown> {
+        return this.isRecord(error) ? error : {};
+    }
+
+    private isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === 'object' && value !== null && !Array.isArray(value);
+    }
 }
