@@ -141,7 +141,10 @@ export class BaseMealManageComponent {
     public readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
     public readonly aiUsage = signal<UserAiUsageResponse | null>(null);
     public readonly itemsRenderVersion = signal(0);
-    public nutritionMode: NutritionMode = 'auto';
+    public readonly nutritionMode = signal<NutritionMode>('auto');
+    public readonly preMealSatietyLevel = signal<number | null>(3);
+    public readonly postMealSatietyLevel = signal<number | null>(3);
+    public readonly selectedMealType = signal<string | null>(null);
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
     public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
@@ -216,7 +219,7 @@ export class BaseMealManageComponent {
         this.buildMealTypeOptions();
         this.buildNutritionModeOptions();
         this.buildSatietyEmojiOptions();
-        this.nutritionMode = this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual';
+        this.nutritionMode.set(this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual');
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
             this.buildNutritionModeOptions();
@@ -237,14 +240,19 @@ export class BaseMealManageComponent {
         )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
+                this.preMealSatietyLevel.set(this.consumptionForm.controls.preMealSatietyLevel.value);
+                this.postMealSatietyLevel.set(this.consumptionForm.controls.postMealSatietyLevel.value);
                 this.updateSatietyAriaLabels();
             });
         this.updateSatietyAriaLabels();
+        this.consumptionForm.controls.mealType.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+            this.selectedMealType.set(value);
+        });
 
         this.updateManualNutritionValidators(true);
         this.updateItemValidationRules();
         this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(isAuto => {
-            this.nutritionMode = isAuto ? 'auto' : 'manual';
+            this.nutritionMode.set(isAuto ? 'auto' : 'manual');
             this.updateManualNutritionValidators(isAuto);
             if (!isAuto) {
                 this.populateManualNutritionFromCurrentSummary();
@@ -395,11 +403,11 @@ export class BaseMealManageComponent {
 
     public onNutritionModeChange(nextMode: string): void {
         const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
-        if (this.nutritionMode === resolvedMode) {
+        if (this.nutritionMode() === resolvedMode) {
             return;
         }
 
-        this.nutritionMode = resolvedMode;
+        this.nutritionMode.set(resolvedMode);
         this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
     }
 
@@ -591,7 +599,9 @@ export class BaseMealManageComponent {
             return;
         }
 
-        mealTypeControl.setValue(resolveMealTypeByTime(date), { emitEvent: false });
+        const mealType = resolveMealTypeByTime(date);
+        mealTypeControl.setValue(mealType, { emitEvent: false });
+        this.selectedMealType.set(mealType);
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {

@@ -87,7 +87,7 @@
                             </p>
                             <fd-ui-emoji-picker
                                 [options]="hungerEmojiOptions"
-                                [selectedValue]="consumptionForm.controls.preMealSatietyLevel.value"
+                                [selectedValue]="preMealSatietyLevel()"
                                 [ariaLabel]="preMealSatietyAriaLabel()"
                                 (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
                             />
@@ -98,7 +98,7 @@
                             </p>
                             <fd-ui-emoji-picker
                                 [options]="satietyEmojiOptions"
-                                [selectedValue]="consumptionForm.controls.postMealSatietyLevel.value"
+                                [selectedValue]="postMealSatietyLevel()"
                                 [ariaLabel]="postMealSatietyAriaLabel()"
                                 (selectedValueChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
                             />
@@ -115,7 +115,7 @@
                     <div class="consumption-manage__items-grid fd-grid fd-gap-lg">
                         <fd-ai-input-bar
                             mode="emit"
-                            [mealType]="consumptionForm.controls.mealType.value"
+                            [mealType]="selectedMealType()"
                             [isProcessing]="consumptionForm.disabled"
                             (mealRecognized)="onAiMealRecognized($event)"
                         />
@@ -165,7 +165,7 @@
                     [consumptionForm]="consumptionForm"
                     [nutritionControlNames]="nutritionControlNames"
                     [macroBarState]="macroBarState()"
-                    [nutritionMode]="nutritionMode"
+                    [nutritionMode]="nutritionMode()"
                     [nutritionModeOptions]="nutritionModeOptions"
                     [nutritionWarning]="nutritionWarning()"
                     [caloriesError]="caloriesError()"

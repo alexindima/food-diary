@@ -660,6 +660,7 @@
                             </div>
 
                             <div class="user-manage__dietologist-permissions fd-stack fd-gap-sm">
+                                @let permissions = dietologistPermissions();
                                 <div class="user-manage__dietologist-permission-list fd-stack fd-gap-sm">
                                     <div
                                         class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
@@ -670,7 +671,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareProfile.value"
+                                            [checked]="permissions.shareProfile"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE' | translate"
@@ -687,7 +688,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareMeals.value"
+                                            [checked]="permissions.shareMeals"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS' | translate"
@@ -704,7 +705,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareStatistics.value"
+                                            [checked]="permissions.shareStatistics"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_STATISTICS' | translate"
@@ -721,7 +722,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareWeight.value"
+                                            [checked]="permissions.shareWeight"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT' | translate"
@@ -738,7 +739,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareWaist.value"
+                                            [checked]="permissions.shareWaist"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_WAIST' | translate"
@@ -755,7 +756,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareGoals.value"
+                                            [checked]="permissions.shareGoals"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_GOALS' | translate"
@@ -772,7 +773,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareHydration.value"
+                                            [checked]="permissions.shareHydration"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_HYDRATION' | translate"
@@ -789,7 +790,7 @@
                                             </div>
                                         </div>
                                         <fd-ui-switch
-                                            [checked]="dietologistForm.controls.shareFasting.value"
+                                            [checked]="permissions.shareFasting"
                                             [disabled]="isSavingDietologist()"
                                             [fdUiHint]="'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate"
                                             [ariaLabel]="'USER_MANAGE.DIETOLOGIST_PERMISSION_FASTING' | translate"

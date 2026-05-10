@@ -144,6 +144,7 @@ export class UserManageComponent {
     public readonly globalError = this.facade.globalError;
     public readonly dietologistRelationship = this.facade.dietologistRelationship;
     public readonly dietologistError = signal<string | null>(null);
+    public readonly dietologistPermissions = signal<DietologistPermissions>(this.createDefaultDietologistPermissions());
     public readonly isLoadingDietologist = signal(false);
     public readonly isSavingDietologist = signal(false);
     public readonly billingOverview = signal<BillingOverview | null>(null);
@@ -387,6 +388,7 @@ export class UserManageComponent {
         });
         this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.dietologistError.set(null);
+            this.updateDietologistPermissionsState();
         });
         const dietologistFormEvents = (this.dietologistForm as { events?: Observable<unknown> }).events ?? EMPTY;
         merge(dietologistFormEvents, this.dietologistForm.statusChanges, this.dietologistForm.valueChanges)
@@ -731,6 +733,7 @@ export class UserManageComponent {
                 error: () => {
                     if (previousPermissions) {
                         this.dietologistForm.patchValue(previousPermissions, { emitEvent: false });
+                        this.updateDietologistPermissionsState();
                         this.dietologistForm.markAsPristine();
                         this.dietologistForm.markAsUntouched();
                         this.cdr.markForCheck();
@@ -1075,6 +1078,7 @@ export class UserManageComponent {
             this.dietologistForm.controls.email.enable({ emitEvent: false });
         }
 
+        this.updateDietologistPermissionsState();
         this.dietologistForm.markAsPristine();
         this.dietologistForm.markAsUntouched();
         this.cdr.markForCheck();
@@ -1090,6 +1094,23 @@ export class UserManageComponent {
             shareGoals: this.dietologistForm.controls.shareGoals.getRawValue(),
             shareHydration: this.dietologistForm.controls.shareHydration.getRawValue(),
             shareFasting: this.dietologistForm.controls.shareFasting.getRawValue(),
+        };
+    }
+
+    private updateDietologistPermissionsState(): void {
+        this.dietologistPermissions.set(this.getDietologistPermissions());
+    }
+
+    private createDefaultDietologistPermissions(): DietologistPermissions {
+        return {
+            shareProfile: true,
+            shareMeals: true,
+            shareStatistics: true,
+            shareWeight: true,
+            shareWaist: true,
+            shareGoals: true,
+            shareHydration: true,
+            shareFasting: true,
         };
     }
 
