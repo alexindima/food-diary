@@ -74,6 +74,7 @@ export class ProductDetailComponent {
     public calories: number;
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
+    public readonly qualityHintKey: string;
     public nutrientChartData: NutrientData;
     public readonly isDeleteDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
     public readonly isEditDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
@@ -92,6 +93,7 @@ export class ProductDetailComponent {
         color: string;
         percent: number;
     }[];
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, 3));
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
         proteins: 'proteins',
@@ -114,6 +116,7 @@ export class ProductDetailComponent {
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
         this.qualityScore = Math.round(Math.min(100, Math.max(0, this.product.qualityScore)));
         this.qualityGrade = this.product.qualityGrade;
+        this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
 
         this.calories = this.product.caloriesPerBase;
         this.nutrientChartData = {
