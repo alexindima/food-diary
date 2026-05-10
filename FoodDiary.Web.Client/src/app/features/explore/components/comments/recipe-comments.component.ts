@@ -1,8 +1,7 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -13,17 +12,25 @@ import { finalize } from 'rxjs';
 import { CommentService } from '../../api/comment.service';
 import { type RecipeComment } from '../../models/comment.data';
 
+interface RecipeCommentViewModel {
+    comment: RecipeComment;
+    authorLabel: string;
+    dateLabel: string;
+}
+
 @Component({
     selector: 'fd-recipe-comments',
     templateUrl: './recipe-comments.component.html',
     styleUrls: ['./recipe-comments.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule, TranslatePipe, DatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiLoaderComponent],
+    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiLoaderComponent],
 })
 export class RecipeCommentsComponent {
     private readonly commentService = inject(CommentService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly translateService = inject(TranslateService);
+    private readonly languageVersion = signal(0);
 
     public readonly recipeId = input.required<string>();
 
@@ -36,6 +43,15 @@ export class RecipeCommentsComponent {
     public readonly editingCommentId = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
     public readonly hasMore = computed(() => this.comments().length < this.totalItems());
+    public readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
+        this.languageVersion();
+
+        return this.comments().map(comment => ({
+            comment,
+            authorLabel: comment.authorFirstName || comment.authorUsername || 'User',
+            dateLabel: this.formatShortDate(comment.createdAtUtc),
+        }));
+    });
 
     private readonly recipeChangeEffect = effect(() => {
         this.recipeId();
@@ -46,6 +62,12 @@ export class RecipeCommentsComponent {
         this.commentControl.reset();
         this.loadComments(1);
     });
+
+    public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
+    }
 
     public onSubmit(): void {
         if (this.commentControl.invalid || this.isSubmitting()) {
@@ -131,5 +153,17 @@ export class RecipeCommentsComponent {
                     this.comments.set(data.data);
                 }
             });
+    }
+
+    private formatShortDate(value: string): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+        }).format(date);
     }
 }

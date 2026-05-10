@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { type ChartConfiguration } from 'chart.js';
@@ -61,6 +61,12 @@ export class WaistHistoryPageComponent {
     public readonly isDesiredWaistSaving = this.facade.isDesiredWaistSaving;
     public readonly desiredWaistControl = this.facade.desiredWaistControl;
     public readonly entriesDescending = this.facade.entriesDescending;
+    public readonly entryItems = computed<WaistEntryViewModel[]>(() =>
+        this.entriesDescending().map(entry => ({
+            entry,
+            dateLabel: this.formatNumericDate(entry.date),
+        })),
+    );
     public readonly chartData = this.facade.chartData;
     public readonly form = this.facade.form;
     public readonly latestWaist = this.facade.latestWaist;
@@ -138,10 +144,28 @@ export class WaistHistoryPageComponent {
             class: className,
         };
     }
+
+    private formatNumericDate(value: string): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        }).format(date);
+    }
 }
 
 interface WhtSegment {
     labelKey: string;
     width: string;
     class: string;
+}
+
+interface WaistEntryViewModel {
+    entry: WaistEntry;
+    dateLabel: string;
 }

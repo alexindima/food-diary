@@ -1,6 +1,7 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DietologistService } from '../../api/dietologist.service';
@@ -10,31 +11,42 @@ interface ClientCardViewModel {
     client: ClientSummary;
     title: string;
     initials: string;
+    connectedDateLabel: string;
 }
 
 @Component({
     selector: 'fd-dietologist-clients-page',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DatePipe, FdUiCardComponent],
+    imports: [FdUiCardComponent],
     templateUrl: './dietologist-clients-page.component.html',
     styleUrls: ['./dietologist-clients-page.component.scss'],
 })
 export class DietologistClientsPageComponent {
     private readonly dietologistService = inject(DietologistService);
     private readonly router = inject(Router);
+    private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly languageVersion = signal(0);
 
     public readonly clients = signal<ClientSummary[]>([]);
     public readonly loading = signal(true);
-    public readonly clientItems = computed<ClientCardViewModel[]>(() =>
-        this.clients().map(client => ({
+    public readonly clientItems = computed<ClientCardViewModel[]>(() => {
+        this.languageVersion();
+
+        return this.clients().map(client => ({
             client,
             title: this.getClientTitle(client),
             initials: this.getClientInitials(client),
-        })),
-    );
+            connectedDateLabel: this.formatMediumDate(client.acceptedAtUtc),
+        }));
+    });
 
     public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
+
         this.dietologistService.getMyClients().subscribe({
             next: clients => {
                 this.clients.set(clients);
@@ -65,5 +77,16 @@ export class DietologistClientsPageComponent {
             .slice(0, 2)
             .map(value => value.trim().charAt(0).toUpperCase())
             .join('');
+    }
+
+    private formatMediumDate(value: string): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat(this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+            dateStyle: 'medium',
+        }).format(date);
     }
 }

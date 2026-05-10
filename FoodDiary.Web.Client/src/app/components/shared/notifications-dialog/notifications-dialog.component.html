@@ -49,9 +49,7 @@
                                         <span class="notifications-dialog__item-title fd-ui-card-title">{{ item.notification.title }}</span>
                                     </div>
                                     <div class="notifications-dialog__item-meta fd-inline-center fd-justify-end fd-gap-xs">
-                                        <span class="notifications-dialog__item-date fd-ui-caption">{{
-                                            item.notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm'
-                                        }}</span>
+                                        <span class="notifications-dialog__item-date fd-ui-caption">{{ item.dateLabel }}</span>
                                         <span
                                             class="notifications-dialog__item-indicator"
                                             [class.is-hidden]="item.notification.isRead"

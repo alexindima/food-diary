@@ -59,6 +59,12 @@ export class WeightHistoryPageComponent {
     public readonly isSummaryLoading = this.facade.isSummaryLoading;
     public readonly customRangeControl = this.facade.customRangeControl;
     public readonly entriesDescending = this.facade.entriesDescending;
+    public readonly entryItems = computed<WeightEntryViewModel[]>(() =>
+        this.entriesDescending().map(entry => ({
+            entry,
+            dateLabel: this.formatNumericDate(entry.date),
+        })),
+    );
     public readonly chartData = this.facade.chartData;
     public readonly form = this.facade.form;
     public readonly desiredWeightControl = this.facade.desiredWeightControl;
@@ -137,6 +143,19 @@ export class WeightHistoryPageComponent {
     public changeRange(value: string): void {
         this.facade.changeRange(value);
     }
+
+    private formatNumericDate(value: string): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        }).format(date);
+    }
 }
 
 interface BmiSegment {
@@ -148,4 +167,9 @@ interface BmiSegment {
 
 interface BmiSegmentViewModel extends BmiSegment {
     width: string;
+}
+
+interface WeightEntryViewModel {
+    entry: WeightEntry;
+    dateLabel: string;
 }

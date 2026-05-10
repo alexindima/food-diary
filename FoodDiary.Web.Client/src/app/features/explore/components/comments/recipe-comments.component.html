@@ -32,21 +32,21 @@
         </div>
     } @else {
         <div class="comments-list">
-            @for (comment of comments(); track comment.id) {
+            @for (item of commentItems(); track item.comment.id) {
                 <div class="comment-item">
                     <div class="comment-header">
                         <span class="comment-author fd-ui-caption">
-                            {{ comment.authorFirstName || comment.authorUsername || 'User' }}
+                            {{ item.authorLabel }}
                         </span>
                         <span class="comment-date fd-ui-caption">
-                            {{ comment.createdAtUtc | date: 'short' }}
-                            @if (comment.modifiedAtUtc) {
+                            {{ item.dateLabel }}
+                            @if (item.comment.modifiedAtUtc) {
                                 <span class="comment-edited fd-ui-caption">({{ 'COMMENTS.EDITED' | translate }})</span>
                             }
                         </span>
                     </div>
-                    <p class="comment-text fd-ui-body-sm">{{ comment.text }}</p>
-                    @if (comment.isOwnedByCurrentUser) {
+                    <p class="comment-text fd-ui-body-sm">{{ item.comment.text }}</p>
+                    @if (item.comment.isOwnedByCurrentUser) {
                         <div class="comment-actions">
                             <fd-ui-button
                                 class="comment-action"
@@ -54,7 +54,7 @@
                                 fill="text"
                                 size="sm"
                                 icon="edit"
-                                (click)="onEdit(comment)"
+                                (click)="onEdit(item.comment)"
                             >
                                 {{ 'COMMENTS.EDIT' | translate }}
                             </fd-ui-button>
@@ -64,7 +64,7 @@
                                 fill="text"
                                 size="sm"
                                 icon="delete"
-                                (click)="onDelete(comment)"
+                                (click)="onDelete(item.comment)"
                             >
                                 {{ 'COMMENTS.DELETE' | translate }}
                             </fd-ui-button>

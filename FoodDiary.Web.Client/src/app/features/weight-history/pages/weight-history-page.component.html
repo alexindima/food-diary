@@ -192,13 +192,13 @@
                             </div>
                         } @else {
                             <div class="weight-history-page__entries fd-stack fd-gap-card-header">
-                                @for (entry of entriesDescending(); track entry.id) {
+                                @for (item of entryItems(); track item.entry.id) {
                                     <div class="weight-history-page__entry fd-grid fd-gap-card-header fd-align-center">
                                         <div class="weight-history-page__entry-date fd-ui-stat-value">
-                                            {{ entry.date | date: 'dd.MM.yyyy' }}
+                                            {{ item.dateLabel }}
                                         </div>
                                         <div class="weight-history-page__entry-weight fd-ui-body">
-                                            {{ entry.weight | number: '1.0-2' }}
+                                            {{ item.entry.weight | number: '1.0-2' }}
                                             {{ 'DASHBOARD.KG' | translate }}
                                         </div>
                                         <div class="weight-history-page__entry-actions fd-row fd-wrap fd-gap-actions fd-justify-end">
@@ -207,7 +207,7 @@
                                                 fill="text"
                                                 variant="secondary"
                                                 icon="edit"
-                                                (click)="startEdit(entry)"
+                                                (click)="startEdit(item.entry)"
                                             >
                                                 {{ 'WEIGHT_HISTORY.EDIT' | translate }}
                                             </fd-ui-button>
@@ -216,7 +216,7 @@
                                                 fill="text"
                                                 variant="danger"
                                                 icon="delete"
-                                                (click)="deleteEntry(entry)"
+                                                (click)="deleteEntry(item.entry)"
                                             >
                                                 {{ 'WEIGHT_HISTORY.DELETE' | translate }}
                                             </fd-ui-button>

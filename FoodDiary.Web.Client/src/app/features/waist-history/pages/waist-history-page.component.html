@@ -185,13 +185,13 @@
                             </div>
                         } @else {
                             <div class="waist-history-page__entries">
-                                @for (entry of entriesDescending(); track entry.id) {
+                                @for (item of entryItems(); track item.entry.id) {
                                     <div class="waist-history-page__entry">
                                         <div class="waist-history-page__entry-date fd-ui-stat-value">
-                                            {{ entry.date | date: 'dd.MM.yyyy' }}
+                                            {{ item.dateLabel }}
                                         </div>
                                         <div class="waist-history-page__entry-value fd-ui-body">
-                                            {{ entry.circumference | number: '1.0-2' }}
+                                            {{ item.entry.circumference | number: '1.0-2' }}
                                             {{ 'WAIST_HISTORY.CM' | translate }}
                                         </div>
                                         <div class="waist-history-page__entry-actions">
@@ -200,7 +200,7 @@
                                                 fill="text"
                                                 variant="secondary"
                                                 icon="edit"
-                                                (click)="startEdit(entry)"
+                                                (click)="startEdit(item.entry)"
                                             >
                                                 {{ 'WAIST_HISTORY.EDIT' | translate }}
                                             </fd-ui-button>
@@ -209,7 +209,7 @@
                                                 fill="text"
                                                 variant="danger"
                                                 icon="delete"
-                                                (click)="deleteEntry(entry)"
+                                                (click)="deleteEntry(item.entry)"
                                             >
                                                 {{ 'WAIST_HISTORY.DELETE' | translate }}
                                             </fd-ui-button>

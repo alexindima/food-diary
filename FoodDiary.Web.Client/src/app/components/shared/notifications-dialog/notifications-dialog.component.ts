@@ -1,8 +1,7 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -19,12 +18,13 @@ interface NotificationViewModel {
     badgeKey: string | null;
     actionKey: string | null;
     ariaLabel: string;
+    dateLabel: string;
 }
 
 @Component({
     selector: 'fd-notifications-dialog',
     standalone: true,
-    imports: [DatePipe, TranslateModule, FdUiButtonComponent, FdUiIconComponent, FdUiDialogFooterDirective, FdUiDialogComponent],
+    imports: [TranslateModule, FdUiButtonComponent, FdUiIconComponent, FdUiDialogFooterDirective, FdUiDialogComponent],
     templateUrl: './notifications-dialog.component.html',
     styleUrl: './notifications-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +33,9 @@ export class NotificationsDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject<FdUiDialogRef<NotificationsDialogComponent, void>>(FdUiDialogRef);
     private readonly notificationService = inject(NotificationService);
+    private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
+    private readonly languageVersion = signal(0);
 
     protected readonly notifications = this.notificationService.notifications;
     protected readonly isLoading = this.notificationService.notificationsLoading;
@@ -41,6 +43,7 @@ export class NotificationsDialogComponent {
     protected readonly hasUnreadNotifications = computed(() => this.notifications().some(item => !item.isRead));
     protected readonly notificationItems = computed<NotificationViewModel[]>(() =>
         this.notifications().map(notification => {
+            this.languageVersion();
             const isDietologistInvitation = notification.type === 'DietologistInvitationReceived';
             const isPasswordSetupSuggestion = notification.type === 'PasswordSetupSuggested';
             const hasAccentIcon = isDietologistInvitation || isPasswordSetupSuggestion;
@@ -62,11 +65,15 @@ export class NotificationsDialogComponent {
                       ? 'NOTIFICATIONS.PASSWORD_SETUP_ACTION'
                       : null,
                 ariaLabel: [notification.title.trim(), notification.body?.trim()].filter(Boolean).join('. '),
+                dateLabel: this.formatDateTime(notification.createdAtUtc),
             };
         }),
     );
 
     public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
         this.notificationService.ensureNotificationsLoaded();
     }
 
@@ -115,5 +122,24 @@ export class NotificationsDialogComponent {
                     this.isMarkingAllRead.set(false);
                 },
             });
+    }
+
+    private formatDateTime(value: string): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat(this.resolveLocale(), {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        }).format(date);
+    }
+
+    private resolveLocale(): string {
+        return this.translateService.currentLang === 'ru' ? 'ru-RU' : 'en-US';
     }
 }
