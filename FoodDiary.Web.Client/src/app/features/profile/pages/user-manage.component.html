@@ -9,8 +9,8 @@
         <form
             class="user-manage__form fd-stack fd-gap-card-profile"
             [formGroup]="userForm"
-            (ngSubmit)="onSubmit()"
             [attr.aria-busy]="isSurfaceBusy()"
+            (ngSubmit)="onSubmit()"
         >
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
                 <fd-ui-card
@@ -461,10 +461,10 @@
 
                             <fd-ui-section-state
                                 appearance="compact"
+                                emptyIcon="devices"
                                 [state]="connectedDevicesSectionState()"
                                 [loadingLabel]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate"
                                 [emptyMessage]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate"
-                                emptyIcon="devices"
                             >
                                 <div class="user-manage__notifications-device-list fd-stack fd-gap-xs">
                                     @for (device of connectedDeviceItems(); track device.subscription.endpoint) {

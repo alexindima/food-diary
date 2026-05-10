@@ -839,6 +839,20 @@ export default [
             '@angular-eslint/template/no-positive-tabindex': 'error',
             '@angular-eslint/template/label-has-associated-control': 'warn',
             '@angular-eslint/template/no-autofocus': 'warn',
+            '@angular-eslint/template/attributes-order': [
+                'error',
+                {
+                    alphabetical: false,
+                    order: [
+                        'STRUCTURAL_DIRECTIVE',
+                        'TEMPLATE_REFERENCE',
+                        'ATTRIBUTE_BINDING',
+                        'INPUT_BINDING',
+                        'TWO_WAY_BINDING',
+                        'OUTPUT_BINDING',
+                    ],
+                },
+            ],
             'local/fd-ui-button-accessible-name': 'error',
         },
     },

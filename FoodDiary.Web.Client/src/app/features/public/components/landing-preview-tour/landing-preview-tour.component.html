@@ -74,7 +74,7 @@
                         }
                     </div>
                 </div>
-                <div class="landing-tour-block__draft" #draftBlock>
+                <div #draftBlock class="landing-tour-block__draft">
                     <div class="landing-tour-block__draft-copy">
                         <span class="landing-tour-block__draft-eyebrow">{{ 'LANDING_PREVIEW_TOUR.TOUR.DRAFT_EYEBROW' | translate }}</span>
                         <h3 class="landing-tour-block__draft-title">{{ 'LANDING_PREVIEW_TOUR.TOUR.DRAFT_TITLE' | translate }}</h3>
@@ -86,7 +86,7 @@
                         <p class="landing-tour-block__draft-note">{{ 'LANDING_PREVIEW_TOUR.TOUR.DRAFT_NOTE' | translate }}</p>
                     </div>
                     <div class="landing-tour__drawer">
-                        <fd-quick-consumption-drawer [forceShow]="true" layout="inline" />
+                        <fd-quick-consumption-drawer layout="inline" [forceShow]="true" />
                         <p class="landing-tour__hint">{{ 'LANDING_PREVIEW_TOUR.TOUR.DRAWER_HINT' | translate }}</p>
                     </div>
                 </div>

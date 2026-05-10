@@ -24,9 +24,9 @@
 
     <nav class="sidebar__nav fd-grid fd-gap-xxs">
         <fd-sidebar-route-links
+            linkClass="sidebar__link fd-grid fd-gap-xs fd-align-center"
             [items]="primaryRouteItems()"
             [pendingRoute]="pendingRoute()"
-            linkClass="sidebar__link fd-grid fd-gap-xs fd-align-center"
             (itemSelected)="onRouteSelected($event)"
         />
         @for (item of primaryActionItems(); track item.id) {
@@ -49,9 +49,9 @@
         @if (isFoodTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary fd-grid fd-gap-xxs">
                 <fd-sidebar-route-links
+                    linkClass="sidebar__link sidebar__link--secondary fd-grid fd-gap-xs fd-align-center"
                     [items]="foodTrackingItems"
                     [pendingRoute]="pendingRoute()"
-                    linkClass="sidebar__link sidebar__link--secondary fd-grid fd-gap-xs fd-align-center"
                     (itemSelected)="onRouteSelected($event)"
                 />
             </nav>
@@ -66,9 +66,9 @@
         @if (isBodyTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary fd-grid fd-gap-xxs">
                 <fd-sidebar-route-links
+                    linkClass="sidebar__link sidebar__link--secondary fd-grid fd-gap-xs fd-align-center"
                     [items]="bodyTrackingItems"
                     [pendingRoute]="pendingRoute()"
-                    linkClass="sidebar__link sidebar__link--secondary fd-grid fd-gap-xs fd-align-center"
                     (itemSelected)="onRouteSelected($event)"
                 />
             </nav>
@@ -79,9 +79,9 @@
 
     <nav class="sidebar__nav sidebar__nav--secondary sidebar__nav--bottom fd-grid fd-gap-xxs">
         <fd-sidebar-route-links
+            linkClass="sidebar__link sidebar__link--secondary fd-grid fd-gap-xs fd-align-center"
             [items]="desktopBottomItems"
             [pendingRoute]="pendingRoute()"
-            linkClass="sidebar__link sidebar__link--secondary fd-grid fd-gap-xs fd-align-center"
             (itemSelected)="onRouteSelected($event)"
         />
     </nav>
@@ -98,7 +98,7 @@
             >
                 @if (user.profileImage) {
                     <div class="sidebar__avatar sidebar__avatar--image fd-place-center">
-                        <img [src]="user.profileImage" alt="Avatar" />
+                        <img alt="Avatar" [src]="user.profileImage" />
                     </div>
                 } @else {
                     <div class="sidebar__avatar fd-place-center">
@@ -180,10 +180,10 @@
             #mobileFoodButton
             type="button"
             class="sidebar-mobile__item"
-            [class.is-open]="isMobileFoodOpen()"
-            (click)="toggleMobileFood(mobileFoodButton)"
             aria-haspopup="dialog"
+            [class.is-open]="isMobileFoodOpen()"
             [attr.aria-expanded]="isMobileFoodOpen()"
+            (click)="toggleMobileFood(mobileFoodButton)"
         >
             <fd-ui-icon name="restaurant_menu"></fd-ui-icon>
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.FOOD' | translate }}</span>
@@ -192,10 +192,10 @@
             #mobileBodyButton
             type="button"
             class="sidebar-mobile__item"
-            [class.is-open]="isMobileBodyOpen()"
-            (click)="toggleMobileBody(mobileBodyButton)"
             aria-haspopup="dialog"
+            [class.is-open]="isMobileBodyOpen()"
             [attr.aria-expanded]="isMobileBodyOpen()"
+            (click)="toggleMobileBody(mobileBodyButton)"
         >
             <fd-ui-icon name="monitor_weight"></fd-ui-icon>
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.BODY' | translate }}</span>
@@ -204,10 +204,10 @@
             #mobileReportsButton
             type="button"
             class="sidebar-mobile__item"
-            [class.is-open]="isMobileReportsOpen()"
-            (click)="toggleMobileReports(mobileReportsButton)"
             aria-haspopup="dialog"
+            [class.is-open]="isMobileReportsOpen()"
             [attr.aria-expanded]="isMobileReportsOpen()"
+            (click)="toggleMobileReports(mobileReportsButton)"
         >
             <fd-ui-icon name="bar_chart"></fd-ui-icon>
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.REPORTS' | translate }}</span>
@@ -216,10 +216,10 @@
             #mobileUserButton
             type="button"
             class="sidebar-mobile__item"
-            [class.is-open]="isMobileUserOpen()"
-            (click)="toggleMobileUser(mobileUserButton)"
             aria-haspopup="dialog"
+            [class.is-open]="isMobileUserOpen()"
             [attr.aria-expanded]="isMobileUserOpen()"
+            (click)="toggleMobileUser(mobileUserButton)"
         >
             <fd-ui-icon name="person"></fd-ui-icon>
             @if (unreadNotificationCount() > 0) {
@@ -296,9 +296,9 @@
                 </fd-ui-button>
             } @else {
                 <fd-sidebar-route-links
+                    linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
                     [items]="activeMobileSheetRouteItems()"
                     [pendingRoute]="pendingRoute()"
-                    linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
                     (itemSelected)="onRouteSelected($event); closeMobileMenus()"
                 />
             }

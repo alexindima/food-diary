@@ -4,11 +4,11 @@
 >
     <div
         #controlWrap
-        cdkOverlayOrigin
         #origin="cdkOverlayOrigin"
+        cdkOverlayOrigin
         class="fd-ui-autocomplete__control-wrap"
-        [style.background]="fillColor() || null"
         role="presentation"
+        [style.background]="fillColor() || null"
     >
         @if (label()) {
             <label class="fd-ui-autocomplete__label" [attr.for]="id()">
@@ -72,7 +72,7 @@
             (backdropClick)="closeMenu()"
             (detach)="closeMenu()"
         >
-            <div #listbox class="fd-ui-autocomplete__menu" [id]="id() + '-listbox'" role="listbox">
+            <div #listbox class="fd-ui-autocomplete__menu" role="listbox" [id]="id() + '-listbox'">
                 @if (loading()) {
                     <div class="fd-ui-autocomplete__state">
                         <fd-ui-loader />
@@ -81,11 +81,11 @@
                     @for (option of options(); track getOptionTrack(option, index); let index = $index) {
                         <button
                             type="button"
-                            [id]="getOptionId(index)"
                             class="fd-ui-autocomplete__menu-item"
-                            [class.fd-ui-autocomplete__menu-item--active]="index === activeIndex()"
                             role="option"
                             tabindex="-1"
+                            [id]="getOptionId(index)"
+                            [class.fd-ui-autocomplete__menu-item--active]="index === activeIndex()"
                             [attr.aria-selected]="isEqual(option.value, internalValue())"
                             (click)="selectOption(option)"
                         >
@@ -108,6 +108,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-autocomplete__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+        <div class="fd-ui-autocomplete__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
     }
 </div>

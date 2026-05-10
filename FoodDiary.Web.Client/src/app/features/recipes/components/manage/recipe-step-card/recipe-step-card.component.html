@@ -5,8 +5,8 @@
                 <span
                     class="recipe-step-card__drag"
                     cdkDragHandle
-                    [class.recipe-step-card__drag--disabled]="dragDisabled()"
                     aria-hidden="true"
+                    [class.recipe-step-card__drag--disabled]="dragDisabled()"
                 ></span>
                 @if (isStepTitleEditing()) {
                     <fd-ui-input
@@ -105,8 +105,8 @@
                             [readonly]="true"
                             [prefixIcon]="row.prefixIcon"
                             [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                            (click)="onProductSelectClick(row.index)"
                             [error]="row.foodNameError"
+                            (click)="onProductSelectClick(row.index)"
                         />
 
                         <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">

@@ -27,10 +27,10 @@
                 <input
                     #timeInput
                     class="fd-ui-datetime-input__control fd-ui-datetime-input__control--time"
-                    [value]="timeValue()"
                     type="time"
                     step="60"
                     inputmode="numeric"
+                    [value]="timeValue()"
                     [attr.placeholder]="shouldFloatLabel() ? null : 'HH:mm'"
                     [disabled]="disabled()"
                     (input)="onTimeInput($any($event.target).value)"

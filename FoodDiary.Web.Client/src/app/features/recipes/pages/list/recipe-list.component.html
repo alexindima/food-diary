@@ -1,4 +1,4 @@
-<div class="recipe-list" fdPageContainer #container>
+<div #container class="recipe-list" fdPageContainer>
     <fd-page-header
         class="recipe-list__header"
         [title]="'RECIPE_LIST.TITLE' | translate"
@@ -16,8 +16,8 @@
                         icon="filter_alt"
                         [fdUiHint]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
                         [ariaLabel]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
-                        (click)="openFilters()"
                         [class.recipe-list__filter-button--active]="hasActiveFilters()"
+                        (click)="openFilters()"
                     />
                     <fd-ui-button
                         class="recipe-list__icon-button"
@@ -50,8 +50,8 @@
                         icon="filter_alt"
                         [fdUiHint]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
                         [ariaLabel]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
-                        (click)="openFilters()"
                         [class.recipe-list__filter-button--active]="hasActiveFilters()"
+                        (click)="openFilters()"
                     />
                     <fd-ui-button
                         class="recipe-list__add-button"
@@ -147,27 +147,27 @@
                                         variant="secondary"
                                         fill="text"
                                         icon="open_in_new"
-                                        (click)="openFavoriteRecipe(favorite)"
                                         [fdUiHint]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
                                         [ariaLabel]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
+                                        (click)="openFavoriteRecipe(favorite)"
                                     />
                                     <fd-ui-button
                                         class="recipe-list__favorite-btn"
                                         variant="secondary"
                                         fill="text"
                                         icon="add"
-                                        (click)="addFavoriteRecipeToMeal(favorite)"
                                         [fdUiHint]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
                                         [ariaLabel]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
+                                        (click)="addFavoriteRecipeToMeal(favorite)"
                                     />
                                     <fd-ui-button
                                         class="recipe-list__favorite-btn recipe-list__favorite-btn--remove"
                                         variant="danger"
                                         fill="text"
                                         icon="close"
-                                        (click)="removeFavorite(favorite)"
                                         [fdUiHint]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
                                         [ariaLabel]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
+                                        (click)="removeFavorite(favorite)"
                                     />
                                 </div>
                             </div>

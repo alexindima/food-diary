@@ -16,7 +16,7 @@
             </div>
         </header>
 
-        <div class="features__category-strip fd-row fd-gap-sm" role="tablist" aria-label="{{ 'FEATURES.CATEGORY_ARIA' | translate }}">
+        <div aria-label="{{ 'FEATURES.CATEGORY_ARIA' | translate }}" class="features__category-strip fd-row fd-gap-sm" role="tablist">
             @for (category of categories; track category.key) {
                 <button
                     type="button"
@@ -28,7 +28,7 @@
                     [attr.id]="category.tabId"
                     (click)="selectCategory(category.key)"
                 >
-                    <fd-ui-icon [name]="category.icon" size="md" />
+                    <fd-ui-icon size="md" [name]="category.icon" />
                     <span>{{ category.labelKey | translate }}</span>
                 </button>
             }

@@ -1,4 +1,4 @@
-<div class="dashboard fd-stack fd-gap-xl" #dashboardRoot fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
+<div #dashboardRoot class="dashboard fd-stack fd-gap-xl" fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
     @if (layout.isEditingLayout()) {
         <div class="dashboard__edit-overlay"></div>
     }

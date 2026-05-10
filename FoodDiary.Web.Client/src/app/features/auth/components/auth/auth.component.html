@@ -13,10 +13,10 @@
         @if (authMode === 'login') {
             @if (showPasswordReset()) {
                 <form
-                    [formGroup]="passwordResetForm"
-                    (ngSubmit)="onPasswordResetSubmit()"
                     class="auth__form fd-stack fd-gap-md"
+                    [formGroup]="passwordResetForm"
                     [attr.aria-busy]="isPasswordResetting()"
+                    (ngSubmit)="onPasswordResetSubmit()"
                 >
                     @let passwordResetErrors = passwordResetFieldErrors();
                     <div class="auth__field fd-stack fd-gap-xs">
@@ -24,9 +24,9 @@
                             appearance="auth"
                             formControlName="email"
                             type="email"
+                            autocomplete="email"
                             [label]="'AUTH.RESET.EMAIL' | translate"
                             [placeholder]="'AUTH.RESET.EMAIL_PLACEHOLDER' | translate"
-                            autocomplete="email"
                             [error]="passwordResetErrors.email"
                         />
                     </div>
@@ -67,11 +67,11 @@
             } @else {
                 <form
                     #loginFormElement
+                    class="auth__form fd-stack fd-gap-md"
                     [formGroup]="loginForm"
+                    [attr.aria-busy]="isSubmitting() || isRestoring()"
                     (ngSubmit)="onLoginSubmit()"
                     (input)="onLoginNativeInput()"
-                    class="auth__form fd-stack fd-gap-md"
-                    [attr.aria-busy]="isSubmitting() || isRestoring()"
                 >
                     @let loginErrors = loginFieldErrors();
                     <div class="auth__field fd-stack fd-gap-xs">
@@ -79,9 +79,9 @@
                             appearance="auth"
                             formControlName="email"
                             type="email"
+                            autocomplete="username"
                             [label]="'AUTH.LOGIN.EMAIL' | translate"
                             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
-                            autocomplete="username"
                             [error]="loginErrors.email"
                         />
                     </div>
@@ -91,9 +91,9 @@
                             appearance="auth"
                             formControlName="password"
                             type="password"
+                            autocomplete="current-password"
                             [label]="'AUTH.LOGIN.PASSWORD' | translate"
                             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
-                            autocomplete="current-password"
                             [error]="loginErrors.password"
                         />
                     </div>
@@ -138,7 +138,7 @@
                     </div>
 
                     <div class="auth__social fd-stack fd-gap-xs">
-                        <div #googleLoginButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}"></div>
+                        <div #googleLoginButton aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}" class="auth__google-button"></div>
                         @if (!googleReady()) {
                             <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
                                 {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}
@@ -149,10 +149,10 @@
             }
         } @else {
             <form
-                [formGroup]="registerForm"
-                (ngSubmit)="onRegisterSubmit()"
                 class="auth__form fd-stack fd-gap-md"
+                [formGroup]="registerForm"
                 [attr.aria-busy]="isSubmitting()"
+                (ngSubmit)="onRegisterSubmit()"
             >
                 @let registerErrors = registerFieldErrors();
                 <div class="auth__field fd-stack fd-gap-xs">
@@ -160,9 +160,9 @@
                         appearance="auth"
                         formControlName="email"
                         type="email"
+                        autocomplete="email"
                         [label]="'AUTH.REGISTER.EMAIL' | translate"
                         [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
-                        autocomplete="email"
                         [error]="registerErrors.email"
                     />
                 </div>
@@ -171,9 +171,9 @@
                         appearance="auth"
                         formControlName="password"
                         type="password"
+                        autocomplete="new-password"
                         [label]="'AUTH.REGISTER.PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
-                        autocomplete="new-password"
                         [error]="registerErrors.password"
                     />
                 </div>
@@ -182,9 +182,9 @@
                         appearance="auth"
                         formControlName="confirmPassword"
                         type="password"
+                        autocomplete="new-password"
                         [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
-                        autocomplete="new-password"
                         [error]="registerErrors.confirmPassword"
                     />
                 </div>
@@ -218,8 +218,8 @@
                 <div class="auth__social fd-stack fd-gap-xs">
                     <div
                         #googleRegisterButton
-                        class="auth__google-button"
                         aria-label="{{ 'AUTH.GOOGLE.REGISTER_BUTTON' | translate }}"
+                        class="auth__google-button"
                     ></div>
                     @if (!googleReady()) {
                         <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">

@@ -4,12 +4,12 @@
 >
     <div
         class="fd-ui-input__control-wrap"
+        role="presentation"
         [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"
         [class.fd-ui-input__control-wrap--date]="isDateInput()"
         [style.background]="fillColor() || null"
         [style.--fd-input-control-background]="fillColor() || null"
         (click)="focusControl($event, control)"
-        role="presentation"
     >
         @if (label()) {
             <label class="fd-ui-input__label" [attr.for]="id()">
@@ -58,6 +58,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+        <div class="fd-ui-input__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
     }
 </div>

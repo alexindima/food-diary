@@ -13,8 +13,8 @@
         }
         <div class="fd-ui-date-input__segment">
             <input
-                cdkOverlayOrigin
                 #origin="cdkOverlayOrigin"
+                cdkOverlayOrigin
                 class="fd-ui-date-input__control"
                 [id]="id()"
                 [value]="displayValue()"
@@ -61,6 +61,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-date-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+        <div class="fd-ui-date-input__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
     }
 </div>

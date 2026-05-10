@@ -27,9 +27,9 @@
                     [fullWidth]="true"
                     [options]="nutritionModeOptions()"
                     [selectedValue]="nutritionMode()"
-                    (selectedValueChange)="onNutritionModeChange($event)"
                     [fdUiHint]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
                     [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                    (selectedValueChange)="onNutritionModeChange($event)"
                 />
             </fd-nutrition-editor>
         </div>

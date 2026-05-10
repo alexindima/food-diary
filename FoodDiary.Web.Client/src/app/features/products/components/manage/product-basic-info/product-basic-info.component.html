@@ -23,8 +23,8 @@
         </div>
         <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-autocomplete
-                [formControl]="formGroup().controls.name"
                 size="lg"
+                [formControl]="formGroup().controls.name"
                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
                 [required]="true"
@@ -40,16 +40,16 @@
         </div>
         <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
-                [formControl]="formGroup().controls.brand"
                 size="lg"
+                [formControl]="formGroup().controls.brand"
                 [label]="'PRODUCT_MANAGE.BRAND' | translate"
                 [placeholder]="'PRODUCT_MANAGE.BRAND_PLACEHOLDER' | translate"
             />
         </div>
         <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
-                [formControl]="formGroup().controls.barcode"
                 size="lg"
+                [formControl]="formGroup().controls.barcode"
                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
                 [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
                 [suffixButtonIcon]="'qr_code_scanner'"
@@ -61,8 +61,8 @@
     <div class="product-manage__basic-grid fd-grid fd-gap-lg">
         <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-select
-                [formControl]="formGroup().controls.productType"
                 size="lg"
+                [formControl]="formGroup().controls.productType"
                 [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
                 [options]="productTypeOptions()"
@@ -80,9 +80,9 @@
         <div class="product-manage__serving-row product-manage__field--full fd-row fd-wrap fd-gap-lg">
             <div class="product-manage__serving-part fd-stack fd-gap-xs">
                 <fd-ui-input
-                    [formControl]="formGroup().controls.defaultPortionAmount"
                     size="lg"
                     type="number"
+                    [formControl]="formGroup().controls.defaultPortionAmount"
                     [label]="'PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate"
                     [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
                     [required]="true"
@@ -91,8 +91,8 @@
             </div>
             <div class="product-manage__serving-part fd-stack fd-gap-xs">
                 <fd-ui-select
-                    [formControl]="formGroup().controls.baseUnit"
                     size="lg"
+                    [formControl]="formGroup().controls.baseUnit"
                     [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
                     [options]="unitOptions()"
                     [error]="errors.baseUnit"
@@ -113,8 +113,8 @@
     <div class="product-manage__basic-grid fd-grid fd-gap-lg">
         <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-select
-                [formControl]="formGroup().controls.visibility"
                 size="lg"
+                [formControl]="formGroup().controls.visibility"
                 [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
                 [options]="visibilityOptions()"
                 [error]="errors.visibility"

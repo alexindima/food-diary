@@ -1,14 +1,14 @@
 @let dialog = viewState();
 
-<fd-ui-dialog [title]="dialog.title" size="sm">
+<fd-ui-dialog size="sm" [title]="dialog.title">
     <p><strong>Target:</strong> {{ data.report.targetType }} ({{ data.report.targetId }})</p>
     <p><strong>Reason:</strong> {{ data.report.reason }}</p>
 
-    <fd-ui-textarea [(ngModel)]="adminNote" label="Admin note (optional)" placeholder="Add an admin note..." [rows]="3" />
+    <fd-ui-textarea label="Admin note (optional)" placeholder="Add an admin note..." [rows]="3" [(ngModel)]="adminNote" />
 
     <div class="dialog-actions fd-row fd-justify-end fd-gap-xs">
         <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="onCancel()"> Cancel </fd-ui-button>
-        <fd-ui-button type="button" [variant]="dialog.confirmVariant" size="sm" [disabled]="isSubmitting()" (click)="onConfirm()">
+        <fd-ui-button type="button" size="sm" [variant]="dialog.confirmVariant" [disabled]="isSubmitting()" (click)="onConfirm()">
             {{ dialog.confirmLabel }}
         </fd-ui-button>
     </div>

@@ -10,8 +10,8 @@
     <form
         class="product-manage__form fd-stack fd-gap-lg"
         [formGroup]="productForm"
-        (ngSubmit)="onSubmitAsync()"
         [attr.aria-busy]="isSubmitting() || isDeleting()"
+        (ngSubmit)="onSubmitAsync()"
     >
         <div class="product-manage__grid fd-grid fd-gap-xl">
             <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">

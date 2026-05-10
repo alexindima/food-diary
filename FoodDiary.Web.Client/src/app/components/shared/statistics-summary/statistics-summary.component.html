@@ -25,9 +25,9 @@
 
     <fd-ui-section-state
         appearance="compact"
+        emptyIcon="analytics"
         [state]="summary() ? 'content' : 'empty'"
         [emptyMessage]="emptyKey() | translate"
-        emptyIcon="analytics"
     >
         @if (summary(); as data) {
             <div class="stats-summary-card__content fd-stack fd-gap-card-content">

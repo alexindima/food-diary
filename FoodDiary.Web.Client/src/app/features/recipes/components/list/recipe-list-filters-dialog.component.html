@@ -3,9 +3,9 @@
         class="recipe-list-filters-dialog__visibility"
         [options]="visibilityOptions"
         [selectedValue]="visibilityValue"
-        (selectedValueChange)="onVisibilityChange($event)"
         [fdUiHint]="'RECIPE_LIST.FILTERS_TITLE' | translate"
         [ariaLabel]="'RECIPE_LIST.FILTERS_TITLE' | translate"
+        (selectedValueChange)="onVisibilityChange($event)"
     />
 
     <div fdUiDialogFooter class="recipe-list-filters-dialog__footer fd-row fd-justify-end fd-gap-xs">

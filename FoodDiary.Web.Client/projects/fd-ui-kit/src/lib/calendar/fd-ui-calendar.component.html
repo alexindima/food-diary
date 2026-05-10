@@ -34,6 +34,7 @@
                     <button
                         type="button"
                         class="fd-ui-calendar__day"
+                        role="gridcell"
                         [class.fd-ui-calendar__day--outside]="!cell.isCurrentMonth"
                         [class.fd-ui-calendar__day--today]="cell.isToday"
                         [class.fd-ui-calendar__day--selected]="cell.isSelected"
@@ -42,7 +43,6 @@
                         [attr.data-date]="cell.iso"
                         [attr.tabindex]="cell.isActive ? 0 : -1"
                         [attr.aria-selected]="cell.isSelected"
-                        role="gridcell"
                         (click)="selectDate(cell.date)"
                         (keydown)="onCellKeydown($event, cell.date)"
                     >

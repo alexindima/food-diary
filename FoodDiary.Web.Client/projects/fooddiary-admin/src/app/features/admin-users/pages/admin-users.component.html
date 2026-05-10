@@ -1,6 +1,6 @@
 <div class="admin-users fd-grid fd-gap-md">
     <div class="toolbar fd-row fd-gap-sm">
-        <fd-ui-input [ngModel]="search()" (ngModelChange)="onSearchChange($event)" placeholder="Search by email or username" />
+        <fd-ui-input placeholder="Search by email or username" [ngModel]="search()" (ngModelChange)="onSearchChange($event)" />
 
         <fd-ui-button type="button" [variant]="includeDeleted() ? 'primary' : 'secondary'" (click)="toggleIncludeDeleted()">
             {{ includeDeleted() ? 'Hide deleted' : 'Show deleted' }}
@@ -70,7 +70,7 @@
                 <h2 class="fd-ui-title-sm">Login activity</h2>
                 <p class="fd-ui-body-xs">Successful authentication events with masked IP and parsed client details.</p>
             </div>
-            <fd-ui-input [ngModel]="loginEventsSearch()" (ngModelChange)="onLoginEventsSearchChange($event)" placeholder="Search logins" />
+            <fd-ui-input placeholder="Search logins" [ngModel]="loginEventsSearch()" (ngModelChange)="onLoginEventsSearchChange($event)" />
         </div>
 
         @if (loginSummaryItems().length) {
@@ -148,7 +148,7 @@
                 <h2 class="fd-ui-title-sm">Impersonation sessions</h2>
                 <p class="fd-ui-body-xs">Recent admin access sessions started on behalf of users.</p>
             </div>
-            <fd-ui-input [ngModel]="sessionsSearch()" (ngModelChange)="onSessionsSearchChange($event)" placeholder="Search sessions" />
+            <fd-ui-input placeholder="Search sessions" [ngModel]="sessionsSearch()" (ngModelChange)="onSessionsSearchChange($event)" />
         </div>
 
         @if (isSessionsLoading()) {

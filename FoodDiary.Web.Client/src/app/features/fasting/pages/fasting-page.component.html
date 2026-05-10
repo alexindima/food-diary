@@ -173,8 +173,8 @@
                                     <fd-ui-button
                                         variant="secondary"
                                         fill="outline"
-                                        (click)="openCheckInForm()"
                                         [disabled]="isEnding() || isUpdatingCycle()"
+                                        (click)="openCheckInForm()"
                                     >
                                         {{ currentCheckInCtaKey() | translate }}
                                     </fd-ui-button>
@@ -189,10 +189,10 @@
                                         {{ 'FASTING.CHECK_IN.HUNGER' | translate }}
                                     </div>
                                     <fd-ui-emoji-picker
-                                        [options]="hungerEmojiOptions()"
-                                        [(selectedValue)]="hungerLevel"
-                                        [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
                                         size="sm"
+                                        [options]="hungerEmojiOptions()"
+                                        [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
+                                        [(selectedValue)]="hungerLevel"
                                     />
                                 </div>
 
@@ -201,10 +201,10 @@
                                         {{ 'FASTING.CHECK_IN.ENERGY' | translate }}
                                     </div>
                                     <fd-ui-emoji-picker
-                                        [options]="energyEmojiOptions()"
-                                        [(selectedValue)]="energyLevel"
-                                        [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
                                         size="sm"
+                                        [options]="energyEmojiOptions()"
+                                        [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
+                                        [(selectedValue)]="energyLevel"
                                     />
                                 </div>
 
@@ -213,10 +213,10 @@
                                         {{ 'FASTING.CHECK_IN.MOOD' | translate }}
                                     </div>
                                     <fd-ui-emoji-picker
-                                        [options]="moodEmojiOptions()"
-                                        [(selectedValue)]="moodLevel"
-                                        [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
                                         size="sm"
+                                        [options]="moodEmojiOptions()"
+                                        [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
+                                        [(selectedValue)]="moodLevel"
                                     />
                                 </div>
                             </div>
@@ -227,10 +227,10 @@
                                 </div>
                                 <fd-ui-chip-select
                                     class="fasting__symptom-chips"
-                                    [options]="symptomChipOptions()"
-                                    [(selectedValues)]="selectedSymptoms"
-                                    [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
                                     size="sm"
+                                    [options]="symptomChipOptions()"
+                                    [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
+                                    [(selectedValues)]="selectedSymptoms"
                                 />
                             </div>
 
@@ -238,10 +238,10 @@
                                 <span class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
                                 <textarea
                                     class="fasting__textarea"
-                                    [ngModel]="checkInNotes()"
-                                    (ngModelChange)="onCheckInNotesChange($event)"
-                                    [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
                                     rows="4"
+                                    [ngModel]="checkInNotes()"
+                                    [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
+                                    (ngModelChange)="onCheckInNotesChange($event)"
                                 ></textarea>
                             </label>
 
@@ -249,15 +249,15 @@
                                 <fd-ui-button
                                     variant="secondary"
                                     fill="outline"
-                                    (click)="closeCheckInForm()"
                                     [disabled]="isSavingCheckIn()"
+                                    (click)="closeCheckInForm()"
                                 >
                                     {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
                                 </fd-ui-button>
                                 <fd-ui-button
-                                    (click)="saveCheckIn()"
                                     [loading]="isSavingCheckIn()"
                                     [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()"
+                                    (click)="saveCheckIn()"
                                 >
                                     {{ 'FASTING.CHECK_IN.SAVE' | translate }}
                                 </fd-ui-button>

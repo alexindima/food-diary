@@ -1,4 +1,4 @@
-<fd-ui-dialog [title]="'NOTIFICATIONS.TITLE' | translate" size="lg" bodyScrollInset="edge">
+<fd-ui-dialog size="lg" bodyScrollInset="edge" [title]="'NOTIFICATIONS.TITLE' | translate">
     <div class="notifications-dialog__body" [attr.aria-busy]="isLoading()">
         @if (isLoading()) {
             <div class="notifications-dialog__state fd-place-center fd-gap-sm" role="status" aria-live="polite">

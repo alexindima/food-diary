@@ -4,13 +4,13 @@
         <div class="explore-controls fd-row fd-wrap fd-gap-sm">
             <fd-ui-input
                 class="explore-search"
+                type="text"
                 [formControl]="searchControl"
                 [placeholder]="'EXPLORE.SEARCH_PLACEHOLDER' | translate"
-                type="text"
             />
             <div class="explore-sort fd-row fd-gap-xs">
                 @for (action of sortActions(); track action.value) {
-                    <fd-ui-button [variant]="action.variant" size="sm" (click)="onSortChange(action.value)">
+                    <fd-ui-button size="sm" [variant]="action.variant" (click)="onSortChange(action.value)">
                         {{ action.labelKey | translate }}
                     </fd-ui-button>
                 }

@@ -7,8 +7,8 @@
                     appearance="plain-icon"
                     variant="secondary"
                     fill="text"
-                    [icon]="favoriteIcon()"
                     iconSize="sm"
+                    [icon]="favoriteIcon()"
                     [class.consumption-detail__favorite-btn--active]="isFavorite()"
                     [class.fd-favorite-button--active]="isFavorite()"
                     [disabled]="isFavoriteLoading()"
@@ -29,7 +29,7 @@
                     }
                 </div>
             </div>
-            <button type="button" class="consumption-detail__close-button" (click)="close()" aria-label="Close dialog">
+            <button type="button" class="consumption-detail__close-button" aria-label="Close dialog" (click)="close()">
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>

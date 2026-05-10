@@ -1,11 +1,11 @@
-<fd-ui-dialog class="calorie-goal-dialog" [title]="'USER_MANAGE.DAILY_CALORIES' | translate" size="md">
-    <form [formGroup]="form" (ngSubmit)="save()" id="calorieGoalForm">
+<fd-ui-dialog class="calorie-goal-dialog" size="md" [title]="'USER_MANAGE.DAILY_CALORIES' | translate">
+    <form id="calorieGoalForm" [formGroup]="form" (ngSubmit)="save()">
         <fd-ui-input
             formControlName="dailyCalorieTarget"
             type="number"
+            floatLabel="always"
             [label]="'USER_MANAGE.CALORIE_TARGET_LABEL' | translate"
             [placeholder]="'USER_MANAGE.DAILY_CALORIES_PLACEHOLDER' | translate"
-            floatLabel="always"
         />
     </form>
 

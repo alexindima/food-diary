@@ -8,7 +8,7 @@
                 <option value="general">Other mail</option>
             </select>
         </label>
-        <fd-ui-input type="number" [ngModel]="limit()" (ngModelChange)="updateLimit($event)" placeholder="Limit" />
+        <fd-ui-input type="number" placeholder="Limit" [ngModel]="limit()" (ngModelChange)="updateLimit($event)" />
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
 

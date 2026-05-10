@@ -1,6 +1,6 @@
 <div class="dashboard-widget-header fd-row fd-gap-xs fd-min-w-0" [class.dashboard-widget-header--with-icon]="hasIcon()">
     @if (hasIcon()) {
-        <div class="dashboard-widget-header__icon fd-inline-center" [attr.data-tone]="iconTone()" aria-hidden="true">
+        <div class="dashboard-widget-header__icon fd-inline-center" aria-hidden="true" [attr.data-tone]="iconTone()">
             @if (iconName()) {
                 <fd-ui-icon [name]="iconName()!"></fd-ui-icon>
             } @else {

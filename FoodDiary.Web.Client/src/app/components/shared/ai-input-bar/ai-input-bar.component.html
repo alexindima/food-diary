@@ -13,9 +13,9 @@
         class="ai-input-bar__input fd-ui-body-sm"
         [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
         [value]="voiceText()"
+        [disabled]="isDisabled()"
         (input)="onTextInput($event)"
         (keydown.enter)="submitTextAsync(); $event.preventDefault()"
-        [disabled]="isDisabled()"
     />
     @if (!voiceText()) {
         <fd-ui-button
@@ -24,25 +24,25 @@
             fill="solid"
             icon="photo_camera"
             iconSize="lg"
+            fdUiHintPosition="bottom"
             [disabled]="isDisabled()"
-            (click)="onPhotoClickAsync()"
             [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
             [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-            fdUiHintPosition="bottom"
+            (click)="onPhotoClickAsync()"
         />
         @if (isSpeechSupported) {
             <fd-ui-button
                 class="ai-input-bar__action-btn"
                 variant="secondary"
                 fill="solid"
-                [icon]="microphoneIcon()"
                 iconSize="lg"
+                fdUiHintPosition="bottom"
+                [icon]="microphoneIcon()"
                 [class.ai-input-bar__action-btn--mic-active]="isListening()"
                 [disabled]="isDisabled()"
-                (click)="toggleMicAsync()"
                 [fdUiHint]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
                 [ariaLabel]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
-                fdUiHintPosition="bottom"
+                (click)="toggleMicAsync()"
             />
         }
     } @else {
@@ -50,8 +50,8 @@
             class="ai-input-bar__submit"
             variant="primary"
             fill="solid"
-            [icon]="textSubmitIcon()"
             iconSize="lg"
+            [icon]="textSubmitIcon()"
             [disabled]="isDisabled()"
             [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
             (click)="submitTextAsync()"

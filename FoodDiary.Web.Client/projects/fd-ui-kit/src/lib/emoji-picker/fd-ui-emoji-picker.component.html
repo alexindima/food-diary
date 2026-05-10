@@ -1,14 +1,14 @@
-<div [class]="containerClass()" role="radiogroup" [attr.aria-label]="ariaLabel() || null">
+<div role="radiogroup" [class]="containerClass()" [attr.aria-label]="ariaLabel() || null">
     @for (option of options(); track option.value; let index = $index) {
         <button
             #optionButton
             type="button"
             class="fd-ui-emoji-picker__option"
+            role="radio"
             [class.is-selected]="isSelected(option.value)"
             [class.has-label]="showLabels() && !!option.label"
             [class.has-description]="showDescriptions() && !!option.description"
             [disabled]="option.disabled ?? false"
-            role="radio"
             [attr.aria-checked]="isSelected(option.value)"
             [attr.aria-label]="getOptionAriaLabel(option)"
             [attr.tabindex]="getTabIndex(option.value)"

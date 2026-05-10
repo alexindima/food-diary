@@ -6,7 +6,7 @@
 
     <div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs">
         @for (dt of dietFilterOptions(); track dt.value) {
-            <fd-ui-button variant="secondary" [fill]="dt.fill" size="sm" (click)="filterByDiet(dt.value)">
+            <fd-ui-button variant="secondary" size="sm" [fill]="dt.fill" (click)="filterByDiet(dt.value)">
                 {{ dt.labelKey | translate }}
             </fd-ui-button>
         }

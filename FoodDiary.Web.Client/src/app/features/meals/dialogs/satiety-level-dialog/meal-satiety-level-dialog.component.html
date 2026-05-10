@@ -1,11 +1,11 @@
-<fd-ui-dialog [title]="data.titleKey | translate" [subtitle]="subtitle()" size="lg">
+<fd-ui-dialog size="lg" [title]="data.titleKey | translate" [subtitle]="subtitle()">
     <fd-ui-satiety-scale layout="vertical" [ngModel]="selectedValue()" (ngModelChange)="onValueSelected($event)" />
 
     <div fdUiDialogFooter>
         <fd-ui-button variant="secondary" fill="outline" (click)="close()">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button variant="primary" (click)="closeWithValue()" [disabled]="selectedValue() === null">
+        <fd-ui-button variant="primary" [disabled]="selectedValue() === null" (click)="closeWithValue()">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_APPLY' | translate }}
         </fd-ui-button>
     </div>

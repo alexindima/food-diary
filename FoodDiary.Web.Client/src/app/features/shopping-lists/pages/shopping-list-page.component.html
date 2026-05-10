@@ -172,9 +172,9 @@
                             <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
                                 <fd-ui-checkbox
                                     class="shopping-list__checkbox"
+                                    label=""
                                     [ngModel]="item.isChecked"
                                     (ngModelChange)="toggleItemChecked(item, $event)"
-                                    label=""
                                 />
                                 <div class="shopping-list__item-body">
                                     <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>

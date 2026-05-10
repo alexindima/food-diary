@@ -1,4 +1,4 @@
-<div class="consumption-list" fdPageContainer #container>
+<div #container class="consumption-list" fdPageContainer>
     <fd-page-header
         class="consumption-list__header"
         [title]="'CONSUMPTION_LIST.TITLE' | translate"
@@ -16,8 +16,8 @@
                         icon="filter_alt"
                         [fdUiHint]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                         [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                        (click)="openFilters()"
                         [class.consumption-list__filter-button--active]="hasDateFilter()"
+                        (click)="openFilters()"
                     />
                 </div>
             } @else {
@@ -30,8 +30,8 @@
                         icon="filter_alt"
                         [fdUiHint]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                         [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                        (click)="openFilters()"
                         [class.consumption-list__filter-button--active]="hasDateFilter()"
+                        (click)="openFilters()"
                     />
                 </div>
             }
@@ -91,18 +91,18 @@
                                 variant="secondary"
                                 fill="text"
                                 icon="replay"
-                                (click)="repeatFavorite(fav)"
                                 [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
                                 [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
+                                (click)="repeatFavorite(fav)"
                             />
                             <fd-ui-button
                                 class="consumption-list__favorite-btn consumption-list__favorite-btn--remove"
                                 variant="danger"
                                 fill="text"
                                 icon="close"
-                                (click)="removeFavorite(fav)"
                                 [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
                                 [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
+                                (click)="removeFavorite(fav)"
                             />
                         </div>
                     </div>

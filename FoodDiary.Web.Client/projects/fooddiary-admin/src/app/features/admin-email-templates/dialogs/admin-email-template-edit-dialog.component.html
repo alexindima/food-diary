@@ -1,8 +1,8 @@
 <fd-ui-dialog
-    [title]="isNew ? 'Create email template' : 'Edit email template'"
     subtitle="Manage localized subjects, bodies, and the rendered preview."
     size="xl"
     bodyScrollInset="edge"
+    [title]="isNew ? 'Create email template' : 'Edit email template'"
 >
     <form class="email-template-edit-dialog fd-grid fd-gap-md" [formGroup]="form" (ngSubmit)="onSave()">
         <section class="template-meta fd-grid fd-gap-md fd-align-center" aria-label="Template metadata">
@@ -62,7 +62,7 @@
                 </dl>
 
                 <div class="test-send fd-grid fd-gap-sm fd-align-center">
-                    <fd-ui-input [formControl]="testEmailControl" label="Send test to" />
+                    <fd-ui-input label="Send test to" [formControl]="testEmailControl" />
                     <fd-ui-button
                         type="button"
                         variant="secondary"

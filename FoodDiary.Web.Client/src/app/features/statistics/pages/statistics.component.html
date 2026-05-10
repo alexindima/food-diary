@@ -27,7 +27,7 @@
             </div>
         } @else if (!hasLoadError()) {
             @if (!hasStatisticsData() && !hasBodyData() && !isBodyLoading() && !hasBodyLoadError()) {
-                <fd-ui-empty-state [message]="'STATISTICS.NO_DATA' | translate" icon="monitoring" />
+                <fd-ui-empty-state icon="monitoring" [message]="'STATISTICS.NO_DATA' | translate" />
             }
 
             <fd-statistics-summary

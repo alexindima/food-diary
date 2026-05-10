@@ -1,7 +1,7 @@
 <fd-ui-dialog
+    size="lg"
     [title]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.TITLE' | translate"
     [subtitle]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
-    size="lg"
 >
     <div class="photo-ai-dialog fd-stack fd-gap-lg">
         <div class="photo-ai-dialog__upload">
@@ -58,10 +58,10 @@
                         </span>
                         <span class="photo-ai-dialog__title-actions fd-row fd-gap-xxs">
                             <fd-ui-button
-                                [variant]="editActionState().variant"
-                                [fill]="editActionState().fill"
                                 size="sm"
                                 class="photo-ai-dialog__edit-toggle"
+                                [variant]="editActionState().variant"
+                                [fill]="editActionState().fill"
                                 (click)="handleEditAction()"
                             >
                                 {{ editActionState().labelKey | translate }}
@@ -80,24 +80,24 @@
                                         <fd-ui-icon name="drag_indicator" />
                                     </div>
                                     <input
+                                        #nameInput
                                         class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--name"
                                         type="text"
                                         [value]="item.name"
                                         (input)="updateEditItem(i, 'name', nameInput.value)"
-                                        #nameInput
                                     />
                                     <input
+                                        #amountInput
                                         class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--amount"
                                         type="number"
                                         [value]="item.amount"
                                         (input)="updateEditItem(i, 'amount', amountInput.value)"
-                                        #amountInput
                                     />
                                     <select
+                                        #unitSelect
                                         class="photo-ai-dialog__edit-select"
                                         [value]="item.unit"
                                         (change)="updateEditItem(i, 'unit', unitSelect.value)"
-                                        #unitSelect
                                     >
                                         @for (unit of unitOptions; track unit.value) {
                                             <option [value]="unit.value">{{ unit.labelKey | translate }}</option>

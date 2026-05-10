@@ -15,10 +15,10 @@
             <input
                 #timeInput
                 class="fd-ui-time-input__control"
-                [id]="id()"
                 type="time"
                 step="60"
                 inputmode="numeric"
+                [id]="id()"
                 [value]="internalValue()"
                 [attr.placeholder]="placeholderAttribute()"
                 [disabled]="disabled()"
@@ -35,6 +35,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-time-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+        <div class="fd-ui-time-input__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
     }
 </div>

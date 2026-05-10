@@ -46,6 +46,6 @@
         <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
     }
     @if (error()) {
-        <p class="fd-ui-radio-group__error" [id]="id() + '-error'" role="alert">{{ error() }}</p>
+        <p class="fd-ui-radio-group__error" role="alert" [id]="id() + '-error'">{{ error() }}</p>
     }
 </div>

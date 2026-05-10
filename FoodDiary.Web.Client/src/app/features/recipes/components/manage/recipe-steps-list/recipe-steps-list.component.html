@@ -4,9 +4,9 @@
     </div>
     <section class="recipe-steps-list__section fd-stack fd-gap-sm">
         <div
+            #dragBoundary
             class="recipe-steps-list__steps fd-stack fd-gap-sm"
             cdkDropList
-            #dragBoundary
             [cdkDropListData]="stepsFormArray().controls"
             (cdkDropListDropped)="onStepDrop($event)"
         >
@@ -14,9 +14,9 @@
                 <div
                     class="recipe-step"
                     cdkDrag
+                    cdkDragLockAxis="y"
                     [cdkDragDisabled]="stepsFormArray().length <= 1"
                     [cdkDragBoundary]="dragBoundary"
-                    cdkDragLockAxis="y"
                 >
                     <fd-recipe-step-card
                         [stepFormGroup]="step"

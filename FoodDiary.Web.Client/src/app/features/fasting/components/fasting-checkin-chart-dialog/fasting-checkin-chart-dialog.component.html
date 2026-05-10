@@ -1,4 +1,4 @@
-<fd-ui-dialog-shell [title]="data.title" [subtitle]="data.subtitle" size="lg">
+<fd-ui-dialog-shell size="lg" [title]="data.title" [subtitle]="data.subtitle">
     <div class="fasting-checkin-chart-dialog__body">
         <div class="fasting-checkin-chart-dialog__chart">
             <canvas baseChart [data]="chartData()" [options]="chartOptions" [type]="'line'" [height]="360"></canvas>

@@ -32,7 +32,7 @@
                     }
                 </div>
             } @else {
-                <fd-ui-icon [name]="imageIcon()" size="lg" />
+                <fd-ui-icon size="lg" [name]="imageIcon()" />
             }
         }
     </div>
@@ -46,8 +46,8 @@
                         appearance="plain-icon"
                         variant="secondary"
                         fill="text"
-                        [icon]="favoriteIcon()"
                         iconSize="sm"
+                        [icon]="favoriteIcon()"
                         [class.entity-card__favorite-button--active]="isFavorite()"
                         [class.fd-favorite-button--active]="isFavorite()"
                         [fdUiHint]="favoriteAriaLabel()"
@@ -123,9 +123,9 @@
             <fd-ui-button
                 class="entity-card__action-button"
                 appearance="card-action"
-                [icon]="actionIcon()"
                 variant="primary"
                 fill="solid"
+                [icon]="actionIcon()"
                 [ariaLabel]="actionAriaLabel() ?? ''"
                 (click)="handleAction($event)"
             >

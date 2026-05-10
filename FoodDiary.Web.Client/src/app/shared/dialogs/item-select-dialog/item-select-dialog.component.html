@@ -1,5 +1,5 @@
 @if (!embedded()) {
-    <fd-ui-dialog [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate" size="lg">
+    <fd-ui-dialog size="lg" [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate">
         <div class="consumption-item-select fd-stack fd-gap-md">
             <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
 

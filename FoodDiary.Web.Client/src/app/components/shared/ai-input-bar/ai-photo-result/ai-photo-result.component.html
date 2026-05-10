@@ -59,7 +59,7 @@
                     (click)="reanalyzeRequested.emit()"
                 />
             </span>
-            <fd-ui-button [variant]="editActionView().variant" [fill]="editActionView().fill" size="sm" (click)="handleEditAction()">
+            <fd-ui-button size="sm" [variant]="editActionView().variant" [fill]="editActionView().fill" (click)="handleEditAction()">
                 {{ editActionView().labelKey | translate }}
             </fd-ui-button>
             @if (isEditing()) {
@@ -77,24 +77,24 @@
                             <fd-ui-icon name="drag_indicator"></fd-ui-icon>
                         </div>
                         <input
+                            #nameInput
                             class="ai-photo-result__edit-input ai-photo-result__edit-input--name"
                             type="text"
                             [value]="item.name"
                             (input)="updateEditItem(i, 'name', nameInput.value)"
-                            #nameInput
                         />
                         <input
+                            #amountInput
                             class="ai-photo-result__edit-input ai-photo-result__edit-input--amount"
                             type="number"
                             [value]="item.amount"
                             (input)="updateEditItem(i, 'amount', amountInput.value)"
-                            #amountInput
                         />
                         <select
+                            #unitSelect
                             class="ai-photo-result__edit-select"
                             [value]="item.unit"
                             (change)="updateEditItem(i, 'unit', unitSelect.value)"
-                            #unitSelect
                         >
                             @for (unit of editUnitOptions(); track unit.value) {
                                 <option [value]="unit.value">{{ unit.label }}</option>
@@ -169,14 +169,14 @@
             <div class="ai-photo-result__details" [class.ai-photo-result__details--expanded]="showDetails() && isDetailsExpanded()">
                 <fd-meal-details-fields
                     class="ai-photo-result__details-inner"
+                    density="regular"
+                    satietyLayout="columns"
                     [date]="detailsDate()"
                     [time]="detailsTime()"
                     [comment]="detailsComment()"
                     [preMealSatietyLevel]="preMealSatietyLevel()"
                     [postMealSatietyLevel]="postMealSatietyLevel()"
                     [surface]="false"
-                    density="regular"
-                    satietyLayout="columns"
                     (dateChange)="updateDetailsDate($event)"
                     (timeChange)="updateDetailsTime($event)"
                     (commentChange)="updateDetailsComment($event)"

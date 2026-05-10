@@ -2,9 +2,9 @@
     class="like-button"
     variant="secondary"
     fill="outline"
+    iconSize="md"
     [class.like-button--liked]="isLiked()"
     [icon]="icon()"
-    iconSize="md"
     [disabled]="isToggling()"
     (click)="onToggle()"
 >

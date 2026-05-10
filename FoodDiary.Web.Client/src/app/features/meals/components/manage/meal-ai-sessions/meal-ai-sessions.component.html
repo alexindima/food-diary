@@ -4,7 +4,7 @@
             <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
                 <div class="consumption-manage__ai-summary-image fd-center">
                     @if (row.session.imageUrl) {
-                        <img [src]="row.session.imageUrl" alt="" loading="lazy" />
+                        <img alt="" loading="lazy" [src]="row.session.imageUrl" />
                     } @else {
                         <fd-ui-icon name="auto_awesome" size="md" />
                     }

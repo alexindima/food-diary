@@ -3,19 +3,19 @@
         class="product-list-filters-dialog__visibility"
         [options]="visibilityOptions"
         [selectedValue]="visibilityValue"
-        (selectedValueChange)="onVisibilityChange($event)"
         [fdUiHint]="'PRODUCT_LIST.FILTERS_TITLE' | translate"
         [ariaLabel]="'PRODUCT_LIST.FILTERS_TITLE' | translate"
+        (selectedValueChange)="onVisibilityChange($event)"
     />
 
     <section class="product-list-filters-dialog__section fd-grid fd-gap-xs">
         <h3 class="product-list-filters-dialog__section-title">{{ 'PRODUCT_LIST.FILTER_CATEGORIES' | translate }}</h3>
         <fd-ui-chip-select
             class="product-list-filters-dialog__types"
-            [options]="productTypeOptions()"
-            [(selectedValues)]="selectedTypeValues"
-            [ariaLabel]="'PRODUCT_LIST.FILTER_CATEGORIES' | translate"
             size="sm"
+            [options]="productTypeOptions()"
+            [ariaLabel]="'PRODUCT_LIST.FILTER_CATEGORIES' | translate"
+            [(selectedValues)]="selectedTypeValues"
         />
     </section>
 

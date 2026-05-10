@@ -7,7 +7,7 @@
         (back)="onCancelAsync()"
     />
 
-    <form class="recipe-manage__form fd-stack fd-gap-lg" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
+    <form class="recipe-manage__form fd-stack fd-gap-lg" [formGroup]="recipeForm" [attr.aria-busy]="isSubmitting()" (ngSubmit)="onSubmit()">
         @if (globalError()) {
             <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
                 {{ globalError() }}
@@ -58,9 +58,9 @@
                                     [fullWidth]="true"
                                     [options]="nutritionModeOptions"
                                     [selectedValue]="nutritionMode()"
-                                    (selectedValueChange)="onNutritionModeChange($event)"
                                     [fdUiHint]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
                                     [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                                    (selectedValueChange)="onNutritionModeChange($event)"
                                 />
                                 <fd-ui-segmented-toggle
                                     nutrition-before
@@ -69,9 +69,9 @@
                                     [fullWidth]="true"
                                     [options]="nutritionScaleModeOptions"
                                     [selectedValue]="nutritionScaleMode"
-                                    (selectedValueChange)="onNutritionScaleModeChange($event)"
                                     [fdUiHint]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
                                     [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
+                                    (selectedValueChange)="onNutritionScaleModeChange($event)"
                                 />
                             </fd-nutrition-editor>
                         </div>

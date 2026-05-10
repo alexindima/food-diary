@@ -1,5 +1,5 @@
 <div class="daily-advice-card fd-stack fd-gap-sm" [class.daily-advice-card--loading]="isLoading()">
-    <fd-dashboard-widget-frame [title]="'DASHBOARD.ADVICE_TITLE' | translate" iconName="tips_and_updates" iconTone="info">
+    <fd-dashboard-widget-frame iconName="tips_and_updates" iconTone="info" [title]="'DASHBOARD.ADVICE_TITLE' | translate">
         <div class="daily-advice-card__body">
             @if (isLoading()) {
                 <div class="daily-advice-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">

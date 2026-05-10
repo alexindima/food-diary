@@ -18,11 +18,11 @@
             >
                 <svg class="dashboard-summary-card__svg" viewBox="-5 -5 270 270" aria-hidden="true" focusable="false">
                     <defs>
-                        <linearGradient [id]="dailyGradientId" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" [id]="dailyGradientId">
                             <stop offset="0%" [attr.stop-color]="dailyGradientStart()" />
                             <stop offset="100%" [attr.stop-color]="dailyGradientEnd()" />
                         </linearGradient>
-                        <linearGradient [id]="weeklyGradientId" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" [id]="weeklyGradientId">
                             <stop offset="0%" [attr.stop-color]="weeklyGradientStart()" />
                             <stop offset="100%" [attr.stop-color]="weeklyGradientEnd()" />
                         </linearGradient>
@@ -30,23 +30,23 @@
                     <g
                         class="dashboard-summary-card__ring dashboard-summary-card__ring--daily"
                         [class.is-hovered]="isDailyHovered()"
+                        [style.--ring-color]="dailyStrokeColor()"
                         (mouseenter)="setDailyHover(true)"
                         (mouseleave)="setDailyHover(false)"
-                        [style.--ring-color]="dailyStrokeColor()"
                     >
                         <circle
                             class="dashboard-summary-card__track dashboard-summary-card__track--daily"
-                            [class.is-hovered]="isDailyHovered()"
                             cx="130"
                             cy="130"
                             r="112"
+                            [class.is-hovered]="isDailyHovered()"
                         />
                         <circle
                             class="dashboard-summary-card__progress dashboard-summary-card__progress--daily"
-                            [class.is-hovered]="isDailyHovered()"
                             cx="130"
                             cy="130"
                             r="112"
+                            [class.is-hovered]="isDailyHovered()"
                             [attr.stroke-dasharray]="dailyDasharray()"
                             [attr.stroke]="dailyGradientStroke"
                         />
@@ -55,23 +55,23 @@
                     <g
                         class="dashboard-summary-card__ring dashboard-summary-card__ring--weekly"
                         [class.is-hovered]="isWeeklyHovered()"
+                        [style.--ring-color]="weeklyStrokeColor()"
                         (mouseenter)="setWeeklyHover(true)"
                         (mouseleave)="setWeeklyHover(false)"
-                        [style.--ring-color]="weeklyStrokeColor()"
                     >
                         <circle
                             class="dashboard-summary-card__track dashboard-summary-card__track--weekly"
-                            [class.is-hovered]="isWeeklyHovered()"
                             cx="130"
                             cy="130"
                             r="88"
+                            [class.is-hovered]="isWeeklyHovered()"
                         />
                         <circle
                             class="dashboard-summary-card__progress dashboard-summary-card__progress--weekly"
-                            [class.is-hovered]="isWeeklyHovered()"
                             cx="130"
                             cy="130"
                             r="88"
+                            [class.is-hovered]="isWeeklyHovered()"
                             [attr.stroke-dasharray]="weeklyDasharray()"
                             [attr.stroke]="weeklyGradientStroke"
                         />

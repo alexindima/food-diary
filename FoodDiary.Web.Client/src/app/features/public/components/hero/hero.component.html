@@ -33,10 +33,10 @@
                 <fd-ui-segmented-toggle
                     class="hero__language-toggle"
                     [options]="languageOptions"
-                    [(selectedValue)]="language"
-                    (selectedValueChange)="updateLanguage()"
                     [ariaLabel]="'LANDING_HERO.LANGUAGE_LABEL' | translate"
                     [shrinkItems]="true"
+                    [(selectedValue)]="language"
+                    (selectedValueChange)="updateLanguage()"
                 />
             </div>
 

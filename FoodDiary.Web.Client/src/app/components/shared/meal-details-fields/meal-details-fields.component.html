@@ -10,11 +10,11 @@
                 {{ 'MEAL_DETAILS.DATE' | translate }}
             </span>
             <input
+                #dateInput
                 class="meal-details-fields__input fd-ui-body-sm"
                 type="date"
                 [value]="date()"
                 (input)="dateChange.emit(dateInput.value)"
-                #dateInput
             />
         </label>
         <label class="meal-details-fields__field fd-grid fd-gap-xxs">
@@ -22,11 +22,11 @@
                 {{ 'MEAL_DETAILS.TIME' | translate }}
             </span>
             <input
+                #timeInput
                 class="meal-details-fields__input fd-ui-body-sm"
                 type="time"
                 [value]="time()"
                 (input)="timeChange.emit(timeInput.value)"
-                #timeInput
             />
         </label>
     </div>
@@ -36,11 +36,11 @@
             {{ 'MEAL_DETAILS.COMMENT' | translate }}
         </span>
         <textarea
+            #commentInput
             class="meal-details-fields__textarea fd-ui-body-sm"
             [rows]="textareaRows()"
             [value]="comment()"
             (input)="commentChange.emit(commentInput.value)"
-            #commentInput
         ></textarea>
     </label>
 

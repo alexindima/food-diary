@@ -1,4 +1,4 @@
-<fd-ui-dialog [title]="'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate" size="md">
+<fd-ui-dialog size="md" [title]="'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate">
     <div class="meal-manual-item-dialog fd-stack fd-gap-md">
         <fd-ui-input
             [ngModel]="itemSourceName()"
@@ -12,8 +12,8 @@
         />
 
         <fd-ui-input
-            [formControl]="amount"
             type="number"
+            [formControl]="amount"
             [step]="0.01"
             [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
             [placeholder]="amountPlaceholderKey() | translate"

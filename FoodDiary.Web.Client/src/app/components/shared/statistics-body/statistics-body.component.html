@@ -9,10 +9,10 @@
 
     <fd-ui-section-state
         class="stats-body-card__state"
+        emptyIcon="monitoring"
         [state]="sectionState()"
         [loadingLabel]="'STATISTICS.LOADING' | translate"
         [emptyMessage]="noDataKey() | translate"
-        emptyIcon="monitoring"
         [errorTitle]="'ERRORS.LOAD_FAILED_TITLE' | translate"
         [errorMessage]="loadErrorKey() | translate"
         [retryLabel]="'ERRORS.RETRY' | translate"

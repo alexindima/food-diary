@@ -1,8 +1,8 @@
 <fd-ui-dialog class="meal-list-filters-dialog" [title]="'CONSUMPTION_LIST.FILTERS_TITLE' | translate">
     <form (ngSubmit)="onApply()">
         <fd-ui-date-range-input
-            [formControl]="dateRangeControl"
             class="meal-list-filters-dialog__date-range"
+            [formControl]="dateRangeControl"
             [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
             [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
             [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"

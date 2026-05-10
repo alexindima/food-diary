@@ -18,10 +18,10 @@
         <input
             #fileInput
             type="file"
+            hidden
             [accept]="acceptedTypes()"
             [disabled]="disabled || isUploading"
             (change)="onFileSelected($event)"
-            hidden
         />
 
         @if (selection.url) {
@@ -71,7 +71,7 @@
         }
     </div>
     @if (error) {
-        <span [id]="errorId" class="image-upload-field__error fd-ui-error-text" role="alert">{{ error }}</span>
+        <span class="image-upload-field__error fd-ui-error-text" role="alert" [id]="errorId">{{ error }}</span>
     }
 
     @defer (when isCropping && cropPreviewUrl) {
@@ -85,20 +85,20 @@
                 [attr.aria-describedby]="cropSubtitleId"
             >
                 <div class="image-upload-field__cropper-header fd-stack fd-gap-xxs">
-                    <div [id]="cropTitleId" class="image-upload-field__cropper-title fd-ui-card-title">
+                    <div class="image-upload-field__cropper-title fd-ui-card-title" [id]="cropTitleId">
                         {{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}
                     </div>
-                    <div [id]="cropSubtitleId" class="image-upload-field__cropper-subtitle fd-ui-body-sm">
+                    <div class="image-upload-field__cropper-subtitle fd-ui-body-sm" [id]="cropSubtitleId">
                         {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
                     </div>
                 </div>
                 <div class="image-upload-field__cropper-body">
                     <img
                         #cropImage
+                        class="image-upload-field__cropper-image"
                         [src]="cropPreviewUrl"
                         [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
                         (load)="onCropperImageLoadedAsync(cropImage)"
-                        class="image-upload-field__cropper-image"
                     />
                 </div>
                 <div class="image-upload-field__cropper-actions fd-row fd-justify-end fd-wrap fd-gap-xs">

@@ -14,11 +14,11 @@
     </div>
 
     <section class="admin-billing__filters fd-row fd-gap-sm fd-wrap">
-        <fd-ui-input [ngModel]="search()" (ngModelChange)="search.set($event)" placeholder="Search email or external id" />
-        <fd-ui-input [ngModel]="provider()" (ngModelChange)="provider.set($event)" placeholder="Provider" />
-        <fd-ui-input [ngModel]="status()" (ngModelChange)="status.set($event)" placeholder="Status" />
+        <fd-ui-input placeholder="Search email or external id" [ngModel]="search()" (ngModelChange)="search.set($event)" />
+        <fd-ui-input placeholder="Provider" [ngModel]="provider()" (ngModelChange)="provider.set($event)" />
+        <fd-ui-input placeholder="Status" [ngModel]="status()" (ngModelChange)="status.set($event)" />
         @if (activeTab() === 'payments') {
-            <fd-ui-input [ngModel]="kind()" (ngModelChange)="kind.set($event)" placeholder="Kind" />
+            <fd-ui-input placeholder="Kind" [ngModel]="kind()" (ngModelChange)="kind.set($event)" />
         }
         <label class="fd-grid fd-gap-xxs">
             <span>From</span>

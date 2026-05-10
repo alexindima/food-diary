@@ -9,9 +9,9 @@
 
     <fd-ui-section-state
         appearance="compact"
+        emptyIcon="monitoring"
         [state]="hasData() ? 'content' : 'empty'"
         [emptyMessage]="'STATISTICS.NO_DATA' | translate"
-        emptyIcon="monitoring"
     >
         @switch (selectedTab()) {
             @case ('calories') {

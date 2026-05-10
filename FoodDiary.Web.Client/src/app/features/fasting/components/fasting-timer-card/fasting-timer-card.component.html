@@ -148,13 +148,13 @@
         <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
         <circle
             class="fasting-timer-card__ring-progress"
-            [class.fasting-timer-card__ring-progress--overtime]="state.isOvertime"
             cx="100"
             cy="100"
             r="90"
             fill="none"
             stroke-width="8"
             stroke-linecap="round"
+            [class.fasting-timer-card__ring-progress--overtime]="state.isOvertime"
             [style.stroke]="progressStrokeColor()"
             [style.stroke-dasharray]="ringStrokeDasharray"
             [style.stroke-dashoffset]="ringStrokeDashoffset()"

@@ -1,4 +1,4 @@
-﻿<div class="product-select fd-stack fd-gap-md" #container>
+﻿<div #container class="product-select fd-stack fd-gap-md">
     @if (!embedded()) {
         <div class="product-select__header fd-row fd-justify-between">
             <div>
@@ -27,8 +27,8 @@
             [icon]="filterIcon()"
             [fdUiHint]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
             [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
-            (click)="toggleOnlyMine()"
             [class.product-select__filter-button--active]="onlyMineFilter()"
+            (click)="toggleOnlyMine()"
         />
     </div>
 
@@ -63,12 +63,12 @@
                         </div>
                         <span class="product-select__action fd-inline-center">
                             <fd-ui-button
+                                ariaLabel="{{ 'COMMON.ADD' | translate }}"
                                 icon="add"
                                 variant="primary"
                                 fill="solid"
                                 size="sm"
                                 [fdUiHint]="'COMMON.ADD' | translate"
-                                ariaLabel="{{ 'COMMON.ADD' | translate }}"
                             />
                         </span>
                     </button>

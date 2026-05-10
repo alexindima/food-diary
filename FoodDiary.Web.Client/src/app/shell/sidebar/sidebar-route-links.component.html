@@ -1,7 +1,7 @@
 @for (item of items(); track item.id) {
     <a
-        [routerLink]="item.route"
         routerLinkActive="is-active"
+        [routerLink]="item.route"
         [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
         [class]="linkClass()"
         [class.is-pending]="pendingRoute() === item.route"

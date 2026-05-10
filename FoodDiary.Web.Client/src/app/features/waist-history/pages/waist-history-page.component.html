@@ -124,7 +124,7 @@
                     </div>
 
                     <div class="waist-history-page__form-actions">
-                        <fd-ui-button [disabled]="isSaving()" [loading]="isSaving()" type="submit">
+                        <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
                             @if (isEditing()) {
                                 {{ 'WAIST_HISTORY.UPDATE' | translate }}
                             } @else {
@@ -151,15 +151,15 @@
                         [step]="0.1"
                         [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
                         [suffixButtonIcon]="desiredWaistControl.value ? 'backspace' : undefined"
-                        (suffixButtonClicked)="desiredWaistControl.setValue('')"
                         [formControl]="desiredWaistControl"
+                        (suffixButtonClicked)="desiredWaistControl.setValue('')"
                     />
                     <div class="waist-history-page__goal-actions">
                         <fd-ui-button
                             type="button"
-                            (click)="saveDesiredWaist()"
                             [disabled]="isDesiredWaistSaving()"
                             [loading]="isDesiredWaistSaving()"
+                            (click)="saveDesiredWaist()"
                         >
                             {{ 'WAIST_HISTORY.SAVE_GOAL' | translate }}
                         </fd-ui-button>

@@ -16,7 +16,7 @@
 
     <div class="lessons-list__filters fd-row fd-gap-xs fd-wrap">
         @for (cat of categoryFilterOptions(); track cat.value) {
-            <fd-ui-button variant="secondary" [fill]="cat.fill" size="sm" (click)="filterByCategory(cat.value)">
+            <fd-ui-button variant="secondary" size="sm" [fill]="cat.fill" (click)="filterByCategory(cat.value)">
                 {{ cat.labelKey | translate }}
             </fd-ui-button>
         }
@@ -36,9 +36,9 @@
                     <div
                         class="lesson-card fd-stack fd-gap-xs"
                         fdCardHover
-                        [class.lesson-card--read]="lesson.isRead"
                         role="button"
                         tabindex="0"
+                        [class.lesson-card--read]="lesson.isRead"
                         (click)="openLesson(lesson.id)"
                         (keydown.enter)="openLesson(lesson.id)"
                     >

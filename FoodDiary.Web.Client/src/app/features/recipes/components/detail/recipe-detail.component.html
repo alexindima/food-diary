@@ -7,8 +7,8 @@
                     appearance="plain-icon"
                     variant="secondary"
                     fill="text"
-                    [icon]="favoriteIcon()"
                     iconSize="sm"
+                    [icon]="favoriteIcon()"
                     [class.recipe-detail__favorite-btn--active]="isFavorite()"
                     [class.fd-favorite-button--active]="isFavorite()"
                     [disabled]="isFavoriteLoading()"
@@ -18,7 +18,7 @@
                 />
                 <h2 class="recipe-detail__title">{{ recipe.name }}</h2>
             </div>
-            <button type="button" class="recipe-detail__close-button" (click)="close()" aria-label="Close dialog">
+            <button type="button" class="recipe-detail__close-button" aria-label="Close dialog" (click)="close()">
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>

@@ -131,7 +131,7 @@
                     </div>
 
                     <div class="weight-history-page__form-actions fd-row fd-wrap fd-gap-actions">
-                        <fd-ui-button [disabled]="isSaving()" [loading]="isSaving()" type="submit">
+                        <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
                             @if (isEditing()) {
                                 {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
                             } @else {
@@ -158,15 +158,15 @@
                         [step]="0.1"
                         [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
                         [suffixButtonIcon]="desiredWeightControl.value ? 'backspace' : undefined"
-                        (suffixButtonClicked)="desiredWeightControl.setValue('')"
                         [formControl]="desiredWeightControl"
+                        (suffixButtonClicked)="desiredWeightControl.setValue('')"
                     />
                     <div class="weight-history-page__goal-actions fd-row fd-gap-actions">
                         <fd-ui-button
                             type="button"
-                            (click)="saveDesiredWeight()"
                             [disabled]="isDesiredWeightSaving()"
                             [loading]="isDesiredWeightSaving()"
+                            (click)="saveDesiredWeight()"
                         >
                             {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
                         </fd-ui-button>

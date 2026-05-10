@@ -17,9 +17,9 @@
                 <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
                     <div class="consumption-manage__ai-summary-image fd-center">
                         @if (item.imageUrl) {
-                            <img [src]="item.imageUrl" alt="" loading="lazy" />
+                            <img alt="" loading="lazy" [src]="item.imageUrl" />
                         } @else {
-                            <fd-ui-icon [name]="item.icon" size="md" />
+                            <fd-ui-icon size="md" [name]="item.icon" />
                         }
                     </div>
                     <div class="consumption-manage__ai-summary-heading fd-stack fd-gap-xxs">
