@@ -72,15 +72,15 @@ export class AiPhotoResultComponent {
     public readonly imageUrl = input<string | null>(null);
     public readonly sourceText = input<string | null>(null);
     public readonly sourceTextLabelKey = input<string>('AI_INPUT_BAR.TEXT_PREVIEW_LABEL');
-    public readonly submitLabelKey = input<string>('CONSUMPTION_LIST.VOICE_CREATE_MEAL');
-    public readonly showDetails = input<boolean>(true);
-    public readonly results = input<FoodVisionItem[]>([]);
-    public readonly isAnalyzing = input<boolean>(false);
-    public readonly isNutritionLoading = input<boolean>(false);
-    public readonly nutrition = input<FoodNutritionResponse | null>(null);
-    public readonly errorKey = input<string | null>(null);
-    public readonly nutritionErrorKey = input<string | null>(null);
-    public readonly isProcessing = input<boolean>(false);
+    public readonly submitLabelKey = input.required<string>();
+    public readonly showDetails = input.required<boolean>();
+    public readonly results = input.required<FoodVisionItem[]>();
+    public readonly isAnalyzing = input.required<boolean>();
+    public readonly isNutritionLoading = input.required<boolean>();
+    public readonly nutrition = input.required<FoodNutritionResponse | null>();
+    public readonly errorKey = input.required<string | null>();
+    public readonly nutritionErrorKey = input.required<string | null>();
+    public readonly isProcessing = input.required<boolean>();
 
     public readonly dismissed = output<void>();
     public readonly addToMeal = output<AiInputBarMealDetails>();

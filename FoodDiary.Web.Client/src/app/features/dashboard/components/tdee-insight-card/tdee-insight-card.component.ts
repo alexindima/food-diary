@@ -16,8 +16,8 @@ import { type TdeeInsight } from '../../models/tdee-insight.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TdeeInsightCardComponent {
-    public readonly insight = input<TdeeInsight | null>(null);
-    public readonly isLoading = input<boolean>(false);
+    public readonly insight = input.required<TdeeInsight | null>();
+    public readonly isLoading = input.required<boolean>();
     public readonly applyGoal = output<number>();
 
     public readonly effectiveTdee = computed(() => {

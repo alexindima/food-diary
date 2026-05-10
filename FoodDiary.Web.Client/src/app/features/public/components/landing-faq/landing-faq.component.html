@@ -1,9 +1,9 @@
 <section class="landing-section landing-section--faq">
     <div class="landing-section__inner">
         <div class="landing-section__copy">
-            <span class="landing-section__eyebrow">{{ eyebrowKey() | translate }}</span>
-            <h2 class="landing-section__title">{{ titleKey() | translate }}</h2>
-            <p class="landing-section__subtitle">{{ subtitleKey() | translate }}</p>
+            <span class="landing-section__eyebrow">{{ 'LANDING_FAQ.EYEBROW' | translate }}</span>
+            <h2 class="landing-section__title">{{ 'LANDING_FAQ.TITLE' | translate }}</h2>
+            <p class="landing-section__subtitle">{{ 'LANDING_FAQ.SUBTITLE' | translate }}</p>
         </div>
         <div class="landing-faq">
             @for (item of questions(); track item.questionKey) {
@@ -15,7 +15,7 @@
         </div>
         @if (guides().length) {
             <div class="landing-faq__guides">
-                <p class="landing-faq__guides-title">{{ guidesTitleKey() | translate }}</p>
+                <p class="landing-faq__guides-title">{{ 'LANDING_FAQ.GUIDES_TITLE' | translate }}</p>
                 <div class="landing-faq__guides-grid">
                     @for (guide of guides(); track guide.path) {
                         <a class="landing-faq__guide-link" [routerLink]="guide.path">{{ guide.labelKey | translate }}</a>

@@ -1,26 +1,8 @@
 <div class="custom-group-wrapper">
     <div class="custom-group">
-        <div class="custom-group__title fd-ui-overline" [ngStyle]="{ left: titleLeftOffset() }">
+        <div class="custom-group__title fd-ui-overline">
             <span>{{ title() }}</span>
         </div>
-        @if (isAccordion()) {
-            <button type="button" class="custom-group__toggle" (click)="toggleAccordion()">
-                {{ accordionToggleLabel() }}
-            </button>
-        }
-        @if (showCloseButton()) {
-            <fd-ui-button class="custom-group__button" type="button" variant="danger" fill="solid" size="xs" (click)="onCloseButtonClick()">
-                X
-            </fd-ui-button>
-        }
-        @if (!forceCollapse()) {
-            @if (isOpen() || !isAccordion()) {
-                <ng-content />
-            } @else if (collapsedHint()) {
-                <div class="custom-group__hint fd-ui-body-sm fd-ui-text-muted fd-truncate">
-                    {{ collapsedHint() }}
-                </div>
-            }
-        }
+        <ng-content />
     </div>
 </div>

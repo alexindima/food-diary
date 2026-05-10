@@ -139,11 +139,7 @@
                         <fd-meal-items-list
                             [formArray]="items"
                             [hasExternalItems]="aiSessions().length > 0"
-                            [isEditMode]="!!consumption()"
                             [renderVersion]="itemsRenderVersion()"
-                            [showAddAction]="false"
-                            [showEmptyRows]="false"
-                            (addItem)="addConsumptionItem()"
                             (editItem)="openManualItemDialog($event)"
                             (removeItemEvent)="removeItem($event)"
                             (openItemSelect)="onItemSourceClick($event)"

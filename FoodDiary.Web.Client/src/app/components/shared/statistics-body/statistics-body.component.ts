@@ -17,12 +17,12 @@ import { BaseChartDirective } from 'ng2-charts';
 })
 export class StatisticsBodyComponent {
     public readonly tabs = input.required<FdUiTab[]>();
-    public readonly selectedTab = input<string>('weight');
-    public readonly isLoading = input<boolean>(false);
-    public readonly hasLoadError = input<boolean>(false);
-    public readonly bodyChartData = input<ChartConfiguration<'line'>['data'] | null>(null);
-    public readonly bodyChartOptions = input<ChartConfiguration['options'] | null>(null);
-    public readonly hasBodyData = input<boolean>(false);
+    public readonly selectedTab = input.required<string>();
+    public readonly isLoading = input.required<boolean>();
+    public readonly hasLoadError = input.required<boolean>();
+    public readonly bodyChartData = input.required<ChartConfiguration<'line'>['data'] | null>();
+    public readonly bodyChartOptions = input.required<ChartConfiguration['options'] | null>();
+    public readonly hasBodyData = input.required<boolean>();
     public readonly noDataKey = input<string>('STATISTICS.BODY_NO_DATA');
     public readonly loadErrorKey = input<string>('ERRORS.LOAD_FAILED_MESSAGE');
 

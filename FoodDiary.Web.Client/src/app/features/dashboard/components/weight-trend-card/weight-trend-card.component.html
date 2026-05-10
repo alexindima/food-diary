@@ -1,10 +1,5 @@
 <div class="weight-trend-card fd-min-w-0" [class.weight-trend-card--loading]="isLoading()">
-    <fd-dashboard-widget-frame
-        [title]="title() | translate"
-        [iconName]="iconName()"
-        [iconLabel]="iconName() ? null : iconLabel()"
-        [iconTone]="iconTone()"
-    >
+    <fd-dashboard-widget-frame [title]="title() | translate" [iconName]="iconName()" iconTone="neutral">
         <div
             class="weight-trend-card__delta fd-ui-pill fd-ui-stat-value"
             [class.weight-trend-card__delta--positive]="changeTone() === 'positive'"
@@ -37,7 +32,7 @@
         }
 
         <div class="weight-trend-card__footer fd-ui-body-sm fd-ui-text-muted">
-            {{ timeframeLabel() || ('WEIGHT_TREND_CARD.LAST_7_DAYS' | translate) }}
+            {{ timeframeLabel() }}
         </div>
     </fd-dashboard-widget-frame>
 </div>

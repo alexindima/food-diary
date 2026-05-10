@@ -38,9 +38,9 @@ export class RecipeStepCardComponent {
 
     public readonly stepFormGroup = input.required<FormGroup<StepFormData>>();
     public readonly stepIndex = input.required<number>();
-    public readonly isExpanded = input<boolean>(true);
-    public readonly isFirst = input<boolean>(false);
-    public readonly dragDisabled = input<boolean>(false);
+    public readonly isExpanded = input.required<boolean>();
+    public readonly isFirst = input.required<boolean>();
+    public readonly dragDisabled = input.required<boolean>();
 
     public readonly removeStep = output<void>();
     public readonly toggleExpanded = output<void>();

@@ -17,6 +17,6 @@ import { type SidebarRouteItem } from './sidebar.models';
 export class SidebarRouteLinksComponent {
     public readonly items = input.required<SidebarRouteItem[]>();
     public readonly linkClass = input.required<string>();
-    public readonly pendingRoute = input<string | null>(null);
+    public readonly pendingRoute = input.required<string | null>();
     public readonly itemSelected = output<SidebarRouteItem>();
 }

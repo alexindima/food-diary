@@ -33,13 +33,9 @@ export class MealItemsListComponent {
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly formArray = input.required<FormArray<FormGroup<ConsumptionItemFormData>>>();
-    public readonly hasExternalItems = input<boolean>(false);
-    public readonly isEditMode = input<boolean>(false);
+    public readonly hasExternalItems = input.required<boolean>();
     public readonly renderVersion = input<number>(0);
-    public readonly showAddAction = input<boolean>(true);
-    public readonly showEmptyRows = input<boolean>(true);
 
-    public readonly addItem = output<void>();
     public readonly editItem = output<number>();
     public readonly removeItemEvent = output<number>();
     public readonly openItemSelect = output<number>();
@@ -49,14 +45,13 @@ export class MealItemsListComponent {
 
         return this.formArray()
             .controls.map((group, index) => ({ group, index }))
-            .filter(({ index }) => this.showEmptyRows() || this.hasManualItem(index))
+            .filter(({ index }) => this.hasManualItem(index))
             .map(({ group, index }) => {
                 const totals = this.getManualItemTotals(index);
 
                 return {
                     index,
                     group,
-                    isFirst: index === 0,
                     imageUrl: this.getManualItemImageUrl(index),
                     icon: this.getItemSourceIcon(index),
                     sourceName: this.getItemSourceName(index),
@@ -235,10 +230,6 @@ export class MealItemsListComponent {
         return Boolean(group.controls.product.value) || Boolean(group.controls.recipe.value);
     }
 
-    public onAddItem(): void {
-        this.addItem.emit();
-    }
-
     public onRemoveItem(index: number): void {
         this.removeItemEvent.emit(index);
     }
@@ -281,7 +272,6 @@ export class MealItemsListComponent {
 interface ManualItemRowViewModel {
     index: number;
     group: FormGroup<ConsumptionItemFormData>;
-    isFirst: boolean;
     imageUrl: string | null;
     icon: string;
     sourceName: string;

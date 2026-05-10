@@ -15,8 +15,8 @@ import { type DailyAdvice } from '../../models/daily-advice.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DailyAdviceCardComponent {
-    public readonly advice = input<DailyAdvice | null>(null);
-    public readonly isLoading = input<boolean>(false);
+    public readonly advice = input.required<DailyAdvice | null>();
+    public readonly isLoading = input.required<boolean>();
 
     public readonly adviceState = computed(() => {
         const advice = this.advice();

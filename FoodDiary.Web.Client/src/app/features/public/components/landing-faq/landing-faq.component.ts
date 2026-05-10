@@ -20,10 +20,6 @@ export interface LandingFaqGuide {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingFaqComponent {
-    public readonly eyebrowKey = input('LANDING_FAQ.EYEBROW');
-    public readonly titleKey = input('LANDING_FAQ.TITLE');
-    public readonly subtitleKey = input('LANDING_FAQ.SUBTITLE');
-    public readonly guidesTitleKey = input('LANDING_FAQ.GUIDES_TITLE');
-    public readonly questions = input<readonly LandingFaqItem[]>([]);
-    public readonly guides = input<readonly LandingFaqGuide[]>([]);
+    public readonly questions = input.required<readonly LandingFaqItem[]>();
+    public readonly guides = input.required<readonly LandingFaqGuide[]>();
 }

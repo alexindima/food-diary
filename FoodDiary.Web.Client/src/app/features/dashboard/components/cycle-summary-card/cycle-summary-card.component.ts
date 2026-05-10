@@ -15,11 +15,10 @@ import { type CyclePredictions } from '../../../cycle-tracking/models/cycle.data
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CycleSummaryCardComponent {
-    public readonly title = input<string>('CYCLE_CARD.TITLE');
-    public readonly startDate = input<string | null>(null);
-    public readonly predictions = input<CyclePredictions | null>(null);
-    public readonly referenceDate = input<Date | string | null>(null);
-    public readonly isLoading = input<boolean>(false);
+    public readonly startDate = input.required<string | null>();
+    public readonly predictions = input.required<CyclePredictions | null>();
+    public readonly referenceDate = input.required<Date | string | null>();
+    public readonly isLoading = input.required<boolean>();
     public readonly setupAction = output<void>();
 
     private readonly normalizedStart = computed(() => this.normalizeDate(this.startDate()));

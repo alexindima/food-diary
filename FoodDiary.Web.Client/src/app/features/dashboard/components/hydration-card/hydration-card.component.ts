@@ -15,16 +15,16 @@ import { NoticeBannerComponent } from '../../../../components/shared/notice-bann
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HydrationCardComponent {
-    public readonly title = input<string>('HYDRATION_CARD.TITLE');
-    public readonly total = input<number>(0);
-    public readonly goal = input<number | null>(null);
-    public readonly addStep = input<number>(250);
-    public readonly isLoading = input<boolean>(false);
-    public readonly canAdd = input<boolean>(true);
+    private readonly addStep = 250;
+
+    public readonly total = input.required<number>();
+    public readonly goal = input.required<number | null>();
+    public readonly isLoading = input.required<boolean>();
+    public readonly canAdd = input.required<boolean>();
     public readonly addClick = output<number>();
     public readonly goalAction = output<void>();
 
-    public readonly addAmount = computed(() => Math.max(1, this.addStep()));
+    public readonly addAmount = computed(() => Math.max(1, this.addStep));
     public readonly hasGoal = computed(() => !!this.goal() && this.goal()! > 0);
     public readonly percent = computed(() => {
         if (!this.hasGoal()) {

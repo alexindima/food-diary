@@ -58,7 +58,7 @@ export class RecipeCardComponent {
     private readonly toastService = inject(FdUiToastService);
 
     public readonly recipe = input.required<RecipeCardItem>();
-    public readonly imageUrl = input<string>();
+    public readonly imageUrl = input.required<string | null | undefined>();
     public readonly open = output<void>();
     public readonly addToMeal = output<void>();
     public readonly favoriteChanged = output<RecipeFavoriteChange>();

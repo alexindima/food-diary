@@ -52,6 +52,7 @@ describe('ProductCardComponent', () => {
         fixture = TestBed.createComponent(ProductCardComponent);
         component = fixture.componentInstance;
         fixture.componentRef.setInput('product', mockProduct);
+        fixture.componentRef.setInput('imageUrl', null);
     });
 
     it('should create', () => {

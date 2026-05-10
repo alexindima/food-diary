@@ -56,12 +56,12 @@ export type StatisticsSummaryExportFormat = 'csv' | 'pdf';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsSummaryComponent {
-    public readonly summary = input<SummaryMetrics | null>(null);
-    public readonly summarySparklineData = input<ChartConfiguration<'line'>['data'] | null>(null);
-    public readonly summarySparklineOptions = input<ChartConfiguration['options'] | null>(null);
-    public readonly macroSparklineData = input<Record<string, ChartConfiguration<'line'>['data']> | null>(null);
+    public readonly summary = input.required<SummaryMetrics | null>();
+    public readonly summarySparklineData = input.required<ChartConfiguration<'line'>['data'] | null>();
+    public readonly summarySparklineOptions = input.required<ChartConfiguration['options'] | null>();
+    public readonly macroSparklineData = input.required<Record<string, ChartConfiguration<'line'>['data']> | null>();
     public readonly emptyKey = input<string>('STATISTICS.NO_DATA');
-    public readonly exportingFormat = input<StatisticsSummaryExportFormat | null>(null);
+    public readonly exportingFormat = input.required<StatisticsSummaryExportFormat | null>();
     public readonly exportRequested = output<StatisticsSummaryExportFormat>();
 
     public export(format: StatisticsSummaryExportFormat): void {

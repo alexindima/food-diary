@@ -1,5 +1,3 @@
-@use 'variables' as variables;
-
 .custom-group-wrapper {
     padding-top: var(--fd-space-xs);
 }
@@ -19,49 +17,13 @@
 .custom-group__title {
     position: absolute;
     top: var(--custom-group-label-offset);
+    left: calc(var(--fd-space-sm) + var(--fd-border-width-strong) + var(--fd-border-width));
     background: var(--fd-bg-surface-raised);
     border: var(--fd-border-width-strong) solid var(--fd-color-border);
     border-radius: var(--fd-radius-xs);
     padding: 0 var(--fd-space-xs);
     line-height: var(--custom-group-label-height);
     color: var(--fd-color-text);
-}
-
-.custom-group__toggle {
-    position: absolute;
-    top: var(--custom-group-label-offset);
-    left: var(--custom-group-label-inline-offset);
-    background: var(--fd-bg-surface-raised);
-    border: var(--fd-border-width-strong) solid var(--fd-color-border);
-    border-radius: var(--fd-radius-xs);
-    padding: 0;
-    width: var(--fd-size-control-xs);
-    font-size: var(--fd-text-body-size);
-    line-height: var(--custom-group-label-height);
-}
-
-.custom-group__button {
-    position: absolute;
-    top: var(--custom-group-label-offset);
-    right: var(--custom-group-button-inline-offset);
-    --fd-button-width: auto;
-    --fd-button-min-width: var(--custom-group-label-height);
-    --fd-button-height: var(--custom-group-label-height);
-    --fd-button-height-explicit: var(--custom-group-label-height);
-    --fd-button-padding-x: var(--fd-space-xs);
-    --fd-button-border-radius: var(--fd-radius-xs);
-    --fd-button-font-size: var(--fd-text-helper-size);
-    --fd-button-font-weight: var(--fd-text-section-title-weight);
-    --fd-button-shadow-default: var(--fd-shadow-none);
-    --fd-button-shadow-hover: var(--fd-shadow-none);
-    --fd-button-shadow-active: var(--fd-shadow-none);
-    --fd-button-transform-hover: none;
-    --fd-button-transform-active: none;
-}
-
-.custom-group__hint {
-    margin: 0;
-    font-style: italic;
 }
 
 

@@ -36,11 +36,11 @@ export class MealNutritionSidebarComponent {
     public readonly macroBarState = input.required<MacroBarState>();
     public readonly nutritionMode = input.required<NutritionMode>();
     public readonly nutritionModeOptions = input.required<FdUiSegmentedToggleOption[]>();
-    public readonly nutritionWarning = input<CalorieMismatchWarning | null>(null);
-    public readonly caloriesError = input<string | null>(null);
-    public readonly macrosError = input<string | null>(null);
-    public readonly consumption = input<Consumption | null>(null);
-    public readonly globalError = input<string | null>(null);
+    public readonly nutritionWarning = input.required<CalorieMismatchWarning | null>();
+    public readonly caloriesError = input.required<string | null>();
+    public readonly macrosError = input.required<string | null>();
+    public readonly consumption = input.required<Consumption | null>();
+    public readonly globalError = input.required<string | null>();
 
     public readonly nutritionModeChange = output<string>();
     public readonly cancel = output<void>();

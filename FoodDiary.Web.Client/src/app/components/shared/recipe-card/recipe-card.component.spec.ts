@@ -54,6 +54,7 @@ describe('RecipeCardComponent', () => {
         fixture = TestBed.createComponent(RecipeCardComponent);
         component = fixture.componentInstance;
         fixture.componentRef.setInput('recipe', mockRecipe);
+        fixture.componentRef.setInput('imageUrl', null);
     });
 
     it('should create', () => {

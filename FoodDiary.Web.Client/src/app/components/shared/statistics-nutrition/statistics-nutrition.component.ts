@@ -17,23 +17,23 @@ import { BaseChartDirective } from 'ng2-charts';
 })
 export class StatisticsNutritionComponent {
     public readonly tabs = input.required<FdUiTab[]>();
-    public readonly selectedTab = input<string>('calories');
-    public readonly hasData = input<boolean>(false);
+    public readonly selectedTab = input.required<string>();
+    public readonly hasData = input.required<boolean>();
 
-    public readonly caloriesLineChartData = input<ChartConfiguration<'line'>['data'] | null>(null);
-    public readonly caloriesLineChartOptions = input<ChartConfiguration['options'] | null>(null);
+    public readonly caloriesLineChartData = input.required<ChartConfiguration<'line'>['data'] | null>();
+    public readonly caloriesLineChartOptions = input.required<ChartConfiguration['options'] | null>();
 
-    public readonly nutrientsLineChartData = input<ChartConfiguration<'line'>['data'] | null>(null);
-    public readonly nutrientsLineChartOptions = input<ChartConfiguration['options'] | null>(null);
+    public readonly nutrientsLineChartData = input.required<ChartConfiguration<'line'>['data'] | null>();
+    public readonly nutrientsLineChartOptions = input.required<ChartConfiguration['options'] | null>();
 
-    public readonly nutrientsPieChartData = input<ChartConfiguration<'pie'>['data'] | null>(null);
-    public readonly pieChartOptions = input<ChartOptions<'pie'> | null>(null);
+    public readonly nutrientsPieChartData = input.required<ChartConfiguration<'pie'>['data'] | null>();
+    public readonly pieChartOptions = input.required<ChartOptions<'pie'> | null>();
 
-    public readonly nutrientsRadarChartData = input<ChartConfiguration<'radar'>['data'] | null>(null);
-    public readonly radarChartOptions = input<ChartOptions<'radar'> | null>(null);
+    public readonly nutrientsRadarChartData = input.required<ChartConfiguration<'radar'>['data'] | null>();
+    public readonly radarChartOptions = input.required<ChartOptions<'radar'> | null>();
 
-    public readonly nutrientsBarChartData = input<ChartConfiguration<'bar'>['data'] | null>(null);
-    public readonly barChartOptions = input<ChartOptions<'bar'> | null>(null);
+    public readonly nutrientsBarChartData = input.required<ChartConfiguration<'bar'>['data'] | null>();
+    public readonly barChartOptions = input.required<ChartOptions<'bar'> | null>();
 
     public readonly selectedTabChange = output<string>();
 

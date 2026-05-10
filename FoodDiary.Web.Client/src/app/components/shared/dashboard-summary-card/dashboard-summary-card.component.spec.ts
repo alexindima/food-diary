@@ -15,6 +15,11 @@ describe('DashboardSummaryCardComponent', () => {
 
         fixture = TestBed.createComponent(DashboardSummaryCardComponent);
         component = fixture.componentInstance;
+        fixture.componentRef.setInput('dailyGoal', 0);
+        fixture.componentRef.setInput('dailyConsumed', 0);
+        fixture.componentRef.setInput('weeklyConsumed', 0);
+        fixture.componentRef.setInput('weeklyGoal', null);
+        fixture.componentRef.setInput('nutrientBars', null);
     });
 
     it('should create', () => {

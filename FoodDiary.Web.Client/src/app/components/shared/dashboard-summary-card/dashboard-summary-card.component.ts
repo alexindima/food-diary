@@ -44,11 +44,11 @@ export class DashboardSummaryCardComponent {
         '--fd-color-danger': [239, 68, 68],
     };
     public readonly goalAction = output<void>();
-    public readonly dailyGoal = input<number>(0);
-    public readonly dailyConsumed = input<number>(0);
-    public readonly weeklyConsumed = input<number>(0);
-    public readonly weeklyGoal = input<number | null>(null);
-    public readonly nutrientBars = input<NutrientBar[] | null>(null);
+    public readonly dailyGoal = input.required<number>();
+    public readonly dailyConsumed = input.required<number>();
+    public readonly weeklyConsumed = input.required<number>();
+    public readonly weeklyGoal = input.required<number | null>();
+    public readonly nutrientBars = input.required<NutrientBar[] | null>();
     public readonly caloriesBurned = input<number>(0);
     public readonly isDailyHovered = signal(false);
     public readonly isWeeklyHovered = signal(false);

@@ -21,15 +21,13 @@ export interface WeightTrendPoint {
 })
 export class WeightTrendCardComponent {
     public readonly title = input<string>('WEIGHT_CARD.TITLE');
-    public readonly currentWeight = input<number | null>(null);
-    public readonly change = input<number | null>(null);
-    public readonly timeframeLabel = input<string>('');
-    public readonly points = input<WeightTrendPoint[]>([]);
-    public readonly isLoading = input<boolean>(false);
+    public readonly currentWeight = input.required<number | null>();
+    public readonly change = input.required<number | null>();
+    public readonly timeframeLabel = input.required<string>();
+    public readonly points = input.required<WeightTrendPoint[]>();
+    public readonly isLoading = input.required<boolean>();
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
     public readonly iconName = input<string | null>('monitor_weight');
-    public readonly iconLabel = input<string>('WT');
-    public readonly iconTone = input<'neutral' | 'info' | 'success' | 'energy' | 'accent'>('neutral');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {

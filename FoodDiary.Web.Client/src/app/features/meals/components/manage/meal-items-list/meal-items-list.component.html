@@ -64,7 +64,6 @@
                             icon="delete"
                             [fdUiHint]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
                             [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                            [disabled]="item.isFirst && showEmptyRows()"
                             (click)="onRemoveItem(item.index)"
                         />
                     </div>
@@ -86,22 +85,6 @@
 
         <ng-content />
     </div>
-
-    @if (showAddAction()) {
-        <div class="consumption-item__actions consumption-item__actions--stack fd-stack fd-gap-sm">
-            <fd-ui-button
-                type="button"
-                icon="add"
-                appearance="dashed"
-                class="consumption-item__add"
-                variant="secondary"
-                fill="outline"
-                (click)="onAddItem()"
-            >
-                {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
-            </fd-ui-button>
-        </div>
-    }
 
     <fd-ui-form-error class="consumption-item__error" [error]="arrayError()" />
 </fd-ui-card>
