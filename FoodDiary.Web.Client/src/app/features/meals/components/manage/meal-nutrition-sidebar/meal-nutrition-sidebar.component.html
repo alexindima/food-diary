@@ -10,6 +10,7 @@
     >
         <div class="consumption-manage__nutrition fd-stack fd-gap-md">
             <fd-nutrition-editor
+                manualHintKey="CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT"
                 [formGroup]="consumptionForm()"
                 [controlNames]="nutritionControlNames()"
                 [macroState]="macroBarState()"
@@ -17,7 +18,6 @@
                 [caloriesError]="caloriesError()"
                 [macrosError]="macrosError()"
                 [showManualHint]="showManualNutritionHint()"
-                [manualHintKey]="'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT'"
                 [warning]="nutritionWarning()"
             >
                 <fd-ui-segmented-toggle

@@ -20,10 +20,10 @@
 
                 <div class="landing-preview__meals-card">
                     <fd-meals-preview
+                        titleKey="MEALS_PREVIEW.TITLE"
+                        viewAllKey="MEALS_PREVIEW.VIEW_ALL"
+                        emptyKey="MEALS_PREVIEW.PLACEHOLDER"
                         [entries]="guestMealEntries"
-                        [titleKey]="'MEALS_PREVIEW.TITLE'"
-                        [viewAllKey]="'MEALS_PREVIEW.VIEW_ALL'"
-                        [emptyKey]="'MEALS_PREVIEW.PLACEHOLDER'"
                         [showAddButtons]="true"
                         (add)="openAuthDialogAsync('register')"
                         (viewAll)="openAuthDialogAsync('login')"

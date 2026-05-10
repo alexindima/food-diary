@@ -30,9 +30,9 @@
         <p class="fd-ui-body-sm">Loading client data...</p>
     } @else if (!client()) {
         <p class="fd-ui-body-sm">Client not found.</p>
-    } @else {
+    } @else if (client(); as currentClient) {
         <div class="client-dashboard__sections fd-stack fd-gap-md">
-            @if (client()!.permissions.shareProfile) {
+            @if (currentClient.permissions.shareProfile) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Profile</h2>
@@ -40,7 +40,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareStatistics) {
+            @if (currentClient.permissions.shareStatistics) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Statistics</h2>
@@ -48,7 +48,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareMeals) {
+            @if (currentClient.permissions.shareMeals) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Meals</h2>
@@ -56,7 +56,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareWeight) {
+            @if (currentClient.permissions.shareWeight) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Weight</h2>
@@ -64,7 +64,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareWaist) {
+            @if (currentClient.permissions.shareWaist) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Waist</h2>
@@ -72,7 +72,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareGoals) {
+            @if (currentClient.permissions.shareGoals) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Goals</h2>
@@ -80,7 +80,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareHydration) {
+            @if (currentClient.permissions.shareHydration) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Hydration</h2>
@@ -88,7 +88,7 @@
                     </div>
                 </fd-ui-card>
             }
-            @if (client()!.permissions.shareFasting) {
+            @if (currentClient.permissions.shareFasting) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
                         <h2 class="fd-ui-card-title">Fasting</h2>

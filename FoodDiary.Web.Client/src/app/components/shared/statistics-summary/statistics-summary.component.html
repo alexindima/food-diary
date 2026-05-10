@@ -41,12 +41,9 @@
                             {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
                         <div class="stats-summary-card__trend">
-                            <canvas
-                                baseChart
-                                [type]="'line'"
-                                [data]="summarySparklineData()!"
-                                [options]="summarySparklineOptions() || {}"
-                            ></canvas>
+                            @if (summarySparklineData(); as chartData) {
+                                <canvas baseChart type="line" [data]="chartData" [options]="summarySparklineOptions() || {}"></canvas>
+                            }
                         </div>
                     </div>
                     <div class="stats-summary-card__average fd-ui-stat-tile fd-stack fd-gap-card-header fd-min-w-0">
@@ -98,11 +95,11 @@
                                 {{ macro.value | number: '1.0-1' }} {{ 'GENERAL.UNITS.G' | translate }}
                             </strong>
                             <div class="stats-summary-card__macro-trend">
-                                @if (macroSparklineData()) {
+                                @if (macroSparklineData(); as chartData) {
                                     <canvas
                                         baseChart
-                                        [type]="'line'"
-                                        [data]="macroSparklineData()![macro.key]"
+                                        type="line"
+                                        [data]="chartData[macro.key]"
                                         [options]="summarySparklineOptions() || {}"
                                     ></canvas>
                                 }

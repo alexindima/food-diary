@@ -1,6 +1,6 @@
-<span [class]="'fd-badge fd-inline-center fd-gap-xxs ' + variantClass()">
-    @if (icon()) {
-        <fd-ui-icon class="fd-badge__icon" [name]="icon()!" />
+<span [class]="`fd-badge fd-inline-center fd-gap-xxs ${variantClass()}`">
+    @if (icon(); as iconName) {
+        <fd-ui-icon class="fd-badge__icon" [name]="iconName" />
     }
     <span class="fd-badge__label fd-ui-caption fd-nowrap">{{ label() }}</span>
 </span>

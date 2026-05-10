@@ -11,7 +11,7 @@
     <div
         class="fd-ui-radio-group__control"
         role="radiogroup"
-        [attr.aria-describedby]="error() ? id() + '-error' : null"
+        [attr.aria-describedby]="error() ? `${id()}-error` : null"
         [attr.aria-invalid]="error() ? 'true' : null"
     >
         @for (option of options(); track trackByValue($index, option)) {
@@ -46,6 +46,6 @@
         <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
     }
     @if (error()) {
-        <p class="fd-ui-radio-group__error" role="alert" [id]="id() + '-error'">{{ error() }}</p>
+        <p class="fd-ui-radio-group__error" role="alert" [id]="`${id()}-error`">{{ error() }}</p>
     }
 </div>

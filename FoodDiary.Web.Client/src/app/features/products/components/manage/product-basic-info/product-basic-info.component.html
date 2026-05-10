@@ -13,9 +13,9 @@
         <div class="product-manage__image fd-row">
             <fd-image-upload-field
                 appearance="compact"
+                recommendedSize="512 x 512"
                 [formControl]="formGroup().controls.imageUrl"
                 [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
-                [recommendedSize]="'512 x 512'"
                 [cropEnabled]="true"
                 [cropSize]="512"
                 [cropAspectRatio]="1"
@@ -49,10 +49,10 @@
         <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
                 size="lg"
+                suffixButtonIcon="qr_code_scanner"
                 [formControl]="formGroup().controls.barcode"
                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
                 [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
-                [suffixButtonIcon]="'qr_code_scanner'"
                 [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
                 (suffixButtonClicked)="openBarcodeScanner.emit()"
             />

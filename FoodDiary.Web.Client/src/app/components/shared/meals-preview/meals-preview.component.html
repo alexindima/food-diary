@@ -17,8 +17,8 @@
             </div>
         } @else {
             @for (entry of entries(); track entry.meal?.id ?? entry.slot ?? $index) {
-                @if (entry.meal) {
-                    <fd-meal-card class="meals-preview__meal-card" [meal]="entry.meal" (open)="open.emit(entry.meal!)" />
+                @if (entry.meal; as meal) {
+                    <fd-meal-card class="meals-preview__meal-card" [meal]="meal" (open)="open.emit(meal)" />
                 } @else if (showAddButtons()) {
                     <div class="meals-preview__placeholder-stack fd-stack fd-gap-card-header">
                         <div class="meals-preview__placeholder fd-row fd-justify-between fd-gap-card-content">

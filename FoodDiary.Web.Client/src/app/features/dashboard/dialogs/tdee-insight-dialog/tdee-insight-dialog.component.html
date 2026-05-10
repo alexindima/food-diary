@@ -112,9 +112,14 @@
                         <p class="tdee-dialog__hint-text fd-ui-body-sm">{{ hintKey | translate }}</p>
                     }
                     @if (showSuggestion && insight?.suggestedCalorieTarget) {
-                        <p class="tdee-dialog__hint-text fd-ui-body-sm">
-                            {{ 'TDEE_DIALOG.SUGGESTED_TARGET' | translate: { value: insight!.suggestedCalorieTarget | number: '1.0-0' } }}
-                        </p>
+                        @if (insight; as currentInsight) {
+                            <p class="tdee-dialog__hint-text fd-ui-body-sm">
+                                {{
+                                    'TDEE_DIALOG.SUGGESTED_TARGET'
+                                        | translate: { value: currentInsight.suggestedCalorieTarget | number: '1.0-0' }
+                                }}
+                            </p>
+                        }
                     }
                 </div>
             </section>

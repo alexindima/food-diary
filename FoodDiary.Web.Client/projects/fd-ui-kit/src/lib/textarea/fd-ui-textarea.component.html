@@ -19,7 +19,7 @@
             [attr.placeholder]="placeholderAttribute()"
             [attr.maxlength]="maxLength() ?? null"
             [attr.rows]="rows()"
-            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-describedby]="error() ? `${id()}-error` : null"
             [attr.aria-invalid]="error() ? 'true' : null"
             (input)="onInput(control.value)"
             (focus)="onFocus()"
@@ -28,6 +28,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-textarea__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
+        <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

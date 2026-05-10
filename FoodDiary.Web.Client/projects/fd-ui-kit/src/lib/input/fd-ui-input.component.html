@@ -16,9 +16,9 @@
                 }
             </label>
         }
-        @if (prefixIcon()) {
+        @if (prefixIcon(); as prefixIconName) {
             <span class="fd-ui-input__prefix" aria-hidden="true">
-                <fd-ui-icon [name]="prefixIcon()!" />
+                <fd-ui-icon [name]="prefixIconName" />
             </span>
         }
         <input
@@ -33,7 +33,7 @@
             [attr.placeholder]="placeholderAttribute()"
             [attr.maxlength]="maxLength() ?? null"
             [attr.step]="step() ?? null"
-            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-describedby]="error() ? `${id()}-error` : null"
             [attr.aria-invalid]="error() ? 'true' : null"
             (animationstart)="onAnimationStart($event, control.value)"
             (input)="onInput(control.value)"
@@ -41,20 +41,20 @@
             (blur)="onBlur()"
         />
 
-        @if (suffixButtonIcon()) {
+        @if (suffixButtonIcon(); as suffixIconName) {
             <button
                 class="fd-ui-input__suffix"
                 type="button"
-                [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
+                [attr.aria-label]="suffixButtonAriaLabel() || suffixIconName"
                 [disabled]="disabled()"
                 (click)="triggerSuffixButton()"
             >
-                <fd-ui-icon [name]="suffixButtonIcon()!" />
+                <fd-ui-icon [name]="suffixIconName" />
             </button>
         }
     </div>
 
     @if (error()) {
-        <div class="fd-ui-input__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
+        <div class="fd-ui-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

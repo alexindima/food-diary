@@ -12,9 +12,9 @@
             <div class="fasting__grid fd-grid fd-gap-lg">
                 <fd-fasting-timer-card
                     class="fasting__card"
+                    layout="page"
                     [class.fasting__card--page-summary]="isActive()"
                     [class.fasting__card--setup]="!isActive()"
-                    [layout]="'page'"
                 />
 
                 <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">

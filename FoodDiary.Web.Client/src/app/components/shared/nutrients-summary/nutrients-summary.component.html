@@ -52,12 +52,12 @@
                     <div class="chart fd-center" [ngStyle]="chartStyles()">
                         <canvas
                             baseChart
+                            type="pie"
                             [style.width.px]="chartsBlockSize()"
                             [style.height.px]="chartsBlockSize()"
                             [ngStyle]="chartCanvasStyles()"
                             [data]="nutrientsPieChartData()"
                             [options]="pieChartOptions"
-                            [type]="'pie'"
                             [legend]="false"
                         ></canvas>
                     </div>
@@ -66,12 +66,12 @@
                     <div class="chart fd-center" [ngStyle]="chartStyles()">
                         <canvas
                             baseChart
+                            type="bar"
                             [style.width.px]="chartsBlockSize()"
                             [style.height.px]="chartsBlockSize()"
                             [ngStyle]="chartCanvasStyles()"
                             [data]="nutrientsBarChartData()"
                             [options]="barChartOptions"
-                            [type]="'bar'"
                             [legend]="false"
                         ></canvas>
                     </div>

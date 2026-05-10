@@ -129,7 +129,7 @@
                                 <fd-dashboard-card-shell [attr.inert]="blockStates.fasting.inert">
                                     <fd-fasting-timer-card
                                         class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
-                                        [layout]="'dashboard'"
+                                        layout="dashboard"
                                         [session]="fastingCurrentSession()"
                                     />
                                 </fd-dashboard-card-shell>
@@ -190,11 +190,11 @@
                                 (keydown.enter)="layout.toggleBlock('meals')"
                             >
                                 <fd-meals-preview
+                                    titleKey="DASHBOARD.MEALS_TITLE"
+                                    viewAllKey="DASHBOARD.MEALS_VIEW_ALL"
                                     [attr.inert]="blockStates.meals.inert"
                                     [entries]="mealPreviewEntries()"
                                     [titleText]="mealsState.titleText"
-                                    [titleKey]="'DASHBOARD.MEALS_TITLE'"
-                                    [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
                                     [emptyKey]="mealsState.emptyKey"
                                     [showAddButtons]="mealsState.showDateActions"
                                     [showAiButtons]="mealsState.showDateActions"
@@ -310,14 +310,14 @@
                                     <fd-dashboard-card-shell [attr.inert]="blockStates.waist.inert">
                                         <fd-weight-trend-card
                                             class="dashboard__card dashboard__card--waist-trend"
-                                            [title]="'WAIST_CARD.TITLE'"
+                                            title="WAIST_CARD.TITLE"
+                                            unitKey="WAIST_CARD.CM"
+                                            iconName="straighten"
+                                            accentColor="var(--fd-color-sky-500)"
                                             [currentWeight]="waistTrend.waistTrendCurrent()"
                                             [change]="waistTrend.waistTrendChange()"
                                             [points]="waistTrend.waistTrendSeries()"
                                             [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                                            [unitKey]="'WAIST_CARD.CM'"
-                                            [iconName]="'straighten'"
-                                            [accentColor]="'var(--fd-color-sky-500)'"
                                             [isLoading]="isWaistTrendLoading()"
                                         />
                                     </fd-dashboard-card-shell>

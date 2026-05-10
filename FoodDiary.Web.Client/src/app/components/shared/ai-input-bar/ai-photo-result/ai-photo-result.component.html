@@ -14,12 +14,12 @@
 
     @if (imageUrl() || sourceText()) {
         <div class="ai-photo-result__preview-wrap">
-            @if (imageUrl()) {
+            @if (imageUrl(); as previewUrl) {
                 <img
                     class="ai-photo-result__preview"
                     width="512"
                     height="512"
-                    [ngSrc]="imageUrl()!"
+                    [ngSrc]="previewUrl"
                     [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate"
                 />
             } @else {
@@ -45,9 +45,9 @@
         </div>
     }
 
-    @if (errorKey()) {
+    @if (errorKey(); as currentErrorKey) {
         <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
-            {{ errorKey()! | translate }}
+            {{ currentErrorKey | translate }}
         </div>
     }
 
@@ -145,9 +145,9 @@
             </div>
         }
 
-        @if (!isNutritionLoading() && nutritionErrorKey()) {
+        @if (!isNutritionLoading() && nutritionErrorKey(); as currentNutritionErrorKey) {
             <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
-                {{ nutritionErrorKey()! | translate }}
+                {{ currentNutritionErrorKey | translate }}
             </div>
         }
 

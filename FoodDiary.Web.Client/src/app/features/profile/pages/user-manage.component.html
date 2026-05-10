@@ -41,10 +41,10 @@
                             <fd-image-upload-field
                                 class="user-manage__avatar"
                                 formControlName="profileImage"
+                                recommendedSize="512 x 512"
+                                acceptedTypes="image/png,image/jpeg,image/webp"
                                 [description]="'USER_MANAGE.AVATAR_DESC' | translate"
-                                [recommendedSize]="'512 x 512'"
                                 [maxSizeMb]="5"
-                                [acceptedTypes]="'image/png,image/jpeg,image/webp'"
                                 [cropEnabled]="true"
                                 [cropSize]="512"
                                 [cropAspectRatio]="1"

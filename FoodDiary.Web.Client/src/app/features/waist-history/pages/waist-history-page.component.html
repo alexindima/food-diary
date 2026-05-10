@@ -30,7 +30,7 @@
                         <canvas
                             baseChart
                             class="waist-history-page__chart-canvas"
-                            [type]="'line'"
+                            type="line"
                             [data]="chartData()"
                             [options]="chartOptions"
                             [legend]="false"
@@ -59,7 +59,7 @@
                             <div class="waist-history-page__wht-scale">
                                 <div class="waist-history-page__wht-segments">
                                     @for (segment of whtSegments; track segment.labelKey) {
-                                        <div [class]="'waist-history-page__wht-segment ' + segment.class" [style.width]="segment.width">
+                                        <div [class]="`waist-history-page__wht-segment ${segment.class}`" [style.width]="segment.width">
                                             <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
                                         </div>
                                     }
@@ -76,7 +76,7 @@
                                     {{ 'WAIST_HISTORY.WHT_CURRENT' | translate }}:
                                     <strong>{{ whtrValue() }}</strong>
                                 </div>
-                                <div [class]="'waist-history-page__wht-status fd-ui-stat-value ' + status.class">
+                                <div [class]="`waist-history-page__wht-status fd-ui-stat-value ${status.class}`">
                                     {{ status.labelKey | translate }}
                                 </div>
                             </div>

@@ -55,7 +55,7 @@
                             <span class="recipe-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
                             <div class="recipe-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                                 <span
-                                    [class]="'recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--' + qualityGrade"
+                                    [class]="`recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--${qualityGrade}`"
                                     [style.width.%]="qualityScore"
                                 ></span>
                             </div>

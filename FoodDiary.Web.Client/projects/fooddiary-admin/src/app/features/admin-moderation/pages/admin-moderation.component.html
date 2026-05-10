@@ -30,7 +30,7 @@
                         <td>{{ report.targetType }} ({{ report.targetIdShort }})</td>
                         <td class="reason-cell">{{ report.reason }}</td>
                         <td>
-                            <span [class]="'status-badge status-badge--' + (report.status | lowercase)">
+                            <span [class]="`status-badge status-badge--${(report.status | lowercase)}`">
                                 {{ report.status }}
                             </span>
                         </td>

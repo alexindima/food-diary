@@ -24,11 +24,11 @@
             [id]="id()"
             [disabled]="disabled()"
             [class.fd-ui-select__control--placeholder]="!hasValue()"
-            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-describedby]="error() ? `${id()}-error` : null"
             [attr.aria-invalid]="error() ? 'true' : null"
             [attr.aria-expanded]="isOpen()"
             [attr.aria-haspopup]="'listbox'"
-            [attr.aria-controls]="id() + '-listbox'"
+            [attr.aria-controls]="`${id()}-listbox`"
             [attr.aria-activedescendant]="activeOptionId()"
             (focus)="onFocus()"
             (blur)="onBlur()"
@@ -40,10 +40,10 @@
 
         <ng-template
             cdkConnectedOverlay
+            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
             [cdkConnectedOverlayOrigin]="origin"
             [cdkConnectedOverlayOpen]="isOpen()"
             [cdkConnectedOverlayHasBackdrop]="true"
-            [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
             [cdkConnectedOverlayMinWidth]="overlayMinWidth()"
             [cdkConnectedOverlayPositions]="[
                 { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
@@ -58,7 +58,7 @@
                 class="fd-ui-select__menu"
                 role="listbox"
                 tabindex="-1"
-                [id]="id() + '-listbox'"
+                [id]="`${id()}-listbox`"
                 (keydown)="onListboxKeydown($event)"
             >
                 @for (option of options(); track option.value) {
@@ -85,6 +85,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-select__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
+        <div class="fd-ui-select__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

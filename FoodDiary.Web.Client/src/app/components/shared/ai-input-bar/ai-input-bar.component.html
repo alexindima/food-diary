@@ -62,9 +62,9 @@
 @if (hasTextResult()) {
     <fd-ai-photo-result
         class="ai-input-bar__result-panel"
-        [titleKey]="'CONSUMPTION_LIST.VOICE_RESULT_TITLE'"
+        titleKey="CONSUMPTION_LIST.VOICE_RESULT_TITLE"
+        sourceTextLabelKey="AI_INPUT_BAR.TEXT_PREVIEW_LABEL"
         [sourceText]="textSubmittedQuery()"
-        [sourceTextLabelKey]="'AI_INPUT_BAR.TEXT_PREVIEW_LABEL'"
         [submitLabelKey]="submitLabelKey()"
         [showDetails]="showDetails()"
         [results]="textResults()"

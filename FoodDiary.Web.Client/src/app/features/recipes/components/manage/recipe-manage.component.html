@@ -41,6 +41,7 @@
                     >
                         <div class="recipe-manage__nutrition fd-stack fd-gap-md">
                             <fd-nutrition-editor
+                                manualHintKey="RECIPE_MANAGE.MANUAL_NUTRITION_HINT"
                                 [formGroup]="recipeForm"
                                 [controlNames]="nutritionControlNames"
                                 [macroState]="macroBarState()"
@@ -48,7 +49,6 @@
                                 [caloriesError]="caloriesError()"
                                 [macrosError]="macrosError()"
                                 [showManualHint]="showManualNutritionHint()"
-                                [manualHintKey]="'RECIPE_MANAGE.MANUAL_NUTRITION_HINT'"
                                 [warning]="nutritionWarning()"
                             >
                                 <fd-ui-segmented-toggle

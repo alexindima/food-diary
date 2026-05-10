@@ -23,7 +23,7 @@
                         [attr.aria-pressed]="selectedTheme() === theme.name"
                         (click)="selectTheme(theme.name)"
                     >
-                        <span [class]="'dashboard-appearance-dialog__swatch dashboard-appearance-dialog__swatch--' + theme.name"></span>
+                        <span [class]="`dashboard-appearance-dialog__swatch dashboard-appearance-dialog__swatch--${theme.name}`"></span>
                         <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ theme.labelKey | translate }}</span>
                         <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
                             {{ theme.descriptionKey | translate }}
@@ -53,9 +53,7 @@
                         (click)="selectUiStyle(uiStyle.name)"
                     >
                         <span
-                            [class]="
-                                'dashboard-appearance-dialog__style-preview dashboard-appearance-dialog__style-preview--' + uiStyle.name
-                            "
+                            [class]="`dashboard-appearance-dialog__style-preview dashboard-appearance-dialog__style-preview--${uiStyle.name}`"
                         >
                             <span></span>
                             <span></span>

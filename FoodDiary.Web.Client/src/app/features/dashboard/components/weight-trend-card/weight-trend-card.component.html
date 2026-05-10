@@ -23,9 +23,9 @@
             <div class="weight-trend-card__unit fd-ui-metric-unit fd-ui-text-muted">{{ unitKey() | translate }}</div>
         </div>
 
-        @if (chartData()) {
+        @if (chartData(); as currentChartData) {
             <div class="weight-trend-card__chart">
-                <canvas baseChart aria-hidden="true" [type]="'line'" [data]="chartData()!" [options]="dynamicChartOptions()"></canvas>
+                <canvas baseChart aria-hidden="true" type="line" [data]="currentChartData" [options]="dynamicChartOptions()"></canvas>
             </div>
         } @else {
             <div class="weight-trend-card__empty fd-ui-body-sm fd-ui-text-muted">{{ 'WEIGHT_TREND_CARD.NO_DATA' | translate }}</div>

@@ -19,7 +19,7 @@
                 [value]="internalValue()"
                 [attr.placeholder]="placeholderAttribute()"
                 [disabled]="disabled()"
-                [attr.aria-describedby]="error() ? id() + '-error' : null"
+                [attr.aria-describedby]="error() ? `${id()}-error` : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
                 (focus)="onFocus()"
                 (input)="onInput(timeInput.value)"
@@ -32,6 +32,6 @@
     </div>
 
     @if (error()) {
-        <div class="fd-ui-time-input__error" role="alert" [id]="id() + '-error'">{{ error() }}</div>
+        <div class="fd-ui-time-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

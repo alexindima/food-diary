@@ -13,36 +13,37 @@
                         <span class="tdee-card__unit fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.KCAL_DAY' | translate }}</span>
                     </div>
 
-                    @if (confidenceLabel()) {
+                    @if (confidenceLabel(); as currentConfidenceLabel) {
                         <div
-                            [class]="
-                                'tdee-card__confidence fd-ui-pill fd-ui-pill--compact fd-ui-overline tdee-card__confidence--' +
-                                confidenceClass()
-                            "
+                            [class]="`tdee-card__confidence fd-ui-pill fd-ui-pill--compact fd-ui-overline tdee-card__confidence--${confidenceClass()}`"
                         >
                             <fd-ui-icon name="verified" />
-                            <span>{{ confidenceLabel()! | translate }}</span>
+                            <span>{{ currentConfidenceLabel | translate }}</span>
                         </div>
                     }
 
-                    @if (insight()?.bmr) {
-                        <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
-                            <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.BMR' | translate }}</span>
-                            <span class="tdee-card__meta-value fd-ui-stat-value"
-                                >{{ insight()!.bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
-                            >
-                        </div>
-                    }
+                    @if (insight(); as currentInsight) {
+                        @if (currentInsight.bmr) {
+                            <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
+                                <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{
+                                    'TDEE_CARD.BMR' | translate
+                                }}</span>
+                                <span class="tdee-card__meta-value fd-ui-stat-value"
+                                    >{{ currentInsight.bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                                >
+                            </div>
+                        }
 
-                    @if (insight()?.adaptiveTdee && insight()?.estimatedTdee) {
-                        <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
-                            <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{
-                                'TDEE_CARD.FORMULA_ESTIMATE' | translate
-                            }}</span>
-                            <span class="tdee-card__meta-value fd-ui-stat-value"
-                                >{{ insight()!.estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
-                            >
-                        </div>
+                        @if (currentInsight.adaptiveTdee && currentInsight.estimatedTdee) {
+                            <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
+                                <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{
+                                    'TDEE_CARD.FORMULA_ESTIMATE' | translate
+                                }}</span>
+                                <span class="tdee-card__meta-value fd-ui-stat-value"
+                                    >{{ currentInsight.estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                                >
+                            </div>
+                        }
                     }
 
                     @if (weightTrendFormatted()) {
@@ -56,17 +57,20 @@
                         </div>
                     }
 
-                    @if (hintKey()) {
+                    @if (hintKey(); as currentHintKey) {
                         <div class="tdee-card__hint fd-row fd-align-start fd-gap-xs fd-ui-meta-text">
                             <fd-ui-icon name="tips_and_updates" />
-                            <span>{{ hintKey()! | translate }}</span>
+                            <span>{{ currentHintKey | translate }}</span>
                         </div>
                     }
 
-                    @if (showSuggestion()) {
+                    @if (showSuggestion() && insight(); as currentInsight) {
                         <div class="tdee-card__suggestion fd-row fd-justify-between fd-gap-sm">
                             <span class="tdee-card__suggestion-text fd-ui-meta-text">
-                                {{ 'TDEE_CARD.SUGGESTED_GOAL' | translate: { value: insight()!.suggestedCalorieTarget | number: '1.0-0' } }}
+                                {{
+                                    'TDEE_CARD.SUGGESTED_GOAL'
+                                        | translate: { value: currentInsight.suggestedCalorieTarget | number: '1.0-0' }
+                                }}
                             </span>
                             <fd-ui-button variant="primary" fill="outline" size="sm" (click)="onApplyGoal($event)">
                                 {{ 'TDEE_CARD.APPLY' | translate }}

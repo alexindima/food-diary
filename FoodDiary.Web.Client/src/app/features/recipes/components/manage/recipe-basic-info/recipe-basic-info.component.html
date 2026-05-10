@@ -14,10 +14,10 @@
                 <fd-image-upload-field
                     appearance="compact"
                     formControlName="imageUrl"
+                    recommendedSize="512 x 512"
+                    acceptedTypes="image/png,image/jpeg,image/webp"
                     [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
-                    [recommendedSize]="'512 x 512'"
                     [maxSizeMb]="10"
-                    [acceptedTypes]="'image/png,image/jpeg,image/webp'"
                     [cropEnabled]="true"
                     [cropSize]="512"
                     [cropAspectRatio]="1"

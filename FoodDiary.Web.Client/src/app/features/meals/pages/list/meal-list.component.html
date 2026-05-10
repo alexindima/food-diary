@@ -112,8 +112,8 @@
     }
 
     <fd-page-body>
-        @if (errorKey()) {
-            <fd-error-state [titleKey]="errorKey()!" (retry)="retryLoad()" />
+        @if (errorKey(); as currentErrorKey) {
+            <fd-error-state [titleKey]="currentErrorKey" (retry)="retryLoad()" />
         } @else if (consumptionData.isLoading()) {
             <div class="consumption-list__grid fd-grid fd-gap-card-profile">
                 <fd-skeleton-card />

@@ -30,7 +30,7 @@
                         <canvas
                             baseChart
                             class="weight-history-page__chart-canvas"
-                            [type]="'line'"
+                            type="line"
                             [data]="chartData()"
                             [options]="chartOptions"
                             [legend]="false"
@@ -62,7 +62,7 @@
                             <div class="weight-history-page__bmi-scale">
                                 <div class="weight-history-page__bmi-segments">
                                     @for (segment of bmiSegments(); track segment.labelKey) {
-                                        <div [class]="'weight-history-page__bmi-segment ' + segment.class" [style.width]="segment.width">
+                                        <div [class]="`weight-history-page__bmi-segment ${segment.class}`" [style.width]="segment.width">
                                             <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
                                         </div>
                                     }
@@ -81,9 +81,7 @@
                                     <strong>{{ bmiValue() }}</strong>
                                 </div>
                                 <div
-                                    [class]="
-                                        'weight-history-page__bmi-status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value ' + bmiInfo.class
-                                    "
+                                    [class]="`weight-history-page__bmi-status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value ${bmiInfo.class}`"
                                 >
                                     {{ bmiInfo.labelKey | translate }}
                                 </div>

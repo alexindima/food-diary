@@ -6,8 +6,8 @@
     [attr.aria-busy]="loading() ? 'true' : null"
 >
     <span class="fd-ui-button__content">
-        @if (icon()) {
-            <fd-ui-icon class="fd-ui-button__icon" [name]="icon()!" />
+        @if (icon(); as iconName) {
+            <fd-ui-icon class="fd-ui-button__icon" [name]="iconName" />
         }
         <span class="fd-ui-button__label">
             <ng-content />

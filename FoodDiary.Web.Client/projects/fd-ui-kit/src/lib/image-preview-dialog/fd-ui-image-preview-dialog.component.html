@@ -22,7 +22,7 @@
             } @else if (collageImages.length) {
                 <div
                     role="img"
-                    [class]="'fd-ui-image-preview-dialog__collage fd-ui-image-preview-dialog__collage--count-' + collageImages.length"
+                    [class]="`fd-ui-image-preview-dialog__collage fd-ui-image-preview-dialog__collage--count-${collageImages.length}`"
                     [attr.aria-label]="alt"
                 >
                     @for (image of collageImages; track image.url) {

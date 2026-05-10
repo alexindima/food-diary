@@ -20,7 +20,7 @@
     >
         @if (bodyChartData(); as bodyData) {
             <div class="stats-body-card__chart-area">
-                <canvas baseChart [type]="'line'" [data]="bodyData" [options]="bodyChartOptions() || {}" [legend]="false"></canvas>
+                <canvas baseChart type="line" [data]="bodyData" [options]="bodyChartOptions() || {}" [legend]="false"></canvas>
             </div>
         }
     </fd-ui-section-state>
