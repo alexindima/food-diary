@@ -6,9 +6,9 @@
             <p class="dietologist-promo__subtitle">{{ 'LANDING_DIETOLOGIST.SUBTITLE' | translate }}</p>
 
             <div class="dietologist-promo__steps">
-                @for (step of workflowSteps; track step.key; let index = $index) {
+                @for (step of workflowSteps; track step.key) {
                     <article class="dietologist-promo__step">
-                        <div class="dietologist-promo__step-index">{{ index + 1 }}</div>
+                        <div class="dietologist-promo__step-index">{{ $index + 1 }}</div>
                         <div>
                             <h3 class="dietologist-promo__step-title">
                                 {{ step.titleKey | translate }}

@@ -88,7 +88,7 @@
                 <div class="recipe-step-card__subtitle fd-ui-caption">
                     {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
                 </div>
-                @for (row of ingredientRows(); track row.index; let firstIngredient = $first) {
+                @for (row of ingredientRows(); track row.index) {
                     <div class="recipe-ingredient fd-row fd-gap-md" [formGroupName]="row.index">
                         <input type="hidden" formControlName="food" />
                         <input type="hidden" formControlName="nestedRecipeId" />
@@ -121,7 +121,7 @@
                                 icon="delete"
                                 [fdUiHint]="'COMMON.DELETE' | translate"
                                 [ariaLabel]="'COMMON.DELETE' | translate"
-                                [disabled]="firstIngredient"
+                                [disabled]="$first"
                                 (click)="onRemoveIngredient(row.index)"
                             />
                         </div>

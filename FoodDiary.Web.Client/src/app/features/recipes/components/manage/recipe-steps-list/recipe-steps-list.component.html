@@ -10,7 +10,7 @@
             [cdkDropListData]="stepsFormArray().controls"
             (cdkDropListDropped)="onStepDrop($event)"
         >
-            @for (step of stepsFormArray().controls; track $index; let index = $index; let first = $first) {
+            @for (step of stepsFormArray().controls; track $index) {
                 <div
                     class="recipe-step"
                     cdkDrag
@@ -20,15 +20,15 @@
                 >
                     <fd-recipe-step-card
                         [stepFormGroup]="step"
-                        [stepIndex]="index"
-                        [isExpanded]="isStepExpanded(index)"
-                        [isFirst]="first"
+                        [stepIndex]="$index"
+                        [isExpanded]="isStepExpanded($index)"
+                        [isFirst]="$first"
                         [dragDisabled]="stepsFormArray().length <= 1"
-                        (toggleExpanded)="toggleStepExpanded(index)"
-                        (removeStep)="onRemoveStep(index)"
-                        (addIngredient)="onAddIngredient(index)"
-                        (removeIngredient)="onRemoveIngredient(index, $event)"
-                        (selectProduct)="onSelectProduct(index, $event)"
+                        (toggleExpanded)="toggleStepExpanded($index)"
+                        (removeStep)="onRemoveStep($index)"
+                        (addIngredient)="onAddIngredient($index)"
+                        (removeIngredient)="onRemoveIngredient($index, $event)"
+                        (selectProduct)="onSelectProduct($index, $event)"
                     />
                 </div>
             }

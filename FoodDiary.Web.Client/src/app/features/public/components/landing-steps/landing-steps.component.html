@@ -6,9 +6,9 @@
             <p class="landing-section__subtitle">{{ 'LANDING_STEPS.SUBTITLE' | translate }}</p>
         </div>
         <div class="landing-steps fd-grid fd-gap-md">
-            @for (step of steps; track step.key; let index = $index) {
+            @for (step of steps; track step.key) {
                 <article class="landing-steps__item fd-stack fd-gap-sm">
-                    <div class="landing-steps__icon fd-inline-center">{{ index + 1 }}</div>
+                    <div class="landing-steps__icon fd-inline-center">{{ $index + 1 }}</div>
                     <h3 class="landing-steps__title">{{ step.titleKey | translate }}</h3>
                     <p class="landing-steps__text">{{ step.textKey | translate }}</p>
                 </article>

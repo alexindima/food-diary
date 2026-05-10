@@ -78,14 +78,14 @@
                         <fd-ui-loader />
                     </div>
                 } @else if (options().length > 0) {
-                    @for (option of options(); track getOptionTrack(option, index); let index = $index) {
+                    @for (option of options(); track getOptionTrack(option, $index)) {
                         <button
                             type="button"
                             class="fd-ui-autocomplete__menu-item"
                             role="option"
                             tabindex="-1"
-                            [id]="getOptionId(index)"
-                            [class.fd-ui-autocomplete__menu-item--active]="index === activeIndex()"
+                            [id]="getOptionId($index)"
+                            [class.fd-ui-autocomplete__menu-item--active]="$index === activeIndex()"
                             [attr.aria-selected]="isEqual(option.value, internalValue())"
                             (click)="selectOption(option)"
                         >

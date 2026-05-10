@@ -76,9 +76,9 @@
                 <p class="seo-landing__section-subtitle">{{ steps.subtitleKey | translate }}</p>
             </div>
             <div class="seo-landing__steps">
-                @for (step of steps.items; track step.key; let index = $index) {
+                @for (step of steps.items; track step.key) {
                     <article class="seo-landing__step-card">
-                        <div class="seo-landing__step-index">{{ index + 1 }}</div>
+                        <div class="seo-landing__step-index">{{ $index + 1 }}</div>
                         <h3 class="seo-landing__step-title">{{ step.titleKey | translate }}</h3>
                         <p class="seo-landing__step-text">{{ step.textKey | translate }}</p>
                     </article>

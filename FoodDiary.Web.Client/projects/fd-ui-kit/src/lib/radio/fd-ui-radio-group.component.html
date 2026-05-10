@@ -14,18 +14,18 @@
         [attr.aria-describedby]="error() ? id() + '-error' : null"
         [attr.aria-invalid]="error() ? 'true' : null"
     >
-        @for (option of options(); track trackByValue($index, option); let index = $index) {
+        @for (option of options(); track trackByValue($index, option)) {
             <label class="fd-ui-radio" [class.fd-ui-radio--disabled]="disabled()">
                 <input
                     class="fd-ui-radio__input"
                     type="radio"
                     [name]="id()"
-                    [value]="index"
+                    [value]="$index"
                     [checked]="isEqual(internalValue, option.value)"
                     [disabled]="disabled()"
                     (change)="selectOption(option)"
                     (blur)="handleBlur()"
-                    (keydown)="handleKeydown(index, $event)"
+                    (keydown)="handleKeydown($index, $event)"
                 />
                 <span class="fd-ui-radio__control" aria-hidden="true">
                     <span class="fd-ui-radio__dot"></span>

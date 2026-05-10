@@ -906,7 +906,7 @@ export default [
             '@angular-eslint/template/prefer-at-empty': 'error',
             '@angular-eslint/template/prefer-built-in-pipes': 'error',
             '@angular-eslint/template/prefer-class-binding': 'warn',
-            '@angular-eslint/template/prefer-contextual-for-variables': 'warn',
+            '@angular-eslint/template/prefer-contextual-for-variables': 'error',
             '@angular-eslint/template/prefer-control-flow': 'warn',
             '@angular-eslint/template/prefer-ngsrc': 'warn',
             '@angular-eslint/template/prefer-self-closing-tags': 'error',

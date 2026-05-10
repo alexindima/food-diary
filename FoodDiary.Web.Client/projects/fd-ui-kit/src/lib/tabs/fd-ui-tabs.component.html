@@ -1,16 +1,16 @@
 <div role="tablist" [class]="'fd-ui-tabs ' + appearanceClass()">
-    @for (tab of tabItems(); track tab.value; let index = $index) {
+    @for (tab of tabItems(); track tab.value) {
         <button
             #tabButton
             type="button"
             class="fd-ui-tabs__tab"
             role="tab"
-            [id]="tabId(index)"
-            [class.fd-ui-tabs__tab--active]="index === selectedIndex()"
-            [attr.aria-selected]="index === selectedIndex()"
-            [attr.tabindex]="index === selectedIndex() ? 0 : -1"
-            (click)="selectIndex(index)"
-            (keydown)="onKeydown(index, $event)"
+            [id]="tabId($index)"
+            [class.fd-ui-tabs__tab--active]="$index === selectedIndex()"
+            [attr.aria-selected]="$index === selectedIndex()"
+            [attr.tabindex]="$index === selectedIndex() ? 0 : -1"
+            (click)="selectIndex($index)"
+            (keydown)="onKeydown($index, $event)"
         >
             <span class="fd-ui-tabs__label">
                 {{ tab.labelText }}
