@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -19,6 +19,12 @@ export type AdminModerationActionDialogResult = {
     confirmed: boolean;
 };
 
+type AdminModerationActionDialogViewState = {
+    title: string;
+    confirmVariant: 'danger' | 'secondary';
+    confirmLabel: string;
+};
+
 @Component({
     selector: 'fd-admin-moderation-action-dialog',
     standalone: true,
@@ -37,9 +43,20 @@ export class AdminModerationActionDialogComponent {
     public adminNote = '';
     public readonly isSubmitting = signal(false);
 
-    public get dialogTitle(): string {
-        return this.data.action === 'review' ? 'Review Report' : 'Dismiss Report';
-    }
+    public readonly viewState = computed(
+        (): AdminModerationActionDialogViewState =>
+            this.data.action === 'review'
+                ? {
+                      title: 'Review Report',
+                      confirmVariant: 'danger',
+                      confirmLabel: 'Review & Remove',
+                  }
+                : {
+                      title: 'Dismiss Report',
+                      confirmVariant: 'secondary',
+                      confirmLabel: 'Dismiss',
+                  },
+    );
 
     public onConfirm(): void {
         this.isSubmitting.set(true);

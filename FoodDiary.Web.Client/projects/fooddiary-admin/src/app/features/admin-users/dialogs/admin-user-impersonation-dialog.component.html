@@ -9,7 +9,7 @@
             [rows]="4"
             [maxLength]="500"
             [required]="true"
-            [error]="reasonError"
+            [error]="reasonError()"
         />
 
         @if (submitError()) {
@@ -20,7 +20,7 @@
     <div fdUiDialogFooter>
         <fd-ui-button type="button" variant="secondary" [disabled]="isSubmitting()" (click)="close()">Cancel</fd-ui-button>
         <fd-ui-button type="button" [disabled]="isSubmitting()" (click)="submit()">
-            {{ isSubmitting() ? 'Starting...' : 'Start' }}
+            {{ submitLabel() }}
         </fd-ui-button>
     </div>
 </fd-ui-dialog>

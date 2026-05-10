@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, InjectionToken, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, InjectionToken, input, signal } from '@angular/core';
 import { type AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { merge } from 'rxjs';
@@ -35,8 +35,8 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
 })
 export class FdUiFormErrorComponent {
     private readonly translate = inject(TranslateService);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
+    private readonly controlVersion = signal(0);
 
     public readonly control = input<AbstractControl | null>();
     public readonly error = input<string | null>();
@@ -48,8 +48,8 @@ export class FdUiFormErrorComponent {
             return;
         }
 
-        const subscription = merge(control.statusChanges, control.valueChanges).subscribe(() => {
-            this.cdr.markForCheck();
+        const subscription = merge(control.statusChanges, control.valueChanges, control.events).subscribe(() => {
+            this.controlVersion.update(version => version + 1);
         });
 
         onCleanup((): void => {
@@ -57,7 +57,9 @@ export class FdUiFormErrorComponent {
         });
     });
 
-    public get message(): string | null {
+    public readonly message = computed((): string | null => {
+        this.controlVersion();
+
         const error = this.error();
         if (error) {
             return this.translate.instant(error, this.context());
@@ -100,5 +102,5 @@ export class FdUiFormErrorComponent {
         }
 
         return this.translate.instant('FORM_ERRORS.UNKNOWN');
-    }
+    });
 }

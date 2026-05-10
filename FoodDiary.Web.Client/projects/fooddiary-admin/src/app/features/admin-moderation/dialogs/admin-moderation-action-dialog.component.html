@@ -1,4 +1,6 @@
-<fd-ui-dialog [title]="dialogTitle" size="sm">
+@let dialog = viewState();
+
+<fd-ui-dialog [title]="dialog.title" size="sm">
     <p><strong>Target:</strong> {{ data.report.targetType }} ({{ data.report.targetId }})</p>
     <p><strong>Reason:</strong> {{ data.report.reason }}</p>
 
@@ -6,14 +8,8 @@
 
     <div class="dialog-actions fd-row fd-justify-end fd-gap-xs">
         <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="onCancel()"> Cancel </fd-ui-button>
-        <fd-ui-button
-            type="button"
-            [variant]="data.action === 'review' ? 'danger' : 'secondary'"
-            size="sm"
-            [disabled]="isSubmitting()"
-            (click)="onConfirm()"
-        >
-            {{ data.action === 'review' ? 'Review & Remove' : 'Dismiss' }}
+        <fd-ui-button type="button" [variant]="dialog.confirmVariant" size="sm" [disabled]="isSubmitting()" (click)="onConfirm()">
+            {{ dialog.confirmLabel }}
         </fd-ui-button>
     </div>
 </fd-ui-dialog>

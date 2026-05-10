@@ -93,11 +93,8 @@ export class MealListComponent {
     public readonly isEmptyState = computed(() => this.consumptionData.items().length === 0 && !this.hasDateFilter());
     public readonly isNoResultsState = computed(() => this.consumptionData.items().length === 0 && this.hasDateFilter());
     public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
+    public readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
-
-    public get currentPageIndex(): number {
-        return this.mealListFacade.currentPageIndex();
-    }
 
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
@@ -258,7 +255,7 @@ export class MealListComponent {
     }
 
     protected reloadCurrentPage(): void {
-        this.loadConsumptions(this.currentPageIndex + 1)
+        this.loadConsumptions(this.currentPageIndex() + 1)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }

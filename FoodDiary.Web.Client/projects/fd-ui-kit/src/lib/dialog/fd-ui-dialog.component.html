@@ -8,7 +8,7 @@
         'fd-ui-dialog--body-scroll-' + bodyScrollInset(),
         isBodyScrollInsetVisible() ? 'fd-ui-dialog--body-scrollable' : '',
         showBuiltInHeader() || hasCustomHeader() ? 'fd-ui-dialog--has-header' : '',
-        hasFooter ? 'fd-ui-dialog--has-footer' : '',
+        hasFooter() ? 'fd-ui-dialog--has-footer' : '',
     ]"
 >
     @if (hasCustomHeader()) {

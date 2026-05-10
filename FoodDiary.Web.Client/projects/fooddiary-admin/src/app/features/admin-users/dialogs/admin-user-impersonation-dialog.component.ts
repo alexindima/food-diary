@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, type FormControl, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -7,6 +7,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { merge } from 'rxjs';
 
 import { type AdminImpersonationStart, type AdminUser, AdminUsersService } from '../api/admin-users.service';
 
@@ -36,8 +37,11 @@ export class AdminUserImpersonationDialogComponent {
     public readonly form: FormGroup<AdminUserImpersonationForm> = this.fb.group({
         reason: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]),
     });
+    private readonly reasonValidationVersion = signal(0);
 
-    public get reasonError(): string | null {
+    public readonly reasonError = computed((): string | null => {
+        this.reasonValidationVersion();
+
         const control = this.form.controls.reason;
         if (!control.touched && !control.dirty) {
             return null;
@@ -56,6 +60,17 @@ export class AdminUserImpersonationDialogComponent {
         }
 
         return null;
+    });
+
+    public readonly submitLabel = computed(() => (this.isSubmitting() ? 'Starting...' : 'Start'));
+
+    public constructor() {
+        const reason = this.form.controls.reason;
+        merge(reason.statusChanges, reason.valueChanges)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.refreshReasonValidation();
+            });
     }
 
     public close(): void {
@@ -65,6 +80,7 @@ export class AdminUserImpersonationDialogComponent {
     public submit(): void {
         this.submitError.set(null);
         this.form.markAllAsTouched();
+        this.refreshReasonValidation();
         if (this.form.invalid || this.isSubmitting()) {
             return;
         }
@@ -82,5 +98,9 @@ export class AdminUserImpersonationDialogComponent {
                     this.isSubmitting.set(false);
                 },
             });
+    }
+
+    private refreshReasonValidation(): void {
+        this.reasonValidationVersion.update(version => version + 1);
     }
 }

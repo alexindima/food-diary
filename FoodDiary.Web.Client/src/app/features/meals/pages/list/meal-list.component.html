@@ -167,7 +167,7 @@
                 class="consumption-list__pagination"
                 [length]="consumptionData.totalItems"
                 [pageSize]="10"
-                [pageIndex]="currentPageIndex"
+                [pageIndex]="currentPageIndex()"
                 (pageIndexChange)="onPageChange($event)"
             />
         }

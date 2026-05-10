@@ -67,6 +67,7 @@ export class FdUiDialogComponent {
     public readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
     public readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
     public readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());
+    public readonly hasFooter = computed(() => Boolean(this.footerSlot()));
 
     public constructor() {
         afterNextRender(() => {
@@ -94,10 +95,6 @@ export class FdUiDialogComponent {
                 mutationObserver.disconnect();
             });
         });
-    }
-
-    public get hasFooter(): boolean {
-        return Boolean(this.footerSlot());
     }
 
     public close(result?: unknown): void {

@@ -190,7 +190,7 @@ describe('MealListComponent', () => {
 
         component.onPageChange(1);
 
-        expect(component.currentPageIndex).toBe(1);
+        expect(component.currentPageIndex()).toBe(1);
         expect(mockMealService.query).toHaveBeenCalledWith(2, 10, expect.any(Object));
     });
 

@@ -52,7 +52,7 @@ describe('AdminUserImpersonationDialogComponent', () => {
         component.submit();
 
         expect(usersService.startImpersonation).not.toHaveBeenCalled();
-        expect(component.reasonError).toBe('Reason is required.');
+        expect(component.reasonError()).toBe('Reason is required.');
     });
 
     it('should validate minimum reason length', () => {
@@ -60,7 +60,7 @@ describe('AdminUserImpersonationDialogComponent', () => {
         component.submit();
 
         expect(usersService.startImpersonation).not.toHaveBeenCalled();
-        expect(component.reasonError).toBe('Reason must be at least 10 characters.');
+        expect(component.reasonError()).toBe('Reason must be at least 10 characters.');
     });
 
     it('should start impersonation and close with response', () => {
