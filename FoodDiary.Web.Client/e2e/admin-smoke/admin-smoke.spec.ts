@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 test.describe('admin smoke', () => {
     test('redirects unauthenticated user to unauthorized page', async ({ page }) => {
@@ -10,78 +10,8 @@ test.describe('admin smoke', () => {
     });
 
     test('renders admin pages for authenticated admin with mocked api', async ({ page }) => {
-        await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-        }, createJwt({ role: 'Admin' }));
-
-        await page.route('**/api/v1/admin/dashboard', async route => {
-            await route.fulfill({
-                status: 200,
-                contentType: 'application/json',
-                body: JSON.stringify({
-                    totalUsers: 42,
-                    activeUsers: 30,
-                    premiumUsers: 10,
-                }),
-            });
-        });
-
-        await page.route('**/api/v1/admin/ai-usage/summary', async route => {
-            await route.fulfill({
-                status: 200,
-                contentType: 'application/json',
-                body: JSON.stringify({
-                    totalTokens: 12345,
-                    inputTokens: 7000,
-                    outputTokens: 5345,
-                }),
-            });
-        });
-
-        await page.route('**/api/v1/admin/users**', async route => {
-            await route.fulfill({
-                status: 200,
-                contentType: 'application/json',
-                body: JSON.stringify({
-                    data: [
-                        {
-                            id: 'u1',
-                            email: 'admin@example.com',
-                            username: 'alex',
-                            isActive: true,
-                            isEmailConfirmed: true,
-                            createdOnUtc: '2026-01-01T00:00:00Z',
-                            roles: ['Admin'],
-                            deletedAt: null,
-                        },
-                    ],
-                    page: 1,
-                    limit: 20,
-                    totalPages: 1,
-                    totalItems: 1,
-                }),
-            });
-        });
-
-        await page.route('**/api/v1/admin/email-templates**', async route => {
-            await route.fulfill({
-                status: 200,
-                contentType: 'application/json',
-                body: JSON.stringify([
-                    {
-                        id: 't1',
-                        key: 'email_verification',
-                        locale: 'en',
-                        subject: 'Verify your email',
-                        htmlBody: '<p>Hello</p>',
-                        textBody: 'Hello',
-                        isActive: true,
-                        createdOnUtc: '2026-01-01T00:00:00Z',
-                        updatedOnUtc: null,
-                    },
-                ]),
-            });
-        });
+        await authenticateAdminAsync(page);
+        await mockAdminApiAsync(page);
 
         await page.goto('/');
 
@@ -104,6 +34,76 @@ test.describe('admin smoke', () => {
         await expect(page.getByText('Verify your email')).toBeVisible();
     });
 });
+
+async function authenticateAdminAsync(page: Page): Promise<void> {
+    await page.addInitScript(
+        (token: string) => {
+            window.localStorage.setItem('authToken', token);
+        },
+        createJwt({ role: 'Admin' }),
+    );
+}
+
+async function mockAdminApiAsync(page: Page): Promise<void> {
+    await page.route('**/api/v1/admin/dashboard', async route => {
+        await route.fulfill(jsonResponse({ totalUsers: 42, activeUsers: 30, premiumUsers: 10 }));
+    });
+
+    await page.route('**/api/v1/admin/ai-usage/summary', async route => {
+        await route.fulfill(jsonResponse({ totalTokens: 12345, inputTokens: 7000, outputTokens: 5345 }));
+    });
+
+    await page.route('**/api/v1/admin/users**', async route => {
+        await route.fulfill(jsonResponse(createUsersPage()));
+    });
+
+    await page.route('**/api/v1/admin/email-templates**', async route => {
+        await route.fulfill(jsonResponse([createEmailTemplate()]));
+    });
+}
+
+function createUsersPage(): Record<string, unknown> {
+    return {
+        data: [
+            {
+                id: 'u1',
+                email: 'admin@example.com',
+                username: 'alex',
+                isActive: true,
+                isEmailConfirmed: true,
+                createdOnUtc: '2026-01-01T00:00:00Z',
+                roles: ['Admin'],
+                deletedAt: null,
+            },
+        ],
+        page: 1,
+        limit: 20,
+        totalPages: 1,
+        totalItems: 1,
+    };
+}
+
+function createEmailTemplate(): Record<string, unknown> {
+    return {
+        id: 't1',
+        key: 'email_verification',
+        locale: 'en',
+        subject: 'Verify your email',
+        htmlBody: '<p>Hello</p>',
+        textBody: 'Hello',
+        isActive: true,
+        createdOnUtc: '2026-01-01T00:00:00Z',
+        updatedOnUtc: null,
+    };
+}
+
+function jsonResponse(body: unknown): { status: number; contentType: string; body: string } {
+    return {
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(body),
+    };
+}
 
 function createJwt(payload: Record<string, unknown>): string {
     return `${encodeSegment({ alg: 'none', typ: 'JWT' })}.${encodeSegment(payload)}.signature`;

@@ -1,4 +1,19 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, type Page, type Route, test } from '@playwright/test';
+
+const MS_PER_SECOND = 1000;
+const AUTH_TOKEN_TTL_SECONDS = 3600;
+const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
+    { matches: pathname => pathname.endsWith('/users/info'), createResponse: createUser },
+    { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
+    { matches: pathname => pathname.endsWith('/cycles/current'), createResponse: () => null },
+    { matches: pathname => pathname.endsWith('/tdee/insight'), createResponse: createTdeeInsight },
+    { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
+    { matches: pathname => pathname.endsWith('/notifications/unread-count'), createResponse: () => ({ count: 2 }) },
+    { matches: pathname => pathname.endsWith('/notifications'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/favorite-products'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/products/search'), createResponse: createProductsPage },
+    { matches: pathname => pathname.endsWith('/products'), createResponse: createProductsPage },
+];
 
 test.describe('client smoke', () => {
     test('renders public landing page', async ({ page }) => {
@@ -16,15 +31,12 @@ test.describe('client smoke', () => {
     });
 
     test('redirects authenticated user from landing to dashboard', async ({ page }) => {
-        await page.addInitScript(
-            (token: string) => {
-                window.localStorage.setItem('authToken', token);
-                window.localStorage.setItem('refreshToken', 'refresh-token');
-                window.localStorage.setItem('userId', 'u1');
-                window.localStorage.setItem('emailConfirmed', 'true');
-            },
-            createJwt({ sub: 'u1', nameid: 'u1', role: 'User', exp: Math.floor(Date.now() / 1000) + 3600 }),
-        );
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
 
@@ -44,15 +56,12 @@ test.describe('client smoke', () => {
 
     test('renders products page for authenticated user on mobile viewport', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
-        await page.addInitScript(
-            (token: string) => {
-                window.localStorage.setItem('authToken', token);
-                window.localStorage.setItem('refreshToken', 'refresh-token');
-                window.localStorage.setItem('userId', 'u1');
-                window.localStorage.setItem('emailConfirmed', 'true');
-            },
-            createJwt({ sub: 'u1', nameid: 'u1', role: 'User', exp: Math.floor(Date.now() / 1000) + 3600 }),
-        );
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
 
@@ -70,102 +79,17 @@ async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
         await route.abort('failed');
     });
 
-    await page.route('**/api/v1/**', async route => {
-        const url = new URL(route.request().url());
-        const { pathname } = url;
+    await page.route('**/api/v1/**', fulfillClientApiRouteAsync);
+}
 
-        if (pathname.endsWith('/users/info')) {
-            await route.fulfill(jsonResponse(createUser()));
-            return;
-        }
+async function fulfillClientApiRouteAsync(route: Route): Promise<void> {
+    const { pathname } = new URL(route.request().url());
+    await route.fulfill(jsonResponse(resolveClientApiResponse(pathname)));
+}
 
-        if (pathname.endsWith('/dashboard')) {
-            await route.fulfill(jsonResponse(createDashboardSnapshot()));
-            return;
-        }
-
-        if (pathname.endsWith('/cycles/current')) {
-            await route.fulfill(jsonResponse(null));
-            return;
-        }
-
-        if (pathname.endsWith('/tdee/insight')) {
-            await route.fulfill(
-                jsonResponse({
-                    estimatedTdee: 2100,
-                    adaptiveTdee: 2050,
-                    bmr: 1500,
-                    suggestedCalorieTarget: 1900,
-                    currentCalorieTarget: 1900,
-                    weightTrendPerWeek: -0.2,
-                    confidence: 'medium',
-                    dataDaysUsed: 14,
-                    goalAdjustmentHint: null,
-                }),
-            );
-            return;
-        }
-
-        if (pathname.endsWith('/usda/daily-micronutrients')) {
-            await route.fulfill(
-                jsonResponse({
-                    date: '2026-04-19T00:00:00.000Z',
-                    linkedProductCount: 0,
-                    totalProductCount: 0,
-                    nutrients: [],
-                    healthScores: null,
-                }),
-            );
-            return;
-        }
-
-        if (pathname.endsWith('/notifications/unread-count')) {
-            await route.fulfill(jsonResponse({ count: 2 }));
-            return;
-        }
-
-        if (pathname.endsWith('/notifications')) {
-            await route.fulfill(jsonResponse([]));
-            return;
-        }
-
-        if (pathname.endsWith('/favorite-products')) {
-            await route.fulfill(
-                jsonResponse({
-                    data: [],
-                    page: 1,
-                    limit: 20,
-                    totalPages: 0,
-                    totalItems: 0,
-                }),
-            );
-            return;
-        }
-
-        if (pathname.endsWith('/products') || pathname.endsWith('/products/search')) {
-            await route.fulfill(
-                jsonResponse({
-                    data: [
-                        {
-                            id: 'p1',
-                            name: 'Greek yogurt',
-                            brand: 'Food Diary',
-                            caloriesPerBase: 95,
-                            imageUrl: null,
-                            imageAssetId: null,
-                        },
-                    ],
-                    page: 1,
-                    limit: 20,
-                    totalPages: 1,
-                    totalItems: 1,
-                }),
-            );
-            return;
-        }
-
-        await route.fulfill(jsonResponse({}));
-    });
+function resolveClientApiResponse(pathname: string): unknown {
+    const mock = CLIENT_API_MOCKS.find(item => item.matches(pathname));
+    return mock === undefined ? {} : mock.createResponse();
 }
 
 function createDashboardSnapshot(): Record<string, unknown> {
@@ -239,6 +163,59 @@ function createUser(): Record<string, unknown> {
     };
 }
 
+function createTdeeInsight(): Record<string, unknown> {
+    return {
+        estimatedTdee: 2100,
+        adaptiveTdee: 2050,
+        bmr: 1500,
+        suggestedCalorieTarget: 1900,
+        currentCalorieTarget: 1900,
+        weightTrendPerWeek: -0.2,
+        confidence: 'medium',
+        dataDaysUsed: 14,
+        goalAdjustmentHint: null,
+    };
+}
+
+function createDailyMicronutrients(): Record<string, unknown> {
+    return {
+        date: '2026-04-19T00:00:00.000Z',
+        linkedProductCount: 0,
+        totalProductCount: 0,
+        nutrients: [],
+        healthScores: null,
+    };
+}
+
+function createEmptyProductsPage(): Record<string, unknown> {
+    return {
+        data: [],
+        page: 1,
+        limit: 20,
+        totalPages: 0,
+        totalItems: 0,
+    };
+}
+
+function createProductsPage(): Record<string, unknown> {
+    return {
+        data: [
+            {
+                id: 'p1',
+                name: 'Greek yogurt',
+                brand: 'Food Diary',
+                caloriesPerBase: 95,
+                imageUrl: null,
+                imageAssetId: null,
+            },
+        ],
+        page: 1,
+        limit: 20,
+        totalPages: 1,
+        totalItems: 1,
+    };
+}
+
 function jsonResponse(body: unknown): { status: number; contentType: string; body: string } {
     return {
         status: 200,
@@ -251,6 +228,20 @@ function createJwt(payload: Record<string, unknown>): string {
     return `${encodeSegment({ alg: 'none', typ: 'JWT' })}.${encodeSegment(payload)}.signature`;
 }
 
+function createAuthenticatedUserJwt(): string {
+    return createJwt({
+        sub: 'u1',
+        nameid: 'u1',
+        role: 'User',
+        exp: Math.floor(Date.now() / MS_PER_SECOND) + AUTH_TOKEN_TTL_SECONDS,
+    });
+}
+
 function encodeSegment(value: Record<string, unknown>): string {
     return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
+}
+
+interface ClientApiMock {
+    matches: (pathname: string) => boolean;
+    createResponse: () => unknown;
 }

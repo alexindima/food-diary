@@ -264,7 +264,7 @@ export default [
             'no-console': 'error',
             'no-else-return': 'error',
             'no-lonely-if': 'error',
-            'max-depth': ['warn', 4],
+            'max-depth': ['error', 4],
             'max-lines-per-function': [
                 'warn',
                 {
