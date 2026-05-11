@@ -12,11 +12,9 @@ import {
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
@@ -31,7 +29,6 @@ import {
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
-import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 
@@ -67,6 +64,8 @@ import type { DietologistPermissions, DietologistRelationship } from '../../diet
 import { PremiumBillingService } from '../../premium/api/premium-billing.service';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
+import { UserManageBillingCardComponent } from './user-manage-billing-card.component';
+import { type DietologistPermissionChange, UserManageDietologistCardComponent } from './user-manage-dietologist-card.component';
 import { type FastingReminderHoursChange, UserManageNotificationsCardComponent } from './user-manage-notifications-card.component';
 import { UserManagePrivacyCardComponent } from './user-manage-privacy-card.component';
 
@@ -106,9 +105,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     selector: 'fd-user-manage',
     imports: [
         ReactiveFormsModule,
-        FormsModule,
         TranslatePipe,
-        FdUiHintDirective,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
@@ -116,11 +113,12 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         FdUiStatusBadgeComponent,
-        FdUiSwitchComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
+        UserManageBillingCardComponent,
+        UserManageDietologistCardComponent,
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
     ],
@@ -826,6 +824,10 @@ export class UserManageComponent {
         this.persistDietologistPermissions(previousPermissions);
     }
 
+    public onDietologistPermissionChangeRequest(change: DietologistPermissionChange): void {
+        this.updateDietologistPermission(change.controlName, change.value);
+    }
+
     public persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
         if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
             return;
@@ -1516,7 +1518,7 @@ interface DietologistFormValues {
     shareFasting: boolean;
 }
 
-type DietologistFormData = FormGroupControls<DietologistFormValues>;
+export type DietologistFormData = FormGroupControls<DietologistFormValues>;
 type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;
 
 interface ProfileStatusViewModel {
@@ -1536,7 +1538,7 @@ interface PasswordActionState {
     descriptionKey: string;
 }
 
-interface BillingViewModel {
+export interface BillingViewModel {
     overview: BillingOverview;
     statusTone: 'success' | 'muted';
     endLabelKey: string;
