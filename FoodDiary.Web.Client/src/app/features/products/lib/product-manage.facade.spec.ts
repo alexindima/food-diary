@@ -11,107 +11,107 @@ import { ProductManageFacade } from './product-manage.facade';
 
 const HTTP_BAD_REQUEST = 400;
 
-describe('ProductManageFacade', () => {
-    let facade: ProductManageFacade;
-    let productService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteById: ReturnType<typeof vi.fn> };
-    let dialogService: { open: ReturnType<typeof vi.fn> };
-    let navigationService: {
-        navigateToHomeAsync: ReturnType<typeof vi.fn>;
-        navigateToProductListAsync: ReturnType<typeof vi.fn>;
-        navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
+const product: Product = {
+    id: 'p1',
+    name: 'Test product',
+    barcode: null,
+    brand: null,
+    productType: ProductType.Unknown,
+    category: null,
+    description: null,
+    comment: null,
+    imageUrl: null,
+    imageAssetId: null,
+    baseUnit: MeasurementUnit.G,
+    baseAmount: 100,
+    defaultPortionAmount: 100,
+    caloriesPerBase: 100,
+    proteinsPerBase: 10,
+    fatsPerBase: 5,
+    carbsPerBase: 12,
+    fiberPerBase: 1,
+    alcoholPerBase: 0,
+    usageCount: 0,
+    visibility: ProductVisibility.Private,
+    createdAt: new Date('2026-01-01T00:00:00Z'),
+    isOwnedByCurrentUser: true,
+    qualityScore: 80,
+    qualityGrade: 'green',
+};
+
+const request: CreateProductRequest = {
+    name: 'Test product',
+    barcode: null,
+    brand: null,
+    productType: ProductType.Unknown,
+    category: null,
+    description: null,
+    comment: null,
+    imageUrl: null,
+    imageAssetId: null,
+    baseAmount: 100,
+    defaultPortionAmount: 100,
+    baseUnit: MeasurementUnit.G,
+    caloriesPerBase: 100,
+    proteinsPerBase: 10,
+    fatsPerBase: 5,
+    carbsPerBase: 12,
+    fiberPerBase: 1,
+    alcoholPerBase: 0,
+    visibility: ProductVisibility.Private,
+};
+
+let facade: ProductManageFacade;
+let productService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteById: ReturnType<typeof vi.fn> };
+let dialogService: { open: ReturnType<typeof vi.fn> };
+let navigationService: {
+    navigateToHomeAsync: ReturnType<typeof vi.fn>;
+    navigateToProductListAsync: ReturnType<typeof vi.fn>;
+    navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
+};
+let authService: { isPremium: ReturnType<typeof vi.fn> };
+
+beforeEach(() => {
+    productService = {
+        create: vi.fn(),
+        update: vi.fn(),
+        deleteById: vi.fn(),
     };
-    let authService: { isPremium: ReturnType<typeof vi.fn> };
-
-    const product: Product = {
-        id: 'p1',
-        name: 'Test product',
-        barcode: null,
-        brand: null,
-        productType: ProductType.Unknown,
-        category: null,
-        description: null,
-        comment: null,
-        imageUrl: null,
-        imageAssetId: null,
-        baseUnit: MeasurementUnit.G,
-        baseAmount: 100,
-        defaultPortionAmount: 100,
-        caloriesPerBase: 100,
-        proteinsPerBase: 10,
-        fatsPerBase: 5,
-        carbsPerBase: 12,
-        fiberPerBase: 1,
-        alcoholPerBase: 0,
-        usageCount: 0,
-        visibility: ProductVisibility.Private,
-        createdAt: new Date('2026-01-01T00:00:00Z'),
-        isOwnedByCurrentUser: true,
-        qualityScore: 80,
-        qualityGrade: 'green',
+    dialogService = {
+        open: vi.fn(),
+    };
+    navigationService = {
+        navigateToHomeAsync: vi.fn(),
+        navigateToProductListAsync: vi.fn(),
+        navigateToPremiumAccessAsync: vi.fn(),
+    };
+    authService = {
+        isPremium: vi.fn(),
     };
 
-    const request: CreateProductRequest = {
-        name: 'Test product',
-        barcode: null,
-        brand: null,
-        productType: ProductType.Unknown,
-        category: null,
-        description: null,
-        comment: null,
-        imageUrl: null,
-        imageAssetId: null,
-        baseAmount: 100,
-        defaultPortionAmount: 100,
-        baseUnit: MeasurementUnit.G,
-        caloriesPerBase: 100,
-        proteinsPerBase: 10,
-        fatsPerBase: 5,
-        carbsPerBase: 12,
-        fiberPerBase: 1,
-        alcoholPerBase: 0,
-        visibility: ProductVisibility.Private,
-    };
+    navigationService.navigateToHomeAsync.mockResolvedValue(true);
+    navigationService.navigateToProductListAsync.mockResolvedValue(true);
+    navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
+    dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
+    productService.create.mockReturnValue(of(product));
+    productService.update.mockReturnValue(of(product));
+    productService.deleteById.mockReturnValue(of(undefined));
+    authService.isPremium.mockReturnValue(true);
 
-    beforeEach(() => {
-        productService = {
-            create: vi.fn(),
-            update: vi.fn(),
-            deleteById: vi.fn(),
-        };
-        dialogService = {
-            open: vi.fn(),
-        };
-        navigationService = {
-            navigateToHomeAsync: vi.fn(),
-            navigateToProductListAsync: vi.fn(),
-            navigateToPremiumAccessAsync: vi.fn(),
-        };
-        authService = {
-            isPremium: vi.fn(),
-        };
-
-        navigationService.navigateToHomeAsync.mockResolvedValue(true);
-        navigationService.navigateToProductListAsync.mockResolvedValue(true);
-        navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
-        dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
-        productService.create.mockReturnValue(of(product));
-        productService.update.mockReturnValue(of(product));
-        productService.deleteById.mockReturnValue(of(undefined));
-        authService.isPremium.mockReturnValue(true);
-
-        TestBed.configureTestingModule({
-            providers: [
-                ProductManageFacade,
-                { provide: ProductService, useValue: productService },
-                { provide: FdUiDialogService, useValue: dialogService },
-                { provide: NavigationService, useValue: navigationService },
-                { provide: AuthService, useValue: authService },
-            ],
-        });
-
-        facade = TestBed.inject(ProductManageFacade);
+    TestBed.configureTestingModule({
+        providers: [
+            ProductManageFacade,
+            { provide: ProductService, useValue: productService },
+            { provide: FdUiDialogService, useValue: dialogService },
+            { provide: NavigationService, useValue: navigationService },
+            { provide: AuthService, useValue: authService },
+        ],
     });
 
+    facade = TestBed.inject(ProductManageFacade);
+});
+
+describe('ProductManageFacade submit', () => {
     it('should create product on submit when product is null', async () => {
         const result = await facade.submitProductAsync(null, request, true);
 
@@ -143,7 +143,9 @@ describe('ProductManageFacade', () => {
         expect(result.product).toBeNull();
         expect(result.error?.status).toBe(HTTP_BAD_REQUEST);
     });
+});
 
+describe('ProductManageFacade delete', () => {
     it('should delete product and navigate after confirmation', async () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
 

@@ -26,76 +26,76 @@ type TranslationLoaderMock = {
     loadApplicationTranslations: ReturnType<typeof vi.fn>;
 };
 
-describe('LocalizationService', () => {
-    let service: LocalizationService;
-    let translateSpy: TranslateServiceMock;
-    let langChangeSubject: Subject<LangChangeEvent>;
-    let mockDocument: Document;
-    let translationLoaderSpy: TranslationLoaderMock;
-    let routerEventsSubject: Subject<unknown>;
-    let documentLang: string | null;
+let service: LocalizationService;
+let translateSpy: TranslateServiceMock;
+let langChangeSubject: Subject<LangChangeEvent>;
+let mockDocument: Document;
+let translationLoaderSpy: TranslationLoaderMock;
+let routerEventsSubject: Subject<unknown>;
+let documentLang: string | null;
 
-    beforeEach(() => {
-        langChangeSubject = new Subject<LangChangeEvent>();
+beforeEach(() => {
+    langChangeSubject = new Subject<LangChangeEvent>();
 
-        translateSpy = {
-            addLangs: vi.fn(),
-            setFallbackLang: vi.fn(),
-            use: vi.fn(),
-            getBrowserLang: vi.fn(),
-            getCurrentLang: vi.fn(),
-            getFallbackLang: vi.fn(),
-            instant: vi.fn(),
-            setTranslation: vi.fn(),
-            onLangChange: langChangeSubject.asObservable(),
-        };
+    translateSpy = {
+        addLangs: vi.fn(),
+        setFallbackLang: vi.fn(),
+        use: vi.fn(),
+        getBrowserLang: vi.fn(),
+        getCurrentLang: vi.fn(),
+        getFallbackLang: vi.fn(),
+        instant: vi.fn(),
+        setTranslation: vi.fn(),
+        onLangChange: langChangeSubject.asObservable(),
+    };
 
-        Object.defineProperty(translateSpy, 'onLangChange', {
-            get: () => langChangeSubject.asObservable(),
-            configurable: true,
-        });
-
-        translateSpy.use.mockReturnValue(of({}));
-        translateSpy.getCurrentLang.mockReturnValue('en');
-        translateSpy.getFallbackLang.mockReturnValue('en');
-        translateSpy.getBrowserLang.mockReturnValue('en');
-        translationLoaderSpy = {
-            isPublicRoute: vi.fn().mockReturnValue(true),
-            loadRouteTranslations: vi.fn().mockReturnValue(of({ SEO_PAGE: { TRUST_TITLE: 'Trust' } })),
-            loadApplicationTranslations: vi.fn().mockReturnValue(of({ DASHBOARD: { TITLE: 'Dashboard' } })),
-        };
-        routerEventsSubject = new Subject<unknown>();
-
-        documentLang = null;
-        mockDocument = {
-            location: { hostname: 'fooddiary.club' },
-            documentElement: {
-                setAttribute: vi.fn((name: string, value: string) => {
-                    if (name === 'lang') {
-                        documentLang = value;
-                    }
-                }),
-                getAttribute: vi.fn((name: string) => (name === 'lang' ? documentLang : null)),
-            },
-        } as unknown as Document;
-
-        TestBed.configureTestingModule({
-            providers: [
-                LocalizationService,
-                { provide: TranslateService, useValue: translateSpy },
-                { provide: DOCUMENT, useValue: mockDocument },
-                { provide: FoodDiaryTranslationLoader, useValue: translationLoaderSpy },
-                { provide: Router, useValue: { events: routerEventsSubject.asObservable() } },
-            ],
-        });
-
-        service = TestBed.inject(LocalizationService);
+    Object.defineProperty(translateSpy, 'onLangChange', {
+        get: () => langChangeSubject.asObservable(),
+        configurable: true,
     });
 
-    afterEach(() => {
-        localStorage.removeItem('fd_language');
+    translateSpy.use.mockReturnValue(of({}));
+    translateSpy.getCurrentLang.mockReturnValue('en');
+    translateSpy.getFallbackLang.mockReturnValue('en');
+    translateSpy.getBrowserLang.mockReturnValue('en');
+    translationLoaderSpy = {
+        isPublicRoute: vi.fn().mockReturnValue(true),
+        loadRouteTranslations: vi.fn().mockReturnValue(of({ SEO_PAGE: { TRUST_TITLE: 'Trust' } })),
+        loadApplicationTranslations: vi.fn().mockReturnValue(of({ DASHBOARD: { TITLE: 'Dashboard' } })),
+    };
+    routerEventsSubject = new Subject<unknown>();
+
+    documentLang = null;
+    mockDocument = {
+        location: { hostname: 'fooddiary.club' },
+        documentElement: {
+            setAttribute: vi.fn((name: string, value: string) => {
+                if (name === 'lang') {
+                    documentLang = value;
+                }
+            }),
+            getAttribute: vi.fn((name: string) => (name === 'lang' ? documentLang : null)),
+        },
+    } as unknown as Document;
+
+    TestBed.configureTestingModule({
+        providers: [
+            LocalizationService,
+            { provide: TranslateService, useValue: translateSpy },
+            { provide: DOCUMENT, useValue: mockDocument },
+            { provide: FoodDiaryTranslationLoader, useValue: translationLoaderSpy },
+            { provide: Router, useValue: { events: routerEventsSubject.asObservable() } },
+        ],
     });
 
+    service = TestBed.inject(LocalizationService);
+});
+
+afterEach(() => {
+    localStorage.removeItem('fd_language');
+});
+
+describe('LocalizationService initialization', () => {
     it("should initialize with default language 'en'", async () => {
         await service.initializeLocalizationAsync();
 
@@ -143,7 +143,9 @@ describe('LocalizationService', () => {
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
+});
 
+describe('LocalizationService language preference', () => {
     it('should apply language preference', async () => {
         translateSpy.getCurrentLang.mockReturnValue('en');
         translateSpy.getFallbackLang.mockReturnValue('en');
@@ -176,7 +178,9 @@ describe('LocalizationService', () => {
 
         expect(mockDocument.documentElement.getAttribute('lang')).toBe('ru');
     });
+});
 
+describe('LocalizationService translation loading', () => {
     it('should extend current language with application translations', async () => {
         await service.loadApplicationTranslationsAsync();
 

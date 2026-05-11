@@ -13,35 +13,30 @@ const UNREAD_COUNT_CONCURRENT = 7;
 const UNREAD_COUNT_LOADED = 3;
 const UNREAD_COUNT_FORCED = 5;
 
-describe('NotificationService', () => {
-    let service: NotificationService;
-    let httpMock: HttpTestingController;
-    let authService: { isAuthenticated: ReturnType<typeof vi.fn> };
+const baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
 
-    const baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
+let service: NotificationService;
+let httpMock: HttpTestingController;
+let authService: { isAuthenticated: ReturnType<typeof vi.fn> };
 
-    beforeEach(() => {
-        authService = {
-            isAuthenticated: vi.fn(() => true),
-        };
+beforeEach(() => {
+    authService = {
+        isAuthenticated: vi.fn(() => true),
+    };
 
-        TestBed.configureTestingModule({
-            providers: [
-                NotificationService,
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                { provide: AuthService, useValue: authService },
-            ],
-        });
-
-        service = TestBed.inject(NotificationService);
-        httpMock = TestBed.inject(HttpTestingController);
+    TestBed.configureTestingModule({
+        providers: [NotificationService, provideHttpClient(), provideHttpClientTesting(), { provide: AuthService, useValue: authService }],
     });
 
-    afterEach(() => {
-        httpMock.verify();
-    });
+    service = TestBed.inject(NotificationService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
 
+afterEach(() => {
+    httpMock.verify();
+});
+
+describe('NotificationService loading', () => {
     it('should load notifications only once via ensureNotificationsLoaded', () => {
         service.ensureNotificationsLoaded();
         service.ensureNotificationsLoaded();
@@ -124,7 +119,9 @@ describe('NotificationService', () => {
         httpMock.expectNone(`${baseUrl}/unread-count`);
         expect(service.unreadCount()).toBe(0);
     });
+});
 
+describe('NotificationService read state', () => {
     it('should mark notification as read and update local state', () => {
         service.notifications.set([
             {
@@ -184,7 +181,9 @@ describe('NotificationService', () => {
         expect(service.unreadCount()).toBe(0);
         expect(service.notifications().every(x => x.isRead)).toBe(true);
     });
+});
 
+describe('NotificationService settings endpoints', () => {
     it('should call preferences and subscription endpoints with expected payloads', () => {
         service.getNotificationPreferences().subscribe();
         httpMock.expectOne(`${baseUrl}/preferences`).flush({

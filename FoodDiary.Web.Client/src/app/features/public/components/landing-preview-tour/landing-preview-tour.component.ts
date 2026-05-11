@@ -231,93 +231,99 @@ export class LandingPreviewTourComponent {
     }
 
     private buildPreviewRecipes(): Recipe[] {
+        return [this.buildPreviewBowlRecipe(), this.buildPreviewSaladRecipe()];
+    }
+
+    private buildPreviewBowlRecipe(): Recipe {
         const bowlName = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.NAME');
         const bowlDescription = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.DESCRIPTION');
         const bowlCategory = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.CATEGORY');
         const bowlStep = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.STEP');
+
+        return {
+            id: 'preview-bowl',
+            name: bowlName,
+            description: bowlDescription,
+            category: bowlCategory,
+            imageUrl: 'assets/images/stubs/products/salmon-bowl-photo.webp',
+            imageAssetId: null,
+            prepTime: 10,
+            cookTime: 10,
+            servings: 2,
+            visibility: RecipeVisibility.Public,
+            usageCount: 0,
+            createdAt: new Date().toISOString(),
+            isOwnedByCurrentUser: true,
+            qualityScore: 81,
+            qualityGrade: 'green',
+            totalCalories: 520,
+            totalProteins: 32,
+            totalFats: 18,
+            totalCarbs: 55,
+            totalFiber: 7,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            manualCalories: null,
+            manualProteins: null,
+            manualFats: null,
+            manualCarbs: null,
+            manualFiber: null,
+            manualAlcohol: null,
+            steps: [
+                {
+                    id: 'step-1',
+                    stepNumber: 1,
+                    instruction: bowlStep,
+                    ingredients: [],
+                },
+            ],
+        };
+    }
+
+    private buildPreviewSaladRecipe(): Recipe {
         const saladName = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.NAME');
         const saladDescription = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.DESCRIPTION');
         const saladCategory = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.CATEGORY');
         const saladStep = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.STEP');
 
-        return [
-            {
-                id: 'preview-bowl',
-                name: bowlName,
-                description: bowlDescription,
-                category: bowlCategory,
-                imageUrl: 'assets/images/stubs/products/salmon-bowl-photo.webp',
-                imageAssetId: null,
-                prepTime: 10,
-                cookTime: 10,
-                servings: 2,
-                visibility: RecipeVisibility.Public,
-                usageCount: 0,
-                createdAt: new Date().toISOString(),
-                isOwnedByCurrentUser: true,
-                qualityScore: 81,
-                qualityGrade: 'green',
-                totalCalories: 520,
-                totalProteins: 32,
-                totalFats: 18,
-                totalCarbs: 55,
-                totalFiber: 7,
-                totalAlcohol: 0,
-                isNutritionAutoCalculated: true,
-                manualCalories: null,
-                manualProteins: null,
-                manualFats: null,
-                manualCarbs: null,
-                manualFiber: null,
-                manualAlcohol: null,
-                steps: [
-                    {
-                        id: 'step-1',
-                        stepNumber: 1,
-                        instruction: bowlStep,
-                        ingredients: [],
-                    },
-                ],
-            },
-            {
-                id: 'preview-salad',
-                name: saladName,
-                description: saladDescription,
-                category: saladCategory,
-                imageUrl: 'assets/images/stubs/products/chicken-avocado-salad-photo.webp',
-                imageAssetId: null,
-                prepTime: 12,
-                cookTime: 0,
-                servings: 1,
-                visibility: RecipeVisibility.Public,
-                usageCount: 0,
-                createdAt: new Date().toISOString(),
-                isOwnedByCurrentUser: true,
-                qualityScore: 76,
-                qualityGrade: 'green',
-                totalCalories: 340,
-                totalProteins: 28,
-                totalFats: 18,
-                totalCarbs: 12,
-                totalFiber: 6,
-                totalAlcohol: 0,
-                isNutritionAutoCalculated: true,
-                manualCalories: null,
-                manualProteins: null,
-                manualFats: null,
-                manualCarbs: null,
-                manualFiber: null,
-                manualAlcohol: null,
-                steps: [
-                    {
-                        id: 'step-1',
-                        stepNumber: 1,
-                        instruction: saladStep,
-                        ingredients: [],
-                    },
-                ],
-            },
-        ];
+        return {
+            id: 'preview-salad',
+            name: saladName,
+            description: saladDescription,
+            category: saladCategory,
+            imageUrl: 'assets/images/stubs/products/chicken-avocado-salad-photo.webp',
+            imageAssetId: null,
+            prepTime: 12,
+            cookTime: 0,
+            servings: 1,
+            visibility: RecipeVisibility.Public,
+            usageCount: 0,
+            createdAt: new Date().toISOString(),
+            isOwnedByCurrentUser: true,
+            qualityScore: 76,
+            qualityGrade: 'green',
+            totalCalories: 340,
+            totalProteins: 28,
+            totalFats: 18,
+            totalCarbs: 12,
+            totalFiber: 6,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            manualCalories: null,
+            manualProteins: null,
+            manualFats: null,
+            manualCarbs: null,
+            manualFiber: null,
+            manualAlcohol: null,
+            steps: [
+                {
+                    id: 'step-1',
+                    stepNumber: 1,
+                    instruction: saladStep,
+                    ingredients: [],
+                },
+            ],
+        };
     }
 
     private buildPreviewQuickItems(): QuickMealItem[] {

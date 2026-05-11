@@ -124,9 +124,9 @@ export class AuthComponent {
 
     public authMode: 'login' | 'register' = 'login';
 
-    public loginForm: FormGroup<LoginFormGroup>;
-    public registerForm: FormGroup<RegisterFormGroup>;
-    public passwordResetForm: FormGroup<PasswordResetFormGroup>;
+    public loginForm!: FormGroup<LoginFormGroup>;
+    public registerForm!: FormGroup<RegisterFormGroup>;
+    public passwordResetForm!: FormGroup<PasswordResetFormGroup>;
     public readonly globalError = signal<string | null>(null);
     public readonly isSubmitting = signal<boolean>(false);
     public readonly googleReady = signal<boolean>(false);
@@ -154,6 +154,18 @@ export class AuthComponent {
     private adminReturnUrl: string | null = null;
 
     public constructor() {
+        this.initializeForms();
+        this.subscribeFormChanges();
+        this.subscribeValidationUpdates();
+        this.registerRenderingEffects();
+        this.updateFieldErrors();
+        afterNextRender(() => {
+            this.startLoginAutofillDetection();
+        });
+        void this.initializeGoogleAsync();
+    }
+
+    private initializeForms(): void {
         this.loginForm = new FormGroup<LoginFormGroup>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
             password: new FormControl<string>('', {
@@ -179,7 +191,9 @@ export class AuthComponent {
         this.passwordResetForm = new FormGroup<PasswordResetFormGroup>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
         });
+    }
 
+    private subscribeFormChanges(): void {
         this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
             this.markDirtyControlsTouched(this.loginForm);
@@ -200,6 +214,9 @@ export class AuthComponent {
         this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.registerForm.controls.confirmPassword.updateValueAndValidity();
         });
+    }
+
+    private subscribeValidationUpdates(): void {
         const loginFormEvents = (this.loginForm as { events?: Observable<unknown> }).events ?? EMPTY;
         const registerFormEvents = (this.registerForm as { events?: Observable<unknown> }).events ?? EMPTY;
         const passwordResetFormEvents = (this.passwordResetForm as { events?: Observable<unknown> }).events ?? EMPTY;
@@ -219,8 +236,9 @@ export class AuthComponent {
             .subscribe(() => {
                 this.updateFieldErrors();
             });
-        this.updateFieldErrors();
+    }
 
+    private registerRenderingEffects(): void {
         effect(() => {
             this.renderGoogleButton();
         });
@@ -243,10 +261,6 @@ export class AuthComponent {
 
             void this.completeAuthenticatedNavigationAsync();
         });
-        afterNextRender(() => {
-            this.startLoginAutofillDetection();
-        });
-        void this.initializeGoogleAsync();
     }
 
     public handleTabChange(value: string): void {

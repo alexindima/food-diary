@@ -8,38 +8,38 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserService } from '../../../../shared/api/user.service';
 import { ChangePasswordDialogComponent, type ChangePasswordDialogData } from './change-password-dialog.component';
 
-describe('ChangePasswordDialogComponent', () => {
-    let component: ChangePasswordDialogComponent;
-    let fixture: ComponentFixture<ChangePasswordDialogComponent>;
-    let userServiceSpy: { changePassword: ReturnType<typeof vi.fn>; setPassword: ReturnType<typeof vi.fn> };
-    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
-    let translateServiceSpy: TranslateService;
+let component: ChangePasswordDialogComponent;
+let fixture: ComponentFixture<ChangePasswordDialogComponent>;
+let userServiceSpy: { changePassword: ReturnType<typeof vi.fn>; setPassword: ReturnType<typeof vi.fn> };
+let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
+let translateServiceSpy: TranslateService;
 
-    function configureComponent(dialogData: ChangePasswordDialogData | null = null): void {
-        userServiceSpy = { changePassword: vi.fn(), setPassword: vi.fn() };
-        dialogRefSpy = { close: vi.fn() };
+function configureComponent(dialogData: ChangePasswordDialogData | null = null): void {
+    userServiceSpy = { changePassword: vi.fn(), setPassword: vi.fn() };
+    dialogRefSpy = { close: vi.fn() };
 
-        TestBed.configureTestingModule({
-            imports: [ChangePasswordDialogComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: UserService, useValue: userServiceSpy },
-                { provide: FdUiDialogRef, useValue: dialogRefSpy },
-                { provide: FD_UI_DIALOG_DATA, useValue: dialogData },
-            ],
-        });
-
-        translateServiceSpy = TestBed.inject(TranslateService);
-        vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
-
-        fixture = TestBed.createComponent(ChangePasswordDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }
-
-    beforeEach(() => {
-        configureComponent();
+    TestBed.configureTestingModule({
+        imports: [ChangePasswordDialogComponent, TranslateModule.forRoot()],
+        providers: [
+            { provide: UserService, useValue: userServiceSpy },
+            { provide: FdUiDialogRef, useValue: dialogRefSpy },
+            { provide: FD_UI_DIALOG_DATA, useValue: dialogData },
+        ],
     });
 
+    translateServiceSpy = TestBed.inject(TranslateService);
+    vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
+
+    fixture = TestBed.createComponent(ChangePasswordDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+}
+
+beforeEach(() => {
+    configureComponent();
+});
+
+describe('ChangePasswordDialogComponent validation', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -76,7 +76,9 @@ describe('ChangePasswordDialogComponent', () => {
         component.form.controls.confirmPassword.setValue('validPass1');
         expect(component.form.controls.confirmPassword.hasError('matchField')).toBe(false);
     });
+});
 
+describe('ChangePasswordDialogComponent submit', () => {
     it('should call changePassword on submit', () => {
         userServiceSpy.changePassword.mockReturnValue(of(true));
 
@@ -133,7 +135,9 @@ describe('ChangePasswordDialogComponent', () => {
         component.onSubmit();
         expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
     });
+});
 
+describe('ChangePasswordDialogComponent cancel and set password mode', () => {
     it('should not close dialog on cancel while submitting', () => {
         component.isSubmitting.set(true);
         component.onCancel();

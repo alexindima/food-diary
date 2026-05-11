@@ -9,72 +9,95 @@ import { LocalizationService } from './localization.service';
 import { NotificationService } from './notification.service';
 import { PushNotificationService } from './push-notification.service';
 
-describe('PushNotificationService', () => {
-    let service: PushNotificationService;
-    let subscription$: Subject<PushSubscription | null>;
-    let subscriptionChanges$: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
-    let notificationClicks$: Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>;
-    let swPush: {
-        isEnabled: boolean;
-        subscription: Subject<PushSubscription | null>;
-        pushSubscriptionChanges: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
-        notificationClicks: Subject<{ notification: { data?: { url?: string } } }>;
-        requestSubscription: ReturnType<typeof vi.fn>;
+let service: PushNotificationService;
+let subscription$: Subject<PushSubscription | null>;
+let subscriptionChanges$: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
+let notificationClicks$: Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>;
+let swPush: {
+    isEnabled: boolean;
+    subscription: Subject<PushSubscription | null>;
+    pushSubscriptionChanges: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
+    notificationClicks: Subject<{ notification: { data?: { url?: string } } }>;
+    requestSubscription: ReturnType<typeof vi.fn>;
+};
+let authService: { isAuthenticated: ReturnType<typeof vi.fn> };
+let localizationService: { getCurrentLanguage: ReturnType<typeof vi.fn> };
+let notificationService: {
+    getWebPushConfiguration: ReturnType<typeof vi.fn>;
+    upsertWebPushSubscription: ReturnType<typeof vi.fn>;
+    removeWebPushSubscription: ReturnType<typeof vi.fn>;
+    fetchUnreadCount: ReturnType<typeof vi.fn>;
+    notifyNotificationsChanged: ReturnType<typeof vi.fn>;
+};
+let router: { navigateByUrl: ReturnType<typeof vi.fn> };
+
+beforeEach(() => {
+    subscription$ = new Subject<PushSubscription | null>();
+    subscriptionChanges$ = new Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>();
+    notificationClicks$ = new Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>();
+
+    swPush = {
+        isEnabled: true,
+        subscription: subscription$,
+        pushSubscriptionChanges: subscriptionChanges$,
+        notificationClicks: notificationClicks$,
+        requestSubscription: vi.fn(),
     };
-    let authService: { isAuthenticated: ReturnType<typeof vi.fn> };
-    let localizationService: { getCurrentLanguage: ReturnType<typeof vi.fn> };
-    let notificationService: {
-        getWebPushConfiguration: ReturnType<typeof vi.fn>;
-        upsertWebPushSubscription: ReturnType<typeof vi.fn>;
-        removeWebPushSubscription: ReturnType<typeof vi.fn>;
-        fetchUnreadCount: ReturnType<typeof vi.fn>;
-        notifyNotificationsChanged: ReturnType<typeof vi.fn>;
+    authService = {
+        isAuthenticated: vi.fn(() => true),
     };
-    let router: { navigateByUrl: ReturnType<typeof vi.fn> };
+    localizationService = {
+        getCurrentLanguage: vi.fn(() => 'en'),
+    };
+    notificationService = {
+        getWebPushConfiguration: vi.fn(() => of({ enabled: true, publicKey: 'public-key' })),
+        upsertWebPushSubscription: vi.fn(() => of(undefined)),
+        removeWebPushSubscription: vi.fn(() => of(undefined)),
+        fetchUnreadCount: vi.fn(),
+        notifyNotificationsChanged: vi.fn(),
+    };
+    router = {
+        navigateByUrl: vi.fn().mockResolvedValue(true),
+    };
 
-    beforeEach(() => {
-        subscription$ = new Subject<PushSubscription | null>();
-        subscriptionChanges$ = new Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>();
-        notificationClicks$ = new Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>();
-
-        swPush = {
-            isEnabled: true,
-            subscription: subscription$,
-            pushSubscriptionChanges: subscriptionChanges$,
-            notificationClicks: notificationClicks$,
-            requestSubscription: vi.fn(),
-        };
-        authService = {
-            isAuthenticated: vi.fn(() => true),
-        };
-        localizationService = {
-            getCurrentLanguage: vi.fn(() => 'en'),
-        };
-        notificationService = {
-            getWebPushConfiguration: vi.fn(() => of({ enabled: true, publicKey: 'public-key' })),
-            upsertWebPushSubscription: vi.fn(() => of(undefined)),
-            removeWebPushSubscription: vi.fn(() => of(undefined)),
-            fetchUnreadCount: vi.fn(),
-            notifyNotificationsChanged: vi.fn(),
-        };
-        router = {
-            navigateByUrl: vi.fn().mockResolvedValue(true),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                PushNotificationService,
-                { provide: SwPush, useValue: swPush },
-                { provide: AuthService, useValue: authService },
-                { provide: LocalizationService, useValue: localizationService },
-                { provide: NotificationService, useValue: notificationService },
-                { provide: Router, useValue: router },
-            ],
-        });
-
-        service = TestBed.inject(PushNotificationService);
+    TestBed.configureTestingModule({
+        providers: [
+            PushNotificationService,
+            { provide: SwPush, useValue: swPush },
+            { provide: AuthService, useValue: authService },
+            { provide: LocalizationService, useValue: localizationService },
+            { provide: NotificationService, useValue: notificationService },
+            { provide: Router, useValue: router },
+        ],
     });
 
+    service = TestBed.inject(PushNotificationService);
+});
+
+function createPushSubscription(endpoint: string): PushSubscription & { unsubscribe: ReturnType<typeof vi.fn> } {
+    const options: PushSubscriptionOptions = {
+        applicationServerKey: null,
+        userVisibleOnly: true,
+    };
+
+    return {
+        endpoint,
+        expirationTime: null,
+        unsubscribe: vi.fn().mockResolvedValue(true),
+        toJSON: () => ({
+            endpoint,
+            expirationTime: null,
+            keys: {
+                p256dh: 'p256',
+                auth: 'auth',
+            },
+        }),
+        getKey: vi.fn(),
+        options,
+    };
+}
+
+describe('PushNotificationService subscription support', () => {
     it('should return unsupported when service worker push is disabled', async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -100,7 +123,9 @@ describe('PushNotificationService', () => {
         const disabledService = TestBed.inject(PushNotificationService);
         await expect(disabledService.ensureSubscriptionAsync()).resolves.toBe('unsupported');
     });
+});
 
+describe('PushNotificationService subscription lifecycle', () => {
     it('should upsert existing subscription and return already-subscribed', async () => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/current');
         swPush.subscription = of(subscription) as never;
@@ -144,7 +169,9 @@ describe('PushNotificationService', () => {
         expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith(subscription.endpoint);
         expect(service.currentSubscriptionEndpoint()).toBeNull();
     });
+});
 
+describe('PushNotificationService notification clicks', () => {
     it('should react to notification click by navigating and refreshing notifications', () => {
         notificationClicks$.next({ notification: { data: { targetUrl: '/fasting?intent=check-in' } } });
 
@@ -152,27 +179,4 @@ describe('PushNotificationService', () => {
         expect(notificationService.fetchUnreadCount).toHaveBeenCalledTimes(1);
         expect(notificationService.notifyNotificationsChanged).toHaveBeenCalledTimes(1);
     });
-
-    function createPushSubscription(endpoint: string): PushSubscription & { unsubscribe: ReturnType<typeof vi.fn> } {
-        const options: PushSubscriptionOptions = {
-            applicationServerKey: null,
-            userVisibleOnly: true,
-        };
-
-        return {
-            endpoint,
-            expirationTime: null,
-            unsubscribe: vi.fn().mockResolvedValue(true),
-            toJSON: () => ({
-                endpoint,
-                expirationTime: null,
-                keys: {
-                    p256dh: 'p256',
-                    auth: 'auth',
-                },
-            }),
-            getKey: vi.fn(),
-            options,
-        };
-    }
 });

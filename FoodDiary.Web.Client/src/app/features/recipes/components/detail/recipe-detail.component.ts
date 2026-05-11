@@ -121,9 +121,7 @@ export class RecipeDetailComponent {
         const data = inject<Recipe>(FD_UI_DIALOG_DATA);
 
         this.recipe = data;
-        this.initialFavoriteState = this.recipe.isFavorite ?? false;
-        this.isFavorite.set(this.initialFavoriteState);
-        this.favoriteRecipeId = this.recipe.favoriteRecipeId ?? null;
+        this.initializeFavoriteState();
         this.calories = this.resolveNutrientValue(data.totalCalories, data.manualCalories);
         this.proteins = this.resolveNutrientValue(data.totalProteins, data.manualProteins);
         this.fats = this.resolveNutrientValue(data.totalFats, data.manualFats);
@@ -142,12 +140,7 @@ export class RecipeDetailComponent {
         this.isDeleteDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
         this.isEditDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
         this.canModify = !this.isEditDisabled;
-        this.warningMessage =
-            !this.isDeleteDisabled && !this.isEditDisabled
-                ? null
-                : this.recipe.isOwnedByCurrentUser
-                  ? 'RECIPE_DETAIL.WARNING_IN_USE'
-                  : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
+        this.warningMessage = this.resolveWarningMessage();
         const datasetValues = [this.proteins, this.fats, this.carbs];
         this.nutritionForm = this.buildNutritionForm({
             calories: this.calories,
@@ -158,7 +151,35 @@ export class RecipeDetailComponent {
             alcohol: this.alcohol,
         });
         this.macroBarState = this.buildMacroBarState(datasetValues);
-        this.macroBlocks = [
+        this.macroBlocks = this.buildMacroBlocks(datasetValues);
+        this.favoriteRecipeService.isFavorite(this.recipe.id).subscribe(isFav => {
+            this.initialFavoriteState = isFav;
+            this.isFavorite.set(isFav);
+        });
+    }
+
+    private initializeFavoriteState(): void {
+        this.initialFavoriteState = this.recipe.isFavorite ?? false;
+        this.isFavorite.set(this.initialFavoriteState);
+        this.favoriteRecipeId = this.recipe.favoriteRecipeId ?? null;
+    }
+
+    private resolveWarningMessage(): string | null {
+        if (!this.isDeleteDisabled && !this.isEditDisabled) {
+            return null;
+        }
+
+        return this.recipe.isOwnedByCurrentUser ? 'RECIPE_DETAIL.WARNING_IN_USE' : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
+    }
+
+    private buildMacroBlocks(datasetValues: number[]): {
+        labelKey: string;
+        value: number;
+        unitKey: string;
+        color: string;
+        percent: number;
+    }[] {
+        return [
             {
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
                 value: this.proteins,
@@ -195,10 +216,6 @@ export class RecipeDetailComponent {
                 percent: this.resolveMacroPercent(this.alcohol, datasetValues),
             },
         ];
-        this.favoriteRecipeService.isFavorite(this.recipe.id).subscribe(isFav => {
-            this.initialFavoriteState = isFav;
-            this.isFavorite.set(isFav);
-        });
     }
 
     private buildNutritionForm(values: {

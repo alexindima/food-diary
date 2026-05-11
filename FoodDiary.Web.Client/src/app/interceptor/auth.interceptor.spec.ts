@@ -24,32 +24,32 @@ type AuthServiceMock = {
     onLogoutAsync: ReturnType<typeof vi.fn<(skipRedirect?: boolean) => Promise<void>>>;
 };
 
-describe('AuthInterceptor', () => {
-    let http: HttpClient;
-    let httpTesting: HttpTestingController;
-    let authServiceSpy: AuthServiceMock;
+let http: HttpClient;
+let httpTesting: HttpTestingController;
+let authServiceSpy: AuthServiceMock;
 
-    beforeEach(() => {
-        authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogoutAsync: vi.fn() };
-        authServiceSpy.onLogoutAsync.mockReturnValue(Promise.resolve());
+beforeEach(() => {
+    authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogoutAsync: vi.fn() };
+    authServiceSpy.onLogoutAsync.mockReturnValue(Promise.resolve());
 
-        TestBed.configureTestingModule({
-            providers: [
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-                { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-                { provide: AuthService, useValue: authServiceSpy },
-            ],
-        });
-
-        http = TestBed.inject(HttpClient);
-        httpTesting = TestBed.inject(HttpTestingController);
+    TestBed.configureTestingModule({
+        providers: [
+            provideHttpClient(withInterceptorsFromDi()),
+            provideHttpClientTesting(),
+            { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+            { provide: AuthService, useValue: authServiceSpy },
+        ],
     });
 
-    afterEach(() => {
-        httpTesting.verify();
-    });
+    http = TestBed.inject(HttpClient);
+    httpTesting = TestBed.inject(HttpTestingController);
+});
 
+afterEach(() => {
+    httpTesting.verify();
+});
+
+describe('AuthInterceptor headers', () => {
     it('should add Authorization header when token exists', () => {
         authServiceSpy.getToken.mockReturnValue('test-token');
 
@@ -91,7 +91,9 @@ describe('AuthInterceptor', () => {
         const req = httpTesting.expectOne('/api/data');
         req.flush(responseData);
     });
+});
 
+describe('AuthInterceptor refresh flow', () => {
     it('should attempt token refresh on 401 error', () => {
         authServiceSpy.getToken.mockReturnValue('expired-token');
         authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
@@ -156,7 +158,9 @@ describe('AuthInterceptor', () => {
 
         expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });
+});
 
+describe('AuthInterceptor error handling', () => {
     it('should not refresh for auth requests (URL contains /auth/)', () => {
         authServiceSpy.getToken.mockReturnValue('some-token');
 

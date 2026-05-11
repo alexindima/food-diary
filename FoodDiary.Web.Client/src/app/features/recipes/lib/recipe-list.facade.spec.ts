@@ -12,93 +12,93 @@ import { RecipeListFacade } from './recipe-list.facade';
 
 const PAGE_LIMIT = 10;
 
-describe('RecipeListFacade', () => {
-    let facade: RecipeListFacade;
-    let recipeService: {
-        queryOverview: ReturnType<typeof vi.fn>;
-        query: ReturnType<typeof vi.fn>;
-        deleteById: ReturnType<typeof vi.fn>;
-    };
-    let navigationService: {
-        navigateToRecipeAddAsync: ReturnType<typeof vi.fn>;
-        navigateToRecipeEditAsync: ReturnType<typeof vi.fn>;
-    };
-    let quickMealService: { addRecipe: ReturnType<typeof vi.fn> };
-    let toastService: { open: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
+const recipe = {
+    id: 'recipe-1',
+    name: 'Recipe',
+    servings: 1,
+    visibility: RecipeVisibility.Public,
+    usageCount: 0,
+    createdAt: '2026-04-02T00:00:00Z',
+    isOwnedByCurrentUser: true,
+    isNutritionAutoCalculated: true,
+    steps: [],
+};
 
-    const recipe = {
-        id: 'recipe-1',
-        name: 'Recipe',
-        servings: 1,
-        visibility: RecipeVisibility.Public,
-        usageCount: 0,
-        createdAt: '2026-04-02T00:00:00Z',
-        isOwnedByCurrentUser: true,
-        isNutritionAutoCalculated: true,
-        steps: [],
-    };
+let facade: RecipeListFacade;
+let recipeService: {
+    queryOverview: ReturnType<typeof vi.fn>;
+    query: ReturnType<typeof vi.fn>;
+    deleteById: ReturnType<typeof vi.fn>;
+};
+let navigationService: {
+    navigateToRecipeAddAsync: ReturnType<typeof vi.fn>;
+    navigateToRecipeEditAsync: ReturnType<typeof vi.fn>;
+};
+let quickMealService: { addRecipe: ReturnType<typeof vi.fn> };
+let toastService: { open: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
-    beforeEach(() => {
-        recipeService = {
-            queryOverview: vi.fn().mockReturnValue(
-                of({
-                    recentItems: [recipe],
-                    favoriteItems: [],
-                    favoriteTotalCount: 0,
-                    allRecipes: {
-                        data: [recipe],
-                        page: 1,
-                        limit: PAGE_LIMIT,
-                        totalPages: 1,
-                        totalItems: 1,
-                    },
-                }),
-            ),
-            query: vi.fn().mockReturnValue(
-                of({
+beforeEach(() => {
+    recipeService = {
+        queryOverview: vi.fn().mockReturnValue(
+            of({
+                recentItems: [recipe],
+                favoriteItems: [],
+                favoriteTotalCount: 0,
+                allRecipes: {
                     data: [recipe],
                     page: 1,
                     limit: PAGE_LIMIT,
                     totalPages: 1,
                     totalItems: 1,
-                }),
-            ),
-            deleteById: vi.fn().mockReturnValue(of(undefined)),
-        };
-
-        navigationService = {
-            navigateToRecipeAddAsync: vi.fn().mockResolvedValue(true),
-            navigateToRecipeEditAsync: vi.fn().mockResolvedValue(true),
-        };
-
-        quickMealService = {
-            addRecipe: vi.fn(),
-        };
-
-        toastService = {
-            open: vi.fn(),
-            error: vi.fn(),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                RecipeListFacade,
-                { provide: RecipeService, useValue: recipeService },
-                { provide: NavigationService, useValue: navigationService },
-                { provide: QuickMealService, useValue: quickMealService },
-                { provide: FdUiToastService, useValue: toastService },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: vi.fn((key: string) => key),
-                    },
                 },
-            ],
-        });
+            }),
+        ),
+        query: vi.fn().mockReturnValue(
+            of({
+                data: [recipe],
+                page: 1,
+                limit: PAGE_LIMIT,
+                totalPages: 1,
+                totalItems: 1,
+            }),
+        ),
+        deleteById: vi.fn().mockReturnValue(of(undefined)),
+    };
 
-        facade = TestBed.inject(RecipeListFacade);
+    navigationService = {
+        navigateToRecipeAddAsync: vi.fn().mockResolvedValue(true),
+        navigateToRecipeEditAsync: vi.fn().mockResolvedValue(true),
+    };
+
+    quickMealService = {
+        addRecipe: vi.fn(),
+    };
+
+    toastService = {
+        open: vi.fn(),
+        error: vi.fn(),
+    };
+
+    TestBed.configureTestingModule({
+        providers: [
+            RecipeListFacade,
+            { provide: RecipeService, useValue: recipeService },
+            { provide: NavigationService, useValue: navigationService },
+            { provide: QuickMealService, useValue: quickMealService },
+            { provide: FdUiToastService, useValue: toastService },
+            {
+                provide: TranslateService,
+                useValue: {
+                    instant: vi.fn((key: string) => key),
+                },
+            },
+        ],
     });
 
+    facade = TestBed.inject(RecipeListFacade);
+});
+
+describe('RecipeListFacade overview', () => {
     it('loads initial overview and updates derived state', () => {
         facade.loadInitialOverview(1, PAGE_LIMIT, null, false).subscribe();
 
@@ -125,7 +125,9 @@ describe('RecipeListFacade', () => {
         expect(facade.recentRecipes()).toEqual([]);
         expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
     });
+});
 
+describe('RecipeListFacade actions', () => {
     it('deletes recipe and reloads first page', () => {
         facade.deleteRecipe(recipe, 'soup', true).subscribe();
 
