@@ -1,24 +1,24 @@
-import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import type { ProductDetailActionResult } from '../../components/detail/product-detail.component';
 import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
+import { ProductListEmptyStateComponent } from '../../components/list/product-list-empty-state.component';
+import { ProductListFavoritesComponent } from '../../components/list/product-list-favorites.component';
+import { ProductListGroupsComponent } from '../../components/list/product-list-groups.component';
+import { ProductListOffSectionComponent } from '../../components/list/product-list-off-section.component';
+import { ProductListPaginationComponent } from '../../components/list/product-list-pagination.component';
 import type { Product } from '../../models/product.data';
 
 @Component({
@@ -27,22 +27,21 @@ import type { Product } from '../../models/product.data';
     styleUrls: ['./product-list-page.component.scss', '../../components/list/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        DecimalPipe,
-        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiIconComponent,
-        FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
-        FavoritesSectionComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        ProductCardComponent,
+        ProductListFavoritesComponent,
+        ProductListGroupsComponent,
+        ProductListEmptyStateComponent,
+        ProductListOffSectionComponent,
+        ProductListPaginationComponent,
     ],
 })
 export class ProductListPageComponent extends ProductListBaseComponent {

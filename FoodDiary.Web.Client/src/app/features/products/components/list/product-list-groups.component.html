@@ -1,0 +1,45 @@
+<div class="product-list__groups fd-stack fd-gap-card-profile">
+    @if (showRecentSection()) {
+        <div class="product-list__section fd-stack fd-gap-sm">
+            <div class="product-list__section-header fd-row fd-gap-sm">
+                <span class="product-list__section-label fd-ui-card-title">
+                    {{ 'PRODUCT_LIST.RECENT_PRODUCTS' | translate }}
+                </span>
+                <span class="product-list__section-line"></span>
+            </div>
+            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
+                @for (item of recentItems(); track item.product.id) {
+                    <fd-product-card
+                        [product]="item.product"
+                        [imageUrl]="item.imageUrl"
+                        (open)="openProduct.emit(item.product)"
+                        (addToMeal)="addToMeal.emit(item.product)"
+                        (favoriteChanged)="favoriteChanged.emit({ product: item.product, change: $event })"
+                    />
+                }
+            </div>
+        </div>
+    }
+
+    @if (allItems().length > 0) {
+        <div class="product-list__section fd-stack fd-gap-sm">
+            <div class="product-list__section-header fd-row fd-gap-sm">
+                <span class="product-list__section-label fd-ui-card-title">
+                    {{ allProductsSectionLabelKey() | translate }}
+                </span>
+                <span class="product-list__section-line"></span>
+            </div>
+            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
+                @for (item of allItems(); track item.product.id) {
+                    <fd-product-card
+                        [product]="item.product"
+                        [imageUrl]="item.imageUrl"
+                        (open)="openProduct.emit(item.product)"
+                        (addToMeal)="addToMeal.emit(item.product)"
+                        (favoriteChanged)="favoriteChanged.emit({ product: item.product, change: $event })"
+                    />
+                }
+            </div>
+        </div>
+    }
+</div>

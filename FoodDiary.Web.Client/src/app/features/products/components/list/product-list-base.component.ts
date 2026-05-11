@@ -1,4 +1,3 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,17 +6,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import { ProductCardComponent, type ProductFavoriteChange } from '../../../../components/shared/product-card/product-card.component';
+import type { ProductFavoriteChange } from '../../../../components/shared/product-card/product-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -31,9 +27,14 @@ import { ProductService } from '../../api/product.service';
 import { resolveProductImageUrl } from '../../lib/product-image.util';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
+import { ProductListEmptyStateComponent } from './product-list-empty-state.component';
+import { ProductListFavoritesComponent } from './product-list-favorites.component';
 import { ProductListFiltersDialogComponent, type ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
+import { ProductListGroupsComponent } from './product-list-groups.component';
+import { ProductListOffSectionComponent } from './product-list-off-section.component';
+import { ProductListPaginationComponent } from './product-list-pagination.component';
 
-interface ProductCardViewModel {
+export interface ProductCardViewModel {
     product: Product;
     imageUrl: string | undefined;
 }
@@ -49,22 +50,21 @@ const OFF_SEARCH_LIMIT = 5;
     styleUrls: ['./product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgOptimizedImage,
-        CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
-        FdUiIconComponent,
-        FavoritesSectionComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        ProductCardComponent,
+        ProductListFavoritesComponent,
+        ProductListGroupsComponent,
+        ProductListEmptyStateComponent,
+        ProductListOffSectionComponent,
+        ProductListPaginationComponent,
     ],
 })
 export class ProductListBaseComponent {

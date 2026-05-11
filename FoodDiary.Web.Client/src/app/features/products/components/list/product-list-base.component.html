@@ -113,200 +113,45 @@
             </div>
         } @else {
             @if (favorites().length > 0) {
-                <fd-favorites-section
-                    class="product-list__favorites"
-                    [title]="'PRODUCT_LIST.FAVORITES_TITLE' | translate"
+                <fd-product-list-favorites
+                    [favorites]="favorites()"
                     [count]="favoriteTotalCount()"
                     [isOpen]="isFavoritesOpen()"
                     [showLoadMore]="hasMoreFavorites()"
                     [isLoadingMore]="isFavoritesLoadingMore()"
-                    [loadMoreLabel]="'PRODUCT_LIST.FAVORITES_LOAD_MORE' | translate"
-                    (toggleRequested)="toggleFavorites()"
+                    (favoritesToggle)="toggleFavorites()"
                     (loadMore)="loadFavorites()"
-                >
-                    <div class="product-list__favorites-grid fd-grid fd-gap-xs">
-                        @for (favorite of favorites(); track favorite.id) {
-                            <div class="product-list__favorite-card fd-row fd-justify-between fd-gap-xs">
-                                <button type="button" class="product-list__favorite-info" (click)="openFavoriteProduct(favorite)">
-                                    <div class="product-list__favorite-name fd-ui-action-text fd-truncate">
-                                        {{ favorite.name || favorite.productName || ('PRODUCT_LIST.FAVORITE_UNNAMED' | translate) }}
-                                    </div>
-                                    <div class="product-list__favorite-meta fd-ui-caption fd-row fd-wrap fd-gap-xxs">
-                                        @if (favorite.brand) {
-                                            <span>{{ favorite.brand }}</span>
-                                            <span>&middot;</span>
-                                        }
-                                        <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-                                    </div>
-                                </button>
-                                <div class="product-list__favorite-actions fd-row fd-gap-xxs">
-                                    <fd-ui-button
-                                        class="product-list__favorite-btn"
-                                        variant="secondary"
-                                        fill="text"
-                                        icon="open_in_new"
-                                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                                        (click)="openFavoriteProduct(favorite)"
-                                    />
-                                    <fd-ui-button
-                                        class="product-list__favorite-btn"
-                                        variant="secondary"
-                                        fill="text"
-                                        icon="add"
-                                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                                        (click)="addFavoriteProductToMeal(favorite)"
-                                    />
-                                    <fd-ui-button
-                                        class="product-list__favorite-btn product-list__favorite-btn--remove"
-                                        variant="danger"
-                                        fill="text"
-                                        icon="close"
-                                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                                        (click)="removeFavorite(favorite)"
-                                    />
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </fd-favorites-section>
+                    (openProduct)="openFavoriteProduct($event)"
+                    (addToMeal)="addFavoriteProductToMeal($event)"
+                    (favoriteRemove)="removeFavorite($event)"
+                />
             }
 
             @if (hasVisibleProducts()) {
-                <div class="product-list__groups fd-stack fd-gap-card-profile">
-                    @if (showRecentSection()) {
-                        <div class="product-list__section fd-stack fd-gap-sm">
-                            <div class="product-list__section-header fd-row fd-gap-sm">
-                                <span class="product-list__section-label fd-ui-card-title">
-                                    {{ 'PRODUCT_LIST.RECENT_PRODUCTS' | translate }}
-                                </span>
-                                <span class="product-list__section-line"></span>
-                            </div>
-                            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
-                                @for (item of recentProductItems(); track item.product.id) {
-                                    <fd-product-card
-                                        [product]="item.product"
-                                        [imageUrl]="item.imageUrl"
-                                        (open)="onProductClick(item.product)"
-                                        (addToMeal)="onAddToMeal(item.product)"
-                                        (favoriteChanged)="onProductFavoriteChanged(item.product, $event)"
-                                    />
-                                }
-                            </div>
-                        </div>
-                    }
-
-                    @if (allProductsSectionItems().length > 0) {
-                        <div class="product-list__section fd-stack fd-gap-sm">
-                            <div class="product-list__section-header fd-row fd-gap-sm">
-                                <span class="product-list__section-label fd-ui-card-title">
-                                    {{ allProductsSectionLabelKey() | translate }}
-                                </span>
-                                <span class="product-list__section-line"></span>
-                            </div>
-                            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
-                                @for (item of allProductItems(); track item.product.id) {
-                                    <fd-product-card
-                                        [product]="item.product"
-                                        [imageUrl]="item.imageUrl"
-                                        (open)="onProductClick(item.product)"
-                                        (addToMeal)="onAddToMeal(item.product)"
-                                        (favoriteChanged)="onProductFavoriteChanged(item.product, $event)"
-                                    />
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
+                <fd-product-list-groups
+                    [showRecentSection]="showRecentSection()"
+                    [recentItems]="recentProductItems()"
+                    [allItems]="allProductItems()"
+                    [allProductsSectionLabelKey]="allProductsSectionLabelKey()"
+                    (openProduct)="onProductClick($event)"
+                    (addToMeal)="onAddToMeal($event)"
+                    (favoriteChanged)="onProductFavoriteChanged($event.product, $event.change)"
+                />
             } @else if (isEmptyState()) {
-                <div class="product-list__empty-state fd-stack fd-align-center fd-gap-xs">
-                    <fd-ui-icon class="product-list__no-results-icon" name="inventory_2" size="xl" />
-                    <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
-                    <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
-                    <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
-                        {{ 'PRODUCT_LIST.ADD_FIRST_PRODUCT_BUTTON' | translate }}
-                    </fd-ui-button>
-                </div>
+                <fd-product-list-empty-state state="empty" (addProduct)="onAddProductClick()" />
             } @else {
-                <div class="product-list__no-results fd-stack fd-align-center fd-gap-xs">
-                    <fd-ui-icon class="product-list__no-results-icon" name="search_off" size="xl" />
-                    <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
-                    <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
-                </div>
+                <fd-product-list-empty-state state="no-results" />
             }
 
-            @if (offProducts().length > 0) {
-                <div class="product-list__section product-list__section--off fd-stack fd-gap-sm">
-                    <div class="product-list__section-header fd-row fd-gap-sm">
-                        <span class="product-list__section-label fd-ui-card-title">
-                            {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
-                        </span>
-                        <span class="product-list__section-line"></span>
-                    </div>
-                    <div class="product-list__off-grid fd-stack fd-gap-xs">
-                        @for (offProduct of offProducts(); track offProduct.barcode) {
-                            <div
-                                class="product-list__off-card fd-row fd-gap-sm"
-                                role="button"
-                                tabindex="0"
-                                (click)="onOffProductClick(offProduct)"
-                                (keydown.enter)="onOffProductClick(offProduct)"
-                            >
-                                @if (offProduct.imageUrl) {
-                                    <img
-                                        class="product-list__off-image"
-                                        width="64"
-                                        height="64"
-                                        [ngSrc]="offProduct.imageUrl"
-                                        [alt]="offProduct.name"
-                                    />
-                                } @else {
-                                    <div class="product-list__off-image-placeholder fd-center">
-                                        <fd-ui-icon name="inventory_2" size="md" />
-                                    </div>
-                                }
-                                <div class="product-list__off-info">
-                                    <div class="product-list__off-name fd-ui-body-sm">{{ offProduct.name }}</div>
-                                    @if (offProduct.brand) {
-                                        <div class="product-list__off-brand fd-ui-caption">{{ offProduct.brand }}</div>
-                                    }
-                                    @if (offProduct.caloriesPer100G !== null && offProduct.caloriesPer100G !== undefined) {
-                                        <div class="product-list__off-kcal fd-ui-caption">
-                                            {{ offProduct.caloriesPer100G | number: '1.0-0' }} {{ 'PRODUCT_LIST.OFF_KCAL' | translate }}
-                                        </div>
-                                    }
-                                </div>
-                                <fd-ui-icon class="product-list__off-arrow" name="arrow_forward" size="md" />
-                            </div>
-                        }
-                    </div>
-                </div>
-            } @else if (offLoading()) {
-                <div class="product-list__section product-list__section--off fd-stack fd-gap-sm">
-                    <div class="product-list__section-header fd-row fd-gap-sm">
-                        <span class="product-list__section-label fd-ui-card-title">
-                            {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
-                        </span>
-                        <span class="product-list__section-line"></span>
-                    </div>
-                    <div class="product-list__off-grid fd-stack fd-gap-xs">
-                        <fd-skeleton-card />
-                        <fd-skeleton-card />
-                    </div>
-                </div>
-            }
+            <fd-product-list-off-section [products]="offProducts()" [isLoading]="offLoading()" (productOpen)="onOffProductClick($event)" />
         }
 
-        @if (productData.totalPages > 1) {
-            <fd-ui-pagination
-                class="product-list__pagination"
-                [length]="productData.totalItems"
-                [pageSize]="pageSize"
-                [pageIndex]="currentPageIndex"
-                (pageIndexChange)="onPageChange($event)"
-            />
-        }
+        <fd-product-list-pagination
+            [totalPages]="productData.totalPages"
+            [length]="productData.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPageIndex"
+            (pageChange)="onPageChange($event)"
+        />
     </fd-page-body>
 </div>

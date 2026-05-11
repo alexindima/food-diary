@@ -1,0 +1,9 @@
+@if (totalPages() > 1) {
+    <fd-ui-pagination
+        class="product-list__pagination"
+        [length]="length()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        (pageIndexChange)="pageChange.emit($event)"
+    />
+}

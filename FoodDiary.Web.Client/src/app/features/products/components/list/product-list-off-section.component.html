@@ -1,0 +1,54 @@
+@if (products().length > 0) {
+    <div class="product-list__section product-list__section--off fd-stack fd-gap-sm">
+        <div class="product-list__section-header fd-row fd-gap-sm">
+            <span class="product-list__section-label fd-ui-card-title">
+                {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
+            </span>
+            <span class="product-list__section-line"></span>
+        </div>
+        <div class="product-list__off-grid fd-stack fd-gap-xs">
+            @for (offProduct of products(); track offProduct.barcode) {
+                <div
+                    class="product-list__off-card fd-row fd-gap-sm"
+                    role="button"
+                    tabindex="0"
+                    (click)="productOpen.emit(offProduct)"
+                    (keydown.enter)="productOpen.emit(offProduct)"
+                >
+                    @if (offProduct.imageUrl) {
+                        <img class="product-list__off-image" width="64" height="64" [ngSrc]="offProduct.imageUrl" [alt]="offProduct.name" />
+                    } @else {
+                        <div class="product-list__off-image-placeholder fd-center">
+                            <fd-ui-icon name="inventory_2" size="md" />
+                        </div>
+                    }
+                    <div class="product-list__off-info">
+                        <div class="product-list__off-name fd-ui-body-sm">{{ offProduct.name }}</div>
+                        @if (offProduct.brand) {
+                            <div class="product-list__off-brand fd-ui-caption">{{ offProduct.brand }}</div>
+                        }
+                        @if (offProduct.caloriesPer100G !== null && offProduct.caloriesPer100G !== undefined) {
+                            <div class="product-list__off-kcal fd-ui-caption">
+                                {{ offProduct.caloriesPer100G | number: '1.0-0' }} {{ 'PRODUCT_LIST.OFF_KCAL' | translate }}
+                            </div>
+                        }
+                    </div>
+                    <fd-ui-icon class="product-list__off-arrow" name="arrow_forward" size="md" />
+                </div>
+            }
+        </div>
+    </div>
+} @else if (isLoading()) {
+    <div class="product-list__section product-list__section--off fd-stack fd-gap-sm">
+        <div class="product-list__section-header fd-row fd-gap-sm">
+            <span class="product-list__section-label fd-ui-card-title">
+                {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
+            </span>
+            <span class="product-list__section-line"></span>
+        </div>
+        <div class="product-list__off-grid fd-stack fd-gap-xs">
+            <fd-skeleton-card />
+            <fd-skeleton-card />
+        </div>
+    </div>
+}

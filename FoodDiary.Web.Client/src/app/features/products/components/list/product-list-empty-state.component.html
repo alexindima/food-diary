@@ -1,0 +1,16 @@
+@if (state() === 'empty') {
+    <div class="product-list__empty-state fd-stack fd-align-center fd-gap-xs">
+        <fd-ui-icon class="product-list__no-results-icon" name="inventory_2" size="xl" />
+        <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
+        <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
+        <fd-ui-button variant="primary" fill="solid" icon="add" (click)="addProduct.emit()">
+            {{ 'PRODUCT_LIST.ADD_FIRST_PRODUCT_BUTTON' | translate }}
+        </fd-ui-button>
+    </div>
+} @else {
+    <div class="product-list__no-results fd-stack fd-align-center fd-gap-xs">
+        <fd-ui-icon class="product-list__no-results-icon" name="search_off" size="xl" />
+        <div class="product-list__empty-title fd-ui-card-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
+        <div class="product-list__empty-copy fd-ui-body-sm">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
+    </div>
+}
