@@ -12,29 +12,14 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
-import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
-import { DashboardSummaryCardComponent } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import { MealsPreviewComponent } from '../../../components/shared/meals-preview/meals-preview.component';
-import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
-import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
-import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
-import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
-import { DashboardCardShellComponent } from '../components/dashboard-card-shell/dashboard-card-shell.component';
-import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
-import { TdeeInsightCardComponent } from '../components/tdee-insight-card/tdee-insight-card.component';
-import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
 import type {
     TdeeInsightDialogAction,
     TdeeInsightDialogComponent as TdeeInsightDialogComponentType,
@@ -42,6 +27,25 @@ import type {
 } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
+import { DashboardAdviceBlockComponent } from './dashboard-advice-block.component';
+import { DashboardCycleBlockComponent } from './dashboard-cycle-block.component';
+import { DashboardEditHintComponent } from './dashboard-edit-hint.component';
+import { DashboardFastingBlockComponent } from './dashboard-fasting-block.component';
+import { DashboardHeaderComponent } from './dashboard-header.component';
+import { DashboardHydrationBlockComponent } from './dashboard-hydration-block.component';
+import { DashboardMealsBlockComponent } from './dashboard-meals-block.component';
+import { DashboardQuickAddComponent } from './dashboard-quick-add.component';
+import { DashboardSummaryBlockComponent } from './dashboard-summary-block.component';
+import { DashboardTdeeBlockComponent } from './dashboard-tdee-block.component';
+import { DashboardTrendBlockComponent } from './dashboard-trend-block.component';
+import type {
+    DashboardBlockId,
+    DashboardBlockState,
+    DashboardBlockStateOptions,
+    DashboardHeaderState,
+    DashboardMealsPreviewState,
+    DashboardSummaryData,
+} from './dashboard-view.types';
 
 const EMPTY_INDEX = -1;
 const FIRST_RESIZE_ENTRY_INDEX = 0;
@@ -51,24 +55,20 @@ const LANGUAGE_VERSION_INCREMENT = 1;
     selector: 'fd-dashboard',
     standalone: true,
     imports: [
-        TranslatePipe,
-        FdUiHintDirective,
-        FdUiButtonComponent,
-        FdUiDatePickerButtonComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        DashboardSummaryCardComponent,
-        HydrationCardComponent,
-        WeightTrendCardComponent,
-        DailyAdviceCardComponent,
-        CycleSummaryCardComponent,
-        TdeeInsightCardComponent,
-        MealsPreviewComponent,
-        NoticeBannerComponent,
-        FdUiLoaderComponent,
-        FastingTimerCardComponent,
-        AiInputBarComponent,
-        DashboardCardShellComponent,
+        TranslatePipe,
+        DashboardHeaderComponent,
+        DashboardQuickAddComponent,
+        DashboardEditHintComponent,
+        DashboardFastingBlockComponent,
+        DashboardSummaryBlockComponent,
+        DashboardMealsBlockComponent,
+        DashboardHydrationBlockComponent,
+        DashboardCycleBlockComponent,
+        DashboardTrendBlockComponent,
+        DashboardTdeeBlockComponent,
+        DashboardAdviceBlockComponent,
     ],
     providers: [DashboardLayoutService, DashboardFacade, provideCharts(withDefaultRegisterables())],
     templateUrl: './dashboard.component.html',
@@ -148,14 +148,13 @@ export class DashboardComponent {
         const selectedDateLabel = this.formatSelectedDate();
 
         return {
-            isToday,
             fullTitleKey: isToday ? 'DASHBOARD.TITLE' : 'DASHBOARD.TITLE_FOR_DATE',
             compactTitleKey: isToday ? 'DASHBOARD.TITLE_SHORT' : 'DASHBOARD.TITLE_FOR_DATE_SHORT',
             titleParams: isToday ? null : { date: selectedDateLabel },
             selectedDateLabel,
         };
     });
-    public readonly mealsPreviewState = computed(() => {
+    public readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() => {
         this.languageVersion();
         const isToday = this.isTodaySelected();
         const selectedDateLabel = this.formatSelectedDate();
@@ -181,6 +180,17 @@ export class DashboardComponent {
         return {
             startDate: cycle?.startDate ?? null,
             predictions: cycle?.predictions ?? null,
+        };
+    });
+    public readonly dashboardSummaryData = computed<DashboardSummaryData>(() => {
+        const ringData = this.consumptionRingData();
+
+        return {
+            dailyGoal: ringData.dailyGoal,
+            dailyConsumed: ringData.dailyConsumed,
+            weeklyConsumed: ringData.weeklyConsumed,
+            weeklyGoal: ringData.weeklyGoal,
+            nutrientBars: ringData.nutrientBars,
         };
     });
     public readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
@@ -470,31 +480,4 @@ export class DashboardComponent {
             blockId === 'advice'
         );
     }
-}
-
-interface DashboardHeaderState {
-    isToday: boolean;
-    fullTitleKey: string;
-    compactTitleKey: string;
-    titleParams: { date: string } | null;
-    selectedDateLabel: string;
-}
-
-type DashboardBlockId = 'fasting' | 'summary' | 'meals' | 'hydration' | 'cycle' | 'weight' | 'waist' | 'tdee' | 'advice';
-
-interface DashboardBlockState {
-    hidden: boolean;
-    role: 'button' | null;
-    tabIndex: number;
-    ariaPressed: boolean | null;
-    ariaDisabled: boolean | null;
-    ariaLabel: string | null;
-    inert: string | null;
-}
-
-interface DashboardBlockStateOptions {
-    alwaysInteractive?: boolean;
-    locked?: boolean;
-    editingLabelKey?: string;
-    defaultLabelKey?: string;
 }

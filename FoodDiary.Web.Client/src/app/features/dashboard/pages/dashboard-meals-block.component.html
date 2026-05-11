@@ -1,0 +1,27 @@
+@if (shouldRender()) {
+    <div
+        class="dashboard__block dashboard__block--meals"
+        [class.dashboard__block--hidden]="state().hidden"
+        [attr.role]="state().role"
+        [attr.tabindex]="state().tabIndex"
+        [attr.aria-pressed]="state().ariaPressed"
+        (click)="blockToggle.emit()"
+        (keydown.enter)="blockToggle.emit()"
+    >
+        <fd-meals-preview
+            titleKey="DASHBOARD.MEALS_TITLE"
+            viewAllKey="DASHBOARD.MEALS_VIEW_ALL"
+            [attr.inert]="state().inert"
+            [entries]="entries()"
+            [titleText]="previewState().titleText"
+            [emptyKey]="previewState().emptyKey"
+            [showAddButtons]="previewState().showDateActions"
+            [showAiButtons]="previewState().showDateActions"
+            [showEmptyState]="previewState().showEmptyState"
+            (viewAll)="viewAll.emit()"
+            (add)="add.emit($event)"
+            (aiMealCreated)="aiMealCreated.emit()"
+            (open)="open.emit($event)"
+        />
+    </div>
+}

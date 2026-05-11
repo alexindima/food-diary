@@ -1,0 +1,28 @@
+@if (shouldRender()) {
+    <div
+        class="dashboard__block"
+        [class.dashboard__block--hidden]="state().hidden"
+        [attr.role]="state().role"
+        [attr.tabindex]="state().tabIndex"
+        [attr.aria-pressed]="state().ariaPressed"
+        [attr.aria-label]="state().ariaLabel"
+        (click)="blockClick.emit($event)"
+        (keydown.enter)="blockClick.emit($event)"
+        (keydown.space)="$event.preventDefault(); blockClick.emit($event)"
+    >
+        @defer (on viewport) {
+            <fd-dashboard-card-shell [attr.inert]="state().inert">
+                <fd-tdee-insight-card
+                    class="dashboard__card dashboard__card--tdee"
+                    [insight]="insight()"
+                    [isLoading]="isLoading()"
+                    (applyGoal)="applyGoal.emit($event)"
+                />
+            </fd-dashboard-card-shell>
+        } @placeholder {
+            <fd-ui-loader />
+        } @loading (minimum 300ms) {
+            <fd-ui-loader />
+        }
+    </div>
+}

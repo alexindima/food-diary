@@ -1,0 +1,32 @@
+@if (shouldRender()) {
+    <div
+        class="dashboard__block"
+        [class.dashboard__block--hidden]="state().hidden"
+        [attr.role]="state().role"
+        [attr.tabindex]="state().tabIndex"
+        [attr.aria-pressed]="state().ariaPressed"
+        (click)="blockToggle.emit()"
+        (keydown.enter)="blockToggle.emit()"
+    >
+        @defer (on viewport) {
+            <fd-dashboard-card-shell [attr.inert]="state().inert">
+                <fd-weight-trend-card
+                    [class]="cardClass()"
+                    [title]="title()"
+                    [unitKey]="unitKey()"
+                    [iconName]="iconName()"
+                    [accentColor]="accentColor()"
+                    [currentWeight]="current()"
+                    [change]="change()"
+                    [points]="points()"
+                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                    [isLoading]="isLoading()"
+                />
+            </fd-dashboard-card-shell>
+        } @placeholder {
+            <fd-ui-loader />
+        } @loading (minimum 300ms) {
+            <fd-ui-loader />
+        }
+    </div>
+}

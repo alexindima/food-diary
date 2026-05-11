@@ -1,0 +1,63 @@
+<header class="dashboard__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-page-header-actions">
+    <div class="dashboard__title-block fd-stack fd-gap-xxs">
+        <h1 class="dashboard__title fd-ui-page-title">
+            <span class="dashboard__title-text dashboard__title-text--full">
+                {{ headerState().fullTitleKey | translate: headerState().titleParams }}
+            </span>
+            <span class="dashboard__title-text dashboard__title-text--compact">
+                {{ headerState().compactTitleKey | translate: headerState().titleParams }}
+            </span>
+        </h1>
+        <p class="dashboard__subtitle fd-ui-page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="dashboard__header-actions fd-row fd-align-start fd-justify-end fd-wrap fd-gap-sm">
+        <div class="dashboard__date-group fd-inline-center">
+            <fd-ui-date-picker-button
+                class="dashboard__date-button"
+                [value]="selectedDate()"
+                [disabled]="isEditingLayout()"
+                [ariaLabel]="headerState().selectedDateLabel"
+                [hint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+                (valueChange)="dateChange.emit($event)"
+            />
+        </div>
+
+        <fd-ui-button
+            class="dashboard__appearance-action"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="palette"
+            [disabled]="isEditingLayout()"
+            [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+            (click)="appearanceOpen.emit()"
+        />
+
+        <fd-ui-button
+            class="dashboard__push-action"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="notifications"
+            [disabled]="isEditingLayout()"
+            [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+            (click)="notificationSettingsOpen.emit()"
+        />
+
+        <fd-ui-button
+            class="dashboard__settings-action"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="tune"
+            [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+            [class.dashboard__settings-action--active]="isEditingLayout()"
+            [attr.aria-pressed]="isEditingLayout()"
+            (click)="settingsOpen.emit()"
+        />
+    </div>
+</header>

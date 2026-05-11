@@ -1,0 +1,65 @@
+import type { NutrientBar } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
+import type { CyclePredictions } from '../../cycle-tracking/models/cycle.data';
+import type { FastingSession } from '../../fasting/models/fasting.data';
+import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
+import type { DailyAdvice } from '../models/daily-advice.data';
+import type { TdeeInsight } from '../models/tdee-insight.data';
+
+export interface DashboardHeaderState {
+    fullTitleKey: string;
+    compactTitleKey: string;
+    titleParams: { date: string } | null;
+    selectedDateLabel: string;
+}
+
+export type DashboardBlockId = 'fasting' | 'summary' | 'meals' | 'hydration' | 'cycle' | 'weight' | 'waist' | 'tdee' | 'advice';
+
+export interface DashboardBlockState {
+    hidden: boolean;
+    role: 'button' | null;
+    tabIndex: number;
+    ariaPressed: boolean | null;
+    ariaDisabled: boolean | null;
+    ariaLabel: string | null;
+    inert: string | null;
+}
+
+export interface DashboardBlockStateOptions {
+    alwaysInteractive?: boolean;
+    locked?: boolean;
+    editingLabelKey?: string;
+    defaultLabelKey?: string;
+}
+
+export interface DashboardMealsPreviewState {
+    titleText: string | null;
+    emptyKey: string;
+    showDateActions: boolean;
+    showEmptyState: boolean;
+}
+
+export interface DashboardHydrationCardState {
+    total: number;
+    goal: number | null;
+}
+
+export interface DashboardCycleCardState {
+    startDate: string | null;
+    predictions: CyclePredictions | null;
+}
+
+export type DashboardFastingSession = FastingSession | null;
+
+export interface DashboardSummaryData {
+    dailyGoal: number;
+    dailyConsumed: number;
+    weeklyConsumed: number;
+    weeklyGoal: number | null;
+    nutrientBars: NutrientBar[] | null;
+}
+
+export type DashboardMealPreviewEntry = MealPreviewEntry;
+export type DashboardWeightTrendPoint = WeightTrendPoint;
+export type DashboardDailyAdvice = DailyAdvice | null;
+export type DashboardTdeeInsight = TdeeInsight | null;

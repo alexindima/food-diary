@@ -1,0 +1,31 @@
+@if (shouldRender()) {
+    <div
+        class="dashboard__block dashboard__block--fasting fd-row"
+        [class.dashboard__block--hidden]="state().hidden"
+        [attr.role]="state().role"
+        [attr.tabindex]="state().tabIndex"
+        [attr.aria-pressed]="state().ariaPressed"
+        [attr.aria-label]="state().ariaLabel"
+        (click)="blockClick.emit()"
+        (keydown.enter)="blockClick.emit()"
+        (keydown.space)="$event.preventDefault(); blockClick.emit()"
+    >
+        <fd-dashboard-card-shell [attr.inert]="state().inert">
+            <fd-fasting-timer-card
+                class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
+                layout="dashboard"
+                [session]="session()"
+            />
+        </fd-dashboard-card-shell>
+        @if (isEditingLayout()) {
+            <div class="dashboard__fasting-overlay fd-stack fd-justify-end fd-gap-xxs">
+                <div class="dashboard__fasting-overlay-title fd-ui-card-title">
+                    {{ 'DASHBOARD.FASTING_EDIT_TITLE' | translate }}
+                </div>
+                <div class="dashboard__fasting-overlay-text fd-ui-caption">
+                    {{ 'DASHBOARD.FASTING_EDIT_HINT' | translate }}
+                </div>
+            </div>
+        }
+    </div>
+}

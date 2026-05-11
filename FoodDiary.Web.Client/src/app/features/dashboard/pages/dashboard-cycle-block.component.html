@@ -1,0 +1,28 @@
+@if (shouldRender()) {
+    <div
+        class="dashboard__block"
+        [class.dashboard__block--hidden]="state().hidden"
+        [attr.role]="state().role"
+        [attr.tabindex]="state().tabIndex"
+        [attr.aria-pressed]="state().ariaPressed"
+        (click)="blockToggle.emit()"
+        (keydown.enter)="blockToggle.emit()"
+    >
+        @defer (on viewport) {
+            <fd-dashboard-card-shell [attr.inert]="state().inert">
+                <fd-cycle-summary-card
+                    class="dashboard__card dashboard__card--cycle"
+                    [startDate]="cardState().startDate"
+                    [predictions]="cardState().predictions"
+                    [referenceDate]="referenceDate()"
+                    [isLoading]="isLoading()"
+                    (setupAction)="setupAction.emit()"
+                />
+            </fd-dashboard-card-shell>
+        } @placeholder {
+            <fd-ui-loader />
+        } @loading (minimum 300ms) {
+            <fd-ui-loader />
+        }
+    </div>
+}

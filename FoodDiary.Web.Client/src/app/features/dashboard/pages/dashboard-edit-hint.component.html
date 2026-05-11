@@ -1,0 +1,8 @@
+<fd-notice-banner
+    class="dashboard__edit-hint"
+    type="info"
+    [title]="'DASHBOARD.SETTINGS.TITLE' | translate"
+    [message]="'DASHBOARD.SETTINGS.HINT' | translate"
+    [actionLabel]="actionLabel()"
+    (action)="save.emit()"
+/>

@@ -1,0 +1,30 @@
+@if (shouldRender()) {
+    <div
+        class="dashboard__block dashboard__block--locked"
+        [class.dashboard__block--hidden]="state().hidden"
+        [attr.role]="state().role"
+        [attr.tabindex]="state().tabIndex"
+        [attr.aria-pressed]="state().ariaPressed"
+        [attr.aria-disabled]="state().ariaDisabled"
+        (click)="blockToggle.emit()"
+        (keydown.enter)="blockToggle.emit()"
+    >
+        @if (isEditingLayout()) {
+            <div class="dashboard__block-label dashboard__block-label--locked fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
+            </div>
+        }
+        <fd-dashboard-card-shell [attr.inert]="state().inert">
+            <fd-dashboard-summary-card
+                class="dashboard__card dashboard__card--ring"
+                [dailyGoal]="data().dailyGoal"
+                [dailyConsumed]="data().dailyConsumed"
+                [weeklyConsumed]="data().weeklyConsumed"
+                [weeklyGoal]="data().weeklyGoal"
+                [nutrientBars]="data().nutrientBars"
+                [caloriesBurned]="caloriesBurned()"
+                (goalAction)="goalAction.emit()"
+            />
+        </fd-dashboard-card-shell>
+    </div>
+}
