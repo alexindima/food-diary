@@ -1,0 +1,68 @@
+<fd-ui-card class="user-manage__card user-manage__card--privacy fd-stack fd-gap-card-profile" tone="profile" density="profile">
+    <div class="user-manage__card-header fd-row fd-gap-sm">
+        <div class="user-manage__card-icon user-manage__card-icon--privacy"></div>
+        <div class="user-manage__card-text fd-stack fd-gap-xxs">
+            <div class="user-manage__card-title">{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</div>
+            <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</div>
+        </div>
+    </div>
+    <div class="user-manage__privacy fd-stack fd-gap-md">
+        <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">
+            <div class="user-manage__privacy-info">
+                <div class="user-manage__privacy-label">{{ 'USER_MANAGE.AI_CONSENT_LABEL' | translate }}</div>
+                <div class="user-manage__privacy-status">
+                    @if (hasAiConsent()) {
+                        <span
+                            class="user-manage__privacy-badge user-manage__privacy-badge--active fd-ui-pill fd-ui-pill--success fd-ui-caption"
+                        >
+                            {{ 'USER_MANAGE.AI_CONSENT_ACTIVE' | translate }}
+                        </span>
+                    } @else {
+                        <span
+                            class="user-manage__privacy-badge user-manage__privacy-badge--inactive fd-ui-pill fd-ui-pill--muted fd-ui-caption"
+                        >
+                            {{ 'USER_MANAGE.AI_CONSENT_INACTIVE' | translate }}
+                        </span>
+                    }
+                </div>
+            </div>
+            @if (hasAiConsent()) {
+                <fd-ui-button
+                    type="button"
+                    fill="outline"
+                    variant="secondary"
+                    size="sm"
+                    [disabled]="isRevokingAiConsent()"
+                    [loading]="isRevokingAiConsent()"
+                    (click)="aiConsentRevoke.emit()"
+                >
+                    {{ 'USER_MANAGE.AI_CONSENT_REVOKE' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+        <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">
+            <a class="user-manage__privacy-link" href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                {{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}
+            </a>
+        </div>
+        <div class="user-manage__privacy-divider"></div>
+        <div class="user-manage__privacy-item user-manage__privacy-item--danger fd-row fd-gap-sm fd-justify-between">
+            <div class="user-manage__privacy-info">
+                <div class="user-manage__privacy-label">{{ 'USER_MANAGE.DELETE_ACCOUNT_LABEL' | translate }}</div>
+                <div class="user-manage__privacy-hint">{{ 'USER_MANAGE.DELETE_ACCOUNT_HINT' | translate }}</div>
+            </div>
+            <fd-ui-button
+                type="button"
+                variant="danger"
+                fill="outline"
+                size="sm"
+                icon="delete"
+                [disabled]="isDeleting()"
+                [loading]="isDeleting()"
+                (click)="accountDelete.emit()"
+            >
+                {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-card>

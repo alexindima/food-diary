@@ -1,0 +1,55 @@
+<div class="user-manage__notifications-devices fd-stack fd-gap-sm">
+    <div class="user-manage__notifications-devices-header fd-stack fd-gap-xxs">
+        <div class="user-manage__notifications-label">
+            {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES' | translate }}
+        </div>
+        <div class="user-manage__notifications-hint">
+            {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_HINT' | translate }}
+        </div>
+    </div>
+
+    <fd-ui-section-state
+        appearance="compact"
+        emptyIcon="devices"
+        [state]="state()"
+        [loadingLabel]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate"
+        [emptyMessage]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate"
+    >
+        <div class="user-manage__notifications-device-list fd-stack fd-gap-xs">
+            @for (device of items(); track device.subscription.endpoint) {
+                <div class="user-manage__notifications-device-item fd-row fd-gap-md fd-justify-between fd-ui-surface fd-ui-surface--raised">
+                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
+                        <div class="user-manage__notifications-label">
+                            {{ device.label }}
+                        </div>
+                        <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
+                            @if (device.isCurrent) {
+                                <span
+                                    class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
+                                >
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_CURRENT' | translate }}
+                                </span>
+                            }
+                        </div>
+                        <div class="user-manage__notifications-hint">
+                            {{ device.meta }}
+                        </div>
+                    </div>
+
+                    <fd-ui-button
+                        type="button"
+                        fill="outline"
+                        variant="secondary"
+                        size="sm"
+                        icon="close"
+                        [loading]="removingEndpoint() === device.subscription.endpoint"
+                        [disabled]="pushNotificationsBusy() || removingEndpoint() === device.subscription.endpoint"
+                        (click)="deviceRemove.emit(device.subscription)"
+                    >
+                        {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE' | translate }}
+                    </fd-ui-button>
+                </div>
+            }
+        </div>
+    </fd-ui-section-state>
+</div>

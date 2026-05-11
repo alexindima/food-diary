@@ -29,7 +29,6 @@ import {
     type FdValidationErrors,
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
@@ -68,6 +67,8 @@ import type { DietologistPermissions, DietologistRelationship } from '../../diet
 import { PremiumBillingService } from '../../premium/api/premium-billing.service';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
+import { type FastingReminderHoursChange, UserManageNotificationsCardComponent } from './user-manage-notifications-card.component';
+import { UserManagePrivacyCardComponent } from './user-manage-privacy-card.component';
 
 const DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS = 12;
 const DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
@@ -113,7 +114,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiSelectComponent,
         FdUiDateInputComponent,
         FdUiButtonComponent,
-        FdUiSectionStateComponent,
         FdUiFormErrorComponent,
         FdUiStatusBadgeComponent,
         FdUiSwitchComponent,
@@ -121,6 +121,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         PageBodyComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
+        UserManageNotificationsCardComponent,
+        UserManagePrivacyCardComponent,
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.scss',
@@ -636,6 +638,10 @@ export class UserManageComponent {
         }
 
         this.fastingCheckInFollowUpReminderHours.set(normalized);
+    }
+
+    public onFastingReminderHoursChangeRequest(request: FastingReminderHoursChange): void {
+        this.onFastingReminderHoursChange(request.value, request.field);
     }
 
     public applyFastingReminderPreset(preset: FastingReminderPreset): void {
@@ -1518,7 +1524,7 @@ interface ProfileStatusViewModel {
     tone: 'success' | 'warning' | 'danger' | 'muted';
 }
 
-interface ConnectedDeviceViewModel {
+export interface ConnectedDeviceViewModel {
     subscription: WebPushSubscriptionItem;
     label: string;
     meta: string;

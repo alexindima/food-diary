@@ -269,250 +269,34 @@
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card
-                    class="user-manage__card user-manage__card--notifications fd-stack fd-gap-card-profile"
-                    tone="profile"
-                    density="profile"
-                >
-                    <div class="user-manage__card-header fd-row fd-gap-sm">
-                        <div class="user-manage__card-icon user-manage__card-icon--notifications"></div>
-                        <div class="user-manage__card-text fd-stack fd-gap-xxs">
-                            <div class="user-manage__card-title">{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</div>
-                            <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</div>
-                            @if (notificationsStatusKey(); as notificationsStatusKey) {
-                                <div class="user-manage__section-status">
-                                    {{ notificationsStatusKey | translate }}
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div class="user-manage__notifications fd-stack fd-gap-card-profile">
-                        <div
-                            class="user-manage__notifications-item fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--primary"
-                        >
-                            <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                                <div class="user-manage__notifications-label">
-                                    {{ 'USER_MANAGE.PUSH_NOTIFICATIONS_LABEL' | translate }}
-                                </div>
-                                <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
-                                    <span
-                                        class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
-                                    >
-                                        {{ pushNotificationsAccountStatusKey() | translate }}
-                                    </span>
-                                    <span class="user-manage__notifications-badge fd-ui-pill fd-ui-pill--muted fd-ui-caption">
-                                        {{ pushNotificationsDeviceStatusKey() | translate }}
-                                    </span>
-                                </div>
-                                <div class="user-manage__notifications-hint">
-                                    {{ pushNotificationsHintKey() | translate }}
-                                </div>
-                                <div class="user-manage__notifications-device-note">
-                                    {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE' | translate }}
-                                </div>
-                            </div>
-                            <fd-ui-switch
-                                [checked]="pushNotificationsEnabled()"
-                                [disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
-                                [fdUiHint]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
-                                [ariaLabel]="'USER_MANAGE.PUSH_NOTIFICATIONS' | translate"
-                                (checkedChange)="togglePushNotificationsAsync()"
-                            />
-                        </div>
-
-                        @if (pushNotificationsEnabled()) {
-                            <div class="user-manage__notifications-category-list fd-stack fd-gap-sm">
-                                <div
-                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
-                                >
-                                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                                        <div class="user-manage__notifications-label">
-                                            {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}
-                                        </div>
-                                        <div class="user-manage__notifications-hint">
-                                            {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}
-                                        </div>
-                                    </div>
-                                    <fd-ui-switch
-                                        [checked]="fastingPushNotificationsEnabled()"
-                                        [disabled]="isUpdatingNotifications()"
-                                        [fdUiHint]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
-                                        [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
-                                        (checkedChange)="toggleFastingPushNotificationsAsync()"
-                                    />
-                                </div>
-
-                                @if (fastingPushNotificationsEnabled()) {
-                                    <div
-                                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
-                                    >
-                                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                                            <div class="user-manage__notifications-label">
-                                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_TITLE' | translate }}
-                                            </div>
-                                            <div class="user-manage__notifications-hint">
-                                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_HINT' | translate }}
-                                            </div>
-                                        </div>
-                                        <div class="user-manage__notifications-reminders fd-grid fd-gap-sm">
-                                            <div class="user-manage__notifications-reminder-presets fd-stack fd-gap-xs">
-                                                <div class="user-manage__notifications-reminder-presets-label">
-                                                    {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_PRESETS' | translate }}
-                                                </div>
-                                                <div class="user-manage__notifications-reminder-presets-list fd-row fd-wrap fd-gap-xs">
-                                                    @for (preset of fastingReminderPresets; track preset.id) {
-                                                        <fd-ui-button
-                                                            class="user-manage__preset-button"
-                                                            type="button"
-                                                            fill="outline"
-                                                            variant="secondary"
-                                                            size="sm"
-                                                            [class.user-manage__preset-button--active]="
-                                                                activeFastingReminderPresetId() === preset.id
-                                                            "
-                                                            (click)="applyFastingReminderPreset(preset)"
-                                                        >
-                                                            {{ preset.labelKey | translate }}
-                                                        </fd-ui-button>
-                                                    }
-                                                </div>
-                                            </div>
-                                            <fd-ui-input
-                                                type="number"
-                                                size="sm"
-                                                [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_FIRST' | translate"
-                                                [ngModel]="fastingCheckInReminderHours()"
-                                                [ngModelOptions]="{ standalone: true }"
-                                                (ngModelChange)="onFastingReminderHoursChange($event, 'first')"
-                                            />
-                                            <fd-ui-input
-                                                type="number"
-                                                size="sm"
-                                                [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SECOND' | translate"
-                                                [ngModel]="fastingCheckInFollowUpReminderHours()"
-                                                [ngModelOptions]="{ standalone: true }"
-                                                (ngModelChange)="onFastingReminderHoursChange($event, 'followUp')"
-                                            />
-                                            <fd-ui-button
-                                                class="user-manage__notifications-reminder-save"
-                                                type="button"
-                                                fill="outline"
-                                                variant="secondary"
-                                                [disabled]="isUpdatingNotifications()"
-                                                [loading]="isUpdatingNotifications()"
-                                                (click)="saveFastingReminderHoursAsync()"
-                                            >
-                                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVE' | translate }}
-                                            </fd-ui-button>
-                                        </div>
-                                    </div>
-                                }
-
-                                <div
-                                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
-                                >
-                                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                                        <div class="user-manage__notifications-label">
-                                            {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}
-                                        </div>
-                                        <div class="user-manage__notifications-hint">
-                                            {{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}
-                                        </div>
-                                    </div>
-                                    <fd-ui-switch
-                                        [checked]="socialPushNotificationsEnabled()"
-                                        [disabled]="isUpdatingNotifications()"
-                                        [fdUiHint]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
-                                        [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
-                                        (checkedChange)="toggleSocialPushNotificationsAsync()"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="user-manage__notifications-actions fd-row">
-                                <fd-ui-button
-                                    class="user-manage__notifications-action-button"
-                                    type="button"
-                                    fill="outline"
-                                    variant="secondary"
-                                    icon="notifications_active"
-                                    [loading]="isSchedulingTestNotification()"
-                                    [disabled]="
-                                        isSchedulingTestNotification() ||
-                                        !pushNotificationsSupported() ||
-                                        !fastingPushNotificationsEnabled()
-                                    "
-                                    (click)="scheduleTestNotification()"
-                                >
-                                    {{ 'USER_MANAGE.NOTIFICATIONS_TEST_BUTTON' | translate }}
-                                </fd-ui-button>
-                            </div>
-                        }
-
-                        <div class="user-manage__notifications-devices fd-stack fd-gap-sm">
-                            <div class="user-manage__notifications-devices-header fd-stack fd-gap-xxs">
-                                <div class="user-manage__notifications-label">
-                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES' | translate }}
-                                </div>
-                                <div class="user-manage__notifications-hint">
-                                    {{ 'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_HINT' | translate }}
-                                </div>
-                            </div>
-
-                            <fd-ui-section-state
-                                appearance="compact"
-                                emptyIcon="devices"
-                                [state]="connectedDevicesSectionState()"
-                                [loadingLabel]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_LOADING' | translate"
-                                [emptyMessage]="'USER_MANAGE.NOTIFICATIONS_CONNECTED_DEVICES_EMPTY' | translate"
-                            >
-                                <div class="user-manage__notifications-device-list fd-stack fd-gap-xs">
-                                    @for (device of connectedDeviceItems(); track device.subscription.endpoint) {
-                                        <div
-                                            class="user-manage__notifications-device-item fd-row fd-gap-md fd-justify-between fd-ui-surface fd-ui-surface--raised"
-                                        >
-                                            <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                                                <div class="user-manage__notifications-label">
-                                                    {{ device.label }}
-                                                </div>
-                                                <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
-                                                    @if (device.isCurrent) {
-                                                        <span
-                                                            class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--primary fd-ui-caption"
-                                                        >
-                                                            {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_CURRENT' | translate }}
-                                                        </span>
-                                                    }
-                                                </div>
-                                                <div class="user-manage__notifications-hint">
-                                                    {{ device.meta }}
-                                                </div>
-                                            </div>
-
-                                            <fd-ui-button
-                                                type="button"
-                                                fill="outline"
-                                                variant="secondary"
-                                                size="sm"
-                                                icon="close"
-                                                [loading]="removingConnectedDeviceEndpoint() === device.subscription.endpoint"
-                                                [disabled]="
-                                                    pushNotificationsBusy() ||
-                                                    removingConnectedDeviceEndpoint() === device.subscription.endpoint
-                                                "
-                                                (click)="removeConnectedDeviceAsync(device.subscription)"
-                                            >
-                                                {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE' | translate }}
-                                            </fd-ui-button>
-                                        </div>
-                                    }
-                                </div>
-                            </fd-ui-section-state>
-                        </div>
-
-                        <!-- Fasting telemetry summary moved to fasting page. -->
-                    </div>
-                </fd-ui-card>
+                <fd-user-manage-notifications-card
+                    [notificationsStatusKey]="notificationsStatusKey()"
+                    [pushNotificationsAccountStatusKey]="pushNotificationsAccountStatusKey()"
+                    [pushNotificationsDeviceStatusKey]="pushNotificationsDeviceStatusKey()"
+                    [pushNotificationsHintKey]="pushNotificationsHintKey()"
+                    [pushNotificationsEnabled]="pushNotificationsEnabled()"
+                    [isUpdatingNotifications]="isUpdatingNotifications()"
+                    [pushNotificationsBusy]="pushNotificationsBusy()"
+                    [fastingPushNotificationsEnabled]="fastingPushNotificationsEnabled()"
+                    [socialPushNotificationsEnabled]="socialPushNotificationsEnabled()"
+                    [fastingReminderPresets]="fastingReminderPresets"
+                    [activeFastingReminderPresetId]="activeFastingReminderPresetId()"
+                    [fastingCheckInReminderHours]="fastingCheckInReminderHours()"
+                    [fastingCheckInFollowUpReminderHours]="fastingCheckInFollowUpReminderHours()"
+                    [isSchedulingTestNotification]="isSchedulingTestNotification()"
+                    [pushNotificationsSupported]="pushNotificationsSupported()"
+                    [connectedDevicesSectionState]="connectedDevicesSectionState()"
+                    [connectedDeviceItems]="connectedDeviceItems()"
+                    [removingConnectedDeviceEndpoint]="removingConnectedDeviceEndpoint()"
+                    (pushNotificationsToggle)="togglePushNotificationsAsync()"
+                    (fastingPushNotificationsToggle)="toggleFastingPushNotificationsAsync()"
+                    (socialPushNotificationsToggle)="toggleSocialPushNotificationsAsync()"
+                    (fastingReminderPresetApply)="applyFastingReminderPreset($event)"
+                    (fastingReminderHoursChange)="onFastingReminderHoursChangeRequest($event)"
+                    (fastingReminderHoursSave)="saveFastingReminderHoursAsync()"
+                    (testNotificationSchedule)="scheduleTestNotification()"
+                    (connectedDeviceRemove)="removeConnectedDeviceAsync($event)"
+                />
 
                 <fd-ui-card
                     class="user-manage__card user-manage__card--dietologist fd-stack fd-gap-card-profile"
@@ -792,74 +576,13 @@
                 </fd-ui-card>
             </div>
 
-            <fd-ui-card class="user-manage__card user-manage__card--privacy fd-stack fd-gap-card-profile" tone="profile" density="profile">
-                <div class="user-manage__card-header fd-row fd-gap-sm">
-                    <div class="user-manage__card-icon user-manage__card-icon--privacy"></div>
-                    <div class="user-manage__card-text fd-stack fd-gap-xxs">
-                        <div class="user-manage__card-title">{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</div>
-                        <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</div>
-                    </div>
-                </div>
-                <div class="user-manage__privacy fd-stack fd-gap-md">
-                    <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">
-                        <div class="user-manage__privacy-info">
-                            <div class="user-manage__privacy-label">{{ 'USER_MANAGE.AI_CONSENT_LABEL' | translate }}</div>
-                            <div class="user-manage__privacy-status">
-                                @if (hasAiConsent()) {
-                                    <span
-                                        class="user-manage__privacy-badge user-manage__privacy-badge--active fd-ui-pill fd-ui-pill--success fd-ui-caption"
-                                    >
-                                        {{ 'USER_MANAGE.AI_CONSENT_ACTIVE' | translate }}
-                                    </span>
-                                } @else {
-                                    <span
-                                        class="user-manage__privacy-badge user-manage__privacy-badge--inactive fd-ui-pill fd-ui-pill--muted fd-ui-caption"
-                                    >
-                                        {{ 'USER_MANAGE.AI_CONSENT_INACTIVE' | translate }}
-                                    </span>
-                                }
-                            </div>
-                        </div>
-                        @if (hasAiConsent()) {
-                            <fd-ui-button
-                                type="button"
-                                fill="outline"
-                                variant="secondary"
-                                size="sm"
-                                [disabled]="isRevokingAiConsent()"
-                                [loading]="isRevokingAiConsent()"
-                                (click)="onRevokeAiConsent()"
-                            >
-                                {{ 'USER_MANAGE.AI_CONSENT_REVOKE' | translate }}
-                            </fd-ui-button>
-                        }
-                    </div>
-                    <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">
-                        <a class="user-manage__privacy-link" href="/privacy-policy" target="_blank" rel="noopener noreferrer">
-                            {{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}
-                        </a>
-                    </div>
-                    <div class="user-manage__privacy-divider"></div>
-                    <div class="user-manage__privacy-item user-manage__privacy-item--danger fd-row fd-gap-sm fd-justify-between">
-                        <div class="user-manage__privacy-info">
-                            <div class="user-manage__privacy-label">{{ 'USER_MANAGE.DELETE_ACCOUNT_LABEL' | translate }}</div>
-                            <div class="user-manage__privacy-hint">{{ 'USER_MANAGE.DELETE_ACCOUNT_HINT' | translate }}</div>
-                        </div>
-                        <fd-ui-button
-                            type="button"
-                            variant="danger"
-                            fill="outline"
-                            size="sm"
-                            icon="delete"
-                            [disabled]="isDeleting()"
-                            [loading]="isDeleting()"
-                            (click)="onDeleteAccount()"
-                        >
-                            {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}
-                        </fd-ui-button>
-                    </div>
-                </div>
-            </fd-ui-card>
+            <fd-user-manage-privacy-card
+                [hasAiConsent]="hasAiConsent()"
+                [isRevokingAiConsent]="isRevokingAiConsent()"
+                [isDeleting]="isDeleting()"
+                (aiConsentRevoke)="onRevokeAiConsent()"
+                (accountDelete)="onDeleteAccount()"
+            />
 
             <fd-ui-form-error class="user-manage__error" [error]="globalError()" />
         </form>
