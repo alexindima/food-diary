@@ -1,0 +1,24 @@
+@let item = checkIn();
+
+<div class="fasting__history-checkin-entry fd-stack fd-gap-xxs">
+    <div class="fasting__history-checkin-header fd-row fd-justify-between fd-gap-xs">
+        <div class="fasting__history-checkin-time fd-ui-caption">
+            {{ item.checkedInAtLabel }}
+        </div>
+    </div>
+    <div class="fasting__history-checkin-summary fd-ui-body-sm">
+        {{ item.summary }}
+    </div>
+    @if (item.symptomLabels.length > 0) {
+        <div class="fasting__history-symptoms fd-row fd-wrap fd-gap-xxs">
+            @for (symptomLabel of item.symptomLabels; track symptomLabel) {
+                <span class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption">
+                    {{ symptomLabel }}
+                </span>
+            }
+        </div>
+    }
+    @if (item.checkIn.notes) {
+        <p class="fasting__history-notes fd-ui-caption">{{ item.checkIn.notes }}</p>
+    }
+</div>

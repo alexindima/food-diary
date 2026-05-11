@@ -1,0 +1,101 @@
+@if (isActive()) {
+    <fd-ui-card class="fasting__card" [title]="'FASTING.CHECK_IN.TITLE' | translate">
+        <div class="fasting__checkin fd-stack fd-gap-md" [attr.aria-busy]="isSaving()">
+            @if (!isExpanded()) {
+                <div class="fasting__checkin-summary fd-stack fd-gap-card-profile">
+                    <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
+
+                    <fd-fasting-check-in-summary [latestCheckIn]="latestCheckIn()" />
+
+                    <div class="fasting__actions fasting__actions--start fd-ui-actions">
+                        <fd-ui-button
+                            variant="secondary"
+                            fill="outline"
+                            [disabled]="isEnding() || isUpdatingCycle()"
+                            (click)="formOpen.emit()"
+                        >
+                            {{ ctaKey() | translate }}
+                        </fd-ui-button>
+                    </div>
+                </div>
+            } @else {
+                <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
+
+                <div class="fasting__checkin-grid fd-grid fd-gap-md">
+                    <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                        <div class="fasting__protocol-group-title fd-ui-overline">
+                            {{ 'FASTING.CHECK_IN.HUNGER' | translate }}
+                        </div>
+                        <fd-ui-emoji-picker
+                            size="sm"
+                            [options]="hungerOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
+                            [selectedValue]="hungerLevel()()"
+                            (selectedValueChange)="setHungerLevel($event)"
+                        />
+                    </div>
+
+                    <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                        <div class="fasting__protocol-group-title fd-ui-overline">
+                            {{ 'FASTING.CHECK_IN.ENERGY' | translate }}
+                        </div>
+                        <fd-ui-emoji-picker
+                            size="sm"
+                            [options]="energyOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
+                            [selectedValue]="energyLevel()()"
+                            (selectedValueChange)="setEnergyLevel($event)"
+                        />
+                    </div>
+
+                    <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                        <div class="fasting__protocol-group-title fd-ui-overline">
+                            {{ 'FASTING.CHECK_IN.MOOD' | translate }}
+                        </div>
+                        <fd-ui-emoji-picker
+                            size="sm"
+                            [options]="moodOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
+                            [selectedValue]="moodLevel()()"
+                            (selectedValueChange)="setMoodLevel($event)"
+                        />
+                    </div>
+                </div>
+
+                <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                    <div class="fasting__protocol-group-title fd-ui-overline">
+                        {{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}
+                    </div>
+                    <fd-ui-chip-select
+                        class="fasting__symptom-chips"
+                        size="sm"
+                        [options]="symptomOptions()"
+                        [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
+                        [selectedValues]="selectedSymptoms()()"
+                        (selectedValuesChange)="selectedSymptoms().set($event)"
+                    />
+                </div>
+
+                <label class="fasting__checkin-notes fd-stack fd-gap-xs">
+                    <span class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
+                    <textarea
+                        class="fasting__textarea"
+                        rows="4"
+                        [ngModel]="notes()()"
+                        [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
+                        (ngModelChange)="notes().set($event)"
+                    ></textarea>
+                </label>
+
+                <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">
+                    <fd-ui-button variant="secondary" fill="outline" [disabled]="isSaving()" (click)="formClose.emit()">
+                        {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
+                    </fd-ui-button>
+                    <fd-ui-button [loading]="isSaving()" [disabled]="draftDisabled()" (click)="save.emit()">
+                        {{ 'FASTING.CHECK_IN.SAVE' | translate }}
+                    </fd-ui-button>
+                </div>
+            }
+        </div>
+    </fd-ui-card>
+}

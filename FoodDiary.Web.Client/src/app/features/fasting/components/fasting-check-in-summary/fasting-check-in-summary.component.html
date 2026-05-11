@@ -1,0 +1,20 @@
+@if (latestCheckIn(); as latest) {
+    <div class="fasting__checkin-meta fd-ui-meta-text">
+        {{ 'FASTING.CHECK_IN.LAST_SAVED' | translate: { value: latest.relativeCheckedInAt } }}
+    </div>
+    <div class="fasting__checkin-summary-text fd-ui-body-sm">
+        {{ latest.summary }}
+    </div>
+    @if (latest.symptomLabels.length > 0) {
+        <div class="fasting__history-symptoms fd-row fd-wrap fd-gap-xxs">
+            @for (symptomLabel of latest.symptomLabels; track symptomLabel) {
+                <span class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption">
+                    {{ symptomLabel }}
+                </span>
+            }
+        </div>
+    }
+    @if (latest.checkIn.notes) {
+        <p class="fasting__checkin-summary-note fd-ui-caption">{{ latest.checkIn.notes }}</p>
+    }
+}

@@ -1,0 +1,10 @@
+@if (insights().length > 0) {
+    <div class="fasting__insights-section fd-stack fd-gap-xs">
+        <div class="fasting__section-label fd-ui-card-title">{{ 'FASTING.INSIGHTS.TITLE' | translate }}</div>
+        <div class="fasting__insights fd-stack fd-gap-xs">
+            @for (insight of insights(); track insight.message.titleKey) {
+                <fd-ui-inline-alert appearance="notice" [severity]="insight.severity" [title]="insight.title" [message]="insight.body" />
+            }
+        </div>
+    </div>
+}

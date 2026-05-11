@@ -1,0 +1,33 @@
+<fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
+    <div class="fasting__history-content">
+        @if (history().length === 0) {
+            <p class="fasting__empty fd-ui-body-sm">{{ 'FASTING.NO_HISTORY' | translate }}</p>
+        } @else {
+            <div class="fasting__history fd-stack fd-gap-xs">
+                @for (historyItem of historyItems(); track historyItem.session.id) {
+                    <fd-fasting-history-item
+                        [historyItem]="historyItem"
+                        (chartOpen)="chartOpen.emit($event)"
+                        (historyToggle)="historyToggle.emit($event)"
+                        (checkInsLoadMore)="checkInsLoadMore.emit($event)"
+                    />
+                }
+            </div>
+            @if (canLoadMoreHistory()) {
+                <div class="fasting__history-actions fd-row fd-justify-center">
+                    <fd-ui-button
+                        type="button"
+                        fill="outline"
+                        variant="secondary"
+                        size="sm"
+                        [loading]="isLoadingMoreHistory()"
+                        [disabled]="isLoadingMoreHistory()"
+                        (click)="historyLoadMore.emit()"
+                    >
+                        {{ 'FASTING.LOAD_MORE_HISTORY' | translate }}
+                    </fd-ui-button>
+                </div>
+            }
+        }
+    </div>
+</fd-ui-card>

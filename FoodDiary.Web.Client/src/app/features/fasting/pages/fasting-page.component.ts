@@ -1,11 +1,9 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
+import type { FdUiChipSelectOption, FdUiEmojiPickerOption } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInlineAlertComponent, type FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
@@ -17,10 +15,13 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizationService } from '../../../services/localization.service';
+import { FastingCheckInCardComponent } from '../components/fasting-check-in-card/fasting-check-in-card.component';
 import {
     FastingCheckInChartDialogComponent,
     type FastingCheckInChartDialogData,
 } from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
+import { FastingHistoryCardComponent } from '../components/fasting-history-card/fasting-history-card.component';
+import { FastingInsightsSectionComponent } from '../components/fasting-insights-section/fasting-insights-section.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
 import { FastingFacade } from '../lib/fasting.facade';
 import {
@@ -54,19 +55,18 @@ const MINUTES_PER_HOUR = 60;
     standalone: true,
     imports: [
         DecimalPipe,
-        FormsModule,
         TranslatePipe,
-        FdUiChipSelectComponent,
-        FdUiEmojiPickerComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         SkeletonCardComponent,
         FdUiCardComponent,
-        FdUiButtonComponent,
         FdUiAccentSurfaceComponent,
         FdUiInlineAlertComponent,
         FastingTimerCardComponent,
+        FastingHistoryCardComponent,
+        FastingInsightsSectionComponent,
+        FastingCheckInCardComponent,
     ],
     templateUrl: './fasting-page.component.html',
     styleUrl: './fasting-page.component.scss',
@@ -659,14 +659,14 @@ interface FastingStatsViewModel {
     topSymptomLabel: string;
 }
 
-interface FastingMessageViewModel {
+export interface FastingMessageViewModel {
     message: FastingMessage;
     severity: FdUiInlineAlertSeverity;
     title: string;
     body: string;
 }
 
-interface FastingCheckInViewModel {
+export interface FastingCheckInViewModel {
     checkIn: FastingCheckIn;
     checkedInAtLabel: string;
     relativeCheckedInAt: string | null;
@@ -674,7 +674,7 @@ interface FastingCheckInViewModel {
     symptomLabels: string[];
 }
 
-interface FastingHistorySessionViewModel {
+export interface FastingHistorySessionViewModel {
     session: FastingSession;
     startedAtLabel: string;
     accentColor: string;

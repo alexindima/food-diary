@@ -141,281 +141,40 @@
                 </div>
             }
 
-            @if (isActive()) {
-                <fd-ui-card class="fasting__card" [title]="'FASTING.CHECK_IN.TITLE' | translate">
-                    <div class="fasting__checkin fd-stack fd-gap-md" [attr.aria-busy]="isSavingCheckIn()">
-                        @if (!isCheckInExpanded()) {
-                            <div class="fasting__checkin-summary fd-stack fd-gap-card-profile">
-                                <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
+            <fd-fasting-check-in-card
+                [isActive]="isActive()"
+                [isSaving]="isSavingCheckIn()"
+                [isEnding]="isEnding()"
+                [isUpdatingCycle]="isUpdatingCycle()"
+                [isExpanded]="isCheckInExpanded()"
+                [latestCheckIn]="currentSessionLatestCheckInView()"
+                [ctaKey]="currentCheckInCtaKey()"
+                [hungerOptions]="hungerEmojiOptions()"
+                [energyOptions]="energyEmojiOptions()"
+                [moodOptions]="moodEmojiOptions()"
+                [symptomOptions]="symptomChipOptions()"
+                [hungerLevel]="hungerLevel"
+                [energyLevel]="energyLevel"
+                [moodLevel]="moodLevel"
+                [selectedSymptoms]="selectedSymptoms"
+                [notes]="checkInNotes"
+                (formOpen)="openCheckInForm()"
+                (formClose)="closeCheckInForm()"
+                (save)="saveCheckIn()"
+            />
 
-                                @if (currentSessionLatestCheckInView(); as latestCheckIn) {
-                                    <div class="fasting__checkin-meta fd-ui-meta-text">
-                                        {{ 'FASTING.CHECK_IN.LAST_SAVED' | translate: { value: latestCheckIn.relativeCheckedInAt } }}
-                                    </div>
-                                    <div class="fasting__checkin-summary-text fd-ui-body-sm">
-                                        {{ latestCheckIn.summary }}
-                                    </div>
-                                    @if (latestCheckIn.symptomLabels.length > 0) {
-                                        <div class="fasting__history-symptoms fd-row fd-wrap fd-gap-xxs">
-                                            @for (symptomLabel of latestCheckIn.symptomLabels; track symptomLabel) {
-                                                <span class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption">
-                                                    {{ symptomLabel }}
-                                                </span>
-                                            }
-                                        </div>
-                                    }
-                                    @if (latestCheckIn.checkIn.notes) {
-                                        <p class="fasting__checkin-summary-note fd-ui-caption">{{ latestCheckIn.checkIn.notes }}</p>
-                                    }
-                                }
+            <fd-fasting-insights-section [insights]="insightItems()" />
 
-                                <div class="fasting__actions fasting__actions--start fd-ui-actions">
-                                    <fd-ui-button
-                                        variant="secondary"
-                                        fill="outline"
-                                        [disabled]="isEnding() || isUpdatingCycle()"
-                                        (click)="openCheckInForm()"
-                                    >
-                                        {{ currentCheckInCtaKey() | translate }}
-                                    </fd-ui-button>
-                                </div>
-                            </div>
-                        } @else {
-                            <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
-
-                            <div class="fasting__checkin-grid fd-grid fd-gap-md">
-                                <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                                    <div class="fasting__protocol-group-title fd-ui-overline">
-                                        {{ 'FASTING.CHECK_IN.HUNGER' | translate }}
-                                    </div>
-                                    <fd-ui-emoji-picker
-                                        size="sm"
-                                        [options]="hungerEmojiOptions()"
-                                        [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
-                                        [(selectedValue)]="hungerLevel"
-                                    />
-                                </div>
-
-                                <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                                    <div class="fasting__protocol-group-title fd-ui-overline">
-                                        {{ 'FASTING.CHECK_IN.ENERGY' | translate }}
-                                    </div>
-                                    <fd-ui-emoji-picker
-                                        size="sm"
-                                        [options]="energyEmojiOptions()"
-                                        [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
-                                        [(selectedValue)]="energyLevel"
-                                    />
-                                </div>
-
-                                <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                                    <div class="fasting__protocol-group-title fd-ui-overline">
-                                        {{ 'FASTING.CHECK_IN.MOOD' | translate }}
-                                    </div>
-                                    <fd-ui-emoji-picker
-                                        size="sm"
-                                        [options]="moodEmojiOptions()"
-                                        [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
-                                        [(selectedValue)]="moodLevel"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                                <div class="fasting__protocol-group-title fd-ui-overline">
-                                    {{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}
-                                </div>
-                                <fd-ui-chip-select
-                                    class="fasting__symptom-chips"
-                                    size="sm"
-                                    [options]="symptomChipOptions()"
-                                    [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
-                                    [(selectedValues)]="selectedSymptoms"
-                                />
-                            </div>
-
-                            <label class="fasting__checkin-notes fd-stack fd-gap-xs">
-                                <span class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
-                                <textarea
-                                    class="fasting__textarea"
-                                    rows="4"
-                                    [ngModel]="checkInNotes()"
-                                    [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
-                                    (ngModelChange)="onCheckInNotesChange($event)"
-                                ></textarea>
-                            </label>
-
-                            <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">
-                                <fd-ui-button
-                                    variant="secondary"
-                                    fill="outline"
-                                    [disabled]="isSavingCheckIn()"
-                                    (click)="closeCheckInForm()"
-                                >
-                                    {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
-                                </fd-ui-button>
-                                <fd-ui-button
-                                    [loading]="isSavingCheckIn()"
-                                    [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()"
-                                    (click)="saveCheckIn()"
-                                >
-                                    {{ 'FASTING.CHECK_IN.SAVE' | translate }}
-                                </fd-ui-button>
-                            </div>
-                        }
-                    </div>
-                </fd-ui-card>
-            }
-
-            @if (insightItems().length > 0) {
-                <div class="fasting__insights-section fd-stack fd-gap-xs">
-                    <div class="fasting__section-label fd-ui-card-title">{{ 'FASTING.INSIGHTS.TITLE' | translate }}</div>
-                    <div class="fasting__insights fd-stack fd-gap-xs">
-                        @for (insight of insightItems(); track insight.message.titleKey) {
-                            <fd-ui-inline-alert
-                                appearance="notice"
-                                [severity]="insight.severity"
-                                [title]="insight.title"
-                                [message]="insight.body"
-                            />
-                        }
-                    </div>
-                </div>
-            }
-
-            <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
-                <div class="fasting__history-content">
-                    @if (history().length === 0) {
-                        <p class="fasting__empty fd-ui-body-sm">{{ 'FASTING.NO_HISTORY' | translate }}</p>
-                    } @else {
-                        <div class="fasting__history fd-stack fd-gap-xs">
-                            @for (historyItem of historyItems(); track historyItem.session.id) {
-                                @let session = historyItem.session;
-                                <fd-ui-accent-surface
-                                    class="fasting__history-item fd-bg-surface-panel-gradient"
-                                    accentSide="left"
-                                    [accentColor]="historyItem.accentColor"
-                                    [tinted]="true"
-                                >
-                                    <div class="fasting__history-header fd-row fd-wrap fd-justify-between fd-gap-sm">
-                                        <div class="fasting__history-heading fd-row fd-wrap fd-align-baseline fd-gap-xs">
-                                            <span class="fasting__history-date fd-ui-stat-value">
-                                                {{ historyItem.startedAtLabel }}
-                                            </span>
-                                            <span class="fasting__history-separator" aria-hidden="true">&middot;</span>
-                                            <span class="fasting__history-details fd-ui-body-sm">
-                                                {{ historyItem.sessionTypeLabel }} &middot; {{ historyItem.protocolDisplay }}
-                                            </span>
-                                        </div>
-                                        <div
-                                            class="fasting__history-badge fd-ui-pill fd-ui-pill--compact fd-ui-meta-text"
-                                            [class.fasting__history-badge--completed]="session.status === 'Completed'"
-                                            [class.fasting__history-badge--interrupted]="session.status === 'Interrupted'"
-                                            [class.fasting__history-badge--skipped]="session.status === 'Skipped'"
-                                            [class.fasting__history-badge--postponed]="session.status === 'Postponed'"
-                                        >
-                                            {{ historyItem.badgeKey | translate }}
-                                        </div>
-                                    </div>
-                                    @if (session.notes) {
-                                        <p class="fasting__history-notes fd-ui-caption">{{ session.notes }}</p>
-                                    }
-                                    @if (historyItem.hasCheckIns) {
-                                        <div class="fasting__history-toggle-row fd-row fd-wrap fd-justify-between fd-gap-sm">
-                                            <span class="fasting__history-toggle-count fd-ui-caption">
-                                                {{ 'FASTING.HISTORY_CHECK_INS_COUNT' | translate: { count: historyItem.checkInCount } }}
-                                            </span>
-                                            <div class="fasting__history-toggle-buttons fd-row fd-wrap fd-justify-end fd-gap-card-profile">
-                                                @if (historyItem.canViewChart) {
-                                                    <fd-ui-button
-                                                        type="button"
-                                                        class="fasting__history-toggle fasting__history-toggle--muted"
-                                                        variant="secondary"
-                                                        fill="text"
-                                                        (click)="openSessionCheckInChart(session)"
-                                                    >
-                                                        {{ 'FASTING.SHOW_CHECK_IN_CHART' | translate }}
-                                                    </fd-ui-button>
-                                                }
-                                                <fd-ui-button
-                                                    type="button"
-                                                    class="fasting__history-toggle"
-                                                    variant="secondary"
-                                                    fill="text"
-                                                    [attr.aria-expanded]="historyItem.isExpanded"
-                                                    [attr.aria-controls]="historyItem.checkInRegionId"
-                                                    (click)="toggleHistorySession(session.id)"
-                                                >
-                                                    {{ historyItem.toggleKey | translate: { count: historyItem.checkInCount } }}
-                                                </fd-ui-button>
-                                            </div>
-                                        </div>
-
-                                        @if (historyItem.isExpanded) {
-                                            <div class="fasting__history-checkin fd-stack fd-gap-xs" [id]="historyItem.checkInRegionId">
-                                                @for (checkIn of historyItem.visibleCheckIns; track checkIn.checkIn.id) {
-                                                    <div class="fasting__history-checkin-entry fd-stack fd-gap-xxs">
-                                                        <div class="fasting__history-checkin-header fd-row fd-justify-between fd-gap-xs">
-                                                            <div class="fasting__history-checkin-time fd-ui-caption">
-                                                                {{ checkIn.checkedInAtLabel }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="fasting__history-checkin-summary fd-ui-body-sm">
-                                                            {{ checkIn.summary }}
-                                                        </div>
-                                                        @if (checkIn.symptomLabels.length > 0) {
-                                                            <div class="fasting__history-symptoms fd-row fd-wrap fd-gap-xxs">
-                                                                @for (symptomLabel of checkIn.symptomLabels; track symptomLabel) {
-                                                                    <span
-                                                                        class="fasting__history-symptom fd-ui-pill fd-ui-pill--compact fd-ui-caption"
-                                                                    >
-                                                                        {{ symptomLabel }}
-                                                                    </span>
-                                                                }
-                                                            </div>
-                                                        }
-                                                        @if (checkIn.checkIn.notes) {
-                                                            <p class="fasting__history-notes fd-ui-caption">{{ checkIn.checkIn.notes }}</p>
-                                                        }
-                                                    </div>
-                                                }
-                                                @if (historyItem.canLoadMoreCheckIns) {
-                                                    <div class="fasting__history-toggle-actions fd-row">
-                                                        <fd-ui-button
-                                                            type="button"
-                                                            fill="outline"
-                                                            variant="secondary"
-                                                            size="sm"
-                                                            (click)="loadMoreSessionCheckIns(session.id)"
-                                                        >
-                                                            {{ 'FASTING.LOAD_MORE_CHECK_INS' | translate }}
-                                                        </fd-ui-button>
-                                                    </div>
-                                                }
-                                            </div>
-                                        }
-                                    }
-                                </fd-ui-accent-surface>
-                            }
-                        </div>
-                        @if (canLoadMoreHistory()) {
-                            <div class="fasting__history-actions fd-row fd-justify-center">
-                                <fd-ui-button
-                                    type="button"
-                                    fill="outline"
-                                    variant="secondary"
-                                    size="sm"
-                                    [loading]="isLoadingMoreHistory()"
-                                    [disabled]="isLoadingMoreHistory()"
-                                    (click)="loadMoreHistory()"
-                                >
-                                    {{ 'FASTING.LOAD_MORE_HISTORY' | translate }}
-                                </fd-ui-button>
-                            </div>
-                        }
-                    }
-                </div>
-            </fd-ui-card>
+            <fd-fasting-history-card
+                [history]="history()"
+                [historyItems]="historyItems()"
+                [canLoadMoreHistory]="canLoadMoreHistory()"
+                [isLoadingMoreHistory]="isLoadingMoreHistory()"
+                (chartOpen)="openSessionCheckInChart($event)"
+                (historyToggle)="toggleHistorySession($event)"
+                (checkInsLoadMore)="loadMoreSessionCheckIns($event)"
+                (historyLoadMore)="loadMoreHistory()"
+            />
         }
     </fd-page-body>
 </div>

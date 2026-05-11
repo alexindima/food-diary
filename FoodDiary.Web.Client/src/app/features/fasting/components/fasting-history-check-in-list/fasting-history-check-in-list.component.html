@@ -1,0 +1,16 @@
+@let item = historyItem();
+
+@if (item.isExpanded) {
+    <div class="fasting__history-checkin fd-stack fd-gap-xs" [id]="item.checkInRegionId">
+        @for (checkIn of item.visibleCheckIns; track checkIn.checkIn.id) {
+            <fd-fasting-history-check-in-entry [checkIn]="checkIn" />
+        }
+        @if (item.canLoadMoreCheckIns) {
+            <div class="fasting__history-toggle-actions fd-row">
+                <fd-ui-button type="button" fill="outline" variant="secondary" size="sm" (click)="checkInsLoadMore.emit(item.session.id)">
+                    {{ 'FASTING.LOAD_MORE_CHECK_INS' | translate }}
+                </fd-ui-button>
+            </div>
+        }
+    </div>
+}
