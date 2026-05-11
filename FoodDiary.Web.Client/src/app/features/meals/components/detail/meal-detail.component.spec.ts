@@ -61,39 +61,46 @@ const mockMeal: Meal = {
     aiSessions: [],
 };
 
-describe('MealDetailComponent', () => {
-    let component: MealDetailComponent;
-    let fixture: ComponentFixture<MealDetailComponent>;
+let component: MealDetailComponent;
+let fixture: ComponentFixture<MealDetailComponent>;
 
-    const mockDialogRef = {
-        close: vi.fn(),
-    };
+const mockDialogRef = {
+    close: vi.fn(),
+};
 
-    const mockConfirmDialogRef = {
-        afterClosed: vi.fn().mockReturnValue(of(true)),
-    };
+const mockConfirmDialogRef = {
+    afterClosed: vi.fn().mockReturnValue(of(true)),
+};
 
-    const mockFdDialogService = {
-        open: vi.fn().mockReturnValue(mockConfirmDialogRef),
-    };
+const mockFdDialogService = {
+    open: vi.fn().mockReturnValue(mockConfirmDialogRef),
+};
 
-    beforeEach(async () => {
-        vi.clearAllMocks();
-
-        await TestBed.configureTestingModule({
+async function createComponentAsync(meal: Meal = mockMeal): Promise<MealDetailComponent> {
+    await TestBed.resetTestingModule()
+        .configureTestingModule({
             imports: [MealDetailComponent, TranslateModule.forRoot()],
             providers: [
-                { provide: FD_UI_DIALOG_DATA, useValue: mockMeal },
+                { provide: FD_UI_DIALOG_DATA, useValue: meal },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
             ],
-        }).compileComponents();
+        })
+        .compileComponents();
 
-        fixture = TestBed.createComponent(MealDetailComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(MealDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
 
+    return component;
+}
+
+beforeEach(async () => {
+    vi.clearAllMocks();
+    await createComponentAsync();
+});
+
+describe('MealDetailComponent summary state', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -127,7 +134,9 @@ describe('MealDetailComponent', () => {
         component.onTabChange('invalid');
         expect(component.activeTab).toBe('summary');
     });
+});
 
+describe('MealDetailComponent actions', () => {
     it('should close dialog with edit action on onEdit', () => {
         component.onEdit();
 
@@ -148,7 +157,9 @@ describe('MealDetailComponent', () => {
     it('should count items', () => {
         expect(component.itemsCount).toBe(0);
     });
+});
 
+describe('MealDetailComponent item previews', () => {
     it('should include ai items in item count and preview', async () => {
         const meal: Meal = {
             ...mockMeal,
@@ -188,23 +199,14 @@ describe('MealDetailComponent', () => {
             ],
         };
 
-        TestBed.resetTestingModule();
-        await TestBed.configureTestingModule({
-            imports: [MealDetailComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: FD_UI_DIALOG_DATA, useValue: meal },
-                { provide: FdUiDialogRef, useValue: mockDialogRef },
-                { provide: FdUiDialogService, useValue: mockFdDialogService },
-            ],
-        }).compileComponents();
-
-        const customFixture = TestBed.createComponent(MealDetailComponent);
-        const customComponent = customFixture.componentInstance;
+        const customComponent = await createComponentAsync(meal);
 
         expect(customComponent.itemsCount).toBe(2);
         expect(customComponent.itemPreview.map(item => item.name)).toEqual(['Manual item', 'ИИ позиция']);
     });
+});
 
+describe('MealDetailComponent macro blocks and expanded preview', () => {
     it('should build macro blocks', () => {
         expect(component.macroBlocks.length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
         expect(component.macroBlocks[0].value).toBe(TOTAL_PROTEINS);
@@ -241,18 +243,7 @@ describe('MealDetailComponent', () => {
             aiSessions: [],
         };
 
-        TestBed.resetTestingModule();
-        await TestBed.configureTestingModule({
-            imports: [MealDetailComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: FD_UI_DIALOG_DATA, useValue: meal },
-                { provide: FdUiDialogRef, useValue: mockDialogRef },
-                { provide: FdUiDialogService, useValue: mockFdDialogService },
-            ],
-        }).compileComponents();
-
-        const customFixture = TestBed.createComponent(MealDetailComponent);
-        const customComponent = customFixture.componentInstance;
+        const customComponent = await createComponentAsync(meal);
 
         expect(customComponent.visibleItemPreview().map(item => item.name)).toEqual(['First item', 'Second item']);
         expect(customComponent.hiddenItemPreviewCount()).toBe(1);

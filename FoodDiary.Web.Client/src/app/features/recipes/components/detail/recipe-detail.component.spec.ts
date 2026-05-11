@@ -87,46 +87,46 @@ const mockRecipe: Recipe = {
     ],
 };
 
-describe('RecipeDetailComponent', () => {
-    let component: RecipeDetailComponent;
-    let fixture: ComponentFixture<RecipeDetailComponent>;
+let component: RecipeDetailComponent;
+let fixture: ComponentFixture<RecipeDetailComponent>;
 
-    const mockDialogRef = {
-        close: vi.fn(),
-    };
+const mockDialogRef = {
+    close: vi.fn(),
+};
 
-    const mockConfirmDialogRef = {
-        afterClosed: vi.fn().mockReturnValue(of(true)),
-    };
+const mockConfirmDialogRef = {
+    afterClosed: vi.fn().mockReturnValue(of(true)),
+};
 
-    const mockFdDialogService = {
-        open: vi.fn().mockReturnValue(mockConfirmDialogRef),
-    };
+const mockFdDialogService = {
+    open: vi.fn().mockReturnValue(mockConfirmDialogRef),
+};
 
-    const mockRecipeService = {
-        duplicate: vi.fn().mockReturnValue(of({ ...mockRecipe, id: '2', name: 'Test Recipe (Copy)' })),
-    };
+const mockRecipeService = {
+    duplicate: vi.fn().mockReturnValue(of({ ...mockRecipe, id: '2', name: 'Test Recipe (Copy)' })),
+};
 
-    beforeEach(async () => {
-        vi.clearAllMocks();
+beforeEach(async () => {
+    vi.clearAllMocks();
 
-        await TestBed.configureTestingModule({
-            imports: [RecipeDetailComponent, TranslateModule.forRoot()],
-            providers: [
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                { provide: FD_UI_DIALOG_DATA, useValue: mockRecipe },
-                { provide: FdUiDialogRef, useValue: mockDialogRef },
-                { provide: FdUiDialogService, useValue: mockFdDialogService },
-                { provide: RecipeService, useValue: mockRecipeService },
-            ],
-        }).compileComponents();
+    await TestBed.configureTestingModule({
+        imports: [RecipeDetailComponent, TranslateModule.forRoot()],
+        providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: FD_UI_DIALOG_DATA, useValue: mockRecipe },
+            { provide: FdUiDialogRef, useValue: mockDialogRef },
+            { provide: FdUiDialogService, useValue: mockFdDialogService },
+            { provide: RecipeService, useValue: mockRecipeService },
+        ],
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(RecipeDetailComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(RecipeDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+});
 
+describe('RecipeDetailComponent summary state', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -163,7 +163,9 @@ describe('RecipeDetailComponent', () => {
         component.onTabChange('summary');
         expect(component.activeTab).toBe('summary');
     });
+});
 
+describe('RecipeDetailComponent actions', () => {
     it('should emit edit action', () => {
         component.onEdit();
 

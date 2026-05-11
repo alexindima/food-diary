@@ -27,51 +27,51 @@ const SUMMARY_FATS = 2.5;
 const SUMMARY_CARBS = 10;
 const SUMMARY_FIBER = 1.5;
 
-describe('RecipeManageFacade', () => {
-    let facade: RecipeManageFacade;
-    let recipeService: {
-        create: ReturnType<typeof vi.fn>;
-        update: ReturnType<typeof vi.fn>;
+let facade: RecipeManageFacade;
+let recipeService: {
+    create: ReturnType<typeof vi.fn>;
+    update: ReturnType<typeof vi.fn>;
+};
+let navigationService: {
+    navigateToRecipeListAsync: ReturnType<typeof vi.fn>;
+};
+let dialogService: {
+    open: ReturnType<typeof vi.fn>;
+};
+
+beforeEach(() => {
+    recipeService = {
+        create: vi.fn().mockReturnValue(of({ id: 'recipe-1', name: 'Recipe' })),
+        update: vi.fn().mockReturnValue(of({ id: 'recipe-1', name: 'Recipe' })),
     };
-    let navigationService: {
-        navigateToRecipeListAsync: ReturnType<typeof vi.fn>;
+    navigationService = {
+        navigateToRecipeListAsync: vi.fn().mockResolvedValue(true),
     };
-    let dialogService: {
-        open: ReturnType<typeof vi.fn>;
+    dialogService = {
+        open: vi.fn().mockReturnValue({
+            afterClosed: () => of(null),
+        }),
     };
 
-    beforeEach(() => {
-        recipeService = {
-            create: vi.fn().mockReturnValue(of({ id: 'recipe-1', name: 'Recipe' })),
-            update: vi.fn().mockReturnValue(of({ id: 'recipe-1', name: 'Recipe' })),
-        };
-        navigationService = {
-            navigateToRecipeListAsync: vi.fn().mockResolvedValue(true),
-        };
-        dialogService = {
-            open: vi.fn().mockReturnValue({
-                afterClosed: () => of(null),
-            }),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                RecipeManageFacade,
-                { provide: RecipeService, useValue: recipeService },
-                { provide: NavigationService, useValue: navigationService },
-                { provide: FdUiDialogService, useValue: dialogService },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: vi.fn((key: string) => key),
-                    },
+    TestBed.configureTestingModule({
+        providers: [
+            RecipeManageFacade,
+            { provide: RecipeService, useValue: recipeService },
+            { provide: NavigationService, useValue: navigationService },
+            { provide: FdUiDialogService, useValue: dialogService },
+            {
+                provide: TranslateService,
+                useValue: {
+                    instant: vi.fn((key: string) => key),
                 },
-            ],
-        });
-
-        facade = TestBed.inject(RecipeManageFacade);
+            },
+        ],
     });
 
+    facade = TestBed.inject(RecipeManageFacade);
+});
+
+describe('RecipeManageFacade submit', () => {
     it('creates recipe and navigates on success', async () => {
         facade.addRecipe({
             name: 'Recipe',
@@ -133,7 +133,9 @@ describe('RecipeManageFacade', () => {
 
         expect(facade.globalError()).toBe('Backend failed');
     });
+});
 
+describe('RecipeManageFacade selection', () => {
     it('opens item selection dialog and normalizes undefined dialog result to null', async () => {
         const afterClosed = of(undefined);
         dialogService.open.mockReturnValue({
@@ -189,7 +191,9 @@ describe('RecipeManageFacade', () => {
         expect(ingredientGroup.value.amount).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
         expect(ingredientGroup.value.nestedRecipeId).toBeNull();
     });
+});
 
+describe('RecipeManageFacade nutrition summary', () => {
     it('calculates nutrient summary from recipe steps', () => {
         const stepsArray = new FormArray([
             new FormGroup({

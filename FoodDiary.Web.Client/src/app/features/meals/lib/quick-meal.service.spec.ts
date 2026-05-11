@@ -13,88 +13,88 @@ import { QuickMealService } from './quick-meal.service';
 const DEFAULT_PORTION_AMOUNT = 180;
 const DOUBLE_DEFAULT_PORTION_AMOUNT = 360;
 
-describe('QuickMealService', () => {
-    let service: QuickMealService;
-    let mealService: { create: ReturnType<typeof vi.fn> };
-    let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
+const product: Product = {
+    id: 'product-1',
+    name: 'Crab salad',
+    productType: ProductType.Other,
+    baseUnit: MeasurementUnit.G,
+    baseAmount: 100,
+    defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
+    caloriesPerBase: 185,
+    proteinsPerBase: 10,
+    fatsPerBase: 12,
+    carbsPerBase: 8,
+    fiberPerBase: 0,
+    alcoholPerBase: 0,
+    usageCount: 0,
+    visibility: ProductVisibility.Private,
+    createdAt: new Date('2026-05-03T12:00:00Z'),
+    isOwnedByCurrentUser: true,
+    qualityScore: 50,
+    qualityGrade: 'yellow',
+};
 
-    const product: Product = {
-        id: 'product-1',
-        name: 'Crab salad',
-        productType: ProductType.Other,
-        baseUnit: MeasurementUnit.G,
-        baseAmount: 100,
-        defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
-        caloriesPerBase: 185,
-        proteinsPerBase: 10,
-        fatsPerBase: 12,
-        carbsPerBase: 8,
-        fiberPerBase: 0,
-        alcoholPerBase: 0,
-        usageCount: 0,
-        visibility: ProductVisibility.Private,
-        createdAt: new Date('2026-05-03T12:00:00Z'),
-        isOwnedByCurrentUser: true,
-        qualityScore: 50,
-        qualityGrade: 'yellow',
+const createdMeal: Meal = {
+    id: 'meal-1',
+    date: '2026-05-03T12:00:00Z',
+    mealType: null,
+    comment: null,
+    imageUrl: null,
+    imageAssetId: null,
+    totalCalories: 185,
+    totalProteins: 10,
+    totalFats: 12,
+    totalCarbs: 8,
+    totalFiber: 0,
+    totalAlcohol: 0,
+    isNutritionAutoCalculated: true,
+    items: [],
+    aiSessions: [],
+};
+
+const recipe: Recipe = {
+    id: 'recipe-1',
+    name: 'Rice bowl',
+    servings: 4,
+    visibility: RecipeVisibility.Private,
+    usageCount: 0,
+    createdAt: '2026-05-03T12:00:00Z',
+    isOwnedByCurrentUser: true,
+    isNutritionAutoCalculated: true,
+    steps: [],
+};
+
+let service: QuickMealService;
+let mealService: { create: ReturnType<typeof vi.fn> };
+let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
+
+beforeEach(() => {
+    mealService = {
+        create: vi.fn().mockReturnValue(of(createdMeal)),
+    };
+    toastService = {
+        success: vi.fn(),
+        error: vi.fn(),
     };
 
-    const createdMeal: Meal = {
-        id: 'meal-1',
-        date: '2026-05-03T12:00:00Z',
-        mealType: null,
-        comment: null,
-        imageUrl: null,
-        imageAssetId: null,
-        totalCalories: 185,
-        totalProteins: 10,
-        totalFats: 12,
-        totalCarbs: 8,
-        totalFiber: 0,
-        totalAlcohol: 0,
-        isNutritionAutoCalculated: true,
-        items: [],
-        aiSessions: [],
-    };
-
-    const recipe: Recipe = {
-        id: 'recipe-1',
-        name: 'Rice bowl',
-        servings: 4,
-        visibility: RecipeVisibility.Private,
-        usageCount: 0,
-        createdAt: '2026-05-03T12:00:00Z',
-        isOwnedByCurrentUser: true,
-        isNutritionAutoCalculated: true,
-        steps: [],
-    };
-
-    beforeEach(() => {
-        mealService = {
-            create: vi.fn().mockReturnValue(of(createdMeal)),
-        };
-        toastService = {
-            success: vi.fn(),
-            error: vi.fn(),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                QuickMealService,
-                { provide: MealService, useValue: mealService },
-                { provide: FdUiToastService, useValue: toastService },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: vi.fn((key: string) => key),
-                    },
+    TestBed.configureTestingModule({
+        providers: [
+            QuickMealService,
+            { provide: MealService, useValue: mealService },
+            { provide: FdUiToastService, useValue: toastService },
+            {
+                provide: TranslateService,
+                useValue: {
+                    instant: vi.fn((key: string) => key),
                 },
-            ],
-        });
-
-        service = TestBed.inject(QuickMealService);
+            },
+        ],
     });
 
+    service = TestBed.inject(QuickMealService);
+});
+
+describe('QuickMealService draft items', () => {
     it('uses product default portion amount for quick add', () => {
         service.addProduct(product);
 
@@ -157,7 +157,9 @@ describe('QuickMealService', () => {
             }),
         );
     });
+});
 
+describe('QuickMealService saving', () => {
     it('clears draft and shows success only when save returns created meal', () => {
         service.addProduct(product);
         service.updateDetails({

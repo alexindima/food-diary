@@ -20,39 +20,39 @@ const DEFAULT_EXTEND_HOURS = 24;
 const DEFAULT_REDUCE_HOURS = 4;
 const DEFAULT_EATING_WINDOW_HOURS = 8;
 
-describe('FastingControlsComponent', () => {
-    let fixture: ComponentFixture<FastingControlsComponent>;
-    let component: FastingControlsComponent;
-    let facade: ReturnType<typeof createFacadeMock>;
-    let dialogService: { open: ReturnType<typeof vi.fn> };
+let fixture: ComponentFixture<FastingControlsComponent>;
+let component: FastingControlsComponent;
+let facade: FastingFacadeMock;
+let dialogService: { open: ReturnType<typeof vi.fn> };
 
-    beforeEach(async () => {
-        facade = createFacadeMock();
-        dialogService = {
-            open: vi.fn(() => ({
-                afterClosed: (): Observable<string> => of('confirm'),
-            })),
-        };
+beforeEach(async () => {
+    facade = createFacadeMock();
+    dialogService = {
+        open: vi.fn(() => ({
+            afterClosed: (): Observable<string> => of('confirm'),
+        })),
+    };
 
-        await TestBed.configureTestingModule({
-            imports: [FastingControlsComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: FastingFacade, useValue: facade },
-                { provide: FdUiDialogService, useValue: dialogService },
-                {
-                    provide: LocalizationService,
-                    useValue: {
-                        getCurrentLanguage: vi.fn(() => 'ru'),
-                    },
+    await TestBed.configureTestingModule({
+        imports: [FastingControlsComponent, TranslateModule.forRoot()],
+        providers: [
+            { provide: FastingFacade, useValue: facade },
+            { provide: FdUiDialogService, useValue: dialogService },
+            {
+                provide: LocalizationService,
+                useValue: {
+                    getCurrentLanguage: vi.fn(() => 'ru'),
                 },
-            ],
-        }).compileComponents();
+            },
+        ],
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(FastingControlsComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(FastingControlsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+});
 
+describe('FastingControlsComponent setup controls', () => {
     it('renders setup controls and starts fasting from the CTA', () => {
         expect(host(fixture).textContent).toContain('FASTING.MODE_INTERMITTENT');
         expect(host(fixture).textContent).toContain('FASTING.START_FAST');
@@ -90,7 +90,9 @@ describe('FastingControlsComponent', () => {
         expect(facade.setExtendHours).not.toHaveBeenCalled();
         expect(facade.setReduceHours).not.toHaveBeenCalled();
     });
+});
 
+describe('FastingControlsComponent active cyclic session', () => {
     it('renders active cyclic controls without setup start CTA', () => {
         facade.isActive.set(true);
         facade.currentSession.set(createCyclicSession());
@@ -126,7 +128,9 @@ describe('FastingControlsComponent', () => {
         expect(facade.skipCyclicDay).toHaveBeenCalledTimes(1);
         expect(facade.postponeCyclicDay).toHaveBeenCalledTimes(1);
     });
+});
 
+describe('FastingControlsComponent active extended session', () => {
     it('keeps extended adjustment panels collapsed by default', () => {
         facade.isActive.set(true);
         facade.currentSession.set(createExtendedSession());
@@ -187,12 +191,12 @@ describe('FastingControlsComponent', () => {
     });
 });
 
-function host(fixture: ComponentFixture<FastingControlsComponent>): HTMLElement {
-    return fixture.nativeElement as HTMLElement;
+function host(componentFixture: ComponentFixture<FastingControlsComponent>): HTMLElement {
+    return componentFixture.nativeElement as HTMLElement;
 }
 
-function getButtonByText(fixture: ComponentFixture<FastingControlsComponent>, text: string): HTMLElement {
-    const button = Array.from(host(fixture).querySelectorAll<HTMLElement>('fd-ui-button')).find(element =>
+function getButtonByText(componentFixture: ComponentFixture<FastingControlsComponent>, text: string): HTMLElement {
+    const button = Array.from(host(componentFixture).querySelectorAll<HTMLElement>('fd-ui-button')).find(element =>
         element.textContent.includes(text),
     );
     if (button === undefined) {
@@ -202,7 +206,7 @@ function getButtonByText(fixture: ComponentFixture<FastingControlsComponent>, te
     return button;
 }
 
-function createFacadeMock(): {
+type FastingFacadeMock = {
     startFasting: ReturnType<typeof vi.fn>;
     endFasting: ReturnType<typeof vi.fn>;
     selectMode: ReturnType<typeof vi.fn>;
@@ -240,7 +244,36 @@ function createFacadeMock(): {
     isReducing: WritableSignal<boolean>;
     isUpdatingCycle: WritableSignal<boolean>;
     canExtendActiveSession: WritableSignal<boolean>;
-} {
+};
+
+function createFacadeMock(): FastingFacadeMock {
+    return {
+        ...createFacadeActionMocks(),
+        ...createFacadeSignals(),
+    };
+}
+
+function createFacadeActionMocks(): Pick<
+    FastingFacadeMock,
+    | 'startFasting'
+    | 'endFasting'
+    | 'selectMode'
+    | 'selectProtocol'
+    | 'setCustomHours'
+    | 'setCustomIntermittentFastHours'
+    | 'setCyclicPreset'
+    | 'selectCustomCyclicPreset'
+    | 'setCyclicFastDays'
+    | 'setCyclicEatDays'
+    | 'selectCyclicEatDayProtocol'
+    | 'setCyclicEatDayFastHours'
+    | 'setExtendHours'
+    | 'setReduceHours'
+    | 'extendByHours'
+    | 'reduceTargetByHours'
+    | 'skipCyclicDay'
+    | 'postponeCyclicDay'
+> {
     return {
         startFasting: vi.fn(),
         endFasting: vi.fn(),
@@ -260,6 +293,11 @@ function createFacadeMock(): {
         reduceTargetByHours: vi.fn(),
         skipCyclicDay: vi.fn(),
         postponeCyclicDay: vi.fn(),
+    };
+}
+
+function createFacadeSignals(): Omit<FastingFacadeMock, keyof ReturnType<typeof createFacadeActionMocks>> {
+    return {
         isActive: signal(false),
         currentSession: signal<FastingSession | null>(null),
         selectedMode: signal<'intermittent' | 'extended' | 'cyclic'>('intermittent'),

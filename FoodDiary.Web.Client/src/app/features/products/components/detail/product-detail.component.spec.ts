@@ -37,46 +37,53 @@ const mockProduct: Product = {
     qualityGrade: 'green',
 };
 
-describe('ProductDetailComponent', () => {
-    let component: ProductDetailComponent;
-    let fixture: ComponentFixture<ProductDetailComponent>;
+let component: ProductDetailComponent;
+let fixture: ComponentFixture<ProductDetailComponent>;
 
-    const mockDialogRef = {
-        close: vi.fn(),
-    };
+const mockDialogRef = {
+    close: vi.fn(),
+};
 
-    const mockConfirmDialogRef = {
-        afterClosed: vi.fn().mockReturnValue(of(true)),
-    };
+const mockConfirmDialogRef = {
+    afterClosed: vi.fn().mockReturnValue(of(true)),
+};
 
-    const mockFdDialogService = {
-        open: vi.fn().mockReturnValue(mockConfirmDialogRef),
-    };
+const mockFdDialogService = {
+    open: vi.fn().mockReturnValue(mockConfirmDialogRef),
+};
 
-    const mockProductService = {
-        duplicate: vi.fn().mockReturnValue(of({ ...mockProduct, id: '2', name: 'Test Product (Copy)' })),
-    };
+const mockProductService = {
+    duplicate: vi.fn().mockReturnValue(of({ ...mockProduct, id: '2', name: 'Test Product (Copy)' })),
+};
 
-    beforeEach(async () => {
-        vi.clearAllMocks();
-
-        await TestBed.configureTestingModule({
+async function createComponentAsync(product: Product = mockProduct): Promise<ProductDetailComponent> {
+    await TestBed.resetTestingModule()
+        .configureTestingModule({
             imports: [ProductDetailComponent, TranslateModule.forRoot()],
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                { provide: FD_UI_DIALOG_DATA, useValue: mockProduct },
+                { provide: FD_UI_DIALOG_DATA, useValue: product },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
                 { provide: ProductService, useValue: mockProductService },
             ],
-        }).compileComponents();
+        })
+        .compileComponents();
 
-        fixture = TestBed.createComponent(ProductDetailComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(ProductDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
 
+    return component;
+}
+
+beforeEach(async () => {
+    vi.clearAllMocks();
+    await createComponentAsync();
+});
+
+describe('ProductDetailComponent summary state', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -103,7 +110,9 @@ describe('ProductDetailComponent', () => {
         component.onTabChange('summary');
         expect(component.activeTab).toBe('summary');
     });
+});
 
+describe('ProductDetailComponent actions', () => {
     it('should emit edit action', () => {
         component.onEdit();
 
@@ -122,27 +131,13 @@ describe('ProductDetailComponent', () => {
         expect(component.isEditDisabled()).toBe(false);
         expect(component.isDeleteDisabled()).toBe(false);
     });
+});
 
+describe('ProductDetailComponent disabled states', () => {
     it('should disable edit and delete when not owned by current user', async () => {
         const notOwnedProduct: Product = { ...mockProduct, isOwnedByCurrentUser: false };
 
-        await TestBed.resetTestingModule()
-            .configureTestingModule({
-                imports: [ProductDetailComponent, TranslateModule.forRoot()],
-                providers: [
-                    provideHttpClient(),
-                    provideHttpClientTesting(),
-                    { provide: FD_UI_DIALOG_DATA, useValue: notOwnedProduct },
-                    { provide: FdUiDialogRef, useValue: mockDialogRef },
-                    { provide: FdUiDialogService, useValue: mockFdDialogService },
-                    { provide: ProductService, useValue: mockProductService },
-                ],
-            })
-            .compileComponents();
-
-        const notOwnedFixture = TestBed.createComponent(ProductDetailComponent);
-        const notOwnedComponent = notOwnedFixture.componentInstance;
-        notOwnedFixture.detectChanges();
+        const notOwnedComponent = await createComponentAsync(notOwnedProduct);
 
         expect(notOwnedComponent.canModify()).toBe(false);
         expect(notOwnedComponent.isEditDisabled()).toBe(true);
@@ -152,23 +147,7 @@ describe('ProductDetailComponent', () => {
     it('should disable edit and delete when product has usage', async () => {
         const usedProduct: Product = { ...mockProduct, usageCount: USED_PRODUCT_USAGE_COUNT };
 
-        await TestBed.resetTestingModule()
-            .configureTestingModule({
-                imports: [ProductDetailComponent, TranslateModule.forRoot()],
-                providers: [
-                    provideHttpClient(),
-                    provideHttpClientTesting(),
-                    { provide: FD_UI_DIALOG_DATA, useValue: usedProduct },
-                    { provide: FdUiDialogRef, useValue: mockDialogRef },
-                    { provide: FdUiDialogService, useValue: mockFdDialogService },
-                    { provide: ProductService, useValue: mockProductService },
-                ],
-            })
-            .compileComponents();
-
-        const usedFixture = TestBed.createComponent(ProductDetailComponent);
-        const usedComponent = usedFixture.componentInstance;
-        usedFixture.detectChanges();
+        const usedComponent = await createComponentAsync(usedProduct);
 
         expect(usedComponent.canModify()).toBe(false);
     });
@@ -176,24 +155,8 @@ describe('ProductDetailComponent', () => {
     it('should not emit edit when edit is disabled', async () => {
         const usedProduct: Product = { ...mockProduct, usageCount: USED_PRODUCT_USAGE_COUNT };
 
-        await TestBed.resetTestingModule()
-            .configureTestingModule({
-                imports: [ProductDetailComponent, TranslateModule.forRoot()],
-                providers: [
-                    provideHttpClient(),
-                    provideHttpClientTesting(),
-                    { provide: FD_UI_DIALOG_DATA, useValue: usedProduct },
-                    { provide: FdUiDialogRef, useValue: mockDialogRef },
-                    { provide: FdUiDialogService, useValue: mockFdDialogService },
-                    { provide: ProductService, useValue: mockProductService },
-                ],
-            })
-            .compileComponents();
-
         vi.clearAllMocks();
-        const usedFixture = TestBed.createComponent(ProductDetailComponent);
-        const usedComponent = usedFixture.componentInstance;
-        usedFixture.detectChanges();
+        const usedComponent = await createComponentAsync(usedProduct);
 
         usedComponent.onEdit();
         expect(mockDialogRef.close).not.toHaveBeenCalled();
@@ -202,29 +165,15 @@ describe('ProductDetailComponent', () => {
     it('should not emit delete when delete is disabled', async () => {
         const usedProduct: Product = { ...mockProduct, usageCount: USED_PRODUCT_USAGE_COUNT };
 
-        await TestBed.resetTestingModule()
-            .configureTestingModule({
-                imports: [ProductDetailComponent, TranslateModule.forRoot()],
-                providers: [
-                    provideHttpClient(),
-                    provideHttpClientTesting(),
-                    { provide: FD_UI_DIALOG_DATA, useValue: usedProduct },
-                    { provide: FdUiDialogRef, useValue: mockDialogRef },
-                    { provide: FdUiDialogService, useValue: mockFdDialogService },
-                    { provide: ProductService, useValue: mockProductService },
-                ],
-            })
-            .compileComponents();
-
         vi.clearAllMocks();
-        const usedFixture = TestBed.createComponent(ProductDetailComponent);
-        const usedComponent = usedFixture.componentInstance;
-        usedFixture.detectChanges();
+        const usedComponent = await createComponentAsync(usedProduct);
 
         usedComponent.onDelete();
         expect(mockFdDialogService.open).not.toHaveBeenCalled();
     });
+});
 
+describe('ProductDetailComponent metadata', () => {
     it('should handle duplicate', () => {
         component.onDuplicate();
 
@@ -242,23 +191,7 @@ describe('ProductDetailComponent', () => {
     it('should show warning message when product is not owned', async () => {
         const notOwnedProduct: Product = { ...mockProduct, isOwnedByCurrentUser: false };
 
-        await TestBed.resetTestingModule()
-            .configureTestingModule({
-                imports: [ProductDetailComponent, TranslateModule.forRoot()],
-                providers: [
-                    provideHttpClient(),
-                    provideHttpClientTesting(),
-                    { provide: FD_UI_DIALOG_DATA, useValue: notOwnedProduct },
-                    { provide: FdUiDialogRef, useValue: mockDialogRef },
-                    { provide: FdUiDialogService, useValue: mockFdDialogService },
-                    { provide: ProductService, useValue: mockProductService },
-                ],
-            })
-            .compileComponents();
-
-        const notOwnedFixture = TestBed.createComponent(ProductDetailComponent);
-        const notOwnedComponent = notOwnedFixture.componentInstance;
-        notOwnedFixture.detectChanges();
+        const notOwnedComponent = await createComponentAsync(notOwnedProduct);
 
         expect(notOwnedComponent.warningMessage()).toBe('PRODUCT_DETAIL.WARNING_NOT_OWNER');
     });

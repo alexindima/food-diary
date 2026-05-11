@@ -14,119 +14,119 @@ import { ProfileManageFacade } from './profile-manage.facade';
 
 const AUTOSAVE_DEBOUNCE_MS = 700;
 
-describe('ProfileManageFacade', () => {
-    let facade: ProfileManageFacade;
-    let userService: {
-        getOverview: ReturnType<typeof vi.fn>;
-        update: ReturnType<typeof vi.fn>;
-        deleteCurrentUser: ReturnType<typeof vi.fn>;
-    };
-    let notificationService: {
-        updateNotificationPreferences: ReturnType<typeof vi.fn>;
-        removeWebPushSubscription: ReturnType<typeof vi.fn>;
-    };
-    let dialogService: { open: ReturnType<typeof vi.fn> };
-    let authService: { onLogoutAsync: ReturnType<typeof vi.fn>; startAdminSso: ReturnType<typeof vi.fn> };
-    let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
-    let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
+const user: User = {
+    id: 'u1',
+    email: 'test@example.com',
+    hasPassword: false,
+    language: 'ru',
+    isActive: true,
+    isEmailConfirmed: true,
+    pushNotificationsEnabled: true,
+    fastingPushNotificationsEnabled: false,
+    socialPushNotificationsEnabled: true,
+    fastingCheckInReminderHours: 12,
+    fastingCheckInFollowUpReminderHours: 20,
+};
 
-    const user: User = {
-        id: 'u1',
-        email: 'test@example.com',
-        hasPassword: false,
-        language: 'ru',
-        isActive: true,
-        isEmailConfirmed: true,
+const overview: UserProfileOverview = {
+    user,
+    notificationPreferences: {
         pushNotificationsEnabled: true,
         fastingPushNotificationsEnabled: false,
         socialPushNotificationsEnabled: true,
         fastingCheckInReminderHours: 12,
         fastingCheckInFollowUpReminderHours: 20,
+    },
+    webPushSubscriptions: [
+        {
+            endpoint: 'https://push.example.com/subscriptions/current',
+            endpointHost: 'push.example.com',
+            expirationTimeUtc: null,
+            locale: 'en',
+            userAgent: 'Chrome',
+            createdAtUtc: '2026-04-10T10:00:00Z',
+            updatedAtUtc: null,
+        },
+    ],
+    dietologistRelationship: null,
+};
+
+let facade: ProfileManageFacade;
+let userService: {
+    getOverview: ReturnType<typeof vi.fn>;
+    update: ReturnType<typeof vi.fn>;
+    deleteCurrentUser: ReturnType<typeof vi.fn>;
+};
+let notificationService: {
+    updateNotificationPreferences: ReturnType<typeof vi.fn>;
+    removeWebPushSubscription: ReturnType<typeof vi.fn>;
+};
+let dialogService: { open: ReturnType<typeof vi.fn> };
+let authService: { onLogoutAsync: ReturnType<typeof vi.fn>; startAdminSso: ReturnType<typeof vi.fn> };
+let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
+let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
+
+beforeEach(() => {
+    vi.useFakeTimers();
+    userService = {
+        getOverview: vi.fn().mockReturnValue(of(overview)),
+        update: vi.fn().mockReturnValue(of(user)),
+        deleteCurrentUser: vi.fn().mockReturnValue(of(true)),
+    };
+    notificationService = {
+        updateNotificationPreferences: vi.fn().mockReturnValue(
+            of({
+                pushNotificationsEnabled: false,
+                fastingPushNotificationsEnabled: true,
+                socialPushNotificationsEnabled: true,
+                fastingCheckInReminderHours: 12,
+                fastingCheckInFollowUpReminderHours: 20,
+            }),
+        ),
+        removeWebPushSubscription: vi.fn().mockReturnValue(of(undefined)),
+    };
+    dialogService = {
+        open: vi.fn(),
+    };
+    authService = {
+        onLogoutAsync: vi.fn().mockResolvedValue(undefined),
+        startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
+    };
+    localizationService = {
+        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
+    };
+    navigationService = {
+        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
     };
 
-    const overview: UserProfileOverview = {
-        user,
-        notificationPreferences: {
-            pushNotificationsEnabled: true,
-            fastingPushNotificationsEnabled: false,
-            socialPushNotificationsEnabled: true,
-            fastingCheckInReminderHours: 12,
-            fastingCheckInFollowUpReminderHours: 20,
-        },
-        webPushSubscriptions: [
+    dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
+
+    TestBed.configureTestingModule({
+        providers: [
+            ProfileManageFacade,
+            { provide: UserService, useValue: userService },
+            { provide: NotificationService, useValue: notificationService },
+            { provide: FdUiDialogService, useValue: dialogService },
+            { provide: AuthService, useValue: authService },
+            { provide: LocalizationService, useValue: localizationService },
+            { provide: NavigationService, useValue: navigationService },
             {
-                endpoint: 'https://push.example.com/subscriptions/current',
-                endpointHost: 'push.example.com',
-                expirationTimeUtc: null,
-                locale: 'en',
-                userAgent: 'Chrome',
-                createdAtUtc: '2026-04-10T10:00:00Z',
-                updatedAtUtc: null,
+                provide: TranslateService,
+                useValue: {
+                    instant: vi.fn((key: string) => key),
+                },
             },
         ],
-        dietologistRelationship: null,
-    };
-
-    beforeEach(() => {
-        vi.useFakeTimers();
-        userService = {
-            getOverview: vi.fn().mockReturnValue(of(overview)),
-            update: vi.fn().mockReturnValue(of(user)),
-            deleteCurrentUser: vi.fn().mockReturnValue(of(true)),
-        };
-        notificationService = {
-            updateNotificationPreferences: vi.fn().mockReturnValue(
-                of({
-                    pushNotificationsEnabled: false,
-                    fastingPushNotificationsEnabled: true,
-                    socialPushNotificationsEnabled: true,
-                    fastingCheckInReminderHours: 12,
-                    fastingCheckInFollowUpReminderHours: 20,
-                }),
-            ),
-            removeWebPushSubscription: vi.fn().mockReturnValue(of(undefined)),
-        };
-        dialogService = {
-            open: vi.fn(),
-        };
-        authService = {
-            onLogoutAsync: vi.fn().mockResolvedValue(undefined),
-            startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
-        };
-        localizationService = {
-            applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
-        };
-        navigationService = {
-            navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
-        };
-
-        dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
-
-        TestBed.configureTestingModule({
-            providers: [
-                ProfileManageFacade,
-                { provide: UserService, useValue: userService },
-                { provide: NotificationService, useValue: notificationService },
-                { provide: FdUiDialogService, useValue: dialogService },
-                { provide: AuthService, useValue: authService },
-                { provide: LocalizationService, useValue: localizationService },
-                { provide: NavigationService, useValue: navigationService },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: vi.fn((key: string) => key),
-                    },
-                },
-            ],
-        });
-
-        facade = TestBed.inject(ProfileManageFacade);
     });
 
-    afterEach(() => {
-        vi.useRealTimers();
-    });
+    facade = TestBed.inject(ProfileManageFacade);
+});
 
+afterEach(() => {
+    vi.useRealTimers();
+});
+
+describe('ProfileManageFacade loading and submit', () => {
     it('loads user and applies language on initialize', () => {
         facade.initialize();
 
@@ -155,7 +155,9 @@ describe('ProfileManageFacade', () => {
         expect(dialogService.open).toHaveBeenCalled();
         expect(navigationService.navigateToHomeAsync).toHaveBeenCalled();
     });
+});
 
+describe('ProfileManageFacade account actions', () => {
     it('opens password success dialog after successful password dialog close', () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of(undefined) });
         facade.user.set(user);
@@ -190,7 +192,9 @@ describe('ProfileManageFacade', () => {
         expect(facade.globalError()).toBe('USER_MANAGE.DELETE_ACCOUNT_ERROR');
         expect(facade.isDeleting()).toBe(false);
     });
+});
 
+describe('ProfileManageFacade notification preferences', () => {
     it('updates notification preferences through notification endpoint', async () => {
         facade.initialize();
 
@@ -221,7 +225,9 @@ describe('ProfileManageFacade', () => {
         expect(updatedUser).toBeNull();
         expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
     });
+});
 
+describe('ProfileManageFacade autosave', () => {
     it('debounces profile autosave and updates user without success dialog', async () => {
         facade.initialize();
 
