@@ -45,7 +45,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.7" />
     <PackageVersion Include="MailKit" Version="4.16.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageVersion Include="QuestPDF" Version="2026.2.4" />
+    <PackageVersion Include="QuestPDF" Version="2026.5.0" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageVersion Include="SmtpServer" Version="11.1.0" />
     <PackageVersion Include="Stripe.net" Version="51.1.0" />
