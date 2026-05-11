@@ -319,9 +319,9 @@ export default [
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-require-imports': 'error',
             '@typescript-eslint/no-shadow': 'error',
-            'eslint-comments/no-unlimited-disable': 'warn',
-            'eslint-comments/no-unused-disable': 'warn',
-            'eslint-comments/require-description': 'warn',
+            'eslint-comments/no-unlimited-disable': 'error',
+            'eslint-comments/no-unused-disable': 'error',
+            'eslint-comments/require-description': 'error',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
@@ -361,7 +361,7 @@ export default [
             ],
             '@typescript-eslint/await-thenable': 'error',
             '@typescript-eslint/ban-ts-comment': [
-                'warn',
+                'error',
                 {
                     'ts-expect-error': 'allow-with-description',
                     'ts-ignore': true,
