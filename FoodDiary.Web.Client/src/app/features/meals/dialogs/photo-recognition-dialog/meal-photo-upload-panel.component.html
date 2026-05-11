@@ -1,0 +1,28 @@
+<div class="photo-ai-dialog__upload">
+    <fd-image-upload-field
+        appearance="preview"
+        [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL' | translate"
+        [description]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC' | translate"
+        [recommendedSize]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
+        [cropEnabled]="false"
+        [resizeMaxDimension]="1536"
+        [deleteOnClear]="true"
+        [initialSelection]="initialSelection()"
+        (imageChanged)="imageChanged.emit($event)"
+    />
+
+    @if (statusKey(); as currentStatusKey) {
+        <div
+            class="photo-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
+            [class.photo-ai-dialog__status--loading]="isLoading()"
+        >
+            {{ currentStatusKey | translate }}
+        </div>
+    }
+
+    @if (isLoading() || isNutritionLoading()) {
+        <div class="photo-ai-dialog__scan-overlay">
+            <div class="photo-ai-dialog__scan-line" [class.photo-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
+        </div>
+    }
+</div>

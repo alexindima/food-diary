@@ -1,0 +1,26 @@
+<div class="photo-ai-dialog__results-title fd-ui-card-title fd-row fd-gap-xs">
+    <span class="photo-ai-dialog__title-left fd-row fd-gap-xs">
+        <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
+        <fd-ui-button
+            class="photo-ai-dialog__action-button"
+            variant="secondary"
+            fill="text"
+            icon="refresh"
+            [disabled]="isLoading() || !hasSelectionAsset() || isEditing()"
+            [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+            [ariaLabel]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+            (click)="reanalyze.emit()"
+        />
+    </span>
+    <span class="photo-ai-dialog__title-actions fd-row fd-gap-xxs">
+        <fd-ui-button
+            size="sm"
+            class="photo-ai-dialog__edit-toggle"
+            [variant]="editActionState().variant"
+            [fill]="editActionState().fill"
+            (click)="editAction.emit()"
+        >
+            {{ editActionState().labelKey | translate }}
+        </fd-ui-button>
+    </span>
+</div>

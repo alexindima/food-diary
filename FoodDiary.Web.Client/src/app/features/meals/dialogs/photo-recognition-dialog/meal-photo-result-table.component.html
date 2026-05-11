@@ -1,0 +1,27 @@
+<div class="photo-ai-dialog__table">
+    <div class="photo-ai-dialog__table-head fd-grid fd-gap-xs fd-align-center">
+        <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-stat-label">
+            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
+        </div>
+        <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-label">
+            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
+        </div>
+    </div>
+    <div class="photo-ai-dialog__table-body fd-stack">
+        @for (itemView of resultViews(); track itemView.item) {
+            <div class="photo-ai-dialog__table-row fd-grid fd-gap-xs fd-align-center">
+                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-body-sm">
+                    {{ itemView.displayName }}
+                </div>
+                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-value">
+                    {{ itemView.amount }}
+                    @if (itemView.unitKey) {
+                        {{ itemView.unitKey | translate }}
+                    } @else if (itemView.unit) {
+                        {{ itemView.unit }}
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

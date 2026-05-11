@@ -1,0 +1,27 @@
+@if (!isNutritionLoading()) {
+    @if (items().length) {
+        <div class="photo-ai-dialog__nutrition fd-stack fd-gap-xs">
+            <div class="photo-ai-dialog__nutrition-title fd-ui-card-title">
+                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE' | translate }}
+            </div>
+            <div class="photo-ai-dialog__nutrition-grid fd-grid">
+                @for (macro of items(); track macro.key) {
+                    <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
+                        <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
+                            {{ macro.labelKey | translate }}
+                        </span>
+                        <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
+                            {{ macro.value | number: macro.numberFormat }} {{ macro.unitKey | translate }}
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    } @else {
+        @if (errorKey(); as currentErrorKey) {
+            <div class="photo-ai-dialog__nutrition-error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
+                {{ currentErrorKey | translate }}
+            </div>
+        }
+    }
+}

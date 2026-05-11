@@ -1,54 +1,37 @@
-import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { catchError, of } from 'rxjs';
 
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../models/meal.data';
+import { MealPhotoEditListComponent } from './meal-photo-edit-list.component';
+import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary.component';
+import type {
+    EditableAiItem,
+    MacroSummaryItem,
+    PhotoAiEditActionState,
+    PhotoAiEditItemDrop,
+    PhotoAiEditItemUpdate,
+    RecognizedItemView,
+    UnitOptionView,
+} from './meal-photo-recognition-dialog.types';
+import { MealPhotoResultActionsComponent } from './meal-photo-result-actions.component';
+import { MealPhotoResultTableComponent } from './meal-photo-result-table.component';
+import { MealPhotoUploadPanelComponent } from './meal-photo-upload-panel.component';
 
 type PhotoAiDialogData = {
     initialSelection?: ImageSelection | null;
     initialSession?: MealAiSessionManageDto | null;
     mode?: 'edit' | 'create';
-};
-
-type RecognizedItemView = {
-    item: FoodVisionItem;
-    displayName: string;
-    amount: number;
-    unit: string | null | undefined;
-    unitKey: string | null;
-};
-
-type UnitOptionView = {
-    value: string;
-    labelKey: string;
-};
-
-type MacroSummaryItem = {
-    key: 'calories' | 'protein' | 'fat' | 'carbs' | 'fiber' | 'alcohol';
-    labelKey: string;
-    value: number;
-    unitKey: string;
-    numberFormat: string;
-};
-
-type PhotoAiEditActionState = {
-    variant: 'primary' | 'secondary';
-    fill: 'solid' | 'outline';
-    labelKey: string;
 };
 
 const UNIT_OPTIONS: readonly UnitOptionView[] = [
@@ -67,15 +50,15 @@ const NUTRITION_FRACTION_THRESHOLD = 0.01;
     styleUrls: ['./meal-photo-recognition-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         TranslatePipe,
-        FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
-        FdUiIconComponent,
-        DragDropModule,
-        ImageUploadFieldComponent,
+        MealPhotoUploadPanelComponent,
+        MealPhotoResultActionsComponent,
+        MealPhotoEditListComponent,
+        MealPhotoResultTableComponent,
+        MealPhotoNutritionSummaryComponent,
     ],
 })
 export class MealPhotoRecognitionDialogComponent {
@@ -159,6 +142,7 @@ export class MealPhotoRecognitionDialogComponent {
 
         return null;
     });
+    public readonly hasSelectionAsset = computed(() => this.selection()?.assetId !== null && this.selection()?.assetId !== undefined);
 
     public constructor() {
         const session = this.dialogData.initialSession;
@@ -428,7 +412,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.isEditing.set(false);
     }
 
-    public onEditItemDrop(event: CdkDragDrop<EditableAiItem[]>): void {
+    public onEditItemDrop(event: PhotoAiEditItemDrop): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -436,6 +420,10 @@ export class MealPhotoRecognitionDialogComponent {
         const items = [...this.editItems()];
         moveItemInArray(items, event.previousIndex, event.currentIndex);
         this.editItems.set(items);
+    }
+
+    public updateEditItemFromView(update: PhotoAiEditItemUpdate): void {
+        this.updateEditItem(update.index, update.field, update.value);
     }
 
     public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
@@ -636,15 +624,6 @@ export class MealPhotoRecognitionDialogComponent {
         };
     }
 }
-
-type EditableAiItem = {
-    id: string;
-    name: string;
-    nameEn: string;
-    nameLocal: string | null;
-    amount: number;
-    unit: string;
-};
 
 type AmountChange = {
     id: string;

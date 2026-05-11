@@ -4,187 +4,50 @@
     [subtitle]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
 >
     <div class="photo-ai-dialog fd-stack fd-gap-lg">
-        <div class="photo-ai-dialog__upload">
-            <fd-image-upload-field
-                appearance="preview"
-                [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL' | translate"
-                [description]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC' | translate"
-                [recommendedSize]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
-                [cropEnabled]="false"
-                [resizeMaxDimension]="1536"
-                [deleteOnClear]="true"
-                [initialSelection]="initialSelection"
-                (imageChanged)="onImageChanged($event)"
-            />
-
-            @if (statusKey()) {
-                <div
-                    class="photo-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
-                    [class.photo-ai-dialog__status--loading]="isLoading()"
-                >
-                    {{ statusKey() | translate }}
-                </div>
-            }
-
-            @if (isLoading() || isNutritionLoading()) {
-                <div class="photo-ai-dialog__scan-overlay">
-                    <div class="photo-ai-dialog__scan-line" [class.photo-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
-                </div>
-            }
-        </div>
+        <fd-meal-photo-upload-panel
+            [initialSelection]="initialSelection"
+            [statusKey]="statusKey()"
+            [isLoading]="isLoading()"
+            [isNutritionLoading]="isNutritionLoading()"
+            (imageChanged)="onImageChanged($event)"
+        />
 
         @if (!isLoading()) {
-            @if (errorKey()) {
+            @if (errorKey(); as currentErrorKey) {
                 <div class="photo-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
-                    {{ errorKey() | translate }}
+                    {{ currentErrorKey | translate }}
                 </div>
             }
 
             @if (results().length) {
                 <div class="photo-ai-dialog__results fd-stack fd-gap-sm">
-                    <div class="photo-ai-dialog__results-title fd-ui-card-title fd-row fd-gap-xs">
-                        <span class="photo-ai-dialog__title-left fd-row fd-gap-xs">
-                            <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
-                            <fd-ui-button
-                                class="photo-ai-dialog__action-button"
-                                variant="secondary"
-                                fill="text"
-                                icon="refresh"
-                                [disabled]="isLoading() || !selection()?.assetId || isEditing()"
-                                [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
-                                [ariaLabel]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
-                                (click)="onReanalyze()"
-                            />
-                        </span>
-                        <span class="photo-ai-dialog__title-actions fd-row fd-gap-xxs">
-                            <fd-ui-button
-                                size="sm"
-                                class="photo-ai-dialog__edit-toggle"
-                                [variant]="editActionState().variant"
-                                [fill]="editActionState().fill"
-                                (click)="handleEditAction()"
-                            >
-                                {{ editActionState().labelKey | translate }}
-                            </fd-ui-button>
-                        </span>
-                    </div>
+                    <fd-meal-photo-result-actions
+                        [isLoading]="isLoading()"
+                        [hasSelectionAsset]="hasSelectionAsset()"
+                        [isEditing]="isEditing()"
+                        [editActionState]="editActionState()"
+                        (reanalyze)="onReanalyze()"
+                        (editAction)="handleEditAction()"
+                    />
+
                     @if (isEditing()) {
-                        <div
-                            class="photo-ai-dialog__edit-list fd-stack fd-gap-xs"
-                            cdkDropList
-                            (cdkDropListDropped)="onEditItemDrop($event)"
-                        >
-                            @for (item of editItems(); track item.id; let i = $index) {
-                                <div class="photo-ai-dialog__edit-row fd-grid fd-gap-xs fd-align-center" cdkDrag>
-                                    <div class="photo-ai-dialog__edit-handle fd-inline-center" cdkDragHandle>
-                                        <fd-ui-icon name="drag_indicator" />
-                                    </div>
-                                    <input
-                                        #nameInput
-                                        class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--name"
-                                        type="text"
-                                        [value]="item.name"
-                                        (input)="updateEditItem(i, 'name', nameInput.value)"
-                                    />
-                                    <input
-                                        #amountInput
-                                        class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--amount"
-                                        type="number"
-                                        [value]="item.amount"
-                                        (input)="updateEditItem(i, 'amount', amountInput.value)"
-                                    />
-                                    <select
-                                        #unitSelect
-                                        class="photo-ai-dialog__edit-select"
-                                        [value]="item.unit"
-                                        (change)="updateEditItem(i, 'unit', unitSelect.value)"
-                                    >
-                                        @for (unit of unitOptions; track unit.value) {
-                                            <option [value]="unit.value">{{ unit.labelKey | translate }}</option>
-                                        }
-                                    </select>
-                                    <fd-ui-button
-                                        class="photo-ai-dialog__edit-remove"
-                                        variant="danger"
-                                        fill="text"
-                                        icon="delete"
-                                        [fdUiHint]="'COMMON.DELETE' | translate"
-                                        [ariaLabel]="'COMMON.DELETE' | translate"
-                                        (click)="removeEditItem(i)"
-                                    />
-                                </div>
-                            }
-                        </div>
-                        <fd-ui-button
-                            type="button"
-                            class="photo-ai-dialog__edit-add"
-                            appearance="dashed"
-                            variant="secondary"
-                            fill="outline"
-                            icon="add"
-                            (click)="addEditItem()"
-                        >
-                            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
-                        </fd-ui-button>
+                        <fd-meal-photo-edit-list
+                            [items]="editItems()"
+                            [unitOptions]="unitOptions"
+                            (itemDropped)="onEditItemDrop($event)"
+                            (itemUpdated)="updateEditItemFromView($event)"
+                            (itemRemoved)="removeEditItem($event)"
+                            (itemAdded)="addEditItem()"
+                        />
                     } @else {
-                        <div class="photo-ai-dialog__table">
-                            <div class="photo-ai-dialog__table-head fd-grid fd-gap-xs fd-align-center">
-                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-stat-label">
-                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
-                                </div>
-                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-label">
-                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
-                                </div>
-                            </div>
-                            <div class="photo-ai-dialog__table-body fd-stack">
-                                @for (itemView of resultViews(); track itemView.item) {
-                                    <div class="photo-ai-dialog__table-row fd-grid fd-gap-xs fd-align-center">
-                                        <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name fd-ui-body-sm">
-                                            {{ itemView.displayName }}
-                                        </div>
-                                        <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount fd-ui-stat-value">
-                                            {{ itemView.amount }}
-                                            @if (itemView.unitKey) {
-                                                {{ itemView.unitKey | translate }}
-                                            } @else if (itemView.unit) {
-                                                {{ itemView.unit }}
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
+                        <fd-meal-photo-result-table [resultViews]="resultViews()" />
                     }
 
-                    @if (!isNutritionLoading()) {
-                        @if (macroSummaryItems().length) {
-                            <div class="photo-ai-dialog__nutrition fd-stack fd-gap-xs">
-                                <div class="photo-ai-dialog__nutrition-title fd-ui-card-title">
-                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE' | translate }}
-                                </div>
-                                <div class="photo-ai-dialog__nutrition-grid fd-grid">
-                                    @for (macro of macroSummaryItems(); track macro.key) {
-                                        <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
-                                            <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label">
-                                                {{ macro.labelKey | translate }}
-                                            </span>
-                                            <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                                                {{ macro.value | number: macro.numberFormat }} {{ macro.unitKey | translate }}
-                                            </span>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        } @else {
-                            @if (nutritionErrorKey()) {
-                                <div
-                                    class="photo-ai-dialog__nutrition-error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm"
-                                >
-                                    {{ nutritionErrorKey() | translate }}
-                                </div>
-                            }
-                        }
-                    }
+                    <fd-meal-photo-nutrition-summary
+                        [isNutritionLoading]="isNutritionLoading()"
+                        [items]="macroSummaryItems()"
+                        [errorKey]="nutritionErrorKey()"
+                    />
                 </div>
             }
         }
