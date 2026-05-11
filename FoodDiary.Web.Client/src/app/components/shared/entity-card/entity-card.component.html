@@ -7,130 +7,39 @@
     (keydown.space)="handleOpen(); $event.preventDefault()"
 >
     @let previewInteraction = previewInteractionState();
-    <div
+    <fd-entity-card-thumb
         fdMediaCardMedia
-        class="entity-card__thumb fd-place-center"
-        [class.entity-card__thumb--has-image]="!!imageUrl() || collageState().hasImages"
-        [class.entity-card__thumb--previewable]="hasPreviewImage()"
-        [fdUiHint]="previewInteraction.hint"
-        [fdUiHintDisabled]="!hasPreviewImage()"
-        [attr.role]="previewInteraction.role"
-        [attr.tabindex]="previewInteraction.tabIndex"
-        [attr.aria-label]="previewInteraction.ariaLabel"
-        (click)="handlePreview($event)"
-        (keydown.enter)="handlePreview($event)"
-        (keydown.space)="handlePreview($event); $event.preventDefault()"
-    >
-        @if (imageUrl(); as imageSrc) {
-            <img width="96" height="96" [ngSrc]="imageSrc" [alt]="imageAlt()" />
-        } @else {
-            @let collage = collageState();
-            @if (collage.hasImages) {
-                <div [class]="`entity-card__collage entity-card__collage--count-${collage.count}`">
-                    @for (image of collage.images; track image.url) {
-                        <img class="entity-card__collage-image" width="96" height="96" [ngSrc]="image.url" [alt]="image.alt" />
-                    }
-                </div>
-            } @else {
-                <fd-ui-icon size="lg" [name]="imageIcon()" />
-            }
-        }
-    </div>
+        [imageUrl]="imageUrl()"
+        [imageAlt]="imageAlt()"
+        [imageIcon]="imageIcon()"
+        [collage]="collageState()"
+        [hasPreviewImage]="hasPreviewImage()"
+        [previewInteraction]="previewInteraction"
+        (preview)="handlePreview()"
+    />
 
-    <div fdMediaCardContent class="entity-card__content fd-grid fd-gap-entity-card-content fd-min-w-0">
-        <div class="entity-card__title-block fd-stack fd-gap-entity-card-title fd-min-w-0">
-            <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
-                @if (showFavorite()) {
-                    <fd-ui-button
-                        class="entity-card__favorite-button fd-favorite-button fd-inline-center"
-                        appearance="plain-icon"
-                        variant="secondary"
-                        fill="text"
-                        iconSize="sm"
-                        [icon]="favoriteIcon()"
-                        [class.entity-card__favorite-button--active]="isFavorite()"
-                        [class.fd-favorite-button--active]="isFavorite()"
-                        [fdUiHint]="favoriteAriaLabel()"
-                        [fdUiHintDisabled]="!favoriteAriaLabel()"
-                        [ariaLabel]="favoriteAriaLabel() ?? undefined"
-                        [disabled]="favoriteLoading()"
-                        (click)="handleFavoriteToggle($event)"
-                    />
-                }
-                @if (ownershipIcon(); as icon) {
-                    <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
-                }
-                <div class="entity-card__name fd-ui-card-title fd-truncate">{{ title() }}</div>
-                @if (titleMuted(); as mutedTitle) {
-                    <div class="entity-card__title-muted fd-ui-meta-text fd-nowrap">{{ mutedTitle }}</div>
-                }
-            </div>
+    <fd-entity-card-body
+        fdMediaCardContent
+        [showFavorite]="showFavorite()"
+        [isFavorite]="isFavorite()"
+        [favoriteLoading]="favoriteLoading()"
+        [favoriteIcon]="favoriteIcon()"
+        [favoriteAriaLabel]="favoriteAriaLabel()"
+        [ownershipIcon]="ownershipIcon()"
+        [title]="title()"
+        [titleMuted]="titleMuted()"
+        [description]="description()"
+        [nutrition]="nutrition()"
+        [quality]="normalizedQuality()"
+        (favoriteToggle)="handleFavoriteToggle()"
+    />
 
-            @if (description(); as bodyDescription) {
-                <div class="entity-card__description fd-ui-caption fd-truncate">{{ bodyDescription }}</div>
-            }
-        </div>
-
-        <div class="entity-card__summary-row fd-grid fd-gap-entity-card-header fd-align-center fd-min-w-0">
-            <div class="entity-card__nutrients fd-row fd-min-w-0">
-                <div
-                    class="entity-card__nutrients-container"
-                    [class.entity-card__nutrients-container--green]="normalizedQuality()?.grade === 'green'"
-                    [class.entity-card__nutrients-container--yellow]="normalizedQuality()?.grade === 'yellow'"
-                    [class.entity-card__nutrients-container--red]="normalizedQuality()?.grade === 'red'"
-                >
-                    <fd-nutrient-badges
-                        [proteins]="nutrition().proteins"
-                        [fats]="nutrition().fats"
-                        [carbs]="nutrition().carbs"
-                        [fiber]="nutrition().fiber"
-                        [alcohol]="nutrition().alcohol"
-                    />
-                </div>
-            </div>
-
-            @if (normalizedQuality(); as cardQuality) {
-                <div
-                    class="entity-card__quality fd-gap-entity-card-header fd-min-w-0"
-                    [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
-                >
-                    <span class="entity-card__quality-label fd-ui-stat-label fd-nowrap">{{
-                        'PRODUCT_CARD.QUALITY_SCORE' | translate
-                    }}</span>
-                    <div class="entity-card__quality-bar" aria-hidden="true">
-                        <span
-                            [class]="`entity-card__quality-fill entity-card__quality-fill--${cardQuality.grade}`"
-                            [style.width.%]="cardQuality.score"
-                        ></span>
-                    </div>
-                    <span class="entity-card__quality-value fd-ui-stat-value" [fdUiHint]="cardQuality.hintKey | translate">
-                        {{ cardQuality.score }}
-                    </span>
-                </div>
-            }
-        </div>
-    </div>
-
-    <div fdMediaCardActions class="entity-card__action-group fd-stack fd-center fd-gap-entity-card-content">
-        <div class="entity-card__calories-inline fd-stack fd-center fd-gap-entity-card-title fd-nowrap">
-            <span class="entity-card__calories-value fd-ui-metric-lg">
-                {{ calories() | number: '1.0-0' }}
-            </span>
-            <span class="entity-card__calories-unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-        </div>
-
-        @if (showAction()) {
-            <fd-ui-button
-                class="entity-card__action-button"
-                appearance="card-action"
-                variant="primary"
-                fill="solid"
-                [icon]="actionIcon()"
-                [ariaLabel]="actionAriaLabel() ?? ''"
-                (click)="handleAction($event)"
-            >
-                {{ actionAriaLabel() }}
-            </fd-ui-button>
-        }
-    </div>
+    <fd-entity-card-actions
+        fdMediaCardActions
+        [calories]="calories()"
+        [showAction]="showAction()"
+        [actionIcon]="actionIcon()"
+        [actionAriaLabel]="actionAriaLabel()"
+        (action)="handleAction()"
+    />
 </fd-media-card>

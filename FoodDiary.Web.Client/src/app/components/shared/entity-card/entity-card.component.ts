@@ -1,14 +1,12 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
+import { TranslateService } from '@ngx-translate/core';
 
 import type { QualityGrade } from '../../../features/products/models/product.data';
 import { MediaCardComponent } from '../media-card/media-card.component';
-import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
+import { EntityCardActionsComponent } from './entity-card-actions.component';
+import { EntityCardBodyComponent } from './entity-card-body.component';
+import { type EntityCardPreviewInteractionState, EntityCardThumbComponent } from './entity-card-thumb.component';
 
 const QUALITY_SCORE_MIN = 0;
 const QUALITY_SCORE_MAX = 100;
@@ -32,21 +30,22 @@ export interface EntityCardCollageImage {
     alt: string;
 }
 
+export interface EntityCardCollageState {
+    images: EntityCardCollageImage[];
+    count: number;
+    hasImages: boolean;
+}
+
+export interface EntityCardNormalizedQuality extends EntityCardQuality {
+    hintKey: string;
+}
+
 export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
 
 @Component({
     selector: 'fd-entity-card',
     standalone: true,
-    imports: [
-        NgOptimizedImage,
-        CommonModule,
-        TranslatePipe,
-        FdUiHintDirective,
-        FdUiButtonComponent,
-        FdUiIconComponent,
-        NutrientBadgesComponent,
-        MediaCardComponent,
-    ],
+    imports: [MediaCardComponent, EntityCardThumbComponent, EntityCardBodyComponent, EntityCardActionsComponent],
     templateUrl: './entity-card.component.html',
     styleUrl: './entity-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,7 +86,7 @@ export class EntityCardComponent {
     public readonly action = output<void>();
 
     public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
-    public readonly normalizedQuality = computed(() => {
+    public readonly normalizedQuality = computed<EntityCardNormalizedQuality | null>(() => {
         const quality = this.quality();
         if (quality === null) {
             return null;
@@ -101,7 +100,7 @@ export class EntityCardComponent {
     });
 
     public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, COLLAGE_VISIBLE_LIMIT));
-    public readonly collageState = computed(() => {
+    public readonly collageState = computed<EntityCardCollageState>(() => {
         const images = this.visibleCollageImages();
 
         return {
@@ -137,30 +136,15 @@ export class EntityCardComponent {
         this.open.emit();
     }
 
-    public handlePreview(event: Event): void {
-        event.stopPropagation();
-
-        if (!this.hasPreviewImage()) {
-            return;
-        }
-
+    public handlePreview(): void {
         this.preview.emit();
     }
 
-    public handleFavoriteToggle(event: Event): void {
-        event.stopPropagation();
+    public handleFavoriteToggle(): void {
         this.favoriteToggle.emit();
     }
 
-    public handleAction(event: Event): void {
-        event.stopPropagation();
+    public handleAction(): void {
         this.action.emit();
     }
-}
-
-interface EntityCardPreviewInteractionState {
-    hint: string | null;
-    role: string | null;
-    tabIndex: string | null;
-    ariaLabel: string | null;
 }

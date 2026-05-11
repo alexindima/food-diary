@@ -17,58 +17,16 @@
             </div>
         } @else {
             @for (entry of entries(); track entry.meal?.id ?? entry.slot ?? $index) {
-                @if (entry.meal; as meal) {
-                    <fd-meal-card class="meals-preview__meal-card" [meal]="meal" (open)="open.emit(meal)" />
-                } @else if (showAddButtons()) {
-                    <div class="meals-preview__placeholder-stack fd-stack fd-gap-card-header">
-                        <div class="meals-preview__placeholder fd-row fd-justify-between fd-gap-card-content">
-                            <button class="meals-preview__placeholder-main fd-row fd-min-w-0" type="button" (click)="add.emit(entry.slot)">
-                                <div class="meals-preview__placeholder-left fd-row fd-gap-card-content fd-min-w-0">
-                                    <div class="meals-preview__placeholder-icon fd-place-center">
-                                        <fd-ui-icon [name]="entry.icon || 'restaurant_menu'" />
-                                    </div>
-                                    <div class="meals-preview__placeholder-text fd-ui-body">
-                                        {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
-                                    </div>
-                                </div>
-                            </button>
-                            <div class="meals-preview__placeholder-actions fd-row fd-gap-actions">
-                                @if (showAiButtons()) {
-                                    <fd-ui-button
-                                        class="meals-preview__placeholder-action-button meals-preview__placeholder-action-button--ai"
-                                        appearance="ai-action"
-                                        variant="primary"
-                                        fill="solid"
-                                        size="sm"
-                                        icon="auto_awesome"
-                                        iconSize="sm"
-                                        fdUiHintPosition="bottom"
-                                        [ariaLabel]="'DASHBOARD.ADD_WITH_AI_BUTTON' | translate"
-                                        [fdUiHint]="'DASHBOARD.ADD_WITH_AI_BUTTON' | translate"
-                                        (click)="toggleAi(entry.slot)"
-                                    />
-                                }
-                                <fd-ui-button
-                                    class="meals-preview__placeholder-action-button"
-                                    variant="primary"
-                                    fill="solid"
-                                    size="sm"
-                                    icon="edit"
-                                    iconSize="sm"
-                                    fdUiHintPosition="bottom"
-                                    [ariaLabel]="'MEALS_PREVIEW.ADD_MANUAL_HINT' | translate"
-                                    [fdUiHint]="'MEALS_PREVIEW.ADD_MANUAL_HINT' | translate"
-                                    (click)="add.emit(entry.slot)"
-                                />
-                            </div>
-                        </div>
-                        @if (showAiButtons() && expandedAiSlot() === (entry.slot ?? null)) {
-                            <div class="meals-preview__ai-panel">
-                                <fd-ai-input-bar mode="create" [mealType]="entry.slot ?? null" (mealCreated)="handleAiMealCreated()" />
-                            </div>
-                        }
-                    </div>
-                }
+                <fd-meals-preview-entry
+                    [entry]="entry"
+                    [showAddButtons]="showAddButtons()"
+                    [showAiButtons]="showAiButtons()"
+                    [expandedAiSlot]="expandedAiSlot()"
+                    (open)="open.emit($event)"
+                    (add)="add.emit($event)"
+                    (aiToggle)="toggleAi($event)"
+                    (aiMealCreated)="handleAiMealCreated()"
+                />
             }
         }
     </div>

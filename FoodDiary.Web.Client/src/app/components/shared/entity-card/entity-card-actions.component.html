@@ -1,0 +1,22 @@
+<div class="entity-card__action-group fd-stack fd-center fd-gap-entity-card-content">
+    <div class="entity-card__calories-inline fd-stack fd-center fd-gap-entity-card-title fd-nowrap">
+        <span class="entity-card__calories-value fd-ui-metric-lg">
+            {{ calories() | number: '1.0-0' }}
+        </span>
+        <span class="entity-card__calories-unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+    </div>
+
+    @if (showAction()) {
+        <fd-ui-button
+            class="entity-card__action-button"
+            appearance="card-action"
+            variant="primary"
+            fill="solid"
+            [icon]="actionIcon()"
+            [ariaLabel]="actionAriaLabel() ?? ''"
+            (click)="handleAction($event)"
+        >
+            {{ actionAriaLabel() }}
+        </fd-ui-button>
+    }
+</div>

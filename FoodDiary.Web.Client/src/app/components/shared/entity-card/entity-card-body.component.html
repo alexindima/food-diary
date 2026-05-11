@@ -1,0 +1,71 @@
+<div class="entity-card__content fd-grid fd-gap-entity-card-content fd-min-w-0">
+    <div class="entity-card__title-block fd-stack fd-gap-entity-card-title fd-min-w-0">
+        <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
+            @if (showFavorite()) {
+                <fd-ui-button
+                    class="entity-card__favorite-button fd-favorite-button fd-inline-center"
+                    appearance="plain-icon"
+                    variant="secondary"
+                    fill="text"
+                    iconSize="sm"
+                    [icon]="favoriteIcon()"
+                    [class.entity-card__favorite-button--active]="isFavorite()"
+                    [class.fd-favorite-button--active]="isFavorite()"
+                    [fdUiHint]="favoriteAriaLabel()"
+                    [fdUiHintDisabled]="!favoriteAriaLabel()"
+                    [ariaLabel]="favoriteAriaLabel() ?? undefined"
+                    [disabled]="favoriteLoading()"
+                    (click)="handleFavoriteToggle($event)"
+                />
+            }
+            @if (ownershipIcon(); as icon) {
+                <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
+            }
+            <div class="entity-card__name fd-ui-card-title fd-truncate">{{ title() }}</div>
+            @if (titleMuted(); as mutedTitle) {
+                <div class="entity-card__title-muted fd-ui-meta-text fd-nowrap">{{ mutedTitle }}</div>
+            }
+        </div>
+
+        @if (description(); as bodyDescription) {
+            <div class="entity-card__description fd-ui-caption fd-truncate">{{ bodyDescription }}</div>
+        }
+    </div>
+
+    <div class="entity-card__summary-row fd-grid fd-gap-entity-card-header fd-align-center fd-min-w-0">
+        <div class="entity-card__nutrients fd-row fd-min-w-0">
+            <div
+                class="entity-card__nutrients-container"
+                [class.entity-card__nutrients-container--green]="quality()?.grade === 'green'"
+                [class.entity-card__nutrients-container--yellow]="quality()?.grade === 'yellow'"
+                [class.entity-card__nutrients-container--red]="quality()?.grade === 'red'"
+            >
+                <fd-nutrient-badges
+                    [proteins]="nutrition().proteins"
+                    [fats]="nutrition().fats"
+                    [carbs]="nutrition().carbs"
+                    [fiber]="nutrition().fiber"
+                    [alcohol]="nutrition().alcohol"
+                />
+            </div>
+        </div>
+
+        @if (quality(); as cardQuality) {
+            <div
+                class="entity-card__quality fd-gap-entity-card-header fd-min-w-0"
+                [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
+            >
+                <span class="entity-card__quality-label fd-ui-stat-label fd-nowrap">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+                <div class="entity-card__quality-bar" aria-hidden="true">
+                    <span
+                        [class]="`entity-card__quality-fill entity-card__quality-fill--${cardQuality.grade}`"
+                        [style.width.%]="cardQuality.score"
+                    ></span>
+                </div>
+                <span class="entity-card__quality-value fd-ui-stat-value" [fdUiHint]="cardQuality.hintKey | translate">
+                    {{ cardQuality.score }}
+                </span>
+            </div>
+        }
+    </div>
+</div>
