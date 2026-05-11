@@ -50,7 +50,7 @@
     <PackageVersion Include="SmtpServer" Version="11.1.0" />
     <PackageVersion Include="Stripe.net" Version="51.1.0" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
-    <PackageVersion Include="WebPush" Version="1.0.12" />
+    <PackageVersion Include="WebPush" Version="1.0.13" />
 
     <!-- Hangfire -->
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.23" />
