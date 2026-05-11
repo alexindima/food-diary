@@ -59,117 +59,33 @@
         </fd-ui-button>
     </div>
 
-    @if (favorites().length > 0) {
-        <fd-favorites-section
-            class="consumption-list__favorites"
-            [title]="'CONSUMPTION_LIST.FAVORITES_TITLE' | translate"
-            [count]="favoriteTotalCount()"
-            [isOpen]="isFavoritesOpen()"
-            [showLoadMore]="hasMoreFavorites()"
-            [isLoadingMore]="isFavoritesLoadingMore()"
-            [loadMoreLabel]="'CONSUMPTION_LIST.FAVORITES_LOAD_MORE' | translate"
-            (toggleRequested)="toggleFavorites()"
-            (loadMore)="loadFavorites()"
-        >
-            <div class="consumption-list__favorites-grid fd-grid fd-gap-xs">
-                @for (favoriteView of favoriteViews(); track favoriteView.favorite.id) {
-                    @let fav = favoriteView.favorite;
-                    <div class="consumption-list__favorite-card fd-row fd-justify-between fd-gap-xs">
-                        <div class="consumption-list__favorite-info">
-                            <div class="consumption-list__favorite-name">
-                                {{ favoriteView.displayName || (favoriteView.displayNameKey | translate) }}
-                            </div>
-                            <div class="consumption-list__favorite-meta">
-                                {{ fav.totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} &middot;
-                                {{ fav.itemCount }}
-                                {{ 'CONSUMPTION_LIST.FAVORITE_ITEMS' | translate }}
-                            </div>
-                        </div>
-                        <div class="consumption-list__favorite-actions fd-row fd-gap-xxs">
-                            <fd-ui-button
-                                class="consumption-list__favorite-btn"
-                                variant="secondary"
-                                fill="text"
-                                icon="replay"
-                                [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
-                                [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
-                                (click)="repeatFavorite(fav)"
-                            />
-                            <fd-ui-button
-                                class="consumption-list__favorite-btn consumption-list__favorite-btn--remove"
-                                variant="danger"
-                                fill="text"
-                                icon="close"
-                                [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
-                                [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
-                                (click)="removeFavorite(fav)"
-                            />
-                        </div>
-                    </div>
-                }
-            </div>
-        </fd-favorites-section>
-    }
+    <fd-meal-list-favorites
+        [favoriteViews]="favoriteViews()"
+        [count]="favoriteTotalCount()"
+        [isOpen]="isFavoritesOpen()"
+        [showLoadMore]="hasMoreFavorites()"
+        [isLoadingMore]="isFavoritesLoadingMore()"
+        (toggleRequested)="toggleFavorites()"
+        (loadMore)="loadFavorites()"
+        (favoriteRepeated)="repeatFavorite($event)"
+        (favoriteRemoved)="removeFavorite($event)"
+    />
 
     <fd-page-body>
-        @if (errorKey(); as currentErrorKey) {
-            <fd-error-state [titleKey]="currentErrorKey" (retry)="retryLoad()" />
-        } @else if (consumptionData.isLoading()) {
-            <div class="consumption-list__grid fd-grid fd-gap-card-profile">
-                <fd-skeleton-card />
-                <fd-skeleton-card />
-                <fd-skeleton-card />
-            </div>
-        } @else {
-            @if (isEmptyState()) {
-                <div class="consumption-list__empty-state fd-stack fd-align-center fd-gap-xs">
-                    <fd-ui-icon class="consumption-list__no-results-icon" name="restaurant_menu" size="xl" />
-                    <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
-                    <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.EMPTY_COPY' | translate }}</div>
-                    <fd-ui-button icon="add" variant="primary" fill="solid" (click)="goToMealAddAsync()">
-                        {{ 'CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON' | translate }}
-                    </fd-ui-button>
-                </div>
-            } @else if (isNoResultsState()) {
-                <div class="consumption-list__no-results fd-stack fd-align-center fd-gap-xs">
-                    <fd-ui-icon class="consumption-list__no-results-icon" name="search_off" size="xl" />
-                    <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.NO_RESULTS_TITLE' | translate }}</div>
-                    <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.NO_RESULTS_COPY' | translate }}</div>
-                </div>
-            }
-
-            <div class="consumption-list__groups fd-stack fd-gap-card-profile">
-                @for (group of groupedConsumptions(); track group.date) {
-                    <div class="consumption-list__day fd-stack fd-gap-sm">
-                        <div class="consumption-list__day-header fd-row fd-gap-sm">
-                            <span class="consumption-list__day-label">
-                                {{ group.dateLabel }}
-                            </span>
-                            <span class="consumption-list__day-line"></span>
-                        </div>
-                        <div class="consumption-list__grid fd-grid fd-gap-card-profile">
-                            @for (consumption of group.items; track consumption.id) {
-                                <fd-meal-card
-                                    class="consumption-card"
-                                    [meal]="consumption"
-                                    (open)="openMealDetailsAsync(consumption)"
-                                    (favoriteChanged)="onMealFavoriteChanged(consumption, $event)"
-                                />
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-
-        @if (consumptionData.totalPages > 1) {
-            <fd-ui-pagination
-                class="consumption-list__pagination"
-                [length]="consumptionData.totalItems"
-                [pageSize]="10"
-                [pageIndex]="currentPageIndex()"
-                (pageIndexChange)="onPageChange($event)"
-            />
-        }
+        <fd-meal-list-content
+            [errorKey]="errorKey()"
+            [isLoading]="consumptionData.isLoading()"
+            [isEmptyState]="isEmptyState()"
+            [isNoResultsState]="isNoResultsState()"
+            [groups]="groupedConsumptions()"
+            [totalPages]="consumptionData.totalPages"
+            [totalItems]="consumptionData.totalItems"
+            [currentPageIndex]="currentPageIndex()"
+            (retry)="retryLoad()"
+            (mealAdd)="goToMealAddAsync()"
+            (mealOpened)="openMealDetailsAsync($event)"
+            (mealFavoriteChanged)="onMealFavoriteChanged($event.meal, $event.change)"
+            (pageIndexChange)="onPageChange($event)"
+        />
     </fd-page-body>
 </div>

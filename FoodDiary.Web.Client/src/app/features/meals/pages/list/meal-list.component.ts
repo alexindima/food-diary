@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -7,17 +6,12 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
-import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { debounceTime, type Observable, switchMap } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
-import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
-import { MealCardComponent, type MealFavoriteChange } from '../../../../components/shared/meal-card/meal-card.component';
+import type { MealFavoriteChange } from '../../../../components/shared/meal-card/meal-card.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
@@ -26,11 +20,13 @@ import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
 import { MealListFacade } from '../../lib/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
+import { MealListContentComponent } from './meal-list-content.component';
+import { MealListFavoritesComponent } from './meal-list-favorites.component';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
 const FILTER_CHANGE_DEBOUNCE_MS = 300;
 
-interface FavoriteMealView {
+export interface FavoriteMealView {
     favorite: FavoriteMeal;
     displayName: string | null;
     displayNameKey: string;
@@ -42,21 +38,16 @@ interface FavoriteMealView {
     styleUrls: ['./meal-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        DecimalPipe,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiPaginationComponent,
-        SkeletonCardComponent,
-        ErrorStateComponent,
-        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        MealCardComponent,
         AiInputBarComponent,
-        FavoritesSectionComponent,
+        MealListContentComponent,
+        MealListFavoritesComponent,
     ],
     providers: [MealListFacade],
 })
@@ -317,7 +308,7 @@ interface SearchFormValues {
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;
 
-interface MealDateGroupView {
+export interface MealDateGroupView {
     date: Date;
     dateLabel: string;
     items: Meal[];

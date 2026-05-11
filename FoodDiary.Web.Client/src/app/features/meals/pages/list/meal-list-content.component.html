@@ -1,0 +1,59 @@
+@if (errorKey(); as currentErrorKey) {
+    <fd-error-state [titleKey]="currentErrorKey" (retry)="retry.emit()" />
+} @else if (isLoading()) {
+    <div class="consumption-list__grid fd-grid fd-gap-card-profile">
+        <fd-skeleton-card />
+        <fd-skeleton-card />
+        <fd-skeleton-card />
+    </div>
+} @else {
+    @if (isEmptyState()) {
+        <div class="consumption-list__empty-state fd-stack fd-align-center fd-gap-xs">
+            <fd-ui-icon class="consumption-list__no-results-icon" name="restaurant_menu" size="xl" />
+            <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
+            <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.EMPTY_COPY' | translate }}</div>
+            <fd-ui-button icon="add" variant="primary" fill="solid" (click)="mealAdd.emit()">
+                {{ 'CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+    } @else if (isNoResultsState()) {
+        <div class="consumption-list__no-results fd-stack fd-align-center fd-gap-xs">
+            <fd-ui-icon class="consumption-list__no-results-icon" name="search_off" size="xl" />
+            <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.NO_RESULTS_TITLE' | translate }}</div>
+            <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.NO_RESULTS_COPY' | translate }}</div>
+        </div>
+    }
+
+    <div class="consumption-list__groups fd-stack fd-gap-card-profile">
+        @for (group of groups(); track group.date) {
+            <div class="consumption-list__day fd-stack fd-gap-sm">
+                <div class="consumption-list__day-header fd-row fd-gap-sm">
+                    <span class="consumption-list__day-label">
+                        {{ group.dateLabel }}
+                    </span>
+                    <span class="consumption-list__day-line"></span>
+                </div>
+                <div class="consumption-list__grid fd-grid fd-gap-card-profile">
+                    @for (consumption of group.items; track consumption.id) {
+                        <fd-meal-card
+                            class="consumption-card"
+                            [meal]="consumption"
+                            (open)="mealOpened.emit(consumption)"
+                            (favoriteChanged)="mealFavoriteChanged.emit({ meal: consumption, change: $event })"
+                        />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (totalPages() > 1) {
+    <fd-ui-pagination
+        class="consumption-list__pagination"
+        [length]="totalItems()"
+        [pageSize]="10"
+        [pageIndex]="currentPageIndex()"
+        (pageIndexChange)="pageIndexChange.emit($event)"
+    />
+}

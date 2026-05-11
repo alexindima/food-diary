@@ -1,0 +1,51 @@
+@if (favoriteViews().length > 0) {
+    <fd-favorites-section
+        class="consumption-list__favorites"
+        [title]="'CONSUMPTION_LIST.FAVORITES_TITLE' | translate"
+        [count]="count()"
+        [isOpen]="isOpen()"
+        [showLoadMore]="showLoadMore()"
+        [isLoadingMore]="isLoadingMore()"
+        [loadMoreLabel]="'CONSUMPTION_LIST.FAVORITES_LOAD_MORE' | translate"
+        (toggleRequested)="toggleRequested.emit()"
+        (loadMore)="loadMore.emit()"
+    >
+        <div class="consumption-list__favorites-grid fd-grid fd-gap-xs">
+            @for (favoriteView of favoriteViews(); track favoriteView.favorite.id) {
+                @let fav = favoriteView.favorite;
+                <div class="consumption-list__favorite-card fd-row fd-justify-between fd-gap-xs">
+                    <div class="consumption-list__favorite-info">
+                        <div class="consumption-list__favorite-name">
+                            {{ favoriteView.displayName || (favoriteView.displayNameKey | translate) }}
+                        </div>
+                        <div class="consumption-list__favorite-meta">
+                            {{ fav.totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} &middot;
+                            {{ fav.itemCount }}
+                            {{ 'CONSUMPTION_LIST.FAVORITE_ITEMS' | translate }}
+                        </div>
+                    </div>
+                    <div class="consumption-list__favorite-actions fd-row fd-gap-xxs">
+                        <fd-ui-button
+                            class="consumption-list__favorite-btn"
+                            variant="secondary"
+                            fill="text"
+                            icon="replay"
+                            [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
+                            [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
+                            (click)="favoriteRepeated.emit(fav)"
+                        />
+                        <fd-ui-button
+                            class="consumption-list__favorite-btn consumption-list__favorite-btn--remove"
+                            variant="danger"
+                            fill="text"
+                            icon="close"
+                            [fdUiHint]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
+                            [ariaLabel]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
+                            (click)="favoriteRemoved.emit(fav)"
+                        />
+                    </div>
+                </div>
+            }
+        </div>
+    </fd-favorites-section>
+}
