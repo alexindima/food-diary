@@ -1,0 +1,33 @@
+@if (checkoutReturnState() === 'success') {
+    <fd-notice-banner
+        type="info"
+        [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_TITLE' | translate"
+        [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE' | translate"
+    />
+}
+
+@if (checkoutReturnState() === 'canceled') {
+    <fd-notice-banner
+        type="warning"
+        [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_TITLE' | translate"
+        [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE' | translate"
+    />
+}
+
+@if (overviewCopyState().showCancelAtPeriodEndBanner) {
+    <fd-notice-banner
+        type="warning"
+        [title]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_TITLE' | translate"
+        [message]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE' | translate"
+    />
+}
+
+@if (errorMessage(); as currentErrorMessage) {
+    <fd-notice-banner
+        type="error"
+        [title]="'PREMIUM_PAGE.ERROR_TITLE' | translate"
+        [message]="currentErrorMessage"
+        [actionLabel]="'PREMIUM_PAGE.RETRY_ACTION' | translate"
+        (action)="retry.emit()"
+    />
+}

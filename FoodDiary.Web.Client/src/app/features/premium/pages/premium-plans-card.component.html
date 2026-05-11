@@ -1,0 +1,54 @@
+<fd-ui-card class="premium-access-page__card fd-grid fd-gap-card-profile">
+    <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
+        <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.PLANS.TITLE' | translate }}</h2>
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+            {{ 'PREMIUM_PAGE.PLANS.SUBTITLE' | translate }}
+        </p>
+    </div>
+
+    <div class="premium-access-page__plans fd-grid fd-gap-card-content">
+        @for (card of cards(); track card.plan) {
+            <article
+                class="premium-access-page__plan fd-grid fd-gap-card-profile"
+                [class.premium-access-page__plan--featured]="card.isFeatured"
+            >
+                <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
+                    @if (card.kickerKey) {
+                        <span class="premium-access-page__plan-kicker fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ card.kickerKey | translate }}
+                        </span>
+                    }
+                    <h3 class="premium-access-page__plan-title fd-ui-card-title">
+                        {{ card.titleKey | translate }}
+                    </h3>
+                    <p class="premium-access-page__text fd-ui-body">{{ card.descriptionKey | translate }}</p>
+                </div>
+                @if (showProviderChoices()) {
+                    <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
+                        @for (provider of card.providerOptions; track provider.provider) {
+                            <fd-ui-button
+                                variant="secondary"
+                                fill="outline"
+                                fullWidth
+                                [loading]="card.isLoading"
+                                [disabled]="checkoutLoadingPlan() !== null"
+                                (click)="checkout.emit({ plan: card.plan, provider: provider.provider })"
+                            >
+                                {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: provider.label } }}
+                            </fd-ui-button>
+                        }
+                    </div>
+                } @else {
+                    <fd-ui-button
+                        fullWidth
+                        [loading]="card.isLoading"
+                        [disabled]="checkoutLoadingPlan() !== null"
+                        (click)="checkout.emit({ plan: card.plan })"
+                    >
+                        {{ card.actionKey | translate }}
+                    </fd-ui-button>
+                }
+            </article>
+        }
+    </div>
+</fd-ui-card>

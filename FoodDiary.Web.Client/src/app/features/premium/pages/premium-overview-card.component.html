@@ -1,0 +1,50 @@
+<fd-ui-card class="premium-access-page__card premium-access-page__card--overview fd-grid fd-gap-card-profile">
+    <div class="premium-access-page__section-header fd-row fd-align-start fd-justify-between fd-gap-card-header fd-wrap">
+        <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
+            <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
+            <p class="premium-access-page__text fd-ui-body">
+                {{ overviewCopyState().stateLabelKey | translate }}
+            </p>
+        </div>
+
+        @if (showManageBilling()) {
+            <fd-ui-button
+                variant="secondary"
+                fill="outline"
+                [loading]="portalLoading()"
+                [disabled]="portalLoading()"
+                (click)="manageBilling.emit()"
+            >
+                {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+
+    @if (isLoading()) {
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+            {{ 'PREMIUM_PAGE.STATUS_LOADING' | translate }}
+        </p>
+    } @else if (overview()) {
+        <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
+            @if (overviewBadges().planLabelKey) {
+                <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
+                    {{ overviewBadges().planLabelKey | translate }}
+                </span>
+            }
+            <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
+                {{ overviewBadges().statusLabelKey | translate }}
+            </span>
+        </div>
+
+        @if (currentPeriodEndLabel(); as currentPeriodEnd) {
+            <p class="premium-access-page__meta fd-ui-body-sm">
+                {{ overviewCopyState().periodLabelKey | translate }}
+                <strong>{{ currentPeriodEnd }}</strong>
+            </p>
+        }
+
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+            {{ overviewHintKey() | translate }}
+        </p>
+    }
+</fd-ui-card>

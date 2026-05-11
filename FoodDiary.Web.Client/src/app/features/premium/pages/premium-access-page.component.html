@@ -1,170 +1,33 @@
 <section fdPageContainer class="premium-access-page fd-stack">
     <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate" />
 
-    @if (checkoutReturnState() === 'success') {
-        <fd-notice-banner
-            type="info"
-            [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_TITLE' | translate"
-            [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE' | translate"
-        />
-    }
+    <fd-premium-access-banners
+        [checkoutReturnState]="checkoutReturnState()"
+        [overviewCopyState]="overviewCopyState()"
+        [errorMessage]="errorMessage()"
+        (retry)="reloadOverviewAsync()"
+    />
 
-    @if (checkoutReturnState() === 'canceled') {
-        <fd-notice-banner
-            type="warning"
-            [title]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_TITLE' | translate"
-            [message]="'PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE' | translate"
-        />
-    }
-
-    @if (overviewCopyState().showCancelAtPeriodEndBanner) {
-        <fd-notice-banner
-            type="warning"
-            [title]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_TITLE' | translate"
-            [message]="'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE' | translate"
-        />
-    }
-
-    @if (errorMessage(); as errorMessage) {
-        <fd-notice-banner
-            type="error"
-            [title]="'PREMIUM_PAGE.ERROR_TITLE' | translate"
-            [message]="errorMessage"
-            [actionLabel]="'PREMIUM_PAGE.RETRY_ACTION' | translate"
-            (action)="reloadOverviewAsync()"
-        />
-    }
-
-    <fd-ui-card class="premium-access-page__card premium-access-page__card--overview fd-grid fd-gap-card-profile">
-        <div class="premium-access-page__section-header fd-row fd-align-start fd-justify-between fd-gap-card-header fd-wrap">
-            <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
-                <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
-                <p class="premium-access-page__text fd-ui-body">
-                    {{ overviewCopyState().stateLabelKey | translate }}
-                </p>
-            </div>
-
-            @if (showManageBilling()) {
-                <fd-ui-button
-                    variant="secondary"
-                    fill="outline"
-                    [loading]="portalLoading()"
-                    [disabled]="portalLoading()"
-                    (click)="openPortalAsync()"
-                >
-                    {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
-                </fd-ui-button>
-            }
-        </div>
-
-        @if (isLoading()) {
-            <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-                {{ 'PREMIUM_PAGE.STATUS_LOADING' | translate }}
-            </p>
-        } @else if (overview(); as overview) {
-            <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
-                @if (overviewBadges(); as badges) {
-                    @if (badges.planLabelKey) {
-                        <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
-                            {{ badges.planLabelKey | translate }}
-                        </span>
-                    }
-                    <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
-                        {{ badges.statusLabelKey | translate }}
-                    </span>
-                }
-            </div>
-
-            @if (currentPeriodEndLabel(); as currentPeriodEnd) {
-                <p class="premium-access-page__meta fd-ui-body-sm">
-                    {{ overviewCopyState().periodLabelKey | translate }}
-                    <strong>{{ currentPeriodEnd }}</strong>
-                </p>
-            }
-
-            <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-                {{ overviewHintKey() | translate }}
-            </p>
-        }
-    </fd-ui-card>
+    <fd-premium-overview-card
+        [overviewCopyState]="overviewCopyState()"
+        [showManageBilling]="showManageBilling()"
+        [portalLoading]="portalLoading()"
+        [isLoading]="isLoading()"
+        [overview]="overview()"
+        [overviewBadges]="overviewBadges()"
+        [currentPeriodEndLabel]="currentPeriodEndLabel()"
+        [overviewHintKey]="overviewHintKey()"
+        (manageBilling)="openPortalAsync()"
+    />
 
     @if (showPlans()) {
-        <fd-ui-card class="premium-access-page__card fd-grid fd-gap-card-profile">
-            <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
-                <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.PLANS.TITLE' | translate }}</h2>
-                <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-                    {{ 'PREMIUM_PAGE.PLANS.SUBTITLE' | translate }}
-                </p>
-            </div>
-
-            <div class="premium-access-page__plans fd-grid fd-gap-card-content">
-                @for (card of planCards(); track card.plan) {
-                    <article
-                        class="premium-access-page__plan fd-grid fd-gap-card-profile"
-                        [class.premium-access-page__plan--featured]="card.isFeatured"
-                    >
-                        <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
-                            @if (card.kickerKey) {
-                                <span class="premium-access-page__plan-kicker fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                                    {{ card.kickerKey | translate }}
-                                </span>
-                            }
-                            <h3 class="premium-access-page__plan-title fd-ui-card-title">
-                                {{ card.titleKey | translate }}
-                            </h3>
-                            <p class="premium-access-page__text fd-ui-body">{{ card.descriptionKey | translate }}</p>
-                        </div>
-                        @if (showProviderChoices()) {
-                            <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
-                                @for (provider of card.providerOptions; track provider.provider) {
-                                    <fd-ui-button
-                                        variant="secondary"
-                                        fill="outline"
-                                        fullWidth
-                                        [loading]="card.isLoading"
-                                        [disabled]="checkoutLoadingPlan() !== null"
-                                        (click)="startCheckoutAsync(card.plan, provider.provider)"
-                                    >
-                                        {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: provider.label } }}
-                                    </fd-ui-button>
-                                }
-                            </div>
-                        } @else {
-                            <fd-ui-button
-                                fullWidth
-                                [loading]="card.isLoading"
-                                [disabled]="checkoutLoadingPlan() !== null"
-                                (click)="startCheckoutAsync(card.plan)"
-                            >
-                                {{ card.actionKey | translate }}
-                            </fd-ui-button>
-                        }
-                    </article>
-                }
-            </div>
-        </fd-ui-card>
+        <fd-premium-plans-card
+            [cards]="planCards()"
+            [showProviderChoices]="showProviderChoices()"
+            [checkoutLoadingPlan]="checkoutLoadingPlan()"
+            (checkout)="startCheckoutFromViewAsync($event)"
+        />
     }
 
-    <fd-ui-card class="premium-access-page__card fd-grid fd-gap-card-profile">
-        <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
-            <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.BENEFITS.TITLE' | translate }}</h2>
-            <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-                {{ 'PREMIUM_PAGE.BENEFITS.SUBTITLE' | translate }}
-            </p>
-        </div>
-
-        <ul class="premium-access-page__benefits fd-grid fd-gap-card-header fd-ui-body">
-            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_1' | translate }}</li>
-            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_2' | translate }}</li>
-            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_3' | translate }}</li>
-            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_4' | translate }}</li>
-            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_5' | translate }}</li>
-            <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_6' | translate }}</li>
-        </ul>
-
-        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-            {{ 'PREMIUM_PAGE.SUPPORT.TEXT' | translate }}
-            <a class="premium-access-page__link" href="mailto:admin@fooddiary.club">admin@fooddiary.club</a>
-        </p>
-    </fd-ui-card>
+    <fd-premium-benefits-card />
 </section>

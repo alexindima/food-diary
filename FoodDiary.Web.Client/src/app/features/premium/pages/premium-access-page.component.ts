@@ -1,22 +1,29 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
 import { PremiumBillingService } from '../api/premium-billing.service';
 import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../models/billing.models';
+import { PremiumAccessBannersComponent } from './premium-access-banners.component';
+import type {
+    PremiumCheckoutRequest,
+    PremiumOverviewBadgesViewModel,
+    PremiumOverviewCopyState,
+    PremiumPlanCardViewModel,
+} from './premium-access-page.types';
+import { PremiumBenefitsCardComponent } from './premium-benefits-card.component';
+import { PremiumOverviewCardComponent } from './premium-overview-card.component';
+import { PremiumPlansCardComponent } from './premium-plans-card.component';
 
 @Component({
     selector: 'fd-premium-access-page',
@@ -25,13 +32,13 @@ import type { BillingOverview, BillingPlan, BillingProvider } from '../models/bi
     styleUrls: ['./premium-access-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         FdPageContainerDirective,
         PageHeaderComponent,
-        FdUiButtonComponent,
-        FdUiCardComponent,
-        NoticeBannerComponent,
         TranslatePipe,
+        PremiumAccessBannersComponent,
+        PremiumOverviewCardComponent,
+        PremiumPlansCardComponent,
+        PremiumBenefitsCardComponent,
     ],
 })
 export class PremiumAccessPageComponent {
@@ -156,6 +163,10 @@ export class PremiumAccessPageComponent {
         } finally {
             this.checkoutLoadingPlan.set(null);
         }
+    }
+
+    public async startCheckoutFromViewAsync(request: PremiumCheckoutRequest): Promise<void> {
+        await this.startCheckoutAsync(request.plan, request.provider);
     }
 
     public async openPortalAsync(): Promise<void> {
@@ -373,31 +384,4 @@ export class PremiumAccessPageComponent {
         const fallbackLang = this.translateService.getFallbackLang() ?? '';
         return fallbackLang.length > 0 ? fallbackLang : 'en';
     }
-}
-
-interface PremiumOverviewBadgesViewModel {
-    planLabelKey: string | null;
-    statusLabelKey: string;
-}
-
-interface PremiumOverviewCopyState {
-    stateLabelKey: string;
-    periodLabelKey: string;
-    showCancelAtPeriodEndBanner: boolean;
-}
-
-interface PremiumPlanCardViewModel {
-    plan: BillingPlan;
-    titleKey: string;
-    descriptionKey: string;
-    actionKey: string;
-    isFeatured: boolean;
-    kickerKey: string | null;
-    isLoading: boolean;
-    providerOptions: PremiumProviderOptionViewModel[];
-}
-
-interface PremiumProviderOptionViewModel {
-    provider: BillingProvider;
-    label: string;
 }
