@@ -5,6 +5,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { RetryInterceptor } from './retry.interceptor';
 
+const HTTP_BAD_REQUEST = 400;
+const HTTP_NOT_FOUND = 404;
+const HTTP_INTERNAL_SERVER_ERROR = 500;
+
 describe('RetryInterceptor', () => {
     let http: HttpClient;
     let httpMock: HttpTestingController;
@@ -42,33 +46,33 @@ describe('RetryInterceptor', () => {
     it('should not retry on 400 errors', () => {
         http.get('/api/test').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(400);
+                expect(error.status).toBe(HTTP_BAD_REQUEST);
             },
         });
 
         const req = httpMock.expectOne('/api/test');
-        req.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
+        req.flush('Bad Request', { status: HTTP_BAD_REQUEST, statusText: 'Bad Request' });
     });
 
     it('should not retry on 404 errors', () => {
         http.get('/api/test').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(404);
+                expect(error.status).toBe(HTTP_NOT_FOUND);
             },
         });
 
         const req = httpMock.expectOne('/api/test');
-        req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
     });
 
     it('should not retry POST requests', () => {
         http.post('/api/test', { value: 1 }).subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(500);
+                expect(error.status).toBe(HTTP_INTERNAL_SERVER_ERROR);
             },
         });
 
         const req = httpMock.expectOne('/api/test');
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
     });
 });

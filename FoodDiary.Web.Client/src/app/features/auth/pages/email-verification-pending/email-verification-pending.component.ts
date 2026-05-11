@@ -10,6 +10,9 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
 
+const RESEND_COOLDOWN_SECONDS = 60;
+const SECOND_MS = 1000;
+
 @Component({
     selector: 'fd-email-verification-pending',
     imports: [TranslateModule, FdUiCardComponent, FdUiButtonComponent],
@@ -50,7 +53,7 @@ export class EmailVerificationPendingComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {
                 this.isChecking.set(false);
-                if (!user) {
+                if (user === null) {
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.ERROR'));
                     return;
                 }
@@ -102,7 +105,7 @@ export class EmailVerificationPendingComponent {
         this.sendVerificationEmail(true);
     }
 
-    private startResendCooldown(seconds = 60): void {
+    private startResendCooldown(seconds = RESEND_COOLDOWN_SECONDS): void {
         this.resendCooldownSeconds.set(seconds);
         const intervalId = window.setInterval(() => {
             const remaining = this.resendCooldownSeconds();
@@ -112,7 +115,7 @@ export class EmailVerificationPendingComponent {
                 return;
             }
             this.resendCooldownSeconds.set(remaining - 1);
-        }, 1000);
+        }, SECOND_MS);
 
         this.destroyRef.onDestroy(() => {
             window.clearInterval(intervalId);
@@ -124,7 +127,7 @@ export class EmailVerificationPendingComponent {
             .getInfo()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {
-                if (!user) {
+                if (user === null) {
                     return;
                 }
                 this.email.set(user.email);

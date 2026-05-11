@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { JwtDecoderService } from './jwt-decoder.service';
 
+const NON_STRING_ROLE_VALUE = 42;
+
 function encodePayload(payload: Record<string, unknown>): string {
     const json = JSON.stringify(payload);
     const bytes = new TextEncoder().encode(json);
@@ -103,7 +105,7 @@ describe('JwtDecoderService', () => {
         });
 
         it('should filter non-string values from role array', () => {
-            const token = encodePayload({ role: ['Admin', 42, null, 'User'] });
+            const token = encodePayload({ role: ['Admin', NON_STRING_ROLE_VALUE, null, 'User'] });
             expect(service.extractRoles(token)).toEqual(['Admin', 'User']);
         });
 

@@ -13,6 +13,8 @@ import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { UsdaService } from '../../api/usda.service';
 import type { UsdaFood } from '../../models/usda.data';
 
+const SEARCH_DEBOUNCE_MS = 300;
+
 @Component({
     selector: 'fd-usda-food-search-dialog',
     standalone: true,
@@ -42,7 +44,7 @@ export class UsdaFoodSearchDialogComponent {
     public constructor() {
         toObservable(this.searchQuery)
             .pipe(
-                debounceTime(300),
+                debounceTime(SEARCH_DEBOUNCE_MS),
                 distinctUntilChanged(),
                 switchMap(query => {
                     if (query.length < 2) {

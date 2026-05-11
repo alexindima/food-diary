@@ -9,6 +9,8 @@ import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
 
+const HYDRATION_AMOUNT_ML = 250;
+
 describe('DashboardFacade', () => {
     let facade: DashboardFacade;
     let dashboardService: { getSnapshot: ReturnType<typeof vi.fn> };
@@ -89,7 +91,7 @@ describe('DashboardFacade', () => {
         facade.initialize();
         const initialCallCount = dashboardService.getSnapshot.mock.calls.length;
 
-        facade.addHydration(250);
+        facade.addHydration(HYDRATION_AMOUNT_ML);
 
         expect(hydrationService.addEntry).toHaveBeenCalled();
         expect(dashboardService.getSnapshot.mock.calls.length).toBe(initialCallCount + 1);
@@ -99,7 +101,7 @@ describe('DashboardFacade', () => {
         facade.initialize();
         hydrationService.addEntry.mockReturnValueOnce(throwError(() => new Error('hydration failed')));
 
-        facade.addHydration(250);
+        facade.addHydration(HYDRATION_AMOUNT_ML);
 
         expect(facade.isHydrationLoading()).toBe(false);
     });

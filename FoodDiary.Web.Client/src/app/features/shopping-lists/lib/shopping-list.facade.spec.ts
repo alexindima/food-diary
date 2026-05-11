@@ -9,6 +9,8 @@ import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingList } from '../models/shopping-list.data';
 import { ShoppingListFacade } from './shopping-list.facade';
 
+const AUTOSAVE_DEBOUNCE_MS = 500;
+
 describe('ShoppingListFacade', () => {
     let facade: ShoppingListFacade;
     let shoppingListService: {
@@ -83,7 +85,7 @@ describe('ShoppingListFacade', () => {
 
         expect(facade.items()).toHaveLength(1);
 
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
         expect(shoppingListService.update).toHaveBeenCalledTimes(1);
     });
@@ -93,7 +95,7 @@ describe('ShoppingListFacade', () => {
         await Promise.resolve();
 
         facade.setListName('Renamed list');
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
         expect(shoppingListService.update).toHaveBeenCalledWith('list-1', expect.objectContaining({ name: 'Renamed list' }));
     });

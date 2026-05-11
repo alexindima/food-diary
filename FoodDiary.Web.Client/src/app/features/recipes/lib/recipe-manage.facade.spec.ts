@@ -12,6 +12,21 @@ import type { IngredientFormData, StepFormData } from '../components/manage/reci
 import { RecipeVisibility } from '../models/recipe.data';
 import { RecipeManageFacade } from './recipe-manage.facade';
 
+const PRODUCT_BASE_AMOUNT = 100;
+const PRODUCT_DEFAULT_PORTION_AMOUNT = 150;
+const APPLE_CALORIES = 52;
+const APPLE_PROTEINS = 0.3;
+const APPLE_FATS = 0.2;
+const APPLE_CARBS = 14;
+const APPLE_FIBER = 2.4;
+const APPLE_QUALITY_SCORE = 65;
+const INGREDIENT_AMOUNT = 50;
+const SUMMARY_CALORIES = 100;
+const SUMMARY_PROTEINS = 5;
+const SUMMARY_FATS = 2.5;
+const SUMMARY_CARBS = 10;
+const SUMMARY_FIBER = 1.5;
+
 describe('RecipeManageFacade', () => {
     let facade: RecipeManageFacade;
     let recipeService: {
@@ -147,31 +162,31 @@ describe('RecipeManageFacade', () => {
                 id: 'product-1',
                 name: 'Apple',
                 baseUnit: MeasurementUnit.G,
-                baseAmount: 100,
-                defaultPortionAmount: 150,
+                baseAmount: PRODUCT_BASE_AMOUNT,
+                defaultPortionAmount: PRODUCT_DEFAULT_PORTION_AMOUNT,
                 productType: ProductType.Fruit,
                 barcode: null,
                 brand: null,
                 category: null,
                 description: null,
                 imageUrl: null,
-                caloriesPerBase: 52,
-                proteinsPerBase: 0.3,
-                fatsPerBase: 0.2,
-                carbsPerBase: 14,
-                fiberPerBase: 2.4,
+                caloriesPerBase: APPLE_CALORIES,
+                proteinsPerBase: APPLE_PROTEINS,
+                fatsPerBase: APPLE_FATS,
+                carbsPerBase: APPLE_CARBS,
+                fiberPerBase: APPLE_FIBER,
                 alcoholPerBase: 0,
                 usageCount: 0,
                 visibility: ProductVisibility.Private,
                 createdAt: new Date(),
                 isOwnedByCurrentUser: true,
-                qualityScore: 65,
+                qualityScore: APPLE_QUALITY_SCORE,
                 qualityGrade: 'yellow',
             },
         });
 
         expect(ingredientGroup.value.foodName).toBe('Apple');
-        expect(ingredientGroup.value.amount).toBe(150);
+        expect(ingredientGroup.value.amount).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
         expect(ingredientGroup.value.nestedRecipeId).toBeNull();
     });
 
@@ -184,7 +199,7 @@ describe('RecipeManageFacade', () => {
                 ingredients: new FormArray([
                     new FormGroup({
                         food: new FormControl({
-                            baseAmount: 100,
+                            baseAmount: PRODUCT_BASE_AMOUNT,
                             caloriesPerBase: 200,
                             proteinsPerBase: 10,
                             fatsPerBase: 5,
@@ -192,7 +207,7 @@ describe('RecipeManageFacade', () => {
                             fiberPerBase: 3,
                             alcoholPerBase: 0,
                         }),
-                        amount: new FormControl(50),
+                        amount: new FormControl(INGREDIENT_AMOUNT),
                         foodName: new FormControl('Ingredient'),
                         nestedRecipeId: new FormControl<string | null>(null),
                         nestedRecipeName: new FormControl<string | null>(null),
@@ -204,11 +219,11 @@ describe('RecipeManageFacade', () => {
         const summary = facade.calculateAutoSummary(stepsArray);
 
         expect(summary).toEqual({
-            calories: 100,
-            proteins: 5,
-            fats: 2.5,
-            carbs: 10,
-            fiber: 1.5,
+            calories: SUMMARY_CALORIES,
+            proteins: SUMMARY_PROTEINS,
+            fats: SUMMARY_FATS,
+            carbs: SUMMARY_CARBS,
+            fiber: SUMMARY_FIBER,
             alcohol: 0,
         });
     });

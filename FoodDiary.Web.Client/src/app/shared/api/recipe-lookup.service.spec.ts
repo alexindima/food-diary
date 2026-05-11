@@ -7,6 +7,8 @@ import { environment } from '../../../environments/environment';
 import type { RecipeLookup } from '../models/recipe-lookup.data';
 import { RecipeLookupService } from './recipe-lookup.service';
 
+const SERVINGS = 4;
+
 describe('RecipeLookupService', () => {
     let service: RecipeLookupService;
     let httpMock: HttpTestingController;
@@ -35,7 +37,7 @@ describe('RecipeLookupService', () => {
 
         const mockResponse: RecipeLookup = {
             id: recipeId,
-            servings: 4,
+            servings: SERVINGS,
             steps: [
                 {
                     ingredients: [{ amount: 200, productBaseUnit: 'g' }],
@@ -45,7 +47,7 @@ describe('RecipeLookupService', () => {
 
         service.getById(recipeId).subscribe(response => {
             expect(response.id).toBe(recipeId);
-            expect(response.servings).toBe(4);
+            expect(response.servings).toBe(SERVINGS);
             expect(response.steps.length).toBe(1);
         });
 

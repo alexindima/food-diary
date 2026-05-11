@@ -3,6 +3,8 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
+const DEFAULT_MAX_INPUT_CHARS = 8;
+
 @Component({
     selector: 'fd-ui-nutrient-input',
     standalone: true,
@@ -44,13 +46,15 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     public value = '';
     public inputSize = 1;
     public inputWidth = '1ch';
-    public readonly maxInputChars = 8;
+    public readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
     protected get hostClass(): string {
-        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()}${this.disabled ? ' fd-ui-nutrient-input--disabled' : ''}${this.readonly() ? ' fd-ui-nutrient-input--readonly' : ''}${this.error() ? ' fd-ui-nutrient-input--error' : ''}`;
+        const error = this.error();
+        const hasError = error !== null && error !== undefined && error.length > 0;
+        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()}${this.disabled ? ' fd-ui-nutrient-input--disabled' : ''}${this.readonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
     }
 
     public writeValue(value: string | number | null): void {
@@ -95,7 +99,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     }
 
     private sanitizeDecimalInput(value: string): string {
-        if (!value) {
+        if (value.length === 0) {
             return '';
         }
 

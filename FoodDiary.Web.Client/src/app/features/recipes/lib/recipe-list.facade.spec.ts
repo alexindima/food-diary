@@ -10,6 +10,8 @@ import { RecipeService } from '../api/recipe.service';
 import { RecipeVisibility } from '../models/recipe.data';
 import { RecipeListFacade } from './recipe-list.facade';
 
+const PAGE_LIMIT = 10;
+
 describe('RecipeListFacade', () => {
     let facade: RecipeListFacade;
     let recipeService: {
@@ -46,7 +48,7 @@ describe('RecipeListFacade', () => {
                     allRecipes: {
                         data: [recipe],
                         page: 1,
-                        limit: 10,
+                        limit: PAGE_LIMIT,
                         totalPages: 1,
                         totalItems: 1,
                     },
@@ -56,7 +58,7 @@ describe('RecipeListFacade', () => {
                 of({
                     data: [recipe],
                     page: 1,
-                    limit: 10,
+                    limit: PAGE_LIMIT,
                     totalPages: 1,
                     totalItems: 1,
                 }),
@@ -98,15 +100,15 @@ describe('RecipeListFacade', () => {
     });
 
     it('loads initial overview and updates derived state', () => {
-        facade.loadInitialOverview(1, 10, null, false).subscribe();
+        facade.loadInitialOverview(1, PAGE_LIMIT, null, false).subscribe();
 
         expect(recipeService.queryOverview).toHaveBeenCalledWith({
             page: 1,
-            limit: 10,
+            limit: PAGE_LIMIT,
             filters: { search: null },
             includePublic: true,
-            recentLimit: 10,
-            favoriteLimit: 10,
+            recentLimit: PAGE_LIMIT,
+            favoriteLimit: PAGE_LIMIT,
         });
         expect(facade.recipeData.items()).toEqual([recipe]);
         expect(facade.recentRecipes()).toEqual([recipe]);
@@ -117,7 +119,7 @@ describe('RecipeListFacade', () => {
     it('sets load error state when overview query fails', () => {
         recipeService.queryOverview.mockReturnValueOnce(throwError(() => ({ status: 500 })));
 
-        facade.loadInitialOverview(1, 10, ' soup ', false).subscribe();
+        facade.loadInitialOverview(1, PAGE_LIMIT, ' soup ', false).subscribe();
 
         expect(facade.recipeData.items()).toEqual([]);
         expect(facade.recentRecipes()).toEqual([]);
@@ -128,7 +130,7 @@ describe('RecipeListFacade', () => {
         facade.deleteRecipe(recipe, 'soup', true).subscribe();
 
         expect(recipeService.deleteById).toHaveBeenCalledWith('recipe-1');
-        expect(recipeService.query).toHaveBeenCalledWith(1, 10, { search: 'soup' }, false);
+        expect(recipeService.query).toHaveBeenCalledWith(1, PAGE_LIMIT, { search: 'soup' }, false);
         expect(facade.isDeleting()).toBe(false);
     });
 

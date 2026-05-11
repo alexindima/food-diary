@@ -1,11 +1,14 @@
 import { Injectable, signal } from '@angular/core';
 
+const DEFAULT_SHOW_DELAY_MS = 500;
+const DEFAULT_MIN_VISIBLE_MS = 300;
+
 @Injectable({
     providedIn: 'root',
 })
 export class GlobalLoadingService {
-    private static readonly showDelayMs = 500;
-    private static readonly minVisibleMs = 300;
+    private static readonly showDelayMs = DEFAULT_SHOW_DELAY_MS;
+    private static readonly minVisibleMs = DEFAULT_MIN_VISIBLE_MS;
 
     private activeRequests = 0;
     private visibleSince = 0;

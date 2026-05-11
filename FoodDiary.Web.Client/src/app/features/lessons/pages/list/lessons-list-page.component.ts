@@ -12,6 +12,8 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { LessonFacade } from '../../lib/lesson.facade';
 import { LESSON_CATEGORIES, type LessonSummary } from '../../models/lesson.data';
 
+const PERCENTAGE_MULTIPLIER = 100;
+
 interface LessonCategoryOption {
     value: string | null;
     labelKey: string;
@@ -62,7 +64,7 @@ export class LessonsListPageComponent {
             return null;
         }
         const read = all.filter(l => l.isRead).length;
-        return { read, total: all.length, percent: Math.round((read / all.length) * 100) };
+        return { read, total: all.length, percent: Math.round((read / all.length) * PERCENTAGE_MULTIPLIER) };
     });
     public readonly categoryFilterOptions = computed<LessonCategoryOption[]>(() => {
         const selectedCategory = this.facade.categoryFilter();

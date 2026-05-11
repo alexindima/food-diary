@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { type FdUiTab, FdUiTabsComponent } from './fd-ui-tabs.component';
 
+const TAB_COUNT = 3;
+
 describe('FdUiTabsComponent', () => {
     let fixture: ComponentFixture<FdUiTabsComponent>;
     let component: FdUiTabsComponent;
@@ -37,7 +39,7 @@ describe('FdUiTabsComponent', () => {
 
     it('should render tabs', () => {
         const tabLabels = tabs();
-        expect(tabLabels.length).toBe(3);
+        expect(tabLabels.length).toBe(TAB_COUNT);
     });
 
     it('should set selected tab based on selectedValue', () => {

@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 
+const DEFAULT_PAGE_SIZE = 10;
+const VISIBLE_PAGE_RADIUS = 2;
+const MAX_VISIBLE_PAGES = 5;
+
 @Component({
     selector: 'fd-ui-pagination',
     standalone: true,
@@ -9,7 +13,7 @@ import { ChangeDetectionStrategy, Component, computed, input, model } from '@ang
 })
 export class FdUiPaginationComponent {
     public readonly length = input(0);
-    public readonly pageSize = input(10);
+    public readonly pageSize = input(DEFAULT_PAGE_SIZE);
     public readonly pageIndex = model(0);
 
     protected readonly pageCount = computed(() => {
@@ -20,9 +24,9 @@ export class FdUiPaginationComponent {
     protected readonly visiblePages = computed(() => {
         const count = this.pageCount();
         const current = Math.min(Math.max(this.pageIndex(), 0), count - 1);
-        const start = Math.max(0, current - 2);
-        const end = Math.min(count, start + 5);
-        const adjustedStart = Math.max(0, end - 5);
+        const start = Math.max(0, current - VISIBLE_PAGE_RADIUS);
+        const end = Math.min(count, start + MAX_VISIBLE_PAGES);
+        const adjustedStart = Math.max(0, end - MAX_VISIBLE_PAGES);
 
         return Array.from({ length: end - adjustedStart }, (_, index) => adjustedStart + index);
     });

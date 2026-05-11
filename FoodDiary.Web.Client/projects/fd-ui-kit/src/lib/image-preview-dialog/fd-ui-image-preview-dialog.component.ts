@@ -18,6 +18,8 @@ export interface FdUiImagePreviewDialogCollageImage {
     alt?: string;
 }
 
+const MAX_COLLAGE_IMAGES = 4;
+
 @Component({
     selector: 'fd-ui-image-preview-dialog',
     standalone: true,
@@ -31,7 +33,7 @@ export class FdUiImagePreviewDialogComponent {
     private readonly dialogData = inject<FdUiImagePreviewDialogData>(FD_UI_DIALOG_DATA);
 
     public readonly imageUrl = this.dialogData.imageUrl?.trim() ?? '';
-    public readonly collageImages = (this.dialogData.collageImages ?? []).slice(0, 4);
+    public readonly collageImages = (this.dialogData.collageImages ?? []).slice(0, MAX_COLLAGE_IMAGES);
     public readonly alt = this.dialogData.alt ?? '';
     public readonly title = this.dialogData.title?.trim() ?? '';
 

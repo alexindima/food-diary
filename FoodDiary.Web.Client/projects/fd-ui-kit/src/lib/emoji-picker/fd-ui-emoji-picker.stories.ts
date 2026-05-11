@@ -12,9 +12,12 @@ const meta: Meta<FdUiEmojiPickerComponent> = {
 export default meta;
 type Story = StoryObj<FdUiEmojiPickerComponent>;
 
+const COMPACT_SELECTED_VALUE = 3;
+const WITH_LABELS_SELECTED_VALUE = 2;
+
 export const Compact: Story = {
     render: () => {
-        const selected = signal<number | null>(3);
+        const selected = signal<number | null>(COMPACT_SELECTED_VALUE);
         return {
             props: {
                 selected,
@@ -36,7 +39,7 @@ export const Compact: Story = {
 
 export const WithLabels: Story = {
     render: () => {
-        const selected = signal<number | null>(2);
+        const selected = signal<number | null>(WITH_LABELS_SELECTED_VALUE);
         return {
             props: {
                 selected,

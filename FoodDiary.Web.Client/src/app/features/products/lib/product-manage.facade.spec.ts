@@ -9,6 +9,8 @@ import { ProductService } from '../api/product.service';
 import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../models/product.data';
 import { ProductManageFacade } from './product-manage.facade';
 
+const HTTP_BAD_REQUEST = 400;
+
 describe('ProductManageFacade', () => {
     let facade: ProductManageFacade;
     let productService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteById: ReturnType<typeof vi.fn> };
@@ -134,12 +136,12 @@ describe('ProductManageFacade', () => {
     });
 
     it('should return error when save fails', async () => {
-        productService.create.mockReturnValueOnce(throwError(() => ({ status: 400 })));
+        productService.create.mockReturnValueOnce(throwError(() => ({ status: HTTP_BAD_REQUEST })));
 
         const result = await facade.submitProductAsync(null, request, true);
 
         expect(result.product).toBeNull();
-        expect(result.error?.status).toBe(400);
+        expect(result.error?.status).toBe(HTTP_BAD_REQUEST);
     });
 
     it('should delete product and navigate after confirmation', async () => {

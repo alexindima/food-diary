@@ -6,13 +6,15 @@ import { fallbackApiError } from '../shared/lib/api-error.utils';
 import type { FastingTelemetrySummary } from '../shared/models/admin-telemetry.data';
 import { ApiService } from './api.service';
 
+const DEFAULT_FASTING_SUMMARY_HOURS = 24;
+
 @Injectable({
     providedIn: 'root',
 })
 export class AdminTelemetryService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/admin/telemetry');
 
-    public getFastingSummary(hours: number = 24): Observable<FastingTelemetrySummary | null> {
+    public getFastingSummary(hours: number = DEFAULT_FASTING_SUMMARY_HOURS): Observable<FastingTelemetrySummary | null> {
         return this.get<FastingTelemetrySummary>('fasting', { hours }).pipe(
             catchError(error => fallbackApiError('Get fasting telemetry summary error', error, null)),
         );

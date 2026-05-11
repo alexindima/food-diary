@@ -5,6 +5,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminAiUsageService } from '../api/admin-ai-usage.service';
 import { AdminAiUsageComponent } from './admin-ai-usage.component';
 
+const TOTAL_TOKENS = 1000;
+const INPUT_TOKENS = 600;
+const OUTPUT_TOKENS = 400;
+
 describe('AdminAiUsageComponent', () => {
     let component: AdminAiUsageComponent;
     let fixture: ComponentFixture<AdminAiUsageComponent>;
@@ -14,9 +18,9 @@ describe('AdminAiUsageComponent', () => {
         aiUsageService = { getSummary: vi.fn() };
         aiUsageService.getSummary.mockReturnValue(
             of({
-                totalTokens: 1000,
-                inputTokens: 600,
-                outputTokens: 400,
+                totalTokens: TOTAL_TOKENS,
+                inputTokens: INPUT_TOKENS,
+                outputTokens: OUTPUT_TOKENS,
                 byDay: [],
                 byOperation: [],
                 byModel: [],
@@ -40,7 +44,7 @@ describe('AdminAiUsageComponent', () => {
 
     it('should load ai usage on init', () => {
         expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
-        expect(component.usage()?.totalTokens).toBe(1000);
+        expect(component.usage()?.totalTokens).toBe(TOTAL_TOKENS);
         expect(component.isLoading()).toBe(false);
     });
 

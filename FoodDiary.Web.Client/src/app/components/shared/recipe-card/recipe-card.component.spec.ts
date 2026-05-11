@@ -9,6 +9,10 @@ import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-re
 import { AuthService } from '../../../services/auth.service';
 import { RecipeCardComponent, type RecipeCardItem } from './recipe-card.component';
 
+const TOTAL_TIME_MINUTES = 45;
+const PREP_TIME_ONLY_MINUTES = 20;
+const INGREDIENT_COUNT = 5;
+
 describe('RecipeCardComponent', () => {
     let component: RecipeCardComponent;
     let fixture: ComponentFixture<RecipeCardComponent>;
@@ -95,7 +99,7 @@ describe('RecipeCardComponent', () => {
 
     it('should calculate total time as sum of prepTime and cookTime', () => {
         fixture.detectChanges();
-        expect(component.totalTime()).toBe(45);
+        expect(component.totalTime()).toBe(TOTAL_TIME_MINUTES);
     });
 
     it('should return null for total time when both prepTime and cookTime are 0', () => {
@@ -121,16 +125,16 @@ describe('RecipeCardComponent', () => {
     it('should handle only prepTime set', () => {
         fixture.componentRef.setInput('recipe', {
             ...mockRecipe,
-            prepTime: 20,
+            prepTime: PREP_TIME_ONLY_MINUTES,
             cookTime: null,
         });
         fixture.detectChanges();
-        expect(component.totalTime()).toBe(20);
+        expect(component.totalTime()).toBe(PREP_TIME_ONLY_MINUTES);
     });
 
     it('should count ingredients across all steps', () => {
         fixture.detectChanges();
-        expect(component.ingredientCount()).toBe(5);
+        expect(component.ingredientCount()).toBe(INGREDIENT_COUNT);
     });
 
     it('should return 0 ingredients when steps is null', () => {

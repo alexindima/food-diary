@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from './fd-ui-segmented-toggle.component';
 
+const OPTION_COUNT = 3;
+
 describe('FdUiSegmentedToggleComponent', () => {
     let component: FdUiSegmentedToggleComponent;
     let fixture: ComponentFixture<FdUiSegmentedToggleComponent>;
@@ -43,7 +45,7 @@ describe('FdUiSegmentedToggleComponent', () => {
 
     it('should render all options', () => {
         const buttons = radioButtons();
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(OPTION_COUNT);
         expect(buttons[0].textContent.trim()).toBe('Day');
         expect(buttons[1].textContent.trim()).toBe('Week');
         expect(buttons[2].textContent.trim()).toBe('Month');

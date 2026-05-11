@@ -17,6 +17,8 @@ export interface ReportDialogData {
     targetId: string;
 }
 
+const REPORT_REASON_MAX_LENGTH = 1000;
+
 @Component({
     selector: 'fd-report-dialog',
     templateUrl: './report-dialog.component.html',
@@ -32,7 +34,7 @@ export class ReportDialogComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
+    public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(REPORT_REASON_MAX_LENGTH)]);
     public readonly isSubmitting = signal(false);
 
     public onSubmit(): void {

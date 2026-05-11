@@ -11,6 +11,9 @@ import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.s
 import { AuthService } from '../../../services/auth.service';
 import { MealCardComponent, type MealCardItem } from './meal-card.component';
 
+const ITEM_COUNT = 3;
+const AI_ITEM_COUNT = 6;
+
 describe('MealCardComponent', () => {
     let component: MealCardComponent;
     let fixture: ComponentFixture<MealCardComponent>;
@@ -88,7 +91,7 @@ describe('MealCardComponent', () => {
 
     it('should calculate itemCount from items array', () => {
         fixture.detectChanges();
-        expect(component.itemCount()).toBe(3);
+        expect(component.itemCount()).toBe(ITEM_COUNT);
     });
 
     it('should calculate itemCount as 0 when items is null', () => {
@@ -104,7 +107,7 @@ describe('MealCardComponent', () => {
             aiSessions: [{ items: [{}, {}, {}] }, { items: [{}] }],
         });
         fixture.detectChanges();
-        expect(component.itemCount()).toBe(6);
+        expect(component.itemCount()).toBe(AI_ITEM_COUNT);
     });
 
     it('should handle aiSessions with null items', () => {

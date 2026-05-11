@@ -7,12 +7,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiHintDirective } from './fd-ui-hint.directive';
 
+const HINT_SHOW_DELAY_MS = 500;
+
 @Component({
     standalone: true,
     imports: [FdUiHintDirective],
-    template: ' <button type="button" fdUiHint="Notifications" [fdUiHintShowDelay]="500">Open dialog</button> ',
+    template: ' <button type="button" fdUiHint="Notifications" [fdUiHintShowDelay]="hintShowDelayMs">Open dialog</button> ',
 })
-class TestHostComponent {}
+class TestHostComponent {
+    protected readonly hintShowDelayMs = HINT_SHOW_DELAY_MS;
+}
 
 describe('FdUiHintDirective', () => {
     let fixture: ComponentFixture<TestHostComponent>;
@@ -55,7 +59,7 @@ describe('FdUiHintDirective', () => {
         trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         fixture.detectChanges();
 
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(HINT_SHOW_DELAY_MS);
         fixture.detectChanges();
 
         expect(overlayRoot.querySelector('.fd-ui-hint')).toBeNull();

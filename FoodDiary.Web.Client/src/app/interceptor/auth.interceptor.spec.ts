@@ -15,6 +15,9 @@ import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
 import { AuthInterceptor } from './auth.interceptor';
 
+const HTTP_UNAUTHORIZED = 401;
+const HTTP_INTERNAL_SERVER_ERROR = 500;
+
 type AuthServiceMock = {
     getToken: ReturnType<typeof vi.fn<() => string | null>>;
     refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
@@ -96,7 +99,7 @@ describe('AuthInterceptor', () => {
         http.get('/api/data').subscribe();
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
 
@@ -115,7 +118,7 @@ describe('AuthInterceptor', () => {
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         const retryReq = httpTesting.expectOne('/api/data');
         expect(retryReq.request.headers.get('Authorization')).toBe('Bearer refreshed-token');
@@ -144,12 +147,12 @@ describe('AuthInterceptor', () => {
 
         http.get('/api/data').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(401);
+                expect(error.status).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });
@@ -159,12 +162,12 @@ describe('AuthInterceptor', () => {
 
         http.get('/api/auth/login').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(401);
+                expect(error.status).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
         const req = httpTesting.expectOne('/api/auth/login');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
         expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
@@ -175,12 +178,12 @@ describe('AuthInterceptor', () => {
 
         http.get('/api/data').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(500);
+                expect(error.status).toBe(HTTP_INTERNAL_SERVER_ERROR);
             },
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: 500, statusText: 'Internal Server Error' });
+        req.flush(null, { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
         expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();

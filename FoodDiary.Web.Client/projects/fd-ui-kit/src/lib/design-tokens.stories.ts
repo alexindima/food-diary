@@ -131,6 +131,8 @@ const grayShades: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.gray)
 const semanticColors: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.semantic).map(([name, value]) => ({ name, value }));
 const chartColors: TokenSwatch[] = Object.entries(DESIGN_TOKEN_VALUES.color.chart).map(([name, value]) => ({ name, value }));
 
+const OVERVIEW_SHADE_COUNT = 5;
+
 const layoutTokens: TokenTableRow[] = [
     { name: 'page.background', value: DESIGN_TOKEN_VALUES.layout.page.background },
     { name: 'page.horizontalPadding', value: DESIGN_TOKEN_VALUES.layout.page.horizontalPadding },
@@ -165,7 +167,11 @@ export const Overview: Story = {
             {
                 title: 'Core Palette',
                 description: 'Primary, secondary, and gray ramps used across product surfaces, text, and emphasis.',
-                items: [...primaryShades.slice(0, 5), ...secondaryShades.slice(0, 5), ...grayShades.slice(0, 5)],
+                items: [
+                    ...primaryShades.slice(0, OVERVIEW_SHADE_COUNT),
+                    ...secondaryShades.slice(0, OVERVIEW_SHADE_COUNT),
+                    ...grayShades.slice(0, OVERVIEW_SHADE_COUNT),
+                ],
             },
             {
                 title: 'Semantic Colors',

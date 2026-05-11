@@ -6,6 +6,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { type AdminBillingPayment, AdminBillingService } from './admin-billing.service';
 
+const PAGE = 2;
+const LIMIT = 20;
+const TOTAL_PAGES = 4;
+const TOTAL_ITEMS = 61;
+
 describe('AdminBillingService', () => {
     let service: AdminBillingService;
     let httpMock: HttpTestingController;
@@ -41,10 +46,10 @@ describe('AdminBillingService', () => {
                     createdOnUtc: '2026-04-28T00:00:00Z',
                 },
             ],
-            page: 2,
-            limit: 20,
-            totalPages: 4,
-            totalItems: 61,
+            page: PAGE,
+            limit: LIMIT,
+            totalPages: TOTAL_PAGES,
+            totalItems: TOTAL_ITEMS,
         } satisfies {
             data: AdminBillingPayment[];
             page: number;
@@ -54,7 +59,7 @@ describe('AdminBillingService', () => {
         };
 
         service
-            .getPayments(2, 20, {
+            .getPayments(PAGE, LIMIT, {
                 provider: 'Paddle',
                 status: 'paid',
                 kind: 'webhook',
@@ -64,15 +69,15 @@ describe('AdminBillingService', () => {
             })
             .subscribe(result => {
                 expect(result.items).toEqual(response.data);
-                expect(result.page).toBe(2);
-                expect(result.totalItems).toBe(61);
+                expect(result.page).toBe(PAGE);
+                expect(result.totalItems).toBe(TOTAL_ITEMS);
             });
 
         const req = httpMock.expectOne(
             r =>
                 r.url === `${baseUrl}/payments` &&
-                r.params.get('page') === '2' &&
-                r.params.get('limit') === '20' &&
+                r.params.get('page') === String(PAGE) &&
+                r.params.get('limit') === String(LIMIT) &&
                 r.params.get('provider') === 'Paddle' &&
                 r.params.get('status') === 'paid' &&
                 r.params.get('kind') === 'webhook' &&
@@ -85,7 +90,7 @@ describe('AdminBillingService', () => {
     });
 
     it('should omit empty filters for subscriptions', () => {
-        service.getSubscriptions(1, 20, { provider: '', status: null, search: undefined }).subscribe(result => {
+        service.getSubscriptions(1, LIMIT, { provider: '', status: null, search: undefined }).subscribe(result => {
             expect(result.items).toEqual([]);
         });
 
@@ -96,14 +101,14 @@ describe('AdminBillingService', () => {
         req.flush({
             data: [],
             page: 1,
-            limit: 20,
+            limit: LIMIT,
             totalPages: 0,
             totalItems: 0,
         });
     });
 
     it('should request webhook events endpoint', () => {
-        service.getWebhookEvents(1, 20, { provider: 'YooKassa' }).subscribe(result => {
+        service.getWebhookEvents(1, LIMIT, { provider: 'YooKassa' }).subscribe(result => {
             expect(result.items[0].eventId).toBe('evt_1');
         });
 
@@ -122,7 +127,7 @@ describe('AdminBillingService', () => {
                 },
             ],
             page: 1,
-            limit: 20,
+            limit: LIMIT,
             totalPages: 1,
             totalItems: 1,
         });

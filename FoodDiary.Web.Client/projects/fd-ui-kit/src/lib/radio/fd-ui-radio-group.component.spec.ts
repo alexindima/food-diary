@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiRadioGroupComponent, type FdUiRadioOption } from './fd-ui-radio-group.component';
 
+const OPTION_COUNT = 3;
+
 describe('FdUiRadioGroupComponent', () => {
     let component: FdUiRadioGroupComponent<string>;
     let fixture: ComponentFixture<FdUiRadioGroupComponent<string>>;
@@ -51,7 +53,7 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.detectChanges();
 
         const radioButtons = Array.from(host().querySelectorAll<HTMLElement>('.fd-ui-radio'));
-        expect(radioButtons.length).toBe(3);
+        expect(radioButtons.length).toBe(OPTION_COUNT);
         expect(radioButtons[0].textContent).toContain('Option A');
         expect(radioButtons[1].textContent).toContain('Option B');
         expect(radioButtons[2].textContent).toContain('Option C');

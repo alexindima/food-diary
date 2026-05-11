@@ -4,6 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { GamificationService } from '../api/gamification.service';
 import type { Badge, GamificationData } from '../models/gamification.data';
 
+const HEALTH_SCORE_RING_RADIUS = 90;
+const PERCENTAGE_MULTIPLIER = 100;
+
 export interface BadgeDisplay extends Badge {
     icon: string;
     nameKey: string;
@@ -11,7 +14,7 @@ export interface BadgeDisplay extends Badge {
 
 @Injectable({ providedIn: 'root' })
 export class GamificationFacade {
-    private readonly healthScoreCircleCircumference = 2 * Math.PI * 90;
+    private readonly healthScoreCircleCircumference = 2 * Math.PI * HEALTH_SCORE_RING_RADIUS;
     private readonly gamificationService = inject(GamificationService);
     private readonly dataResource = resource({
         loader: async (): Promise<GamificationData> => firstValueFrom(this.gamificationService.getData()),
@@ -24,11 +27,11 @@ export class GamificationFacade {
     public readonly longestStreak = computed(() => this.data()?.longestStreak ?? 0);
     public readonly totalMealsLogged = computed(() => this.data()?.totalMealsLogged ?? 0);
     public readonly healthScore = computed(() => this.data()?.healthScore ?? 0);
-    public readonly weeklyAdherence = computed(() => Math.round((this.data()?.weeklyAdherence ?? 0) * 100));
+    public readonly weeklyAdherence = computed(() => Math.round((this.data()?.weeklyAdherence ?? 0) * PERCENTAGE_MULTIPLIER));
     public readonly badges = computed(() => this.data()?.badges ?? []);
     public readonly healthScoreRing = computed(() => ({
         strokeDasharray: this.healthScoreCircleCircumference,
-        strokeDashoffset: this.healthScoreCircleCircumference * (1 - this.healthScore() / 100),
+        strokeDashoffset: this.healthScoreCircleCircumference * (1 - this.healthScore() / PERCENTAGE_MULTIPLIER),
     }));
     public readonly badgeDisplays = computed(() => this.badges().map(badge => this.toBadgeDisplay(badge)));
     public readonly earnedBadges = computed(() => this.badgeDisplays().filter(badge => badge.isEarned));

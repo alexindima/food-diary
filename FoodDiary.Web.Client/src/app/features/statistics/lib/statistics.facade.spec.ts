@@ -9,6 +9,10 @@ import { WeightEntriesService } from '../../weight-history/api/weight-entries.se
 import { StatisticsService } from '../api/statistics.service';
 import { StatisticsFacade } from './statistics.facade';
 
+const FIRST_TOTAL_CALORIES = 1800;
+const USER_HEIGHT_CM = 180;
+const RETRY_TOTAL_CALORIES = 2200;
+
 describe('StatisticsFacade', () => {
     let facade: StatisticsFacade;
     let statisticsService: { getAggregatedStatistics: ReturnType<typeof vi.fn> };
@@ -23,7 +27,7 @@ describe('StatisticsFacade', () => {
                     {
                         dateFrom: new Date('2026-04-01T00:00:00Z'),
                         dateTo: new Date('2026-04-01T23:59:59Z'),
-                        totalCalories: 1800,
+                        totalCalories: FIRST_TOTAL_CALORIES,
                         averageProteins: 120,
                         averageFats: 70,
                         averageCarbs: 160,
@@ -43,7 +47,7 @@ describe('StatisticsFacade', () => {
                 .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82.1 }])),
         };
         userService = {
-            getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
+            getInfo: vi.fn().mockReturnValue(of({ height: USER_HEIGHT_CM })),
         };
 
         TestBed.configureTestingModule({
@@ -75,10 +79,10 @@ describe('StatisticsFacade', () => {
         expect(weightEntriesService.getSummary).toHaveBeenCalled();
         expect(waistEntriesService.getSummary).toHaveBeenCalled();
         expect(userService.getInfo).toHaveBeenCalled();
-        expect(facade.chartStatisticsData()?.calories).toEqual([1800]);
+        expect(facade.chartStatisticsData()?.calories).toEqual([FIRST_TOTAL_CALORIES]);
         expect(facade.weightSummaryPoints()).toHaveLength(1);
         expect(facade.waistSummaryPoints()).toHaveLength(1);
-        expect(facade.userHeightCm()).toBe(180);
+        expect(facade.userHeightCm()).toBe(USER_HEIGHT_CM);
     });
 
     it('reloads aggregated data when the selected range changes', () => {
@@ -124,7 +128,7 @@ describe('StatisticsFacade', () => {
                 {
                     dateFrom: new Date('2026-04-01T00:00:00Z'),
                     dateTo: new Date('2026-04-01T23:59:59Z'),
-                    totalCalories: 2200,
+                    totalCalories: RETRY_TOTAL_CALORIES,
                     averageProteins: 130,
                     averageFats: 75,
                     averageCarbs: 190,
@@ -142,6 +146,6 @@ describe('StatisticsFacade', () => {
         TestBed.tick();
 
         expect(facade.hasLoadError()).toBe(false);
-        expect(facade.chartStatisticsData()?.calories).toEqual([2200]);
+        expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
     });
 });

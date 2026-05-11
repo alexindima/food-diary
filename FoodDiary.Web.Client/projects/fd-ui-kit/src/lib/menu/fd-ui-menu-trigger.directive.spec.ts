@@ -9,6 +9,8 @@ import { FdUiMenuComponent } from './fd-ui-menu.component';
 import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
 import { FdUiMenuTriggerDirective } from './fd-ui-menu-trigger.directive';
 
+const MENU_ITEM_COUNT = 3;
+
 @Component({
     standalone: true,
     imports: [FdUiMenuTriggerDirective, FdUiMenuComponent, FdUiMenuItemComponent],
@@ -75,7 +77,7 @@ describe('FdUiMenuTriggerDirective', () => {
         await flushOverlayFocusAsync();
 
         const items = getMenuItems();
-        expect(items).toHaveLength(3);
+        expect(items).toHaveLength(MENU_ITEM_COUNT);
         expect(focusLastItem).toHaveBeenCalledOnce();
     });
 

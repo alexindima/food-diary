@@ -12,6 +12,9 @@ import { FavoriteMealService } from '../api/favorite-meal.service';
 import { MealService } from '../api/meal.service';
 import type { FavoriteMeal, Meal, MealFilters } from '../models/meal.data';
 
+const MEAL_LIST_PAGE_SIZE = 10;
+const OVERVIEW_FAVORITES_LIMIT = 10;
+
 @Injectable({ providedIn: 'root' })
 export class MealListFacade {
     private readonly mealService = inject(MealService);
@@ -20,7 +23,7 @@ export class MealListFacade {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
 
-    public readonly pageSize = 10;
+    public readonly pageSize = MEAL_LIST_PAGE_SIZE;
     public readonly consumptionData = new PagedData<Meal>();
     public readonly currentPageIndex = signal(0);
     public readonly errorKey = signal<string | null>(null);
@@ -74,7 +77,7 @@ export class MealListFacade {
         this.consumptionData.setLoading(true);
         const filters = this.buildFilters(dateRange);
 
-        return this.mealService.queryOverview(1, this.pageSize, filters, 10).pipe(
+        return this.mealService.queryOverview(1, this.pageSize, filters, OVERVIEW_FAVORITES_LIMIT).pipe(
             tap(data => {
                 this.consumptionData.setData(data.allConsumptions);
                 this.favorites.set(data.favoriteItems);

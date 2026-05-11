@@ -8,11 +8,13 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../models/usda.data';
 
+const DEFAULT_USDA_SEARCH_LIMIT = 20;
+
 @Injectable({ providedIn: 'root' })
 export class UsdaService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.usda;
 
-    public searchFoods(search: string, limit: number = 20): Observable<UsdaFood[]> {
+    public searchFoods(search: string, limit: number = DEFAULT_USDA_SEARCH_LIMIT): Observable<UsdaFood[]> {
         return this.get<UsdaFood[]>('foods', { search, limit }).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Search USDA foods error', error, [])),
         );

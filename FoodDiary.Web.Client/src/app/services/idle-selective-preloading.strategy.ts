@@ -4,6 +4,11 @@ import { EMPTY, from, type Observable, switchMap } from 'rxjs';
 
 import { AuthService } from './auth.service';
 
+const PAGE_READY_FALLBACK_MS = 1500;
+const LOAD_EVENT_FALLBACK_MS = 3000;
+const IDLE_TIMEOUT_MS = 2000;
+const IDLE_FALLBACK_MS = 1200;
+
 type IdleCapableGlobal = {
     addEventListener?: (type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void;
     removeEventListener?: (type: string, listener: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void;
@@ -48,7 +53,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             if (typeof this.globalObject.addEventListener !== 'function' || typeof this.globalObject.removeEventListener !== 'function') {
                 this.globalObject.setTimeout(() => {
                     resolve();
-                }, 1500);
+                }, PAGE_READY_FALLBACK_MS);
                 return;
             }
 
@@ -66,7 +71,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             this.globalObject.setTimeout(() => {
                 removeEventListener('load', onLoad);
                 resolve();
-            }, 3000);
+            }, LOAD_EVENT_FALLBACK_MS);
         });
 
         return this.pageReadyPromise;
@@ -79,14 +84,14 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
                     () => {
                         resolve();
                     },
-                    { timeout: 2000 },
+                    { timeout: IDLE_TIMEOUT_MS },
                 );
                 return;
             }
 
             this.globalObject.setTimeout(() => {
                 resolve();
-            }, 1200);
+            }, IDLE_FALLBACK_MS);
         });
     }
 }

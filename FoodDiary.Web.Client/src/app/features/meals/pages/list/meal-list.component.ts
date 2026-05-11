@@ -28,6 +28,8 @@ import { MealListFacade } from '../../lib/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
+const FILTER_CHANGE_DEBOUNCE_MS = 300;
+
 interface FavoriteMealView {
     favorite: FavoriteMeal;
     displayName: string | null;
@@ -75,7 +77,7 @@ export class MealListComponent {
         this.favorites().map(favorite => ({
             favorite,
             displayName: favorite.name,
-            displayNameKey: favorite.mealType ? `MEAL_TYPES.${favorite.mealType}` : 'CONSUMPTION_LIST.FAVORITE_UNNAMED',
+            displayNameKey: `MEAL_TYPES.${favorite.mealType}`,
         })),
     );
     public readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
@@ -88,7 +90,7 @@ export class MealListComponent {
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasDateFilter = computed(() => {
         const dateRange = this.searchForm.controls.dateRange.value;
-        return !!dateRange?.start || !!dateRange?.end;
+        return (dateRange?.start !== null && dateRange?.start !== undefined) || (dateRange?.end !== null && dateRange?.end !== undefined);
     });
     public readonly isEmptyState = computed(() => this.consumptionData.items().length === 0 && !this.hasDateFilter());
     public readonly isNoResultsState = computed(() => this.consumptionData.items().length === 0 && this.hasDateFilter());
@@ -109,7 +111,7 @@ export class MealListComponent {
         this.searchForm.valueChanges
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                debounceTime(300),
+                debounceTime(FILTER_CHANGE_DEBOUNCE_MS),
                 switchMap(() => this.loadConsumptions(1)),
             )
             .subscribe();
@@ -180,7 +182,7 @@ export class MealListComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(data => {
-                if (!data) {
+                if (data === undefined) {
                     return;
                 }
 
@@ -232,7 +234,7 @@ export class MealListComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (!result) {
+                if (result === null || result === undefined) {
                     return;
                 }
 

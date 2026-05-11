@@ -5,6 +5,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminBillingService, type AdminBillingSubscription } from '../api/admin-billing.service';
 import { AdminBillingComponent } from './admin-billing.component';
 
+const PAGE_SIZE = 20;
+const TOTAL_PAGES = 2;
+const TOTAL_ITEMS = 21;
+
 describe('AdminBillingComponent', () => {
     let component: AdminBillingComponent;
     let fixture: ComponentFixture<AdminBillingComponent>;
@@ -28,9 +32,9 @@ describe('AdminBillingComponent', () => {
             },
         ],
         page: 1,
-        limit: 20,
-        totalPages: 2,
-        totalItems: 21,
+        limit: PAGE_SIZE,
+        totalPages: TOTAL_PAGES,
+        totalItems: TOTAL_ITEMS,
     } satisfies {
         items: AdminBillingSubscription[];
         page: number;
@@ -57,7 +61,7 @@ describe('AdminBillingComponent', () => {
                         },
                     ],
                     page: 1,
-                    limit: 20,
+                    limit: PAGE_SIZE,
                     totalPages: 1,
                     totalItems: 1,
                 }),
@@ -76,7 +80,7 @@ describe('AdminBillingComponent', () => {
                         },
                     ],
                     page: 1,
-                    limit: 20,
+                    limit: PAGE_SIZE,
                     totalPages: 1,
                     totalItems: 1,
                 }),
@@ -94,7 +98,7 @@ describe('AdminBillingComponent', () => {
     });
 
     it('should load subscriptions on init', () => {
-        expect(billingService.getSubscriptions).toHaveBeenCalledWith(1, 20, {
+        expect(billingService.getSubscriptions).toHaveBeenCalledWith(1, PAGE_SIZE, {
             provider: null,
             status: null,
             kind: null,
@@ -103,8 +107,8 @@ describe('AdminBillingComponent', () => {
             toUtc: null,
         });
         expect(component.subscriptions()).toEqual(subscriptionsPage.items);
-        expect(component.totalPages()).toBe(2);
-        expect(component.totalItems()).toBe(21);
+        expect(component.totalPages()).toBe(TOTAL_PAGES);
+        expect(component.totalItems()).toBe(TOTAL_ITEMS);
         expect(component.isLoading()).toBe(false);
     });
 
@@ -114,7 +118,7 @@ describe('AdminBillingComponent', () => {
 
         expect(component.activeTab()).toBe('payments');
         expect(component.page()).toBe(1);
-        expect(billingService.getPayments).toHaveBeenCalledWith(1, 20, {
+        expect(billingService.getPayments).toHaveBeenCalledWith(1, PAGE_SIZE, {
             provider: null,
             status: null,
             kind: 'webhook',
@@ -134,7 +138,7 @@ describe('AdminBillingComponent', () => {
 
         component.applyFilters();
 
-        expect(billingService.getSubscriptions).toHaveBeenLastCalledWith(1, 20, {
+        expect(billingService.getSubscriptions).toHaveBeenLastCalledWith(1, PAGE_SIZE, {
             provider: 'Paddle',
             status: 'paid',
             kind: null,

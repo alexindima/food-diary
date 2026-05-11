@@ -3,11 +3,13 @@ import { describe, expect, it } from 'vitest';
 
 import { nonEmptyArrayValidator } from './non-empty-array.validator';
 
+const VALID_ARRAY_VALUE = ['first', 'second', 'third'];
+
 describe('nonEmptyArrayValidator', () => {
     const validator = nonEmptyArrayValidator();
 
     it('should return null for non-empty array', () => {
-        const control = new FormControl([1, 2, 3]);
+        const control = new FormControl(VALID_ARRAY_VALUE);
         const result = validator(control);
         expect(result).toBeNull();
     });

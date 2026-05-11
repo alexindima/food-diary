@@ -15,6 +15,9 @@ type AdminUserImpersonationForm = {
     reason: FormControl<string>;
 };
 
+const REASON_MIN_LENGTH = 10;
+const REASON_MAX_LENGTH = 500;
+
 @Component({
     selector: 'fd-admin-user-impersonation-dialog',
     standalone: true,
@@ -35,7 +38,11 @@ export class AdminUserImpersonationDialogComponent {
     public readonly isSubmitting = signal(false);
     public readonly submitError = signal<string | null>(null);
     public readonly form: FormGroup<AdminUserImpersonationForm> = this.fb.group({
-        reason: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]),
+        reason: this.fb.nonNullable.control('', [
+            Validators.required,
+            Validators.minLength(REASON_MIN_LENGTH),
+            Validators.maxLength(REASON_MAX_LENGTH),
+        ]),
     });
     private readonly reasonValidationVersion = signal(0);
 

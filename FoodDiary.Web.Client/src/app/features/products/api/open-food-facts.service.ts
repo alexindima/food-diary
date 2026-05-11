@@ -6,6 +6,8 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 
+const DEFAULT_OPEN_FOOD_FACTS_SEARCH_LIMIT = 10;
+
 export interface OpenFoodFactsProduct {
     barcode: string;
     name: string;
@@ -31,7 +33,7 @@ export class OpenFoodFactsService extends ApiService {
         );
     }
 
-    public search(query: string, limit = 10): Observable<OpenFoodFactsProduct[]> {
+    public search(query: string, limit = DEFAULT_OPEN_FOOD_FACTS_SEARCH_LIMIT): Observable<OpenFoodFactsProduct[]> {
         return this.get<OpenFoodFactsProduct[]>('products', { search: query, limit }).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Open Food Facts search error', error, [])),
         );

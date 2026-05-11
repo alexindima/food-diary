@@ -2,6 +2,11 @@ import { HttpErrorResponse, type HttpEvent, type HttpHandler, type HttpIntercept
 import { Injectable } from '@angular/core';
 import { type Observable, retry, throwError, timer } from 'rxjs';
 
+const RETRY_ATTEMPT_COUNT = 3;
+const HTTP_CLIENT_ERROR_MIN = 400;
+const HTTP_SERVER_ERROR_MIN = 500;
+const RETRY_BASE_DELAY_MS = 1000;
+
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -11,13 +16,17 @@ export class RetryInterceptor implements HttpInterceptor {
 
         return next.handle(req).pipe(
             retry({
-                count: 3,
+                count: RETRY_ATTEMPT_COUNT,
                 delay: (error, retryCount) => {
-                    if (error instanceof HttpErrorResponse && error.status >= 400 && error.status < 500) {
+                    if (
+                        error instanceof HttpErrorResponse &&
+                        error.status >= HTTP_CLIENT_ERROR_MIN &&
+                        error.status < HTTP_SERVER_ERROR_MIN
+                    ) {
                         return throwError(() => error);
                     }
 
-                    const delayMs = Math.pow(2, retryCount - 1) * 1000;
+                    const delayMs = Math.pow(2, retryCount - 1) * RETRY_BASE_DELAY_MS;
                     return timer(delayMs);
                 },
             }),

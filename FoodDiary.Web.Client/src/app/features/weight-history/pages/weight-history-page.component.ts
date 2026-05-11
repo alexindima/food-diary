@@ -19,6 +19,9 @@ import { NavigationService } from '../../../services/navigation.service';
 import { WeightHistoryFacade } from '../lib/weight-history.facade';
 import type { WeightEntry } from '../models/weight-entry.data';
 
+const BMI_SCALE_MAX = 40;
+const PERCENTAGE_MULTIPLIER = 100;
+
 @Component({
     selector: 'fd-weight-history-page',
     standalone: true,
@@ -46,7 +49,7 @@ export class WeightHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
 
-    private readonly bmiScaleMax = 40;
+    private readonly bmiScaleMax = BMI_SCALE_MAX;
     public readonly selectedRange = this.facade.selectedRange;
     public readonly currentRange = this.facade.currentRange;
     public readonly entries = this.facade.entries;
@@ -108,7 +111,7 @@ export class WeightHistoryPageComponent {
     public readonly bmiSegments = computed<BmiSegmentViewModel[]>(() =>
         this.bmiSegmentDefinitions.map(segment => ({
             ...segment,
-            width: `${((segment.to - segment.from) / this.bmiScaleMax) * 100}%`,
+            width: `${((segment.to - segment.from) / this.bmiScaleMax) * PERCENTAGE_MULTIPLIER}%`,
         })),
     );
 

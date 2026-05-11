@@ -7,6 +7,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { PeriodFilterComponent } from './period-filter.component';
 
+const NON_STRING_RANGE_VALUE = 42;
+
 @Component({
     standalone: true,
     imports: [PeriodFilterComponent],
@@ -74,7 +76,7 @@ describe('PeriodFilterComponent', () => {
     it('should not emit for non-string values', () => {
         const periodFilter = hostFixture.debugElement.children[0].componentInstance as PeriodFilterComponent;
 
-        periodFilter.onRangeChange(42);
+        periodFilter.onRangeChange(NON_STRING_RANGE_VALUE);
 
         expect(host.lastEmittedValue).toBeNull();
     });

@@ -12,6 +12,8 @@ import { type UserProfileOverview, UserService } from '../../../shared/api/user.
 import { UpdateUserDto, type User } from '../../../shared/models/user.data';
 import { ProfileManageFacade } from './profile-manage.facade';
 
+const AUTOSAVE_DEBOUNCE_MS = 700;
+
 describe('ProfileManageFacade', () => {
     let facade: ProfileManageFacade;
     let userService: {
@@ -228,7 +230,7 @@ describe('ProfileManageFacade', () => {
 
         expect(userService.update).not.toHaveBeenCalled();
 
-        await vi.advanceTimersByTimeAsync(700);
+        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
 
         expect(userService.update).toHaveBeenCalledTimes(1);
         expect(userService.update.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));
@@ -242,7 +244,7 @@ describe('ProfileManageFacade', () => {
         userService.update.mockReturnValueOnce(inFlightUpdate.asObservable());
 
         facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alex' }));
-        await vi.advanceTimersByTimeAsync(700);
+        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
         expect(userService.update).toHaveBeenCalledTimes(1);
 
         facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alexa' }));
@@ -251,7 +253,7 @@ describe('ProfileManageFacade', () => {
         inFlightUpdate.next(user);
         inFlightUpdate.complete();
         await Promise.resolve();
-        await vi.advanceTimersByTimeAsync(700);
+        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
 
         expect(userService.update).toHaveBeenCalledTimes(2);
         expect(userService.update.mock.calls[1][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));

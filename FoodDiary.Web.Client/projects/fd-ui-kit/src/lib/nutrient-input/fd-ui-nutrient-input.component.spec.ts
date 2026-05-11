@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input.component';
 
+const NUMERIC_VALUE = 100;
+const CLAMPED_INPUT_SIZE = 5;
+
 describe('FdUiNutrientInputComponent', () => {
     let component: FdUiNutrientInputComponent;
     let fixture: ComponentFixture<FdUiNutrientInputComponent>;
@@ -38,8 +41,8 @@ describe('FdUiNutrientInputComponent', () => {
     });
 
     it('should write numeric value via CVA and convert to string', () => {
-        component.writeValue(100);
-        expect(component.value).toBe('100');
+        component.writeValue(NUMERIC_VALUE);
+        expect(component.value).toBe(String(NUMERIC_VALUE));
     });
 
     it('should write null value via CVA as empty string', () => {
@@ -122,8 +125,8 @@ describe('FdUiNutrientInputComponent', () => {
 
     it('should update inputWidth based on value length', () => {
         component.writeValue('12345');
-        expect(component.inputWidth).toBe('5ch');
-        expect(component.inputSize).toBe(5);
+        expect(component.inputWidth).toBe(`${CLAMPED_INPUT_SIZE}ch`);
+        expect(component.inputSize).toBe(CLAMPED_INPUT_SIZE);
     });
 
     it('should clamp inputWidth to maxInputChars', () => {

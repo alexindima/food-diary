@@ -377,7 +377,7 @@ export default [
             '@typescript-eslint/no-duplicate-type-constituents': 'error',
             '@typescript-eslint/no-empty-object-type': 'error',
             '@typescript-eslint/no-magic-numbers': [
-                'warn',
+                'error',
                 {
                     ignore: [-1, 0, 1, 2],
                     ignoreArrayIndexes: true,

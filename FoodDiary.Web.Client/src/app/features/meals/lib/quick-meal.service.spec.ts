@@ -10,6 +10,9 @@ import { MealService } from '../api/meal.service';
 import type { Meal } from '../models/meal.data';
 import { QuickMealService } from './quick-meal.service';
 
+const DEFAULT_PORTION_AMOUNT = 180;
+const DOUBLE_DEFAULT_PORTION_AMOUNT = 360;
+
 describe('QuickMealService', () => {
     let service: QuickMealService;
     let mealService: { create: ReturnType<typeof vi.fn> };
@@ -21,7 +24,7 @@ describe('QuickMealService', () => {
         productType: ProductType.Other,
         baseUnit: MeasurementUnit.G,
         baseAmount: 100,
-        defaultPortionAmount: 180,
+        defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
         caloriesPerBase: 185,
         proteinsPerBase: 10,
         fatsPerBase: 12,
@@ -98,7 +101,7 @@ describe('QuickMealService', () => {
         expect(service.items()).toEqual([
             expect.objectContaining({
                 key: 'product-product-1',
-                amount: 180,
+                amount: DEFAULT_PORTION_AMOUNT,
             }),
         ]);
     });
@@ -107,7 +110,7 @@ describe('QuickMealService', () => {
         service.addProduct(product);
         service.addProduct(product);
 
-        expect(service.items()[0]?.amount).toBe(360);
+        expect(service.items()[0]?.amount).toBe(DOUBLE_DEFAULT_PORTION_AMOUNT);
     });
 
     it('updates an existing draft item amount', () => {
@@ -174,7 +177,7 @@ describe('QuickMealService', () => {
                 items: [
                     expect.objectContaining({
                         productId: 'product-1',
-                        amount: 180,
+                        amount: DEFAULT_PORTION_AMOUNT,
                     }),
                 ],
                 isNutritionAutoCalculated: true,

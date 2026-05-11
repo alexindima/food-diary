@@ -5,6 +5,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiTextareaComponent } from './fd-ui-textarea.component';
 
+const NUMERIC_VALUE = 42;
+const TEXTAREA_ROWS = 8;
+
 @Component({
     template: '<fd-ui-textarea [formControl]="ctrl" />',
     standalone: true,
@@ -70,11 +73,11 @@ describe('FdUiTextareaComponent', () => {
     });
 
     it('should write value via CVA (number converts to string)', () => {
-        component.writeValue(42);
+        component.writeValue(NUMERIC_VALUE);
         fixture.detectChanges();
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
-        expect(textarea?.value).toBe('42');
+        expect(textarea?.value).toBe(String(NUMERIC_VALUE));
     });
 
     it('should call onChange on input', () => {
@@ -83,7 +86,7 @@ describe('FdUiTextareaComponent', () => {
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
         expect(textarea).toBeTruthy();
-        if (textarea) {
+        if (textarea !== null) {
             textarea.value = 'new text';
         }
         textarea?.dispatchEvent(new Event('input'));
@@ -117,7 +120,7 @@ describe('FdUiTextareaComponent', () => {
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
         expect(textarea).toBeTruthy();
-        if (textarea) {
+        if (textarea !== null) {
             textarea.value = 'blocked';
         }
         textarea?.dispatchEvent(new Event('input'));
@@ -157,11 +160,11 @@ describe('FdUiTextareaComponent', () => {
     });
 
     it('should set rows attribute', () => {
-        fixture.componentRef.setInput('rows', 8);
+        fixture.componentRef.setInput('rows', TEXTAREA_ROWS);
         fixture.detectChanges();
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
-        expect(textarea?.getAttribute('rows')).toBe('8');
+        expect(textarea?.getAttribute('rows')).toBe(String(TEXTAREA_ROWS));
     });
 
     it('should apply size class', () => {
@@ -193,7 +196,7 @@ describe('FdUiTextareaComponent', () => {
         it('should propagate input value to FormControl', () => {
             const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control');
             expect(textarea).toBeTruthy();
-            if (textarea) {
+            if (textarea !== null) {
                 textarea.value = 'typed';
             }
             textarea?.dispatchEvent(new Event('input'));

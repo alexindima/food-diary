@@ -21,6 +21,9 @@ import type { Recipe } from '../../../recipes/models/recipe.data';
 import { ExploreService } from '../../api/explore.service';
 import type { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
 
+const EXPLORE_PAGE_SIZE = 20;
+const SEARCH_DEBOUNCE_MS = 400;
+
 @Component({
     selector: 'fd-explore-page',
     templateUrl: './explore-page.component.html',
@@ -57,7 +60,7 @@ export class ExplorePageComponent {
     });
     public readonly recipeData = new PagedData<ExploreRecipe>();
     public readonly currentPageIndex = signal(0);
-    public readonly pageSize = 20;
+    public readonly pageSize = EXPLORE_PAGE_SIZE;
 
     public readonly resolveImageUrl = resolveRecipeImageUrl;
 
@@ -65,7 +68,7 @@ export class ExplorePageComponent {
         this.loadRecipes();
 
         this.searchControl.valueChanges
-            .pipe(debounceTime(400), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.currentPageIndex.set(0);
                 this.loadRecipes();
