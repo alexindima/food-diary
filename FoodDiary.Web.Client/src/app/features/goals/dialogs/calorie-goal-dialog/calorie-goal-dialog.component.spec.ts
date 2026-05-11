@@ -9,13 +9,18 @@ import { GoalsService } from '../../api/goals.service';
 import type { GoalsResponse } from '../../models/goals.data';
 import { CalorieGoalDialogComponent, type CalorieGoalDialogData } from './calorie-goal-dialog.component';
 
+const DEFAULT_CALORIE_TARGET = 2000;
+const CURRENT_CALORIE_TARGET = 2500;
+const UPDATED_CALORIE_TARGET = 1800;
+const INVALID_CALORIE_TARGET = -100;
+
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;
     let fixture: ComponentFixture<CalorieGoalDialogComponent>;
     let goalsServiceSpy: { updateGoals: ReturnType<typeof vi.fn> };
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
-    function createComponent(data: CalorieGoalDialogData | null = { dailyCalorieTarget: 2000 }): void {
+    function createComponent(data: CalorieGoalDialogData | null = { dailyCalorieTarget: DEFAULT_CALORIE_TARGET }): void {
         goalsServiceSpy = { updateGoals: vi.fn() };
         dialogRefSpy = { close: vi.fn() };
 
@@ -39,8 +44,8 @@ describe('CalorieGoalDialogComponent', () => {
     });
 
     it('should initialize form with current goal value', () => {
-        createComponent({ dailyCalorieTarget: 2500 });
-        expect(component.form.value.dailyCalorieTarget).toBe(2500);
+        createComponent({ dailyCalorieTarget: CURRENT_CALORIE_TARGET });
+        expect(component.form.value.dailyCalorieTarget).toBe(CURRENT_CALORIE_TARGET);
     });
 
     it('should initialize form with null when no data provided', () => {
@@ -51,7 +56,7 @@ describe('CalorieGoalDialogComponent', () => {
     it('should validate minimum calorie value', () => {
         createComponent();
         const control = component.form.controls.dailyCalorieTarget;
-        control.setValue(-100);
+        control.setValue(INVALID_CALORIE_TARGET);
         control.markAsTouched();
         expect(control.hasError('min')).toBe(true);
 
@@ -61,13 +66,13 @@ describe('CalorieGoalDialogComponent', () => {
 
     it('should submit updated goal', () => {
         createComponent();
-        const updatedGoals: GoalsResponse = { dailyCalorieTarget: 1800, calorieCyclingEnabled: false };
+        const updatedGoals: GoalsResponse = { dailyCalorieTarget: UPDATED_CALORIE_TARGET, calorieCyclingEnabled: false };
         goalsServiceSpy.updateGoals.mockReturnValue(of(updatedGoals));
 
-        component.form.controls.dailyCalorieTarget.setValue(1800);
+        component.form.controls.dailyCalorieTarget.setValue(UPDATED_CALORIE_TARGET);
         component.save();
 
-        expect(goalsServiceSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: 1800 });
+        expect(goalsServiceSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: UPDATED_CALORIE_TARGET });
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 
@@ -75,7 +80,7 @@ describe('CalorieGoalDialogComponent', () => {
         createComponent();
         goalsServiceSpy.updateGoals.mockReturnValue(throwError(() => new Error('fail')));
 
-        component.form.controls.dailyCalorieTarget.setValue(1800);
+        component.form.controls.dailyCalorieTarget.setValue(UPDATED_CALORIE_TARGET);
         component.save();
 
         expect(dialogRefSpy.close).toHaveBeenCalledWith(false);

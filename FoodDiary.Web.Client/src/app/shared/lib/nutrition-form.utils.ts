@@ -26,6 +26,14 @@ export interface CalorieMismatchWarningInput {
 
 export type NutritionMode = 'auto' | 'manual';
 
+const PROTEIN_CALORIES_PER_GRAM = 4;
+const FAT_CALORIES_PER_GRAM = 9;
+const CARB_CALORIES_PER_GRAM = 4;
+const ALCOHOL_CALORIES_PER_GRAM = 7;
+const DEFAULT_CALORIE_MISMATCH_THRESHOLD = 0.2;
+const PERCENT_MULTIPLIER = 100;
+const NUTRIENT_ROUNDING_FACTOR = 100;
+
 /**
  * Calculate expected calories from macronutrient grams.
  * Proteins: 4 kcal/g, Fats: 9 kcal/g, Carbs: 4 kcal/g, Alcohol: 7 kcal/g.
@@ -40,10 +48,10 @@ export function calculateCaloriesFromMacros(
     alcohol: number | null | undefined = 0,
 ): number {
     return (
-        normalizeMacroValue(proteins) * 4 +
-        normalizeMacroValue(fats) * 9 +
-        normalizeMacroValue(carbs) * 4 +
-        normalizeMacroValue(alcohol) * 7
+        normalizeMacroValue(proteins) * PROTEIN_CALORIES_PER_GRAM +
+        normalizeMacroValue(fats) * FAT_CALORIES_PER_GRAM +
+        normalizeMacroValue(carbs) * CARB_CALORIES_PER_GRAM +
+        normalizeMacroValue(alcohol) * ALCOHOL_CALORIES_PER_GRAM
     );
 }
 
@@ -55,7 +63,7 @@ export function calculateCaloriesFromMacros(
  * within the acceptable range).
  */
 export function calculateCalorieMismatchWarning(input: CalorieMismatchWarningInput): CalorieMismatchWarning | null {
-    const { calories, proteins, fats, carbs, alcohol = 0, threshold = 0.2 } = input;
+    const { calories, proteins, fats, carbs, alcohol = 0, threshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD } = input;
     const expectedCalories = calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
 
     if (expectedCalories <= 0 || calories <= 0) {
@@ -96,7 +104,7 @@ export function calculateMacroBarState(proteins: number, fats: number, carbs: nu
         isEmpty: false,
         segments: positive.map(entry => ({
             key: entry.key,
-            percent: (entry.value / total) * 100,
+            percent: (entry.value / total) * PERCENT_MULTIPLIER,
         })),
     };
 }
@@ -125,7 +133,7 @@ export function getControlNumericValue(control: { value: number | string | null 
  * Round a nutrient value to 2 decimal places.
  */
 export function roundNutrient(value: number): number {
-    return Math.round(value * 100) / 100;
+    return Math.round(value * NUTRIENT_ROUNDING_FACTOR) / NUTRIENT_ROUNDING_FACTOR;
 }
 
 /**

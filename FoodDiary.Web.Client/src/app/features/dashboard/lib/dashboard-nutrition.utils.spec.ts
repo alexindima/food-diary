@@ -10,6 +10,22 @@ import {
     placeholderLabel,
 } from './dashboard-nutrition.utils';
 
+const BAR_COUNT = 4;
+const PREVIEW_WITHOUT_SLOTS_COUNT = 2;
+const TODAY_SLOT_COUNT = 3;
+const CALORIES = 2000;
+const PROTEIN = 100;
+const FATS = 70;
+const CARBS = 250;
+const FIBER = 25;
+const PROTEIN_GOAL = 120;
+const FAT_GOAL = 80;
+const CARB_GOAL = 300;
+const FIBER_GOAL = 30;
+const WEEKLY_CALORIE_GOAL = 14000;
+const DAILY_CONSUMED = 1500;
+const WEEKLY_CONSUMED = 10000;
+
 function buildSnapshot(
     overrides: { statistics: Partial<DashboardStatistics> } & Partial<Omit<DashboardSnapshot, 'statistics'>>,
 ): DashboardSnapshot {
@@ -36,6 +52,13 @@ function buildSnapshot(
 }
 
 describe('dashboard-nutrition.utils', () => {
+    registerPlaceholderTests();
+    registerNutrientSignalTests();
+    registerConsumptionRingTests();
+    registerMealPreviewTests();
+});
+
+function registerPlaceholderTests(): void {
     describe('placeholderIcon', () => {
         it('should return correct icon for BREAKFAST', () => {
             expect(placeholderIcon('BREAKFAST')).toBe('wb_sunny');
@@ -80,7 +103,9 @@ describe('dashboard-nutrition.utils', () => {
             expect(placeholderLabel(undefined)).toBe('MEAL_CARD.MEAL_TYPES.OTHER');
         });
     });
+}
 
+function registerNutrientSignalTests(): void {
     describe('createNutrientBarsSignal', () => {
         it('should return empty array when snapshot is null', () => {
             const snapshot = signal<DashboardSnapshot | null>(null);
@@ -92,15 +117,15 @@ describe('dashboard-nutrition.utils', () => {
             const snapshot = signal<DashboardSnapshot | null>(
                 buildSnapshot({
                     statistics: {
-                        totalCalories: 2000,
-                        averageProteins: 100,
-                        averageFats: 70,
-                        averageCarbs: 250,
-                        averageFiber: 25,
-                        proteinGoal: 120,
-                        fatGoal: 80,
-                        carbGoal: 300,
-                        fiberGoal: 30,
+                        totalCalories: CALORIES,
+                        averageProteins: PROTEIN,
+                        averageFats: FATS,
+                        averageCarbs: CARBS,
+                        averageFiber: FIBER,
+                        proteinGoal: PROTEIN_GOAL,
+                        fatGoal: FAT_GOAL,
+                        carbGoal: CARB_GOAL,
+                        fiberGoal: FIBER_GOAL,
                     },
                 }),
             );
@@ -108,35 +133,37 @@ describe('dashboard-nutrition.utils', () => {
             const bars = createNutrientBarsSignal(snapshot);
             const result = bars();
 
-            expect(result).toHaveLength(4);
+            expect(result).toHaveLength(BAR_COUNT);
             expect(result[0].id).toBe('protein');
-            expect(result[0].current).toBe(100);
-            expect(result[0].target).toBe(120);
+            expect(result[0].current).toBe(PROTEIN);
+            expect(result[0].target).toBe(PROTEIN_GOAL);
             expect(result[1].id).toBe('carbs');
             expect(result[2].id).toBe('fats');
             expect(result[3].id).toBe('fiber');
         });
     });
+}
 
+function registerConsumptionRingTests(): void {
     describe('createConsumptionRingSignal', () => {
         it('should compute ring data from snapshot', () => {
             const snapshot = signal<DashboardSnapshot | null>(
                 buildSnapshot({
-                    dailyGoal: 2000,
-                    weeklyCalorieGoal: 14000,
-                    statistics: { totalCalories: 1500 },
+                    dailyGoal: CALORIES,
+                    weeklyCalorieGoal: WEEKLY_CALORIE_GOAL,
+                    statistics: { totalCalories: DAILY_CONSUMED },
                 }),
             );
-            const weeklyConsumed = signal(10000);
+            const weeklyConsumed = signal(WEEKLY_CONSUMED);
             const nutrientBars = signal([]);
 
             const ring = createConsumptionRingSignal(snapshot, weeklyConsumed, nutrientBars);
             const result = ring();
 
-            expect(result.dailyGoal).toBe(2000);
-            expect(result.dailyConsumed).toBe(1500);
-            expect(result.weeklyConsumed).toBe(10000);
-            expect(result.weeklyGoal).toBe(14000);
+            expect(result.dailyGoal).toBe(CALORIES);
+            expect(result.dailyConsumed).toBe(DAILY_CONSUMED);
+            expect(result.weeklyConsumed).toBe(WEEKLY_CONSUMED);
+            expect(result.weeklyGoal).toBe(WEEKLY_CALORIE_GOAL);
         });
 
         it('should handle null snapshot', () => {
@@ -145,7 +172,9 @@ describe('dashboard-nutrition.utils', () => {
             expect(ring().weeklyGoal).toBe(0);
         });
     });
+}
 
+function registerMealPreviewTests(): void {
     describe('createMealPreviewSignal', () => {
         it('should return meals without slots when not today', () => {
             const meals = signal([
@@ -157,7 +186,7 @@ describe('dashboard-nutrition.utils', () => {
             const preview = createMealPreviewSignal(meals, isTodaySelected);
             const result = preview();
 
-            expect(result).toHaveLength(2);
+            expect(result).toHaveLength(PREVIEW_WITHOUT_SLOTS_COUNT);
             expect(result[0].meal).toBeTruthy();
             expect(result[0].slot).toBe('LUNCH');
         });
@@ -169,7 +198,7 @@ describe('dashboard-nutrition.utils', () => {
             const preview = createMealPreviewSignal(meals, isTodaySelected);
             const result = preview();
 
-            expect(result.length).toBeGreaterThanOrEqual(3);
+            expect(result.length).toBeGreaterThanOrEqual(TODAY_SLOT_COUNT);
             const breakfastSlot = result.find(e => e.slot === 'BREAKFAST');
             expect(breakfastSlot?.meal).toBeNull();
             const lunchSlot = result.find(e => e.slot === 'LUNCH');
@@ -183,8 +212,8 @@ describe('dashboard-nutrition.utils', () => {
             const preview = createMealPreviewSignal(meals, isTodaySelected);
             const result = preview();
 
-            expect(result).toHaveLength(3);
+            expect(result).toHaveLength(TODAY_SLOT_COUNT);
             expect(result.every(e => e.meal === null)).toBe(true);
         });
     });
-});
+}

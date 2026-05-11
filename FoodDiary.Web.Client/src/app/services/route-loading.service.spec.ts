@@ -3,6 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RouteLoadingService } from './route-loading.service';
 
+const SHOW_DELAY_MS = 150;
+const BEFORE_SHOW_DELAY_MS = SHOW_DELAY_MS - 1;
+const MIN_VISIBLE_DURATION_MS = 250;
+const BEFORE_MIN_VISIBLE_DURATION_MS = MIN_VISIBLE_DURATION_MS - 1;
+
 describe('RouteLoadingService', () => {
     let service: RouteLoadingService;
 
@@ -23,7 +28,7 @@ describe('RouteLoadingService', () => {
     it('should not show loader for short chunk loads', () => {
         service.beginLoad();
 
-        vi.advanceTimersByTime(149);
+        vi.advanceTimersByTime(BEFORE_SHOW_DELAY_MS);
         expect(service.isVisible()).toBe(false);
 
         service.endLoad();
@@ -35,7 +40,7 @@ describe('RouteLoadingService', () => {
     it('should show loader after delay for long chunk loads', () => {
         service.beginLoad();
 
-        vi.advanceTimersByTime(150);
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
 
         expect(service.isVisible()).toBe(true);
     });
@@ -43,11 +48,11 @@ describe('RouteLoadingService', () => {
     it('should keep loader visible for minimum duration after showing', () => {
         service.beginLoad();
 
-        vi.advanceTimersByTime(150);
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
         expect(service.isVisible()).toBe(true);
 
         service.endLoad();
-        vi.advanceTimersByTime(249);
+        vi.advanceTimersByTime(BEFORE_MIN_VISIBLE_DURATION_MS);
         expect(service.isVisible()).toBe(true);
 
         vi.advanceTimersByTime(1);
@@ -58,7 +63,7 @@ describe('RouteLoadingService', () => {
         service.beginLoad();
         service.beginLoad();
 
-        vi.advanceTimersByTime(150);
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
         expect(service.isVisible()).toBe(true);
 
         service.endLoad();
@@ -66,7 +71,7 @@ describe('RouteLoadingService', () => {
         expect(service.isVisible()).toBe(true);
 
         service.endLoad();
-        vi.advanceTimersByTime(250);
+        vi.advanceTimersByTime(MIN_VISIBLE_DURATION_MS);
         expect(service.isVisible()).toBe(false);
     });
 });

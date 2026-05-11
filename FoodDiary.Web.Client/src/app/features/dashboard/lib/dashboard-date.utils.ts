@@ -1,6 +1,16 @@
+const START_OF_DAY_HOUR = 0;
+const START_OF_DAY_MINUTE = 0;
+const START_OF_DAY_SECOND = 0;
+const START_OF_DAY_MS = 0;
+const HYDRATION_DAY_HOUR = 12;
+const END_OF_DAY_HOUR = 23;
+const END_OF_DAY_MINUTE = 59;
+const END_OF_DAY_SECOND = 59;
+const END_OF_DAY_MS = 999;
+
 export function normalizeDate(date: Date): Date {
     const normalized = new Date(date);
-    normalized.setHours(0, 0, 0, 0);
+    normalized.setHours(START_OF_DAY_HOUR, START_OF_DAY_MINUTE, START_OF_DAY_SECOND, START_OF_DAY_MS);
     return normalized;
 }
 
@@ -9,7 +19,9 @@ export function getDashboardDateUtc(date: Date): Date {
 }
 
 export function getHydrationDateUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0));
+    return new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), HYDRATION_DAY_HOUR, START_OF_DAY_MINUTE, START_OF_DAY_SECOND),
+    );
 }
 
 export function normalizeStartOfDayUtc(date: Date): Date {
@@ -17,7 +29,9 @@ export function normalizeStartOfDayUtc(date: Date): Date {
 }
 
 export function normalizeEndOfDayUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+    return new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), END_OF_DAY_HOUR, END_OF_DAY_MINUTE, END_OF_DAY_SECOND, END_OF_DAY_MS),
+    );
 }
 
 export function getWeightTrendRange(selectedDate: Date, trendDays: number): { start: Date; end: Date } {

@@ -2,42 +2,56 @@ import { describe, expect, it } from 'vitest';
 
 import { resolveFastingStage } from './fasting-stage';
 
-const hours = (value: number): number => value * 3_600_000;
+const MS_PER_HOUR = 3_600_000;
+const MS_PER_SECOND = 1000;
+const SECONDS_PER_HOUR = 3600;
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const PAD_LENGTH = 2;
+const HOURS_3 = 3;
+const HOURS_4 = 4;
+const HOURS_10 = 10;
+const HOURS_12 = 12;
+const HOURS_16 = 16;
+const HOURS_24 = 24;
+const TOTAL_EXTENDED_STAGES = 4;
+
+const hours = (value: number): number => value * MS_PER_HOUR;
 
 describe('resolveFastingStage', () => {
     it.each([
         {
             elapsedHours: 0,
-            plannedHours: 16,
+            plannedHours: HOURS_16,
             expectedIndex: 1,
-            expectedTotal: 3,
+            expectedTotal: HOURS_3,
             expectedTitleKey: 'FASTING.STAGES.EARLY.TITLE',
             expectedNextTitleKey: 'FASTING.STAGES.TRANSITION.TITLE',
             expectedNextIn: '04:00:00',
         },
         {
-            elapsedHours: 4,
-            plannedHours: 16,
+            elapsedHours: HOURS_4,
+            plannedHours: HOURS_16,
             expectedIndex: 2,
-            expectedTotal: 3,
+            expectedTotal: HOURS_3,
             expectedTitleKey: 'FASTING.STAGES.TRANSITION.TITLE',
             expectedNextTitleKey: 'FASTING.STAGES.STORED_ENERGY.TITLE',
             expectedNextIn: '08:00:00',
         },
         {
-            elapsedHours: 12,
-            plannedHours: 16,
-            expectedIndex: 3,
-            expectedTotal: 3,
+            elapsedHours: HOURS_12,
+            plannedHours: HOURS_16,
+            expectedIndex: HOURS_3,
+            expectedTotal: HOURS_3,
             expectedTitleKey: 'FASTING.STAGES.STORED_ENERGY.TITLE',
             expectedNextTitleKey: null,
             expectedNextIn: null,
         },
         {
-            elapsedHours: 16,
-            plannedHours: 24,
-            expectedIndex: 4,
-            expectedTotal: 4,
+            elapsedHours: HOURS_16,
+            plannedHours: HOURS_24,
+            expectedIndex: TOTAL_EXTENDED_STAGES,
+            expectedTotal: TOTAL_EXTENDED_STAGES,
             expectedTitleKey: 'FASTING.STAGES.DEEP.TITLE',
             expectedNextTitleKey: null,
             expectedNextIn: null,
@@ -56,7 +70,7 @@ describe('resolveFastingStage', () => {
     );
 
     it('ignores stage definitions that start after the planned duration', () => {
-        const stage = resolveFastingStage(hours(10), 12);
+        const stage = resolveFastingStage(hours(HOURS_10), HOURS_12);
 
         expect(stage.index).toBe(2);
         expect(stage.total).toBe(2);
@@ -65,7 +79,7 @@ describe('resolveFastingStage', () => {
     });
 
     it('falls back to the first stage for zero-length plans', () => {
-        const stage = resolveFastingStage(hours(3), 0);
+        const stage = resolveFastingStage(hours(HOURS_3), 0);
 
         expect(stage.index).toBe(1);
         expect(stage.total).toBe(1);
@@ -75,19 +89,19 @@ describe('resolveFastingStage', () => {
     });
 
     it('clamps negative elapsed time to the first stage', () => {
-        const stage = resolveFastingStage(-hours(2), 16);
+        const stage = resolveFastingStage(-hours(2), HOURS_16);
 
         expect(stage.index).toBe(1);
         expect(stage.titleKey).toBe('FASTING.STAGES.EARLY.TITLE');
-        expect(stage.nextInMs).toBe(hours(4));
+        expect(stage.nextInMs).toBe(hours(HOURS_4));
     });
 });
 
 function formatMs(ms: number): string {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hoursPart = Math.floor(totalSeconds / 3600);
-    const minutesPart = Math.floor((totalSeconds % 3600) / 60);
-    const secondsPart = totalSeconds % 60;
+    const totalSeconds = Math.floor(ms / MS_PER_SECOND);
+    const hoursPart = Math.floor(totalSeconds / SECONDS_PER_HOUR);
+    const minutesPart = Math.floor((totalSeconds % SECONDS_PER_HOUR) / MINUTES_PER_HOUR);
+    const secondsPart = totalSeconds % SECONDS_PER_MINUTE;
 
-    return `${String(hoursPart).padStart(2, '0')}:${String(minutesPart).padStart(2, '0')}:${String(secondsPart).padStart(2, '0')}`;
+    return `${String(hoursPart).padStart(PAD_LENGTH, '0')}:${String(minutesPart).padStart(PAD_LENGTH, '0')}:${String(secondsPart).padStart(PAD_LENGTH, '0')}`;
 }

@@ -4,6 +4,12 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { NutrientBadgesComponent } from './nutrient-badges.component';
 
+const PROTEIN_VALUE = 25;
+const FAT_VALUE = 10;
+const CARB_VALUE = 50;
+const FIBER_VALUE = 8;
+const EXPECTED_CHIP_COUNT = 5;
+
 describe('NutrientBadgesComponent', () => {
     let component: NutrientBadgesComponent;
     let fixture: ComponentFixture<NutrientBadgesComponent>;
@@ -15,10 +21,10 @@ describe('NutrientBadgesComponent', () => {
 
         fixture = TestBed.createComponent(NutrientBadgesComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput('proteins', 25);
-        fixture.componentRef.setInput('fats', 10);
-        fixture.componentRef.setInput('carbs', 50);
-        fixture.componentRef.setInput('fiber', 8);
+        fixture.componentRef.setInput('proteins', PROTEIN_VALUE);
+        fixture.componentRef.setInput('fats', FAT_VALUE);
+        fixture.componentRef.setInput('carbs', CARB_VALUE);
+        fixture.componentRef.setInput('fiber', FIBER_VALUE);
         fixture.componentRef.setInput('alcohol', 0);
     });
 
@@ -31,35 +37,35 @@ describe('NutrientBadgesComponent', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
         const chips = el.querySelectorAll('.nutrient-badges__chip-value');
-        expect(chips.length).toBe(5);
+        expect(chips.length).toBe(EXPECTED_CHIP_COUNT);
     });
 
     it('should render protein value', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
         const proteinChip = el.querySelector('.nutrient-badges__chip--protein .nutrient-badges__chip-value');
-        expect(proteinChip?.textContent).toContain('25');
+        expect(proteinChip?.textContent).toContain(String(PROTEIN_VALUE));
     });
 
     it('should render fat value', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
         const fatChip = el.querySelector('.nutrient-badges__chip--fat .nutrient-badges__chip-value');
-        expect(fatChip?.textContent).toContain('10');
+        expect(fatChip?.textContent).toContain(String(FAT_VALUE));
     });
 
     it('should render carb value', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
         const carbChip = el.querySelector('.nutrient-badges__chip--carb .nutrient-badges__chip-value');
-        expect(carbChip?.textContent).toContain('50');
+        expect(carbChip?.textContent).toContain(String(CARB_VALUE));
     });
 
     it('should render fiber value', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
         const fiberChip = el.querySelector('.nutrient-badges__chip--fiber .nutrient-badges__chip-value');
-        expect(fiberChip?.textContent).toContain('8');
+        expect(fiberChip?.textContent).toContain(String(FIBER_VALUE));
     });
 
     it('should render alcohol value', () => {
@@ -71,10 +77,10 @@ describe('NutrientBadgesComponent', () => {
 
     it('should expose input values', () => {
         fixture.detectChanges();
-        expect(component.proteins()).toBe(25);
-        expect(component.fats()).toBe(10);
-        expect(component.carbs()).toBe(50);
-        expect(component.fiber()).toBe(8);
+        expect(component.proteins()).toBe(PROTEIN_VALUE);
+        expect(component.fats()).toBe(FAT_VALUE);
+        expect(component.carbs()).toBe(CARB_VALUE);
+        expect(component.fiber()).toBe(FIBER_VALUE);
         expect(component.alcohol()).toBe(0);
     });
 });

@@ -3,6 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GlobalLoadingService } from './global-loading.service';
 
+const SHOW_DELAY_MS = 500;
+const BEFORE_SHOW_DELAY_MS = SHOW_DELAY_MS - 1;
+const MIN_VISIBLE_DURATION_MS = 300;
+const BEFORE_MIN_VISIBLE_DURATION_MS = MIN_VISIBLE_DURATION_MS - 1;
+
 describe('GlobalLoadingService', () => {
     let service: GlobalLoadingService;
 
@@ -23,7 +28,7 @@ describe('GlobalLoadingService', () => {
     it('should not show loader for fast requests', () => {
         const complete = service.trackRequest();
 
-        vi.advanceTimersByTime(499);
+        vi.advanceTimersByTime(BEFORE_SHOW_DELAY_MS);
         expect(service.isVisible()).toBe(false);
 
         complete();
@@ -35,7 +40,7 @@ describe('GlobalLoadingService', () => {
     it('should show loader after delay for long requests', () => {
         service.trackRequest();
 
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
 
         expect(service.isVisible()).toBe(true);
     });
@@ -43,11 +48,11 @@ describe('GlobalLoadingService', () => {
     it('should keep loader visible for minimum duration after showing', () => {
         const complete = service.trackRequest();
 
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
         expect(service.isVisible()).toBe(true);
 
         complete();
-        vi.advanceTimersByTime(299);
+        vi.advanceTimersByTime(BEFORE_MIN_VISIBLE_DURATION_MS);
         expect(service.isVisible()).toBe(true);
 
         vi.advanceTimersByTime(1);
@@ -58,7 +63,7 @@ describe('GlobalLoadingService', () => {
         const firstComplete = service.trackRequest();
         const secondComplete = service.trackRequest();
 
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
         expect(service.isVisible()).toBe(true);
 
         firstComplete();
@@ -66,7 +71,7 @@ describe('GlobalLoadingService', () => {
         expect(service.isVisible()).toBe(true);
 
         secondComplete();
-        vi.advanceTimersByTime(300);
+        vi.advanceTimersByTime(MIN_VISIBLE_DURATION_MS);
         expect(service.isVisible()).toBe(false);
     });
 });

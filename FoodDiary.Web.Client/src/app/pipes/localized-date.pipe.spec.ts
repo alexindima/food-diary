@@ -10,6 +10,11 @@ type TranslateServiceStub = {
     onLangChange: Observable<LangChangeEvent>;
 };
 
+const TEST_YEAR = 2026;
+const JANUARY_INDEX = 0;
+const TEST_DAY = 15;
+const EXPECTED_CUSTOM_DATE = '2026-01-15';
+
 describe('LocalizedDatePipe', () => {
     let pipe: LocalizedDatePipe;
     let onLangChange: Subject<LangChangeEvent>;
@@ -31,7 +36,7 @@ describe('LocalizedDatePipe', () => {
     });
 
     it('should transform Date to formatted string', () => {
-        const date = new Date(2026, 0, 15);
+        const date = new Date(TEST_YEAR, JANUARY_INDEX, TEST_DAY);
         const result = pipe.transform(date);
         expect(result).toBeDefined();
         expect(typeof result).toBe('string');
@@ -49,15 +54,15 @@ describe('LocalizedDatePipe', () => {
     });
 
     it("should use default pattern 'mediumDate'", () => {
-        const date = new Date(2026, 0, 15);
+        const date = new Date(TEST_YEAR, JANUARY_INDEX, TEST_DAY);
         const defaultResult = pipe.transform(date);
         const explicitResult = pipe.transform(date, 'mediumDate');
         expect(defaultResult).toBe(explicitResult);
     });
 
     it('should use custom pattern when provided', () => {
-        const date = new Date(2026, 0, 15);
+        const date = new Date(TEST_YEAR, JANUARY_INDEX, TEST_DAY);
         const result = pipe.transform(date, 'yyyy-MM-dd');
-        expect(result).toBe('2026-01-15');
+        expect(result).toBe(EXPECTED_CUSTOM_DATE);
     });
 });

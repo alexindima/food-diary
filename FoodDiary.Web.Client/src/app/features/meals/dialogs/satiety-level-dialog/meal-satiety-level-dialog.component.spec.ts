@@ -6,6 +6,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { MealSatietyLevelDialogComponent, type SatietyLevelDialogData } from './meal-satiety-level-dialog.component';
 
+const LOW_SATIETY = 3;
+const SELECTED_SATIETY = 4;
+const HIGH_SATIETY = 5;
+
 describe('MealSatietyLevelDialogComponent', () => {
     let component: MealSatietyLevelDialogComponent;
     let fixture: ComponentFixture<MealSatietyLevelDialogComponent>;
@@ -33,26 +37,26 @@ describe('MealSatietyLevelDialogComponent', () => {
     });
 
     it('should initialize with value from data', () => {
-        createComponent({ titleKey: 'TITLE', value: 5 });
-        expect(component.selectedValue()).toBe(5);
+        createComponent({ titleKey: 'TITLE', value: HIGH_SATIETY });
+        expect(component.selectedValue()).toBe(HIGH_SATIETY);
     });
 
     it('should initialize with neutral value when data value is null', () => {
         createComponent({ titleKey: 'TITLE', value: null });
-        expect(component.selectedValue()).toBe(3);
+        expect(component.selectedValue()).toBe(LOW_SATIETY);
     });
 
     it('should update selectedValue on selection', () => {
         createComponent();
-        component.onValueSelected(4);
-        expect(component.selectedValue()).toBe(4);
+        component.onValueSelected(SELECTED_SATIETY);
+        expect(component.selectedValue()).toBe(SELECTED_SATIETY);
     });
 
     it('should close with selected value', () => {
-        createComponent({ titleKey: 'TITLE', value: 3 });
-        component.onValueSelected(5);
+        createComponent({ titleKey: 'TITLE', value: LOW_SATIETY });
+        component.onValueSelected(HIGH_SATIETY);
         component.closeWithValue();
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(5);
+        expect(dialogRefSpy.close).toHaveBeenCalledWith(HIGH_SATIETY);
     });
 
     it('should close with null on dismiss', () => {

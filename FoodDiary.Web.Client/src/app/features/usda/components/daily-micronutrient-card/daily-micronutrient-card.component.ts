@@ -8,6 +8,20 @@ type DailyMicronutrientView = DailyMicronutrient & {
     percentDailyValueWidth: number | null;
 };
 
+const NUTRIENT_ID_VITAMIN_A = 1106;
+const NUTRIENT_ID_VITAMIN_C = 1162;
+const NUTRIENT_ID_VITAMIN_D = 1110;
+const NUTRIENT_ID_VITAMIN_E = 1109;
+const NUTRIENT_ID_VITAMIN_B6 = 1175;
+const NUTRIENT_ID_VITAMIN_B12 = 1178;
+const NUTRIENT_ID_CALCIUM = 1087;
+const NUTRIENT_ID_IRON = 1089;
+const NUTRIENT_ID_MAGNESIUM = 1090;
+const NUTRIENT_ID_POTASSIUM = 1092;
+const NUTRIENT_ID_ZINC = 1095;
+const NUTRIENT_ID_SELENIUM = 1103;
+const MAX_PERCENT_DAILY_VALUE = 100;
+
 @Component({
     selector: 'fd-daily-micronutrient-card',
     standalone: true,
@@ -23,18 +37,18 @@ export class DailyMicronutrientCardComponent {
 
     // Show only key vitamins and minerals that have DRI values
     private static readonly KEY_NUTRIENT_IDS = new Set([
-        1106,
-        1162,
-        1110,
-        1109,
-        1175,
-        1178, // Vitamins A, C, D, E, B6, B12
-        1087,
-        1089,
-        1090,
-        1092,
-        1095,
-        1103, // Calcium, Iron, Magnesium, Potassium, Zinc, Selenium
+        NUTRIENT_ID_VITAMIN_A,
+        NUTRIENT_ID_VITAMIN_C,
+        NUTRIENT_ID_VITAMIN_D,
+        NUTRIENT_ID_VITAMIN_E,
+        NUTRIENT_ID_VITAMIN_B6,
+        NUTRIENT_ID_VITAMIN_B12,
+        NUTRIENT_ID_CALCIUM,
+        NUTRIENT_ID_IRON,
+        NUTRIENT_ID_MAGNESIUM,
+        NUTRIENT_ID_POTASSIUM,
+        NUTRIENT_ID_ZINC,
+        NUTRIENT_ID_SELENIUM,
     ]);
 
     public readonly keyNutrients = computed(() =>
@@ -47,7 +61,8 @@ export class DailyMicronutrientCardComponent {
     private toView(nutrient: DailyMicronutrient): DailyMicronutrientView {
         return {
             ...nutrient,
-            percentDailyValueWidth: nutrient.percentDailyValue === null ? null : Math.min(Math.max(nutrient.percentDailyValue, 0), 100),
+            percentDailyValueWidth:
+                nutrient.percentDailyValue === null ? null : Math.min(Math.max(nutrient.percentDailyValue, 0), MAX_PERCENT_DAILY_VALUE),
         };
     }
 }
