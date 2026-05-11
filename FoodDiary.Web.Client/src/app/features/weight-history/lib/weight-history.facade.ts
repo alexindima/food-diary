@@ -17,6 +17,35 @@ import type {
 
 export type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
 
+const BMI_SCALE_MAX = 40;
+const BMI_POINTER_PADDING_PERCENT = 1;
+const MIN_WEIGHT_KG = 1;
+const MAX_WEIGHT_KG = 500;
+const CENTIMETERS_PER_METER = 100;
+const ROUNDING_FACTOR = 10;
+const PERCENT_MAX = 100;
+const BMI_UNDERWEIGHT_MAX = 18.5;
+const BMI_NORMAL_MAX = 25;
+const BMI_OVERWEIGHT_MAX = 30;
+const DEFAULT_MONTH_OFFSET = 1;
+const WEEK_DAYS = 7;
+const ENTRIES_LIMIT_MAX = 500;
+const ENTRIES_LIMIT_PER_DAY = 5;
+const MONTH_QUANTIZATION_DAYS = 3;
+const YEAR_QUANTIZATION_DAYS = 14;
+const CUSTOM_QUANTIZATION_DIVISOR = 12;
+const END_OF_DAY_HOURS = 23;
+const END_OF_DAY_MINUTES = 59;
+const END_OF_DAY_SECONDS = 59;
+const END_OF_DAY_MS = 999;
+const DATE_PART_PAD_LENGTH = 2;
+const DATE_PART_PAD = '0';
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const MS_PER_SECOND = 1000;
+const MS_IN_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
+
 export interface BmiStatusInfo {
     labelKey: string;
     descriptionKey: string;
@@ -32,10 +61,8 @@ export class WeightHistoryFacade {
     private readonly fb = inject(FormBuilder);
 
     private readonly userHeightCm = signal<number | null>(null);
-    private readonly bmiScaleMax = 40;
     private readonly defaultRange: WeightHistoryRange = 'month';
     private readonly editingEntryId = signal<string | null>(null);
-    private readonly bmiPointerPaddingPercent = 1;
     private readonly initialized = signal(false);
     private lastLoadedRangeKey: string | null = null;
 
@@ -53,7 +80,7 @@ export class WeightHistoryFacade {
 
     public readonly form = this.fb.group({
         date: [this.formatDateInput(new Date()), Validators.required],
-        weight: ['', [Validators.required, Validators.min(1), Validators.max(500)]],
+        weight: ['', [Validators.required, Validators.min(MIN_WEIGHT_KG), Validators.max(MAX_WEIGHT_KG)]],
     });
 
     public readonly desiredWeightControl = new FormControl<string>('');
@@ -93,17 +120,13 @@ export class WeightHistoryFacade {
     public readonly bmiValue = computed<number | null>(() => {
         const heightCm = this.userHeightCm();
         const latest = this.latestWeight();
-        if (!heightCm || !latest) {
+        if (heightCm === null || latest === null || heightCm <= 0 || latest <= 0) {
             return null;
         }
 
-        const heightMeters = heightCm / 100;
-        if (!heightMeters) {
-            return null;
-        }
-
+        const heightMeters = heightCm / CENTIMETERS_PER_METER;
         const bmi = latest / (heightMeters * heightMeters);
-        return Math.round(bmi * 10) / 10;
+        return Math.round(bmi * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     });
 
     public readonly bmiPointerPosition = computed(() => {
@@ -112,8 +135,8 @@ export class WeightHistoryFacade {
             return '0%';
         }
 
-        const rawPercent = (bmi / this.bmiScaleMax) * 100;
-        const percent = Math.max(this.bmiPointerPaddingPercent, Math.min(100 - this.bmiPointerPaddingPercent, rawPercent));
+        const rawPercent = (bmi / BMI_SCALE_MAX) * PERCENT_MAX;
+        const percent = Math.max(BMI_POINTER_PADDING_PERCENT, Math.min(PERCENT_MAX - BMI_POINTER_PADDING_PERCENT, rawPercent));
         return `${percent}%`;
     });
 
@@ -123,7 +146,7 @@ export class WeightHistoryFacade {
             return null;
         }
 
-        if (bmi < 18.5) {
+        if (bmi < BMI_UNDERWEIGHT_MAX) {
             return {
                 labelKey: 'WEIGHT_HISTORY.BMI_STATUS.UNDERWEIGHT',
                 descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.UNDERWEIGHT',
@@ -131,7 +154,7 @@ export class WeightHistoryFacade {
             };
         }
 
-        if (bmi < 25) {
+        if (bmi < BMI_NORMAL_MAX) {
             return {
                 labelKey: 'WEIGHT_HISTORY.BMI_STATUS.NORMAL',
                 descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.NORMAL',
@@ -139,7 +162,7 @@ export class WeightHistoryFacade {
             };
         }
 
-        if (bmi < 30) {
+        if (bmi < BMI_OVERWEIGHT_MAX) {
             return {
                 labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OVER',
                 descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.OVER',
@@ -180,7 +203,7 @@ export class WeightHistoryFacade {
             return;
         }
 
-        if (customRange?.start && customRange.end) {
+        if (customRange?.start !== undefined && customRange.start !== null && customRange.end !== null) {
             this.loadEntries();
         }
     });
@@ -203,12 +226,13 @@ export class WeightHistoryFacade {
         }
 
         const payload = this.buildPayload();
-        if (!payload) {
+        if (payload === null) {
             return;
         }
 
         const editingId = this.editingEntryId();
-        const request$ = editingId ? this.weightEntriesService.update(editingId, payload) : this.weightEntriesService.create(payload);
+        const request$ =
+            editingId !== null ? this.weightEntriesService.update(editingId, payload) : this.weightEntriesService.create(payload);
 
         this.isSaving.set(true);
         request$
@@ -220,7 +244,7 @@ export class WeightHistoryFacade {
             )
             .subscribe(() => {
                 this.loadEntries(false, true);
-                if (editingId) {
+                if (editingId !== null) {
                     this.resetEditingState();
                     return;
                 }
@@ -243,7 +267,7 @@ export class WeightHistoryFacade {
         const latest = (this.entriesDescending() as Array<WeightEntry | undefined>)[0];
         this.form.setValue({
             date: this.formatDateInput(new Date()),
-            weight: latest ? latest.weight.toString() : '',
+            weight: latest !== undefined ? latest.weight.toString() : '',
         });
     }
 
@@ -270,9 +294,8 @@ export class WeightHistoryFacade {
             return;
         }
 
-        const rawValue = this.desiredWeightControl.value?.trim();
-        const parsedValue = rawValue ? Number(rawValue.replace(',', '.')) : null;
-        if (rawValue && (parsedValue === null || Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > 500)) {
+        const parsedValue = this.parseDesiredWeight();
+        if (parsedValue === undefined) {
             this.desiredWeightControl.setErrors({ invalid: true });
             return;
         }
@@ -292,6 +315,16 @@ export class WeightHistoryFacade {
             });
     }
 
+    private parseDesiredWeight(): number | null | undefined {
+        const rawValue = this.desiredWeightControl.value?.trim();
+        if (rawValue === undefined || rawValue.length === 0) {
+            return null;
+        }
+
+        const parsedValue = Number(rawValue.replace(',', '.'));
+        return Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > MAX_WEIGHT_KG ? undefined : parsedValue;
+    }
+
     public changeRange(value: string): void {
         if (!isWeightHistoryRange(value) || value === this.selectedRange()) {
             return;
@@ -301,10 +334,10 @@ export class WeightHistoryFacade {
 
         if (value === 'custom') {
             const current = this.customRangeControl.value;
-            if (!current?.start || !current.end) {
+            if (current?.start === undefined || current.start === null || current.end === null) {
                 const end = new Date();
                 const start = new Date(end);
-                start.setMonth(start.getMonth() - 1);
+                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
                 this.customRangeControl.setValue({ start, end }, { emitEvent: true });
             }
             return;
@@ -383,7 +416,7 @@ export class WeightHistoryFacade {
     private buildPayload(): CreateWeightEntryPayload | null {
         const rawDate = this.form.value.date;
         const rawWeight = this.form.value.weight;
-        if (!rawDate || rawWeight === null || rawWeight === undefined) {
+        if (rawDate === null || rawDate === undefined || rawDate.length === 0 || rawWeight === null || rawWeight === undefined) {
             return null;
         }
 
@@ -415,7 +448,7 @@ export class WeightHistoryFacade {
         const normalizedEnd = this.normalizeEndOfDay(end);
         const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
         const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(500, totalDays * 5);
+        const limit = Math.min(ENTRIES_LIMIT_MAX, totalDays * ENTRIES_LIMIT_PER_DAY);
         const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
 
         return {
@@ -440,20 +473,20 @@ export class WeightHistoryFacade {
         let end = new Date(now);
 
         if (range === 'week') {
-            start.setDate(start.getDate() - 7);
+            start.setDate(start.getDate() - WEEK_DAYS);
         } else if (range === 'month') {
-            start.setMonth(start.getMonth() - 1);
+            start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
         } else if (range === 'year') {
-            start.setFullYear(start.getFullYear() - 1);
+            start.setFullYear(start.getFullYear() - DEFAULT_MONTH_OFFSET);
         } else {
             const custom = this.customRangeControl.value;
-            if (custom?.start) {
+            if (custom?.start !== undefined && custom.start !== null) {
                 start = new Date(custom.start);
             } else {
-                start.setMonth(start.getMonth() - 1);
+                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
             }
 
-            if (custom?.end) {
+            if (custom?.end !== undefined && custom.end !== null) {
                 end = new Date(custom.end);
             }
         }
@@ -466,13 +499,23 @@ export class WeightHistoryFacade {
     }
 
     private normalizeEndOfDay(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+        return new Date(
+            Date.UTC(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                END_OF_DAY_HOURS,
+                END_OF_DAY_MINUTES,
+                END_OF_DAY_SECONDS,
+                END_OF_DAY_MS,
+            ),
+        );
     }
 
     private formatDateInput(date: Date): string {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
+        const day = String(date.getDate()).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
         return `${year}-${month}-${day}`;
     }
 
@@ -482,22 +525,20 @@ export class WeightHistoryFacade {
         }
 
         if (range === 'month') {
-            return 3;
+            return MONTH_QUANTIZATION_DAYS;
         }
 
         if (range === 'year') {
-            return 14;
+            return YEAR_QUANTIZATION_DAYS;
         }
 
-        return Math.max(1, Math.round(totalDays / 12));
+        return Math.max(1, Math.round(totalDays / CUSTOM_QUANTIZATION_DIVISOR));
     }
 
     private formatDateLabel(dateString: string): string {
         return new Date(dateString).toLocaleDateString();
     }
 }
-
-const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
 function isWeightHistoryRange(value: string): value is WeightHistoryRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';

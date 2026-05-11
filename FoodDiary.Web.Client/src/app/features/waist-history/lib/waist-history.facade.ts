@@ -17,6 +17,35 @@ import type {
 
 export type WaistHistoryRange = 'week' | 'month' | 'year' | 'custom';
 
+const WHT_SCALE_MAX = 0.8;
+const POINTER_PADDING_PERCENT = 1;
+const MIN_WAIST_CM = 1;
+const MAX_WAIST_CM = 300;
+const MAX_DESIRED_WAIST_CM = 400;
+const ROUNDING_FACTOR = 100;
+const PERCENT_MAX = 100;
+const WHT_UNDER_MAX = 0.4;
+const WHT_NORMAL_MAX = 0.5;
+const WHT_ELEVATED_MAX = 0.6;
+const DEFAULT_MONTH_OFFSET = 1;
+const WEEK_DAYS = 7;
+const ENTRIES_LIMIT_MAX = 500;
+const ENTRIES_LIMIT_PER_DAY = 5;
+const MONTH_QUANTIZATION_DAYS = 3;
+const YEAR_QUANTIZATION_DAYS = 14;
+const CUSTOM_QUANTIZATION_DIVISOR = 12;
+const END_OF_DAY_HOURS = 23;
+const END_OF_DAY_MINUTES = 59;
+const END_OF_DAY_SECONDS = 59;
+const END_OF_DAY_MS = 999;
+const DATE_PART_PAD_LENGTH = 2;
+const DATE_PART_PAD = '0';
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const MS_PER_SECOND = 1000;
+const MS_IN_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
+
 export interface WhtStatusInfo {
     labelKey: string;
     descriptionKey: string;
@@ -32,8 +61,6 @@ export class WaistHistoryFacade {
     private readonly fb = inject(FormBuilder);
 
     private readonly defaultRange: WaistHistoryRange = 'month';
-    private readonly whtScaleMax = 0.8;
-    private readonly pointerPaddingPercent = 1;
     private readonly editingEntryId = signal<string | null>(null);
     private readonly userHeightCm = signal<number | null>(null);
     private readonly initialized = signal(false);
@@ -54,7 +81,7 @@ export class WaistHistoryFacade {
 
     public readonly form = this.fb.group({
         date: [this.formatDateInput(new Date()), Validators.required],
-        circumference: ['', [Validators.required, Validators.min(1), Validators.max(300)]],
+        circumference: ['', [Validators.required, Validators.min(MIN_WAIST_CM), Validators.max(MAX_WAIST_CM)]],
     });
 
     public readonly entriesDescending = computed(() =>
@@ -92,12 +119,12 @@ export class WaistHistoryFacade {
     public readonly whtrValue = computed<number | null>(() => {
         const height = this.userHeightCm();
         const waist = this.latestWaist();
-        if (!height || !waist || height <= 0) {
+        if (height === null || waist === null || height <= 0 || waist <= 0) {
             return null;
         }
 
         const ratio = waist / height;
-        return Math.round(ratio * 100) / 100;
+        return Math.round(ratio * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     });
 
     public readonly whtrPointerPosition = computed(() => {
@@ -106,8 +133,8 @@ export class WaistHistoryFacade {
             return '0%';
         }
 
-        const rawPercent = (ratio / this.whtScaleMax) * 100;
-        const clamped = Math.max(this.pointerPaddingPercent, Math.min(100 - this.pointerPaddingPercent, rawPercent));
+        const rawPercent = (ratio / WHT_SCALE_MAX) * PERCENT_MAX;
+        const clamped = Math.max(POINTER_PADDING_PERCENT, Math.min(PERCENT_MAX - POINTER_PADDING_PERCENT, rawPercent));
         return `${clamped}%`;
     });
 
@@ -117,7 +144,7 @@ export class WaistHistoryFacade {
             return null;
         }
 
-        if (ratio < 0.4) {
+        if (ratio < WHT_UNDER_MAX) {
             return {
                 labelKey: 'WAIST_HISTORY.WHT_STATUS.UNDER',
                 descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.UNDER',
@@ -125,7 +152,7 @@ export class WaistHistoryFacade {
             };
         }
 
-        if (ratio < 0.5) {
+        if (ratio < WHT_NORMAL_MAX) {
             return {
                 labelKey: 'WAIST_HISTORY.WHT_STATUS.NORMAL',
                 descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.NORMAL',
@@ -133,7 +160,7 @@ export class WaistHistoryFacade {
             };
         }
 
-        if (ratio < 0.6) {
+        if (ratio < WHT_ELEVATED_MAX) {
             return {
                 labelKey: 'WAIST_HISTORY.WHT_STATUS.ELEVATED',
                 descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.ELEVATED',
@@ -174,7 +201,7 @@ export class WaistHistoryFacade {
             return;
         }
 
-        if (customRange?.start && customRange.end) {
+        if (customRange?.start !== undefined && customRange.start !== null && customRange.end !== null) {
             this.loadEntries();
         }
     });
@@ -197,12 +224,13 @@ export class WaistHistoryFacade {
         }
 
         const payload = this.buildPayload();
-        if (!payload) {
+        if (payload === null) {
             return;
         }
 
         const editingId = this.editingEntryId();
-        const request$ = editingId ? this.waistEntriesService.update(editingId, payload) : this.waistEntriesService.create(payload);
+        const request$ =
+            editingId !== null ? this.waistEntriesService.update(editingId, payload) : this.waistEntriesService.create(payload);
 
         this.isSaving.set(true);
         request$
@@ -214,7 +242,7 @@ export class WaistHistoryFacade {
             )
             .subscribe(() => {
                 this.loadEntries(false, true);
-                if (editingId) {
+                if (editingId !== null) {
                     this.resetEditingState();
                     return;
                 }
@@ -237,7 +265,7 @@ export class WaistHistoryFacade {
         const latest = (this.entriesDescending() as Array<WaistEntry | undefined>)[0];
         this.form.setValue({
             date: this.formatDateInput(new Date()),
-            circumference: latest ? latest.circumference.toString() : '',
+            circumference: latest !== undefined ? latest.circumference.toString() : '',
         });
     }
 
@@ -264,9 +292,8 @@ export class WaistHistoryFacade {
             return;
         }
 
-        const rawValue = this.desiredWaistControl.value?.trim();
-        const parsedValue = rawValue ? Number(rawValue.replace(',', '.')) : null;
-        if (rawValue && (parsedValue === null || Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > 400)) {
+        const parsedValue = this.parseDesiredWaist();
+        if (parsedValue === undefined) {
             this.desiredWaistControl.setErrors({ invalid: true });
             return;
         }
@@ -286,6 +313,16 @@ export class WaistHistoryFacade {
             });
     }
 
+    private parseDesiredWaist(): number | null | undefined {
+        const rawValue = this.desiredWaistControl.value?.trim();
+        if (rawValue === undefined || rawValue.length === 0) {
+            return null;
+        }
+
+        const parsedValue = Number(rawValue.replace(',', '.'));
+        return Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
+    }
+
     public changeRange(value: string): void {
         if (!isWaistHistoryRange(value) || value === this.selectedRange()) {
             return;
@@ -295,10 +332,10 @@ export class WaistHistoryFacade {
 
         if (value === 'custom') {
             const current = this.customRangeControl.value;
-            if (!current?.start || !current.end) {
+            if (current?.start === undefined || current.start === null || current.end === null) {
                 const end = new Date();
                 const start = new Date(end);
-                start.setMonth(start.getMonth() - 1);
+                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
                 this.customRangeControl.setValue({ start, end }, { emitEvent: true });
             }
             return;
@@ -375,7 +412,13 @@ export class WaistHistoryFacade {
     private buildPayload(): CreateWaistEntryPayload | null {
         const rawDate = this.form.value.date;
         const rawCircumference = this.form.value.circumference;
-        if (!rawDate || rawCircumference === null || rawCircumference === undefined) {
+        if (
+            rawDate === null ||
+            rawDate === undefined ||
+            rawDate.length === 0 ||
+            rawCircumference === null ||
+            rawCircumference === undefined
+        ) {
             return null;
         }
 
@@ -407,7 +450,7 @@ export class WaistHistoryFacade {
         const normalizedEnd = this.normalizeEndOfDay(end);
         const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
         const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(500, totalDays * 5);
+        const limit = Math.min(ENTRIES_LIMIT_MAX, totalDays * ENTRIES_LIMIT_PER_DAY);
         const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
 
         return {
@@ -432,20 +475,20 @@ export class WaistHistoryFacade {
         let end = new Date(now);
 
         if (range === 'week') {
-            start.setDate(start.getDate() - 7);
+            start.setDate(start.getDate() - WEEK_DAYS);
         } else if (range === 'month') {
-            start.setMonth(start.getMonth() - 1);
+            start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
         } else if (range === 'year') {
-            start.setFullYear(start.getFullYear() - 1);
+            start.setFullYear(start.getFullYear() - DEFAULT_MONTH_OFFSET);
         } else {
             const custom = this.customRangeControl.value;
-            if (custom?.start) {
+            if (custom?.start !== undefined && custom.start !== null) {
                 start = new Date(custom.start);
             } else {
-                start.setMonth(start.getMonth() - 1);
+                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
             }
 
-            if (custom?.end) {
+            if (custom?.end !== undefined && custom.end !== null) {
                 end = new Date(custom.end);
             }
         }
@@ -459,14 +502,14 @@ export class WaistHistoryFacade {
         }
 
         if (range === 'month') {
-            return 3;
+            return MONTH_QUANTIZATION_DAYS;
         }
 
         if (range === 'year') {
-            return 14;
+            return YEAR_QUANTIZATION_DAYS;
         }
 
-        return Math.max(1, Math.round(totalDays / 12));
+        return Math.max(1, Math.round(totalDays / CUSTOM_QUANTIZATION_DIVISOR));
     }
 
     private normalizeStartOfDay(date: Date): Date {
@@ -474,13 +517,23 @@ export class WaistHistoryFacade {
     }
 
     private normalizeEndOfDay(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+        return new Date(
+            Date.UTC(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                END_OF_DAY_HOURS,
+                END_OF_DAY_MINUTES,
+                END_OF_DAY_SECONDS,
+                END_OF_DAY_MS,
+            ),
+        );
     }
 
     private formatDateInput(date: Date): string {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
+        const day = String(date.getDate()).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
         return `${year}-${month}-${day}`;
     }
 
@@ -488,8 +541,6 @@ export class WaistHistoryFacade {
         return new Date(dateString).toLocaleDateString();
     }
 }
-
-const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
 function isWaistHistoryRange(value: string): value is WaistHistoryRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
