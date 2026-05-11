@@ -1,7 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { type GlobalPositionStrategy, Overlay } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
 
@@ -13,6 +13,11 @@ type StrategyMock = {
     centerHorizontally: ReturnType<typeof vi.fn<() => GlobalPositionStrategy>>;
     top: ReturnType<typeof vi.fn<(value: string) => GlobalPositionStrategy>>;
     bottom: ReturnType<typeof vi.fn<(value: string) => GlobalPositionStrategy>>;
+};
+type DialogServiceTestContext = {
+    open: DialogOpenMock;
+    service: FdUiDialogService;
+    strategy: StrategyMock;
 };
 
 function createOverlayMock(): {
@@ -59,143 +64,85 @@ function latestConfig(open: DialogOpenMock): DialogOpenConfig {
     return config;
 }
 
-describe('FdUiDialogService', () => {
+function setupDialogService(matches: boolean): DialogServiceTestContext {
+    vi.stubGlobal('window', {
+        matchMedia: vi.fn().mockReturnValue({ matches }),
+    });
+
+    const open = createDialogOpenMock();
+    const dialogMock = createDialogMock(open);
+    const { overlayMock, strategy } = createOverlayMock();
+
+    TestBed.configureTestingModule({
+        providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
+    });
+
+    const service = TestBed.inject(FdUiDialogService);
+
+    return { open, service, strategy };
+}
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+});
+
+describe('FdUiDialogService panel classes', () => {
     it('maps detail preset to semantic panel classes', () => {
-        vi.stubGlobal('window', {
-            matchMedia: vi.fn().mockReturnValue({ matches: false }),
-        });
-
-        const open = createDialogOpenMock();
-        const dialogMock = createDialogMock(open);
-        const { overlayMock } = createOverlayMock();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
-        });
-
-        const service = TestBed.inject(FdUiDialogService);
+        const { open, service } = setupDialogService(false);
         service.open(DummyDialogComponent, { preset: 'detail' });
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(latestConfig(open).panelClass).toContain('fd-ui-dialog-panel--detail');
         expect(latestConfig(open).panelClass).toContain('fd-ui-dialog-panel--lg');
         expect(latestConfig(open).backdropClass).toContain('fd-ui-dialog-backdrop--detail');
-
-        vi.unstubAllGlobals();
     });
 
     it('maps fullscreen preset to fullscreen panel class', () => {
-        vi.stubGlobal('window', {
-            matchMedia: vi.fn().mockReturnValue({ matches: false }),
-        });
-
-        const open = createDialogOpenMock();
-        const dialogMock = createDialogMock(open);
-        const { overlayMock } = createOverlayMock();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
-        });
-
-        const service = TestBed.inject(FdUiDialogService);
+        const { open, service } = setupDialogService(false);
         service.open(DummyDialogComponent, { preset: 'fullscreen' });
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(latestConfig(open).panelClass).toContain('fd-ui-dialog-panel--fullscreen');
         expect(latestConfig(open).panelClass).toContain('fd-ui-dialog-panel--xl');
-
-        vi.unstubAllGlobals();
     });
 
     it('maps xl size to the matching panel class', () => {
-        vi.stubGlobal('window', {
-            matchMedia: vi.fn().mockReturnValue({ matches: false }),
-        });
-
-        const open = createDialogOpenMock();
-        const dialogMock = createDialogMock(open);
-        const { overlayMock } = createOverlayMock();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
-        });
-
-        const service = TestBed.inject(FdUiDialogService);
+        const { open, service } = setupDialogService(false);
         service.open(DummyDialogComponent, { size: 'xl' });
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(latestConfig(open).panelClass).toContain('fd-ui-dialog-panel--xl');
-
-        vi.unstubAllGlobals();
     });
+});
 
+describe('FdUiDialogService options', () => {
     it('uses first tabbable autofocus by default', () => {
-        vi.stubGlobal('window', {
-            matchMedia: vi.fn().mockReturnValue({ matches: false }),
-        });
-
-        const open = createDialogOpenMock();
-        const dialogMock = createDialogMock(open);
-        const { overlayMock } = createOverlayMock();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
-        });
-
-        const service = TestBed.inject(FdUiDialogService);
+        const { open, service } = setupDialogService(false);
         service.open(DummyDialogComponent);
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(latestConfig(open).autoFocus).toBe('first-tabbable');
-
-        vi.unstubAllGlobals();
     });
+});
 
+describe('FdUiDialogService positioning', () => {
     it('top-aligns regular dialogs to keep tabbed headers stable', () => {
-        vi.stubGlobal('window', {
-            matchMedia: vi.fn().mockReturnValue({ matches: false }),
-        });
-
-        const open = createDialogOpenMock();
-        const dialogMock = createDialogMock(open);
-        const { overlayMock, strategy } = createOverlayMock();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
-        });
-
-        const service = TestBed.inject(FdUiDialogService);
+        const { open, service, strategy } = setupDialogService(false);
         service.open(DummyDialogComponent);
 
         expect(strategy.centerHorizontally).toHaveBeenCalledTimes(1);
         expect(strategy.top).toHaveBeenCalledWith('40px');
         expect(strategy.bottom).not.toHaveBeenCalled();
         expect(latestConfig(open).positionStrategy).toBe(strategy);
-
-        vi.unstubAllGlobals();
     });
 
     it('keeps compact mobile dialogs anchored to the bottom edge', () => {
-        vi.stubGlobal('window', {
-            matchMedia: vi.fn().mockReturnValue({ matches: true }),
-        });
-
-        const open = createDialogOpenMock();
-        const dialogMock = createDialogMock(open);
-        const { overlayMock, strategy } = createOverlayMock();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
-        });
-
-        const service = TestBed.inject(FdUiDialogService);
+        const { open, service, strategy } = setupDialogService(true);
         service.open(DummyDialogComponent);
 
         expect(strategy.centerHorizontally).toHaveBeenCalledTimes(1);
         expect(strategy.bottom).toHaveBeenCalledWith('0');
         expect(strategy.top).not.toHaveBeenCalled();
         expect(latestConfig(open).positionStrategy).toBe(strategy);
-
-        vi.unstubAllGlobals();
     });
 });

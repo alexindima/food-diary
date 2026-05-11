@@ -1,18 +1,29 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiSelectComponent, type FdUiSelectOption } from './fd-ui-select.component';
 
-describe('FdUiSelectComponent', () => {
-    let component: FdUiSelectComponent<string>;
-    let fixture: ComponentFixture<FdUiSelectComponent<string>>;
+const TEST_OPTIONS: FdUiSelectOption<string>[] = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+];
 
-    const testOptions: FdUiSelectOption<string>[] = [
-        { value: 'apple', label: 'Apple' },
-        { value: 'banana', label: 'Banana' },
-        { value: 'cherry', label: 'Cherry' },
-    ];
+type SelectTestContext = {
+    component: FdUiSelectComponent<string>;
+    fixture: ComponentFixture<FdUiSelectComponent<string>>;
+    host: () => HTMLElement;
+    requireElement: <T extends Element>(selector: string) => T;
+};
 
+async function setupSelectAsync(): Promise<SelectTestContext> {
+    await TestBed.configureTestingModule({
+        imports: [FdUiSelectComponent],
+        providers: [],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(FdUiSelectComponent<string>);
+    const component = fixture.componentInstance;
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
     const requireElement = <T extends Element>(selector: string): T => {
         const element = host().querySelector<T>(selector);
@@ -23,22 +34,22 @@ describe('FdUiSelectComponent', () => {
         return element;
     };
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [FdUiSelectComponent],
-            providers: [],
-        }).compileComponents();
+    fixture.detectChanges();
 
-        fixture = TestBed.createComponent(FdUiSelectComponent<string>);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    return { component, fixture, host, requireElement };
+}
 
-    it('should create', () => {
+describe('FdUiSelectComponent', () => {
+    it('should create', async () => {
+        const { component } = await setupSelectAsync();
+
         expect(component).toBeTruthy();
     });
+});
 
-    it('should render label', () => {
+describe('FdUiSelectComponent rendering', () => {
+    it('should render label', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('label', 'Fruit');
         fixture.detectChanges();
 
@@ -46,7 +57,8 @@ describe('FdUiSelectComponent', () => {
         expect(labelEl.textContent.trim()).toBe('Fruit');
     });
 
-    it('should show required asterisk', () => {
+    it('should show required asterisk', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('label', 'Fruit');
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
@@ -55,16 +67,20 @@ describe('FdUiSelectComponent', () => {
         expect(requiredEl.textContent.trim()).toBe('*');
     });
 
-    it('should display error message', () => {
+    it('should display error message', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('error', 'This field is required');
         fixture.detectChanges();
 
         const errorEl = requireElement<HTMLElement>('.fd-ui-select__error');
         expect(errorEl.textContent.trim()).toBe('This field is required');
     });
+});
 
-    it('should write value via CVA', () => {
-        fixture.componentRef.setInput('options', testOptions);
+describe('FdUiSelectComponent CVA', () => {
+    it('should write value via CVA', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
         component.writeValue('banana');
@@ -73,8 +89,9 @@ describe('FdUiSelectComponent', () => {
         expect(component['internalValue']()).toBe('banana');
     });
 
-    it('should select option and update value', () => {
-        fixture.componentRef.setInput('options', testOptions);
+    it('should select option and update value', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
         const onChangeSpy = vi.fn();
@@ -82,7 +99,7 @@ describe('FdUiSelectComponent', () => {
         component.registerOnChange(onChangeSpy);
         component.registerOnTouched(onTouchedSpy);
 
-        component['onOptionSelect'](testOptions[1]);
+        component['onOptionSelect'](TEST_OPTIONS[1]);
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBe('banana');
@@ -90,23 +107,34 @@ describe('FdUiSelectComponent', () => {
         expect(onTouchedSpy).toHaveBeenCalled();
     });
 
-    it('should not select when disabled', () => {
-        fixture.componentRef.setInput('options', testOptions);
+    it('should not select when disabled', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
-        component['onOptionSelect'](testOptions[0]);
+        component['onOptionSelect'](TEST_OPTIONS[0]);
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBeNull();
         expect(onChangeSpy).not.toHaveBeenCalled();
     });
 
-    it('should show selected label', () => {
-        fixture.componentRef.setInput('options', testOptions);
+    it('should set disabled state via CVA', async () => {
+        const { component } = await setupSelectAsync();
+        component.setDisabledState(true);
+
+        expect(component['disabled']()).toBe(true);
+    });
+});
+
+describe('FdUiSelectComponent computed state', () => {
+    it('should show selected label', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
         component.writeValue('cherry');
@@ -115,9 +143,10 @@ describe('FdUiSelectComponent', () => {
         expect(component['selectedLabel']()).toBe('Cherry');
     });
 
-    it('should float label when has selection', () => {
+    it('should float label when has selection', async () => {
+        const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('label', 'Fruit');
-        fixture.componentRef.setInput('options', testOptions);
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
         expect(component['shouldFloatLabel']()).toBe(false);
@@ -127,22 +156,9 @@ describe('FdUiSelectComponent', () => {
         expect(component['shouldFloatLabel']()).toBe(true);
     });
 
-    it('should apply size class', () => {
-        fixture.componentRef.setInput('size', 'lg');
-        fixture.detectChanges();
-
-        const selectEl = requireElement<HTMLElement>('.fd-ui-select');
-        expect(selectEl.classList).toContain('fd-ui-select--size-lg');
-    });
-
-    it('should set disabled state via CVA', () => {
-        component.setDisabledState(true);
-
-        expect(component['disabled']()).toBe(true);
-    });
-
-    it('should expose active option id when menu is open', () => {
-        fixture.componentRef.setInput('options', testOptions);
+    it('should expose active option id when menu is open', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
         component['openMenu']();
@@ -150,8 +166,22 @@ describe('FdUiSelectComponent', () => {
 
         expect(component['activeOptionId']()).toBe(`${component.id()}-option-0`);
     });
+});
 
+describe('FdUiSelectComponent classes', () => {
+    it('should apply size class', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('size', 'lg');
+        fixture.detectChanges();
+
+        const selectEl = requireElement<HTMLElement>('.fd-ui-select');
+        expect(selectEl.classList).toContain('fd-ui-select--size-lg');
+    });
+});
+
+describe('FdUiSelectComponent overlay', () => {
     it('should focus listbox when overlay attaches', async () => {
+        const { component } = await setupSelectAsync();
         const focus = vi.fn();
         Object.defineProperty(component, 'listboxRef', {
             value: vi.fn(() => ({

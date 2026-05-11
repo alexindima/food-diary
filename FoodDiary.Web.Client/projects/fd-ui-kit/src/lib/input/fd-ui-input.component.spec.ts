@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiInputComponent } from './fd-ui-input.component';
 
@@ -14,27 +14,65 @@ class TestHostComponent {
     public ctrl = new FormControl('');
 }
 
+type InputTestContext = {
+    component: FdUiInputComponent;
+    el: HTMLElement;
+    fixture: ComponentFixture<FdUiInputComponent>;
+    input: () => HTMLInputElement;
+};
+type InputHostTestContext = {
+    hostComponent: TestHostComponent;
+    hostFixture: ComponentFixture<TestHostComponent>;
+    input: () => HTMLInputElement;
+};
+
+async function setupInputAsync(): Promise<InputTestContext> {
+    await TestBed.configureTestingModule({
+        imports: [FdUiInputComponent],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(FdUiInputComponent);
+    const component = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    const input = (): HTMLInputElement => requireInput(el);
+    fixture.detectChanges();
+
+    return { component, el, fixture, input };
+}
+
+async function setupInputHostAsync(): Promise<InputHostTestContext> {
+    await TestBed.configureTestingModule({
+        imports: [TestHostComponent],
+    }).compileComponents();
+
+    const hostFixture = TestBed.createComponent(TestHostComponent);
+    const hostComponent = hostFixture.componentInstance;
+    const input = (): HTMLInputElement => requireInput(hostFixture.nativeElement as HTMLElement);
+    hostFixture.detectChanges();
+
+    return { hostComponent, hostFixture, input };
+}
+
+function requireInput(host: HTMLElement): HTMLInputElement {
+    const input = host.querySelector<HTMLInputElement>('.fd-ui-input__control');
+    if (input === null) {
+        throw new Error('Expected fd-ui input control to exist.');
+    }
+
+    return input;
+}
+
 describe('FdUiInputComponent', () => {
-    let fixture: ComponentFixture<FdUiInputComponent>;
-    let component: FdUiInputComponent;
-    let el: HTMLElement;
+    it('should create', async () => {
+        const { component } = await setupInputAsync();
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [FdUiInputComponent],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(FdUiInputComponent);
-        component = fixture.componentInstance;
-        el = fixture.nativeElement as HTMLElement;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
         expect(component).toBeTruthy();
     });
+});
 
-    it('should render label when provided', () => {
+describe('FdUiInputComponent rendering', () => {
+    it('should render label when provided', async () => {
+        const { el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Username');
         fixture.detectChanges();
 
@@ -43,7 +81,8 @@ describe('FdUiInputComponent', () => {
         expect(label?.textContent).toBe('Username');
     });
 
-    it('should show required asterisk when required', () => {
+    it('should show required asterisk when required', async () => {
+        const { el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Email');
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
@@ -53,7 +92,8 @@ describe('FdUiInputComponent', () => {
         expect(asterisk?.textContent).toBe('*');
     });
 
-    it('should render prefix icon', () => {
+    it('should render prefix icon', async () => {
+        const { el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('prefixIcon', 'search');
         fixture.detectChanges();
 
@@ -61,7 +101,20 @@ describe('FdUiInputComponent', () => {
         expect(prefix).toBeTruthy();
     });
 
-    it('should render suffix button with icon', () => {
+    it('should display error message', async () => {
+        const { el, fixture } = await setupInputAsync();
+        fixture.componentRef.setInput('error', 'Field is required');
+        fixture.detectChanges();
+
+        const errorEl = el.querySelector('.fd-ui-input__error');
+        expect(errorEl).toBeTruthy();
+        expect(errorEl?.textContent).toBe('Field is required');
+    });
+});
+
+describe('FdUiInputComponent suffix button', () => {
+    it('should render suffix button with icon', async () => {
+        const { el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('suffixButtonIcon', 'visibility');
         fixture.detectChanges();
 
@@ -69,7 +122,8 @@ describe('FdUiInputComponent', () => {
         expect(suffix).toBeTruthy();
     });
 
-    it('should emit suffixButtonClicked when suffix button clicked', () => {
+    it('should emit suffixButtonClicked when suffix button clicked', async () => {
+        const { component, el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('suffixButtonIcon', 'visibility');
         fixture.detectChanges();
 
@@ -81,7 +135,8 @@ describe('FdUiInputComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should not emit suffixButtonClicked when disabled', () => {
+    it('should not emit suffixButtonClicked when disabled', async () => {
+        const { component, el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('suffixButtonIcon', 'visibility');
         component.setDisabledState(true);
         fixture.detectChanges();
@@ -93,77 +148,76 @@ describe('FdUiInputComponent', () => {
 
         expect(spy).not.toHaveBeenCalled();
     });
+});
 
-    it('should write value via CVA', () => {
+describe('FdUiInputComponent CVA', () => {
+    it('should write value via CVA', async () => {
+        const { component, fixture, input } = await setupInputAsync();
         component.writeValue('hello');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input?.value).toBe('hello');
+        expect(input().value).toBe('hello');
     });
 
-    it('should call onChange on input event', () => {
+    it('should call onChange on input event', async () => {
+        const { component, input } = await setupInputAsync();
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input).toBeTruthy();
-        if (input !== null) {
-            input.value = 'test';
-        }
-        input?.dispatchEvent(new Event('input'));
+        const inputEl = input();
+        inputEl.value = 'test';
+        inputEl.dispatchEvent(new Event('input'));
 
         expect(onChangeSpy).toHaveBeenCalledWith('test');
     });
 
-    it('should call onTouched on blur', () => {
+    it('should call onTouched on blur', async () => {
+        const { component, input } = await setupInputAsync();
         const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input).toBeTruthy();
-        input?.dispatchEvent(new Event('blur'));
+        input().dispatchEvent(new Event('blur'));
 
         expect(onTouchedSpy).toHaveBeenCalled();
     });
 
-    it('should set disabled state via CVA', () => {
+    it('should set disabled state via CVA', async () => {
+        const { component, fixture, input } = await setupInputAsync();
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input?.disabled).toBe(true);
+        expect(input().disabled).toBe(true);
     });
 
-    it('should not process input when disabled', () => {
+    it('should not process input when disabled', async () => {
+        const { component, input } = await setupInputAsync();
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input).toBeTruthy();
-        if (input !== null) {
-            input.value = 'blocked';
-        }
-        input?.dispatchEvent(new Event('input'));
+        const inputEl = input();
+        inputEl.value = 'blocked';
+        inputEl.dispatchEvent(new Event('input'));
 
         expect(onChangeSpy).not.toHaveBeenCalled();
     });
+});
 
-    it('should float label when focused', () => {
+describe('FdUiInputComponent floating label', () => {
+    it('should float label when focused', async () => {
+        const { el, fixture, input } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Name');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input).toBeTruthy();
-        input?.dispatchEvent(new Event('focus'));
+        input().dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
         expect(wrapper?.classList).toContain('fd-ui-input--floating');
     });
 
-    it('should float label when has value', () => {
+    it('should float label when has value', async () => {
+        const { component, el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Name');
         component.writeValue('something');
         fixture.detectChanges();
@@ -172,53 +226,41 @@ describe('FdUiInputComponent', () => {
         expect(wrapper?.classList).toContain('fd-ui-input--floating');
     });
 
-    it('should float label when native input has autofilled value before focus', () => {
+    it('should float label when native input has autofilled value before focus', async () => {
+        const { el, fixture, input } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Email');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input).toBeTruthy();
-        if (input !== null) {
-            input.value = 'autofilled@example.com';
-        }
-        input?.dispatchEvent(new Event('focus'));
+        const inputEl = input();
+        inputEl.value = 'autofilled@example.com';
+        inputEl.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
         expect(wrapper?.classList).toContain('fd-ui-input--floating');
     });
+});
 
-    it('should show placeholder only when focused and empty', () => {
+describe('FdUiInputComponent attributes', () => {
+    it('should show placeholder only when focused and empty', async () => {
+        const { component, fixture, input } = await setupInputAsync();
         fixture.componentRef.setInput('placeholder', 'Enter text');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input).toBeTruthy();
+        const inputEl = input();
+        expect(inputEl.getAttribute('placeholder')).toBeNull();
 
-        // Not focused and empty: no placeholder
-        expect(input?.getAttribute('placeholder')).toBeNull();
-
-        // Focused and empty: show placeholder
-        input?.dispatchEvent(new Event('focus'));
+        inputEl.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
-        expect(input?.getAttribute('placeholder')).toBe('Enter text');
+        expect(inputEl.getAttribute('placeholder')).toBe('Enter text');
 
-        // Focused with value: no placeholder
         component.writeValue('x');
         fixture.detectChanges();
-        expect(input?.getAttribute('placeholder')).toBeNull();
+        expect(inputEl.getAttribute('placeholder')).toBeNull();
     });
 
-    it('should display error message', () => {
-        fixture.componentRef.setInput('error', 'Field is required');
-        fixture.detectChanges();
-
-        const errorEl = el.querySelector('.fd-ui-input__error');
-        expect(errorEl).toBeTruthy();
-        expect(errorEl?.textContent).toBe('Field is required');
-    });
-
-    it('should apply size class', () => {
+    it('should apply size class', async () => {
+        const { el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('size', 'lg');
         fixture.detectChanges();
 
@@ -226,73 +268,59 @@ describe('FdUiInputComponent', () => {
         expect(wrapper?.classList).toContain('fd-ui-input--size-lg');
     });
 
-    it('should set type attribute on input element', () => {
+    it('should set type attribute on input element', async () => {
+        const { fixture, input } = await setupInputAsync();
         fixture.componentRef.setInput('type', 'password');
         fixture.detectChanges();
 
-        const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
-        expect(input?.getAttribute('type')).toBe('password');
+        expect(input().getAttribute('type')).toBe('password');
+    });
+});
+
+describe('FdUiInputComponent with TestHost', () => {
+    it('should write value from FormControl', async () => {
+        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
+        hostComponent.ctrl.setValue('from form');
+        hostFixture.detectChanges();
+
+        expect(input().value).toBe('from form');
     });
 
-    describe('with TestHost (FormControl integration)', () => {
-        let hostFixture: ComponentFixture<TestHostComponent>;
-        let hostComponent: TestHostComponent;
+    it('should propagate input value to FormControl', async () => {
+        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
+        const inputEl = input();
+        inputEl.value = 'typed';
+        inputEl.dispatchEvent(new Event('input'));
+        hostFixture.detectChanges();
 
-        beforeEach(() => {
-            hostFixture = TestBed.createComponent(TestHostComponent);
-            hostComponent = hostFixture.componentInstance;
-            hostFixture.detectChanges();
-        });
+        expect(hostComponent.ctrl.value).toBe('typed');
+    });
 
-        it('should write value from FormControl', () => {
-            hostComponent.ctrl.setValue('from form');
-            hostFixture.detectChanges();
+    it('should sync native autofilled value to FormControl on focus', async () => {
+        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
+        const inputEl = input();
+        inputEl.value = 'autofilled@example.com';
+        inputEl.dispatchEvent(new Event('focus'));
+        hostFixture.detectChanges();
 
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
-            expect(input?.value).toBe('from form');
-        });
+        expect(hostComponent.ctrl.value).toBe('autofilled@example.com');
+    });
 
-        it('should propagate input value to FormControl', () => {
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
-            expect(input).toBeTruthy();
-            if (input !== null) {
-                input.value = 'typed';
-            }
-            input?.dispatchEvent(new Event('input'));
-            hostFixture.detectChanges();
+    it('should mark control as touched on blur', async () => {
+        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
+        expect(hostComponent.ctrl.touched).toBe(false);
 
-            expect(hostComponent.ctrl.value).toBe('typed');
-        });
+        input().dispatchEvent(new Event('blur'));
+        hostFixture.detectChanges();
 
-        it('should sync native autofilled value to FormControl on focus', () => {
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
-            expect(input).toBeTruthy();
-            if (input !== null) {
-                input.value = 'autofilled@example.com';
-            }
-            input?.dispatchEvent(new Event('focus'));
-            hostFixture.detectChanges();
+        expect(hostComponent.ctrl.touched).toBe(true);
+    });
 
-            expect(hostComponent.ctrl.value).toBe('autofilled@example.com');
-        });
+    it('should disable input when FormControl is disabled', async () => {
+        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
+        hostComponent.ctrl.disable();
+        hostFixture.detectChanges();
 
-        it('should mark control as touched on blur', () => {
-            expect(hostComponent.ctrl.touched).toBe(false);
-
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
-            expect(input).toBeTruthy();
-            input?.dispatchEvent(new Event('blur'));
-            hostFixture.detectChanges();
-
-            expect(hostComponent.ctrl.touched).toBe(true);
-        });
-
-        it('should disable input when FormControl is disabled', () => {
-            hostComponent.ctrl.disable();
-            hostFixture.detectChanges();
-
-            const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
-            expect(input?.disabled).toBe(true);
-        });
+        expect(input().disabled).toBe(true);
     });
 });

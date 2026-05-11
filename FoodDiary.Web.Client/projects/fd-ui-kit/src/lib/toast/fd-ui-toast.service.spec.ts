@@ -11,17 +11,20 @@ const EXIT_ANIMATION_MS = 200;
 const SUCCESS_DURATION_MS = 3500;
 const INFO_DURATION_MS = 1500;
 
-describe('FdUiToastService', () => {
+function setupToastService(): FdUiToastService {
+    TestBed.configureTestingModule({
+        providers: [FdUiToastService],
+    });
+
+    return TestBed.inject(FdUiToastService);
+}
+
+describe('FdUiToastService creation', () => {
     let service: FdUiToastService;
 
     beforeEach(() => {
         vi.useFakeTimers();
-
-        TestBed.configureTestingModule({
-            providers: [FdUiToastService],
-        });
-
-        service = TestBed.inject(FdUiToastService);
+        service = setupToastService();
     });
 
     afterEach(() => {
@@ -39,6 +42,21 @@ describe('FdUiToastService', () => {
 
         expect(service.toasts()).toHaveLength(1);
         expect(service.toasts()[0]?.message).toBe('Hello');
+    });
+});
+
+describe('FdUiToastService options', () => {
+    let service: FdUiToastService;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        service = setupToastService();
+    });
+
+    afterEach(() => {
+        service.dismissAll();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
     });
 
     it('should apply configured appearance', () => {
@@ -77,6 +95,21 @@ describe('FdUiToastService', () => {
         expect(service.toasts()[0]?.horizontalPosition).toBe('center');
         expect(service.toasts()[0]?.verticalPosition).toBe('bottom');
     });
+});
+
+describe('FdUiToastService dismissal', () => {
+    let service: FdUiToastService;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        service = setupToastService();
+    });
+
+    afterEach(() => {
+        service.dismissAll();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
+    });
 
     it('should dismiss a toast after duration and exit animation', () => {
         service.open('Message', { duration: SHORT_DURATION_MS });
@@ -113,6 +146,21 @@ describe('FdUiToastService', () => {
 
         expect(service.toasts()).toHaveLength(1);
         expect(secondRef).toBe(firstRef);
+    });
+});
+
+describe('FdUiToastService semantic helpers', () => {
+    let service: FdUiToastService;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        service = setupToastService();
+    });
+
+    afterEach(() => {
+        service.dismissAll();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
     });
 
     it('should create success toast with semantic defaults', () => {

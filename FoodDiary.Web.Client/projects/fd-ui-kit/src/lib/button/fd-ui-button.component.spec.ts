@@ -1,13 +1,24 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiButtonComponent } from './fd-ui-button.component';
 
-describe('FdUiButtonComponent', () => {
-    let component: FdUiButtonComponent;
-    let fixture: ComponentFixture<FdUiButtonComponent>;
+interface ButtonTestContext {
+    button: () => HTMLButtonElement;
+    component: FdUiButtonComponent;
+    fixture: ComponentFixture<FdUiButtonComponent>;
+}
+
+function setupButton(): ButtonTestContext {
+    TestBed.configureTestingModule({
+        imports: [FdUiButtonComponent],
+    });
+
+    const fixture = TestBed.createComponent(FdUiButtonComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
     const button = (): HTMLButtonElement => {
@@ -19,22 +30,20 @@ describe('FdUiButtonComponent', () => {
         return element;
     };
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [FdUiButtonComponent],
-        }).compileComponents();
+    return { button, component, fixture };
+}
 
-        fixture = TestBed.createComponent(FdUiButtonComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
+describe('FdUiButtonComponent', () => {
     it('should create', () => {
+        const { component } = setupButton();
+
         expect(component).toBeTruthy();
     });
 
     it('should have default classes (primary, solid, md)', () => {
+        const { component } = setupButton();
         const classes = component.classes();
+
         expect(classes).toContain('fd-ui-button');
         expect(classes).toContain('fd-ui-button--primary');
         expect(classes).toContain('fd-ui-button--solid');
@@ -42,8 +51,12 @@ describe('FdUiButtonComponent', () => {
         expect(classes).toContain('fd-ui-button--size-md');
         expect(classes).toContain('fd-ui-button--icon-md');
     });
+});
 
+describe('FdUiButtonComponent classes', () => {
     it('should update classes when appearance changes', () => {
+        const { component, fixture } = setupButton();
+
         fixture.componentRef.setInput('appearance', 'toolbar');
         fixture.detectChanges();
 
@@ -53,6 +66,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should update classes when variant changes', () => {
+        const { component, fixture } = setupButton();
+
         fixture.componentRef.setInput('variant', 'danger');
         fixture.detectChanges();
 
@@ -62,6 +77,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should normalize fill to text for ghost variant', () => {
+        const { component, fixture } = setupButton();
+
         fixture.componentRef.setInput('variant', 'ghost');
         fixture.detectChanges();
 
@@ -71,6 +88,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should normalize fill to outline for outline variant', () => {
+        const { component, fixture } = setupButton();
+
         fixture.componentRef.setInput('variant', 'outline');
         fixture.detectChanges();
 
@@ -80,6 +99,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should normalize fill ghost to text', () => {
+        const { component, fixture } = setupButton();
+
         fixture.componentRef.setInput('fill', 'ghost');
         fixture.detectChanges();
 
@@ -89,14 +110,20 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should add full-width class when fullWidth is true', () => {
+        const { component, fixture } = setupButton();
+
         fixture.componentRef.setInput('fullWidth', true);
         fixture.detectChanges();
 
         const classes = component.classes();
         expect(classes).toContain('fd-ui-button--full-width');
     });
+});
 
+describe('FdUiButtonComponent rendering', () => {
     it('should set button type attribute', () => {
+        const { button, fixture } = setupButton();
+
         fixture.componentRef.setInput('type', 'submit');
         fixture.detectChanges();
 
@@ -104,6 +131,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should set disabled attribute', () => {
+        const { button, fixture } = setupButton();
+
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
@@ -111,6 +140,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should disable button and show spinner when loading', () => {
+        const { button, component, fixture } = setupButton();
+
         fixture.componentRef.setInput('loading', true);
         fixture.detectChanges();
 
@@ -123,6 +154,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should keep spinner positioned inside the button', () => {
+        const { button, fixture } = setupButton();
+
         fixture.componentRef.setInput('loading', true);
         fixture.detectChanges();
 
@@ -130,6 +163,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should set aria-label attribute', () => {
+        const { button, fixture } = setupButton();
+
         fixture.componentRef.setInput('ariaLabel', 'Close dialog');
         fixture.detectChanges();
 
@@ -137,6 +172,8 @@ describe('FdUiButtonComponent', () => {
     });
 
     it('should render icon when provided', () => {
+        const { fixture } = setupButton();
+
         fixture.componentRef.setInput('icon', 'add');
         fixture.detectChanges();
 

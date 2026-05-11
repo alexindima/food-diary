@@ -12,58 +12,50 @@ import { NotificationsDialogComponent } from './notifications-dialog.component';
 type NotificationsDialogComponentTestApi = NotificationsDialogComponent & {
     notificationItems(): Array<{ icon: string }>;
 };
-
-describe('NotificationsDialogComponent', () => {
-    let fixture: ComponentFixture<NotificationsDialogComponent>;
-    let component: NotificationsDialogComponent;
-    let dialogRef: { close: ReturnType<typeof vi.fn> };
-    let router: { navigateByUrl: ReturnType<typeof vi.fn> };
-    let notificationService: {
+type NotificationsDialogTestContext = {
+    component: NotificationsDialogComponent;
+    dialogRef: { close: ReturnType<typeof vi.fn> };
+    fixture: ComponentFixture<NotificationsDialogComponent>;
+    notificationService: {
+        ensureNotificationsLoaded: ReturnType<typeof vi.fn>;
+        markAllRead: ReturnType<typeof vi.fn>;
+        markAsRead: ReturnType<typeof vi.fn>;
         notifications: ReturnType<typeof signal<NotificationItem[]>>;
         notificationsLoading: ReturnType<typeof signal<boolean>>;
-        ensureNotificationsLoaded: ReturnType<typeof vi.fn>;
-        markAsRead: ReturnType<typeof vi.fn>;
-        markAllRead: ReturnType<typeof vi.fn>;
+    };
+    router: { navigateByUrl: ReturnType<typeof vi.fn> };
+};
+
+function setupNotificationsDialog(notifications: NotificationItem[]): NotificationsDialogTestContext {
+    const dialogRef = { close: vi.fn() };
+    const router = { navigateByUrl: vi.fn().mockResolvedValue(true) };
+    const notificationService = {
+        notifications: signal(notifications),
+        notificationsLoading: signal(false),
+        ensureNotificationsLoaded: vi.fn(),
+        markAsRead: vi.fn().mockReturnValue(of(undefined)),
+        markAllRead: vi.fn().mockReturnValue(of(undefined)),
     };
 
-    function createComponent(notifications: NotificationItem[]): void {
-        dialogRef = { close: vi.fn() };
-        router = { navigateByUrl: vi.fn().mockResolvedValue(true) };
-        notificationService = {
-            notifications: signal(notifications),
-            notificationsLoading: signal(false),
-            ensureNotificationsLoaded: vi.fn(),
-            markAsRead: vi.fn().mockReturnValue(of(undefined)),
-            markAllRead: vi.fn().mockReturnValue(of(undefined)),
-        };
+    TestBed.configureTestingModule({
+        imports: [NotificationsDialogComponent, TranslateModule.forRoot()],
+        providers: [
+            { provide: FdUiDialogRef, useValue: dialogRef },
+            { provide: NotificationService, useValue: notificationService },
+            { provide: Router, useValue: router },
+        ],
+    });
 
-        TestBed.configureTestingModule({
-            imports: [NotificationsDialogComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: FdUiDialogRef, useValue: dialogRef },
-                { provide: NotificationService, useValue: notificationService },
-                { provide: Router, useValue: router },
-            ],
-        });
+    const fixture = TestBed.createComponent(NotificationsDialogComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
-        fixture = TestBed.createComponent(NotificationsDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }
+    return { component, dialogRef, fixture, notificationService, router };
+}
 
+describe('NotificationsDialogComponent invitations', () => {
     it('renders a highlighted dietologist invitation card', () => {
-        createComponent([
-            {
-                id: 'n1',
-                type: 'DietologistInvitationReceived',
-                title: 'Dietologist invitation',
-                body: 'Client invited you',
-                targetUrl: '/dietologist-invitations/inv-1',
-                referenceId: 'inv-1',
-                isRead: false,
-                createdAtUtc: '2026-04-15T00:00:00Z',
-            },
-        ]);
+        const { component, fixture } = setupNotificationsDialog([createInvitationNotification()]);
 
         const host = fixture.nativeElement as HTMLElement;
         const card = host.querySelector('.notifications-dialog__item--dietologist');
@@ -74,18 +66,7 @@ describe('NotificationsDialogComponent', () => {
     });
 
     it('marks unread invitation as read before navigation', () => {
-        createComponent([
-            {
-                id: 'n1',
-                type: 'DietologistInvitationReceived',
-                title: 'Dietologist invitation',
-                body: 'Client invited you',
-                targetUrl: '/dietologist-invitations/inv-1',
-                referenceId: 'inv-1',
-                isRead: false,
-                createdAtUtc: '2026-04-15T00:00:00Z',
-            },
-        ]);
+        const { dialogRef, fixture, notificationService, router } = setupNotificationsDialog([createInvitationNotification()]);
 
         const host = fixture.nativeElement as HTMLElement;
         const card = host.querySelector<HTMLButtonElement>('.notifications-dialog__item');
@@ -100,20 +81,11 @@ describe('NotificationsDialogComponent', () => {
         expect(router.navigateByUrl).toHaveBeenCalledWith('/dietologist-invitations/inv-1');
         expect(dialogRef.close).toHaveBeenCalled();
     });
+});
 
+describe('NotificationsDialogComponent password reminders', () => {
     it('renders a highlighted password setup reminder card', () => {
-        createComponent([
-            {
-                id: 'n2',
-                type: 'PasswordSetupSuggested',
-                title: 'Add a backup password',
-                body: 'Set a password to keep a backup sign-in method besides Google.',
-                targetUrl: '/profile?intent=set-password',
-                referenceId: 'password-setup:user-1',
-                isRead: false,
-                createdAtUtc: '2026-04-15T00:00:00Z',
-            },
-        ]);
+        const { component, fixture } = setupNotificationsDialog([createPasswordSetupNotification()]);
 
         const host = fixture.nativeElement as HTMLElement;
         const card = host.querySelector('.notifications-dialog__item--security');
@@ -123,3 +95,29 @@ describe('NotificationsDialogComponent', () => {
         expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('password');
     });
 });
+
+function createInvitationNotification(): NotificationItem {
+    return {
+        id: 'n1',
+        type: 'DietologistInvitationReceived',
+        title: 'Dietologist invitation',
+        body: 'Client invited you',
+        targetUrl: '/dietologist-invitations/inv-1',
+        referenceId: 'inv-1',
+        isRead: false,
+        createdAtUtc: '2026-04-15T00:00:00Z',
+    };
+}
+
+function createPasswordSetupNotification(): NotificationItem {
+    return {
+        id: 'n2',
+        type: 'PasswordSetupSuggested',
+        title: 'Add a backup password',
+        body: 'Set a password to keep a backup sign-in method besides Google.',
+        targetUrl: '/profile?intent=set-password',
+        referenceId: 'password-setup:user-1',
+        isRead: false,
+        createdAtUtc: '2026-04-15T00:00:00Z',
+    };
+}

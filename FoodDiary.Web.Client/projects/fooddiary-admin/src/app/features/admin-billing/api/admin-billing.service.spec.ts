@@ -10,53 +10,27 @@ const PAGE = 2;
 const LIMIT = 20;
 const TOTAL_PAGES = 4;
 const TOTAL_ITEMS = 61;
+const BASE_URL = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/billing`;
 
-describe('AdminBillingService', () => {
-    let service: AdminBillingService;
-    let httpMock: HttpTestingController;
+let service: AdminBillingService;
+let httpMock: HttpTestingController;
 
-    const baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/billing`;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [AdminBillingService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(AdminBillingService);
-        httpMock = TestBed.inject(HttpTestingController);
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [AdminBillingService, provideHttpClient(), provideHttpClientTesting()],
     });
 
-    afterEach(() => {
-        httpMock.verify();
-    });
+    service = TestBed.inject(AdminBillingService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
 
+afterEach(() => {
+    httpMock.verify();
+});
+
+describe('AdminBillingService payments', () => {
     it('should request filtered payments and map paged response', () => {
-        const response = {
-            data: [
-                {
-                    id: 'payment-1',
-                    userId: 'user-1',
-                    userEmail: 'buyer@example.com',
-                    provider: 'Paddle',
-                    externalPaymentId: 'pay_123',
-                    status: 'paid',
-                    kind: 'webhook',
-                    amount: 7.99,
-                    currency: 'USD',
-                    createdOnUtc: '2026-04-28T00:00:00Z',
-                },
-            ],
-            page: PAGE,
-            limit: LIMIT,
-            totalPages: TOTAL_PAGES,
-            totalItems: TOTAL_ITEMS,
-        } satisfies {
-            data: AdminBillingPayment[];
-            page: number;
-            limit: number;
-            totalPages: number;
-            totalItems: number;
-        };
+        const response = createPaymentsResponse();
 
         service
             .getPayments(PAGE, LIMIT, {
@@ -75,7 +49,7 @@ describe('AdminBillingService', () => {
 
         const req = httpMock.expectOne(
             r =>
-                r.url === `${baseUrl}/payments` &&
+                r.url === `${BASE_URL}/payments` &&
                 r.params.get('page') === String(PAGE) &&
                 r.params.get('limit') === String(LIMIT) &&
                 r.params.get('provider') === 'Paddle' &&
@@ -88,13 +62,15 @@ describe('AdminBillingService', () => {
         expect(req.request.method).toBe('GET');
         req.flush(response);
     });
+});
 
+describe('AdminBillingService subscriptions', () => {
     it('should omit empty filters for subscriptions', () => {
         service.getSubscriptions(1, LIMIT, { provider: '', status: null, search: undefined }).subscribe(result => {
             expect(result.items).toEqual([]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/subscriptions`);
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/subscriptions`);
         expect(req.request.params.get('provider')).toBeNull();
         expect(req.request.params.get('status')).toBeNull();
         expect(req.request.params.get('search')).toBeNull();
@@ -106,13 +82,15 @@ describe('AdminBillingService', () => {
             totalItems: 0,
         });
     });
+});
 
+describe('AdminBillingService webhook events', () => {
     it('should request webhook events endpoint', () => {
         service.getWebhookEvents(1, LIMIT, { provider: 'YooKassa' }).subscribe(result => {
             expect(result.items[0].eventId).toBe('evt_1');
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/webhook-events` && r.params.get('provider') === 'YooKassa');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/webhook-events` && r.params.get('provider') === 'YooKassa');
         expect(req.request.method).toBe('GET');
         req.flush({
             data: [
@@ -133,3 +111,32 @@ describe('AdminBillingService', () => {
         });
     });
 });
+
+function createPaymentsResponse(): {
+    data: AdminBillingPayment[];
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalItems: number;
+} {
+    return {
+        data: [
+            {
+                id: 'payment-1',
+                userId: 'user-1',
+                userEmail: 'buyer@example.com',
+                provider: 'Paddle',
+                externalPaymentId: 'pay_123',
+                status: 'paid',
+                kind: 'webhook',
+                amount: 7.99,
+                currency: 'USD',
+                createdOnUtc: '2026-04-28T00:00:00Z',
+            },
+        ],
+        page: PAGE,
+        limit: LIMIT,
+        totalPages: TOTAL_PAGES,
+        totalItems: TOTAL_ITEMS,
+    };
+}

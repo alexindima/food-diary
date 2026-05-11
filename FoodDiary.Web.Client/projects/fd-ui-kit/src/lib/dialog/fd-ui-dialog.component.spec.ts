@@ -21,106 +21,132 @@ import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 })
 class DialogWithCustomHeaderHostComponent {}
 
+interface DialogTestContext {
+    component: FdUiDialogComponent;
+    dialogRefSpy: { close: ReturnType<typeof vi.fn> };
+    fixture: ComponentFixture<FdUiDialogComponent>;
+}
+
+function createDialogComponent(data: FdUiDialogData): DialogTestContext {
+    const dialogRefSpy = { close: vi.fn() };
+
+    TestBed.configureTestingModule({
+        imports: [FdUiDialogComponent],
+        providers: [
+            { provide: FD_UI_DIALOG_DATA, useValue: data },
+            { provide: FdUiDialogRef, useValue: dialogRefSpy },
+        ],
+    });
+
+    const fixture = TestBed.createComponent(FdUiDialogComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    return { component, dialogRefSpy, fixture };
+}
+
+function createDialogCustomHeaderElement(): HTMLElement {
+    TestBed.configureTestingModule({
+        imports: [DialogWithCustomHeaderHostComponent],
+        providers: [],
+    });
+
+    const hostFixture = TestBed.createComponent(DialogWithCustomHeaderHostComponent);
+    hostFixture.detectChanges();
+
+    return hostFixture.nativeElement as HTMLElement;
+}
+
 describe('FdUiDialogComponent', () => {
-    let component: FdUiDialogComponent;
-    let fixture: ComponentFixture<FdUiDialogComponent>;
-    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
-
-    function createComponent(data: FdUiDialogData): void {
-        dialogRefSpy = { close: vi.fn() };
-
-        TestBed.configureTestingModule({
-            imports: [FdUiDialogComponent],
-            providers: [
-                { provide: FD_UI_DIALOG_DATA, useValue: data },
-                { provide: FdUiDialogRef, useValue: dialogRefSpy },
-            ],
-        });
-
-        fixture = TestBed.createComponent(FdUiDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }
-
     it('should create with provided data', () => {
-        createComponent({ title: 'Test Dialog' });
+        const { component } = createDialogComponent({ title: 'Test Dialog' });
+
         expect(component).toBeTruthy();
     });
 
     it('should display title', () => {
-        createComponent({ title: 'My Title' });
+        const { fixture } = createDialogComponent({ title: 'My Title' });
         const titleEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__title');
+
         expect(titleEl).toBeTruthy();
         expect(titleEl?.textContent).toContain('My Title');
     });
 
     it('should display subtitle when provided', () => {
-        createComponent({ title: 'Title', subtitle: 'My Subtitle' });
+        const { fixture } = createDialogComponent({ title: 'Title', subtitle: 'My Subtitle' });
         const subtitleEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__subtitle');
+
         expect(subtitleEl).toBeTruthy();
         expect(subtitleEl?.textContent).toContain('My Subtitle');
     });
 
     it('should not display subtitle when not provided', () => {
-        createComponent({ title: 'Title' });
+        const { fixture } = createDialogComponent({ title: 'Title' });
         const subtitleEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__subtitle');
+
         expect(subtitleEl).toBeNull();
     });
+});
 
+describe('FdUiDialogComponent dismiss button', () => {
     it('should show dismiss button when dismissible is true (default)', () => {
-        createComponent({ title: 'Title' });
+        const { fixture } = createDialogComponent({ title: 'Title' });
+
         const closeBtn = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__close-button');
         expect(closeBtn).toBeTruthy();
     });
 
     it('should hide dismiss button when dismissible is false', () => {
-        createComponent({ title: 'Title', dismissible: false });
+        const { fixture } = createDialogComponent({ title: 'Title', dismissible: false });
         const closeBtn = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__close-button');
+
         expect(closeBtn).toBeNull();
     });
 
     it('should call dialogRef.close() on dismiss', () => {
-        createComponent({ title: 'Title' });
+        const { dialogRefSpy, fixture } = createDialogComponent({ title: 'Title' });
         const closeBtn = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button');
+
         expect(closeBtn).toBeTruthy();
         closeBtn?.click();
         expect(dialogRefSpy.close).toHaveBeenCalled();
     });
+});
 
+describe('FdUiDialogComponent size classes', () => {
     it('should apply size class', () => {
-        createComponent({ title: 'Title', size: 'lg' });
+        const { fixture } = createDialogComponent({ title: 'Title', size: 'lg' });
+
         const dialogEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog');
         expect(dialogEl?.classList).toContain('fd-ui-dialog--size-lg');
     });
 
     it('should apply default size class md when size is not provided', () => {
-        createComponent({ title: 'Title' });
+        const { fixture } = createDialogComponent({ title: 'Title' });
         const dialogEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog');
+
         expect(dialogEl?.classList).toContain('fd-ui-dialog--size-md');
     });
 
     it('should apply sm size class', () => {
-        createComponent({ title: 'Title', size: 'sm' });
+        const { fixture } = createDialogComponent({ title: 'Title', size: 'sm' });
         const dialogEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog');
+
         expect(dialogEl?.classList).toContain('fd-ui-dialog--size-sm');
     });
 
     it('should apply xl size class', () => {
-        createComponent({ title: 'Title', size: 'xl' });
+        const { fixture } = createDialogComponent({ title: 'Title', size: 'xl' });
         const dialogEl = (fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog');
+
         expect(dialogEl?.classList).toContain('fd-ui-dialog--size-xl');
     });
+});
 
+describe('FdUiDialogComponent custom header', () => {
     it('should render custom header instead of built-in title block', () => {
-        TestBed.configureTestingModule({
-            imports: [DialogWithCustomHeaderHostComponent],
-            providers: [],
-        });
+        const element = createDialogCustomHeaderElement();
 
-        const hostFixture = TestBed.createComponent(DialogWithCustomHeaderHostComponent);
-        hostFixture.detectChanges();
-
-        const element = hostFixture.nativeElement as HTMLElement;
         expect(element.querySelector('.custom-header')?.textContent).toContain('Custom Header Content');
         expect(element.querySelector('.fd-ui-dialog__title')).toBeNull();
         expect(element.querySelector('.fd-ui-dialog__header--custom')).toBeTruthy();
