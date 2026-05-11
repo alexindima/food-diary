@@ -12,6 +12,11 @@ import { ProductService } from '../../api/product.service';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../models/product.data';
 import { ProductDetailComponent } from './product-detail.component';
 
+const PRODUCT_CALORIES = 165;
+const PRODUCT_PROTEINS = 31;
+const PRODUCT_FATS = 3.6;
+const USED_PRODUCT_USAGE_COUNT = 5;
+
 const mockProduct: Product = {
     id: '1',
     name: 'Test Product',
@@ -19,9 +24,9 @@ const mockProduct: Product = {
     baseUnit: MeasurementUnit.G,
     baseAmount: 100,
     defaultPortionAmount: 100,
-    caloriesPerBase: 165,
-    proteinsPerBase: 31,
-    fatsPerBase: 3.6,
+    caloriesPerBase: PRODUCT_CALORIES,
+    proteinsPerBase: PRODUCT_PROTEINS,
+    fatsPerBase: PRODUCT_FATS,
     carbsPerBase: 0,
     fiberPerBase: 0,
     alcoholPerBase: 0,
@@ -77,9 +82,9 @@ describe('ProductDetailComponent', () => {
     });
 
     it('should display product nutrition', () => {
-        expect(component.calories).toBe(165);
-        expect(component.nutrientChartData.proteins).toBe(31);
-        expect(component.nutrientChartData.fats).toBe(3.6);
+        expect(component.calories).toBe(PRODUCT_CALORIES);
+        expect(component.nutrientChartData.proteins).toBe(PRODUCT_PROTEINS);
+        expect(component.nutrientChartData.fats).toBe(PRODUCT_FATS);
         expect(component.nutrientChartData.carbs).toBe(0);
     });
 
@@ -145,7 +150,7 @@ describe('ProductDetailComponent', () => {
     });
 
     it('should disable edit and delete when product has usage', async () => {
-        const usedProduct: Product = { ...mockProduct, usageCount: 5 };
+        const usedProduct: Product = { ...mockProduct, usageCount: USED_PRODUCT_USAGE_COUNT };
 
         await TestBed.resetTestingModule()
             .configureTestingModule({
@@ -169,7 +174,7 @@ describe('ProductDetailComponent', () => {
     });
 
     it('should not emit edit when edit is disabled', async () => {
-        const usedProduct: Product = { ...mockProduct, usageCount: 5 };
+        const usedProduct: Product = { ...mockProduct, usageCount: USED_PRODUCT_USAGE_COUNT };
 
         await TestBed.resetTestingModule()
             .configureTestingModule({
@@ -195,7 +200,7 @@ describe('ProductDetailComponent', () => {
     });
 
     it('should not emit delete when delete is disabled', async () => {
-        const usedProduct: Product = { ...mockProduct, usageCount: 5 };
+        const usedProduct: Product = { ...mockProduct, usageCount: USED_PRODUCT_USAGE_COUNT };
 
         await TestBed.resetTestingModule()
             .configureTestingModule({
@@ -228,9 +233,9 @@ describe('ProductDetailComponent', () => {
     });
 
     it('should build macro blocks with correct values', () => {
-        expect(component.macroBlocks.length).toBe(5);
-        expect(component.macroBlocks[0].value).toBe(31); // proteins
-        expect(component.macroBlocks[1].value).toBe(3.6); // fats
+        expect(component.macroBlocks.length).toBe(USED_PRODUCT_USAGE_COUNT);
+        expect(component.macroBlocks[0].value).toBe(PRODUCT_PROTEINS); // proteins
+        expect(component.macroBlocks[1].value).toBe(PRODUCT_FATS); // fats
         expect(component.macroBlocks[2].value).toBe(0); // carbs
     });
 

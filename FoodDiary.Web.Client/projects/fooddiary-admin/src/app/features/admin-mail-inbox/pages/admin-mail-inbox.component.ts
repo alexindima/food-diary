@@ -17,6 +17,9 @@ interface AdminMailInboxMessageDetailsViewModel extends AdminMailInboxMessageDet
     toRecipientsLabel: string;
 }
 
+const DEFAULT_MAIL_INBOX_LIMIT = 50;
+const MAX_MAIL_INBOX_LIMIT = 200;
+
 @Component({
     selector: 'fd-admin-mail-inbox',
     standalone: true,
@@ -33,7 +36,7 @@ export class AdminMailInboxComponent {
     public readonly selectedMessage = signal<AdminMailInboxMessageDetails | null>(null);
     public readonly isLoading = signal(false);
     public readonly isDetailsLoading = signal(false);
-    public readonly limit = signal(50);
+    public readonly limit = signal(DEFAULT_MAIL_INBOX_LIMIT);
     public readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
     public readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
     public readonly filteredMessages = computed<AdminMailInboxMessageSummaryViewModel[]>(() => {
@@ -47,7 +50,7 @@ export class AdminMailInboxComponent {
     });
     public readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
         const message = this.selectedMessage();
-        if (!message) {
+        if (message === null) {
             return null;
         }
 
@@ -59,7 +62,7 @@ export class AdminMailInboxComponent {
     });
     public readonly selectedBody = computed(() => {
         const message = this.selectedMessage();
-        if (!message) {
+        if (message === null) {
             return '';
         }
 
@@ -127,7 +130,7 @@ export class AdminMailInboxComponent {
             return;
         }
 
-        this.limit.set(Math.max(1, Math.min(parsed, 200)));
+        this.limit.set(Math.max(1, Math.min(parsed, MAX_MAIL_INBOX_LIMIT)));
     }
 
     public setBodyMode(mode: 'text' | 'html' | 'raw'): void {

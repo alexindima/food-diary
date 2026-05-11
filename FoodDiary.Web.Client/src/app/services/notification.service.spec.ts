@@ -8,6 +8,11 @@ import { SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens'
 import { AuthService } from './auth.service';
 import { NotificationService } from './notification.service';
 
+const UNREAD_COUNT_INITIAL = 4;
+const UNREAD_COUNT_CONCURRENT = 7;
+const UNREAD_COUNT_LOADED = 3;
+const UNREAD_COUNT_FORCED = 5;
+
 describe('NotificationService', () => {
     let service: NotificationService;
     let httpMock: HttpTestingController;
@@ -67,9 +72,9 @@ describe('NotificationService', () => {
         const req = httpMock.expectOne(`${baseUrl}/unread-count`);
         expect(req.request.method).toBe('GET');
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
-        req.flush({ count: 4 });
+        req.flush({ count: UNREAD_COUNT_INITIAL });
 
-        expect(service.unreadCount()).toBe(4);
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_INITIAL);
     });
 
     it('should coalesce concurrent unread count requests', () => {
@@ -80,35 +85,35 @@ describe('NotificationService', () => {
         const requests = httpMock.match(`${baseUrl}/unread-count`);
         expect(requests).toHaveLength(1);
 
-        requests[0].flush({ count: 7 });
+        requests[0].flush({ count: UNREAD_COUNT_CONCURRENT });
 
-        expect(service.unreadCount()).toBe(7);
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_CONCURRENT);
     });
 
     it('should not refetch unread count after it has been loaded', () => {
         service.fetchUnreadCount();
 
         const req = httpMock.expectOne(`${baseUrl}/unread-count`);
-        req.flush({ count: 3 });
+        req.flush({ count: UNREAD_COUNT_LOADED });
 
         service.fetchUnreadCount();
 
         httpMock.expectNone(`${baseUrl}/unread-count`);
-        expect(service.unreadCount()).toBe(3);
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_LOADED);
     });
 
     it('should refetch unread count when forced', () => {
         service.fetchUnreadCount();
 
         const firstReq = httpMock.expectOne(`${baseUrl}/unread-count`);
-        firstReq.flush({ count: 3 });
+        firstReq.flush({ count: UNREAD_COUNT_LOADED });
 
         service.fetchUnreadCount({ force: true });
 
         const secondReq = httpMock.expectOne(`${baseUrl}/unread-count`);
-        secondReq.flush({ count: 5 });
+        secondReq.flush({ count: UNREAD_COUNT_FORCED });
 
-        expect(service.unreadCount()).toBe(5);
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_FORCED);
     });
 
     it('should reset unread count when unauthenticated', () => {

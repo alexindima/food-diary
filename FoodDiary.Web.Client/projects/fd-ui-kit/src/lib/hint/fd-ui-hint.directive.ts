@@ -8,6 +8,10 @@ import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay.component';
 type HintContent = string | TemplateRef<unknown> | null;
 type HintPosition = 'top' | 'bottom' | 'left' | 'right';
 
+const DEFAULT_HINT_SHOW_DELAY_MS = 500;
+const OVERLAY_VIEWPORT_MARGIN = 8;
+const OVERLAY_POSITION_OFFSET = 6;
+
 let nextHintId = 0;
 
 @Directive({
@@ -26,7 +30,7 @@ export class FdUiHintDirective {
     public readonly fdUiHint = input<HintContent>(null);
     public readonly fdUiHintHtml = input(false);
     public readonly fdUiHintContext = input<Record<string, unknown> | null>(null);
-    public readonly fdUiHintShowDelay = input(500);
+    public readonly fdUiHintShowDelay = input(DEFAULT_HINT_SHOW_DELAY_MS);
     public readonly fdUiHintFocusShowDelay = input(0);
     public readonly fdUiHintHideDelay = input(0);
     public readonly fdUiHintPosition = input<HintPosition>('bottom');
@@ -117,7 +121,7 @@ export class FdUiHintDirective {
 
     private show(): void {
         const content = this.fdUiHint();
-        if (!content || this.fdUiHintDisabled()) {
+        if (content === null || !this.hasContent() || this.fdUiHintDisabled()) {
             return;
         }
 
@@ -150,11 +154,12 @@ export class FdUiHintDirective {
     }
 
     private hide(): void {
-        if (!this.overlayRef?.hasAttached()) {
+        const overlayRef = this.overlayRef;
+        if (overlayRef?.hasAttached() !== true) {
             return;
         }
 
-        this.overlayRef.detach();
+        overlayRef.detach();
         this.syncAriaDescribedBy(false);
     }
 
@@ -163,7 +168,7 @@ export class FdUiHintDirective {
             .position()
             .flexibleConnectedTo(this.elementRef)
             .withFlexibleDimensions(false)
-            .withViewportMargin(8)
+            .withViewportMargin(OVERLAY_VIEWPORT_MARGIN)
             .withPositions(this.getPositions());
 
         return this.overlay.create({
@@ -174,7 +179,7 @@ export class FdUiHintDirective {
     }
 
     private getPositions(): ConnectedPosition[] {
-        const offset = 6;
+        const offset = OVERLAY_POSITION_OFFSET;
         const top: ConnectedPosition[] = [
             {
                 originX: 'center',
@@ -258,7 +263,11 @@ export class FdUiHintDirective {
             return true;
         }
 
-        return typeof content === 'string' ? content.trim().length > 0 : Boolean(content);
+        if (content === null) {
+            return false;
+        }
+
+        return content.trim().length > 0;
     }
 
     private syncAriaDescribedBy(isVisible: boolean): void {
@@ -267,7 +276,7 @@ export class FdUiHintDirective {
             (this.initialAriaDescribedBy ?? '')
                 .split(/\s+/)
                 .map((token: string) => token.trim())
-                .filter(Boolean),
+                .filter((token: string) => token.length > 0),
         );
 
         if (isVisible) {
@@ -277,7 +286,7 @@ export class FdUiHintDirective {
         }
 
         const value = Array.from(tokens).join(' ');
-        if (value) {
+        if (value.length > 0) {
             host.setAttribute('aria-describedby', value);
             return;
         }

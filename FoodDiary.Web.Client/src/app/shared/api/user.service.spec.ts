@@ -8,6 +8,14 @@ import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.toke
 import { type ChangePasswordRequest, UpdateUserDto, type User } from '../models/user.data';
 import { UserService } from './user.service';
 
+const USER_CALORIES = 2000;
+const FASTING_CHECK_IN_REMINDER_HOURS = 12;
+const FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
+const DESIRED_WEIGHT = 75;
+const UPDATED_DESIRED_WEIGHT = 70;
+const HTTP_BAD_REQUEST = 400;
+const HTTP_INTERNAL_SERVER_ERROR = 500;
+
 describe('UserService', () => {
     let service: UserService;
     let httpMock: HttpTestingController;
@@ -19,12 +27,12 @@ describe('UserService', () => {
         email: 'test@example.com',
         hasPassword: true,
         username: 'test-user',
-        calories: 2000,
+        calories: USER_CALORIES,
         pushNotificationsEnabled: true,
         fastingPushNotificationsEnabled: false,
         socialPushNotificationsEnabled: true,
-        fastingCheckInReminderHours: 12,
-        fastingCheckInFollowUpReminderHours: 20,
+        fastingCheckInReminderHours: FASTING_CHECK_IN_REMINDER_HOURS,
+        fastingCheckInFollowUpReminderHours: FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
         isActive: true,
         isEmailConfirmed: true,
     };
@@ -60,7 +68,7 @@ describe('UserService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/info`);
-        req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
 
         expect(service.user()).toBeNull();
     });
@@ -125,7 +133,7 @@ describe('UserService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/password`);
-        req.flush('Server error', { status: 400, statusText: 'Bad Request' });
+        req.flush('Server error', { status: HTTP_BAD_REQUEST, statusText: 'Bad Request' });
     });
 
     it('should set password and update hasPassword in signal', () => {
@@ -166,7 +174,7 @@ describe('UserService', () => {
 
     it('should get user calories', () => {
         service.getUserCalories().subscribe(result => {
-            expect(result).toBe(2000);
+            expect(result).toBe(USER_CALORIES);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/info`);
@@ -176,22 +184,22 @@ describe('UserService', () => {
 
     it('should get desired weight', () => {
         service.getDesiredWeight().subscribe(result => {
-            expect(result).toBe(75);
+            expect(result).toBe(DESIRED_WEIGHT);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/desired-weight`);
         expect(req.request.method).toBe('GET');
-        req.flush({ desiredWeight: 75 });
+        req.flush({ desiredWeight: DESIRED_WEIGHT });
     });
 
     it('should update desired weight', () => {
-        service.updateDesiredWeight(70).subscribe(result => {
-            expect(result).toBe(70);
+        service.updateDesiredWeight(UPDATED_DESIRED_WEIGHT).subscribe(result => {
+            expect(result).toBe(UPDATED_DESIRED_WEIGHT);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/desired-weight`);
         expect(req.request.method).toBe('PUT');
-        expect(req.request.body).toEqual({ desiredWeight: 70 });
-        req.flush({ desiredWeight: 70 });
+        expect(req.request.body).toEqual({ desiredWeight: UPDATED_DESIRED_WEIGHT });
+        req.flush({ desiredWeight: UPDATED_DESIRED_WEIGHT });
     });
 });

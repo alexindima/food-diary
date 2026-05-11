@@ -90,7 +90,7 @@ export class AdminUsersService {
     public getUsers(page: number, limit: number, search?: string | null, includeDeleted = false): Observable<PagedResponse<AdminUser>> {
         let params = new HttpParams().set('page', page).set('limit', limit).set('includeDeleted', includeDeleted);
 
-        if (search) {
+        if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
         }
 
@@ -120,7 +120,7 @@ export class AdminUsersService {
     ): Observable<PagedResponse<AdminImpersonationSession>> {
         let params = new HttpParams().set('page', page).set('limit', limit);
 
-        if (search) {
+        if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
         }
 
@@ -138,7 +138,7 @@ export class AdminUsersService {
     public getLoginEvents(page: number, limit: number, search?: string | null): Observable<PagedResponse<AdminUserLoginEvent>> {
         let params = new HttpParams().set('page', page).set('limit', limit);
 
-        if (search) {
+        if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
         }
 

@@ -14,6 +14,21 @@ import {
 } from '../models/product.data';
 import { ProductService } from './product.service';
 
+const BASE_AMOUNT_GRAMS = 100;
+const CHICKEN_CALORIES = 165;
+const CHICKEN_PROTEINS = 31;
+const CHICKEN_FATS = 3.6;
+const QUALITY_SCORE_GREEN = 80;
+const DEFAULT_PAGE_LIMIT = 10;
+const FILTERED_PAGE_LIMIT = 20;
+const RECENT_PRODUCTS_LIMIT = 5;
+const NEW_PRODUCT_CALORIES = 100;
+const NEW_PRODUCT_PROTEINS = 10;
+const NEW_PRODUCT_FATS = 2;
+const NEW_PRODUCT_CARBS = 12;
+const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_NOT_FOUND = 404;
+
 describe('ProductService', () => {
     let service: ProductService;
     let httpMock: HttpTestingController;
@@ -31,11 +46,11 @@ describe('ProductService', () => {
         imageUrl: null,
         imageAssetId: null,
         baseUnit: MeasurementUnit.G,
-        baseAmount: 100,
-        defaultPortionAmount: 100,
-        caloriesPerBase: 165,
-        proteinsPerBase: 31,
-        fatsPerBase: 3.6,
+        baseAmount: BASE_AMOUNT_GRAMS,
+        defaultPortionAmount: BASE_AMOUNT_GRAMS,
+        caloriesPerBase: CHICKEN_CALORIES,
+        proteinsPerBase: CHICKEN_PROTEINS,
+        fatsPerBase: CHICKEN_FATS,
         carbsPerBase: 0,
         fiberPerBase: 0,
         alcoholPerBase: 0,
@@ -43,14 +58,14 @@ describe('ProductService', () => {
         visibility: ProductVisibility.Private,
         createdAt: new Date('2026-01-01'),
         isOwnedByCurrentUser: true,
-        qualityScore: 80,
+        qualityScore: QUALITY_SCORE_GREEN,
         qualityGrade: 'green',
     };
 
     const mockPage: PageOf<Product> = {
         data: [mockProduct],
         page: 1,
-        limit: 10,
+        limit: DEFAULT_PAGE_LIMIT,
         totalPages: 1,
         totalItems: 1,
     };
@@ -72,13 +87,13 @@ describe('ProductService', () => {
     });
 
     it('should query products with pagination params', () => {
-        service.query(1, 10).subscribe(result => {
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
             expect(result).toEqual(mockPage);
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
-        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(mockPage);
     });
@@ -86,7 +101,7 @@ describe('ProductService', () => {
     it('should include filters in query params', () => {
         const filters = { search: 'chicken', productTypes: [ProductType.Meat, ProductType.Dairy] };
 
-        service.query(1, 20, filters, false).subscribe(result => {
+        service.query(1, FILTERED_PAGE_LIMIT, filters, false).subscribe(result => {
             expect(result.data.length).toBe(1);
         });
 
@@ -100,7 +115,7 @@ describe('ProductService', () => {
     it('should not include empty search filter', () => {
         const filters = { search: '  ' };
 
-        service.query(1, 10, filters).subscribe();
+        service.query(1, DEFAULT_PAGE_LIMIT, filters).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
         expect(req.request.params.has('search')).toBe(false);
@@ -122,12 +137,12 @@ describe('ProductService', () => {
             name: 'New Product',
             productType: ProductType.Other,
             baseUnit: MeasurementUnit.G,
-            baseAmount: 100,
-            defaultPortionAmount: 100,
-            caloriesPerBase: 100,
-            proteinsPerBase: 10,
-            fatsPerBase: 2,
-            carbsPerBase: 12,
+            baseAmount: BASE_AMOUNT_GRAMS,
+            defaultPortionAmount: BASE_AMOUNT_GRAMS,
+            caloriesPerBase: NEW_PRODUCT_CALORIES,
+            proteinsPerBase: NEW_PRODUCT_PROTEINS,
+            fatsPerBase: NEW_PRODUCT_FATS,
+            carbsPerBase: NEW_PRODUCT_CARBS,
             fiberPerBase: 1,
             alcoholPerBase: 0,
             visibility: ProductVisibility.Private,
@@ -183,27 +198,27 @@ describe('ProductService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
-        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(recentProducts);
     });
 
     it('should get recent products with custom params', () => {
-        service.getRecent(5, false).subscribe();
+        service.getRecent(RECENT_PRODUCTS_LIMIT, false).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
-        expect(req.request.params.get('limit')).toBe('5');
+        expect(req.request.params.get('limit')).toBe(String(RECENT_PRODUCTS_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('false');
         req.flush([]);
     });
 
     it('should return empty PageOf on query failure', () => {
-        service.query(1, 10).subscribe(result => {
-            expect(result).toEqual({ data: [], page: 1, limit: 10, totalPages: 0, totalItems: 0 });
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
+            expect(result).toEqual({ data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 });
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
     });
 
     it('should return null on getById failure', () => {
@@ -212,7 +227,7 @@ describe('ProductService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/p1`);
-        req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
     });
 
     it('should return empty array on getRecent failure', () => {
@@ -221,6 +236,6 @@ describe('ProductService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
     });
 });

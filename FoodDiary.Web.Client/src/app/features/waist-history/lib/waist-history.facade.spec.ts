@@ -8,6 +8,10 @@ import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import { WaistHistoryFacade } from './waist-history.facade';
 
+const TARGET_WAIST = 78;
+const UPDATED_TARGET_WAIST = 77;
+const EXPECTED_WHTR = 0.46;
+
 describe('WaistHistoryFacade', () => {
     let facade: WaistHistoryFacade;
     let waistEntriesService: {
@@ -39,9 +43,9 @@ describe('WaistHistoryFacade', () => {
             remove: vi.fn().mockReturnValue(of(void 0)),
         };
         userService = {
-            getDesiredWaist: vi.fn().mockReturnValue(of(78)),
+            getDesiredWaist: vi.fn().mockReturnValue(of(TARGET_WAIST)),
             getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
-            updateDesiredWaist: vi.fn().mockReturnValue(of(77)),
+            updateDesiredWaist: vi.fn().mockReturnValue(of(UPDATED_TARGET_WAIST)),
         };
 
         TestBed.configureTestingModule({
@@ -72,8 +76,8 @@ describe('WaistHistoryFacade', () => {
         expect(userService.getInfo).toHaveBeenCalledTimes(1);
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
-        expect(facade.desiredWaist()).toBe(78);
-        expect(facade.whtrValue()).toBe(0.46);
+        expect(facade.desiredWaist()).toBe(TARGET_WAIST);
+        expect(facade.whtrValue()).toBe(EXPECTED_WHTR);
     });
 
     it('submits a new entry and reloads the list', () => {
@@ -111,12 +115,12 @@ describe('WaistHistoryFacade', () => {
     });
 
     it('saves desired waist after validation', () => {
-        facade.desiredWaistControl.setValue('77');
+        facade.desiredWaistControl.setValue(`${UPDATED_TARGET_WAIST}`);
 
         facade.saveDesiredWaist();
 
-        expect(userService.updateDesiredWaist).toHaveBeenCalledWith(77);
-        expect(facade.desiredWaist()).toBe(77);
-        expect(facade.desiredWaistControl.value).toBe('77');
+        expect(userService.updateDesiredWaist).toHaveBeenCalledWith(UPDATED_TARGET_WAIST);
+        expect(facade.desiredWaist()).toBe(UPDATED_TARGET_WAIST);
+        expect(facade.desiredWaistControl.value).toBe(`${UPDATED_TARGET_WAIST}`);
     });
 });

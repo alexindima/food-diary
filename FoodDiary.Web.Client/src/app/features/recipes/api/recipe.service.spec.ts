@@ -7,6 +7,20 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../models/recipe.data';
 import { RecipeService } from './recipe.service';
 
+const RECIPE_SERVINGS = 2;
+const RECIPE_TOTAL_CALORIES = 350;
+const RECIPE_TOTAL_PROTEINS = 40;
+const RECIPE_TOTAL_FATS = 12;
+const RECIPE_TOTAL_CARBS = 15;
+const RECIPE_TOTAL_FIBER = 4;
+const DEFAULT_PAGE_LIMIT = 10;
+const RECENT_RECIPES_LIMIT = 5;
+const NEW_RECIPE_PREP_MINUTES = 10;
+const NEW_RECIPE_COOK_MINUTES = 20;
+const NEW_RECIPE_SERVINGS = 4;
+const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_NOT_FOUND = 404;
+
 describe('RecipeService', () => {
     let service: RecipeService;
     let httpMock: HttpTestingController;
@@ -22,16 +36,16 @@ describe('RecipeService', () => {
         imageAssetId: null,
         prepTime: null,
         cookTime: null,
-        servings: 2,
+        servings: RECIPE_SERVINGS,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
         createdAt: '2026-01-01',
         isOwnedByCurrentUser: true,
-        totalCalories: 350,
-        totalProteins: 40,
-        totalFats: 12,
-        totalCarbs: 15,
-        totalFiber: 4,
+        totalCalories: RECIPE_TOTAL_CALORIES,
+        totalProteins: RECIPE_TOTAL_PROTEINS,
+        totalFats: RECIPE_TOTAL_FATS,
+        totalCarbs: RECIPE_TOTAL_CARBS,
+        totalFiber: RECIPE_TOTAL_FIBER,
         totalAlcohol: 0,
         isNutritionAutoCalculated: true,
         steps: [],
@@ -40,7 +54,7 @@ describe('RecipeService', () => {
     const mockPage: PageOf<Recipe> = {
         data: [mockRecipe],
         page: 1,
-        limit: 10,
+        limit: DEFAULT_PAGE_LIMIT,
         totalPages: 1,
         totalItems: 1,
     };
@@ -62,13 +76,13 @@ describe('RecipeService', () => {
     });
 
     it('should query recipes with pagination params', () => {
-        service.query(1, 10).subscribe(result => {
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
             expect(result).toEqual(mockPage);
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
-        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(mockPage);
     });
@@ -76,7 +90,7 @@ describe('RecipeService', () => {
     it('should include search filter in query params', () => {
         const filters = { search: 'salad' };
 
-        service.query(1, 10, filters, false).subscribe();
+        service.query(1, DEFAULT_PAGE_LIMIT, filters, false).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
         expect(req.request.params.get('search')).toBe('salad');
@@ -107,9 +121,9 @@ describe('RecipeService', () => {
     it('should create recipe', () => {
         const createData: RecipeDto = {
             name: 'New Recipe',
-            prepTime: 10,
-            cookTime: 20,
-            servings: 4,
+            prepTime: NEW_RECIPE_PREP_MINUTES,
+            cookTime: NEW_RECIPE_COOK_MINUTES,
+            servings: NEW_RECIPE_SERVINGS,
             visibility: RecipeVisibility.Private,
             calculateNutritionAutomatically: true,
             steps: [],
@@ -128,9 +142,9 @@ describe('RecipeService', () => {
     it('should update recipe via PATCH', () => {
         const updateData: RecipeDto = {
             name: 'Updated Recipe',
-            prepTime: 10,
-            cookTime: 20,
-            servings: 4,
+            prepTime: NEW_RECIPE_PREP_MINUTES,
+            cookTime: NEW_RECIPE_COOK_MINUTES,
+            servings: NEW_RECIPE_SERVINGS,
             visibility: RecipeVisibility.Private,
             calculateNutritionAutomatically: true,
             steps: [],
@@ -173,27 +187,27 @@ describe('RecipeService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
-        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(recentRecipes);
     });
 
     it('should get recent recipes with custom params', () => {
-        service.getRecent(5, false).subscribe();
+        service.getRecent(RECENT_RECIPES_LIMIT, false).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
-        expect(req.request.params.get('limit')).toBe('5');
+        expect(req.request.params.get('limit')).toBe(String(RECENT_RECIPES_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('false');
         req.flush([]);
     });
 
     it('should return empty PageOf on query failure', () => {
-        service.query(1, 10).subscribe(result => {
-            expect(result).toEqual({ data: [], page: 1, limit: 10, totalPages: 0, totalItems: 0 });
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
+            expect(result).toEqual({ data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 });
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
     });
 
     it('should return null on getById failure', () => {
@@ -202,7 +216,7 @@ describe('RecipeService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/r1` && r.method === 'GET');
-        req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
     });
 
     it('should return empty array on getRecent failure', () => {
@@ -211,6 +225,6 @@ describe('RecipeService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
     });
 });

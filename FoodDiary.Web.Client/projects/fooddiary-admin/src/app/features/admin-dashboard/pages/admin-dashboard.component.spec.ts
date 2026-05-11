@@ -7,6 +7,25 @@ import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminTelemetryService } from '../api/admin-telemetry.service';
 import { AdminDashboardComponent } from './admin-dashboard.component';
 
+const TOTAL_USERS = 10;
+const ACTIVE_USERS = 8;
+const PREMIUM_USERS = 3;
+const DELETED_USERS = 2;
+const TOTAL_TOKENS = 1000;
+const INPUT_TOKENS = 600;
+const OUTPUT_TOKENS = 400;
+const FASTING_WINDOW_HOURS = 24;
+const STARTED_SESSIONS = 12;
+const COMPLETED_SESSIONS = 8;
+const SAVED_CHECK_INS = 5;
+const REMINDER_PRESET_SELECTIONS = 6;
+const REMINDER_TIMING_SAVES = 3;
+const PRESET_REMINDER_TIMING_SAVES = 2;
+const MANUAL_REMINDER_TIMING_SAVES = 1;
+const COMPLETION_RATE_PERCENT = 66.7;
+const CHECK_IN_RATE_PERCENT = 41.7;
+const AVERAGE_COMPLETED_DURATION_HOURS = 18.2;
+
 describe('AdminDashboardComponent', () => {
     let component: AdminDashboardComponent;
     let fixture: ComponentFixture<AdminDashboardComponent>;
@@ -21,18 +40,18 @@ describe('AdminDashboardComponent', () => {
 
         dashboardService.getSummary.mockReturnValue(
             of({
-                totalUsers: 10,
-                activeUsers: 8,
-                premiumUsers: 3,
-                deletedUsers: 2,
+                totalUsers: TOTAL_USERS,
+                activeUsers: ACTIVE_USERS,
+                premiumUsers: PREMIUM_USERS,
+                deletedUsers: DELETED_USERS,
                 recentUsers: [],
             }),
         );
         aiUsageService.getSummary.mockReturnValue(
             of({
-                totalTokens: 1000,
-                inputTokens: 600,
-                outputTokens: 400,
+                totalTokens: TOTAL_TOKENS,
+                inputTokens: INPUT_TOKENS,
+                outputTokens: OUTPUT_TOKENS,
                 byDay: [],
                 byOperation: [],
                 byModel: [],
@@ -41,18 +60,18 @@ describe('AdminDashboardComponent', () => {
         );
         telemetryService.getFastingSummary.mockReturnValue(
             of({
-                windowHours: 24,
+                windowHours: FASTING_WINDOW_HOURS,
                 generatedAtUtc: '2026-04-12T10:00:00Z',
-                startedSessions: 12,
-                completedSessions: 8,
-                savedCheckIns: 5,
-                reminderPresetSelections: 6,
-                reminderTimingSaves: 3,
-                presetReminderTimingSaves: 2,
-                manualReminderTimingSaves: 1,
-                completionRatePercent: 66.7,
-                checkInRatePercent: 41.7,
-                averageCompletedDurationHours: 18.2,
+                startedSessions: STARTED_SESSIONS,
+                completedSessions: COMPLETED_SESSIONS,
+                savedCheckIns: SAVED_CHECK_INS,
+                reminderPresetSelections: REMINDER_PRESET_SELECTIONS,
+                reminderTimingSaves: REMINDER_TIMING_SAVES,
+                presetReminderTimingSaves: PRESET_REMINDER_TIMING_SAVES,
+                manualReminderTimingSaves: MANUAL_REMINDER_TIMING_SAVES,
+                completionRatePercent: COMPLETION_RATE_PERCENT,
+                checkInRatePercent: CHECK_IN_RATE_PERCENT,
+                averageCompletedDurationHours: AVERAGE_COMPLETED_DURATION_HOURS,
                 lastCheckInAtUtc: '2026-04-12T09:30:00Z',
                 lastEventAtUtc: '2026-04-12T09:40:00Z',
                 topPresets: [],
@@ -81,9 +100,9 @@ describe('AdminDashboardComponent', () => {
         expect(dashboardService.getSummary).toHaveBeenCalledTimes(1);
         expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
         expect(telemetryService.getFastingSummary).toHaveBeenCalledTimes(1);
-        expect(component.summary()?.totalUsers).toBe(10);
-        expect(component.aiUsage()?.totalTokens).toBe(1000);
-        expect(component.fastingTelemetry()?.startedSessions).toBe(12);
+        expect(component.summary()?.totalUsers).toBe(TOTAL_USERS);
+        expect(component.aiUsage()?.totalTokens).toBe(TOTAL_TOKENS);
+        expect(component.fastingTelemetry()?.startedSessions).toBe(STARTED_SESSIONS);
         expect(component.isLoading()).toBe(false);
     });
 

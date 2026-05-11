@@ -8,6 +8,9 @@ import { AdminLessonsService } from '../api/admin-lessons.service';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog.component';
 import type { AdminLesson, AdminLessonCreateRequest, AdminLessonsImportRequest } from '../models/admin-lesson.data';
 
+const DEFAULT_ESTIMATED_READ_MINUTES = 5;
+const EXPORT_DATE_LENGTH = 10;
+
 @Component({
     selector: 'fd-admin-lessons',
     standalone: true,
@@ -56,7 +59,7 @@ export class AdminLessonsComponent {
             locale: 'ru',
             category: 'NutritionBasics',
             difficulty: 'Beginner',
-            estimatedReadMinutes: 5,
+            estimatedReadMinutes: DEFAULT_ESTIMATED_READ_MINUTES,
             sortOrder: 0,
             createdOnUtc: new Date().toISOString(),
             modifiedOnUtc: null,
@@ -71,7 +74,7 @@ export class AdminLessonsComponent {
             })
             .afterClosed()
             .subscribe(updated => {
-                if (updated) {
+                if (updated === true) {
                     this.loadLessons();
                 }
             });
@@ -86,7 +89,7 @@ export class AdminLessonsComponent {
             })
             .afterClosed()
             .subscribe(updated => {
-                if (updated) {
+                if (updated === true) {
                     this.loadLessons();
                 }
             });
@@ -112,7 +115,7 @@ export class AdminLessonsComponent {
             version: 1,
             lessons: this.lessons().map(lesson => this.toImportLesson(lesson)),
         };
-        const fileName = `fooddiary-lessons-${new Date().toISOString().slice(0, 10)}.json`;
+        const fileName = `fooddiary-lessons-${new Date().toISOString().slice(0, EXPORT_DATE_LENGTH)}.json`;
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement('a');
@@ -125,7 +128,7 @@ export class AdminLessonsComponent {
     public importLessons(event: Event): void {
         const input = event.target instanceof HTMLInputElement ? event.target : null;
         const file = input?.files?.[0];
-        if (!file || this.isImporting()) {
+        if (input === null || file === undefined || this.isImporting()) {
             return;
         }
 

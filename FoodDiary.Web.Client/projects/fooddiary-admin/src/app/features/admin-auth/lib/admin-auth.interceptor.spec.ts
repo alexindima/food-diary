@@ -6,6 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { adminAuthInterceptor } from './admin-auth.interceptor';
 
+const HTTP_UNAUTHORIZED = 401;
+const HTTP_FORBIDDEN = 403;
+
 describe('adminAuthInterceptor', () => {
     let http: HttpClient;
     let httpMock: HttpTestingController;
@@ -56,12 +59,12 @@ describe('adminAuthInterceptor', () => {
 
         http.get('/api/admin/users').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(401);
+                expect(error.status).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
         const req = httpMock.expectOne('/api/admin/users');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         expect(localStorage.getItem('authToken')).toBeNull();
         expect(localStorage.getItem('refreshToken')).toBeNull();
@@ -76,12 +79,12 @@ describe('adminAuthInterceptor', () => {
 
         http.get('/api/admin/users').subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(403);
+                expect(error.status).toBe(HTTP_FORBIDDEN);
             },
         });
 
         const req = httpMock.expectOne('/api/admin/users');
-        req.flush(null, { status: 403, statusText: 'Forbidden' });
+        req.flush(null, { status: HTTP_FORBIDDEN, statusText: 'Forbidden' });
 
         expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'forbidden', returnUrl: '/users?page=2' },
@@ -93,12 +96,12 @@ describe('adminAuthInterceptor', () => {
 
         http.post('/api/v1/auth/admin-sso/exchange', {}).subscribe({
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(401);
+                expect(error.status).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
         const req = httpMock.expectOne('/api/v1/auth/admin-sso/exchange');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         expect(router.navigate).not.toHaveBeenCalled();
     });

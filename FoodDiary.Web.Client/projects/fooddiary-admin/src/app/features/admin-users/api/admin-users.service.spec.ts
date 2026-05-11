@@ -6,6 +6,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { type AdminUser, AdminUsersService } from './admin-users.service';
 
+const USERS_PAGE = 2;
+const USERS_LIMIT = 20;
+const USERS_TOTAL_PAGES = 3;
+const USERS_TOTAL_ITEMS = 41;
+
 describe('AdminUsersService', () => {
     let service: AdminUsersService;
     let httpMock: HttpTestingController;
@@ -37,10 +42,10 @@ describe('AdminUsersService', () => {
                     roles: ['Admin'],
                 },
             ],
-            page: 2,
-            limit: 20,
-            totalPages: 3,
-            totalItems: 41,
+            page: USERS_PAGE,
+            limit: USERS_LIMIT,
+            totalPages: USERS_TOTAL_PAGES,
+            totalItems: USERS_TOTAL_ITEMS,
         } satisfies {
             data: AdminUser[];
             page: number;
@@ -49,19 +54,19 @@ describe('AdminUsersService', () => {
             totalItems: number;
         };
 
-        service.getUsers(2, 20, 'alex', true).subscribe(result => {
+        service.getUsers(USERS_PAGE, USERS_LIMIT, 'alex', true).subscribe(result => {
             expect(result.items).toEqual(response.data);
-            expect(result.page).toBe(2);
-            expect(result.limit).toBe(20);
-            expect(result.totalPages).toBe(3);
-            expect(result.totalItems).toBe(41);
+            expect(result.page).toBe(USERS_PAGE);
+            expect(result.limit).toBe(USERS_LIMIT);
+            expect(result.totalPages).toBe(USERS_TOTAL_PAGES);
+            expect(result.totalItems).toBe(USERS_TOTAL_ITEMS);
         });
 
         const req = httpMock.expectOne(
             r =>
                 r.url === baseUrl &&
-                r.params.get('page') === '2' &&
-                r.params.get('limit') === '20' &&
+                r.params.get('page') === String(USERS_PAGE) &&
+                r.params.get('limit') === String(USERS_LIMIT) &&
                 r.params.get('search') === 'alex' &&
                 r.params.get('includeDeleted') === 'true',
         );

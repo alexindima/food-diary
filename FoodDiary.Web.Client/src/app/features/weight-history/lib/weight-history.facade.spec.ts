@@ -8,6 +8,10 @@ import { UserService } from '../../../shared/api/user.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import { WeightHistoryFacade } from './weight-history.facade';
 
+const TARGET_WEIGHT = 70;
+const UPDATED_TARGET_WEIGHT = 69;
+const EXPECTED_BMI = 22.9;
+
 describe('WeightHistoryFacade', () => {
     let facade: WeightHistoryFacade;
     let weightEntriesService: {
@@ -39,9 +43,9 @@ describe('WeightHistoryFacade', () => {
             remove: vi.fn().mockReturnValue(of(void 0)),
         };
         userService = {
-            getDesiredWeight: vi.fn().mockReturnValue(of(70)),
+            getDesiredWeight: vi.fn().mockReturnValue(of(TARGET_WEIGHT)),
             getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
-            updateDesiredWeight: vi.fn().mockReturnValue(of(69)),
+            updateDesiredWeight: vi.fn().mockReturnValue(of(UPDATED_TARGET_WEIGHT)),
         };
 
         TestBed.configureTestingModule({
@@ -72,9 +76,9 @@ describe('WeightHistoryFacade', () => {
         expect(userService.getInfo).toHaveBeenCalledTimes(1);
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
-        expect(facade.desiredWeight()).toBe(70);
+        expect(facade.desiredWeight()).toBe(TARGET_WEIGHT);
         expect(facade.form.controls.weight.value).toBe('74.2');
-        expect(facade.bmiValue()).toBe(22.9);
+        expect(facade.bmiValue()).toBe(EXPECTED_BMI);
     });
 
     it('submits a new entry and reloads the list', () => {
@@ -112,12 +116,12 @@ describe('WeightHistoryFacade', () => {
     });
 
     it('saves desired weight after validation', () => {
-        facade.desiredWeightControl.setValue('69');
+        facade.desiredWeightControl.setValue(`${UPDATED_TARGET_WEIGHT}`);
 
         facade.saveDesiredWeight();
 
-        expect(userService.updateDesiredWeight).toHaveBeenCalledWith(69);
-        expect(facade.desiredWeight()).toBe(69);
-        expect(facade.desiredWeightControl.value).toBe('69');
+        expect(userService.updateDesiredWeight).toHaveBeenCalledWith(UPDATED_TARGET_WEIGHT);
+        expect(facade.desiredWeight()).toBe(UPDATED_TARGET_WEIGHT);
+        expect(facade.desiredWeightControl.value).toBe(`${UPDATED_TARGET_WEIGHT}`);
     });
 });

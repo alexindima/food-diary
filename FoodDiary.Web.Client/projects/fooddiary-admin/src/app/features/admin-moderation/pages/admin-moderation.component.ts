@@ -19,6 +19,9 @@ interface AdminContentReportViewModel extends AdminContentReport {
     reviewedText: string;
 }
 
+const TARGET_ID_PREVIEW_LENGTH = 8;
+const ADMIN_MODERATION_PAGE_SIZE = 20;
+
 @Component({
     selector: 'fd-admin-moderation',
     standalone: true,
@@ -37,7 +40,7 @@ export class AdminModerationComponent {
     public readonly reportItems = computed<AdminContentReportViewModel[]>(() =>
         this.reports().map(report => ({
             ...report,
-            targetIdShort: `${report.targetId.slice(0, 8)}...`,
+            targetIdShort: `${report.targetId.slice(0, TARGET_ID_PREVIEW_LENGTH)}...`,
             createdText: this.formatDateLabel(report.createdAtUtc),
             reviewedText: this.formatDateLabel(report.reviewedAtUtc),
         })),
@@ -45,7 +48,7 @@ export class AdminModerationComponent {
     public readonly totalPages = signal(1);
     public readonly totalItems = signal(0);
     public readonly page = signal(1);
-    public readonly limit = 20;
+    public readonly limit = ADMIN_MODERATION_PAGE_SIZE;
     public readonly isLoading = signal(false);
     public readonly statusFilter = signal<string>('Pending');
 
@@ -56,7 +59,7 @@ export class AdminModerationComponent {
     public loadReports(): void {
         this.isLoading.set(true);
         this.moderationService
-            .getReports(this.page(), this.limit, this.statusFilter() || null)
+            .getReports(this.page(), this.limit, this.resolveStatusFilter())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -98,13 +101,18 @@ export class AdminModerationComponent {
             )
             .afterClosed()
             .subscribe(result => {
-                if (result?.confirmed) {
+                if (result?.confirmed === true) {
                     this.loadReports();
                 }
             });
     }
 
     private formatDateLabel(value?: string | Date | null): string {
-        return value ? formatDate(value, 'short', this.locale) : '-';
+        return value === null || value === undefined ? '-' : formatDate(value, 'short', this.locale);
+    }
+
+    private resolveStatusFilter(): string | null {
+        const status = this.statusFilter();
+        return status.length > 0 ? status : null;
     }
 }

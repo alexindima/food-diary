@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { AdminMailInboxService } from './admin-mail-inbox.service';
 
+const MESSAGE_LIMIT = 25;
+
 describe('AdminMailInboxService', () => {
     let service: AdminMailInboxService;
     let httpMock: HttpTestingController;
@@ -37,11 +39,11 @@ describe('AdminMailInboxService', () => {
             },
         ];
 
-        service.getMessages(25).subscribe(result => {
+        service.getMessages(MESSAGE_LIMIT).subscribe(result => {
             expect(result).toEqual(response);
         });
 
-        const req = httpMock.expectOne(r => r.url === baseUrl && r.params.get('limit') === '25');
+        const req = httpMock.expectOne(r => r.url === baseUrl && r.params.get('limit') === String(MESSAGE_LIMIT));
         expect(req.request.method).toBe('GET');
         req.flush(response);
     });
