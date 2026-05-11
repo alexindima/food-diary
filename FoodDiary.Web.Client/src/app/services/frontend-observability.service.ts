@@ -8,6 +8,10 @@ import { type ClientTelemetryEvent, LoggingApiService } from './logging-api.serv
 type HttpOutcome = 'success' | 'client_error' | 'server_error' | 'network_error';
 type RouteOutcome = 'success' | 'cancelled' | 'error';
 
+const FIRST_NAVIGATION_ENTRY_INDEX = 0;
+const DECIMAL_ROUNDING_FACTOR = 10;
+const DECIMAL_ROUNDING_DIVISOR = 10;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -19,7 +23,7 @@ export class FrontendObservabilityService {
     private readonly reportedVitals = new Set<string>();
 
     public initialize(): void {
-        if (this.initialized || !environment.enableClientObservability || typeof window === 'undefined') {
+        if (this.initialized || environment.enableClientObservability !== true || typeof window === 'undefined') {
             return;
         }
 
@@ -258,7 +262,7 @@ export class FrontendObservabilityService {
     }
 
     private recordNavigationTiming(): void {
-        const entry = performance.getEntriesByType('navigation')[0];
+        const entry = performance.getEntriesByType('navigation')[FIRST_NAVIGATION_ENTRY_INDEX];
         if (!(entry instanceof PerformanceNavigationTiming)) {
             return;
         }
@@ -295,7 +299,7 @@ export class FrontendObservabilityService {
             observer.observe({ type: 'largest-contentful-paint', buffered: true });
 
             const flush = (): void => {
-                if (latestEntry) {
+                if (latestEntry !== null) {
                     this.recordWebVital('lcp', latestEntry.startTime);
                 }
                 observer.disconnect();
@@ -317,7 +321,7 @@ export class FrontendObservabilityService {
     }
 
     private send(event: ClientTelemetryEvent): void {
-        if (!environment.enableClientObservability) {
+        if (environment.enableClientObservability !== true) {
             return;
         }
 
@@ -334,14 +338,15 @@ export class FrontendObservabilityService {
 
     private normalizeUrl(url: string): string {
         try {
-            return new URL(url, this.getLocation() || 'http://localhost').pathname;
+            const location = this.getLocation();
+            return new URL(url, location.length > 0 ? location : 'http://localhost').pathname;
         } catch {
             return url;
         }
     }
 
     private round(value: number): number {
-        return Math.round(value * 10) / 10;
+        return Math.round(value * DECIMAL_ROUNDING_FACTOR) / DECIMAL_ROUNDING_DIVISOR;
     }
 
     private isPublicRoute(url: string): boolean {

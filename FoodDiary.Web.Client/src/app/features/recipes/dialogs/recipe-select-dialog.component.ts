@@ -36,6 +36,11 @@ interface RecipeSelectItemViewModel {
     imageUrl: string | undefined;
 }
 
+const SEARCH_DEBOUNCE_MS = 300;
+const PAGE_SIZE = 10;
+const FIRST_PAGE = 1;
+const NEXT_PAGE_OFFSET = 1;
+
 @Component({
     selector: 'fd-recipe-select-dialog',
     standalone: true,
@@ -67,7 +72,10 @@ export class RecipeSelectDialogComponent {
     public readonly createRecipeRequested = output<void>();
     public readonly searchValue = signal<string | null>(null);
     public readonly onlyMineFilter = signal(false);
-    public readonly searchSuffixIcon = computed(() => (this.searchValue() ? 'close' : undefined));
+    public readonly searchSuffixIcon = computed(() => {
+        const search = this.searchValue();
+        return search !== null && search.length > 0 ? 'close' : undefined;
+    });
     public readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
     protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
         this.recipeData.items().map(recipe => ({
@@ -88,7 +96,7 @@ export class RecipeSelectDialogComponent {
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
-        this.loadRecipes(1).subscribe();
+        this.loadRecipes(FIRST_PAGE).subscribe();
 
         this.searchForm.controls.search.valueChanges
             .pipe(
@@ -96,8 +104,8 @@ export class RecipeSelectDialogComponent {
                 tap(value => {
                     this.searchValue.set(value);
                 }),
-                debounceTime(300),
-                switchMap(() => this.loadRecipes(1)),
+                debounceTime(SEARCH_DEBOUNCE_MS),
+                switchMap(() => this.loadRecipes(FIRST_PAGE)),
             )
             .subscribe();
 
@@ -108,7 +116,7 @@ export class RecipeSelectDialogComponent {
                 tap(value => {
                     this.onlyMineFilter.set(value);
                 }),
-                switchMap(() => this.loadRecipes(1)),
+                switchMap(() => this.loadRecipes(FIRST_PAGE)),
             )
             .subscribe();
     }
@@ -120,7 +128,7 @@ export class RecipeSelectDialogComponent {
             search: this.searchForm.controls.search.value ?? undefined,
         };
 
-        return this.recipeService.query(page, 10, filters, includePublic).pipe(
+        return this.recipeService.query(page, PAGE_SIZE, filters, includePublic).pipe(
             tap(pageData => {
                 this.recipeData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;
@@ -139,7 +147,7 @@ export class RecipeSelectDialogComponent {
     public onPageChange(pageIndex: number): void {
         this.scrollToTop();
         this.currentPageIndex = pageIndex;
-        this.loadRecipes(pageIndex + 1).subscribe();
+        this.loadRecipes(pageIndex + NEXT_PAGE_OFFSET).subscribe();
     }
 
     public onRecipeClick(recipe: Recipe): void {
@@ -165,7 +173,7 @@ export class RecipeSelectDialogComponent {
             })
             .afterClosed()
             .subscribe(recipe => {
-                if (!recipe) {
+                if (recipe === null || recipe === undefined) {
                     return;
                 }
                 this.handleSelection(recipe);
@@ -173,7 +181,7 @@ export class RecipeSelectDialogComponent {
     }
 
     private handleSelection(recipe: Recipe): void {
-        if (!this.embedded() && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef !== null) {
             this.dialogRef.close(recipe);
         } else {
             this.recipeSelected.emit(recipe);

@@ -7,6 +7,12 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from '../loader/fd-ui-loader.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
+const NO_ACTIVE_OPTION_INDEX = -1;
+const FIRST_OPTION_INDEX = 0;
+const NEXT_OPTION_OFFSET = 1;
+const PREVIOUS_OPTION_OFFSET = -1;
+const EMPTY_STATE_MIN_QUERY_LENGTH = 2;
+
 let uniqueId = 0;
 
 export interface FdUiAutocompleteOption<T = unknown> {
@@ -60,7 +66,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
-    protected readonly activeIndex = signal(-1);
+    protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
     private onChange: (value: T | null) => void = () => undefined;
@@ -70,7 +76,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.queryText().trim().length > 0);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-autocomplete ${this.sizeClass()}${this.error() ? ' fd-ui-autocomplete--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-autocomplete--floating' : ''}`,
+            `fd-ui-autocomplete ${this.sizeClass()}${this.error() !== null ? ' fd-ui-autocomplete--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-autocomplete--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.queryText().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
@@ -90,7 +96,9 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
             this.isOpen() &&
             ((this.loading() && this.showEmptyState()) ||
                 this.options().length > 0 ||
-                (this.showEmptyState() && this.queryText().trim().length >= 2 && !!this.emptyText())),
+                (this.showEmptyState() &&
+                    this.queryText().trim().length >= EMPTY_STATE_MIN_QUERY_LENGTH &&
+                    this.emptyText() !== undefined)),
     );
 
     public writeValue(value: T | null): void {
@@ -169,15 +177,15 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
             case 'ArrowDown':
                 event.preventDefault();
                 this.openMenu();
-                this.moveActive(1);
+                this.moveActive(NEXT_OPTION_OFFSET);
                 break;
             case 'ArrowUp':
                 event.preventDefault();
                 this.openMenu();
-                this.moveActive(-1);
+                this.moveActive(PREVIOUS_OPTION_OFFSET);
                 break;
             case 'Enter':
-                if (this.isOpen() && this.activeIndex() >= 0) {
+                if (this.isOpen() && this.activeIndex() >= FIRST_OPTION_INDEX) {
                     event.preventDefault();
                     this.selectOption(this.options()[this.activeIndex()]);
                 }
@@ -193,7 +201,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
     protected closeMenu(): void {
         this.isOpen.set(false);
-        this.activeIndex.set(-1);
+        this.activeIndex.set(NO_ACTIVE_OPTION_INDEX);
         this.isFocused.set(false);
     }
 
@@ -216,13 +224,13 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
         this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
         this.isOpen.set(true);
-        this.activeIndex.set(this.options().length > 0 ? 0 : -1);
+        this.activeIndex.set(this.options().length > 0 ? FIRST_OPTION_INDEX : NO_ACTIVE_OPTION_INDEX);
     }
 
     private moveActive(delta: number): void {
         const options = this.options();
-        if (!options.length) {
-            this.activeIndex.set(-1);
+        if (options.length === 0) {
+            this.activeIndex.set(NO_ACTIVE_OPTION_INDEX);
             return;
         }
 
@@ -235,7 +243,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
         }
 
         const option = this.options().find(item => this.isEqual(item.value, value));
-        if (option) {
+        if (option !== undefined) {
             return option.label;
         }
 

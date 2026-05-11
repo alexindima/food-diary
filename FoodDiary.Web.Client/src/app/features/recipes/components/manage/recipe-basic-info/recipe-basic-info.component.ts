@@ -75,7 +75,7 @@ export class RecipeBasicInfoComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control) {
+        if (control === null) {
             return null;
         }
 
@@ -84,21 +84,21 @@ export class RecipeBasicInfoComponent {
         }
 
         const errors = control.errors;
-        if (!errors) {
+        if (errors === null) {
             return null;
         }
 
-        if (errors['required']) {
+        if (errors['required'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
         const minError = errors['min'] as { min?: number } | undefined;
-        if (minError) {
+        if (minError !== undefined) {
             const min = minError.min ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 
-        if (errors['nonEmptyArray']) {
+        if (errors['nonEmptyArray'] !== undefined) {
             return this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY');
         }
 

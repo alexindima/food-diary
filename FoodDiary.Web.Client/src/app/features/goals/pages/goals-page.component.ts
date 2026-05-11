@@ -28,6 +28,13 @@ type TimeframeOption = {
     labelKey: string;
 };
 
+const BODY_TARGET_MAX_VALUE = 400;
+const HALF_CIRCLE_DEGREES = 180;
+const RING_START_ANGLE_OFFSET_DEGREES = 450;
+const FULL_CIRCLE_DEGREES = 360;
+const RING_THICKNESS_PX = 30;
+const PERCENT_FULL = 100;
+
 @Component({
     selector: 'fd-goals-page',
     standalone: true,
@@ -105,7 +112,7 @@ export class GoalsPageComponent {
     protected readonly coreMacroViewStates = computed(() => this.coreMacroStates().map(macro => this.withMacroProgressStyles(macro)));
     protected readonly fiberMacroViewState = computed(() => {
         const fiber = this.fiberMacroState();
-        if (!fiber) {
+        if (fiber === undefined) {
             return null;
         }
 
@@ -128,7 +135,7 @@ export class GoalsPageComponent {
 
     protected onBodyTargetChange(key: BodyTargetKey, event: Event): void {
         const target = event.target as HTMLInputElement;
-        const clamped = this.facade.updateBodyTarget(key, Number(target.value), 400);
+        const clamped = this.facade.updateBodyTarget(key, Number(target.value), BODY_TARGET_MAX_VALUE);
         if (clamped !== null) {
             target.value = clamped.toString();
         }
@@ -151,7 +158,7 @@ export class GoalsPageComponent {
     }
 
     protected onMacroPresetModelChange(value: MacroPresetKey | null): void {
-        if (!value) {
+        if (value === null) {
             return;
         }
 
@@ -206,7 +213,7 @@ export class GoalsPageComponent {
 
         const { distanceFromCenter, innerRadius } = this.calculateRingDistances(event, ring);
 
-        if (distanceFromCenter < innerRadius || target?.closest('.goals__ring-center')) {
+        if (distanceFromCenter < innerRadius || target?.closest('.goals__ring-center') !== null) {
             return;
         }
 
@@ -218,7 +225,7 @@ export class GoalsPageComponent {
     }
 
     private readonly handlePointerMove = (event: PointerEvent): void => {
-        if (!this.activeRingElement) {
+        if (this.activeRingElement === null) {
             return;
         }
         this.updateFromPointer(event, this.activeRingElement);
@@ -234,9 +241,9 @@ export class GoalsPageComponent {
         const dx = event.clientX - centerX;
         const dy = event.clientY - centerY;
         const radians = Math.atan2(dy, dx);
-        const degrees = (radians * 180) / Math.PI;
-        const normalized = (degrees + 450) % 360;
-        const ratio = normalized / 360;
+        const degrees = (radians * HALF_CIRCLE_DEGREES) / Math.PI;
+        const normalized = (degrees + RING_START_ANGLE_OFFSET_DEGREES) % FULL_CIRCLE_DEGREES;
+        const ratio = normalized / FULL_CIRCLE_DEGREES;
         const value = this.minCalories + ratio * (this.maxCalories - this.minCalories);
         this.facade.updateCalories(Math.round(value));
     }
@@ -257,7 +264,7 @@ export class GoalsPageComponent {
         const centerY = rect.top + rect.height / 2;
         const distanceFromCenter = Math.hypot(event.clientX - centerX, event.clientY - centerY);
         const outerRadius = Math.min(rect.width, rect.height) / 2;
-        const innerRadius = outerRadius - 30;
+        const innerRadius = outerRadius - RING_THICKNESS_PX;
         return { rect, centerX, centerY, distanceFromCenter, innerRadius, outerRadius };
     }
 
@@ -272,7 +279,7 @@ export class GoalsPageComponent {
         return {
             ...state,
             progressOffset: `${state.percent}%`,
-            progressRatio: state.percent / 100,
+            progressRatio: state.percent / PERCENT_FULL,
         };
     }
 

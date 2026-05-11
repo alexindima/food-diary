@@ -6,6 +6,11 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
+const NO_ACTIVE_OPTION_INDEX = -1;
+const FIRST_OPTION_INDEX = 0;
+const NEXT_OPTION_OFFSET = 1;
+const PREVIOUS_OPTION_OFFSET = -1;
+
 let uniqueId = 0;
 
 export interface FdUiSelectOption<T = unknown> {
@@ -48,7 +53,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
-    protected readonly activeIndex = signal(-1);
+    protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
     private onChange: (value: T | null) => void = () => undefined;
@@ -57,7 +62,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected readonly sizeClass = computed(() => `fd-ui-select--size-${this.size()}`);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-select ${this.sizeClass()}${this.error() ? ' fd-ui-select--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-select--floating' : ''}`,
+            `fd-ui-select ${this.sizeClass()}${this.error() !== null ? ' fd-ui-select--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-select--floating' : ''}`,
     );
     protected readonly selectedIndex = computed(() => this.options().findIndex(option => this.isEqual(option.value, this.internalValue())));
 
@@ -76,7 +81,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
 
     protected readonly activeOptionId = computed(() => {
         const activeIndex = this.activeIndex();
-        if (!this.isOpen() || activeIndex < 0 || activeIndex >= this.options().length) {
+        if (!this.isOpen() || activeIndex < FIRST_OPTION_INDEX || activeIndex >= this.options().length) {
             return null;
         }
 
@@ -155,7 +160,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         }
 
         const target = event.target as HTMLElement | null;
-        if (target?.closest('.fd-ui-select__control')) {
+        if (target?.closest('.fd-ui-select__control') !== null) {
             return;
         }
 
@@ -182,39 +187,53 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
 
     protected onListboxKeydown(event: KeyboardEvent): void {
         const options = this.options();
-        if (!options.length) {
+        if (options.length === 0) {
             return;
         }
 
-        switch (event.key) {
-            case 'ArrowDown':
-                event.preventDefault();
-                this.activeIndex.update(activeIndex => (activeIndex + 1 + options.length) % options.length);
-                break;
-            case 'ArrowUp':
-                event.preventDefault();
-                this.activeIndex.update(activeIndex => (activeIndex - 1 + options.length) % options.length);
-                break;
-            case 'Home':
-                event.preventDefault();
-                this.activeIndex.set(0);
-                break;
-            case 'End':
-                event.preventDefault();
-                this.activeIndex.set(options.length - 1);
-                break;
-            case 'Enter':
-            case ' ':
-                event.preventDefault();
-                if (this.activeIndex() >= 0) {
-                    this.onOptionSelect(options[this.activeIndex()]);
-                }
-                break;
-            case 'Escape':
-                event.preventDefault();
+        const handled = this.handleListboxNavigationKey(event, options);
+        if (handled) {
+            event.preventDefault();
+        }
+    }
+
+    private handleListboxNavigationKey(event: KeyboardEvent, options: Array<FdUiSelectOption<T>>): boolean {
+        const actions: Partial<Record<string, () => void>> = {
+            ArrowDown: () => {
+                this.activeIndex.update(activeIndex => (activeIndex + NEXT_OPTION_OFFSET + options.length) % options.length);
+            },
+            ArrowUp: () => {
+                this.activeIndex.update(activeIndex => (activeIndex + PREVIOUS_OPTION_OFFSET + options.length) % options.length);
+            },
+            Home: () => {
+                this.activeIndex.set(FIRST_OPTION_INDEX);
+            },
+            End: () => {
+                this.activeIndex.set(options.length + PREVIOUS_OPTION_OFFSET);
+            },
+            Escape: () => {
                 this.closeMenu();
                 this.controlRef()?.nativeElement.focus();
-                break;
+            },
+        };
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            this.selectActiveOption(options);
+            return true;
+        }
+
+        const action = actions[event.key];
+        if (action === undefined) {
+            return false;
+        }
+
+        action();
+        return true;
+    }
+
+    private selectActiveOption(options: Array<FdUiSelectOption<T>>): void {
+        if (this.activeIndex() >= FIRST_OPTION_INDEX) {
+            this.onOptionSelect(options[this.activeIndex()]);
         }
     }
 

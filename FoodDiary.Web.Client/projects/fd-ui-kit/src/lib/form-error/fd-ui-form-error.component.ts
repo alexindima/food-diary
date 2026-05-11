@@ -44,7 +44,7 @@ export class FdUiFormErrorComponent {
     public readonly showOnDirty = input(false);
     private readonly controlSubscription = effect((onCleanup): void => {
         const control = this.control();
-        if (!control) {
+        if (control === null || control === undefined) {
             return;
         }
 
@@ -61,21 +61,26 @@ export class FdUiFormErrorComponent {
         this.controlVersion();
 
         const error = this.error();
-        if (error) {
-            return this.translate.instant(error, this.context());
+        if (error !== null && error !== undefined && error.length > 0) {
+            return this.translateMessage(error, this.context());
         }
 
         const control = this.control();
-        if (!control) {
+        if (control === null || control === undefined) {
             return null;
         }
+
+        return this.resolveControlMessage(control);
+    });
+
+    private resolveControlMessage(control: AbstractControl): string | null {
         const shouldShow = control.touched || (this.showOnDirty() && control.dirty);
         if (!control.invalid || !shouldShow) {
             return null;
         }
 
         const errors = control.errors;
-        if (!errors) {
+        if (errors === null) {
             return null;
         }
 
@@ -83,7 +88,7 @@ export class FdUiFormErrorComponent {
 
         for (const key of Object.keys(controlErrors)) {
             const resolver = this.validationErrors?.[key];
-            if (!resolver) {
+            if (resolver === undefined) {
                 continue;
             }
 
@@ -92,18 +97,23 @@ export class FdUiFormErrorComponent {
             const result = resolver(controlError);
 
             if (typeof result === 'string') {
-                return this.translate.instant(result, { ...controlParams, ...(this.context() ?? {}) });
+                return this.translateMessage(result, { ...controlParams, ...(this.context() ?? {}) });
             }
 
-            return this.translate.instant(result.key, {
+            return this.translateMessage(result.key, {
                 ...controlParams,
                 ...(result.params ?? {}),
                 ...(this.context() ?? {}),
             });
         }
 
-        return this.translate.instant('FORM_ERRORS.UNKNOWN');
-    });
+        return this.translateMessage('FORM_ERRORS.UNKNOWN');
+    }
+
+    private translateMessage(key: string, params?: Record<string, unknown>): string {
+        const translated: unknown = this.translate.instant(key, params);
+        return typeof translated === 'string' ? translated : key;
+    }
 
     private getValidationParams(error: unknown): Record<string, unknown> {
         return this.isRecord(error) ? error : {};

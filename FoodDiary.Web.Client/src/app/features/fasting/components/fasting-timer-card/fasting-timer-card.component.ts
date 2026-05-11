@@ -37,6 +37,9 @@ interface FastingTimerCardState {
 
 const RING_RADIUS = 90;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+const PERCENT_FULL = 100;
+const TIMER_TICK_MS = 1000;
+const EMPTY_DURATION_MS = 0;
 
 @Component({
     selector: 'fd-fasting-timer-card',
@@ -57,7 +60,7 @@ export class FastingTimerCardComponent {
     private timerInterval: ReturnType<typeof setInterval> | null = null;
     private readonly timerEffect = effect(() => {
         const session = this.getSession();
-        if (!this.usesFacadeTimer() && session && !session.endedAtUtc) {
+        if (!this.usesFacadeTimer() && session !== null && session.endedAtUtc === null) {
             this.startTimer();
             return;
         }
@@ -66,47 +69,16 @@ export class FastingTimerCardComponent {
     });
     protected readonly normalizedProgressPercent = computed(() => {
         const progress = this.viewState().progressPercent;
-        return Number.isFinite(progress) ? Math.max(0, Math.min(progress, 100)) : 0;
+        return Number.isFinite(progress) ? Math.max(EMPTY_DURATION_MS, Math.min(progress, PERCENT_FULL)) : EMPTY_DURATION_MS;
     });
     protected readonly ringStrokeDasharray = RING_CIRCUMFERENCE;
-    protected readonly ringStrokeDashoffset = computed(() => RING_CIRCUMFERENCE * (1 - this.normalizedProgressPercent() / 100));
+    protected readonly ringStrokeDashoffset = computed(() => RING_CIRCUMFERENCE * (1 - this.normalizedProgressPercent() / PERCENT_FULL));
     public readonly layout = input<'dashboard' | 'page'>('page');
     public readonly session = input<FastingSession | null>(null);
     private readonly usesFacadeTimer = computed(() => this.layout() === 'page' && this.facade !== null);
     protected readonly viewState = computed<FastingTimerCardState>(() => {
         this.currentLanguage();
-        const session = this.getSession();
-        const isActive = !!session && !session.endedAtUtc;
-        const state = buildFastingTimerCardComputedState({
-            session,
-            elapsedMs: this.getElapsedMs(),
-            translate: this.translate,
-        });
-        const stage = state.stage;
-
-        return {
-            isActive,
-            isOvertime: state.isOvertime,
-            currentSessionCompleted: !!session?.endedAtUtc,
-            progressPercent: state.progressPercent,
-            elapsedFormatted: state.elapsedFormatted,
-            remainingFormatted: state.remainingFormatted,
-            remainingLabelKey: state.remainingLabelKey,
-            labelKey: this.getCardLabelKey(session),
-            stateLabel: state.stateLabel,
-            occurrenceKind: session?.occurrenceKind ?? null,
-            detailLabel: state.detailLabel,
-            metaLabel: state.metaLabel,
-            ringColor: state.ringColor,
-            glowColor: stage?.glowColor ?? null,
-            stageTitleKey: stage?.titleKey ?? null,
-            stageDescriptionKey: stage?.descriptionKey ?? null,
-            stageIndex: state.showStageProgress ? (stage?.index ?? null) : null,
-            totalStages: state.showStageProgress ? (stage?.total ?? 4) : 0,
-            nextStageTitleKey: stage?.nextTitleKey ?? null,
-            nextStageFormatted: state.nextStageFormatted,
-            showGlow: this.layout() === 'page' && !isActive,
-        };
+        return this.buildViewState();
     });
 
     protected readonly isDashboardLayout = computed(() => this.layout() === 'dashboard');
@@ -147,7 +119,7 @@ export class FastingTimerCardComponent {
         }
 
         const glowColor = state.glowColor;
-        if (!glowColor) {
+        if (glowColor === null || glowColor.length === 0) {
             return null;
         }
 
@@ -164,8 +136,66 @@ export class FastingTimerCardComponent {
         });
     }
 
+    private buildViewState(): FastingTimerCardState {
+        const session = this.getSession();
+        const isActive = session !== null && session.endedAtUtc === null;
+        const state = buildFastingTimerCardComputedState({
+            session,
+            elapsedMs: this.getElapsedMs(),
+            translate: this.translate,
+        });
+
+        return {
+            isActive,
+            isOvertime: state.isOvertime,
+            currentSessionCompleted: session?.endedAtUtc !== null && session?.endedAtUtc !== undefined,
+            progressPercent: state.progressPercent,
+            elapsedFormatted: state.elapsedFormatted,
+            remainingFormatted: state.remainingFormatted,
+            remainingLabelKey: state.remainingLabelKey,
+            labelKey: this.getCardLabelKey(session),
+            stateLabel: state.stateLabel,
+            occurrenceKind: session?.occurrenceKind ?? null,
+            detailLabel: state.detailLabel,
+            metaLabel: state.metaLabel,
+            ringColor: state.ringColor,
+            ...this.buildStageViewState(state),
+            showGlow: this.layout() === 'page' && !isActive,
+        };
+    }
+
+    private buildStageViewState(
+        state: ReturnType<typeof buildFastingTimerCardComputedState>,
+    ): Pick<
+        FastingTimerCardState,
+        'glowColor' | 'stageTitleKey' | 'stageDescriptionKey' | 'stageIndex' | 'totalStages' | 'nextStageTitleKey' | 'nextStageFormatted'
+    > {
+        const stage = state.stage;
+        if (stage === null) {
+            return {
+                glowColor: null,
+                stageTitleKey: null,
+                stageDescriptionKey: null,
+                stageIndex: null,
+                totalStages: EMPTY_DURATION_MS,
+                nextStageTitleKey: null,
+                nextStageFormatted: state.nextStageFormatted,
+            };
+        }
+
+        return {
+            glowColor: stage.glowColor,
+            stageTitleKey: stage.titleKey,
+            stageDescriptionKey: stage.descriptionKey,
+            stageIndex: state.showStageProgress ? stage.index : null,
+            totalStages: state.showStageProgress ? stage.total : EMPTY_DURATION_MS,
+            nextStageTitleKey: stage.nextTitleKey ?? null,
+            nextStageFormatted: state.nextStageFormatted,
+        };
+    }
+
     private getSession(): FastingSession | null {
-        if (this.layout() === 'page' && this.facade) {
+        if (this.layout() === 'page' && this.facade !== null) {
             return this.facade.currentSession();
         }
 
@@ -173,26 +203,26 @@ export class FastingTimerCardComponent {
     }
 
     private getElapsedMs(): number {
-        if (this.usesFacadeTimer() && this.facade) {
+        if (this.usesFacadeTimer() && this.facade !== null) {
             return this.facade.elapsedMs();
         }
 
         const session = this.getSession();
-        if (!session) {
-            return 0;
+        if (session === null) {
+            return EMPTY_DURATION_MS;
         }
 
         const start = new Date(session.startedAtUtc).getTime();
-        const end = session.endedAtUtc ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
+        const end = session.endedAtUtc !== null ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
         if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
-            return 0;
+            return EMPTY_DURATION_MS;
         }
 
         return end - start;
     }
 
     private getCardLabelKey(session: FastingSession | null): string {
-        if (!session) {
+        if (session === null) {
             return 'FASTING.WIDGET_LABEL';
         }
 
@@ -214,7 +244,7 @@ export class FastingTimerCardComponent {
         this.now.set(new Date());
         this.timerInterval = setInterval(() => {
             this.now.set(new Date());
-        }, 1000);
+        }, TIMER_TICK_MS);
     }
 
     private stopTimer(): void {

@@ -28,7 +28,7 @@ export class DietologistInvitationPageComponent {
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly currentLanguage = signal((this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en');
+    private readonly currentLanguage = signal(this.resolveCurrentLanguage());
 
     public readonly state = signal<InvitationPageState>('loading');
     public readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
@@ -37,15 +37,18 @@ export class DietologistInvitationPageComponent {
     public readonly invitationView = computed<DietologistInvitationView | null>(() => {
         this.currentLanguage();
         const invitation = this.invitation();
-        if (!invitation) {
+        if (invitation === null) {
             return null;
         }
 
-        const displayName = [invitation.clientFirstName, invitation.clientLastName].filter(Boolean).join(' ').trim();
+        const displayName = [invitation.clientFirstName, invitation.clientLastName]
+            .filter((value): value is string => value !== null && value.length > 0)
+            .join(' ')
+            .trim();
 
         return {
             invitation,
-            displayName: displayName || invitation.clientEmail,
+            displayName: displayName.length > 0 ? displayName : invitation.clientEmail,
             expiresDateLabel: this.formatMediumDate(invitation.expiresAtUtc),
         };
     });
@@ -54,14 +57,14 @@ export class DietologistInvitationPageComponent {
         ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.currentLanguage.set((this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en');
+                this.currentLanguage.set(this.resolveCurrentLanguage());
             });
         this.loadInvitation();
     }
 
     public accept(): void {
         const invitationId = this.invitation()?.invitationId;
-        if (!invitationId || this.isSubmitting()) {
+        if (invitationId === undefined || invitationId.length === 0 || this.isSubmitting()) {
             return;
         }
 
@@ -97,7 +100,7 @@ export class DietologistInvitationPageComponent {
 
     public decline(): void {
         const invitationId = this.invitation()?.invitationId;
-        if (!invitationId || this.isSubmitting()) {
+        if (invitationId === undefined || invitationId.length === 0 || this.isSubmitting()) {
             return;
         }
 
@@ -131,7 +134,7 @@ export class DietologistInvitationPageComponent {
 
     private loadInvitation(): void {
         const invitationId = this.route.snapshot.paramMap.get('invitationId');
-        if (!invitationId) {
+        if (invitationId === null || invitationId.length === 0) {
             this.state.set('error');
             this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_INVALID'));
             return;
@@ -177,6 +180,16 @@ export class DietologistInvitationPageComponent {
         return new Intl.DateTimeFormat(this.currentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
             dateStyle: 'medium',
         }).format(date);
+    }
+
+    private resolveCurrentLanguage(): string {
+        const current = this.translateService.getCurrentLang() as string | null | undefined;
+        if (current !== null && current !== undefined && current.length > 0) {
+            return current;
+        }
+
+        const fallback = this.translateService.getFallbackLang() as string | null | undefined;
+        return fallback !== null && fallback !== undefined && fallback.length > 0 ? fallback : 'en';
     }
 }
 

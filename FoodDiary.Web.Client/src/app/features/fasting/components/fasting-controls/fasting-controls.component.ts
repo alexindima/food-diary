@@ -24,6 +24,15 @@ import {
     type FastingSafetyDialogResult,
 } from '../fasting-safety-dialog/fasting-safety-dialog.component';
 
+const HOURS_PER_DAY = 24;
+const EXTEND_DAY_HOURS = 24;
+const EXTEND_DAY_AND_HALF_HOURS = 36;
+const REDUCE_SHORT_HOURS = 4;
+const REDUCE_LONG_HOURS = 8;
+const MIN_FASTING_HOURS = 1;
+const EMPTY_DURATION_HOURS = 0;
+const CYCLIC_PRESET_SEPARATOR = ':';
+
 @Component({
     selector: 'fd-fasting-controls',
     imports: [FormsModule, TranslatePipe, FdUiSegmentedToggleComponent, FdUiButtonComponent, FdUiInputComponent],
@@ -96,8 +105,12 @@ export class FastingControlsComponent {
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     public readonly cyclicPresets = CYCLIC_PRESETS;
-    public readonly customIntermittentEatingWindowHours = computed(() => Math.max(1, 24 - this.customIntermittentFastHours()));
-    public readonly cyclicEatDayEatingWindowHours = computed(() => Math.max(1, 24 - this.cyclicEatDayFastHours()));
+    public readonly customIntermittentEatingWindowHours = computed(() =>
+        Math.max(MIN_FASTING_HOURS, HOURS_PER_DAY - this.customIntermittentFastHours()),
+    );
+    public readonly cyclicEatDayEatingWindowHours = computed(() =>
+        Math.max(MIN_FASTING_HOURS, HOURS_PER_DAY - this.cyclicEatDayFastHours()),
+    );
     public readonly endActionLabelKey = computed(() => {
         if (this.isCurrentSessionCyclic()) {
             return 'FASTING.STOP_CYCLE';
@@ -108,8 +121,8 @@ export class FastingControlsComponent {
     public readonly canManageCurrentCyclicDay = computed(() => {
         const session = this.currentSession();
         return (
-            !!session &&
-            !session.endedAtUtc &&
+            session !== null &&
+            session.endedAtUtc === null &&
             session.planType === 'Cyclic' &&
             (session.occurrenceKind === 'FastDay' || session.occurrenceKind === 'EatDay')
         );
@@ -187,7 +200,7 @@ export class FastingControlsComponent {
             return;
         }
 
-        const [fastDaysRaw, eatDaysRaw] = value.split(':');
+        const [fastDaysRaw, eatDaysRaw] = value.split(CYCLIC_PRESET_SEPARATOR);
         const fastDays = Number.parseInt(fastDaysRaw, 10);
         const eatDays = Number.parseInt(eatDaysRaw, 10);
 
@@ -261,12 +274,12 @@ export class FastingControlsComponent {
 
     public extendByDay(): void {
         this.isCustomExtendExpanded.set(false);
-        this.requestExtendByHours(24);
+        this.requestExtendByHours(EXTEND_DAY_HOURS);
     }
 
     public extendBy36Hours(): void {
         this.isCustomExtendExpanded.set(false);
-        this.requestExtendByHours(36);
+        this.requestExtendByHours(EXTEND_DAY_AND_HALF_HOURS);
     }
 
     public extendByCustom(): void {
@@ -284,12 +297,12 @@ export class FastingControlsComponent {
 
     public reduceBy4Hours(): void {
         this.isCustomReduceExpanded.set(false);
-        this.requestReduceByHours(4);
+        this.requestReduceByHours(REDUCE_SHORT_HOURS);
     }
 
     public reduceBy8Hours(): void {
         this.isCustomReduceExpanded.set(false);
-        this.requestReduceByHours(8);
+        this.requestReduceByHours(REDUCE_LONG_HOURS);
     }
 
     public reduceByCustom(): void {
@@ -346,7 +359,7 @@ export class FastingControlsComponent {
     }
 
     private getCyclicPresetSelectionValue(fastDays: number, eatDays: number): string {
-        return `${fastDays}:${eatDays}`;
+        return `${fastDays}${CYCLIC_PRESET_SEPARATOR}${eatDays}`;
     }
 
     private getEndConfirmDialogData(): FastingEndConfirmDialogData {
@@ -370,7 +383,7 @@ export class FastingControlsComponent {
 
     private isCurrentSessionIntermittent(): boolean {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return true;
         }
 
@@ -407,7 +420,7 @@ export class FastingControlsComponent {
 
     private getCurrentCyclicOccurrenceKind(): FastingSession['occurrenceKind'] | null {
         const session = this.currentSession();
-        if (session?.planType !== 'Cyclic' || session.endedAtUtc) {
+        if (session?.planType !== 'Cyclic' || session.endedAtUtc !== null) {
             return null;
         }
 
@@ -415,9 +428,9 @@ export class FastingControlsComponent {
     }
 
     private requestExtendByHours(additionalHours: number): void {
-        const normalizedHours = Math.max(1, Math.min(FASTING_HARD_STOP_THRESHOLD_HOURS, additionalHours));
+        const normalizedHours = Math.max(MIN_FASTING_HOURS, Math.min(FASTING_HARD_STOP_THRESHOLD_HOURS, additionalHours));
         const currentSession = this.currentSession();
-        const currentDuration = currentSession?.plannedDurationHours ?? 0;
+        const currentDuration = currentSession?.plannedDurationHours ?? EMPTY_DURATION_HOURS;
         const targetDuration = currentDuration + normalizedHours;
 
         if (targetDuration > FASTING_HARD_STOP_THRESHOLD_HOURS) {
@@ -452,13 +465,13 @@ export class FastingControlsComponent {
 
     private requestReduceByHours(reducedHours: number): void {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return;
         }
 
-        const maxReducibleHours = Math.max(0, session.plannedDurationHours - 1);
-        const normalizedHours = Math.max(1, Math.min(maxReducibleHours, reducedHours));
-        if (normalizedHours <= 0) {
+        const maxReducibleHours = Math.max(EMPTY_DURATION_HOURS, session.plannedDurationHours - MIN_FASTING_HOURS);
+        const normalizedHours = Math.max(MIN_FASTING_HOURS, Math.min(maxReducibleHours, reducedHours));
+        if (normalizedHours <= EMPTY_DURATION_HOURS) {
             return;
         }
 

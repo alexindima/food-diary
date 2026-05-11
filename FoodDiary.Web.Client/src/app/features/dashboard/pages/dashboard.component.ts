@@ -43,6 +43,10 @@ import type {
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 
+const EMPTY_INDEX = -1;
+const FIRST_RESIZE_ENTRY_INDEX = 0;
+const LANGUAGE_VERSION_INCREMENT = 1;
+
 @Component({
     selector: 'fd-dashboard',
     standalone: true,
@@ -131,12 +135,12 @@ export class DashboardComponent {
         }
 
         const visibleBlocks = this.layout.visibleBlocks();
-        return visibleBlocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
+        return visibleBlocks.some(block => this.isAsideBlock(block));
     });
     public readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
     public readonly editSaveActionLabel = computed(() => {
         const labelKey = this.editSaveActionLabelKey();
-        return labelKey ? this.translateService.instant(labelKey) : null;
+        return labelKey !== null ? this.translateService.instant(labelKey) : null;
     });
     public readonly dashboardHeaderState = computed<DashboardHeaderState>(() => {
         this.languageVersion();
@@ -182,22 +186,9 @@ export class DashboardComponent {
     public readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
         this.languageVersion();
         const editing = this.layout.isEditingLayout();
-        const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions = {}): DashboardBlockState => {
-            const isVisible = this.layout.isBlockVisible(blockId);
-            const isAlwaysInteractive = options.alwaysInteractive === true;
-            const role = editing || isAlwaysInteractive ? 'button' : null;
-            const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
 
-            return {
-                hidden: editing && !isVisible,
-                role,
-                tabIndex: editing || isAlwaysInteractive ? 0 : -1,
-                ariaPressed: editing ? isVisible : null,
-                ariaDisabled: editing && options.locked ? !this.layout.canToggleBlock(blockId) : null,
-                ariaLabel: ariaLabelKey ? this.translateService.instant(ariaLabelKey) : null,
-                inert: editing ? '' : null,
-            };
-        };
+        const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions = {}): DashboardBlockState =>
+            this.buildDashboardBlockState(blockId, editing, options);
 
         return {
             fasting: stateFor('fasting', {
@@ -219,7 +210,7 @@ export class DashboardComponent {
     public constructor() {
         this.facade.initialize();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
+            this.languageVersion.update(version => version + LANGUAGE_VERSION_INCREMENT);
         });
         afterNextRender(() => {
             this.observeDashboardWidth();
@@ -240,7 +231,7 @@ export class DashboardComponent {
     }
 
     public handleDateChange(value: Date | null): void {
-        if (!value) {
+        if (value === null) {
             return;
         }
 
@@ -273,13 +264,13 @@ export class DashboardComponent {
             .open(CalorieGoalDialogComponent, {
                 preset: 'form',
                 data: {
-                    dailyCalorieTarget: this.dailyGoal() || null,
+                    dailyCalorieTarget: this.dailyGoal() > 0 ? this.dailyGoal() : null,
                 },
             })
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(saved => {
-                if (saved) {
+                if (saved === true) {
                     this.facade.reload();
                 }
             });
@@ -418,8 +409,8 @@ export class DashboardComponent {
         }
 
         this.resizeObserver = new ResizeObserver(entries => {
-            const entry = entries[0] as ResizeObserverEntry | undefined;
-            if (!entry) {
+            const entry = entries[FIRST_RESIZE_ENTRY_INDEX] as ResizeObserverEntry | undefined;
+            if (entry === undefined) {
                 return;
             }
 
@@ -432,6 +423,36 @@ export class DashboardComponent {
 
     private formatSelectedDate(): string {
         return formatDate(this.selectedDate(), 'd MMMM y', this.translateService.getCurrentLang());
+    }
+
+    private buildDashboardBlockState(
+        blockId: DashboardBlockId,
+        editing: boolean,
+        options: DashboardBlockStateOptions,
+    ): DashboardBlockState {
+        const isVisible = this.layout.isBlockVisible(blockId);
+        const isAlwaysInteractive = options.alwaysInteractive === true;
+        const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
+        return {
+            hidden: editing && !isVisible,
+            role: editing || isAlwaysInteractive ? 'button' : null,
+            tabIndex: editing || isAlwaysInteractive ? 0 : EMPTY_INDEX,
+            ariaPressed: editing ? isVisible : null,
+            ariaDisabled: editing && options.locked === true ? !this.layout.canToggleBlock(blockId) : null,
+            ariaLabel: ariaLabelKey !== null ? this.translateService.instant(ariaLabelKey) : null,
+            inert: editing ? '' : null,
+        };
+    }
+
+    private isAsideBlock(blockId: string): boolean {
+        return (
+            blockId === 'hydration' ||
+            blockId === 'cycle' ||
+            blockId === 'weight' ||
+            blockId === 'waist' ||
+            blockId === 'tdee' ||
+            blockId === 'advice'
+        );
     }
 }
 
