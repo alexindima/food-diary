@@ -32,55 +32,11 @@
         />
     </div>
 
-    @if (productData.isLoading()) {
-        <fd-ui-loader class="product-select__loader" />
-    } @else {
-        @if (productData.items().length > 0) {
-            <div class="product-select__list fd-stack fd-gap-sm">
-                @for (item of productItems(); track item.product.id) {
-                    <button
-                        type="button"
-                        class="product-select__item fd-grid fd-gap-sm fd-align-center"
-                        (click)="onProductClick(item.product)"
-                    >
-                        <div class="product-select__thumb fd-place-center">
-                            @if (item.imageUrl) {
-                                <img width="64" height="64" [ngSrc]="item.imageUrl" [alt]="item.product.name" />
-                            } @else {
-                                <fd-ui-icon name="restaurant" />
-                            }
-                        </div>
-                        <div class="product-select__info fd-min-w-0">
-                            <div class="product-select__name fd-ui-action-text fd-truncate">{{ item.product.name }}</div>
-                            <div class="product-select__meta fd-ui-caption fd-truncate">
-                                @if (item.product.brand) {
-                                    {{ item.product.brand }} ·
-                                }
-                                {{ item.product.caloriesPerBase }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}/{{
-                                    item.product.baseAmount
-                                }}{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
-                            </div>
-                        </div>
-                        <span class="product-select__action fd-inline-center">
-                            <fd-ui-button
-                                icon="add"
-                                variant="primary"
-                                fill="solid"
-                                size="sm"
-                                [ariaLabel]="'COMMON.ADD' | translate"
-                                [fdUiHint]="'COMMON.ADD' | translate"
-                            />
-                        </span>
-                    </button>
-                }
-            </div>
-        } @else {
-            <div class="product-select__no-results fd-grid fd-gap-xs fd-ui-body-sm">
-                <fd-ui-icon class="product-select__no-results-icon" name="search_off" size="lg" />
-                {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
-            </div>
-        }
-    }
+    <fd-product-list-dialog-content
+        [isLoading]="productData.isLoading()"
+        [items]="productItems()"
+        (productSelected)="onProductClick($event)"
+    />
 
     @if (productData.totalPages > 1) {
         <fd-ui-pagination

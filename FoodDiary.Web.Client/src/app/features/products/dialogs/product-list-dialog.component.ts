@@ -1,20 +1,18 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
 import { ProductListBaseComponent } from '../components/list/product-list-base.component';
 import type { Product } from '../models/product.data';
 import { ProductAddDialogComponent } from './product-add-dialog.component';
+import { ProductListDialogContentComponent } from './product-list-dialog-content.component';
 
-interface ProductSelectItemViewModel {
+export interface ProductSelectItemViewModel {
     product: Product;
     imageUrl: string | undefined;
 }
@@ -26,15 +24,13 @@ interface ProductSelectItemViewModel {
     styleUrls: ['./product-list-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiLoaderComponent,
         FdUiPaginationComponent,
-        FdUiIconComponent,
+        ProductListDialogContentComponent,
     ],
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

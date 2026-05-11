@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,9 +17,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
@@ -30,8 +27,9 @@ import { RecipeService } from '../api/recipe.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
 import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
 import type { Recipe, RecipeFilters } from '../models/recipe.data';
+import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content.component';
 
-interface RecipeSelectItemViewModel {
+export interface RecipeSelectItemViewModel {
     recipe: Recipe;
     imageUrl: string | undefined;
 }
@@ -48,15 +46,13 @@ const NEXT_PAGE_OFFSET = 1;
     styleUrls: ['./recipe-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiLoaderComponent,
         FdUiPaginationComponent,
-        FdUiIconComponent,
         FdUiInputComponent,
+        RecipeSelectDialogContentComponent,
     ],
 })
 export class RecipeSelectDialogComponent {
