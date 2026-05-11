@@ -14,9 +14,11 @@
                 <h1 class="meal-plan-detail__title fd-ui-display-sm">{{ plan.name }}</h1>
                 <p class="meal-plan-detail__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
                 <div class="meal-plan-detail__actions fd-row fd-wrap fd-gap-sm">
-                    <fd-ui-button icon="content_copy" [hidden]="!plan.isCurated" (click)="adopt()">
-                        {{ 'MEAL_PLANS.ADOPT' | translate }}
-                    </fd-ui-button>
+                    @if (plan.isCurated) {
+                        <fd-ui-button icon="content_copy" (click)="adopt()">
+                            {{ 'MEAL_PLANS.ADOPT' | translate }}
+                        </fd-ui-button>
+                    }
                     <fd-ui-button variant="secondary" icon="shopping_cart" (click)="generateShoppingList()">
                         {{ 'MEAL_PLANS.GENERATE_SHOPPING_LIST' | translate }}
                     </fd-ui-button>

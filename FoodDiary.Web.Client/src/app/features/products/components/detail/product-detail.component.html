@@ -132,23 +132,25 @@
     <div fdUiDialogFooter class="product-detail__footer fd-stack fd-gap-sm">
         <span class="product-detail__warning fd-ui-body-sm" [hidden]="warningMessage() === null">{{ warningMessage() | translate }}</span>
         <div class="product-detail__actions fd-ui-actions fd-ui-actions--end">
-            <fd-ui-button size="md" variant="secondary" icon="edit" [hidden]="!canModify()" (click)="onEdit()">
-                {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
-            </fd-ui-button>
-            <fd-ui-button size="md" variant="danger" icon="delete" [hidden]="!canModify()" (click)="onDelete()">
-                {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
-            </fd-ui-button>
-            <fd-ui-button
-                size="md"
-                variant="secondary"
-                fill="outline"
-                icon="content_copy"
-                [hidden]="canModify()"
-                [disabled]="isDuplicateInProgress"
-                (click)="onDuplicate()"
-            >
-                {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
-            </fd-ui-button>
+            @if (canModify()) {
+                <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
+                    {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
+                </fd-ui-button>
+                <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
+                    {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-ui-button
+                    size="md"
+                    variant="secondary"
+                    fill="outline"
+                    icon="content_copy"
+                    [disabled]="isDuplicateInProgress"
+                    (click)="onDuplicate()"
+                >
+                    {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
+                </fd-ui-button>
+            }
         </div>
     </div>
 </fd-ui-dialog>
