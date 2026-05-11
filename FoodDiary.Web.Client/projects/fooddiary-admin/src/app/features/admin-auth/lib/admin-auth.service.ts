@@ -4,6 +4,9 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 
+const BASE64_BLOCK_SIZE = 4;
+const BASE64_REMAINDER_NONE = 0;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -22,7 +25,7 @@ export class AdminAuthService {
 
     public isAdmin(): boolean {
         const token = this.tokenSignal();
-        if (!token) {
+        if (token === null || token.length === 0) {
             return false;
         }
 
@@ -38,7 +41,7 @@ export class AdminAuthService {
     public async applySsoFromQueryAsync(): Promise<void> {
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
-        if (!code) {
+        if (code === null || code.length === 0) {
             return;
         }
 
@@ -63,14 +66,14 @@ export class AdminAuthService {
         }
 
         const nextQuery = params.toString();
-        const nextUrl = nextQuery ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
+        const nextUrl = nextQuery.length > 0 ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
         window.history.replaceState({}, '', nextUrl);
         this.tokenSignal.set(this.getToken());
     }
 
     public async tryApplySsoFromReturnUrlAsync(returnUrl: string): Promise<string | null> {
         const result = this.extractCodeFromUrl(returnUrl);
-        if (!result) {
+        if (result === null) {
             return null;
         }
 
@@ -94,13 +97,13 @@ export class AdminAuthService {
         }
 
         const token = this.getToken();
-        if (!token) {
+        if (token === null || token.length === 0) {
             return false;
         }
 
         try {
             const response = await firstValueFrom(this.http.post<AdminSsoStartResponse>(`${this.authUrl}/admin-sso/start`, {}));
-            if (!response.code) {
+            if (response.code.length === 0) {
                 return false;
             }
 
@@ -116,7 +119,7 @@ export class AdminAuthService {
         try {
             const response = await firstValueFrom(this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }));
 
-            if (!response.accessToken) {
+            if (response.accessToken.length === 0) {
                 return false;
             }
 
@@ -131,7 +134,7 @@ export class AdminAuthService {
     private captureTokenFromQuery(): void {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('authToken') ?? params.get('accessToken');
-        if (!token) {
+        if (token === null || token.length === 0) {
             return;
         }
 
@@ -142,7 +145,7 @@ export class AdminAuthService {
     private clearCodeFromUrl(params: URLSearchParams): void {
         params.delete('code');
         const nextQuery = params.toString();
-        const nextUrl = nextQuery ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
+        const nextUrl = nextQuery.length > 0 ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
         window.history.replaceState({}, '', nextUrl);
     }
 
@@ -150,7 +153,7 @@ export class AdminAuthService {
         params.delete('authToken');
         params.delete('accessToken');
         const nextQuery = params.toString();
-        const nextUrl = nextQuery ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
+        const nextUrl = nextQuery.length > 0 ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
         window.history.replaceState({}, '', nextUrl);
     }
 
@@ -164,7 +167,7 @@ export class AdminAuthService {
 
     private extractRolesFromToken(token: string): string[] {
         const payload = this.decodePayload(token);
-        if (!payload) {
+        if (payload === null) {
             return [];
         }
 
@@ -187,20 +190,20 @@ export class AdminAuthService {
 
     private extractCodeFromUrl(value: string): { code: string; cleanedUrl: string } | null {
         const decoded = this.safeDecode(value);
-        if (!decoded) {
+        if (decoded.length === 0) {
             return null;
         }
 
         try {
             const url = new URL(decoded, window.location.origin);
             const code = url.searchParams.get('code');
-            if (!code) {
+            if (code === null || code.length === 0) {
                 return null;
             }
 
             url.searchParams.delete('code');
             const cleanedSearch = url.searchParams.toString();
-            const cleanedUrl = cleanedSearch ? `${url.pathname}?${cleanedSearch}` : url.pathname;
+            const cleanedUrl = cleanedSearch.length > 0 ? `${url.pathname}?${cleanedSearch}` : url.pathname;
             return { code, cleanedUrl };
         } catch {
             return null;
@@ -217,13 +220,15 @@ export class AdminAuthService {
 
     private decodePayload(token: string): Record<string, unknown> | null {
         const [, payloadSegment] = token.split('.');
-        if (!payloadSegment) {
+        if (payloadSegment.length === 0) {
             return null;
         }
 
         try {
             const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
-            const padLength = (4 - (normalized.length % 4 || 4)) % 4;
+            const remainder = normalized.length % BASE64_BLOCK_SIZE;
+            const padLength =
+                (BASE64_BLOCK_SIZE - (remainder === BASE64_REMAINDER_NONE ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
             return JSON.parse(decoded) as Record<string, unknown>;

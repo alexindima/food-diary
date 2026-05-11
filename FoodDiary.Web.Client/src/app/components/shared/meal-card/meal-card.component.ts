@@ -40,6 +40,10 @@ export interface MealFavoriteChange {
     favoriteMealId: string | null;
 }
 
+const QUALITY_SCORE_MIN = 0;
+const QUALITY_SCORE_MAX = 100;
+const COLLAGE_IMAGE_LIMIT = 4;
+
 @Component({
     selector: 'fd-meal-card',
     standalone: true,
@@ -63,7 +67,7 @@ export class MealCardComponent {
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isAuthenticated = this.authService.isAuthenticated;
-    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && Boolean(this.meal().id));
+    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.meal().id.length > 0);
     public readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE',
     );
@@ -85,7 +89,7 @@ export class MealCardComponent {
             return null;
         }
 
-        return Math.round(Math.min(100, Math.max(0, score)));
+        return Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, score)));
     });
     private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
     private favoriteMealId: string | null = null;
@@ -93,27 +97,27 @@ export class MealCardComponent {
     public readonly coverImage = computed(() => {
         const image = this.resolvePreviewImage();
         const resolved = resolveMealImageUrl(image ?? undefined, this.meal().mealType ?? undefined) ?? image;
-        const itemImages = image ? [] : this.resolveItemImages();
+        const itemImages = image !== undefined ? [] : this.resolveItemImages();
 
-        if (!image && itemImages.length === 1) {
+        if (image === undefined && itemImages.length === 1) {
             return itemImages[0].url;
         }
 
-        if (!image && itemImages.length > 1) {
+        if (image === undefined && itemImages.length > 1) {
             return null;
         }
 
         return resolved ?? this.fallbackMealImage;
     });
     public readonly collageImages = computed<ReadonlyArray<EntityCardCollageImage>>(() => {
-        if (this.resolvePreviewImage()) {
+        if (this.resolvePreviewImage() !== undefined) {
             return [];
         }
 
         const itemImages = this.resolveItemImages();
         return itemImages.length > 1 ? itemImages : [];
     });
-    public readonly hasPreviewImage = computed(() => Boolean(this.resolvePreviewImage() ?? this.collageImages().length > 0));
+    public readonly hasPreviewImage = computed(() => this.resolvePreviewImage() !== undefined || this.collageImages().length > 0);
 
     public readonly itemCount = computed(() => {
         const meal = this.meal();
@@ -125,7 +129,7 @@ export class MealCardComponent {
     public readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
     public readonly mealTitle = computed(() => {
         const mealType = this.meal().mealType?.trim();
-        const normalizedMealType = mealType ? mealType.toUpperCase() : 'OTHER';
+        const normalizedMealType = mealType !== undefined && mealType.length > 0 ? mealType.toUpperCase() : 'OTHER';
         return this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${normalizedMealType}`);
     });
     private readonly favoriteStateEffect = effect(() => {
@@ -140,8 +144,8 @@ export class MealCardComponent {
 
     public handlePreview(): void {
         const imageUrl = this.resolvePreviewImage();
-        const collageImages = imageUrl ? [] : this.collageImages();
-        if (!imageUrl && collageImages.length === 0) {
+        const collageImages = imageUrl !== undefined ? [] : this.collageImages();
+        if (imageUrl === undefined && collageImages.length === 0) {
             return;
         }
 
@@ -193,7 +197,7 @@ export class MealCardComponent {
     }
 
     private removeFavorite(): void {
-        if (this.favoriteMealId) {
+        if (this.favoriteMealId !== null && this.favoriteMealId.length > 0) {
             this.favoriteMealService
                 .remove(this.favoriteMealId)
                 .pipe(
@@ -220,7 +224,7 @@ export class MealCardComponent {
             .pipe(
                 switchMap(favorites => {
                     const match = favorites.find(favorite => favorite.mealId === this.meal().id);
-                    if (!match) {
+                    if (match === undefined) {
                         return of(null);
                     }
 
@@ -249,7 +253,7 @@ export class MealCardComponent {
 
     private resolvePreviewImage(): string | undefined {
         const explicitImage = this.resolveExplicitPreviewImage();
-        if (explicitImage) {
+        if (explicitImage !== undefined) {
             return explicitImage;
         }
 
@@ -259,7 +263,7 @@ export class MealCardComponent {
 
     private resolveExplicitPreviewImage(): string | undefined {
         const mealImage = this.meal().imageUrl?.trim();
-        if (mealImage) {
+        if (mealImage !== undefined && mealImage.length > 0) {
             return mealImage;
         }
 
@@ -272,7 +276,7 @@ export class MealCardComponent {
 
         for (const item of this.meal().items ?? []) {
             const imageUrl = item?.product?.imageUrl?.trim() ?? item?.recipe?.imageUrl?.trim();
-            if (!imageUrl || seen.has(imageUrl)) {
+            if (imageUrl === undefined || imageUrl.length === 0 || seen.has(imageUrl)) {
                 continue;
             }
 
@@ -282,15 +286,15 @@ export class MealCardComponent {
                 alt: item?.product?.name?.trim() ?? item?.recipe?.name?.trim() ?? this.mealTitle(),
             });
 
-            if (result.length === 4) {
+            if (result.length === COLLAGE_IMAGE_LIMIT) {
                 break;
             }
         }
 
-        if (result.length < 4) {
+        if (result.length < COLLAGE_IMAGE_LIMIT) {
             for (const session of this.meal().aiSessions ?? []) {
                 const imageUrl = session?.imageUrl?.trim();
-                if (!imageUrl || seen.has(imageUrl)) {
+                if (imageUrl === undefined || imageUrl.length === 0 || seen.has(imageUrl)) {
                     continue;
                 }
 
@@ -300,7 +304,7 @@ export class MealCardComponent {
                     alt: session?.notes?.trim() ?? this.mealTitle(),
                 });
 
-                if (result.length === 4) {
+                if (result.length === COLLAGE_IMAGE_LIMIT) {
                     break;
                 }
             }

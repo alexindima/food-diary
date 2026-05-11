@@ -25,6 +25,10 @@ type ProductAiDialogData = {
     initialDescription?: string | null;
 };
 
+const DEFAULT_BASE_AMOUNT = 100;
+const HTTP_FORBIDDEN_STATUS = 403;
+const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
+
 export type ProductAiRecognitionResult = {
     name: string;
     description?: string | null;
@@ -79,7 +83,7 @@ export class ProductAiRecognitionDialogComponent {
     public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
     public readonly resultForm = new FormGroup({
         name: new FormControl('', { nonNullable: true }),
-        portionAmount: new FormControl(100, { nonNullable: true }),
+        portionAmount: new FormControl(DEFAULT_BASE_AMOUNT, { nonNullable: true }),
         baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true }),
         caloriesPerBase: new FormControl(0, { nonNullable: true }),
         proteinsPerBase: new FormControl(0, { nonNullable: true }),
@@ -106,7 +110,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     public readonly statusKey = computed(() => {
-        if (!this.selection()) {
+        if (this.selection() === null) {
             return null;
         }
         if (this.isLoading()) {
@@ -120,11 +124,11 @@ export class ProductAiRecognitionDialogComponent {
         }
         return null;
     });
-    public readonly canApply = computed(() => Boolean(this.nutrition()));
+    public readonly canApply = computed(() => this.nutrition() !== null);
     public readonly itemNames = computed(() =>
         this.results()
-            .map(item => this.capitalizeName((item.nameLocal?.trim() ?? item.nameEn.trim()) || ''))
-            .filter(Boolean),
+            .map(item => this.capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
+            .filter(name => name.length > 0),
     );
     public readonly hasMultipleItems = computed(() => this.results().length > 1);
 
@@ -151,7 +155,7 @@ export class ProductAiRecognitionDialogComponent {
         }
 
         const assetId = this.selection()?.assetId;
-        if (!assetId) {
+        if (assetId === undefined || assetId === null || assetId.length === 0) {
             return;
         }
 
@@ -165,19 +169,20 @@ export class ProductAiRecognitionDialogComponent {
 
     public apply(): void {
         const nutrition = this.nutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return;
         }
 
         const name = this.resultForm.controls.name.value.trim();
         const baseUnit = this.resultForm.controls.baseUnit.value;
-        const baseAmount = this.getNumber(this.resultForm.controls.portionAmount.value) || this.getRecognizedAmount(baseUnit);
+        const requestedBaseAmount = this.getNumber(this.resultForm.controls.portionAmount.value);
+        const baseAmount = requestedBaseAmount > 0 ? requestedBaseAmount : this.getRecognizedAmount(baseUnit);
         const image = this.selection();
 
         const result: ProductAiRecognitionResult = {
-            name: name || this.getFallbackName(),
+            name: name.length > 0 ? name : this.getFallbackName(),
             description: this.getDescription() ?? null,
-            image: image ? { ...image } : null,
+            image: image !== null ? { ...image } : null,
             baseAmount,
             baseUnit,
             caloriesPerBase: this.getNumber(this.resultForm.controls.caloriesPerBase.value),
@@ -205,9 +210,9 @@ export class ProductAiRecognitionDialogComponent {
             })
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 403) {
+                    if (err.status === HTTP_FORBIDDEN_STATUS) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err.status === 429) {
+                    } else if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_GENERIC');
@@ -218,12 +223,12 @@ export class ProductAiRecognitionDialogComponent {
             .subscribe(response => {
                 this.isLoading.set(false);
                 this.hasAnalyzed.set(true);
-                if (!response) {
+                if (response === null) {
                     return;
                 }
                 const items = response.items;
                 this.results.set(items);
-                if (items.length) {
+                if (items.length > 0) {
                     this.runNutrition(items);
                 }
             });
@@ -237,7 +242,7 @@ export class ProductAiRecognitionDialogComponent {
             .calculateNutrition({ items: normalizedItems })
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 429) {
+                    if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
@@ -247,7 +252,7 @@ export class ProductAiRecognitionDialogComponent {
             )
             .subscribe(response => {
                 this.isNutritionLoading.set(false);
-                if (!response) {
+                if (response === null) {
                     return;
                 }
                 this.nutrition.set(response);
@@ -273,7 +278,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private resolveUnit(unit?: string | null): MeasurementUnit {
-        if (!unit) {
+        if (unit === null || unit === undefined || unit.length === 0) {
             return MeasurementUnit.G;
         }
         const normalized = unit.trim().toLowerCase();
@@ -290,7 +295,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private getDefaultBaseAmount(unit: MeasurementUnit): number {
-        return unit === MeasurementUnit.PCS ? 1 : 100;
+        return unit === MeasurementUnit.PCS ? 1 : DEFAULT_BASE_AMOUNT;
     }
 
     private getRecognizedAmount(unit: MeasurementUnit): number {
@@ -299,7 +304,7 @@ export class ProductAiRecognitionDialogComponent {
             .map(item => this.getNumber(item.amount))
             .filter(amount => amount > 0);
 
-        if (compatibleAmounts.length) {
+        if (compatibleAmounts.length > 0) {
             return compatibleAmounts.reduce((total, amount) => total + amount, 0);
         }
 
@@ -323,7 +328,7 @@ export class ProductAiRecognitionDialogComponent {
 
     private getDescription(): string | null {
         const value = this.descriptionControl.value.trim();
-        return value ? value : null;
+        return value.length > 0 ? value : null;
     }
 
     private getFallbackName(): string {
@@ -331,7 +336,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private capitalizeName(value: string): string {
-        if (!value) {
+        if (value.length === 0) {
             return '';
         }
         return value.charAt(0).toUpperCase() + value.slice(1);
@@ -344,7 +349,7 @@ export class ProductAiRecognitionDialogComponent {
 
     private cleanupAsset(): void {
         const assetId = this.selection()?.assetId;
-        if (!assetId) {
+        if (assetId === undefined || assetId === null || assetId.length === 0) {
             return;
         }
 

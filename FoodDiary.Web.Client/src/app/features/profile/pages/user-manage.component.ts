@@ -64,6 +64,12 @@ import { PremiumBillingService } from '../../premium/api/premium-billing.service
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 
+const DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS = 12;
+const DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
+const MAX_FASTING_REMINDER_HOURS = 168;
+const TEST_NOTIFICATION_DELAY_SECONDS = 20;
+const DATE_INPUT_PAD_LENGTH = 2;
+
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
     useFactory: (): FdValidationErrors => ({
@@ -167,9 +173,12 @@ export class UserManageComponent {
             this.isLoadingBilling() ||
             this.isOpeningBillingPortal() ||
             this.isLoadingConnectedDevices() ||
-            !!this.removingConnectedDeviceEndpoint(),
+            this.removingConnectedDeviceEndpoint() !== null,
     );
-    public readonly hasAiConsent = computed(() => !!this.facade.user()?.aiConsentAcceptedAt);
+    public readonly hasAiConsent = computed(() => {
+        const acceptedAt = this.facade.user()?.aiConsentAcceptedAt;
+        return acceptedAt !== null && acceptedAt !== undefined && acceptedAt.length > 0;
+    });
     public readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
     public readonly passwordActionState = computed<PasswordActionState>(() => {
         const hasPassword = this.hasPassword();
@@ -182,8 +191,8 @@ export class UserManageComponent {
     public readonly pushNotificationsEnabled = computed(() => this.facade.user()?.pushNotificationsEnabled ?? false);
     public readonly fastingPushNotificationsEnabled = computed(() => this.facade.user()?.fastingPushNotificationsEnabled ?? true);
     public readonly socialPushNotificationsEnabled = computed(() => this.facade.user()?.socialPushNotificationsEnabled ?? true);
-    public readonly fastingCheckInReminderHours = signal(12);
-    public readonly fastingCheckInFollowUpReminderHours = signal(20);
+    public readonly fastingCheckInReminderHours = signal(DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS);
+    public readonly fastingCheckInFollowUpReminderHours = signal(DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS);
     public readonly fastingReminderPresets = FASTING_REMINDER_PRESETS;
     public readonly pushNotificationsSupported = this.pushNotifications.isSupported;
     public readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
@@ -239,7 +248,7 @@ export class UserManageComponent {
     });
     public readonly billingRenewalLabelKey = computed(() => {
         const overview = this.billingOverview();
-        if (!overview?.isPremium) {
+        if (overview?.isPremium !== true) {
             return 'USER_MANAGE.BILLING_RENEWAL_FREE';
         }
 
@@ -255,7 +264,7 @@ export class UserManageComponent {
     });
     public readonly billingView = computed<BillingViewModel | null>(() => {
         const overview = this.billingOverview();
-        if (!overview) {
+        if (overview === null) {
             return null;
         }
 
@@ -366,7 +375,7 @@ export class UserManageComponent {
         });
         effect(() => {
             const user = this.facade.user();
-            if (!user) {
+            if (user === null) {
                 return;
             }
 
@@ -387,7 +396,7 @@ export class UserManageComponent {
         });
         effect(() => {
             const user = this.facade.user();
-            if (!user || !this.pendingPasswordSetupIntent()) {
+            if (user === null || !this.pendingPasswordSetupIntent()) {
                 return;
             }
 
@@ -457,7 +466,7 @@ export class UserManageComponent {
         this.facade.clearGlobalError();
         const currentImageId = this.userForm.controls.profileImage.value?.assetId;
         const baselineImageId = this.lastUserData?.profileImage?.assetId ?? null;
-        if (currentImageId && currentImageId !== baselineImageId) {
+        if (currentImageId !== null && currentImageId !== undefined && currentImageId.length > 0 && currentImageId !== baselineImageId) {
             this.imageUploadService.deleteAsset(currentImageId).subscribe({
                 error: () => {
                     // swallow errors to avoid blocking reset
@@ -465,7 +474,7 @@ export class UserManageComponent {
             });
         }
 
-        if (this.lastUserData) {
+        if (this.lastUserData !== null) {
             this.applyUserData(this.lastUserData);
         } else {
             this.facade.initialize();
@@ -491,7 +500,7 @@ export class UserManageComponent {
 
         const nextEnabled = !this.pushNotificationsEnabled();
         const user = await this.facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: nextEnabled });
-        if (!user) {
+        if (user === null) {
             return;
         }
 
@@ -544,7 +553,7 @@ export class UserManageComponent {
         const user = await this.facade.updateNotificationPreferencesAsync({
             fastingPushNotificationsEnabled: !this.fastingPushNotificationsEnabled(),
         });
-        if (!user) {
+        if (user === null) {
             return;
         }
 
@@ -564,7 +573,7 @@ export class UserManageComponent {
             return;
         }
 
-        const normalized = Math.max(1, Math.min(168, parsed));
+        const normalized = Math.max(1, Math.min(MAX_FASTING_REMINDER_HOURS, parsed));
         if (field === 'first') {
             this.fastingCheckInReminderHours.set(normalized);
             return;
@@ -599,14 +608,14 @@ export class UserManageComponent {
             fastingCheckInReminderHours: firstReminder,
             fastingCheckInFollowUpReminderHours: followUpReminder,
         });
-        if (!user) {
+        if (user === null) {
             return;
         }
 
         this.frontendObservability.recordFastingReminderTimingSaved({
             firstReminderHours: firstReminder,
             followUpReminderHours: followUpReminder,
-            source: this.activeFastingReminderPresetId() ? 'preset' : 'manual',
+            source: this.activeFastingReminderPresetId() !== null ? 'preset' : 'manual',
             presetId: this.activeFastingReminderPresetId() ?? undefined,
         });
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
@@ -614,7 +623,7 @@ export class UserManageComponent {
 
     public async removeConnectedDeviceAsync(subscription: WebPushSubscriptionItem): Promise<void> {
         const endpoint = subscription.endpoint;
-        if (!endpoint || this.removingConnectedDeviceEndpoint() || this.pushNotificationsBusy()) {
+        if (endpoint.length === 0 || this.removingConnectedDeviceEndpoint() !== null || this.pushNotificationsBusy()) {
             return;
         }
 
@@ -623,7 +632,7 @@ export class UserManageComponent {
                 ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
                 : await this.facade.removeWebPushSubscriptionAsync(endpoint);
 
-        if (!removed) {
+        if (removed === false) {
             this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'failed', {
                 currentDevice: this.isCurrentDevice(subscription),
             });
@@ -641,7 +650,7 @@ export class UserManageComponent {
     private buildConnectedDeviceLabel(subscription: WebPushSubscriptionItem): string {
         const browser = this.getBrowserLabel(subscription.userAgent);
         const platform = this.getPlatformLabel(subscription.userAgent);
-        return platform ? `${browser} / ${platform}` : browser;
+        return platform !== null ? `${browser} / ${platform}` : browser;
     }
 
     private buildConnectedDeviceMeta(subscription: WebPushSubscriptionItem): string {
@@ -649,13 +658,13 @@ export class UserManageComponent {
             subscription.endpointHost,
             subscription.locale?.toUpperCase() ?? null,
             this.formatDateTime(subscription.updatedAtUtc ?? subscription.createdAtUtc),
-        ].filter((value): value is string => !!value);
+        ].filter((value): value is string => value !== null && value.length > 0);
 
         return segments.join(' | ');
     }
 
     public isCurrentDevice(subscription: WebPushSubscriptionItem): boolean {
-        return !!subscription.endpoint && subscription.endpoint === this.currentSubscriptionEndpoint();
+        return subscription.endpoint.length > 0 && subscription.endpoint === this.currentSubscriptionEndpoint();
     }
 
     public async toggleSocialPushNotificationsAsync(): Promise<void> {
@@ -666,7 +675,7 @@ export class UserManageComponent {
         const user = await this.facade.updateNotificationPreferencesAsync({
             socialPushNotificationsEnabled: !this.socialPushNotificationsEnabled(),
         });
-        if (!user) {
+        if (user === null) {
             return;
         }
 
@@ -688,7 +697,7 @@ export class UserManageComponent {
         this.isSchedulingTestNotification.set(true);
         this.notificationService
             .scheduleTestNotification({
-                delaySeconds: 20,
+                delaySeconds: TEST_NOTIFICATION_DELAY_SECONDS,
                 type: 'FastingCompleted',
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -697,7 +706,7 @@ export class UserManageComponent {
                     this.isSchedulingTestNotification.set(false);
                     this.frontendObservability.recordNotificationSubscriptionEvent('test-push.schedule', 'success', {
                         type: 'FastingCompleted',
-                        delaySeconds: 20,
+                        delaySeconds: TEST_NOTIFICATION_DELAY_SECONDS,
                     });
                     this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_SCHEDULED'));
                 },
@@ -705,7 +714,7 @@ export class UserManageComponent {
                     this.isSchedulingTestNotification.set(false);
                     this.frontendObservability.recordNotificationSubscriptionEvent('test-push.schedule', 'failed', {
                         type: 'FastingCompleted',
-                        delaySeconds: 20,
+                        delaySeconds: TEST_NOTIFICATION_DELAY_SECONDS,
                     });
                     this.toastService.error(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_ERROR'));
                 },
@@ -774,7 +783,7 @@ export class UserManageComponent {
                     this.loadDietologistRelationship();
                 },
                 error: () => {
-                    if (previousPermissions) {
+                    if (previousPermissions !== undefined) {
                         this.dietologistForm.patchValue(previousPermissions, { emitEvent: false });
                         this.updateDietologistPermissionsState();
                         this.dietologistForm.markAsPristine();
@@ -805,7 +814,7 @@ export class UserManageComponent {
                 })
                 .afterClosed()
                 .subscribe(confirmed => {
-                    if (confirmed) {
+                    if (confirmed === true) {
                         this.executeDietologistRevoke();
                     }
 
@@ -846,7 +855,7 @@ export class UserManageComponent {
             })
             .afterClosed()
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     const previousPermissions = this.getDietologistPermissions();
                     this.dietologistForm.controls.shareProfile.setValue(false);
                     if (this.hasDietologistRelationship()) {
@@ -863,7 +872,7 @@ export class UserManageComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control?.invalid) {
+        if (control?.invalid !== true) {
             return null;
         }
 
@@ -873,13 +882,13 @@ export class UserManageComponent {
         }
 
         const errors = control.errors;
-        if (!errors) {
+        if (errors === null) {
             return null;
         }
 
         for (const key of Object.keys(errors)) {
             const resolver = this.validationErrors?.[key];
-            if (!resolver) {
+            if (resolver === undefined) {
                 continue;
             }
 
@@ -925,7 +934,8 @@ export class UserManageComponent {
     }
 
     private buildProfileStatus(): ProfileStatusViewModel {
-        if (this.globalError() && this.userForm.dirty) {
+        const globalError = this.globalError();
+        if (globalError !== null && globalError.length > 0 && this.userForm.dirty) {
             return { key: 'USER_MANAGE.PROFILE_STATUS_ERROR', tone: 'danger' };
         }
 
@@ -948,7 +958,7 @@ export class UserManageComponent {
             return 'USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING';
         }
 
-        if (this.removingConnectedDeviceEndpoint()) {
+        if (this.removingConnectedDeviceEndpoint() !== null) {
             return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_REMOVING';
         }
 
@@ -987,7 +997,7 @@ export class UserManageComponent {
             )
             .subscribe({
                 next: session => {
-                    if (!session.url) {
+                    if (session.url.length === 0) {
                         this.billingError.set('USER_MANAGE.BILLING_PORTAL_ERROR');
                         this.toastService.error(this.translateService.instant('USER_MANAGE.BILLING_PORTAL_ERROR'));
                         return;
@@ -1066,7 +1076,7 @@ export class UserManageComponent {
     }
 
     private getBillingPlanLabelKey(plan: BillingPlan | null): string {
-        if (!this.billingOverview()?.isPremium) {
+        if (this.billingOverview()?.isPremium !== true) {
             return 'USER_MANAGE.BILLING_PLAN_FREE';
         }
 
@@ -1095,11 +1105,12 @@ export class UserManageComponent {
     }
 
     private getBillingProviderLabel(provider: BillingProvider | null): string {
-        if (!provider?.trim()) {
+        const normalizedProvider = provider?.trim() ?? '';
+        if (normalizedProvider.length === 0) {
             return this.translateService.instant('USER_MANAGE.BILLING_PROVIDER_NONE');
         }
 
-        switch (provider.toLowerCase()) {
+        switch (normalizedProvider.toLowerCase()) {
             case 'yookassa':
                 return 'YooKassa';
             case 'paddle':
@@ -1107,12 +1118,12 @@ export class UserManageComponent {
             case 'stripe':
                 return 'Stripe';
             default:
-                return provider;
+                return normalizedProvider;
         }
     }
 
     private syncDietologistFormFromRelationship(relationship: DietologistRelationship | null): void {
-        if (relationship) {
+        if (relationship !== null) {
             this.dietologistForm.patchValue({
                 email: relationship.email,
                 ...relationship.permissions,
@@ -1224,20 +1235,23 @@ export class UserManageComponent {
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return null;
         }
 
         const normalized = value.trim().toLowerCase();
-        if (!normalized) {
+        if (normalized.length === 0) {
             return null;
         }
 
         const [code] = normalized.split(/[-_]/);
-        return code || null;
+        return code.length > 0 ? code : null;
     }
 
     private mapUserToForm(user: User): Partial<UserFormValues> {
+        const birthDate = user.birthDate ?? null;
+        const activityLevel = user.activityLevel ?? '';
+        const profileImage = user.profileImage ?? '';
         return {
             email: user.email,
             username: user.username,
@@ -1247,11 +1261,11 @@ export class UserManageComponent {
             language: this.normalizeLanguage(user.language),
             theme: this.normalizeTheme(user.theme),
             uiStyle: this.normalizeUiStyle(user.uiStyle),
-            birthDate: user.birthDate ? this.formatDateInput(new Date(user.birthDate)) : null,
+            birthDate: birthDate !== null ? this.formatDateInput(new Date(birthDate)) : null,
             height: user.height ?? null,
-            activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
+            activityLevel: activityLevel.length > 0 ? (activityLevel.toUpperCase() as ActivityLevelOption) : null,
             stepGoal: user.stepGoal ?? null,
-            profileImage: user.profileImage ? { url: user.profileImage, assetId: user.profileImageAssetId ?? null } : null,
+            profileImage: profileImage.length > 0 ? { url: profileImage, assetId: user.profileImageAssetId ?? null } : null,
             pushNotificationsEnabled: user.pushNotificationsEnabled,
             fastingPushNotificationsEnabled: user.fastingPushNotificationsEnabled,
             socialPushNotificationsEnabled: user.socialPushNotificationsEnabled,
@@ -1260,8 +1274,8 @@ export class UserManageComponent {
 
     private formatDateInput(date: Date): string {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(DATE_INPUT_PAD_LENGTH, '0');
+        const day = String(date.getDate()).padStart(DATE_INPUT_PAD_LENGTH, '0');
         return `${year}-${month}-${day}`;
     }
 
@@ -1275,7 +1289,7 @@ export class UserManageComponent {
     }
 
     private normalizeGender(value: string | null | undefined): Gender | null {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return null;
         }
 
@@ -1293,7 +1307,7 @@ export class UserManageComponent {
     }
 
     private normalizeTheme(value: string | null | undefined): AppThemeName | null {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return null;
         }
 
@@ -1307,7 +1321,7 @@ export class UserManageComponent {
     }
 
     private normalizeUiStyle(value: string | null | undefined): AppUiStyleName | null {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return null;
         }
 
@@ -1329,7 +1343,7 @@ export class UserManageComponent {
     }
 
     public formatDateTime(value: string | null): string | null {
-        if (!value) {
+        if (value === null || value.length === 0) {
             return null;
         }
 
@@ -1345,7 +1359,7 @@ export class UserManageComponent {
     }
 
     private formatLocalizedDate(value: string | null | undefined): string | null {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return null;
         }
 

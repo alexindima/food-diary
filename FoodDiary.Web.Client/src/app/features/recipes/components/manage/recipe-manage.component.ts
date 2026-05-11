@@ -36,6 +36,14 @@ import type {
 } from './recipe-manage.types';
 import { RecipeStepsListComponent, type StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
 
+const CALORIE_MISMATCH_THRESHOLD = 0.2;
+const PERCENT_FULL = 100;
+const LONG_TEXT_MAX_LENGTH = 1_000;
+const STEP_TITLE_MAX_LENGTH = 120;
+const MIN_INGREDIENT_AMOUNT = 0.01;
+const DEFAULT_PRODUCT_BASE_AMOUNT = 100;
+const DEFAULT_PRODUCT_QUALITY_SCORE = 50;
+
 @Component({
     selector: 'fd-recipe-manage',
     imports: [
@@ -71,7 +79,7 @@ export class RecipeManageComponent {
         fiber: 'manualFiber',
         alcohol: 'manualAlcohol',
     };
-    private readonly calorieMismatchThreshold = 0.2;
+    private readonly calorieMismatchThreshold = CALORIE_MISMATCH_THRESHOLD;
     private readonly recipeManageFacade = inject(RecipeManageFacade);
 
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
@@ -104,7 +112,7 @@ export class RecipeManageComponent {
             isEmpty: false,
             segments: positive.map(entry => ({
                 key: entry.key,
-                percent: (entry.value / total) * 100,
+                percent: (entry.value / total) * PERCENT_FULL,
             })),
         };
     });
@@ -115,7 +123,7 @@ export class RecipeManageComponent {
     public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
     public readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
-        const isEdit = !!this.recipe();
+        const isEdit = this.recipe() !== null;
 
         return {
             titleKey: isEdit ? 'RECIPE_MANAGE.EDIT_TITLE' : 'RECIPE_MANAGE.ADD_TITLE',
@@ -131,8 +139,8 @@ export class RecipeManageComponent {
     public constructor() {
         this.recipeForm = new FormGroup<RecipeFormData>({
             name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-            description: new FormControl('', [Validators.maxLength(1000)]),
-            comment: new FormControl<string | null>(null, [Validators.maxLength(1000)]),
+            description: new FormControl('', [Validators.maxLength(LONG_TEXT_MAX_LENGTH)]),
+            comment: new FormControl<string | null>(null, [Validators.maxLength(LONG_TEXT_MAX_LENGTH)]),
             category: new FormControl<string | null>(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
             prepTime: new FormControl<number | null>(0, [Validators.min(0)]),
@@ -180,7 +188,7 @@ export class RecipeManageComponent {
         effect(() => {
             const recipe = this.recipe();
             untracked(() => {
-                if (recipe) {
+                if (recipe !== null) {
                     if (this.lastRecipeId !== recipe.id) {
                         this.lastRecipeId = recipe.id;
                         this.populateForm(recipe);
@@ -234,7 +242,7 @@ export class RecipeManageComponent {
     public onProductSelectClick(event: StepIngredientEvent): void {
         const { stepIndex, ingredientIndex } = event;
         this.recipeManageFacade.openItemSelectionDialog().subscribe(selection => {
-            if (!selection) {
+            if (selection === null) {
                 return;
             }
             const ingredientsArray = this.steps.at(stepIndex).controls.ingredients;
@@ -301,11 +309,11 @@ export class RecipeManageComponent {
     public onSubmit(): void {
         this.markFormGroupTouched(this.recipeForm);
 
-        if (this.macrosError()) {
+        if (this.macrosError() !== null) {
             return;
         }
 
-        if (!this.recipeForm.valid) {
+        if (this.recipeForm.valid === false) {
             this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
@@ -315,7 +323,7 @@ export class RecipeManageComponent {
 
         this.recipeManageFacade.clearGlobalError();
 
-        if (existingRecipe) {
+        if (existingRecipe !== null) {
             this.recipeManageFacade.updateRecipe(existingRecipe.id, recipeData);
         } else {
             this.recipeManageFacade.addRecipe(recipeData);
@@ -343,7 +351,7 @@ export class RecipeManageComponent {
         const steps = formValue.steps
             .map(step => {
                 const ingredients = step.ingredients
-                    .filter(ingredient => !!ingredient.food || !!ingredient.nestedRecipeId)
+                    .filter(ingredient => ingredient.food !== null || ingredient.nestedRecipeId !== null)
                     .map(ingredient => ({
                         productId: ingredient.food?.id,
                         nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
@@ -451,12 +459,13 @@ export class RecipeManageComponent {
     }
 
     private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
-        const ingredientValues = step?.ingredients.length
-            ? step.ingredients
-            : [{ food: null, amount: null, foodName: null, nestedRecipeId: null, nestedRecipeName: null }];
+        const ingredientValues =
+            step !== undefined && step.ingredients.length > 0
+                ? step.ingredients
+                : [{ food: null, amount: null, foodName: null, nestedRecipeId: null, nestedRecipeName: null }];
 
         return new FormGroup<StepFormData>({
-            title: new FormControl(step?.title ?? null, [Validators.maxLength(120)]),
+            title: new FormControl(step?.title ?? null, [Validators.maxLength(STEP_TITLE_MAX_LENGTH)]),
             imageUrl: new FormControl<ImageSelection | null>(step?.imageUrl ?? null),
             description: new FormControl(step?.description ?? '', {
                 nonNullable: true,
@@ -479,7 +488,7 @@ export class RecipeManageComponent {
     ): FormGroup<IngredientFormData> {
         return new FormGroup<IngredientFormData>({
             food: new FormControl(food),
-            amount: new FormControl(amount, [Validators.required, Validators.min(0.01)]),
+            amount: new FormControl(amount, [Validators.required, Validators.min(MIN_INGREDIENT_AMOUNT)]),
             foodName: new FormControl<string | null>(food?.name ?? nestedRecipeName ?? null, [Validators.required]),
             nestedRecipeId: new FormControl<string | null>(nestedRecipeId),
             nestedRecipeName: new FormControl<string | null>(nestedRecipeName),
@@ -487,7 +496,7 @@ export class RecipeManageComponent {
     }
 
     private mapIngredientToFormValue(ingredient: RecipeIngredient): IngredientFormValues | null {
-        if (ingredient.nestedRecipeId) {
+        if (ingredient.nestedRecipeId !== null && ingredient.nestedRecipeId !== undefined && ingredient.nestedRecipeId.length > 0) {
             return {
                 food: null,
                 amount: ingredient.amount,
@@ -497,7 +506,7 @@ export class RecipeManageComponent {
             };
         }
         const product = this.buildIngredientProduct(ingredient);
-        if (!product) {
+        if (product === null) {
             return null;
         }
 
@@ -511,14 +520,14 @@ export class RecipeManageComponent {
     }
 
     private buildIngredientProduct(ingredient: RecipeIngredient): Product | null {
-        if (!ingredient.productId) {
+        if (ingredient.productId === null || ingredient.productId === undefined || ingredient.productId.length === 0) {
             return null;
         }
 
         const rawUnit = ingredient.productBaseUnit as MeasurementUnit | string | undefined;
         const unit = Object.values(MeasurementUnit).includes(rawUnit as MeasurementUnit) ? (rawUnit as MeasurementUnit) : MeasurementUnit.G;
 
-        const baseAmount = ingredient.productBaseAmount ?? 100;
+        const baseAmount = ingredient.productBaseAmount ?? DEFAULT_PRODUCT_BASE_AMOUNT;
         return {
             id: ingredient.productId,
             name: ingredient.productName ?? this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
@@ -541,7 +550,7 @@ export class RecipeManageComponent {
             visibility: ProductVisibility.Private,
             createdAt: new Date(),
             isOwnedByCurrentUser: true,
-            qualityScore: 50,
+            qualityScore: DEFAULT_PRODUCT_QUALITY_SCORE,
             qualityGrade: 'yellow',
         };
     }
@@ -762,7 +771,7 @@ export class RecipeManageComponent {
     }
 
     private normalizeVisibility(value?: RecipeVisibility | string | null): RecipeVisibility {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return RecipeVisibility.Public;
         }
 
