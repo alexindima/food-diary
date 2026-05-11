@@ -10,12 +10,23 @@ import { MeasurementUnit, type Product, ProductVisibility } from '../../../produ
 import { ConsumptionSourceType, type Meal } from '../../models/meal.data';
 import { MealDetailComponent } from './meal-detail.component';
 
+const BASE_AMOUNT = 100;
+const TOTAL_CALORIES = 500;
+const TOTAL_PROTEINS = 30;
+const TOTAL_FATS = 20;
+const TOTAL_CARBS = 50;
+const TOTAL_FIBER = 5;
+const EXPECTED_TAB_COUNT = 2;
+const EXPECTED_MACRO_BLOCK_COUNT = 5;
+const SECOND_ITEM_AMOUNT = 120;
+const THIRD_ITEM_AMOUNT = 140;
+
 const createProduct = (id: string, name: string): Product => ({
     id,
     name,
     baseUnit: MeasurementUnit.G,
-    baseAmount: 100,
-    defaultPortionAmount: 100,
+    baseAmount: BASE_AMOUNT,
+    defaultPortionAmount: BASE_AMOUNT,
     caloriesPerBase: 0,
     proteinsPerBase: 0,
     fatsPerBase: 0,
@@ -37,11 +48,11 @@ const mockMeal: Meal = {
     comment: null,
     imageUrl: null,
     imageAssetId: null,
-    totalCalories: 500,
-    totalProteins: 30,
-    totalFats: 20,
-    totalCarbs: 50,
-    totalFiber: 5,
+    totalCalories: TOTAL_CALORIES,
+    totalProteins: TOTAL_PROTEINS,
+    totalFats: TOTAL_FATS,
+    totalCarbs: TOTAL_CARBS,
+    totalFiber: TOTAL_FIBER,
     totalAlcohol: 0,
     isNutritionAutoCalculated: true,
     preMealSatietyLevel: null,
@@ -88,16 +99,16 @@ describe('MealDetailComponent', () => {
     });
 
     it('should extract nutrition values from meal', () => {
-        expect(component.calories).toBe(500);
-        expect(component.proteins).toBe(30);
-        expect(component.fats).toBe(20);
-        expect(component.carbs).toBe(50);
-        expect(component.fiber).toBe(5);
+        expect(component.calories).toBe(TOTAL_CALORIES);
+        expect(component.proteins).toBe(TOTAL_PROTEINS);
+        expect(component.fats).toBe(TOTAL_FATS);
+        expect(component.carbs).toBe(TOTAL_CARBS);
+        expect(component.fiber).toBe(TOTAL_FIBER);
         expect(component.alcohol).toBe(0);
     });
 
     it('should have summary and nutrients tabs', () => {
-        expect(component.tabs.length).toBe(2);
+        expect(component.tabs.length).toBe(EXPECTED_TAB_COUNT);
         expect(component.tabs[0].value).toBe('summary');
         expect(component.tabs[1].value).toBe('nutrients');
     });
@@ -163,7 +174,7 @@ describe('MealDetailComponent', () => {
                             sessionId: 'session-1',
                             nameEn: 'AI item',
                             nameLocal: 'ИИ позиция',
-                            amount: 100,
+                            amount: BASE_AMOUNT,
                             unit: 'g',
                             calories: 0,
                             proteins: 0,
@@ -195,10 +206,10 @@ describe('MealDetailComponent', () => {
     });
 
     it('should build macro blocks', () => {
-        expect(component.macroBlocks.length).toBe(5);
-        expect(component.macroBlocks[0].value).toBe(30); // proteins
-        expect(component.macroBlocks[1].value).toBe(20); // fats
-        expect(component.macroBlocks[2].value).toBe(50); // carbs
+        expect(component.macroBlocks.length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
+        expect(component.macroBlocks[0].value).toBe(TOTAL_PROTEINS);
+        expect(component.macroBlocks[1].value).toBe(TOTAL_FATS);
+        expect(component.macroBlocks[2].value).toBe(TOTAL_CARBS);
     });
 
     it('should collapse item preview and expand hidden items', async () => {
@@ -208,21 +219,21 @@ describe('MealDetailComponent', () => {
                 {
                     id: 'item-1',
                     consumptionId: '1',
-                    amount: 100,
+                    amount: BASE_AMOUNT,
                     sourceType: ConsumptionSourceType.Product,
                     product: createProduct('p1', 'First item'),
                 },
                 {
                     id: 'item-2',
                     consumptionId: '1',
-                    amount: 120,
+                    amount: SECOND_ITEM_AMOUNT,
                     sourceType: ConsumptionSourceType.Product,
                     product: createProduct('p2', 'Second item'),
                 },
                 {
                     id: 'item-3',
                     consumptionId: '1',
-                    amount: 140,
+                    amount: THIRD_ITEM_AMOUNT,
                     sourceType: ConsumptionSourceType.Product,
                     product: createProduct('p3', 'Third item'),
                 },

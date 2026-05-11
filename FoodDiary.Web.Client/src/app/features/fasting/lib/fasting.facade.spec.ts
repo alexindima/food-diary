@@ -8,6 +8,23 @@ import { FastingService } from '../api/fasting.service';
 import type { FastingOverview, FastingSession } from '../models/fasting.data';
 import { FastingFacade } from './fasting.facade';
 
+const DEFAULT_FASTING_HOURS = 16;
+const DEFAULT_EXTEND_HOURS = 24;
+const CUSTOM_REDUCE_HOURS = 8;
+const CUSTOM_EXTENDED_HOURS = 48;
+const CUSTOM_RESTORED_HOURS = 72;
+const REDUCED_PLANNED_HOURS = 28;
+const REMINDER_HOURS = 12;
+const FOLLOW_UP_REMINDER_HOURS = 20;
+const HISTORY_PAGE = 2;
+const HISTORY_TOTAL_ITEMS = 11;
+const COMPLETION_RATE = 50;
+const CHECK_IN_RATE = 25;
+const HUNGER_LEVEL = 2;
+const ENERGY_LEVEL = 4;
+const MOOD_LEVEL = 4;
+const EXTENDED_PROTOCOL_HOURS = 36;
+
 describe('FastingFacade', () => {
     let facade: FastingFacade;
     let fastingService: {
@@ -28,9 +45,9 @@ describe('FastingFacade', () => {
         id: 'session-1',
         startedAtUtc: '2026-04-12T06:00:00Z',
         endedAtUtc: null,
-        initialPlannedDurationHours: 16,
+        initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
         addedDurationHours: 0,
-        plannedDurationHours: 16,
+        plannedDurationHours: DEFAULT_FASTING_HOURS,
         protocol: 'F16_8',
         planType: 'Intermittent',
         occurrenceKind: 'FastingWindow',
@@ -57,9 +74,9 @@ describe('FastingFacade', () => {
         stats: {
             totalCompleted: 2,
             currentStreak: 1,
-            averageDurationHours: 16,
-            completionRateLast30Days: 50,
-            checkInRateLast30Days: 25,
+            averageDurationHours: DEFAULT_FASTING_HOURS,
+            completionRateLast30Days: COMPLETION_RATE,
+            checkInRateLast30Days: CHECK_IN_RATE,
             lastCheckInAtUtc: null,
             topSymptom: null,
         },
@@ -82,7 +99,11 @@ describe('FastingFacade', () => {
 
         fastingService = {
             getOverview: vi.fn().mockReturnValue(of(baseOverview)),
-            getHistory: vi.fn().mockReturnValue(of({ data: [], page: 2, limit: 10, totalPages: 2, totalItems: 11 })),
+            getHistory: vi
+                .fn()
+                .mockReturnValue(
+                    of({ data: [], page: HISTORY_PAGE, limit: 10, totalPages: HISTORY_PAGE, totalItems: HISTORY_TOTAL_ITEMS }),
+                ),
             updateCheckIn: vi.fn(),
             end: vi.fn(),
             start: vi.fn(),
@@ -96,8 +117,8 @@ describe('FastingFacade', () => {
         };
         userService = {
             user: vi.fn(() => ({
-                fastingCheckInReminderHours: 12,
-                fastingCheckInFollowUpReminderHours: 20,
+                fastingCheckInReminderHours: REMINDER_HOURS,
+                fastingCheckInFollowUpReminderHours: FOLLOW_UP_REMINDER_HOURS,
             })),
         };
 
@@ -128,8 +149,8 @@ describe('FastingFacade', () => {
                 data: [activeSession],
                 page: 1,
                 limit: 10,
-                totalPages: 2,
-                totalItems: 11,
+                totalPages: HISTORY_PAGE,
+                totalItems: HISTORY_TOTAL_ITEMS,
             },
         };
         fastingService.getOverview.mockReturnValueOnce(of(overview));
@@ -161,10 +182,10 @@ describe('FastingFacade', () => {
         fastingService.getHistory.mockReturnValueOnce(
             of({
                 data: [olderSession],
-                page: 2,
+                page: HISTORY_PAGE,
                 limit: 10,
-                totalPages: 2,
-                totalItems: 11,
+                totalPages: HISTORY_PAGE,
+                totalItems: HISTORY_TOTAL_ITEMS,
             }),
         );
 
@@ -175,12 +196,12 @@ describe('FastingFacade', () => {
             expect.objectContaining({
                 from: '2026-03-01T00:00:00.000Z',
                 to: '2026-05-31T23:59:59.999Z',
-                page: 2,
+                page: HISTORY_PAGE,
                 limit: 10,
             }),
         );
         expect(facade.history()).toEqual([activeSession, olderSession]);
-        expect(facade.historyPage()).toBe(2);
+        expect(facade.historyPage()).toBe(HISTORY_PAGE);
     });
 
     it('saves check-in, increments version, and refreshes overview', () => {
@@ -189,18 +210,18 @@ describe('FastingFacade', () => {
             of({
                 ...activeSession,
                 checkInAtUtc: '2026-04-12T10:00:00Z',
-                hungerLevel: 2,
-                energyLevel: 4,
-                moodLevel: 4,
+                hungerLevel: HUNGER_LEVEL,
+                energyLevel: ENERGY_LEVEL,
+                moodLevel: MOOD_LEVEL,
                 symptoms: ['weakness'],
                 checkInNotes: 'steady',
                 checkIns: [
                     {
                         id: 'checkin-1',
                         checkedInAtUtc: '2026-04-12T10:00:00Z',
-                        hungerLevel: 2,
-                        energyLevel: 4,
-                        moodLevel: 4,
+                        hungerLevel: HUNGER_LEVEL,
+                        energyLevel: ENERGY_LEVEL,
+                        moodLevel: MOOD_LEVEL,
                         symptoms: ['weakness'],
                         notes: 'steady',
                     },
@@ -213,18 +234,18 @@ describe('FastingFacade', () => {
                 currentSession: {
                     ...activeSession,
                     checkInAtUtc: '2026-04-12T10:00:00Z',
-                    hungerLevel: 2,
-                    energyLevel: 4,
-                    moodLevel: 4,
+                    hungerLevel: HUNGER_LEVEL,
+                    energyLevel: ENERGY_LEVEL,
+                    moodLevel: MOOD_LEVEL,
                     symptoms: ['weakness'],
                     checkInNotes: 'steady',
                     checkIns: [
                         {
                             id: 'checkin-1',
                             checkedInAtUtc: '2026-04-12T10:00:00Z',
-                            hungerLevel: 2,
-                            energyLevel: 4,
-                            moodLevel: 4,
+                            hungerLevel: HUNGER_LEVEL,
+                            energyLevel: ENERGY_LEVEL,
+                            moodLevel: MOOD_LEVEL,
                             symptoms: ['weakness'],
                             notes: 'steady',
                         },
@@ -233,17 +254,17 @@ describe('FastingFacade', () => {
             }),
         );
 
-        facade.setHungerLevel(2);
-        facade.setEnergyLevel(4);
-        facade.setMoodLevel(4);
+        facade.setHungerLevel(HUNGER_LEVEL);
+        facade.setEnergyLevel(ENERGY_LEVEL);
+        facade.setMoodLevel(MOOD_LEVEL);
         facade.toggleSymptom('weakness');
         facade.setCheckInNotes('steady');
         facade.saveCheckIn();
 
         expect(fastingService.updateCheckIn).toHaveBeenCalledWith({
-            hungerLevel: 2,
-            energyLevel: 4,
-            moodLevel: 4,
+            hungerLevel: HUNGER_LEVEL,
+            energyLevel: ENERGY_LEVEL,
+            moodLevel: MOOD_LEVEL,
             symptoms: ['weakness'],
             checkInNotes: 'steady',
         });
@@ -253,9 +274,9 @@ describe('FastingFacade', () => {
             'check-in.saved',
             expect.objectContaining({
                 sessionId: 'session-1',
-                hungerLevel: 2,
-                energyLevel: 4,
-                moodLevel: 4,
+                hungerLevel: HUNGER_LEVEL,
+                energyLevel: ENERGY_LEVEL,
+                moodLevel: MOOD_LEVEL,
             }),
         );
     });
@@ -264,7 +285,7 @@ describe('FastingFacade', () => {
         facade.currentSession.set(activeSession);
         facade.selectMode('cyclic');
         facade.selectProtocol('F20_4');
-        facade.setCustomHours(48);
+        facade.setCustomHours(CUSTOM_EXTENDED_HOURS);
         fastingService.end.mockReturnValueOnce(
             of({
                 ...activeSession,
@@ -282,7 +303,7 @@ describe('FastingFacade', () => {
         expect(facade.currentSession()).toBeNull();
         expect(facade.selectedMode()).toBe('intermittent');
         expect(facade.selectedProtocol()).toBe('F16_8');
-        expect(facade.extendHours()).toBe(24);
+        expect(facade.extendHours()).toBe(DEFAULT_EXTEND_HOURS);
     });
 
     it('keeps selected protocol valid when switching between setup modes', () => {
@@ -305,12 +326,12 @@ describe('FastingFacade', () => {
     it('restores an intermittent protocol after switching from custom extended setup', () => {
         facade.selectMode('extended');
         facade.selectProtocol('Custom');
-        facade.setCustomHours(72);
+        facade.setCustomHours(CUSTOM_RESTORED_HOURS);
 
         facade.selectMode('intermittent');
 
         expect(facade.selectedProtocol()).toBe('F16_8');
-        expect(facade.plannedDurationHours()).toBe(16);
+        expect(facade.plannedDurationHours()).toBe(DEFAULT_FASTING_HOURS);
     });
 
     it('reduces target locally without overview refresh', () => {
@@ -319,8 +340,8 @@ describe('FastingFacade', () => {
             protocol: 'F36_0',
             planType: 'Extended',
             occurrenceKind: 'FastDay',
-            initialPlannedDurationHours: 36,
-            plannedDurationHours: 36,
+            initialPlannedDurationHours: EXTENDED_PROTOCOL_HOURS,
+            plannedDurationHours: EXTENDED_PROTOCOL_HOURS,
         });
         fastingService.reduceTarget.mockReturnValueOnce(
             of({
@@ -328,15 +349,15 @@ describe('FastingFacade', () => {
                 protocol: 'F36_0',
                 planType: 'Extended',
                 occurrenceKind: 'FastDay',
-                initialPlannedDurationHours: 36,
-                addedDurationHours: -8,
-                plannedDurationHours: 28,
+                initialPlannedDurationHours: EXTENDED_PROTOCOL_HOURS,
+                addedDurationHours: -CUSTOM_REDUCE_HOURS,
+                plannedDurationHours: REDUCED_PLANNED_HOURS,
             }),
         );
-        facade.reduceTargetByHours(8);
+        facade.reduceTargetByHours(CUSTOM_REDUCE_HOURS);
 
-        expect(fastingService.reduceTarget).toHaveBeenCalledWith({ reducedHours: 8 });
+        expect(fastingService.reduceTarget).toHaveBeenCalledWith({ reducedHours: CUSTOM_REDUCE_HOURS });
         expect(fastingService.getOverview).not.toHaveBeenCalled();
-        expect(facade.currentSession()?.plannedDurationHours).toBe(28);
+        expect(facade.currentSession()?.plannedDurationHours).toBe(REDUCED_PLANNED_HOURS);
     });
 });

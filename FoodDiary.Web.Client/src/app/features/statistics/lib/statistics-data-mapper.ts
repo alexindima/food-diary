@@ -34,33 +34,52 @@ export function isBodyTab(value: unknown): value is BodyChartTab {
 
 // ── Date range helpers ─────────────────────────────────────────────────
 
-const MS_IN_DAY = 24 * 60 * 60 * 1000;
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const MS_PER_SECOND = 1_000;
+const MS_IN_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
+const HALF_YEAR_DAYS = 180;
+const LONG_RANGE_QUANTIZATION_DAYS = 30;
+const FOUR_MONTH_DAYS = 120;
+const FOUR_MONTH_QUANTIZATION_DAYS = 21;
+const QUARTER_DAYS = 90;
+const QUARTER_QUANTIZATION_DAYS = 14;
+const TWO_MONTH_DAYS = 60;
+const TWO_MONTH_QUANTIZATION_DAYS = 7;
+const MONTH_DAYS = 30;
+const MONTH_QUANTIZATION_DAYS = 3;
+const TWO_WEEK_DAYS = 14;
+const TWO_WEEK_QUANTIZATION_DAYS = 2;
+const WEEK_DAY_OFFSET = 6;
+const DEFAULT_FILL_ALPHA = 0.16;
+const MACRO_SPARKLINE_FILL_ALPHA = 0.18;
 
 export function getQuantizationDays(start: Date, end: Date): number {
     const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / MS_IN_DAY));
 
-    if (totalDays > 180) {
-        return 30;
+    if (totalDays > HALF_YEAR_DAYS) {
+        return LONG_RANGE_QUANTIZATION_DAYS;
     }
 
-    if (totalDays > 120) {
-        return 21;
+    if (totalDays > FOUR_MONTH_DAYS) {
+        return FOUR_MONTH_QUANTIZATION_DAYS;
     }
 
-    if (totalDays > 90) {
-        return 14;
+    if (totalDays > QUARTER_DAYS) {
+        return QUARTER_QUANTIZATION_DAYS;
     }
 
-    if (totalDays > 60) {
-        return 7;
+    if (totalDays > TWO_MONTH_DAYS) {
+        return TWO_MONTH_QUANTIZATION_DAYS;
     }
 
-    if (totalDays > 30) {
-        return 3;
+    if (totalDays > MONTH_DAYS) {
+        return MONTH_QUANTIZATION_DAYS;
     }
 
-    if (totalDays > 14) {
-        return 2;
+    if (totalDays > TWO_WEEK_DAYS) {
+        return TWO_WEEK_QUANTIZATION_DAYS;
     }
 
     return 1;
@@ -82,7 +101,7 @@ export function getCurrentDateRange(
     const start = new Date(end);
 
     if (range === 'week') {
-        start.setDate(end.getDate() - 6);
+        start.setDate(end.getDate() - WEEK_DAY_OFFSET);
         return { start, end };
     }
 
@@ -96,8 +115,10 @@ export function getCurrentDateRange(
         return { start, end };
     }
 
-    if (customValue?.start && customValue.end) {
-        return { start: customValue.start, end: customValue.end };
+    const customStart = customValue?.start ?? null;
+    const customEnd = customValue?.end ?? null;
+    if (customStart !== null && customEnd !== null) {
+        return { start: customStart, end: customEnd };
     }
 
     return { start, end };
@@ -249,7 +270,7 @@ export function buildBodyChartData<T extends { startDate: string }>(
     getValue: (point: T) => number | null | undefined,
     formatLabel: (dateString: string) => string,
 ): ChartConfiguration<'line'>['data'] | null {
-    if (!points.length) {
+    if (points.length === 0) {
         return null;
     }
 
@@ -322,12 +343,12 @@ function interpolateMissingBodyValues(data: (number | null)[]): (number | null)[
 }
 
 export function buildSummaryMetrics(stats: MappedStatistics | null): SummaryMetrics | null {
-    if (!stats) {
+    if (stats === null) {
         return null;
     }
 
     const totalCalories = stats.calories.reduce((sum, value) => sum + value, 0);
-    const entries = stats.calories.length || 1;
+    const entries = stats.calories.length > 0 ? stats.calories.length : 1;
     const averageCalories = totalCalories / entries;
     const aggregated = stats.aggregatedNutrients;
 
@@ -374,7 +395,11 @@ export function buildMacroSparklineData(
     const labels = stats?.date.map(date => formatLabel(date)) ?? [];
     const nutrients = stats?.nutrientsStatistic;
 
-    const buildData = (series: number[] | undefined, color: string, fillAlpha = 0.16): ChartConfiguration<'line'>['data'] => ({
+    const buildData = (
+        series: number[] | undefined,
+        color: string,
+        fillAlpha = DEFAULT_FILL_ALPHA,
+    ): ChartConfiguration<'line'>['data'] => ({
         labels,
         datasets: [
             {
@@ -391,10 +416,10 @@ export function buildMacroSparklineData(
     });
 
     return {
-        proteins: buildData(nutrients?.proteins, CHART_COLORS.proteins, 0.18),
-        fats: buildData(nutrients?.fats, CHART_COLORS.fats, 0.18),
-        carbs: buildData(nutrients?.carbs, CHART_COLORS.carbs, 0.18),
-        fiber: buildData(nutrients?.fiber, CHART_COLORS.fiber, 0.18),
+        proteins: buildData(nutrients?.proteins, CHART_COLORS.proteins, MACRO_SPARKLINE_FILL_ALPHA),
+        fats: buildData(nutrients?.fats, CHART_COLORS.fats, MACRO_SPARKLINE_FILL_ALPHA),
+        carbs: buildData(nutrients?.carbs, CHART_COLORS.carbs, MACRO_SPARKLINE_FILL_ALPHA),
+        fiber: buildData(nutrients?.fiber, CHART_COLORS.fiber, MACRO_SPARKLINE_FILL_ALPHA),
     };
 }
 

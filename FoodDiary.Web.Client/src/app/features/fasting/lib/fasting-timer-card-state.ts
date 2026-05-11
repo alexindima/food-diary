@@ -3,6 +3,19 @@ import { type FastingStagePresentation, resolveFastingStage } from './fasting-st
 
 type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 
+const MS_PER_HOUR = 3_600_000;
+const MS_PER_SECOND = 1_000;
+const SECONDS_PER_HOUR = 3_600;
+const SECONDS_PER_MINUTE = 60;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_DAY = 24;
+const DEFAULT_CYCLIC_EAT_WINDOW_HOURS = 8;
+const DEFAULT_CYCLIC_FAST_HOURS = 16;
+const MIN_INTERMITTENT_FAST_HOURS = 1;
+const MAX_INTERMITTENT_FAST_HOURS = 23;
+const PERCENT_FULL = 100;
+const TIME_PAD_LENGTH = 2;
+
 export interface FastingTimerCardComputedState {
     progressPercent: number;
     elapsedFormatted: string;
@@ -26,40 +39,44 @@ export interface FastingTimerCardComputedStateInput {
 
 export function buildFastingTimerCardComputedState(input: FastingTimerCardComputedStateInput): FastingTimerCardComputedState {
     const { session, elapsedMs, translate } = input;
-    const baseStage = session ? resolveFastingStage(elapsedMs, session.plannedDurationHours) : null;
-    const totalMs = Math.max(0, (session?.plannedDurationHours ?? 0) * 3_600_000);
+    const baseStage = session !== null ? resolveFastingStage(elapsedMs, session.plannedDurationHours) : null;
+    const totalMs = Math.max(0, (session?.plannedDurationHours ?? 0) * MS_PER_HOUR);
     const remainingMs = Math.max(0, totalMs - elapsedMs);
     const fallback: FastingTimerCardComputedState = {
-        progressPercent: totalMs > 0 ? Math.min((elapsedMs / totalMs) * 100, 100) : 0,
+        progressPercent: totalMs > 0 ? Math.min((elapsedMs / totalMs) * PERCENT_FULL, PERCENT_FULL) : 0,
         elapsedFormatted: formatFastingDuration(elapsedMs),
         remainingFormatted: formatFastingDuration(remainingMs),
         remainingLabelKey: 'FASTING.REMAINING',
         isOvertime: totalMs > 0 && elapsedMs > totalMs,
         showStageProgress: true,
         stateLabel: getFastingOccurrenceLabel(translate, session?.occurrenceKind),
-        detailLabel: session ? getFastingProtocolBaseLabel(translate, session) : null,
+        detailLabel: session !== null ? getFastingProtocolBaseLabel(translate, session) : null,
         metaLabel: session?.planType === 'Cyclic' ? getCyclicPhaseProgressLabel(translate, session, baseStage) : null,
         ringColor: baseStage?.color ?? null,
         stage: baseStage,
-        nextStageFormatted: baseStage?.nextInMs ? formatFastingDuration(baseStage.nextInMs) : null,
+        nextStageFormatted:
+            baseStage?.nextInMs !== null && baseStage?.nextInMs !== undefined ? formatFastingDuration(baseStage.nextInMs) : null,
     };
 
-    if (session?.planType !== 'Intermittent' || session.endedAtUtc) {
+    if (session?.planType !== 'Intermittent' || session.endedAtUtc !== null) {
         return fallback;
     }
 
-    const fastHours = Math.max(1, session.initialPlannedDurationHours || session.plannedDurationHours);
-    const eatingHours = Math.max(1, 24 - fastHours);
-    const cycleLengthMs = (fastHours + eatingHours) * 3_600_000;
+    const fastHours = Math.max(
+        1,
+        session.initialPlannedDurationHours > 0 ? session.initialPlannedDurationHours : session.plannedDurationHours,
+    );
+    const eatingHours = Math.max(1, HOURS_PER_DAY - fastHours);
+    const cycleLengthMs = (fastHours + eatingHours) * MS_PER_HOUR;
     const cycleDay = Math.floor(elapsedMs / cycleLengthMs) + 1;
     const cycleElapsedMs = elapsedMs % cycleLengthMs;
-    const fastWindowMs = fastHours * 3_600_000;
-    const eatingWindowMs = eatingHours * 3_600_000;
+    const fastWindowMs = fastHours * MS_PER_HOUR;
+    const eatingWindowMs = eatingHours * MS_PER_HOUR;
 
     if (cycleElapsedMs < fastWindowMs) {
         const stage = resolveFastingStage(cycleElapsedMs, fastHours);
         return {
-            progressPercent: Math.min((cycleElapsedMs / fastWindowMs) * 100, 100),
+            progressPercent: Math.min((cycleElapsedMs / fastWindowMs) * PERCENT_FULL, PERCENT_FULL),
             elapsedFormatted: formatFastingDuration(cycleElapsedMs),
             remainingFormatted: formatFastingDuration(Math.max(0, fastWindowMs - cycleElapsedMs)),
             remainingLabelKey: 'FASTING.UNTIL_EATING_WINDOW',
@@ -70,13 +87,13 @@ export function buildFastingTimerCardComputedState(input: FastingTimerCardComput
             metaLabel: getFastingCycleLabel(translate, cycleDay),
             ringColor: stage.color,
             stage,
-            nextStageFormatted: stage.nextInMs ? formatFastingDuration(stage.nextInMs) : null,
+            nextStageFormatted: stage.nextInMs !== null ? formatFastingDuration(stage.nextInMs) : null,
         };
     }
 
     const eatingElapsedMs = cycleElapsedMs - fastWindowMs;
     return {
-        progressPercent: Math.min((eatingElapsedMs / eatingWindowMs) * 100, 100),
+        progressPercent: Math.min((eatingElapsedMs / eatingWindowMs) * PERCENT_FULL, PERCENT_FULL),
         elapsedFormatted: formatFastingDuration(eatingElapsedMs),
         remainingFormatted: formatFastingDuration(Math.max(0, eatingWindowMs - eatingElapsedMs)),
         remainingLabelKey: 'FASTING.NEXT_FAST',
@@ -118,16 +135,19 @@ export function getFastingOccurrenceLabel(translate: TranslateFn, kind?: Fasting
 
 export function getFastingProtocolBaseLabel(translate: TranslateFn, session: FastingSession): string {
     if (session.planType === 'Cyclic') {
-        const cycleLabel = session.cyclicFastDays && session.cyclicEatDays ? `${session.cyclicFastDays}:${session.cyclicEatDays}` : '1:1';
-        const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? 8;
-        const eatFastHours = session.cyclicEatDayFastHours ?? 16;
+        const cycleLabel =
+            session.cyclicFastDays !== null && session.cyclicEatDays !== null
+                ? `${session.cyclicFastDays}:${session.cyclicEatDays}`
+                : '1:1';
+        const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? DEFAULT_CYCLIC_EAT_WINDOW_HOURS;
+        const eatFastHours = session.cyclicEatDayFastHours ?? DEFAULT_CYCLIC_FAST_HOURS;
         return `${cycleLabel} (${eatFastHours}:${eatWindowHours})`;
     }
 
     const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
     const hoursLabel = translate('FASTING.HOURS');
 
-    if (!option) {
+    if (option === undefined) {
         return formatFastingHours(session.initialPlannedDurationHours, session.addedDurationHours, hoursLabel);
     }
 
@@ -147,7 +167,7 @@ export function getCyclicPhaseProgressLabel(
 ): string | null {
     const dayNumber = session.cyclicPhaseDayNumber;
     const dayTotal = session.cyclicPhaseDayTotal;
-    if (!dayNumber || !dayTotal) {
+    if (dayNumber === null || dayTotal === null) {
         return getFastingOccurrenceLabel(translate, session.occurrenceKind);
     }
 
@@ -155,7 +175,7 @@ export function getCyclicPhaseProgressLabel(
         return translate('FASTING.CYCLIC_EAT_PHASE_DAY_PROGRESS', { current: dayNumber, total: dayTotal });
     }
 
-    if (stage) {
+    if (stage !== null) {
         return translate('FASTING.CYCLIC_FAST_PHASE_STAGE_PROGRESS', {
             current: dayNumber,
             total: dayTotal,
@@ -168,15 +188,15 @@ export function getCyclicPhaseProgressLabel(
 }
 
 export function getFastingCycleLabel(translate: TranslateFn, cycleDay: number | null): string | null {
-    return cycleDay ? translate('FASTING.DAY_LABEL', { day: cycleDay }) : null;
+    return cycleDay !== null ? translate('FASTING.DAY_LABEL', { day: cycleDay }) : null;
 }
 
 export function formatFastingDuration(ms: number): string {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    const totalSeconds = Math.floor(ms / MS_PER_SECOND);
+    const hours = Math.floor(totalSeconds / SECONDS_PER_HOUR);
+    const minutes = Math.floor((totalSeconds % SECONDS_PER_HOUR) / MINUTES_PER_HOUR);
+    const seconds = totalSeconds % SECONDS_PER_MINUTE;
+    return `${String(hours).padStart(TIME_PAD_LENGTH, '0')}:${String(minutes).padStart(TIME_PAD_LENGTH, '0')}:${String(seconds).padStart(TIME_PAD_LENGTH, '0')}`;
 }
 
 function formatFastingHours(baseHours: number, addedHours: number, hoursLabel: string): string {
@@ -184,7 +204,7 @@ function formatFastingHours(baseHours: number, addedHours: number, hoursLabel: s
 }
 
 function getIntermittentRatioLabel(fastHours: number): string {
-    const normalizedFastHours = Math.max(1, Math.min(23, fastHours));
-    const eatingWindowHours = Math.max(1, 24 - normalizedFastHours);
+    const normalizedFastHours = Math.max(MIN_INTERMITTENT_FAST_HOURS, Math.min(MAX_INTERMITTENT_FAST_HOURS, fastHours));
+    const eatingWindowHours = Math.max(MIN_INTERMITTENT_FAST_HOURS, HOURS_PER_DAY - normalizedFastHours);
     return `${normalizedFastHours}:${eatingWindowHours}`;
 }

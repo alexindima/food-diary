@@ -7,6 +7,19 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../models/meal.data';
 import { MealService } from './meal.service';
 
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 10;
+const SERVER_ERROR_STATUS = 500;
+const TOTAL_CALORIES = 500;
+const PRE_MEAL_SATIETY_LEVEL = 3;
+const POST_MEAL_SATIETY_LEVEL = 4;
+const AI_TOTAL_CALORIES = 319.2;
+const AI_TOTAL_PROTEINS = 9.9;
+const AI_TOTAL_FATS = 4.8;
+const AI_TOTAL_CARBS = 67.09;
+const AI_TOTAL_FIBER = 13.79;
+const MANUAL_TOTAL_CALORIES = 350;
+
 describe('MealService', () => {
     let service: MealService;
     let httpMock: HttpTestingController;
@@ -19,7 +32,7 @@ describe('MealService', () => {
         comment: null,
         imageUrl: null,
         imageAssetId: null,
-        totalCalories: 500,
+        totalCalories: TOTAL_CALORIES,
         totalProteins: 40,
         totalFats: 20,
         totalCarbs: 30,
@@ -32,16 +45,16 @@ describe('MealService', () => {
         manualCarbs: null,
         manualFiber: null,
         manualAlcohol: null,
-        preMealSatietyLevel: 3,
-        postMealSatietyLevel: 4,
+        preMealSatietyLevel: PRE_MEAL_SATIETY_LEVEL,
+        postMealSatietyLevel: POST_MEAL_SATIETY_LEVEL,
         items: [],
         aiSessions: [],
     };
 
     const mockPageDto: PageOf<ConsumptionResponseDto> = {
         data: [mockConsumptionDto],
-        page: 1,
-        limit: 10,
+        page: DEFAULT_PAGE,
+        limit: DEFAULT_LIMIT,
         totalPages: 1,
         totalItems: 1,
     };
@@ -68,29 +81,29 @@ describe('MealService', () => {
     });
 
     it('should query meals with pagination and filters', () => {
-        service.query(1, 10, defaultFilters).subscribe(result => {
-            expect(result.page).toBe(1);
-            expect(result.limit).toBe(10);
+        service.query(DEFAULT_PAGE, DEFAULT_LIMIT, defaultFilters).subscribe(result => {
+            expect(result.page).toBe(DEFAULT_PAGE);
+            expect(result.limit).toBe(DEFAULT_LIMIT);
             expect(result.data.length).toBe(1);
             expect(result.data[0].id).toBe('m1');
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
-        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_LIMIT));
         expect(req.request.params.get('dateFrom')).toBe('2026-03-01');
         expect(req.request.params.get('dateTo')).toBe('2026-03-31');
         req.flush(mockPageDto);
     });
 
     it('should map consumption response to meal on query', () => {
-        service.query(1, 10, defaultFilters).subscribe(result => {
+        service.query(DEFAULT_PAGE, DEFAULT_LIMIT, defaultFilters).subscribe(result => {
             const meal = result.data[0];
-            expect(meal.totalCalories).toBe(500);
+            expect(meal.totalCalories).toBe(TOTAL_CALORIES);
             expect(meal.totalAlcohol).toBe(0);
             expect(meal.isNutritionAutoCalculated).toBe(true);
-            expect(meal.preMealSatietyLevel).toBe(3);
-            expect(meal.postMealSatietyLevel).toBe(4);
+            expect(meal.preMealSatietyLevel).toBe(PRE_MEAL_SATIETY_LEVEL);
+            expect(meal.postMealSatietyLevel).toBe(POST_MEAL_SATIETY_LEVEL);
             expect(meal.items).toEqual([]);
             expect(meal.aiSessions).toEqual([]);
         });
@@ -100,17 +113,17 @@ describe('MealService', () => {
     });
 
     it('should rethrow query errors', () => {
-        service.query(1, 10, defaultFilters).subscribe({
+        service.query(DEFAULT_PAGE, DEFAULT_LIMIT, defaultFilters).subscribe({
             next: () => {
                 expect.fail('Expected query to fail');
             },
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(500);
+                expect(error.status).toBe(SERVER_ERROR_STATUS);
             },
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
     });
 
     it('should get meal by id', () => {
@@ -173,17 +186,17 @@ describe('MealService', () => {
             ...mockConsumptionDto,
             items: [],
             isNutritionAutoCalculated: false,
-            totalCalories: 319.2,
-            totalProteins: 9.9,
-            totalFats: 4.8,
-            totalCarbs: 67.09,
-            totalFiber: 13.79,
+            totalCalories: AI_TOTAL_CALORIES,
+            totalProteins: AI_TOTAL_PROTEINS,
+            totalFats: AI_TOTAL_FATS,
+            totalCarbs: AI_TOTAL_CARBS,
+            totalFiber: AI_TOTAL_FIBER,
             totalAlcohol: 0,
-            manualCalories: 319.2,
-            manualProteins: 9.9,
-            manualFats: 4.8,
-            manualCarbs: 67.09,
-            manualFiber: 13.79,
+            manualCalories: AI_TOTAL_CALORIES,
+            manualProteins: AI_TOTAL_PROTEINS,
+            manualFats: AI_TOTAL_FATS,
+            manualCarbs: AI_TOTAL_CARBS,
+            manualFiber: AI_TOTAL_FIBER,
             manualAlcohol: 0,
             aiSessions: [
                 {
@@ -197,11 +210,11 @@ describe('MealService', () => {
                             nameEn: 'Banana porridge',
                             amount: 1,
                             unit: 'serving',
-                            calories: 319.2,
-                            proteins: 9.9,
-                            fats: 4.8,
-                            carbs: 67.09,
-                            fiber: 13.79,
+                            calories: AI_TOTAL_CALORIES,
+                            proteins: AI_TOTAL_PROTEINS,
+                            fats: AI_TOTAL_FATS,
+                            carbs: AI_TOTAL_CARBS,
+                            fiber: AI_TOTAL_FIBER,
                             alcohol: 0,
                         },
                     ],
@@ -220,12 +233,12 @@ describe('MealService', () => {
             ...mockConsumptionDto,
             items: [],
             isNutritionAutoCalculated: false,
-            totalCalories: 350,
-            manualCalories: 350,
-            manualProteins: 9.9,
-            manualFats: 4.8,
-            manualCarbs: 67.09,
-            manualFiber: 13.79,
+            totalCalories: MANUAL_TOTAL_CALORIES,
+            manualCalories: MANUAL_TOTAL_CALORIES,
+            manualProteins: AI_TOTAL_PROTEINS,
+            manualFats: AI_TOTAL_FATS,
+            manualCarbs: AI_TOTAL_CARBS,
+            manualFiber: AI_TOTAL_FIBER,
             manualAlcohol: 0,
             aiSessions: [
                 {
@@ -239,11 +252,11 @@ describe('MealService', () => {
                             nameEn: 'Banana porridge',
                             amount: 1,
                             unit: 'serving',
-                            calories: 319.2,
-                            proteins: 9.9,
-                            fats: 4.8,
-                            carbs: 67.09,
-                            fiber: 13.79,
+                            calories: AI_TOTAL_CALORIES,
+                            proteins: AI_TOTAL_PROTEINS,
+                            fats: AI_TOTAL_FATS,
+                            carbs: AI_TOTAL_CARBS,
+                            fiber: AI_TOTAL_FIBER,
                             alcohol: 0,
                         },
                     ],
@@ -265,7 +278,7 @@ describe('MealService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
     });
 
     it('should update meal via PATCH', () => {
@@ -300,7 +313,7 @@ describe('MealService', () => {
         });
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
     });
 
     it('should delete meal by id', () => {
@@ -317,11 +330,11 @@ describe('MealService', () => {
                 expect.fail('Expected delete to fail');
             },
             error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(500);
+                expect(error.status).toBe(SERVER_ERROR_STATUS);
             },
         });
 
         const req = httpMock.expectOne(`${baseUrl}/m1`);
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
     });
 });

@@ -12,19 +12,39 @@ import { RecipeService } from '../../api/recipe.service';
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeDetailComponent } from './recipe-detail.component';
 
+const PREP_TIME_MINUTES = 10;
+const COOK_TIME_MINUTES = 20;
+const SERVINGS_COUNT = 4;
+const TOTAL_TIME_MINUTES = 30;
+const INGREDIENT_COUNT = 2;
+const EXPECTED_TAB_COUNT = 2;
+const EXPECTED_MACRO_BLOCK_COUNT = 5;
+const TOTAL_CALORIES = 800;
+const TOTAL_PROTEINS = 40;
+const TOTAL_FATS = 30;
+const TOTAL_CARBS = 80;
+const TOTAL_FIBER = 8;
+const BASE_AMOUNT = 100;
+const FLOUR_CALORIES_PER_BASE = 364;
+const FLOUR_PROTEINS_PER_BASE = 10;
+const FLOUR_CARBS_PER_BASE = 76;
+const FLOUR_FIBER_PER_BASE = 2.7;
+const SUGAR_AMOUNT = 50;
+const SUGAR_CALORIES_PER_BASE = 387;
+
 const mockRecipe: Recipe = {
     id: '1',
     name: 'Test Recipe',
     comment: null,
     isOwnedByCurrentUser: true,
-    prepTime: 10,
-    cookTime: 20,
-    servings: 4,
-    totalCalories: 800,
-    totalProteins: 40,
-    totalFats: 30,
-    totalCarbs: 80,
-    totalFiber: 8,
+    prepTime: PREP_TIME_MINUTES,
+    cookTime: COOK_TIME_MINUTES,
+    servings: SERVINGS_COUNT,
+    totalCalories: TOTAL_CALORIES,
+    totalProteins: TOTAL_PROTEINS,
+    totalFats: TOTAL_FATS,
+    totalCarbs: TOTAL_CARBS,
+    totalFiber: TOTAL_FIBER,
     totalAlcohol: 0,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
@@ -38,27 +58,27 @@ const mockRecipe: Recipe = {
             ingredients: [
                 {
                     id: 'i1',
-                    amount: 100,
+                    amount: BASE_AMOUNT,
                     productId: 'p1',
                     productName: 'Flour',
-                    productBaseAmount: 100,
-                    productCaloriesPerBase: 364,
-                    productProteinsPerBase: 10,
+                    productBaseAmount: BASE_AMOUNT,
+                    productCaloriesPerBase: FLOUR_CALORIES_PER_BASE,
+                    productProteinsPerBase: FLOUR_PROTEINS_PER_BASE,
                     productFatsPerBase: 1,
-                    productCarbsPerBase: 76,
-                    productFiberPerBase: 2.7,
+                    productCarbsPerBase: FLOUR_CARBS_PER_BASE,
+                    productFiberPerBase: FLOUR_FIBER_PER_BASE,
                     productAlcoholPerBase: 0,
                 },
                 {
                     id: 'i2',
-                    amount: 50,
+                    amount: SUGAR_AMOUNT,
                     productId: 'p2',
                     productName: 'Sugar',
-                    productBaseAmount: 100,
-                    productCaloriesPerBase: 387,
+                    productBaseAmount: BASE_AMOUNT,
+                    productCaloriesPerBase: SUGAR_CALORIES_PER_BASE,
                     productProteinsPerBase: 0,
                     productFatsPerBase: 0,
-                    productCarbsPerBase: 100,
+                    productCarbsPerBase: BASE_AMOUNT,
                     productFiberPerBase: 0,
                     productAlcoholPerBase: 0,
                 },
@@ -112,24 +132,24 @@ describe('RecipeDetailComponent', () => {
     });
 
     it('should extract nutrition from recipe', () => {
-        expect(component.calories).toBe(800);
-        expect(component.proteins).toBe(40);
-        expect(component.fats).toBe(30);
-        expect(component.carbs).toBe(80);
-        expect(component.fiber).toBe(8);
+        expect(component.calories).toBe(TOTAL_CALORIES);
+        expect(component.proteins).toBe(TOTAL_PROTEINS);
+        expect(component.fats).toBe(TOTAL_FATS);
+        expect(component.carbs).toBe(TOTAL_CARBS);
+        expect(component.fiber).toBe(TOTAL_FIBER);
         expect(component.alcohol).toBe(0);
     });
 
     it('should calculate total time', () => {
-        expect(component.totalTime).toBe(30);
+        expect(component.totalTime).toBe(TOTAL_TIME_MINUTES);
     });
 
     it('should count ingredients across steps', () => {
-        expect(component.ingredientCount).toBe(2);
+        expect(component.ingredientCount).toBe(INGREDIENT_COUNT);
     });
 
     it('should have summary and nutrients tabs', () => {
-        expect(component.tabs.length).toBe(2);
+        expect(component.tabs.length).toBe(EXPECTED_TAB_COUNT);
         expect(component.tabs[0].value).toBe('summary');
         expect(component.tabs[1].value).toBe('nutrients');
     });
@@ -186,6 +206,6 @@ describe('RecipeDetailComponent', () => {
     });
 
     it('should build macro blocks', () => {
-        expect(component.macroBlocks.length).toBe(5);
+        expect(component.macroBlocks.length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
     });
 });

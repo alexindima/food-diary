@@ -5,7 +5,7 @@ import type { ChartConfiguration, ChartOptions } from 'chart.js';
  */
 export function applyAlpha(hexColor: string, alpha: number): string {
     const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
-    if (!match) {
+    if (match === null) {
         return hexColor;
     }
 
@@ -21,7 +21,7 @@ function readCssColor(variable: string, fallback: string): string {
     }
 
     const value = window.getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
-    return value || fallback;
+    return value.length > 0 ? value : fallback;
 }
 
 const TICK_COLOR_FALLBACK = '#475569';
@@ -49,8 +49,9 @@ export function createCaloriesLineChartOptions(formatTooltip: (label: string, va
             tooltip: {
                 callbacks: {
                     label: (context): string => {
-                        const label = context.label || '';
-                        const value = Number(context.raw) || 0;
+                        const label = context.label.length > 0 ? context.label : '';
+                        const rawValue = Number(context.raw);
+                        const value = Number.isNaN(rawValue) || rawValue === 0 ? 0 : rawValue;
                         return formatTooltip(label, value);
                     },
                 },
@@ -97,8 +98,9 @@ export function createPieChartOptions(formatTooltip: (label: string, value: numb
             tooltip: {
                 callbacks: {
                     label: (context): string => {
-                        const label = context.label || '';
-                        const value = Number(context.raw) || 0;
+                        const label = context.label.length > 0 ? context.label : '';
+                        const rawValue = Number(context.raw);
+                        const value = Number.isNaN(rawValue) || rawValue === 0 ? 0 : rawValue;
                         return formatTooltip(label, value);
                     },
                 },

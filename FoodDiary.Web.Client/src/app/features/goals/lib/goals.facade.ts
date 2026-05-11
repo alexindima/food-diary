@@ -50,6 +50,19 @@ type SliderConfig = {
 
 export type BodyTargetKey = 'weight' | 'waist';
 
+const MAX_CALORIES = 5000;
+const MAX_BODY_TARGET = 400;
+const PERCENT_FULL = 100;
+const CIRCLE_DEGREES = 360;
+const AUTOSAVE_DEBOUNCE_MS = 700;
+const LOW_CALORIE_THRESHOLD = 1000;
+const NORMAL_CALORIE_THRESHOLD = 3500;
+const HIGH_CALORIE_THRESHOLD = 4500;
+const DEFAULT_ZONE_ALPHA = 0.16;
+const PROTEIN_CALORIES_PER_GRAM = 4;
+const FAT_CALORIES_PER_GRAM = 9;
+const CARB_CALORIES_PER_GRAM = 4;
+
 @Injectable({ providedIn: 'root' })
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
@@ -123,19 +136,19 @@ export class GoalsFacade {
     private readonly waterConfig: SliderConfig = {
         labelKey: 'GOALS_PAGE.WATER_LABEL',
         unit: 'ml',
-        max: 5000,
+        max: MAX_CALORIES,
         greenFrom: 1200,
         greenTo: 2500,
         zones: [
             { from: 0, to: 1200, color: this.colorBlue },
             { from: 1200, to: 2500, color: this.colorGreen },
             { from: 2500, to: 3500, color: this.colorOrange },
-            { from: 3500, to: 5000, color: this.colorRed },
+            { from: 3500, to: MAX_CALORIES, color: this.colorRed },
         ],
     };
 
     private readonly autosaveQueue: AutosaveQueue<UpdateGoalsRequest> = createAutosaveQueue({
-        debounceMs: 700,
+        debounceMs: AUTOSAVE_DEBOUNCE_MS,
         isBusy: () => this.isSavingGoals(),
         persist: request => {
             this.persistGoals(request);
@@ -143,7 +156,7 @@ export class GoalsFacade {
     });
 
     public readonly minCalories = 0;
-    public readonly maxCalories = 5000;
+    public readonly maxCalories = MAX_CALORIES;
     public readonly calorieTarget = signal(0);
     public readonly calorieCyclingEnabled = signal(false);
     public readonly dayCalories = signal<Record<string, number>>({
@@ -209,7 +222,7 @@ export class GoalsFacade {
         }
 
         const preset = this.macroPresets.find(item => item.key === presetKey);
-        if (!preset?.percent) {
+        if (preset?.percent === undefined) {
             return;
         }
 
@@ -220,7 +233,7 @@ export class GoalsFacade {
         this.macroConfigs.map(cfg => {
             const rawValue = this.macroValues()[cfg.key];
             const value = this.clampValue(rawValue, cfg.max);
-            const percent = Math.min(100, Math.max(0, Math.round((value / cfg.max) * 100)));
+            const percent = Math.min(PERCENT_FULL, Math.max(0, Math.round((value / cfg.max) * PERCENT_FULL)));
             const accent = this.pickZoneColor(cfg, value);
             const gradient = this.buildZoneGradient(cfg);
             const shortfall = Math.max(0, Math.ceil(cfg.greenFrom - value));
@@ -233,7 +246,7 @@ export class GoalsFacade {
     public readonly waterState = computed(() => {
         const rawValue = this.waterValue();
         const value = this.clampValue(rawValue, this.waterConfig.max);
-        const percent = Math.min(100, Math.max(0, Math.round((value / this.waterConfig.max) * 100)));
+        const percent = Math.min(PERCENT_FULL, Math.max(0, Math.round((value / this.waterConfig.max) * PERCENT_FULL)));
         const accent = this.pickZoneColor(this.waterConfig, value);
         const gradient = this.buildZoneGradient(this.waterConfig);
         const shortfall = Math.max(0, Math.ceil(this.waterConfig.greenFrom - value));
@@ -247,18 +260,18 @@ export class GoalsFacade {
     public readonly progressPercent = computed(() => {
         const span = this.maxCalories - this.minCalories;
         const normalized = Math.min(Math.max(this.calorieTarget() - this.minCalories, 0), span);
-        return Math.round((normalized / span) * 100);
+        return Math.round((normalized / span) * PERCENT_FULL);
     });
-    public readonly knobAngle = computed(() => (this.progressPercent() / 100) * 360);
+    public readonly knobAngle = computed(() => (this.progressPercent() / PERCENT_FULL) * CIRCLE_DEGREES);
     public readonly accentColor = computed(() => {
         const value = this.calorieTarget();
-        if (value < 1000) {
+        if (value < LOW_CALORIE_THRESHOLD) {
             return this.colorBlue;
         }
-        if (value <= 3500) {
+        if (value <= NORMAL_CALORIE_THRESHOLD) {
             return this.colorGreen;
         }
-        if (value <= 4500) {
+        if (value <= HIGH_CALORIE_THRESHOLD) {
             return this.colorOrange;
         }
         return this.colorRed;
@@ -305,7 +318,7 @@ export class GoalsFacade {
         return clamped;
     }
 
-    public updateBodyTarget(key: BodyTargetKey, value: number, max = 400): number | null {
+    public updateBodyTarget(key: BodyTargetKey, value: number, max = MAX_BODY_TARGET): number | null {
         if (Number.isNaN(value)) {
             return null;
         }
@@ -321,7 +334,7 @@ export class GoalsFacade {
 
     public changeMacroPreset(next: MacroPresetKey): void {
         const preset = this.macroPresets.find(item => item.key === next);
-        if (preset?.percent) {
+        if (preset?.percent !== undefined) {
             this.applyPresetPercent(preset.percent);
         }
         this.selectedPreset.set(next);
@@ -330,7 +343,7 @@ export class GoalsFacade {
 
     public updateMacroValue(key: MacroKey, value: number): number | null {
         const cfg = this.macroConfigs.find(item => item.key === key);
-        if (!cfg || Number.isNaN(value)) {
+        if (cfg === undefined || Number.isNaN(value)) {
             return null;
         }
 
@@ -419,7 +432,7 @@ export class GoalsFacade {
                         }
 
                         const cfg = this.macroConfigs.find(item => item.key === key);
-                        if (!cfg) {
+                        if (cfg === undefined) {
                             continue;
                         }
 
@@ -479,7 +492,7 @@ export class GoalsFacade {
             )
             .subscribe({
                 next: goals => {
-                    if (!goals) {
+                    if (goals === null) {
                         const hasQueuedUpdate = this.autosaveQueue.hasPending();
                         if (!hasQueuedUpdate) {
                             this.autosaveQueue.restore(request);
@@ -548,23 +561,23 @@ export class GoalsFacade {
 
     private buildZoneGradient(cfg: SliderConfig | MacroItem): string {
         const parts = cfg.zones.map(zone => {
-            const start = Math.max(0, Math.min(100, (zone.from / cfg.max) * 100));
-            const end = Math.max(0, Math.min(100, (zone.to / cfg.max) * 100));
-            return `${this.withAlpha(zone.color, 0.16)} ${start}% ${end}%`;
+            const start = Math.max(0, Math.min(PERCENT_FULL, (zone.from / cfg.max) * PERCENT_FULL));
+            const end = Math.max(0, Math.min(PERCENT_FULL, (zone.to / cfg.max) * PERCENT_FULL));
+            return `${this.withAlpha(zone.color, DEFAULT_ZONE_ALPHA)} ${start}% ${end}%`;
         });
         return `linear-gradient(90deg, ${parts.join(', ')})`;
     }
 
     private withAlpha(color: string, alpha: number): string {
-        return `color-mix(in srgb, ${color} ${Math.round(alpha * 100)}%, transparent)`;
+        return `color-mix(in srgb, ${color} ${Math.round(alpha * PERCENT_FULL)}%, transparent)`;
     }
 
     private applyPresetPercent(percent: MacroPercent): void {
         const calories = this.calorieTarget();
         const targetValues: Partial<Record<MacroKey, number>> = {
-            protein: (calories * percent.protein) / 4,
-            fats: (calories * percent.fats) / 9,
-            carbs: (calories * percent.carbs) / 4,
+            protein: (calories * percent.protein) / PROTEIN_CALORIES_PER_GRAM,
+            fats: (calories * percent.fats) / FAT_CALORIES_PER_GRAM,
+            carbs: (calories * percent.carbs) / CARB_CALORIES_PER_GRAM,
         };
 
         this.macroValues.update(current => {
@@ -573,7 +586,7 @@ export class GoalsFacade {
             for (const key of Object.keys(targetValues) as MacroKey[]) {
                 const cfg = this.macroConfigs.find(item => item.key === key);
                 const raw = targetValues[key];
-                if (!cfg || raw === undefined) {
+                if (cfg === undefined || raw === undefined) {
                     continue;
                 }
 
@@ -594,7 +607,7 @@ export class GoalsFacade {
         }
 
         const preset = this.macroPresets.find(item => item.key === presetKey);
-        if (preset?.percent) {
+        if (preset?.percent !== undefined) {
             this.applyPresetPercent(preset.percent);
         }
     }

@@ -19,6 +19,12 @@ import { NavigationService } from '../../../services/navigation.service';
 import { WaistHistoryFacade } from '../lib/waist-history.facade';
 import type { WaistEntry } from '../models/waist-entry.data';
 
+const WHT_SCALE_MAX = 0.8;
+const WHT_UNDER_MAX = 0.4;
+const WHT_NORMAL_MAX = 0.5;
+const WHT_ELEVATED_MAX = 0.6;
+const PERCENT_FULL = 100;
+
 @Component({
     selector: 'fd-waist-history-page',
     standalone: true,
@@ -46,7 +52,7 @@ export class WaistHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WaistHistoryFacade);
 
-    private readonly whtScaleMax = 0.8;
+    private readonly whtScaleMax = WHT_SCALE_MAX;
 
     public readonly selectedRange = this.facade.selectedRange;
     public readonly currentRange = this.facade.currentRange;
@@ -103,10 +109,25 @@ export class WaistHistoryPageComponent {
     ];
 
     public readonly whtSegments: WhtSegment[] = [
-        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.UNDER', 0, 0.4, 'waist-history-page__wht-segment--under'),
-        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.NORMAL', 0.4, 0.5, 'waist-history-page__wht-segment--normal'),
-        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.ELEVATED', 0.5, 0.6, 'waist-history-page__wht-segment--elevated'),
-        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.HIGH', 0.6, this.whtScaleMax, 'waist-history-page__wht-segment--high'),
+        this.createWhtSegment('WAIST_HISTORY.WHT_SEGMENTS.UNDER', 0, WHT_UNDER_MAX, 'waist-history-page__wht-segment--under'),
+        this.createWhtSegment(
+            'WAIST_HISTORY.WHT_SEGMENTS.NORMAL',
+            WHT_UNDER_MAX,
+            WHT_NORMAL_MAX,
+            'waist-history-page__wht-segment--normal',
+        ),
+        this.createWhtSegment(
+            'WAIST_HISTORY.WHT_SEGMENTS.ELEVATED',
+            WHT_NORMAL_MAX,
+            WHT_ELEVATED_MAX,
+            'waist-history-page__wht-segment--elevated',
+        ),
+        this.createWhtSegment(
+            'WAIST_HISTORY.WHT_SEGMENTS.HIGH',
+            WHT_ELEVATED_MAX,
+            this.whtScaleMax,
+            'waist-history-page__wht-segment--high',
+        ),
     ];
 
     public constructor() {
@@ -140,7 +161,7 @@ export class WaistHistoryPageComponent {
     private createWhtSegment(labelKey: string, from: number, to: number, className: string): WhtSegment {
         return {
             labelKey,
-            width: `${((to - from) / this.whtScaleMax) * 100}%`,
+            width: `${((to - from) / this.whtScaleMax) * PERCENT_FULL}%`,
             class: className,
         };
     }

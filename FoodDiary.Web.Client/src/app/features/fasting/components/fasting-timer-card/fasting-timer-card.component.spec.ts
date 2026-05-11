@@ -11,195 +11,281 @@ import { FastingFacade } from '../../lib/fasting.facade';
 import type { FastingSession } from '../../models/fasting.data';
 import { FastingTimerCardComponent } from './fasting-timer-card.component';
 
+const MS_PER_HOUR = 3_600_000;
+const DEFAULT_FASTING_HOURS = 16;
+const DEFAULT_EXTENDED_HOURS = 24;
+const DEFAULT_REDUCE_HOURS = 4;
+const EXTENDED_OVERTIME_HOURS = 30;
+const RING_TEST_HOURS = 6;
+const RING_RADIUS = 90;
+const RING_OFFSET_RATIO = 0.75;
+const TIMER_PLANNED_HOURS = 10;
+const TIMER_ELAPSED_HOURS = 5;
+const DASHBOARD_TICK_MS = 1_000;
+
 let localizationLanguage: string;
 
 describe('FastingTimerCardComponent', () => {
-    beforeEach(() => {
-        localizationLanguage = 'ru';
-        vi.useFakeTimers();
-        vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
-    });
-
-    afterEach(() => {
-        vi.useRealTimers();
-    });
-
-    it('renders dashboard layout without page controls', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('dashboard');
-        setSession(fixture, createSession());
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
-        expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
-    });
-
-    it('renders dashboard layout without a fasting facade provider', async () => {
-        const fixture = await createHostFixtureWithoutFacadeAsync();
-
-        fixture.componentInstance.session.set(createSession());
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
-        expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
-    });
-
-    it('renders page controls in page layout', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('page');
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).not.toBeNull();
-    });
-
-    it('refreshes computed summary labels when the active language changes', async () => {
-        const fixture = await createHostFixtureAsync();
-        const translateService = TestBed.inject(TranslateService);
-        translateService.setTranslation('ru', { FASTING: { FASTING_WINDOW: 'Пост' } });
-        translateService.setTranslation('en', { FASTING: { FASTING_WINDOW: 'Fasting' } });
-
-        await firstValueFrom(translateService.use('ru'));
-        fixture.componentInstance.layout.set('dashboard');
-        setSession(fixture, createSession());
-        fixture.detectChanges();
-
-        expect(host(fixture).textContent).toContain('Пост');
-
-        localizationLanguage = 'en';
-        await firstValueFrom(translateService.use('en'));
-        fixture.detectChanges();
-
-        expect(host(fixture).textContent).toContain('Fasting');
-    });
-
-    it.each(['dashboard', 'page'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set(layout);
-        setSession(
-            fixture,
-            createSession({
-                planType: 'Cyclic',
-                protocol: 'Cyclic',
-                occurrenceKind: 'EatDay',
-                cyclicFastDays: 1,
-                cyclicEatDays: 1,
-                cyclicEatDayFastHours: 16,
-                cyclicEatDayEatingWindowHours: 8,
-                cyclicPhaseDayNumber: 1,
-                cyclicPhaseDayTotal: 1,
-            }),
-        );
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('.fasting-timer-card__stage-title'))).toBeNull();
-        expect(fixture.debugElement.query(By.css('.fasting-timer-card__next-stage-label'))).toBeNull();
-    });
-
-    it.each(['dashboard', 'page'] as const)('renders protocol separator without mojibake in %s layout', async layout => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set(layout);
-        setSession(fixture, createSession({ protocol: 'F16_8' }));
-        fixture.detectChanges();
-
-        const separator = requireElement<HTMLElement>(fixture, '.fasting-timer-card__summary-protocol-separator');
-        expect(separator.textContent.trim()).toBe('\u00b7');
-        expect(host(fixture).textContent).not.toContain('\u00c2');
-    });
-
-    it.each(['dashboard', 'page'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set(layout);
-        setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(30) }));
-        fixture.detectChanges();
-
-        const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
-        expect(percent.textContent.trim()).toBe('100%');
-    });
-
-    it.each(['dashboard', 'page'] as const)('uses the same progress ring geometry in %s layout', async layout => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set(layout);
-        setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(6) }));
-        fixture.detectChanges();
-
-        const progressRing = requireElement<SVGCircleElement>(fixture, '.fasting-timer-card__ring-progress');
-        const circumference = 2 * Math.PI * 90;
-        expect(Number(progressRing.style.strokeDasharray)).toBeCloseTo(circumference);
-        expect(Number(progressRing.style.strokeDashoffset)).toBeCloseTo(circumference * 0.75);
-    });
-
-    it.each(['dashboard', 'page'] as const)('uses shared summary ring content in %s layout', async layout => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set(layout);
-        setSession(fixture, createSession());
-        fixture.detectChanges();
-
-        expect(host(fixture).querySelector('.fasting-timer-card__ring-content--summary')).not.toBeNull();
-    });
-
-    it('builds timer display from session inputs', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('dashboard');
-        setSession(
-            fixture,
-            createExtendedSession({ plannedDurationHours: 10, initialPlannedDurationHours: 10, startedAtUtc: getStartedAtUtc(5) }),
-        );
-        fixture.detectChanges();
-
-        const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
-        const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
-        expect(elapsed.textContent.trim()).toBe('05:00:00');
-        expect(percent.textContent.trim()).toBe('50%');
-    });
-
-    it('uses facade elapsed time in page layout', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('page');
-        setSession(
-            fixture,
-            createExtendedSession({ plannedDurationHours: 10, initialPlannedDurationHours: 10, startedAtUtc: getStartedAtUtc(1) }),
-        );
-        getFacadeStub(fixture).elapsedMs.set(5 * 3_600_000);
-        fixture.detectChanges();
-
-        const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
-        const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
-        expect(elapsed.textContent.trim()).toBe('05:00:00');
-        expect(percent.textContent.trim()).toBe('50%');
-    });
-
-    it('advances dashboard elapsed time without a fasting facade provider', async () => {
-        const fixture = await createHostFixtureWithoutFacadeAsync();
-
-        fixture.componentInstance.session.set(createExtendedSession({ plannedDurationHours: 1, initialPlannedDurationHours: 1 }));
-        fixture.detectChanges();
-        vi.advanceTimersByTime(1_000);
-        fixture.detectChanges();
-
-        const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
-        expect(elapsed.textContent.trim()).toBe('00:00:01');
-    });
-
-    it('marks progress rings as decorative', async () => {
-        const fixture = await createHostFixtureAsync();
-
-        fixture.componentInstance.layout.set('dashboard');
-        fixture.detectChanges();
-
-        const ringSvg = requireElement<SVGElement>(fixture, '.fasting-timer-card__ring-svg');
-        expect(ringSvg.getAttribute('aria-hidden')).toBe('true');
-        expect(ringSvg.getAttribute('focusable')).toBe('false');
-    });
+    registerLayoutTests();
+    registerContentTests();
+    registerProgressTests();
+    registerTimerDisplayTests();
+    registerAccessibilityTests();
 });
+
+function registerLayoutTests(): void {
+    describe('layout', () => {
+        beforeEach(() => {
+            localizationLanguage = 'ru';
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('renders dashboard layout without page controls', async () => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set('dashboard');
+            setSession(fixture, createSession());
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
+            expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
+        });
+
+        it('renders dashboard layout without a fasting facade provider', async () => {
+            const fixture = await createHostFixtureWithoutFacadeAsync();
+
+            fixture.componentInstance.session.set(createSession());
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
+            expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).toBeNull();
+        });
+
+        it('renders page controls in page layout', async () => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set('page');
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).not.toBeNull();
+        });
+    });
+}
+
+function registerContentTests(): void {
+    describe('content', () => {
+        beforeEach(() => {
+            localizationLanguage = 'ru';
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('refreshes computed summary labels when the active language changes', async () => {
+            const fixture = await createHostFixtureAsync();
+            const translateService = TestBed.inject(TranslateService);
+            translateService.setTranslation('ru', { FASTING: { FASTING_WINDOW: 'Пост' } });
+            translateService.setTranslation('en', { FASTING: { FASTING_WINDOW: 'Fasting' } });
+
+            await firstValueFrom(translateService.use('ru'));
+            fixture.componentInstance.layout.set('dashboard');
+            setSession(fixture, createSession());
+            fixture.detectChanges();
+
+            expect(host(fixture).textContent).toContain('Пост');
+
+            localizationLanguage = 'en';
+            await firstValueFrom(translateService.use('en'));
+            fixture.detectChanges();
+
+            expect(host(fixture).textContent).toContain('Fasting');
+        });
+
+        it.each(['dashboard', 'page'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set(layout);
+            setSession(
+                fixture,
+                createSession({
+                    planType: 'Cyclic',
+                    protocol: 'Cyclic',
+                    occurrenceKind: 'EatDay',
+                    cyclicFastDays: 1,
+                    cyclicEatDays: 1,
+                    cyclicEatDayFastHours: 16,
+                    cyclicEatDayEatingWindowHours: 8,
+                    cyclicPhaseDayNumber: 1,
+                    cyclicPhaseDayTotal: 1,
+                }),
+            );
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('.fasting-timer-card__stage-title'))).toBeNull();
+            expect(fixture.debugElement.query(By.css('.fasting-timer-card__next-stage-label'))).toBeNull();
+        });
+
+        it.each(['dashboard', 'page'] as const)('renders protocol separator without mojibake in %s layout', async layout => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set(layout);
+            setSession(fixture, createSession({ protocol: 'F16_8' }));
+            fixture.detectChanges();
+
+            const separator = requireElement<HTMLElement>(fixture, '.fasting-timer-card__summary-protocol-separator');
+            expect(separator.textContent.trim()).toBe('\u00b7');
+            expect(host(fixture).textContent).not.toContain('\u00c2');
+        });
+    });
+}
+
+function registerProgressTests(): void {
+    describe('progress', () => {
+        beforeEach(() => {
+            localizationLanguage = 'ru';
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it.each(['dashboard', 'page'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set(layout);
+            setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(EXTENDED_OVERTIME_HOURS) }));
+            fixture.detectChanges();
+
+            const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
+            expect(percent.textContent.trim()).toBe('100%');
+        });
+
+        it.each(['dashboard', 'page'] as const)('uses the same progress ring geometry in %s layout', async layout => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set(layout);
+            setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(RING_TEST_HOURS) }));
+            fixture.detectChanges();
+
+            const progressRing = requireElement<SVGCircleElement>(fixture, '.fasting-timer-card__ring-progress');
+            const circumference = 2 * Math.PI * RING_RADIUS;
+            expect(Number(progressRing.style.strokeDasharray)).toBeCloseTo(circumference);
+            expect(Number(progressRing.style.strokeDashoffset)).toBeCloseTo(circumference * RING_OFFSET_RATIO);
+        });
+
+        it.each(['dashboard', 'page'] as const)('uses shared summary ring content in %s layout', async layout => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set(layout);
+            setSession(fixture, createSession());
+            fixture.detectChanges();
+
+            expect(host(fixture).querySelector('.fasting-timer-card__ring-content--summary')).not.toBeNull();
+        });
+    });
+}
+
+function registerTimerDisplayTests(): void {
+    describe('timer display', () => {
+        beforeEach(() => {
+            localizationLanguage = 'ru';
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('builds timer display from session inputs', async () => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set('dashboard');
+            setSession(
+                fixture,
+                createExtendedSession({
+                    plannedDurationHours: TIMER_PLANNED_HOURS,
+                    initialPlannedDurationHours: TIMER_PLANNED_HOURS,
+                    startedAtUtc: getStartedAtUtc(TIMER_ELAPSED_HOURS),
+                }),
+            );
+            fixture.detectChanges();
+
+            const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
+            const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
+            expect(elapsed.textContent.trim()).toBe('05:00:00');
+            expect(percent.textContent.trim()).toBe('50%');
+        });
+
+        it('uses facade elapsed time in page layout', async () => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set('page');
+            setSession(
+                fixture,
+                createExtendedSession({
+                    plannedDurationHours: TIMER_PLANNED_HOURS,
+                    initialPlannedDurationHours: TIMER_PLANNED_HOURS,
+                    startedAtUtc: getStartedAtUtc(1),
+                }),
+            );
+            getFacadeStub(fixture).elapsedMs.set(TIMER_ELAPSED_HOURS * MS_PER_HOUR);
+            fixture.detectChanges();
+
+            const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
+            const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
+            expect(elapsed.textContent.trim()).toBe('05:00:00');
+            expect(percent.textContent.trim()).toBe('50%');
+        });
+
+        it('advances dashboard elapsed time without a fasting facade provider', async () => {
+            const fixture = await createHostFixtureWithoutFacadeAsync();
+
+            fixture.componentInstance.session.set(createExtendedSession({ plannedDurationHours: 1, initialPlannedDurationHours: 1 }));
+            fixture.detectChanges();
+            vi.advanceTimersByTime(DASHBOARD_TICK_MS);
+            fixture.detectChanges();
+
+            const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
+            expect(elapsed.textContent.trim()).toBe('00:00:01');
+        });
+    });
+}
+
+function registerAccessibilityTests(): void {
+    describe('accessibility', () => {
+        beforeEach(() => {
+            localizationLanguage = 'ru';
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('marks progress rings as decorative', async () => {
+            const fixture = await createHostFixtureAsync();
+
+            fixture.componentInstance.layout.set('dashboard');
+            fixture.detectChanges();
+
+            const ringSvg = requireElement<SVGElement>(fixture, '.fasting-timer-card__ring-svg');
+            expect(ringSvg.getAttribute('aria-hidden')).toBe('true');
+            expect(ringSvg.getAttribute('focusable')).toBe('false');
+        });
+    });
+}
 
 @Component({
     imports: [FastingTimerCardComponent],
@@ -302,15 +388,15 @@ function createFastingFacadeStub(): FastingFacadeStub {
         currentSession,
         selectedMode: signal('intermittent'),
         selectedProtocol: signal('F16_8'),
-        customHours: signal(16),
-        customIntermittentFastHours: signal(16),
+        customHours: signal(DEFAULT_FASTING_HOURS),
+        customIntermittentFastHours: signal(DEFAULT_FASTING_HOURS),
         cyclicEatDayProtocol: signal('F16_8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),
-        cyclicEatDayFastHours: signal(16),
-        extendHours: signal(24),
-        reduceHours: signal(4),
+        cyclicEatDayFastHours: signal(DEFAULT_FASTING_HOURS),
+        extendHours: signal(DEFAULT_EXTENDED_HOURS),
+        reduceHours: signal(DEFAULT_REDUCE_HOURS),
         isStarting: signal(false),
         isEnding: signal(false),
         isExtending: signal(false),
@@ -359,23 +445,23 @@ function requireElement<T extends Element>(fixture: ComponentFixture<FastingTime
 function setSession(fixture: ComponentFixture<FastingTimerCardHostComponent>, session: FastingSession | null): void {
     fixture.componentInstance.session.set(session);
     getFacadeStub(fixture).currentSession.set(session);
-    getFacadeStub(fixture).elapsedMs.set(
-        session ? Math.max(0, new Date('2026-04-12T06:00:00Z').getTime() - new Date(session.startedAtUtc).getTime()) : 0,
-    );
+    const elapsedMs =
+        session === null ? 0 : Math.max(0, new Date('2026-04-12T06:00:00Z').getTime() - new Date(session.startedAtUtc).getTime());
+    getFacadeStub(fixture).elapsedMs.set(elapsedMs);
 }
 
 function createExtendedSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return createSession({
         planType: 'Extended',
         protocol: 'F24_0',
-        initialPlannedDurationHours: 24,
-        plannedDurationHours: 24,
+        initialPlannedDurationHours: DEFAULT_EXTENDED_HOURS,
+        plannedDurationHours: DEFAULT_EXTENDED_HOURS,
         ...overrides,
     });
 }
 
 function getStartedAtUtc(hoursAgo: number): string {
-    return new Date(new Date('2026-04-12T06:00:00Z').getTime() - hoursAgo * 3_600_000).toISOString();
+    return new Date(new Date('2026-04-12T06:00:00Z').getTime() - hoursAgo * MS_PER_HOUR).toISOString();
 }
 
 function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
@@ -383,9 +469,9 @@ function createSession(overrides: Partial<FastingSession> = {}): FastingSession 
         id: 'session-1',
         startedAtUtc: '2026-04-12T06:00:00Z',
         endedAtUtc: null,
-        initialPlannedDurationHours: 16,
+        initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
         addedDurationHours: 0,
-        plannedDurationHours: 16,
+        plannedDurationHours: DEFAULT_FASTING_HOURS,
         protocol: 'F16_8',
         planType: 'Intermittent',
         occurrenceKind: 'FastingWindow',

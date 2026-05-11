@@ -10,6 +10,10 @@ import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
 import { NavigationService } from './navigation.service';
 
+const JWT_SECONDS_PER_MS = 1000;
+const JWT_ONE_MINUTE_SECONDS = 60;
+const JWT_ONE_HOUR_SECONDS = 3600;
+
 function createFakeJwt(payload: Record<string, unknown>): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
     const body = btoa(JSON.stringify(payload));
@@ -404,7 +408,10 @@ describe('AuthService', () => {
     describe('session restore', () => {
         it('should restore the session from refresh token when access token is missing', async () => {
             localStorage.setItem('refreshToken', 'existing-refresh-token');
-            const restoredToken = createFakeJwt({ sub: 'user-restore-1', exp: Math.floor(Date.now() / 1000) + 3600 });
+            const restoredToken = createFakeJwt({
+                sub: 'user-restore-1',
+                exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) + JWT_ONE_HOUR_SECONDS,
+            });
 
             const restorePromise = service.restoreSessionAsync();
 
@@ -423,8 +430,14 @@ describe('AuthService', () => {
         });
 
         it('should restore the session when initializeAuth saw an expired token', async () => {
-            const expiredToken = createFakeJwt({ sub: 'user-expired', exp: Math.floor(Date.now() / 1000) - 60 });
-            const restoredToken = createFakeJwt({ sub: 'user-expired', exp: Math.floor(Date.now() / 1000) + 3600 });
+            const expiredToken = createFakeJwt({
+                sub: 'user-expired',
+                exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) - JWT_ONE_MINUTE_SECONDS,
+            });
+            const restoredToken = createFakeJwt({
+                sub: 'user-expired',
+                exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) + JWT_ONE_HOUR_SECONDS,
+            });
 
             localStorage.setItem('authToken', expiredToken);
             localStorage.setItem('refreshToken', 'existing-refresh-token');
