@@ -20,6 +20,31 @@ import {
 } from '../models/fasting.data';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 
+const PROMPT_SNOOZE_HOURS = 4;
+const HISTORY_PAGE_SIZE = 10;
+const DEFAULT_INTERMITTENT_FAST_HOURS = 16;
+const DEFAULT_EXTEND_HOURS = 24;
+const DEFAULT_REDUCE_HOURS = 4;
+const DEFAULT_CHECK_IN_LEVEL = 3;
+const MIN_FASTING_HOURS = 1;
+const MAX_FASTING_HOURS = 168;
+const MAX_INTERMITTENT_FAST_HOURS = 23;
+const MAX_CYCLIC_DAYS = 30;
+const MAX_CHECK_IN_LEVEL = 5;
+const HOURS_PER_DAY = 24;
+const MILLISECONDS_PER_SECOND = 1000;
+const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_MINUTE = 60;
+const MILLISECONDS_PER_HOUR = 3_600_000;
+const PERCENT_MAX = 100;
+const DURATION_PART_LENGTH = 2;
+const DURATION_PART_PAD = '0';
+const DURATION_ROUNDING_FACTOR = 10;
+const HISTORY_FROM_MONTH_OFFSET = 1;
+const HISTORY_TO_MONTH_OFFSET = 2;
+const DEFAULT_FIRST_REMINDER_HOURS = 12;
+const DEFAULT_FOLLOW_UP_REMINDER_HOURS = 20;
+
 interface FastingPromptState {
     dismissed?: boolean;
     snoozedUntilUtc?: string;
@@ -27,9 +52,6 @@ interface FastingPromptState {
 
 @Injectable({ providedIn: 'root' })
 export class FastingFacade {
-    private static readonly PromptSnoozeHours = 4;
-    private static readonly HistoryPageSize = 10;
-
     private readonly fastingService = inject(FastingService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
     private readonly promptStateStore = inject(FastingPromptStateStore);
@@ -54,18 +76,18 @@ export class FastingFacade {
     public readonly checkInSavedVersion = signal(0);
     public readonly selectedMode = signal<FastingMode>('intermittent');
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
-    public readonly customHours = signal(16);
-    public readonly customIntermittentFastHours = signal(16);
+    public readonly customHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
+    public readonly customIntermittentFastHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
     public readonly cyclicEatDayProtocol = signal<FastingProtocol>('F16_8');
     public readonly cyclicFastDays = signal(1);
     public readonly cyclicEatDays = signal(1);
     public readonly cyclicUsesCustomPreset = signal(false);
-    public readonly cyclicEatDayFastHours = signal(16);
-    public readonly extendHours = signal(24);
-    public readonly reduceHours = signal(4);
-    public readonly hungerLevel = signal(3);
-    public readonly energyLevel = signal(3);
-    public readonly moodLevel = signal(3);
+    public readonly cyclicEatDayFastHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
+    public readonly extendHours = signal(DEFAULT_EXTEND_HOURS);
+    public readonly reduceHours = signal(DEFAULT_REDUCE_HOURS);
+    public readonly hungerLevel = signal(DEFAULT_CHECK_IN_LEVEL);
+    public readonly energyLevel = signal(DEFAULT_CHECK_IN_LEVEL);
+    public readonly moodLevel = signal(DEFAULT_CHECK_IN_LEVEL);
     public readonly selectedSymptoms = signal<string[]>([]);
     public readonly checkInNotes = signal('');
     public readonly now = signal(new Date());
@@ -84,25 +106,25 @@ export class FastingFacade {
         if (protocol === 'Custom') {
             return this.customHours();
         }
-        return FASTING_PROTOCOLS.find(p => p.value === protocol)?.hours ?? 16;
+        return FASTING_PROTOCOLS.find(p => p.value === protocol)?.hours ?? DEFAULT_INTERMITTENT_FAST_HOURS;
     });
 
     public readonly elapsedMs = computed(() => {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return 0;
         }
         const start = new Date(session.startedAtUtc).getTime();
-        const end = session.endedAtUtc ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
+        const end = session.endedAtUtc !== null ? new Date(session.endedAtUtc).getTime() : this.now().getTime();
         return Math.max(0, end - start);
     });
 
     public readonly totalMs = computed(() => {
         const session = this.currentSession();
-        if (!session) {
-            return this.plannedDurationHours() * 3600_000;
+        if (session === null) {
+            return this.plannedDurationHours() * MILLISECONDS_PER_HOUR;
         }
-        return session.plannedDurationHours * 3600_000;
+        return session.plannedDurationHours * MILLISECONDS_PER_HOUR;
     });
 
     public readonly progressPercent = computed(() => {
@@ -110,7 +132,7 @@ export class FastingFacade {
         if (total <= 0) {
             return 0;
         }
-        return Math.min((this.elapsedMs() / total) * 100, 100);
+        return Math.min((this.elapsedMs() / total) * PERCENT_MAX, PERCENT_MAX);
     });
 
     public readonly elapsedFormatted = computed(() => this.formatDuration(this.elapsedMs()));
@@ -144,7 +166,7 @@ export class FastingFacade {
                 from: range.from,
                 to: range.to,
                 page: this.historyPage() + 1,
-                limit: FastingFacade.HistoryPageSize,
+                limit: HISTORY_PAGE_SIZE,
             }),
             history => {
                 this.history.update(current => [...current, ...history.data]);
@@ -171,7 +193,7 @@ export class FastingFacade {
 
     public endFasting(): void {
         this.trackRequest(this.isEnding, this.fastingService.end(), session => {
-            if (session.endedAtUtc) {
+            if (session.endedAtUtc !== null) {
                 this.stopTimer();
                 this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
                     sessionId: session.id,
@@ -180,7 +202,7 @@ export class FastingFacade {
                     status: session.status,
                     plannedDurationHours: session.plannedDurationHours,
                     actualDurationHours: this.getSessionDurationHours(session),
-                    hadCheckIn: !!session.checkInAtUtc,
+                    hadCheckIn: session.checkInAtUtc !== null,
                     ...this.getReminderTelemetryDetails(),
                 });
                 this.clearPromptStateForSession(session.id);
@@ -210,17 +232,17 @@ export class FastingFacade {
     }
 
     public setCustomHours(hours: number): void {
-        this.customHours.set(Math.max(1, Math.min(168, hours)));
+        this.customHours.set(this.clampFastingHours(hours));
     }
 
     public setCustomIntermittentFastHours(hours: number): void {
-        this.customIntermittentFastHours.set(Math.max(1, Math.min(23, hours)));
+        this.customIntermittentFastHours.set(this.clampIntermittentFastHours(hours));
     }
 
     public setCyclicPreset(fastDays: number, eatDays: number): void {
         this.cyclicUsesCustomPreset.set(false);
-        this.cyclicFastDays.set(Math.max(1, Math.min(30, fastDays)));
-        this.cyclicEatDays.set(Math.max(1, Math.min(30, eatDays)));
+        this.cyclicFastDays.set(this.clampCyclicDays(fastDays));
+        this.cyclicEatDays.set(this.clampCyclicDays(eatDays));
     }
 
     public selectCustomCyclicPreset(): void {
@@ -229,12 +251,12 @@ export class FastingFacade {
 
     public setCyclicFastDays(days: number): void {
         this.cyclicUsesCustomPreset.set(true);
-        this.cyclicFastDays.set(Math.max(1, Math.min(30, days)));
+        this.cyclicFastDays.set(this.clampCyclicDays(days));
     }
 
     public setCyclicEatDays(days: number): void {
         this.cyclicUsesCustomPreset.set(true);
-        this.cyclicEatDays.set(Math.max(1, Math.min(30, days)));
+        this.cyclicEatDays.set(this.clampCyclicDays(days));
     }
 
     public selectCyclicEatDayProtocol(protocol: FastingProtocol): void {
@@ -245,34 +267,34 @@ export class FastingFacade {
         }
 
         const preset = FASTING_PROTOCOLS.find(item => item.value === protocol && item.category === 'intermittent');
-        if (preset) {
-            this.cyclicEatDayFastHours.set(Math.max(1, Math.min(23, preset.hours)));
+        if (preset !== undefined) {
+            this.cyclicEatDayFastHours.set(this.clampIntermittentFastHours(preset.hours));
         }
     }
 
     public setCyclicEatDayFastHours(hours: number): void {
         this.cyclicEatDayProtocol.set('CustomIntermittent');
-        this.cyclicEatDayFastHours.set(Math.max(1, Math.min(23, hours)));
+        this.cyclicEatDayFastHours.set(this.clampIntermittentFastHours(hours));
     }
 
     public setExtendHours(hours: number): void {
-        this.extendHours.set(Math.max(1, Math.min(168, hours)));
+        this.extendHours.set(this.clampFastingHours(hours));
     }
 
     public setReduceHours(hours: number): void {
-        this.reduceHours.set(Math.max(1, Math.min(168, hours)));
+        this.reduceHours.set(this.clampFastingHours(hours));
     }
 
     public setHungerLevel(level: number): void {
-        this.hungerLevel.set(Math.max(1, Math.min(5, level)));
+        this.hungerLevel.set(this.clampCheckInLevel(level));
     }
 
     public setEnergyLevel(level: number): void {
-        this.energyLevel.set(Math.max(1, Math.min(5, level)));
+        this.energyLevel.set(this.clampCheckInLevel(level));
     }
 
     public setMoodLevel(level: number): void {
-        this.moodLevel.set(Math.max(1, Math.min(5, level)));
+        this.moodLevel.set(this.clampCheckInLevel(level));
     }
 
     public toggleSymptom(symptom: string): void {
@@ -290,7 +312,7 @@ export class FastingFacade {
     }
 
     public extendByHours(hours: number): void {
-        const additionalHours = Math.max(1, Math.min(168, hours));
+        const additionalHours = this.clampFastingHours(hours);
         runTrackedRequest(this.destroyRef, this.isExtending, this.fastingService.extend({ additionalHours }), {
             next: session => {
                 this.applyCurrentSessionUpdate(session);
@@ -299,10 +321,10 @@ export class FastingFacade {
     }
 
     public reduceTargetByHours(hours: number): void {
-        const reducedHours = Math.max(1, Math.min(168, hours));
+        const reducedHours = this.clampFastingHours(hours);
         runTrackedRequest(this.destroyRef, this.isReducing, this.fastingService.reduceTarget({ reducedHours }), {
             next: session => {
-                if (session.endedAtUtc) {
+                if (session.endedAtUtc !== null) {
                     this.resetDraftState();
                     this.applyCompletedSessionUpdate(session);
                 } else {
@@ -314,9 +336,10 @@ export class FastingFacade {
 
     public saveCheckIn(): void {
         const session = this.currentSession();
-        if (!session || session.endedAtUtc) {
+        if (session?.endedAtUtc !== null) {
             return;
         }
+        const checkInNotes = this.checkInNotes().trim();
 
         this.trackRequest(
             this.isSavingCheckIn,
@@ -325,7 +348,7 @@ export class FastingFacade {
                 energyLevel: this.energyLevel(),
                 moodLevel: this.moodLevel(),
                 symptoms: this.selectedSymptoms(),
-                checkInNotes: this.checkInNotes().trim() || null,
+                checkInNotes: checkInNotes.length > 0 ? checkInNotes : null,
             }),
             updated => {
                 this.checkInSavedVersion.update(version => version + 1);
@@ -337,7 +360,7 @@ export class FastingFacade {
                     energyLevel: updated.energyLevel,
                     moodLevel: updated.moodLevel,
                     symptomsCount: updated.symptoms.length,
-                    hadNotes: !!updated.checkInNotes,
+                    hadNotes: updated.checkInNotes !== null && updated.checkInNotes.length > 0,
                     ...this.getReminderTelemetryDetails(),
                 });
                 this.clearPromptStateForSession(updated.id);
@@ -347,20 +370,20 @@ export class FastingFacade {
     }
 
     public isPromptVisible(session: FastingSession | null, prompt: FastingMessage | null): boolean {
-        if (!session || !prompt || session.endedAtUtc) {
+        if (session === null || prompt === null || session.endedAtUtc !== null) {
             return false;
         }
 
         const state = this.promptState()[this.getPromptStateKey(session.id, prompt.id)];
-        if (!state) {
+        if (state === undefined) {
             return true;
         }
 
-        if (state.dismissed) {
+        if (state.dismissed === true) {
             return false;
         }
 
-        if (!state.snoozedUntilUtc) {
+        if (state.snoozedUntilUtc === undefined || state.snoozedUntilUtc.length === 0) {
             return true;
         }
 
@@ -369,7 +392,7 @@ export class FastingFacade {
 
     public dismissPrompt(promptId: string): void {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return;
         }
 
@@ -378,11 +401,11 @@ export class FastingFacade {
 
     public snoozePrompt(promptId: string): void {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return;
         }
 
-        const snoozedUntilUtc = new Date(this.now().getTime() + FastingFacade.PromptSnoozeHours * 3_600_000).toISOString();
+        const snoozedUntilUtc = new Date(this.now().getTime() + PROMPT_SNOOZE_HOURS * MILLISECONDS_PER_HOUR).toISOString();
         this.updatePromptState(this.getPromptStateKey(session.id, promptId), { snoozedUntilUtc });
     }
 
@@ -403,7 +426,7 @@ export class FastingFacade {
         this.now.set(new Date());
         this.timerInterval = setInterval(() => {
             this.now.set(new Date());
-        }, 1000);
+        }, MILLISECONDS_PER_SECOND);
         this.destroyRef.onDestroy(() => {
             this.stopTimer();
         });
@@ -434,7 +457,7 @@ export class FastingFacade {
         this.insightsData.set(overview.insights);
         this.syncCheckInFromSession(overview.currentSession);
 
-        if (overview.currentSession && !overview.currentSession.endedAtUtc) {
+        if (overview.currentSession !== null && overview.currentSession.endedAtUtc === null) {
             this.startTimer();
             return;
         }
@@ -471,11 +494,24 @@ export class FastingFacade {
     }
 
     private syncCheckInFromSession(session: FastingSession | null): void {
-        this.hungerLevel.set(session?.hungerLevel ?? 3);
-        this.energyLevel.set(session?.energyLevel ?? 3);
-        this.moodLevel.set(session?.moodLevel ?? 3);
-        this.selectedSymptoms.set(session?.symptoms ?? []);
-        this.checkInNotes.set(session?.checkInNotes ?? '');
+        if (session === null) {
+            this.resetCheckInDraftSignals();
+            return;
+        }
+
+        this.hungerLevel.set(session.hungerLevel ?? DEFAULT_CHECK_IN_LEVEL);
+        this.energyLevel.set(session.energyLevel ?? DEFAULT_CHECK_IN_LEVEL);
+        this.moodLevel.set(session.moodLevel ?? DEFAULT_CHECK_IN_LEVEL);
+        this.selectedSymptoms.set(session.symptoms);
+        this.checkInNotes.set(session.checkInNotes ?? '');
+    }
+
+    private resetCheckInDraftSignals(): void {
+        this.hungerLevel.set(DEFAULT_CHECK_IN_LEVEL);
+        this.energyLevel.set(DEFAULT_CHECK_IN_LEVEL);
+        this.moodLevel.set(DEFAULT_CHECK_IN_LEVEL);
+        this.selectedSymptoms.set([]);
+        this.checkInNotes.set('');
     }
 
     private isSelectedProtocolInCategory(category: 'intermittent' | 'extended'): boolean {
@@ -508,16 +544,20 @@ export class FastingFacade {
     }
 
     private formatDuration(ms: number): string {
-        const totalSeconds = Math.floor(ms / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        const totalSeconds = Math.floor(ms / MILLISECONDS_PER_SECOND);
+        const hours = Math.floor(totalSeconds / SECONDS_PER_HOUR);
+        const minutes = Math.floor((totalSeconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+        const seconds = totalSeconds % SECONDS_PER_MINUTE;
+        return `${this.formatDurationPart(hours)}:${this.formatDurationPart(minutes)}:${this.formatDurationPart(seconds)}`;
+    }
+
+    private formatDurationPart(value: number): string {
+        return String(value).padStart(DURATION_PART_LENGTH, DURATION_PART_PAD);
     }
 
     private getSessionDurationHours(session: FastingSession): number {
         const endedAt = session.endedAtUtc;
-        if (!endedAt) {
+        if (endedAt === null) {
             return 0;
         }
 
@@ -527,13 +567,13 @@ export class FastingFacade {
             return 0;
         }
 
-        return Math.round(((endedAtMs - startedAtMs) / 3_600_000) * 10) / 10;
+        return Math.round(((endedAtMs - startedAtMs) / MILLISECONDS_PER_HOUR) * DURATION_ROUNDING_FACTOR) / DURATION_ROUNDING_FACTOR;
     }
 
     private getReminderTelemetryDetails(): Record<string, unknown> {
         const user = this.userService.user();
-        const firstReminderHours = user?.fastingCheckInReminderHours ?? 12;
-        const followUpReminderHours = user?.fastingCheckInFollowUpReminderHours ?? 20;
+        const firstReminderHours = user?.fastingCheckInReminderHours ?? DEFAULT_FIRST_REMINDER_HOURS;
+        const followUpReminderHours = user?.fastingCheckInFollowUpReminderHours ?? DEFAULT_FOLLOW_UP_REMINDER_HOURS;
         const reminderPresetId = resolveFastingReminderPresetId(firstReminderHours, followUpReminderHours);
 
         return {
@@ -543,24 +583,40 @@ export class FastingFacade {
         };
     }
 
+    private clampFastingHours(hours: number): number {
+        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_FASTING_HOURS, hours));
+    }
+
+    private clampIntermittentFastHours(hours: number): number {
+        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_INTERMITTENT_FAST_HOURS, hours));
+    }
+
+    private clampCyclicDays(days: number): number {
+        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_CYCLIC_DAYS, days));
+    }
+
+    private clampCheckInLevel(level: number): number {
+        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_CHECK_IN_LEVEL, level));
+    }
+
     private resetDraftState(): void {
         this.selectedMode.set('intermittent');
         this.selectedProtocol.set('F16_8');
-        this.customHours.set(16);
-        this.customIntermittentFastHours.set(16);
+        this.customHours.set(DEFAULT_INTERMITTENT_FAST_HOURS);
+        this.customIntermittentFastHours.set(DEFAULT_INTERMITTENT_FAST_HOURS);
         this.cyclicEatDayProtocol.set('F16_8');
         this.cyclicFastDays.set(1);
         this.cyclicEatDays.set(1);
         this.cyclicUsesCustomPreset.set(false);
-        this.cyclicEatDayFastHours.set(16);
-        this.extendHours.set(24);
-        this.reduceHours.set(4);
+        this.cyclicEatDayFastHours.set(DEFAULT_INTERMITTENT_FAST_HOURS);
+        this.extendHours.set(DEFAULT_EXTEND_HOURS);
+        this.reduceHours.set(DEFAULT_REDUCE_HOURS);
     }
 
     private getHistoryRange(): { from: string; to: string } {
         const now = new Date();
-        const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1, 0, 0, 0, 0));
-        const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 2, 1, 0, 0, 0, 0) - 1);
+        const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - HISTORY_FROM_MONTH_OFFSET, 1, 0, 0, 0, 0));
+        const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + HISTORY_TO_MONTH_OFFSET, 1, 0, 0, 0, 0) - 1);
 
         return {
             from: from.toISOString(),
@@ -584,7 +640,7 @@ export class FastingFacade {
                 cyclicFastDays: this.cyclicFastDays(),
                 cyclicEatDays: this.cyclicEatDays(),
                 cyclicEatDayFastHours: this.cyclicEatDayFastHours(),
-                cyclicEatDayEatingWindowHours: 24 - this.cyclicEatDayFastHours(),
+                cyclicEatDayEatingWindowHours: HOURS_PER_DAY - this.cyclicEatDayFastHours(),
             };
         }
 
