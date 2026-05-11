@@ -7,6 +7,7 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../models/recipe.data';
 import { RecipeService } from './recipe.service';
 
+const BASE_URL = 'http://localhost:5300/api/v1/recipes';
 const RECIPE_SERVINGS = 2;
 const RECIPE_TOTAL_CALORIES = 350;
 const RECIPE_TOTAL_PROTEINS = 40;
@@ -20,71 +21,70 @@ const NEW_RECIPE_COOK_MINUTES = 20;
 const NEW_RECIPE_SERVINGS = 4;
 const HTTP_INTERNAL_SERVER_ERROR = 500;
 const HTTP_NOT_FOUND = 404;
+const MOCK_RECIPE: Recipe = {
+    id: 'r1',
+    name: 'Grilled Chicken Salad',
+    description: null,
+    comment: null,
+    category: null,
+    imageUrl: null,
+    imageAssetId: null,
+    prepTime: null,
+    cookTime: null,
+    servings: RECIPE_SERVINGS,
+    visibility: RecipeVisibility.Private,
+    usageCount: 0,
+    createdAt: '2026-01-01',
+    isOwnedByCurrentUser: true,
+    totalCalories: RECIPE_TOTAL_CALORIES,
+    totalProteins: RECIPE_TOTAL_PROTEINS,
+    totalFats: RECIPE_TOTAL_FATS,
+    totalCarbs: RECIPE_TOTAL_CARBS,
+    totalFiber: RECIPE_TOTAL_FIBER,
+    totalAlcohol: 0,
+    isNutritionAutoCalculated: true,
+    steps: [],
+};
+const MOCK_PAGE: PageOf<Recipe> = {
+    data: [MOCK_RECIPE],
+    page: 1,
+    limit: DEFAULT_PAGE_LIMIT,
+    totalPages: 1,
+    totalItems: 1,
+};
+
+let service: RecipeService;
+let httpMock: HttpTestingController;
+
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [RecipeService, provideHttpClient(), provideHttpClientTesting()],
+    });
+    service = TestBed.inject(RecipeService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+
+afterEach(() => {
+    httpMock.verify();
+});
 
 describe('RecipeService', () => {
-    let service: RecipeService;
-    let httpMock: HttpTestingController;
-    const baseUrl = 'http://localhost:5300/api/v1/recipes';
-
-    const mockRecipe: Recipe = {
-        id: 'r1',
-        name: 'Grilled Chicken Salad',
-        description: null,
-        comment: null,
-        category: null,
-        imageUrl: null,
-        imageAssetId: null,
-        prepTime: null,
-        cookTime: null,
-        servings: RECIPE_SERVINGS,
-        visibility: RecipeVisibility.Private,
-        usageCount: 0,
-        createdAt: '2026-01-01',
-        isOwnedByCurrentUser: true,
-        totalCalories: RECIPE_TOTAL_CALORIES,
-        totalProteins: RECIPE_TOTAL_PROTEINS,
-        totalFats: RECIPE_TOTAL_FATS,
-        totalCarbs: RECIPE_TOTAL_CARBS,
-        totalFiber: RECIPE_TOTAL_FIBER,
-        totalAlcohol: 0,
-        isNutritionAutoCalculated: true,
-        steps: [],
-    };
-
-    const mockPage: PageOf<Recipe> = {
-        data: [mockRecipe],
-        page: 1,
-        limit: DEFAULT_PAGE_LIMIT,
-        totalPages: 1,
-        totalItems: 1,
-    };
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [RecipeService, provideHttpClient(), provideHttpClientTesting()],
-        });
-        service = TestBed.inject(RecipeService);
-        httpMock = TestBed.inject(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
-    });
-
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+});
 
+describe('RecipeService query', () => {
     it('should query recipes with pagination params', () => {
         service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
-            expect(result).toEqual(mockPage);
+            expect(result).toEqual(MOCK_PAGE);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
         expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
-        req.flush(mockPage);
+        req.flush(MOCK_PAGE);
     });
 
     it('should include search filter in query params', () => {
@@ -92,101 +92,109 @@ describe('RecipeService', () => {
 
         service.query(1, DEFAULT_PAGE_LIMIT, filters, false).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
         expect(req.request.params.get('search')).toBe('salad');
         expect(req.request.params.get('includePublic')).toBe('false');
-        req.flush(mockPage);
+        req.flush(MOCK_PAGE);
     });
 
-    it('should get recipe by id with includePublic param', () => {
-        service.getById('r1').subscribe(result => {
-            expect(result).toEqual(mockRecipe);
+    it('should return empty PageOf on query failure', () => {
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
+            expect(result).toEqual({ data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 });
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/r1` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+    });
+});
+
+describe('RecipeService reads', () => {
+    it('should get recipe by id with includePublic param', () => {
+        service.getById('r1').subscribe(result => {
+            expect(result).toEqual(MOCK_RECIPE);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/r1` && r.method === 'GET');
         expect(req.request.params.get('includePublic')).toBe('true');
-        req.flush(mockRecipe);
+        req.flush(MOCK_RECIPE);
     });
 
     it('should get recipe by id with includePublic false', () => {
         service.getById('r1', false).subscribe(result => {
-            expect(result).toEqual(mockRecipe);
+            expect(result).toEqual(MOCK_RECIPE);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/r1` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/r1` && r.method === 'GET');
         expect(req.request.params.get('includePublic')).toBe('false');
-        req.flush(mockRecipe);
+        req.flush(MOCK_RECIPE);
     });
 
-    it('should create recipe', () => {
-        const createData: RecipeDto = {
-            name: 'New Recipe',
-            prepTime: NEW_RECIPE_PREP_MINUTES,
-            cookTime: NEW_RECIPE_COOK_MINUTES,
-            servings: NEW_RECIPE_SERVINGS,
-            visibility: RecipeVisibility.Private,
-            calculateNutritionAutomatically: true,
-            steps: [],
-        };
-
-        service.create(createData).subscribe(result => {
-            expect(result).toEqual(mockRecipe);
+    it('should return null on getById failure', () => {
+        service.getById('r1').subscribe(result => {
+            expect(result).toBeNull();
         });
 
-        const req = httpMock.expectOne(`${baseUrl}/`);
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/r1` && r.method === 'GET');
+        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
+    });
+});
+
+describe('RecipeService mutations', () => {
+    it('should create recipe', () => {
+        const createData = createRecipeDto('New Recipe');
+
+        service.create(createData).subscribe(result => {
+            expect(result).toEqual(MOCK_RECIPE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(createData);
-        req.flush(mockRecipe);
+        req.flush(MOCK_RECIPE);
     });
 
     it('should update recipe via PATCH', () => {
-        const updateData: RecipeDto = {
-            name: 'Updated Recipe',
-            prepTime: NEW_RECIPE_PREP_MINUTES,
-            cookTime: NEW_RECIPE_COOK_MINUTES,
-            servings: NEW_RECIPE_SERVINGS,
-            visibility: RecipeVisibility.Private,
-            calculateNutritionAutomatically: true,
-            steps: [],
-        };
+        const updateData = createRecipeDto('Updated Recipe');
 
         service.update('r1', updateData).subscribe(result => {
-            expect(result).toEqual(mockRecipe);
+            expect(result).toEqual(MOCK_RECIPE);
         });
 
-        const req = httpMock.expectOne(`${baseUrl}/r1`);
+        const req = httpMock.expectOne(`${BASE_URL}/r1`);
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body).toEqual(updateData);
-        req.flush(mockRecipe);
+        req.flush(MOCK_RECIPE);
     });
 
     it('should delete recipe by id', () => {
         service.deleteById('r1').subscribe();
 
-        const req = httpMock.expectOne(`${baseUrl}/r1`);
+        const req = httpMock.expectOne(`${BASE_URL}/r1`);
         expect(req.request.method).toBe('DELETE');
         req.flush(null);
     });
 
     it('should duplicate recipe', () => {
         service.duplicate('r1').subscribe(result => {
-            expect(result).toEqual(mockRecipe);
+            expect(result).toEqual(MOCK_RECIPE);
         });
 
-        const req = httpMock.expectOne(`${baseUrl}/r1/duplicate`);
+        const req = httpMock.expectOne(`${BASE_URL}/r1/duplicate`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({});
-        req.flush(mockRecipe);
+        req.flush(MOCK_RECIPE);
     });
+});
 
+describe('RecipeService recent', () => {
     it('should get recent recipes with default params', () => {
-        const recentRecipes = [mockRecipe];
+        const recentRecipes = [MOCK_RECIPE];
 
         service.getRecent().subscribe(result => {
             expect(result).toEqual(recentRecipes);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
         expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(recentRecipes);
@@ -195,28 +203,10 @@ describe('RecipeService', () => {
     it('should get recent recipes with custom params', () => {
         service.getRecent(RECENT_RECIPES_LIMIT, false).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
         expect(req.request.params.get('limit')).toBe(String(RECENT_RECIPES_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('false');
         req.flush([]);
-    });
-
-    it('should return empty PageOf on query failure', () => {
-        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
-            expect(result).toEqual({ data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 });
-        });
-
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
-        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
-    });
-
-    it('should return null on getById failure', () => {
-        service.getById('r1').subscribe(result => {
-            expect(result).toBeNull();
-        });
-
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/r1` && r.method === 'GET');
-        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
     });
 
     it('should return empty array on getRecent failure', () => {
@@ -224,7 +214,19 @@ describe('RecipeService', () => {
             expect(result).toEqual([]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
         req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
     });
 });
+
+function createRecipeDto(name: string): RecipeDto {
+    return {
+        name,
+        prepTime: NEW_RECIPE_PREP_MINUTES,
+        cookTime: NEW_RECIPE_COOK_MINUTES,
+        servings: NEW_RECIPE_SERVINGS,
+        visibility: RecipeVisibility.Private,
+        calculateNutritionAutomatically: true,
+        steps: [],
+    };
+}
